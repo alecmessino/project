@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-29 05:26 UTC",
+  "generated": "2026-05-29 14:02 UTC",
   "scope": {
     "games": 79,
     "start": "20260414",
@@ -83,7 +83,7 @@
     ]
   },
   "sweep": {
-    "caveat": "Live line is MODELED (no historical in-play lines on the free plan), so ROI is sensitive to the assumed book pace-chasing and is illustrative, NOT proof of edge. Use reversion-fit for trustworthy calibration.",
+    "caveat": "Live line is MODELED \u2014 no free source of historical in-play NBA totals exists (all are paywalled; ESPN only has pregame open/close), so ROI here is sensitive to the assumed book pace-chasing and is illustrative, NOT proof of edge. Trustworthy paths: the reversion-fit above (real, no lines needed), or forward-capture real lines for free via the timeout cadence + `mrbet backtest`.",
     "book_beta": 0.3,
     "evals": 6362,
     "current": {
@@ -102,107 +102,83 @@
     "top": [
       {
         "label": "move\u226515% edge\u22655.0 ev\u2265+0% min\u22654m",
-        "move": 0.15,
-        "edge": 5.0,
-        "ev": 0.0,
-        "min": 4.0,
         "bets": 219,
         "wins": 202,
         "losses": 16,
         "pushes": 1,
         "win_rate": 0.927,
-        "roi": 0.765
+        "roi": 0.765,
+        "equiv": 9
       },
       {
-        "label": "move\u226515% edge\u22655.0 ev\u2265+0% min\u22656m",
-        "move": 0.15,
-        "edge": 5.0,
-        "ev": 0.0,
-        "min": 6.0,
-        "bets": 219,
-        "wins": 202,
-        "losses": 16,
+        "label": "move\u226515% edge\u22652.0 ev\u2265+0% min\u22654m",
+        "bets": 226,
+        "wins": 208,
+        "losses": 17,
         "pushes": 1,
-        "win_rate": 0.927,
-        "roi": 0.765
+        "win_rate": 0.924,
+        "roi": 0.761,
+        "equiv": 9
       },
       {
-        "label": "move\u226515% edge\u22655.0 ev\u2265+0% min\u22658m",
-        "move": 0.15,
-        "edge": 5.0,
-        "ev": 0.0,
-        "min": 8.0,
-        "bets": 219,
-        "wins": 202,
-        "losses": 16,
+        "label": "move\u226515% edge\u22653.0 ev\u2265+0% min\u22654m",
+        "bets": 223,
+        "wins": 205,
+        "losses": 17,
         "pushes": 1,
-        "win_rate": 0.927,
-        "roi": 0.765
+        "win_rate": 0.923,
+        "roi": 0.759,
+        "equiv": 9
       },
       {
-        "label": "move\u226515% edge\u22655.0 ev\u2265+2% min\u22654m",
-        "move": 0.15,
-        "edge": 5.0,
-        "ev": 0.02,
-        "min": 4.0,
-        "bets": 219,
-        "wins": 202,
-        "losses": 16,
+        "label": "move\u226515% edge\u22654.0 ev\u2265+0% min\u22654m",
+        "bets": 221,
+        "wins": 203,
+        "losses": 17,
         "pushes": 1,
-        "win_rate": 0.927,
-        "roi": 0.765
+        "win_rate": 0.923,
+        "roi": 0.758,
+        "equiv": 9
       },
       {
-        "label": "move\u226515% edge\u22655.0 ev\u2265+2% min\u22656m",
-        "move": 0.15,
-        "edge": 5.0,
-        "ev": 0.02,
-        "min": 6.0,
-        "bets": 219,
-        "wins": 202,
-        "losses": 16,
-        "pushes": 1,
-        "win_rate": 0.927,
-        "roi": 0.765
+        "label": "move\u226512% edge\u22654.0 ev\u2265+0% min\u22654m",
+        "bets": 261,
+        "wins": 236,
+        "losses": 21,
+        "pushes": 4,
+        "win_rate": 0.918,
+        "roi": 0.742,
+        "equiv": 9
       },
       {
-        "label": "move\u226515% edge\u22655.0 ev\u2265+2% min\u22658m",
-        "move": 0.15,
-        "edge": 5.0,
-        "ev": 0.02,
-        "min": 8.0,
-        "bets": 219,
-        "wins": 202,
-        "losses": 16,
-        "pushes": 1,
-        "win_rate": 0.927,
-        "roi": 0.765
+        "label": "move\u226512% edge\u22655.0 ev\u2265+0% min\u22654m",
+        "bets": 252,
+        "wins": 228,
+        "losses": 21,
+        "pushes": 3,
+        "win_rate": 0.916,
+        "roi": 0.739,
+        "equiv": 9
       },
       {
-        "label": "move\u226515% edge\u22655.0 ev\u2265+5% min\u22654m",
-        "move": 0.15,
-        "edge": 5.0,
-        "ev": 0.05,
-        "min": 4.0,
-        "bets": 219,
-        "wins": 202,
-        "losses": 16,
-        "pushes": 1,
-        "win_rate": 0.927,
-        "roi": 0.765
+        "label": "move\u226512% edge\u22653.0 ev\u2265+0% min\u22654m",
+        "bets": 269,
+        "wins": 241,
+        "losses": 24,
+        "pushes": 4,
+        "win_rate": 0.909,
+        "roi": 0.725,
+        "equiv": 9
       },
       {
-        "label": "move\u226515% edge\u22655.0 ev\u2265+5% min\u22656m",
-        "move": 0.15,
-        "edge": 5.0,
-        "ev": 0.05,
-        "min": 6.0,
-        "bets": 219,
-        "wins": 202,
-        "losses": 16,
-        "pushes": 1,
-        "win_rate": 0.927,
-        "roi": 0.765
+        "label": "move\u226512% edge\u22652.0 ev\u2265+0% min\u22656m",
+        "bets": 273,
+        "wins": 244,
+        "losses": 25,
+        "pushes": 4,
+        "win_rate": 0.907,
+        "roi": 0.721,
+        "equiv": 6
       }
     ]
   },

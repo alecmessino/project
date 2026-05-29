@@ -33,6 +33,31 @@ def q13(*offs):
     return sorted((q - 1) * 12 + o for q in (1, 2, 3) for o in offs)
 
 
+def _frontier(rows, limit=8):
+    """Collapse combos with an identical outcome (bets/W/L/P) to one row — the
+    LOOSEST thresholds achieving it — so the table shows distinct results, not
+    dozens of equivalent gates. `equiv` counts how many combos collapsed in."""
+    by_sig = {}
+    for r in rows:
+        sig = (r.bets, r.wins, r.losses, r.pushes)
+        looser = (r.combo.pct_move, r.combo.edge_pts, r.combo.ev, r.combo.min_minutes_full)
+        cur = by_sig.get(sig)
+        if cur is None or looser < cur[1]:
+            by_sig[sig] = (r, looser, (cur[2] + 1 if cur else 1))
+        else:
+            by_sig[sig] = (cur[0], cur[1], cur[2] + 1)
+    out = []
+    for r, _, n in by_sig.values():
+        j = {
+            "label": r.combo.label(), "bets": r.bets, "wins": r.wins,
+            "losses": r.losses, "pushes": r.pushes,
+            "win_rate": round(r.win_rate, 3), "roi": round(r.roi, 3), "equiv": n,
+        }
+        out.append(j)
+    out.sort(key=lambda j: (j["roi"], j["bets"]), reverse=True)
+    return out[:limit]
+
+
 def main():
     settings = Settings.load(ROOT / "config" / "settings.yaml")
     client = ESPNClient()
@@ -101,12 +126,14 @@ def main():
         }
 
     sweep_block = {
-        "caveat": ("Live line is MODELED (no historical in-play lines on the free plan), "
-                   "so ROI is sensitive to the assumed book pace-chasing and is illustrative, "
-                   "NOT proof of edge. Use reversion-fit for trustworthy calibration."),
+        "caveat": ("Live line is MODELED — no free source of historical in-play NBA totals "
+                   "exists (all are paywalled; ESPN only has pregame open/close), so ROI here "
+                   "is sensitive to the assumed book pace-chasing and is illustrative, NOT proof "
+                   "of edge. Trustworthy paths: the reversion-fit above (real, no lines needed), "
+                   "or forward-capture real lines for free via the timeout cadence + `mrbet backtest`."),
         "book_beta": 0.3, "evals": len(recs),
         "current": row_json(crow),
-        "top": [row_json(r) for r in sweep(recs, min_bets=30)[:8]],
+        "top": _frontier(sweep(recs, min_bets=30)),
     }
 
     # ---- 4. worked examples: a few games, sparse projections ---------------- #

@@ -286,7 +286,8 @@ async function loadBacktest(){
   document.getElementById('sweep-caveat').textContent = '⚠ ' + d.sweep.caveat;
   const sr = [{...d.sweep.current, label:'★ '+d.sweep.current.label}, ...d.sweep.top];
   document.getElementById('sweep-rows').innerHTML = sr.map(r=>`<tr>
-    <td>${r.label}</td><td>${r.bets}</td><td>${r.wins}-${r.losses}-${r.pushes}</td>
+    <td>${r.label}${r.equiv>1?` <span class="muted">×${r.equiv} equiv</span>`:''}</td>
+    <td>${r.bets}</td><td>${r.wins}-${r.losses}-${r.pushes}</td>
     <td>${pct(r.win_rate)}</td><td class="${cls(r.roi)}">${(r.roi*100).toFixed(0)}%</td></tr>`).join('');
 
   // examples

@@ -412,6 +412,9 @@ def backtest_batch(
         if "pregame" not in g_dict:
             console.print(f"[yellow]Skipping {g_dict.get('event_id','?')} — no 'pregame' block")
             continue
+        if "incomplete" in str(g_dict.get("_status", "")).lower():
+            console.print(f"[dim]Skipping {g_dict.get('event_id','?')} — marked incomplete")
+            continue
         pairs.append((source, _game_config_from_dict(g_dict)))
 
     if not pairs:

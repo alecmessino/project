@@ -153,6 +153,25 @@
   </div>
 
   <div class="full">
+    <p class="lead">Batch backtest — offline game replay <span class="chip">JSON lines</span></p>
+    <p class="note">Engine replayed against real or mock odds at every 9-point cadence mark.
+      Lines come from <code>tests/data/2026_playoffs_batch.json</code>; run
+      <code>mrbet backtest-batch --data tests/data/2026_playoffs_batch.json --out docs/batch.json</code>
+      to refresh. Template/incomplete games are automatically skipped.</p>
+    <div class="kpi" id="batch-kpi"></div>
+    <section class="card card-scroll"><table style="min-width:660px">
+      <colgroup>
+        <col style="width:115px"><col style="width:115px"><col style="min-width:150px">
+        <col style="width:52px"><col style="width:64px"><col style="width:64px">
+        <col style="width:62px"><col style="width:68px"><col style="width:74px">
+      </colgroup>
+      <thead><tr><th>game</th><th>matchup</th><th>market</th><th>side</th>
+        <th>entry</th><th>close</th><th>CLV</th><th>odds</th><th>result</th></tr></thead>
+      <tbody id="batch-rows"><tr><td colspan="9" class="empty">batch.json not found — run backtest-batch to generate</td></tr></tbody>
+    </table></section>
+  </div>
+
+  <div class="full">
     <p class="lead">Glossary — what the triggers &amp; terms mean</p>
     <section class="card"><table>
       <thead><tr><th>term</th><th>meaning</th></tr></thead>
@@ -351,6 +370,35 @@ function renderForward(f){
   }).join('');
 }
 
+function renderBatch(f){
+  const s = f.summary || {};
+  document.getElementById('batch-kpi').innerHTML = [
+    ['games', f.scope?.games ?? '?'],
+    ['batch bets', s.bets ?? 0],
+    ['record', `${s.wins||0}-${s.losses||0}-${s.pushes||0}`, `${s.pending||0} pending`],
+    ['ROI', s.roi!=null ? pct(s.roi) : '—', 'graded only'],
+    ['beat close', s.clv_graded ? `${s.clv_beat}/${s.clv_graded}` : '—',
+      s.avg_clv_pts!=null ? `avg ${s.avg_clv_pts>0?'+':''}${s.avg_clv_pts} pts` : ''],
+  ].map(([l,v,sub])=>`<div class="box"><div class="v">${v}</div><div class="l">${l}</div>
+     ${sub?`<div class="l" style="text-transform:none">${sub}</div>`:''}</div>`).join('');
+  const tb = document.getElementById('batch-rows');
+  const bets = f.bets || [];
+  if(!bets.length){ tb.innerHTML='<tr><td colspan="9" class="empty">no signals fired in batch — adjust thresholds or check line moves in the data file</td></tr>'; return; }
+  // Extract event_id from the namespaced ledger key (event_id:market:period:team:side).
+  const eventLabel = key => (key||'').split(':')[0].replace(/_/g,' ');
+  tb.innerHTML = bets.map((b,i)=>{
+    const oc = {win:'pos',loss:'neg',push:'muted',pending:'muted'}[b.outcome]||'muted';
+    const gameKey = Object.keys(f.ledger||{})[i] || '';
+    return `<tr><td class="muted" style="font-size:11px">${eventLabel(gameKey)}</td>
+      <td>${b.matchup}</td><td>${b.market}</td>
+      <td class="${b.side==='over'?'over':'under'}">${b.side.toUpperCase()}</td>
+      <td>${b.entry_line}</td><td class="muted">${b.close_line}</td>
+      <td class="${cls(b.clv_pts)}">${b.clv_pts>0?'+':''}${b.clv_pts}</td>
+      <td class="muted">${b.entry_odds>0?'+':''}${b.entry_odds}</td>
+      <td class="${oc}">${b.outcome}</td></tr>`;
+  }).join('');
+}
+
 const GLOSSARY = [
   ['Move (%)', 'How far the live line dropped vs the pregame number. The primary trigger.'],
   ['Edge (pts)', 'Model fair total − live line. The reversion model must independently agree.'],
@@ -369,6 +417,12 @@ async function loadBacktest(){
   try{
     const f = await (await fetch('forward.json',{cache:'no-store'})).json();
     renderForward(f);
+  }catch(e){ /* leave empty state */ }
+
+  // batch backtest panel
+  try{
+    const b = await (await fetch('batch.json',{cache:'no-store'})).json();
+    renderBatch(b);
   }catch(e){ /* leave empty state */ }
 
   document.getElementById('glossary').innerHTML = GLOSSARY.map(([t,m])=>

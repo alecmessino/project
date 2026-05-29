@@ -67,5 +67,6 @@ engine:
 notifications:
   desktop: true
   push: true              # uses NTFY_TOPIC (or Pushover) from environment
+  sms: true               # email-to-SMS gateway; set SMS_EMAIL_TARGET / SMTP_USERNAME / SMTP_PASSWORD in env (see .env.example)
   # Re-alert on the same signal only if EV improves by at least this much.
   reissue_ev_delta: 0.02

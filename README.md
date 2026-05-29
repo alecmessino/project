@@ -71,7 +71,32 @@ mrbet notify-test
 # Grade logged signals against actual results + closing-line value
 mrbet backtest --game config/games/okc_sas_2026-05-28.yaml \
                --results config/games/okc_sas_2026-05-28.results.example.yaml
+
+# Calibrate beta against real playoff outcomes (free ESPN data, no odds, no key)
+mrbet reversion-fit --start 20260414 --end 20260529
+
+# Sweep trigger thresholds across playoff games (line is MODELED — see caveat below)
+mrbet sweep --start 20260414 --end 20260529 --book-beta 0.3
 ```
+
+### Calibration & backtesting
+
+Two tools pull every completed game from ESPN's free scoreboard (no key) and tune the
+model against **real** outcomes:
+
+- **`mrbet reversion-fit`** — the *trustworthy* calibration. It least-squares fits the
+  model's own blend (`remaining_rate = β·pregame_rate + (1-β)·elapsed_pace`) against the
+  realized remaining scoring of each game. No line model, so **no circularity**. Across the
+  2026 playoffs it returns **β ≈ 1.0** (full reversion to the pregame rate) with R² up to
+  0.87 vs a momentum baseline — i.e. early pace carries almost no signal for the rest of the
+  game, and the configured `β = 0.70` is too conservative.
+- **`mrbet sweep`** — grade-once/sweep-many over a threshold grid (move × edge × EV ×
+  min-minutes), reporting record/ROI/where-flags-fire per combo. ⚠️ **The live line is
+  *modeled*** (we don't have historical in-play book lines), so absolute ROI is an artifact
+  of the assumed `--book-beta` (how hard the book chases pace) and is **not** proof of edge —
+  a naive book makes any reversion look unbeatable. Use it for *relative* threshold behavior;
+  use `reversion-fit` for real calibration. Validating true edge requires real in-play lines
+  (e.g. The Odds API historical endpoint).
 
 ### Data sources
 

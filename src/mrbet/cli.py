@@ -245,6 +245,87 @@ def backtest(
         )
 
 
+@app.command("reversion-fit")
+def reversion_fit_cmd(
+    start: str = typer.Option("20260414", help="Start date YYYYMMDD"),
+    end: str = typer.Option("20260529", help="End date YYYYMMDD"),
+    sample_at: float = typer.Option(6.0, help="Earliest game-minute to sample from"),
+):
+    """Estimate the TRUE reversion beta from real playoff score paths (no odds).
+
+    The trustworthy calibration: fits the model's blend against realized remaining
+    scoring. No line model, so no circularity. Compare the fitted beta to the
+    configured `model.beta` to tune it against real outcomes.
+    """
+    from .espn import ESPNClient
+    from .study import load_playoff_games, reversion_fit
+
+    games = load_playoff_games(ESPNClient(), start, end)
+    if not games:
+        console.print("[yellow]No completed playoff games found in that range.")
+        return
+    console.print(f"[bold]Fitting reversion on {len(games)} games ({start}..{end})[/bold]\n")
+    for fr in reversion_fit(games, sample_at=sample_at):
+        flavor = "full reversion" if fr.beta >= 0.85 else ("momentum" if fr.beta <= 0.3 else "partial")
+        console.print(f"  {fr}   [dim]({flavor})[/dim]")
+    cfg = Settings.load(DEFAULT_SETTINGS) if Path(DEFAULT_SETTINGS).exists() else Settings()
+    console.print(f"\nConfigured model.beta = [bold]{cfg.model.beta}[/bold]  "
+                  "(beta~1 => raise it toward full reversion)")
+
+
+@app.command("sweep")
+def sweep_cmd(
+    start: str = typer.Option("20260414", help="Start date YYYYMMDD"),
+    end: str = typer.Option("20260529", help="End date YYYYMMDD"),
+    book_beta: float = typer.Option(0.3, help="Assumed book pace-chasing weight (0=naive, 1=sticky)"),
+    sample_minutes: float = typer.Option(2.0, help="Sampling cadence in game-minutes"),
+    min_bets: int = typer.Option(30, help="Drop threshold combos with fewer bets"),
+    top: int = typer.Option(10, help="How many top combos to show"),
+):
+    """Sweep trigger thresholds across playoff games (line is MODELED — see caveat).
+
+    Efficient grade-once/sweep-many over every market evaluation. WARNING: bets
+    are graded against a *modeled* live line, so absolute ROI is sensitive to
+    --book-beta and is NOT proof of edge. Use it for relative threshold behavior
+    and where/when flags fire; use `reversion-fit` for trustworthy calibration.
+    """
+    from .espn import ESPNClient
+    from .linemodel import game_config_from_history
+    from .study import load_playoff_games
+    from .sweep import Combo, build_records, evaluate_combo, sweep
+
+    settings = Settings.load(DEFAULT_SETTINGS) if Path(DEFAULT_SETTINGS).exists() else Settings()
+    games = [(h, game_config_from_history(h)) for h in load_playoff_games(ESPNClient(), start, end)]
+    if not games:
+        console.print("[yellow]No completed playoff games found in that range.")
+        return
+    recs = build_records(games, settings, book_beta=book_beta, sample_minutes=sample_minutes)
+    console.print(f"[bold]{len(games)} games, {len(recs)} graded evaluations "
+                  f"(book_beta={book_beta})[/bold]")
+    console.print("[yellow]NOTE: live line is modeled; ROI below is illustrative, not real edge.[/yellow]\n")
+
+    t = settings.triggers
+    cur = Combo(t.pct_move_threshold, t.edge_pts_threshold, t.ev_threshold,
+                t.min_minutes_remaining.full)
+    crow = evaluate_combo(recs, cur)
+    console.print(f"Current config [{cur.label()}]: {crow.bets} bets, "
+                  f"{crow.wins}-{crow.losses}-{crow.pushes}, win {crow.win_rate:.1%}, "
+                  f"ROI {crow.roi:+.1%}\n")
+
+    table = Table(show_header=True, header_style="bold", title=f"Top {top} threshold combos by ROI")
+    for col in ["move", "edge", "ev", "min", "bets", "W-L-P", "win%", "ROI", "by period"]:
+        table.add_column(col)
+    for r in sweep(recs, min_bets=min_bets)[:top]:
+        c = r.combo
+        periods = " ".join(f"{k}:{v[0]}" for k, v in sorted(r.by_period.items()))
+        table.add_row(
+            f"{c.pct_move:.0%}", f"{c.edge_pts:.0f}", f"{c.ev:+.0%}", f"{c.min_minutes_full:.0f}m",
+            str(r.bets), f"{r.wins}-{r.losses}-{r.pushes}", f"{r.win_rate:.0%}",
+            f"{r.roi:+.1%}", periods,
+        )
+    console.print(table)
+
+
 @app.command("notify-test")
 def notify_test():
     """Fire a test desktop + push notification."""

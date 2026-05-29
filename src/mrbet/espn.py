@@ -202,6 +202,61 @@ class ESPNClient:
             "team": {away_key: sum(a), home_key: sum(h)},
         }
 
+    def find_completed_game(
+        self, date: str, home_name: str, away_name: str
+    ) -> Optional[tuple[str, str]]:
+        """Return (event_id, shortName) if a completed postseason game matching
+        the team names (by last word) is found on *date* (YYYYMMDD).
+
+        Returns None if the game is not found OR if it has not yet completed —
+        both cases mean the grader should skip this run.
+        """
+        data = self._get(SCOREBOARD, {"dates": date}, f"sb_{date}")
+        if not data:
+            return None
+        home_last = home_name.split()[-1].lower()
+        away_last = away_name.split()[-1].lower()
+        for ev in data.get("events", []):
+            if ev.get("season", {}).get("type") != POSTSEASON:
+                continue
+            comp = (ev.get("competitions") or [{}])[0]
+            competitors = comp.get("competitors", [])
+            names = {c.get("team", {}).get("displayName", "").lower()
+                     for c in competitors}
+            if not (any(home_last in n for n in names) and
+                    any(away_last in n for n in names)):
+                continue
+            if not comp.get("status", {}).get("type", {}).get("completed"):
+                return None   # right game, not finished yet
+            return ev["id"], ev.get("shortName", ev["id"])
+        return None
+
+    def fetch_finals(
+        self, event_id: str
+    ) -> Optional[tuple[str, str, dict]]:
+        """Return (away_abbr, home_abbr, finals_dict) for a completed game.
+
+        Unlike game_history(), does not require play-by-play to be present.
+        finals_dict mirrors the structure produced by _finals().
+        """
+        data = self._get(SUMMARY, {"event": event_id}, f"sum_{event_id}")
+        if not data:
+            return None
+        header = data.get("header", {})
+        comp = (header.get("competitions") or [{}])[0]
+        competitors = {c.get("homeAway"): c
+                       for c in comp.get("competitors", [])}
+        home_c = competitors.get("home", {})
+        away_c = competitors.get("away", {})
+        if not home_c or not away_c:
+            return None
+        away_abbr = away_c.get("team", {}).get("abbreviation", "AWAY")
+        home_abbr = home_c.get("team", {}).get("abbreviation", "HOME")
+        finals = self._finals(competitors)
+        if not finals:
+            return None
+        return away_abbr, home_abbr, finals
+
 
 def playoff_dates(start: str, end: str) -> list[str]:
     """Inclusive list of YYYYMMDD date strings between start and end."""

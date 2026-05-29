@@ -27,10 +27,15 @@ jobs:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           MRBET_GAME: config/games/sas_okc_2026-05-30.yaml   # WCF G7 (armed target)
 
+      - name: Grade completed bets (no-op while game is in progress)
+        run: python scripts/grade_forward.py
+        env:
+          MRBET_GAME: config/games/sas_okc_2026-05-30.yaml
+
       - name: Commit and push state + forward ledger
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/state.json docs/forward.json
+          git add docs/state.json docs/forward.json config/games/
           git diff --cached --quiet && echo "no change" || \
             git commit -m "chore: update live state + forward ledger [skip ci]" && git push

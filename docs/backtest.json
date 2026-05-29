@@ -1,0 +1,394 @@
+{
+  "generated": "2026-05-29 05:26 UTC",
+  "scope": {
+    "games": 79,
+    "start": "20260414",
+    "end": "20260529",
+    "league": "NBA 2026 playoffs"
+  },
+  "config": {
+    "beta": 0.9,
+    "sigma_full": 11.0,
+    "sigma_team": 8.0,
+    "thresholds": {
+      "pct_move": 0.1,
+      "edge_pts": 3.0,
+      "ev": 0.0,
+      "min_minutes_full": 6.0
+    }
+  },
+  "methodology": {
+    "headline": "Live NBA scoring strongly mean-reverts; fitted beta ~ 1.0.",
+    "explainer": "Least-squares fit of remaining_rate = beta*pregame_rate + (1-beta)*elapsed_pace against real finals. No line model, so no circularity. R^2 is variance explained vs a momentum (beta=0) baseline.",
+    "rows": [
+      {
+        "label": "full-game @>=6min",
+        "beta": 1.015,
+        "n": 79,
+        "r2": 0.875
+      },
+      {
+        "label": "full-game @>=12min",
+        "beta": 0.975,
+        "n": 79,
+        "r2": 0.742
+      },
+      {
+        "label": "full-game @>=24min",
+        "beta": 1.029,
+        "n": 79,
+        "r2": 0.527
+      },
+      {
+        "label": "team-total @>=6min",
+        "beta": 1.021,
+        "n": 158,
+        "r2": 0.875
+      }
+    ]
+  },
+  "cadence": {
+    "headline": "Sparse timeout cadence keeps ~86% of opportunities at ~17x fewer credits.",
+    "explainer": "Watch the free ESPN clock; spend a paid odds fetch only at Q1-Q3 stoppages. Retention measured vs dense 1-min sampling across all games; line_delta is how far the bet line sits from the dense first-crossing.",
+    "chosen": "timeout + quarter-break (9)",
+    "rows": [
+      {
+        "name": "timeout (6)",
+        "marks": 6,
+        "retain": 0.81,
+        "line_delta": 4.88,
+        "savings_vs_60s": 25.0
+      },
+      {
+        "name": "timeout + quarter-break (9)",
+        "marks": 9,
+        "retain": 0.857,
+        "line_delta": 4.64,
+        "savings_vs_60s": 16.7
+      },
+      {
+        "name": "every 3 min Q1-3 (12)",
+        "marks": 12,
+        "retain": 0.863,
+        "line_delta": 4.54,
+        "savings_vs_60s": 12.5
+      },
+      {
+        "name": "every 2 min Q1-3 (18)",
+        "marks": 18,
+        "retain": 0.899,
+        "line_delta": 4.47,
+        "savings_vs_60s": 8.3
+      }
+    ]
+  },
+  "sweep": {
+    "caveat": "Live line is MODELED (no historical in-play lines on the free plan), so ROI is sensitive to the assumed book pace-chasing and is illustrative, NOT proof of edge. Use reversion-fit for trustworthy calibration.",
+    "book_beta": 0.3,
+    "evals": 6362,
+    "current": {
+      "label": "move\u226510% edge\u22653.0 ev\u2265+0% min\u22656m",
+      "move": 0.1,
+      "edge": 3.0,
+      "ev": 0.0,
+      "min": 6.0,
+      "bets": 308,
+      "wins": 274,
+      "losses": 30,
+      "pushes": 4,
+      "win_rate": 0.901,
+      "roi": 0.711
+    },
+    "top": [
+      {
+        "label": "move\u226515% edge\u22655.0 ev\u2265+0% min\u22654m",
+        "move": 0.15,
+        "edge": 5.0,
+        "ev": 0.0,
+        "min": 4.0,
+        "bets": 219,
+        "wins": 202,
+        "losses": 16,
+        "pushes": 1,
+        "win_rate": 0.927,
+        "roi": 0.765
+      },
+      {
+        "label": "move\u226515% edge\u22655.0 ev\u2265+0% min\u22656m",
+        "move": 0.15,
+        "edge": 5.0,
+        "ev": 0.0,
+        "min": 6.0,
+        "bets": 219,
+        "wins": 202,
+        "losses": 16,
+        "pushes": 1,
+        "win_rate": 0.927,
+        "roi": 0.765
+      },
+      {
+        "label": "move\u226515% edge\u22655.0 ev\u2265+0% min\u22658m",
+        "move": 0.15,
+        "edge": 5.0,
+        "ev": 0.0,
+        "min": 8.0,
+        "bets": 219,
+        "wins": 202,
+        "losses": 16,
+        "pushes": 1,
+        "win_rate": 0.927,
+        "roi": 0.765
+      },
+      {
+        "label": "move\u226515% edge\u22655.0 ev\u2265+2% min\u22654m",
+        "move": 0.15,
+        "edge": 5.0,
+        "ev": 0.02,
+        "min": 4.0,
+        "bets": 219,
+        "wins": 202,
+        "losses": 16,
+        "pushes": 1,
+        "win_rate": 0.927,
+        "roi": 0.765
+      },
+      {
+        "label": "move\u226515% edge\u22655.0 ev\u2265+2% min\u22656m",
+        "move": 0.15,
+        "edge": 5.0,
+        "ev": 0.02,
+        "min": 6.0,
+        "bets": 219,
+        "wins": 202,
+        "losses": 16,
+        "pushes": 1,
+        "win_rate": 0.927,
+        "roi": 0.765
+      },
+      {
+        "label": "move\u226515% edge\u22655.0 ev\u2265+2% min\u22658m",
+        "move": 0.15,
+        "edge": 5.0,
+        "ev": 0.02,
+        "min": 8.0,
+        "bets": 219,
+        "wins": 202,
+        "losses": 16,
+        "pushes": 1,
+        "win_rate": 0.927,
+        "roi": 0.765
+      },
+      {
+        "label": "move\u226515% edge\u22655.0 ev\u2265+5% min\u22654m",
+        "move": 0.15,
+        "edge": 5.0,
+        "ev": 0.05,
+        "min": 4.0,
+        "bets": 219,
+        "wins": 202,
+        "losses": 16,
+        "pushes": 1,
+        "win_rate": 0.927,
+        "roi": 0.765
+      },
+      {
+        "label": "move\u226515% edge\u22655.0 ev\u2265+5% min\u22656m",
+        "move": 0.15,
+        "edge": 5.0,
+        "ev": 0.05,
+        "min": 6.0,
+        "bets": 219,
+        "wins": 202,
+        "losses": 16,
+        "pushes": 1,
+        "win_rate": 0.927,
+        "roi": 0.765
+      }
+    ]
+  },
+  "examples": [
+    {
+      "matchup": "NY @ CLE",
+      "pregame": 218.5,
+      "final": 223,
+      "samples": [
+        {
+          "min": 6,
+          "score": 33,
+          "proj": 228.2,
+          "err": 5.2
+        },
+        {
+          "min": 9,
+          "score": 46,
+          "proj": 226.2,
+          "err": 3.2
+        },
+        {
+          "min": 12,
+          "score": 64,
+          "proj": 230.7,
+          "err": 7.7
+        },
+        {
+          "min": 18,
+          "score": 93,
+          "proj": 232.1,
+          "err": 9.1
+        },
+        {
+          "min": 21,
+          "score": 103,
+          "proj": 227.1,
+          "err": 4.1
+        },
+        {
+          "min": 24,
+          "score": 117,
+          "proj": 227.0,
+          "err": 4.0
+        },
+        {
+          "min": 30,
+          "score": 143,
+          "proj": 225.6,
+          "err": 2.6
+        },
+        {
+          "min": 33,
+          "score": 156,
+          "proj": 224.4,
+          "err": 1.4
+        },
+        {
+          "min": 36,
+          "score": 169,
+          "proj": 223.8,
+          "err": 0.8
+        }
+      ]
+    },
+    {
+      "matchup": "SA @ OKC",
+      "pregame": 216.5,
+      "final": 241,
+      "samples": [
+        {
+          "min": 6,
+          "score": 26,
+          "proj": 214.5,
+          "err": -26.5
+        },
+        {
+          "min": 9,
+          "score": 37,
+          "proj": 211.3,
+          "err": -29.7
+        },
+        {
+          "min": 12,
+          "score": 56,
+          "proj": 218.9,
+          "err": -22.1
+        },
+        {
+          "min": 18,
+          "score": 89,
+          "proj": 226.3,
+          "err": -14.7
+        },
+        {
+          "min": 21,
+          "score": 103,
+          "proj": 225.8,
+          "err": -15.2
+        },
+        {
+          "min": 24,
+          "score": 127,
+          "proj": 237.1,
+          "err": -3.9
+        },
+        {
+          "min": 30,
+          "score": 163,
+          "proj": 245.9,
+          "err": 4.9
+        },
+        {
+          "min": 33,
+          "score": 174,
+          "proj": 242.8,
+          "err": 1.8
+        },
+        {
+          "min": 36,
+          "score": 192,
+          "proj": 247.1,
+          "err": 6.1
+        }
+      ]
+    },
+    {
+      "matchup": "OKC @ SA",
+      "pregame": 218.5,
+      "final": 209,
+      "samples": [
+        {
+          "min": 6,
+          "score": 25,
+          "proj": 214.9,
+          "err": 5.9
+        },
+        {
+          "min": 9,
+          "score": 40,
+          "proj": 217.1,
+          "err": 8.1
+        },
+        {
+          "min": 12,
+          "score": 57,
+          "proj": 221.6,
+          "err": 12.6
+        },
+        {
+          "min": 18,
+          "score": 90,
+          "proj": 228.3,
+          "err": 19.3
+        },
+        {
+          "min": 21,
+          "score": 96,
+          "proj": 218.9,
+          "err": 9.9
+        },
+        {
+          "min": 24,
+          "score": 113,
+          "proj": 222.6,
+          "err": 13.6
+        },
+        {
+          "min": 30,
+          "score": 145,
+          "proj": 227.0,
+          "err": 18.0
+        },
+        {
+          "min": 33,
+          "score": 151,
+          "proj": 219.4,
+          "err": 10.4
+        },
+        {
+          "min": 36,
+          "score": 158,
+          "proj": 212.4,
+          "err": 3.4
+        }
+      ]
+    }
+  ]
+}

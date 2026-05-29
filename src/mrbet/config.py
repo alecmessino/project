@@ -106,6 +106,9 @@ class GameConfig(BaseModel):
     team_totals: dict[str, OverUnder] = Field(default_factory=dict)
     sides: dict = Field(default_factory=dict)
     total_ladder: dict[float, dict[str, int]] = Field(default_factory=dict)
+    # Optional actual results for backtesting, e.g.
+    #   finals: { game: { full: 224, h1: 110 }, team: { OKC: 112, SAS: 112 } }
+    finals: dict = Field(default_factory=dict)
 
     @classmethod
     def load(cls, path: str | Path) -> "GameConfig":

@@ -161,6 +161,60 @@ def baseline(
     console.print(table)
 
 
+@app.command()
+def backtest(
+    game: str = typer.Option(..., help="Path to game baseline YAML"),
+    db: str = typer.Option("data/runtime/mrbet.sqlite", help="Path to the observations SQLite"),
+    results: Optional[str] = typer.Option(None, help="Results YAML/JSON with final scores"),
+    all_obs: bool = typer.Option(False, "--all", help="Grade all observations, not just flagged"),
+):
+    """Grade logged signals against actual results + closing-line value."""
+    from . import backtest as bt
+
+    g = GameConfig.load(game)
+    finals = bt.load_finals(results, g)
+    summary = bt.grade(db, finals=finals, event_id=g.event.id, flagged_only=not all_obs)
+
+    if summary.bets == 0:
+        console.print("[yellow]No matching observations in the log. Run `simulate`/`run` first.")
+        return
+
+    table = Table(show_header=True, header_style="bold")
+    for col in ["market", "side", "line", "odds", "stake", "result", "actual", "profit", "close", "CLV"]:
+        table.add_column(col)
+    for b in summary.graded:
+        color = {"win": "green", "loss": "red", "push": "yellow"}.get(b.outcome or "", "dim")
+        table.add_row(
+            f"{(b.team or 'GAME')} {b.period}", b.side.upper(), f"{b.line:g}", f"{b.odds:+d}",
+            f"${b.stake:.2f}", f"[{color}]{b.outcome}[/{color}]",
+            "-" if b.actual is None else f"{b.actual:g}",
+            f"${b.profit:+.2f}",
+            "-" if b.closing_line is None else f"{b.closing_line:g}",
+            "-" if b.clv_pts is None else f"{b.clv_pts:+.1f}",
+        )
+    console.print(table)
+
+    console.rule("[bold]Summary")
+    decided = summary.wins + summary.losses
+    console.print(f"Bets: {summary.bets}  |  Record: {summary.wins}-{summary.losses}-{summary.pushes}")
+    if decided:
+        console.print(
+            f"Win rate: {summary.win_rate*100:.1f}%  (model predicted {summary.avg_pred_prob*100:.1f}%)"
+        )
+    if summary.staked:
+        console.print(
+            f"Staked: ${summary.staked:.2f}  |  Net: ${summary.profit:+.2f}  |  "
+            f"ROI: {summary.roi*100:+.1f}%  (model EV avg {summary.avg_model_ev*100:+.1f}%)"
+        )
+    else:
+        console.print("[dim]No finals supplied — provide --results to grade win/loss/ROI.")
+    if summary.clv_graded:
+        console.print(
+            f"Closing-line value: beat close on {summary.clv_beat}/{summary.clv_graded} "
+            f"({summary.clv_beat_rate*100:.0f}%), avg {summary.avg_clv_pts:+.1f} pts"
+        )
+
+
 @app.command("notify-test")
 def notify_test():
     """Fire a test desktop + push notification."""

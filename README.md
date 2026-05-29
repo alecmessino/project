@@ -62,6 +62,10 @@ mrbet run --game config/games/okc_sas_2026-05-28.yaml --provider manual
 
 # Fire a test desktop + push notification
 mrbet notify-test
+
+# Grade logged signals against actual results + closing-line value
+mrbet backtest --game config/games/okc_sas_2026-05-28.yaml \
+               --results config/games/okc_sas_2026-05-28.results.example.yaml
 ```
 
 ### Data sources
@@ -93,6 +97,10 @@ pace may genuinely be slower). Two safeguards are built in:
 - **Everything is logged.** `storage.py` writes every evaluation (flagged or not) to
   `data/runtime/mrbet.sqlite`, so you can grade flagged bets vs the closing line / result
   and tune `β`, `σ`, and the thresholds against real evidence before trusting it.
+- **`mrbet backtest` grades that log.** It reports realized record / ROI vs the model's
+  average EV, calibration (predicted win prob vs actual win rate), and **closing-line
+  value** — whether you flagged a better number than the market closed at. CLV needs no
+  final score and is the most robust evidence that the rule has edge rather than variance.
 
 ## Layout
 

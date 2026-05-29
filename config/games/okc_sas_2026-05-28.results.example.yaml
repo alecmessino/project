@@ -1,0 +1,16 @@
+# ILLUSTRATIVE final scores for backtesting the replay demo — NOT actual results.
+# Replace with real finals after the game to grade your logged signals.
+# Usage:
+#   mrbet backtest --game config/games/okc_sas_2026-05-28.yaml \
+#                  --results config/games/okc_sas_2026-05-28.results.example.yaml
+finals:
+  game:
+    full: 224     # cold start reverted -> final total above the depressed live lines
+    h1: 105
+    q1: 48
+    q2: 57
+    q3: 60
+    q4: 59
+  team:
+    OKC: 113
+    SAS: 111

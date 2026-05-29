@@ -60,6 +60,8 @@ class TheOddsProvider:
         region: str = "us",
         fallback_consensus: bool = True,
         max_polls: Optional[int] = None,
+        cadence: str = "interval",
+        clock_poll_interval: int = 45,
         **_ignored,
     ):
         self.event = event
@@ -74,6 +76,14 @@ class TheOddsProvider:
         self.market_keys = [MARKET_KEYS[m] for m in markets if m in MARKET_KEYS]
         self.poll_interval = poll_interval
         self.max_polls = max_polls
+        # Sparse cadence: spend a (paid) odds fetch only at game-clock marks,
+        # polling the (free) ESPN clock in between. "interval" = legacy behaviour.
+        self.cadence = cadence
+        self.clock_poll_interval = clock_poll_interval
+        self._gate = None
+        if cadence != "interval":
+            from ..cadence import CadenceGate, build_marks
+            self._gate = CadenceGate(build_marks(cadence))
         self._credits: Optional[int] = None
         self._event_id: Optional[str] = None
         self._clock: Optional[str] = None
@@ -83,6 +93,9 @@ class TheOddsProvider:
 
     # --- streaming -------------------------------------------------------- #
     def snapshots(self) -> Iterator[Snapshot]:
+        if self._gate is not None:
+            yield from self._cadence_snapshots()
+            return
         polls = 0
         while self.max_polls is None or polls < self.max_polls:
             polls += 1
@@ -100,6 +113,31 @@ class TheOddsProvider:
             if state is not None and state.minutes_remaining <= 0:
                 return
             time.sleep(self.poll_interval)
+
+    def _cadence_snapshots(self) -> Iterator[Snapshot]:
+        """Watch the free ESPN clock; fetch paid odds only at cadence marks."""
+        polls = 0
+        while self.max_polls is None or polls < self.max_polls:
+            state = self._fetch_state()
+            if state is None:
+                time.sleep(self.clock_poll_interval)
+                continue
+            if self._gate.due(state.minutes_elapsed):
+                polls += 1
+                lines = self._fetch_lines()
+                yield Snapshot(
+                    state=state,
+                    lines=lines,
+                    meta={
+                        "credits_remaining": self._credits,
+                        "clock": self._clock,
+                        "source": "theodds",
+                        "cadence": self.cadence,
+                    },
+                )
+            if state.minutes_remaining <= 0 or self._gate.done:
+                return
+            time.sleep(self.clock_poll_interval)
 
     # --- The Odds API ----------------------------------------------------- #
     def _resolve_event_id(self) -> Optional[str]:

@@ -54,6 +54,28 @@ def _book_line(pregame_total: float, length: float, points: float,
     return round((points + remaining * blended) * 2) / 2.0  # snap to nearest 0.5
 
 
+def _sampled_points(hist: GameHistory, sample_minutes: float,
+                    marks: Optional[list[float]]):
+    """Timeline points to evaluate: nearest-to-each-mark if marks given, else
+    one per `sample_minutes` of game time."""
+    if marks:
+        chosen, seen = [], set()
+        for m in marks:
+            tp = min(hist.timeline, key=lambda x: abs(x.minutes_elapsed - m))
+            if tp.minutes_elapsed > 0 and tp.minutes_elapsed not in seen:
+                seen.add(tp.minutes_elapsed)
+                chosen.append(tp)
+        return chosen
+    out, nxt = [], sample_minutes
+    for tp in hist.timeline:
+        e = tp.minutes_elapsed
+        if e <= 0 or (e < nxt and e < 48.0):
+            continue
+        nxt = e + sample_minutes
+        out.append(tp)
+    return out
+
+
 def synth_snapshots(
     hist: GameHistory,
     cfg: GameConfig,
@@ -61,8 +83,13 @@ def synth_snapshots(
     sample_minutes: float = 1.0,
     min_elapsed: float = 5.0,
     markets: Optional[list[str]] = None,
+    marks: Optional[list[float]] = None,
 ) -> list[Snapshot]:
-    """One snapshot per sampled game-minute, each carrying modeled live lines."""
+    """One snapshot per sampled moment, each carrying modeled live lines.
+
+    Pass `marks` (full-game minutes-elapsed) to sample a sparse cadence
+    (e.g. `cadence.timeout_marks()`); otherwise sample every `sample_minutes`.
+    """
     markets = markets or ["total_full", "total_h1", "team_total"]
     want_full = "total_full" in markets
     want_h1 = "total_h1" in markets
@@ -73,12 +100,8 @@ def synth_snapshots(
     team_pre = {t: ou.line for t, ou in cfg.team_totals.items()}
 
     snaps: list[Snapshot] = []
-    next_sample = sample_minutes
-    for tp in hist.timeline:
+    for tp in _sampled_points(hist, sample_minutes, marks):
         e = tp.minutes_elapsed
-        if e <= 0 or (e < next_sample and e < 48.0):
-            continue
-        next_sample = e + sample_minutes
         lines: list[MarketLine] = []
 
         if want_full:

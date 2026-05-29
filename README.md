@@ -107,6 +107,10 @@ model against **real** outcomes:
   to a **consensus** line — the real book quote nearest the median across all available US
   books (lines are similar across books, so a missing Bovada isn't fatal). The chosen book
   is shown per row. The engine reads `x-requests-remaining` and warns when credits are low.
+  Set `engine.cadence: timeout` to spend a paid odds fetch only at the timeout/quarter-break
+  marks of Q1–Q3 (watching the free ESPN clock in between) — ~17× fewer credits while
+  keeping 86% of opportunities (measured on 79 real playoff games), enough to forward-test
+  on the free tier (~27 games/month).
 - **ESPN scoreboard** (free, no key) — supplies the live game clock + score, which The
   Odds API does not expose.
 - **Manual / replay** (`manual` provider) — enter lines by hand, or replay a JSON file.

@@ -5,7 +5,7 @@ model:
   # Reversion weight beta in [0,1]: fraction of remaining-time scoring assumed to
   # revert to the pregame baseline rate. 1.0 = full reversion to baseline,
   # 0.0 = remaining play continues at the current observed pace.
-  beta: 0.70
+  beta: 0.90   # raised from 0.70: reversion-fit on 79 real playoff games -> beta~1.0
   # Standard deviation of the FINAL total for a full game / team, used to build the
   # normal distribution around the projected fair final. Scaled by sqrt(r/L).
   sigma_full: 11.0
@@ -55,6 +55,14 @@ engine:
     - mybookieag
     - betus
   fallback_consensus: true
+  # Live sampling cadence (saves Odds API credits):
+  #   interval -> poll every poll_interval_seconds (legacy).
+  #   timeout  -> watch the FREE ESPN clock; spend a paid odds fetch only at the
+  #               ~6:00/3:00 timeout marks + quarter break of Q1-Q3
+  #               [6,9,12,18,21,24,30,33,36]. ~17x fewer credits; on 79 real
+  #               playoff games it kept 86% of the opportunities dense polling found.
+  cadence: timeout
+  clock_poll_interval: 45   # seconds between free ESPN clock checks (timeout mode)
 
 notifications:
   desktop: true

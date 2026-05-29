@@ -116,3 +116,48 @@ def test_reversion_fit_on_cold_start_game():
     assert res
     full = next(r for r in res if r.label.startswith("full-game @>=6"))
     assert full.beta > 0.5
+
+
+# ---- cadence gate ---------------------------------------------------------- #
+def test_timeout_marks_default_shape():
+    from mrbet.cadence import timeout_marks
+    assert timeout_marks() == [6, 9, 12, 18, 21, 24, 30, 33, 36]
+    assert timeout_marks(quarters=2, offsets=(6.0,)) == [6, 18]
+
+
+def test_cadence_gate_fires_once_per_mark():
+    from mrbet.cadence import CadenceGate
+    g = CadenceGate([6, 9, 12])
+    assert not g.due(3)          # before first mark
+    assert g.due(6)              # crosses 6
+    assert not g.due(7)          # 6 already fired, 9 not reached
+    assert g.due(10)             # crosses 9
+    assert not g.done
+    assert g.due(99)             # crosses 12 (collapses catch-up)
+    assert g.done
+
+
+def test_cadence_gate_collapses_missed_marks():
+    from mrbet.cadence import CadenceGate
+    g = CadenceGate([6, 9, 12])
+    # joining mid-game past several marks -> a single fetch, then done-aware
+    assert g.due(20)
+    assert g.done
+
+
+def test_build_marks_unknown_raises():
+    import pytest
+    from mrbet.cadence import build_marks
+    with pytest.raises(ValueError):
+        build_marks("hourly")
+
+
+def test_synth_snapshots_honor_marks():
+    from mrbet.cadence import timeout_marks
+    h = _hist()
+    cfg = game_config_from_history(h)
+    snaps = synth_snapshots(h, cfg, marks=timeout_marks())
+    mins = [s.state.minutes_elapsed for s in snaps]
+    # only a handful of sampled moments, none after the last mark (36)
+    assert len(snaps) <= len(timeout_marks())
+    assert max(mins) <= 36.0

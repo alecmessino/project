@@ -60,6 +60,11 @@ class EngineSettings(BaseModel):
     region: str = "us"
     books: list[str] = Field(default_factory=lambda: ["bovada"])
     fallback_consensus: bool = True
+    # Live sampling cadence: "interval" polls every poll_interval_seconds;
+    # "timeout" watches the free ESPN clock and spends a paid odds fetch only at
+    # the ~6:00/3:00 marks of Q1-Q3 (~25x fewer credits).
+    cadence: str = "interval"
+    clock_poll_interval: int = 45
 
 
 class NotificationSettings(BaseModel):

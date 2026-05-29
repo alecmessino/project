@@ -124,6 +124,8 @@ def run(
             books=s.engine.books,
             region=s.engine.region,
             fallback_consensus=s.engine.fallback_consensus,
+            cadence=s.engine.cadence,
+            clock_poll_interval=s.engine.clock_poll_interval,
         )
     elif provider == "manual":
         kwargs = dict(replay=replay)
@@ -184,6 +186,7 @@ def serve(
             poll_interval=s.engine.poll_interval_seconds, bookmaker=g.event.bookmaker,
             books=s.engine.books, region=s.engine.region,
             fallback_consensus=s.engine.fallback_consensus,
+            cadence=s.engine.cadence, clock_poll_interval=s.engine.clock_poll_interval,
         )
     else:
         kwargs = dict(replay=replay)

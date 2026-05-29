@@ -116,7 +116,8 @@ class JsonFileSource:
         if "event_id" in data:
             self._games[data["event_id"]] = data
         for g in data.get("games", []):
-            self._games[g["event_id"]] = g
+            if "event_id" in g:
+                self._games[g["event_id"]] = g
 
     def game_ids(self) -> list[str]:
         return list(self._games.keys())

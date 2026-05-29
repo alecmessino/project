@@ -2,101 +2,215 @@
   "_instructions": [
     "Multi-game batch file for `mrbet backtest-batch --data <this-file>`.",
     "Each game is self-contained: embed pregame baselines inline so no YAML is needed.",
-    "Copy a game block and fill in real lines you observed (or mocked) at each cadence mark.",
+    "Games marked _status:incomplete have REAL final scores but no live lines yet.",
+    "  → They are skipped by backtest-batch until you fill in marks with real/observed lines.",
+    "  → Remove _status (or change it) once marks are populated to include the game in results.",
+    "Games WITHOUT _status have live-line marks and will be fully backtested.",
     "Required per-game keys: event_id, pregame (with at minimum away_key/home_key/total), marks, finals.",
     "Cadence marks: 6, 9, 12 (Q1 timeout/end), 18, 21, 24 (Q2 / halftime), 30, 33, 36 (Q3).",
-    "Omit a mark if you have no lines for it — the engine skips marks with no data."
+    "Omit a mark if you have no lines for it — the engine skips marks with no data.",
+    "Sources for final scores: ESPN/CBS/NBA.com box scores (Basketball-Reference blocks scrapers)."
   ],
+
   "games": [
+
     {
-      "_game": "OKC/SAS series G6 — high-scoring game, near-pregame lines, no OVER signals expected",
-      "event_id": "sas_okc_2026-05-28",
+      "_game": "WCF G1 — SAS @ OKC — Spurs win 2OT 122-115 | real final scores",
+      "_status": "incomplete — real final scores only; populate marks with observed live lines to backtest",
+      "event_id": "sas_okc_2026-05-18",
       "pregame": {
         "away_key":   "SAS",
         "home_key":   "OKC",
         "away_name":  "San Antonio Spurs",
         "home_name":  "Oklahoma City Thunder",
-        "total":       219.0,
-        "h1":          109.5,
-        "team_total_SAS": 107.5,
-        "team_total_OKC": 111.5
+        "total":       218.0,
+        "h1":          109.0,
+        "team_total_SAS": 108.0,
+        "team_total_OKC": 110.0
       },
-      "marks": [
-        {
-          "minutes_elapsed": 6,
-          "away_score": 14, "home_score": 15,
-          "lines": {
-            "game_total":     { "line": 218.5, "over": -110, "under": -110 },
-            "total_h1":       { "line": 109.0, "over": -110, "under": -110 },
-            "team_total_SAS": { "line": 107.0, "over": -110, "under": -110 },
-            "team_total_OKC": { "line": 111.0, "over": -110, "under": -110 }
-          }
-        },
-        {
-          "minutes_elapsed": 9,
-          "away_score": 23, "home_score": 24,
-          "lines": {
-            "game_total":     { "line": 219.0, "over": -110, "under": -110 },
-            "total_h1":       { "line": 109.5, "over": -110, "under": -110 },
-            "team_total_SAS": { "line": 107.5, "over": -110, "under": -110 },
-            "team_total_OKC": { "line": 111.5, "over": -110, "under": -110 }
-          }
-        },
-        {
-          "minutes_elapsed": 12,
-          "away_score": 31, "home_score": 33,
-          "lines": {
-            "game_total":     { "line": 220.0, "over": -110, "under": -110 },
-            "total_h1":       { "line": 110.0, "over": -110, "under": -110 },
-            "team_total_SAS": { "line": 108.0, "over": -110, "under": -110 },
-            "team_total_OKC": { "line": 112.0, "over": -110, "under": -110 }
-          }
-        },
-        {
-          "minutes_elapsed": 18,
-          "away_score": 46, "home_score": 49,
-          "lines": {
-            "game_total":     { "line": 220.5, "over": -110, "under": -110 },
-            "team_total_SAS": { "line": 108.0, "over": -110, "under": -110 },
-            "team_total_OKC": { "line": 112.0, "over": -110, "under": -110 }
-          }
-        },
-        {
-          "minutes_elapsed": 24,
-          "away_score": 57, "home_score": 60,
-          "lines": {
-            "game_total":     { "line": 221.0, "over": -110, "under": -110 },
-            "team_total_SAS": { "line": 108.5, "over": -110, "under": -110 },
-            "team_total_OKC": { "line": 112.5, "over": -110, "under": -110 }
-          }
-        },
-        {
-          "minutes_elapsed": 30,
-          "away_score": 73, "home_score": 77,
-          "lines": {
-            "game_total":     { "line": 222.0, "over": -110, "under": -110 },
-            "team_total_SAS": { "line": 109.0, "over": -110, "under": -110 },
-            "team_total_OKC": { "line": 113.0, "over": -110, "under": -110 }
-          }
-        },
-        {
-          "minutes_elapsed": 36,
-          "away_score": 88, "home_score": 93,
-          "lines": {
-            "game_total":     { "line": 223.0, "over": -110, "under": -110 },
-            "team_total_SAS": { "line": 109.0, "over": -110, "under": -110 },
-            "team_total_OKC": { "line": 113.0, "over": -110, "under": -110 }
-          }
-        }
-      ],
+      "marks": [],
       "finals": {
-        "game": { "full": 218, "h1": 110, "q1": 57, "q2": 53, "q3": 58, "q4": 50 },
-        "team": { "SAS": 103, "OKC": 115 }
+        "_note": "2OT game — q1+q2+q3+q4 sums to 202 regulation; full=237 includes both OT periods",
+        "game": { "full": 237, "h1": 95, "q1": 54, "q2": 41, "q3": 58, "q4": 49 },
+        "team": { "SAS": 122, "OKC": 115 }
       }
     },
 
     {
-      "_game": "OKC/SAS series G7 — cold-start, reversion scenario, all OVER bets WIN",
+      "_game": "WCF G2 — SAS @ OKC — Thunder win 122-113 | real final scores",
+      "_status": "incomplete — real final scores only; populate marks with observed live lines to backtest",
+      "event_id": "sas_okc_2026-05-20",
+      "pregame": {
+        "away_key":   "SAS",
+        "home_key":   "OKC",
+        "away_name":  "San Antonio Spurs",
+        "home_name":  "Oklahoma City Thunder",
+        "total":       216.0,
+        "h1":          108.0,
+        "team_total_SAS": 106.0,
+        "team_total_OKC": 110.0
+      },
+      "marks": [],
+      "finals": {
+        "game": { "full": 235, "h1": 113, "q1": 62, "q2": 51, "q3": 71, "q4": 51 },
+        "team": { "SAS": 113, "OKC": 122 }
+      }
+    },
+
+    {
+      "_game": "WCF G3 — OKC @ SAS — Thunder win 123-108 | real final scores",
+      "_status": "incomplete — real final scores only; populate marks with observed live lines to backtest",
+      "event_id": "okc_sas_2026-05-22",
+      "pregame": {
+        "away_key":   "OKC",
+        "home_key":   "SAS",
+        "away_name":  "Oklahoma City Thunder",
+        "home_name":  "San Antonio Spurs",
+        "total":       215.0,
+        "h1":          107.5,
+        "team_total_OKC": 109.0,
+        "team_total_SAS": 106.0
+      },
+      "marks": [],
+      "finals": {
+        "game": { "full": 231, "h1": 109, "q1": 57, "q2": 52, "q3": 70, "q4": 52 },
+        "team": { "OKC": 123, "SAS": 108 }
+      }
+    },
+
+    {
+      "_game": "WCF G4 — OKC @ SAS — Spurs win 103-82 | real final scores",
+      "_status": "incomplete — real final scores only; populate marks with observed live lines to backtest",
+      "event_id": "okc_sas_2026-05-24",
+      "pregame": {
+        "away_key":   "OKC",
+        "home_key":   "SAS",
+        "away_name":  "Oklahoma City Thunder",
+        "home_name":  "San Antonio Spurs",
+        "total":       215.0,
+        "h1":          107.5,
+        "team_total_OKC": 108.0,
+        "team_total_SAS": 107.0
+      },
+      "marks": [],
+      "finals": {
+        "game": { "full": 185, "h1": 88, "q1": 47, "q2": 41, "q3": 50, "q4": 47 },
+        "team": { "OKC": 82, "SAS": 103 }
+      }
+    },
+
+    {
+      "_game": "WCF G5 — SAS @ OKC — Thunder win 127-114 | real final scores",
+      "_status": "incomplete — real final scores only; populate marks with observed live lines to backtest",
+      "event_id": "sas_okc_2026-05-26",
+      "pregame": {
+        "away_key":   "SAS",
+        "home_key":   "OKC",
+        "away_name":  "San Antonio Spurs",
+        "home_name":  "Oklahoma City Thunder",
+        "total":       217.0,
+        "h1":          108.5,
+        "team_total_SAS": 106.5,
+        "team_total_OKC": 110.5
+      },
+      "marks": [],
+      "finals": {
+        "game": { "full": 241, "h1": 127, "q1": 56, "q2": 71, "q3": 65, "q4": 49 },
+        "team": { "SAS": 114, "OKC": 127 }
+      }
+    },
+
+    {
+      "_game": "WCF G6 — OKC @ SAS — Spurs blowout 118-91 | real finals + mock near-pregame lines (no OVER signals expected)",
+      "_note": "Live lines are mock (near-pregame) to test the no-signal case. Away/home corrected from prior placeholder.",
+      "event_id": "okc_sas_2026-05-28",
+      "pregame": {
+        "away_key":   "OKC",
+        "home_key":   "SAS",
+        "away_name":  "Oklahoma City Thunder",
+        "home_name":  "San Antonio Spurs",
+        "total":       219.0,
+        "h1":          109.5,
+        "team_total_OKC": 111.5,
+        "team_total_SAS": 107.5
+      },
+      "marks": [
+        {
+          "minutes_elapsed": 6,
+          "away_score": 11, "home_score": 17,
+          "lines": {
+            "game_total":     { "line": 218.5, "over": -110, "under": -110 },
+            "total_h1":       { "line": 109.0, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 111.0, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 107.0, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 9,
+          "away_score": 16, "home_score": 26,
+          "lines": {
+            "game_total":     { "line": 219.0, "over": -110, "under": -110 },
+            "total_h1":       { "line": 109.5, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 111.5, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 107.5, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 12,
+          "away_score": 22, "home_score": 35,
+          "lines": {
+            "game_total":     { "line": 220.0, "over": -110, "under": -110 },
+            "total_h1":       { "line": 110.0, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 112.0, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 108.0, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 18,
+          "away_score": 37, "home_score": 48,
+          "lines": {
+            "game_total":     { "line": 220.5, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 112.0, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 108.0, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 24,
+          "away_score": 53, "home_score": 60,
+          "lines": {
+            "game_total":     { "line": 221.0, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 112.5, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 108.5, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 30,
+          "away_score": 63, "home_score": 78,
+          "lines": {
+            "game_total":     { "line": 222.0, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 113.0, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 109.0, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 36,
+          "away_score": 73, "home_score": 96,
+          "lines": {
+            "game_total":     { "line": 223.0, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 113.0, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 109.0, "over": -110, "under": -110 }
+          }
+        }
+      ],
+      "finals": {
+        "game": { "full": 209, "h1": 113, "q1": 57, "q2": 56, "q3": 56, "q4": 40 },
+        "team": { "OKC": 91, "SAS": 118 }
+      }
+    },
+
+    {
+      "_game": "WCF G7 — SAS @ OKC — cold-start test scenario; all OVER bets WIN",
+      "_note": "G7 tip-off May 30 — finals are a test scenario; replace with real results after the game.",
       "event_id": "sas_okc_2026-05-30",
       "pregame": {
         "away_key":   "SAS",
@@ -178,8 +292,94 @@
         }
       ],
       "finals": {
+        "_note": "Test scenario finals — replace with real G7 result after May 30 tip-off",
         "game": { "full": 209, "h1": 104, "q1": 42, "q2": 62, "q3": 61, "q4": 44 },
         "team": { "SAS": 97, "OKC": 112 }
+      }
+    },
+
+    {
+      "_game": "ECF G1 — CLE @ NYK — Knicks win OT 115-104 | real final scores",
+      "_status": "incomplete — real final scores only; populate marks with observed live lines to backtest",
+      "event_id": "cle_nyk_2026-05-19",
+      "pregame": {
+        "away_key":   "CLE",
+        "home_key":   "NYK",
+        "away_name":  "Cleveland Cavaliers",
+        "home_name":  "New York Knicks",
+        "total":       220.0,
+        "h1":          110.0,
+        "team_total_CLE": 109.0,
+        "team_total_NYK": 111.0
+      },
+      "marks": [],
+      "finals": {
+        "_note": "OT game — q1+q2+q3+q4 sums to 202 regulation; full=219 includes OT (CLE 3, NYK 14)",
+        "game": { "full": 219, "h1": 94, "q1": 39, "q2": 55, "q3": 58, "q4": 50 },
+        "team": { "CLE": 104, "NYK": 115 }
+      }
+    },
+
+    {
+      "_game": "ECF G2 — CLE @ NYK — Knicks win 109-93 | real final scores",
+      "_status": "incomplete — real final scores only; populate marks with observed live lines to backtest",
+      "event_id": "cle_nyk_2026-05-21",
+      "pregame": {
+        "away_key":   "CLE",
+        "home_key":   "NYK",
+        "away_name":  "Cleveland Cavaliers",
+        "home_name":  "New York Knicks",
+        "total":       217.0,
+        "h1":          108.5,
+        "team_total_CLE": 107.0,
+        "team_total_NYK": 110.0
+      },
+      "marks": [],
+      "finals": {
+        "game": { "full": 202, "h1": 102, "q1": 51, "q2": 51, "q3": 53, "q4": 47 },
+        "team": { "CLE": 93, "NYK": 109 }
+      }
+    },
+
+    {
+      "_game": "ECF G3 — NYK @ CLE — Knicks win 121-108 | real final scores",
+      "_status": "incomplete — real final scores only; populate marks with observed live lines to backtest",
+      "event_id": "nyk_cle_2026-05-23",
+      "pregame": {
+        "away_key":   "NYK",
+        "home_key":   "CLE",
+        "away_name":  "New York Knicks",
+        "home_name":  "Cleveland Cavaliers",
+        "total":       218.0,
+        "h1":          109.0,
+        "team_total_NYK": 110.0,
+        "team_total_CLE": 108.0
+      },
+      "marks": [],
+      "finals": {
+        "game": { "full": 229, "h1": 114, "q1": 64, "q2": 50, "q3": 59, "q4": 56 },
+        "team": { "NYK": 121, "CLE": 108 }
+      }
+    },
+
+    {
+      "_game": "ECF G4 — NYK @ CLE — Knicks sweep 130-93 | real final scores",
+      "_status": "incomplete — real final scores only; populate marks with observed live lines to backtest",
+      "event_id": "nyk_cle_2026-05-25",
+      "pregame": {
+        "away_key":   "NYK",
+        "home_key":   "CLE",
+        "away_name":  "New York Knicks",
+        "home_name":  "Cleveland Cavaliers",
+        "total":       218.0,
+        "h1":          109.0,
+        "team_total_NYK": 111.0,
+        "team_total_CLE": 107.0
+      },
+      "marks": [],
+      "finals": {
+        "game": { "full": 223, "h1": 117, "q1": 64, "q2": 53, "q3": 52, "q4": 54 },
+        "team": { "NYK": 130, "CLE": 93 }
       }
     },
 
@@ -203,9 +403,9 @@
           "minutes_elapsed": 6,
           "away_score": 0, "home_score": 0,
           "lines": {
-            "game_total":      { "line": 0.0, "over": -110, "under": -110 },
-            "team_total_TEAM1":{ "line": 0.0, "over": -110, "under": -110 },
-            "team_total_TEAM2":{ "line": 0.0, "over": -110, "under": -110 }
+            "game_total":       { "line": 0.0, "over": -110, "under": -110 },
+            "team_total_TEAM1": { "line": 0.0, "over": -110, "under": -110 },
+            "team_total_TEAM2": { "line": 0.0, "over": -110, "under": -110 }
           }
         }
       ],
@@ -215,5 +415,6 @@
         "team": { "TEAM1": 0, "TEAM2": 0 }
       }
     }
+
   ]
 }

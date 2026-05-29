@@ -1,0 +1,219 @@
+{
+  "_instructions": [
+    "Multi-game batch file for `mrbet backtest-batch --data <this-file>`.",
+    "Each game is self-contained: embed pregame baselines inline so no YAML is needed.",
+    "Copy a game block and fill in real lines you observed (or mocked) at each cadence mark.",
+    "Required per-game keys: event_id, pregame (with at minimum away_key/home_key/total), marks, finals.",
+    "Cadence marks: 6, 9, 12 (Q1 timeout/end), 18, 21, 24 (Q2 / halftime), 30, 33, 36 (Q3).",
+    "Omit a mark if you have no lines for it — the engine skips marks with no data."
+  ],
+  "games": [
+    {
+      "_game": "OKC/SAS series G6 — high-scoring game, near-pregame lines, no OVER signals expected",
+      "event_id": "sas_okc_2026-05-28",
+      "pregame": {
+        "away_key":   "SAS",
+        "home_key":   "OKC",
+        "away_name":  "San Antonio Spurs",
+        "home_name":  "Oklahoma City Thunder",
+        "total":       219.0,
+        "h1":          109.5,
+        "team_total_SAS": 107.5,
+        "team_total_OKC": 111.5
+      },
+      "marks": [
+        {
+          "minutes_elapsed": 6,
+          "away_score": 14, "home_score": 15,
+          "lines": {
+            "game_total":     { "line": 218.5, "over": -110, "under": -110 },
+            "total_h1":       { "line": 109.0, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 107.0, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 111.0, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 9,
+          "away_score": 23, "home_score": 24,
+          "lines": {
+            "game_total":     { "line": 219.0, "over": -110, "under": -110 },
+            "total_h1":       { "line": 109.5, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 107.5, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 111.5, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 12,
+          "away_score": 31, "home_score": 33,
+          "lines": {
+            "game_total":     { "line": 220.0, "over": -110, "under": -110 },
+            "total_h1":       { "line": 110.0, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 108.0, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 112.0, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 18,
+          "away_score": 46, "home_score": 49,
+          "lines": {
+            "game_total":     { "line": 220.5, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 108.0, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 112.0, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 24,
+          "away_score": 57, "home_score": 60,
+          "lines": {
+            "game_total":     { "line": 221.0, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 108.5, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 112.5, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 30,
+          "away_score": 73, "home_score": 77,
+          "lines": {
+            "game_total":     { "line": 222.0, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 109.0, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 113.0, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 36,
+          "away_score": 88, "home_score": 93,
+          "lines": {
+            "game_total":     { "line": 223.0, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 109.0, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 113.0, "over": -110, "under": -110 }
+          }
+        }
+      ],
+      "finals": {
+        "game": { "full": 218, "h1": 110, "q1": 57, "q2": 53, "q3": 58, "q4": 50 },
+        "team": { "SAS": 103, "OKC": 115 }
+      }
+    },
+
+    {
+      "_game": "OKC/SAS series G7 — cold-start, reversion scenario, all OVER bets WIN",
+      "event_id": "sas_okc_2026-05-30",
+      "pregame": {
+        "away_key":   "SAS",
+        "home_key":   "OKC",
+        "away_name":  "San Antonio Spurs",
+        "home_name":  "Oklahoma City Thunder",
+        "total":       212.5,
+        "h1":          106.0,
+        "team_total_SAS": 104.5,
+        "team_total_OKC": 108.0
+      },
+      "marks": [
+        {
+          "minutes_elapsed": 6,
+          "away_score": 9, "home_score": 10,
+          "lines": {
+            "game_total":     { "line": 168.0, "over": -115, "under": -105 },
+            "total_h1":       { "line":  83.0, "over": -115, "under": -105 },
+            "team_total_SAS": { "line":  80.5, "over": -110, "under": -110 },
+            "team_total_OKC": { "line":  87.5, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 9,
+          "away_score": 15, "home_score": 16,
+          "lines": {
+            "game_total":     { "line": 177.0, "over": -115, "under": -105 },
+            "total_h1":       { "line":  87.0, "over": -115, "under": -105 },
+            "team_total_SAS": { "line":  86.0, "over": -110, "under": -110 },
+            "team_total_OKC": { "line":  91.0, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 12,
+          "away_score": 20, "home_score": 22,
+          "lines": {
+            "game_total":     { "line": 178.0, "over": -115, "under": -105 },
+            "total_h1":       { "line":  87.5, "over": -115, "under": -105 },
+            "team_total_SAS": { "line":  85.5, "over": -110, "under": -110 },
+            "team_total_OKC": { "line":  92.5, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 18,
+          "away_score": 36, "home_score": 40,
+          "lines": {
+            "game_total":     { "line": 204.5, "over": -110, "under": -110 },
+            "total_h1":       { "line": 102.0, "over": -110, "under": -110 },
+            "team_total_SAS": { "line":  97.5, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 107.0, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 24,
+          "away_score": 49, "home_score": 55,
+          "lines": {
+            "game_total":     { "line": 209.0, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 103.5, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 106.0, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 30,
+          "away_score": 64, "home_score": 70,
+          "lines": {
+            "game_total":     { "line": 214.5, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 103.0, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 107.0, "over": -110, "under": -110 }
+          }
+        },
+        {
+          "minutes_elapsed": 36,
+          "away_score": 79, "home_score": 86,
+          "lines": {
+            "game_total":     { "line": 219.5, "over": -110, "under": -110 },
+            "team_total_SAS": { "line": 104.5, "over": -110, "under": -110 },
+            "team_total_OKC": { "line": 108.0, "over": -110, "under": -110 }
+          }
+        }
+      ],
+      "finals": {
+        "game": { "full": 209, "h1": 104, "q1": 42, "q2": 62, "q3": 61, "q4": 44 },
+        "team": { "SAS": 97, "OKC": 112 }
+      }
+    },
+
+    {
+      "_game": "TEMPLATE — copy this block and fill in real lines for any other game",
+      "_status": "incomplete — finals and most marks are placeholders",
+      "event_id": "TEAM1_TEAM2_YYYY-MM-DD",
+      "pregame": {
+        "away_key":   "TEAM1",
+        "home_key":   "TEAM2",
+        "away_name":  "Away Team Full Name",
+        "home_name":  "Home Team Full Name",
+        "total":       215.0,
+        "h1":          107.5,
+        "team_total_TEAM1": 105.0,
+        "team_total_TEAM2": 110.0
+      },
+      "marks": [
+        {
+          "_note": "Fill in: scores from the ESPN scoreboard at this exact minute",
+          "minutes_elapsed": 6,
+          "away_score": 0, "home_score": 0,
+          "lines": {
+            "game_total":      { "line": 0.0, "over": -110, "under": -110 },
+            "team_total_TEAM1":{ "line": 0.0, "over": -110, "under": -110 },
+            "team_total_TEAM2":{ "line": 0.0, "over": -110, "under": -110 }
+          }
+        }
+      ],
+      "finals": {
+        "_note": "Fill in after the game — or add before to test grading",
+        "game": { "full": 0, "h1": 0, "q1": 0, "q2": 0, "q3": 0, "q4": 0 },
+        "team": { "TEAM1": 0, "TEAM2": 0 }
+      }
+    }
+  ]
+}

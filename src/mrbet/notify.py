@@ -40,6 +40,8 @@ class Notifier:
             _desktop(title, body)
         if self.settings.push:
             _push(title, body, strong=signal.strong)
+        if self.settings.sms:
+            _sms_gateway(signal)
         return True
 
 
@@ -99,6 +101,52 @@ def _ntfy(title: str, body: str, topic: str, strong: bool) -> None:
         )
     except requests.RequestException as exc:  # pragma: no cover - network
         print(f"[ntfy error] {exc}")
+
+
+def _sms_gateway(signal: Signal) -> None:
+    """Send a clean SMS via an email-to-SMS carrier gateway (stdlib only, no new deps).
+
+    Required env vars (set in .env or GitHub Secrets — never hardcode):
+      SMS_EMAIL_TARGET  e.g. 2125551234@txt.att.net
+      SMTP_USERNAME     sender Gmail / SMTP address
+      SMTP_PASSWORD     app-specific password (not your account password)
+    Optional:
+      SMTP_SERVER       default smtp.gmail.com
+      SMTP_PORT         default 587
+    """
+    target = os.environ.get("SMS_EMAIL_TARGET")
+    user   = os.environ.get("SMTP_USERNAME")
+    pwd    = os.environ.get("SMTP_PASSWORD")
+    if not (target and user and pwd):
+        return
+    import smtplib
+    from email.mime.text import MIMEText
+
+    e = signal.evaluation
+    b = e.baseline
+    market = f"{b.team or 'Game'} {b.period.value.upper()}"
+    body = (
+        f"{'🔥 STRONG' if signal.strong else '📈'} MRBET SIGNAL\n"
+        f"Market:  {market}\n"
+        f"Live Line Entry: {e.live.line} ({e.offered_odds:+d})\n"
+        f"Model Edge: {e.edge_pts:+.1f} pts  fair={e.fair_final:.1f}\n"
+        f"P({e.side.value})={e.prob*100:.0f}%  EV={e.ev*100:+.1f}%\n"
+        f"Suggested Stake: ${e.kelly_stake:.2f}"
+    )
+    msg = MIMEText(body)
+    msg["Subject"] = f"mrbet {e.side.value.upper()} {b.line}"
+    msg["From"]    = user
+    msg["To"]      = target
+    host = os.environ.get("SMTP_SERVER", "smtp.gmail.com")
+    port = int(os.environ.get("SMTP_PORT", "587"))
+    try:
+        with smtplib.SMTP(host, port, timeout=10) as s:
+            s.ehlo()
+            s.starttls()
+            s.login(user, pwd)
+            s.send_message(msg)
+    except Exception as exc:
+        print(f"[SMS error] {exc}")
 
 
 def _pushover(title: str, body: str, token: str, user: str, strong: bool) -> None:

@@ -71,6 +71,16 @@
   .kpi .l{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
   .chip{display:inline-block;background:var(--green);color:#03130a;font-weight:700;
         padding:1px 7px;border-radius:6px;font-size:11px}
+  /* threshold criterion badge */
+  .crit{display:inline-block;background:rgba(56,139,253,.11);
+        border:1px solid rgba(56,139,253,.22);color:var(--accent);
+        padding:1px 6px;border-radius:4px;margin:1px 2px;white-space:nowrap;
+        font:700 11px/1.7 'SF Mono',SFMono-Regular,Consolas,Menlo,monospace;
+        letter-spacing:.2px}
+  /* profile label in sweep table */
+  .profile{color:var(--dim);font-size:11px;font-style:italic;white-space:nowrap}
+  /* scrollable card shell for wide tables */
+  .card-scroll{overflow-x:auto}
 </style>
 </head>
 <body>
@@ -96,9 +106,16 @@
       <tbody id="upcoming"><tr><td colspan="7" class="empty">loading…</td></tr></tbody>
     </table>
   </section>
-  <section class="card">
+  <section class="card card-scroll">
     <h2>Live markets — mean-reversion fair value</h2>
-    <table>
+    <table style="min-width:820px">
+      <colgroup>
+        <col style="width:105px"><col style="width:82px">
+        <col style="width:52px"><col style="width:52px"><col style="width:64px">
+        <col style="width:50px"><col style="width:52px"><col style="width:56px">
+        <col style="width:46px"><col style="width:60px"><col style="width:60px">
+        <col style="width:62px"><col style="width:48px">
+      </colgroup>
       <thead><tr>
         <th>Market</th><th>Book</th><th>Pre</th><th>Live</th><th>Move</th><th>Side</th>
         <th>Fair</th><th>Edge</th><th>P</th><th>EV</th><th>Odds</th><th>Stake</th><th>Flag</th>
@@ -123,7 +140,12 @@
       <b>close</b>. <b>CLV</b> (closing-line value) needs no final score; win/loss fills in after.
       Empty until the first live game is captured — then it auto-populates here.</p>
     <div class="kpi" id="fwd-kpi"></div>
-    <section class="card"><table>
+    <section class="card card-scroll"><table style="min-width:620px">
+      <colgroup>
+        <col style="width:115px"><col style="min-width:150px">
+        <col style="width:52px"><col style="width:64px"><col style="width:64px">
+        <col style="width:62px"><col style="width:68px"><col style="width:74px">
+      </colgroup>
       <thead><tr><th>matchup</th><th>market</th><th>side</th><th>entry</th><th>close</th>
         <th>CLV</th><th>odds</th><th>result</th></tr></thead>
       <tbody id="fwd-rows"><tr><td colspan="8" class="empty">no live bets captured yet</td></tr></tbody>
@@ -161,8 +183,13 @@
     <p class="lead">Threshold sweep — relative behavior across all games</p>
     <p class="note" id="sweep-note"></p>
     <div class="warn" id="sweep-caveat"></div>
-    <section class="card"><table>
-      <thead><tr><th>thresholds</th><th>bets</th><th>W-L-P</th><th>win%</th><th>ROI*</th></tr></thead>
+    <section class="card card-scroll"><table style="min-width:580px">
+      <colgroup>
+        <col style="width:162px"><col>
+        <col style="width:50px"><col style="width:88px">
+        <col style="width:68px"><col style="width:68px">
+      </colgroup>
+      <thead><tr><th>profile</th><th>thresholds</th><th>bets</th><th>W-L-P</th><th>win%</th><th>ROI*</th></tr></thead>
       <tbody id="sweep-rows"></tbody>
     </table></section>
   </div>
@@ -185,8 +212,43 @@
 
 <script>
 const fmtPct = v => (v>0?'+':'') + v.toFixed(1)+'%';
-const cls = v => v>0?'pos':(v<0?'neg':'muted');
-const REFRESH_MS = 60_000;  // browser re-fetches state.json every 60s
+const cls    = v => v>0?'pos':(v<0?'neg':'muted');
+const pct    = v => v!=null ? (v*100).toFixed(0)+'%' : '—';
+const bar    = (v,title='') => `<div class="bar" title="${title}"><span style="width:${Math.round(v*100)}%"></span></div>`;
+const REFRESH_MS = 60_000;
+
+// Wrap each threshold criterion (e.g. move≥15%) in a monospace badge.
+function fmtCriteria(label) {
+  return label.split(' ').map(w =>
+    /[≥><=]/.test(w) ? `<span class="crit">${w}</span>` : w
+  ).join(' ');
+}
+
+// Map threshold combo params to a human-readable strategy archetype.
+function sweepProfile(label) {
+  if (label.startsWith('★')) return '⚙ Current config';
+  const m = (label.match(/move[≥>]=?\s*(\d+)%/)    ||[])[1];
+  const e = (label.match(/edge[≥>]=?\s*(\d+\.?\d*)/))||[];
+  const n = (label.match(/min[≥>]=?\s*(\d+)/)       ||[])[1];
+  const v = (label.match(/ev[≥>]=?\+?\s*(\d+)%/)   ||[])[1];
+  if (!m) return '—';
+  const move=+m, edge=e[1]?+e[1]:0, min=n?+n:0, ev=v?+v:0;
+  if (move>=20 && min>=9)              return 'Conservative Core';
+  if (move>=15 && edge>=5 && min>=6)   return 'Selective High-Edge';
+  if (move>=15 && min<=4)              return 'Late Panic Reversal';
+  if (move>=10 && edge>=7)             return 'Strong Edge Only';
+  if (move<=10 && edge>=5)             return 'Early Pace Anomaly';
+  if (move>=15 && ev>=3)               return 'Value Screener';
+  if (move>=10 && min<=4)              return 'Any Late Signal';
+  if (move>=10 && move<15 && min>=6)   return 'Balanced Standard';
+  return '—';
+}
+
+// Green heat-map background that scales with profitability (0 → transparent, max → 32% green).
+function heatBg(val, maxVal) {
+  if (val==null || val<=0 || maxVal<=0) return '';
+  return `background:rgba(46,160,67,${(Math.min(val/maxVal,1)*0.32).toFixed(2)})`;
+}
 let countdown = REFRESH_MS / 1000;
 
 function renderState(d){
@@ -264,11 +326,6 @@ document.querySelectorAll('.tab').forEach(tab=>{
     if(view==='backtest' && !backtestLoaded){ backtestLoaded = true; loadBacktest(); }
   });
 });
-
-const pct = v => (v*100).toFixed(0)+'%';
-function bar(frac, label){
-  return `<div class="bar" title="${label}"><span style="width:${Math.min(100,frac*100)}%"></span></div>`;
-}
 
 function renderForward(f){
   const s = f.summary || {};
@@ -360,10 +417,14 @@ async function loadBacktest(){
     + `${d.sweep.current.pushes}, win ${pct(d.sweep.current.win_rate)}, ROI ${pct(d.sweep.current.roi)}.`;
   document.getElementById('sweep-caveat').textContent = '⚠ ' + d.sweep.caveat;
   const sr = [{...d.sweep.current, label:'★ '+d.sweep.current.label}, ...d.sweep.top];
+  const maxWR  = Math.max(...sr.map(r=>r.win_rate||0));
+  const maxROI = Math.max(...sr.map(r=>r.roi||0));
   document.getElementById('sweep-rows').innerHTML = sr.map(r=>`<tr>
-    <td>${r.label}${r.equiv>1?` <span class="muted">×${r.equiv} equiv</span>`:''}</td>
+    <td class="profile">${sweepProfile(r.label)}</td>
+    <td>${fmtCriteria(r.label.replace(/^★\s*/,''))}${r.equiv>1?` <span class="muted" style="font-size:11px">×${r.equiv}</span>`:''}</td>
     <td>${r.bets}</td><td>${r.wins}-${r.losses}-${r.pushes}</td>
-    <td>${pct(r.win_rate)}</td><td class="${cls(r.roi)}">${(r.roi*100).toFixed(0)}%</td></tr>`).join('');
+    <td style="${heatBg(r.win_rate,maxWR)}">${pct(r.win_rate)}</td>
+    <td class="${cls(r.roi)}" style="${heatBg(r.roi,maxROI)}">${(r.roi*100).toFixed(0)}%</td></tr>`).join('');
 
   // examples
   document.getElementById('examples').innerHTML = d.examples.map(ex=>`

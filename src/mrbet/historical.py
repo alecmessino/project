@@ -39,7 +39,7 @@ from pathlib import Path
 from typing import Optional
 
 from .cadence import timeout_marks
-from .config import GameConfig, Settings
+from .config import EventMeta, GameConfig, OverUnder, Settings
 from .models import GameState, MarketLine, MarketType, Period
 from .odds.base import Snapshot
 from . import forward as fwd
@@ -70,6 +70,40 @@ def _parse_lines(lines_dict: dict) -> list[MarketLine]:
     return out
 
 
+def _game_config_from_dict(g: dict) -> GameConfig:
+    """Build a GameConfig from a self-contained game dict (inline 'pregame' block).
+
+    Required pregame keys: away_key, home_key, total.
+    Optional: away_name, home_name, h1, team_total_<AWAY>, team_total_<HOME>.
+    All odds default to -110/-110 (line-only datasets).
+    """
+    p        = g.get("pregame", {})
+    away_key = p.get("away_key", "AWAY")
+    home_key = p.get("home_key", "HOME")
+    totals: dict = {}
+    if "total" in p:
+        totals["full"] = OverUnder(line=float(p["total"]), over=-110, under=-110)
+    if "h1" in p:
+        totals["h1"]   = OverUnder(line=float(p["h1"]),    over=-110, under=-110)
+    team_totals: dict = {}
+    for key in (away_key, home_key):
+        val = p.get(f"team_total_{key}")
+        if val is not None:
+            team_totals[key] = OverUnder(line=float(val), over=-110, under=-110)
+    return GameConfig(
+        event=EventMeta(
+            id=g["event_id"],
+            away=p.get("away_name", away_key),
+            home=p.get("home_name", home_key),
+            away_key=away_key,
+            home_key=home_key,
+        ),
+        totals=totals,
+        team_totals=team_totals,
+        finals=g.get("finals", {}),
+    )
+
+
 class JsonFileSource:
     """Historical odds from a structured JSON dump (real or mock).
 
@@ -86,6 +120,9 @@ class JsonFileSource:
 
     def game_ids(self) -> list[str]:
         return list(self._games.keys())
+
+    def game_dicts(self) -> list[dict]:
+        return list(self._games.values())
 
     def finals(self, event_id: str) -> Optional[dict]:
         return self._games.get(event_id, {}).get("finals") or None

@@ -388,6 +388,75 @@ def backtest_from_file(
         )
 
 
+@app.command("backtest-batch")
+def backtest_batch(
+    data: str = typer.Option(..., help="Multi-game JSON file (see tests/data/2026_playoffs_batch.json)"),
+    settings: str = typer.Option(DEFAULT_SETTINGS, help="Settings YAML"),
+    out: Optional[str] = typer.Option(None, help="Write aggregated ledger JSON here (optional)"),
+):
+    """Batch 9-point cadence backtest across multiple games in one JSON file.
+
+    Each game embeds its own pregame baselines — no separate YAML needed.
+    Outputs a per-game + combined summary table to the console.
+
+    File format: tests/data/2026_playoffs_batch.json
+    """
+    from .historical import JsonFileSource, _game_config_from_dict, run_cadence_backtest
+    from . import forward as fwd
+
+    s = Settings.load(settings) if Path(settings).exists() else Settings()
+    source = JsonFileSource(data)
+
+    pairs: list[tuple] = []
+    for g_dict in source.game_dicts():
+        if "pregame" not in g_dict:
+            console.print(f"[yellow]Skipping {g_dict.get('event_id','?')} — no 'pregame' block")
+            continue
+        pairs.append((source, _game_config_from_dict(g_dict)))
+
+    if not pairs:
+        console.print("[red]No games with 'pregame' data found. See tests/data/2026_playoffs_batch.json for format.")
+        raise typer.Exit(1)
+
+    combined: dict = {}
+    per_game: list[tuple] = []
+    for src, cfg in pairs:
+        gl = run_cadence_backtest(src, cfg, s)
+        # Namespace keys by event_id to avoid collisions across games.
+        for k, v in gl.items():
+            combined[f"{cfg.event.id}:{k}"] = v
+        per_game.append((cfg, gl))
+
+    # ---- summary table ----
+    table = Table(show_header=True, header_style="bold",
+                  title=f"Batch backtest — {len(pairs)} game(s)")
+    for col in ["game", "bets", "W-L-P", "win%", "ROI", "CLV beat"]:
+        table.add_column(col, justify="right" if col != "game" else "left")
+    for cfg, gl in per_game:
+        sv = fwd.summarize(gl)
+        table.add_row(
+            f"{cfg.event.away_key} @ {cfg.event.home_key}",
+            str(sv["bets"]),
+            f"{sv['wins']}-{sv['losses']}-{sv['pushes']}",
+            f"{sv['win_rate']*100:.0f}%" if sv["win_rate"] is not None else "—",
+            f"{sv['roi']*100:+.0f}%"     if sv["roi"]      is not None else "—",
+            f"{sv['clv_beat']}/{sv['clv_graded']}",
+        )
+    sv = fwd.summarize(combined)
+    table.add_row(
+        "[bold]TOTAL[/bold]", str(sv["bets"]),
+        f"[bold]{sv['wins']}-{sv['losses']}-{sv['pushes']}[/bold]",
+        f"{sv['win_rate']*100:.0f}%" if sv["win_rate"] is not None else "—",
+        f"{sv['roi']*100:+.0f}%"     if sv["roi"]      is not None else "—",
+        f"{sv['clv_beat']}/{sv['clv_graded']}",
+    )
+    console.print(table)
+
+    if out:
+        fwd.dump(out, combined, scope={"source": "batch_sim", "games": len(pairs)})
+        console.print(f"[green]Written → {out}")
+
+
 @app.command("forward-export")
 def forward_export(
     db: str = typer.Option("data/runtime/mrbet.sqlite", help="Observations SQLite from live runs"),

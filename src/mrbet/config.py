@@ -70,6 +70,7 @@ class EngineSettings(BaseModel):
 class NotificationSettings(BaseModel):
     desktop: bool = True
     push: bool = True
+    sms: bool = False      # email-to-SMS gateway; configure via env (see .env.example)
     reissue_ev_delta: float = 0.02
 
 

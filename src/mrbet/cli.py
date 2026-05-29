@@ -162,6 +162,31 @@ def baseline(
 
 
 @app.command()
+def serve(
+    game: str = typer.Option(..., help="Path to game baseline YAML"),
+    provider: str = typer.Option("theodds", help="theodds | replay"),
+    settings: str = typer.Option(DEFAULT_SETTINGS, help="Path to settings YAML"),
+    replay: Optional[str] = typer.Option(None, help="Replay JSON (for replay provider)"),
+    host: str = typer.Option("127.0.0.1", help="Bind host"),
+    port: int = typer.Option(8000, help="Bind port"),
+    no_notify: bool = typer.Option(False, help="Disable notifications"),
+):
+    """Launch the live web dashboard (auto-polls, no manual entry)."""
+    from .web import serve as serve_dashboard
+
+    s, g = _load(settings, game)
+    if provider == "theodds":
+        kwargs = dict(
+            event=g.event, markets=s.engine.markets,
+            poll_interval=s.engine.poll_interval_seconds, bookmaker=g.event.bookmaker,
+        )
+    else:
+        kwargs = dict(replay=replay)
+    prov = get_provider(provider, **kwargs)
+    serve_dashboard(s, g, prov, host=host, port=port, notify=not no_notify)
+
+
+@app.command()
 def backtest(
     game: str = typer.Option(..., help="Path to game baseline YAML"),
     db: str = typer.Option("data/runtime/mrbet.sqlite", help="Path to the observations SQLite"),

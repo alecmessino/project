@@ -69,6 +69,7 @@ class TheOddsProvider:
         self.max_polls = max_polls
         self._credits: Optional[int] = None
         self._event_id: Optional[str] = None
+        self._clock: Optional[str] = None
 
     def credits_remaining(self) -> Optional[int]:
         return self._credits
@@ -83,7 +84,11 @@ class TheOddsProvider:
             yield Snapshot(
                 state=state,
                 lines=lines,
-                meta={"credits_remaining": self._credits, "source": "theodds"},
+                meta={
+                    "credits_remaining": self._credits,
+                    "clock": self._clock,
+                    "source": "theodds",
+                },
             )
             if state is not None and state.minutes_remaining <= 0:
                 return
@@ -232,6 +237,8 @@ class TheOddsProvider:
         status = teams.get("_status", {})
         period = int(status.get("period", 0) or 0)
         clock = float(status.get("clock", 0.0) or 0.0)  # seconds left in period
+        disp = status.get("displayClock")
+        self._clock = f"Q{period} {disp}" if (period and disp) else None
         # Full-game elapsed (regulation), capped at 48.
         reg_period = min(period, 4) if period else 0
         elapsed = max(0.0, (reg_period - 1) * 12 + (12 - clock / 60.0)) if period else 0.0

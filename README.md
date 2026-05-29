@@ -54,6 +54,11 @@ mrbet baseline --game config/games/okc_sas_2026-05-28.yaml
 mrbet simulate --game config/games/okc_sas_2026-05-28.yaml \
                --replay tests/data/replay_okc_sas.json
 
+# Live WEB DASHBOARD — auto-polls, no manual entry (open http://127.0.0.1:8000)
+mrbet serve --game config/games/okc_sas_2026-05-28.yaml --provider theodds
+mrbet serve --game config/games/okc_sas_2026-05-28.yaml \
+            --provider replay --replay tests/data/replay_okc_sas.json   # keyless demo
+
 # Live loop via The Odds API (needs ODDS_API_KEY)
 mrbet run --game config/games/okc_sas_2026-05-28.yaml --provider theodds
 

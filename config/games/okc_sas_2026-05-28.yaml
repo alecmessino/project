@@ -1,0 +1,63 @@
+# Pregame baselines for OKC Thunder @ San Antonio Spurs.
+# Western Conference Finals Game 6 (OKC leads series 3-2). Tip 8:40 PM 5/28/26.
+# Captured from Bovada.lv screenshots.
+
+event:
+  id: okc_sas_2026-05-28
+  league: NBA
+  away: Oklahoma City Thunder
+  home: San Antonio Spurs
+  # Short keys used internally and to match the odds-provider team names.
+  away_key: OKC
+  home_key: SAS
+  commence_time: "2026-05-28T20:40:00-05:00"
+  bookmaker: bovada
+
+# Pregame totals (over/under prices in American odds).
+totals:
+  full:    { line: 219.0, over: -110, under: -110 }
+  h1:      { line: 106.5, over: -110, under: -110 }
+  q1:      { line: 54.5,  over: -105, under: -110 }
+  q2:      { line: 53.0,  over: -110, under: -110 }
+  q3:      { line: 57.5,  over:  100, under: -120 }   # O 57.5 (EVEN)
+  q4:      { line: 54.5,  over: -115, under: -105 }
+
+# Pregame per-team totals (full game).
+team_totals:
+  OKC: { line: 108.5, over: -110, under: -120 }
+  SAS: { line: 111.0, over: -115, under: -115 }
+
+# Pregame side / moneyline markets (stored for reference; not used by the
+# totals-focused reversion engine yet).
+sides:
+  spread:    { OKC: 3.5,  SAS: -3.5, over: -110, under: -110 }
+  moneyline: { OKC: 135,  SAS: -160 }
+
+# Bovada full-game total odds ladder around the main number (from screenshot 2).
+# Maps alternate total lines -> {over, under} American prices. Lets the engine
+# estimate the real price at whatever live line is offered instead of assuming -110.
+total_ladder:
+  209.5: { over: -310, under:  225 }
+  210.5: { over: -280, under:  205 }
+  211.5: { over: -250, under:  185 }
+  212.5: { over: -230, under:  170 }
+  213.5: { over: -210, under:  155 }
+  214.5: { over: -185, under:  140 }
+  215.5: { over: -170, under:  130 }
+  216.5: { over: -150, under:  115 }
+  217.5: { over: -135, under:  105 }
+  218.0: { over: -130, under:  100 }   # EVEN
+  218.5: { over: -125, under: -105 }
+  219.0: { over: -120, under: -110 }
+  220.0: { over: -110, under: -120 }
+  220.5: { over: -105, under: -125 }
+  221.0: { over:  100, under: -130 }   # EVEN
+  221.5: { over:  105, under: -135 }
+  222.5: { over:  115, under: -150 }
+  223.5: { over:  125, under: -165 }
+  224.5: { over:  140, under: -185 }
+  225.5: { over:  150, under: -200 }
+  226.5: { over:  165, under: -220 }
+  227.5: { over:  185, under: -250 }
+  228.5: { over:  200, under: -275 }
+  229.5: { over:  220, under: -300 }

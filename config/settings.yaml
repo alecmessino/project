@@ -1,0 +1,51 @@
+# Global settings for the mean-reversion betting signal engine.
+# All thresholds are tunable; see src/mrbet/config.py for the schema + defaults.
+
+model:
+  # Reversion weight beta in [0,1]: fraction of remaining-time scoring assumed to
+  # revert to the pregame baseline rate. 1.0 = full reversion to baseline,
+  # 0.0 = remaining play continues at the current observed pace.
+  beta: 0.70
+  # Standard deviation of the FINAL total for a full game / team, used to build the
+  # normal distribution around the projected fair final. Scaled by sqrt(r/L).
+  sigma_full: 11.0
+  sigma_team: 8.0
+  # Minimum minutes elapsed before the current-pace term is trusted (avoids dividing
+  # by a tiny sample at the very start of a period).
+  min_minutes_elapsed: 2.0
+
+triggers:
+  # Minimum absolute line move vs pregame (fraction). 0.10 = line moved >= 10%.
+  pct_move_threshold: 0.10
+  # Minimum model edge in points (|fair_final - market_line|).
+  edge_pts_threshold: 3.0
+  # Minimum expected value per $1 staked at the offered odds to flag at all.
+  ev_threshold: 0.0
+  # EV at/above this is tagged "STRONG".
+  ev_strong_threshold: 0.03
+  # Minimum minutes remaining in the relevant period for the signal to be actionable.
+  min_minutes_remaining:
+    full: 6.0
+    half: 4.0
+    quarter: 3.0
+
+staking:
+  bankroll: 85.12          # update to your real Bovada balance
+  kelly_fraction: 0.25     # fractional Kelly (quarter Kelly)
+  max_stake_fraction: 0.05 # never recommend staking more than this fraction of bankroll
+
+engine:
+  poll_interval_seconds: 60
+  # Markets to track. Valid: total_full, total_h1, total_q1..q4, team_total
+  markets:
+    - total_full
+    - total_h1
+    - team_total
+  # Warn / stop polling when remaining API credits drop below this.
+  min_api_credits: 50
+
+notifications:
+  desktop: true
+  push: true              # uses NTFY_TOPIC (or Pushover) from environment
+  # Re-alert on the same signal only if EV improves by at least this much.
+  reissue_ev_delta: 0.02

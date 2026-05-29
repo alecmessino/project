@@ -1,0 +1,39 @@
+{
+  "event_id": "okc_sas_2026-05-28",
+  "_comment": "Synthetic cold-start sequence. Away=OKC, Home=SAS. All snapshots use full-game clock; the engine derives H1 state. Snapshot B is the cold trough where the market over-drops the totals -> OVER flags. Snapshot C shows scoring reverting and the line bouncing back (the reversion thesis paying off).",
+  "snapshots": [
+    {
+      "period": "full",
+      "minutes_elapsed": 6.0,
+      "minutes_remaining": 42.0,
+      "away_score": 12,
+      "home_score": 10,
+      "lines": [
+        {"market_type": "game_total", "period": "full", "line": 212.5, "over_odds": -110, "under_odds": -110}
+      ]
+    },
+    {
+      "period": "full",
+      "minutes_elapsed": 12.0,
+      "minutes_remaining": 36.0,
+      "away_score": 22,
+      "home_score": 18,
+      "lines": [
+        {"market_type": "game_total", "period": "full", "line": 187.5, "over_odds": -110, "under_odds": -110},
+        {"market_type": "game_total", "period": "h1", "line": 85.5, "over_odds": -110, "under_odds": -110},
+        {"market_type": "team_total", "period": "full", "team": "OKC", "line": 95.5, "over_odds": -110, "under_odds": -115}
+      ]
+    },
+    {
+      "period": "full",
+      "minutes_elapsed": 20.0,
+      "minutes_remaining": 28.0,
+      "away_score": 44,
+      "home_score": 40,
+      "lines": [
+        {"market_type": "game_total", "period": "full", "line": 208.5, "over_odds": -110, "under_odds": -110},
+        {"market_type": "team_total", "period": "full", "team": "OKC", "line": 104.5, "over_odds": -110, "under_odds": -115}
+      ]
+    }
+  ]
+}

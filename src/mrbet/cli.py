@@ -26,6 +26,10 @@ from .storage import Storage
 app = typer.Typer(add_completion=False, help="Mean-reversion live betting signals")
 console = Console()
 
+# Load .env (gitignored) so ODDS_API_KEY / THE_ODDS_API_KEY are available locally.
+from .envload import load_env  # noqa: E402
+load_env()
+
 DEFAULT_SETTINGS = "config/settings.yaml"
 
 

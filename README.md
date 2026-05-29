@@ -75,9 +75,13 @@ mrbet backtest --game config/games/okc_sas_2026-05-28.yaml \
 
 ### Data sources
 
-- **The Odds API** (`theodds` provider) — live Bovada over/under prices for totals,
-  team totals, and period markets. Set `ODDS_API_KEY`. Costs `markets × regions` credits
-  per poll; the engine reads `x-requests-remaining` and warns when low.
+- **The Odds API** (`theodds` provider) — live over/under prices for totals, team totals,
+  and period markets. Set `ODDS_API_KEY`. It requests a whole **region** in one call
+  (cost is `markets × regions`, **not** per book), then picks the line from the preferred
+  books in order (`engine.books`, default Bovada first); if none are present it falls back
+  to a **consensus** line — the real book quote nearest the median across all available US
+  books (lines are similar across books, so a missing Bovada isn't fatal). The chosen book
+  is shown per row. The engine reads `x-requests-remaining` and warns when credits are low.
 - **ESPN scoreboard** (free, no key) — supplies the live game clock + score, which The
   Odds API does not expose.
 - **Manual / replay** (`manual` provider) — enter lines by hand, or replay a JSON file.
@@ -90,7 +94,9 @@ others can be added without touching the engine.
 
 Push uses **ntfy.sh** by default (free, zero-config): set `NTFY_TOPIC` and subscribe to
 that topic in the ntfy app. **Pushover** is used instead if `PUSHOVER_TOKEN`/`PUSHOVER_USER`
-are set. Desktop uses `plyer` when installed, otherwise prints to the console.
+are set. Desktop uses `plyer` when installed, otherwise prints to the console. Alerts fire
+from both `mrbet run` and the `mrbet serve` dashboard (the header shows the active channel);
+each signal alerts once and re-alerts only if its EV improves materially.
 
 ## Does it actually have edge?
 

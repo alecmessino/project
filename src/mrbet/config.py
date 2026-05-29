@@ -19,7 +19,7 @@ class ModelSettings(BaseModel):
     beta: float = 0.70
     sigma_full: float = 11.0
     sigma_team: float = 8.0
-    min_minutes_elapsed: float = 2.0
+    min_minutes_elapsed: float = 5.0
 
     def to_params(self) -> ReversionParams:
         return ReversionParams(
@@ -57,6 +57,9 @@ class EngineSettings(BaseModel):
     poll_interval_seconds: int = 60
     markets: list[str] = Field(default_factory=lambda: ["total_full", "total_h1", "team_total"])
     min_api_credits: int = 50
+    region: str = "us"
+    books: list[str] = Field(default_factory=lambda: ["bovada"])
+    fallback_consensus: bool = True
 
 
 class NotificationSettings(BaseModel):

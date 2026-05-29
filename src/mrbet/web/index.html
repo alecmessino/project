@@ -51,6 +51,7 @@
   <div class="score" id="score">—</div>
   <div class="meta" id="clock">—</div>
   <div class="meta" id="status"><span class="dot"></span><span id="statusText">waiting</span></div>
+  <div class="meta" id="alerts"></div>
   <div class="meta" id="credits"></div>
 </header>
 <main>
@@ -58,10 +59,10 @@
     <h2>Live markets — mean-reversion fair value</h2>
     <table>
       <thead><tr>
-        <th>Market</th><th>Pre</th><th>Live</th><th>Move</th><th>Side</th>
+        <th>Market</th><th>Book</th><th>Pre</th><th>Live</th><th>Move</th><th>Side</th>
         <th>Fair</th><th>Edge</th><th>P</th><th>EV</th><th>Odds</th><th>Stake</th><th>Flag</th>
       </tr></thead>
-      <tbody id="rows"><tr><td colspan="12" class="empty">waiting for first poll…</td></tr></tbody>
+      <tbody id="rows"><tr><td colspan="13" class="empty">waiting for first poll…</td></tr></tbody>
     </table>
   </section>
   <section class="card">
@@ -77,13 +78,14 @@ const cls = v => v>0?'pos':(v<0?'neg':'muted');
 
 function renderRows(rows){
   const tb = document.getElementById('rows');
-  if(!rows.length){ tb.innerHTML='<tr><td colspan="12" class="empty">no tracked markets in this snapshot</td></tr>'; return; }
+  if(!rows.length){ tb.innerHTML='<tr><td colspan="13" class="empty">no tracked markets in this snapshot</td></tr>'; return; }
   tb.innerHTML = rows.map(r=>{
     const flagCls = r.flagged ? (r.strong?'flag strong':'flag') : '';
     const badge = r.flagged ? `<span class="badge ${r.strong?'strong':''}">${r.strong?'🔥 STRONG':'FLAG'}</span>` : '';
     const sideCls = r.side==='OVER'?'over':'under';
     return `<tr class="${flagCls}">
       <td>${r.market}</td>
+      <td class="muted">${r.book||'—'}</td>
       <td class="muted">${r.pre}</td>
       <td>${r.live}</td>
       <td class="${cls(r.move_pct)}">${fmtPct(r.move_pct)}</td>
@@ -119,6 +121,8 @@ async function tick(){
     const st = document.getElementById('status');
     st.className = 'meta ' + (h.status||'waiting');
     document.getElementById('statusText').textContent = h.status || 'waiting';
+    document.getElementById('alerts').textContent =
+      h.alerts ? `🔔 alerts: ${h.alerts}` : '';
     document.getElementById('credits').textContent =
       (h.credits!=null) ? `API credits: ${h.credits}` : '';
     document.getElementById('foot').textContent =

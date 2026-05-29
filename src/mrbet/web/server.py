@@ -90,6 +90,7 @@ class DashboardState:
         b = e.baseline
         return {
             "market": f"{b.team or 'GAME'} {b.period.value}",
+            "book": e.live.book or "—",
             "pre": b.line,
             "live": e.live.line,
             "move_pct": round(e.pct_move * 100, 1),
@@ -129,6 +130,25 @@ def _poller(state: DashboardState, engine: Engine, provider: OddsProvider,
         state.set_status("stopped")
 
 
+def _alerts_label(settings: Settings, notify: bool) -> str:
+    """Human label of where alerts will fire, shown in the dashboard header."""
+    if not notify:
+        return "off"
+    import os
+
+    channels = []
+    if settings.notifications.desktop:
+        channels.append("desktop")
+    if settings.notifications.push:
+        if os.environ.get("PUSHOVER_TOKEN") and os.environ.get("PUSHOVER_USER"):
+            channels.append("pushover")
+        elif os.environ.get("NTFY_TOPIC"):
+            channels.append("ntfy")
+        else:
+            channels.append("push(unconfigured)")
+    return "+".join(channels) if channels else "off"
+
+
 def _make_handler(state: DashboardState):
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args):  # silence default logging
@@ -161,6 +181,7 @@ def serve(
     notify: bool = True,
 ) -> None:
     state = DashboardState(game)
+    state.header["alerts"] = _alerts_label(settings, notify)
     engine = Engine(settings, game, provider)
     notifier = Notifier(settings.notifications) if notify else None
 

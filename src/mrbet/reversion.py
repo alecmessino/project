@@ -19,7 +19,7 @@ class ReversionParams:
     beta: float = 0.70            # reversion weight toward pregame rate
     sigma_full: float = 11.0      # final-total std for a full game / period
     sigma_team: float = 8.0       # final-total std for a single team
-    min_minutes_elapsed: float = 2.0
+    min_minutes_elapsed: float = 5.0
 
 
 def projected_final(

@@ -87,6 +87,8 @@ class MarketLine:
     under_odds: int     # American odds
     # For team totals only: which team ("OKC"/"SAS"); None for game totals.
     team: Optional[str] = None
+    # Which sportsbook this quote came from (e.g. "bovada", or the consensus pick).
+    book: Optional[str] = None
 
 
 @dataclass

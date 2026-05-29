@@ -55,7 +55,10 @@ class TheOddsProvider:
         markets: list[str],
         poll_interval: int = 60,
         api_key: Optional[str] = None,
-        bookmaker: str = "bovada",
+        bookmaker: Optional[str] = None,
+        books: Optional[list[str]] = None,
+        region: str = "us",
+        fallback_consensus: bool = True,
         max_polls: Optional[int] = None,
         **_ignored,
     ):
@@ -63,7 +66,11 @@ class TheOddsProvider:
         self.api_key = api_key or os.environ.get("ODDS_API_KEY", "")
         if not self.api_key:
             raise RuntimeError("ODDS_API_KEY not set (env or --api-key)")
-        self.bookmaker = bookmaker
+        # Book preference order. A game-level `bookmaker` (from the YAML) takes
+        # priority if given, then the configured list.
+        self.books = ([bookmaker] if bookmaker else []) + list(books or ["bovada"])
+        self.region = region
+        self.fallback_consensus = fallback_consensus
         self.market_keys = [MARKET_KEYS[m] for m in markets if m in MARKET_KEYS]
         self.poll_interval = poll_interval
         self.max_polls = max_polls
@@ -127,11 +134,12 @@ class TheOddsProvider:
         try:
             r = requests.get(
                 f"{ODDS_BASE}/sports/{SPORT}/events/{event_id}/odds",
+                # Request the whole region (cost = markets x regions, NOT per book),
+                # then select Bovada-or-consensus client-side.
                 params={
                     "apiKey": self.api_key,
-                    "regions": "us",
+                    "regions": self.region,
                     "markets": ",".join(self.market_keys),
-                    "bookmakers": self.bookmaker,
                     "oddsFormat": "american",
                 },
                 timeout=15,
@@ -143,17 +151,42 @@ class TheOddsProvider:
         return self._parse_lines(r.json())
 
     def _parse_lines(self, payload: dict) -> list[MarketLine]:
-        lines: list[MarketLine] = []
+        # Collect every book's quote per market group, then pick one line per group.
+        # groups: (api_market_key, team) -> { book_key: MarketLine }
+        groups: dict[tuple, dict[str, MarketLine]] = {}
         for bk in payload.get("bookmakers", []):
-            if bk.get("key") != self.bookmaker:
-                continue
+            book_key = bk.get("key", "")
             for mkt in bk.get("markets", []):
                 key = mkt.get("key")
                 period = _PERIOD_FOR_KEY.get(key)
                 if period is None:
                     continue
-                lines.extend(self._lines_from_market(key, period, mkt.get("outcomes", [])))
-        return lines
+                for ml in self._lines_from_market(key, period, mkt.get("outcomes", [])):
+                    ml.book = book_key
+                    groups.setdefault((key, ml.team), {})[book_key] = ml
+
+        out: list[MarketLine] = []
+        for per_book in groups.values():
+            chosen = self._select(per_book)
+            if chosen is not None:
+                out.append(chosen)
+        return out
+
+    def _select(self, per_book: dict[str, MarketLine]) -> Optional[MarketLine]:
+        """Prefer the configured books in order; else a consensus-nearest book."""
+        for book in self.books:
+            if book in per_book:
+                return per_book[book]
+        if not self.fallback_consensus or not per_book:
+            return None
+        # Consensus: take the median offered line and return the real book quote
+        # nearest to it (so odds stay internally consistent with the line).
+        import statistics
+
+        lines = [ml.line for ml in per_book.values()]
+        med = statistics.median(lines)
+        chosen = min(per_book.values(), key=lambda ml: abs(ml.line - med))
+        return chosen
 
     def _lines_from_market(self, key: str, period: Period, outcomes: list[dict]) -> list[MarketLine]:
         if key == "team_totals":

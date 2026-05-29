@@ -10,9 +10,9 @@ model:
   # normal distribution around the projected fair final. Scaled by sqrt(r/L).
   sigma_full: 11.0
   sigma_team: 8.0
-  # Minimum minutes elapsed before the current-pace term is trusted (avoids dividing
-  # by a tiny sample at the very start of a period).
-  min_minutes_elapsed: 2.0
+  # Minimum minutes elapsed before the current-pace term is trusted (avoids a
+  # tiny early-game sample whipsawing the projection).
+  min_minutes_elapsed: 5.0
 
 triggers:
   # Minimum absolute line move vs pregame (fraction). 0.10 = line moved >= 10%.
@@ -43,6 +43,18 @@ engine:
     - team_total
   # Warn / stop polling when remaining API credits drop below this.
   min_api_credits: 50
+  # Sportsbook selection. We request a whole region in one call (cost = markets x
+  # regions, NOT per book), then prefer these books in order. If none are present,
+  # fall back to a consensus line across whatever books are available (lines are
+  # similar across books, so a missing Bovada is not fatal).
+  region: us
+  books:
+    - bovada
+    - betonlineag
+    - lowvig
+    - mybookieag
+    - betus
+  fallback_consensus: true
 
 notifications:
   desktop: true

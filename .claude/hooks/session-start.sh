@@ -7,6 +7,10 @@ if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
   exit 0
 fi
 
+# Run asynchronously so the session starts without waiting on the install.
+# Trade-off: Claude may briefly run before deps finish on the very first session.
+echo '{"async": true, "asyncTimeout": 300000}'
+
 cd "${CLAUDE_PROJECT_DIR:-.}"
 
 # Editable install with the dev extra (pytest). Idempotent + cache-friendly.

@@ -1,0 +1,54 @@
+{
+  "event_id": "sample_okc_sas_g7",
+  "status": "blocked",
+  "error": "HISTORICAL_UNAVAILABLE_ON_FREE_USAGE_PLAN",
+  "note": "Historical odds require a PAID Odds API plan. Free tier blocks /v4/historical. Upgrade, or use free forward-capture (timeout cadence) for real lines.",
+  "credits_remaining": 500,
+  "planned_marks": [
+    {
+      "label": "Q1 timeout 1",
+      "game_minute": 6,
+      "timestamp": "2026-05-31T00:13:12Z"
+    },
+    {
+      "label": "Q1 timeout 2",
+      "game_minute": 9,
+      "timestamp": "2026-05-31T00:19:48Z"
+    },
+    {
+      "label": "End of Q1",
+      "game_minute": 12,
+      "timestamp": "2026-05-31T00:26:24Z"
+    },
+    {
+      "label": "Q2 timeout 1",
+      "game_minute": 18,
+      "timestamp": "2026-05-31T00:39:36Z"
+    },
+    {
+      "label": "Q2 timeout 2",
+      "game_minute": 21,
+      "timestamp": "2026-05-31T00:46:12Z"
+    },
+    {
+      "label": "Halftime",
+      "game_minute": 24,
+      "timestamp": "2026-05-31T00:52:48Z"
+    },
+    {
+      "label": "Q3 timeout 1",
+      "game_minute": 30,
+      "timestamp": "2026-05-31T01:06:00Z"
+    },
+    {
+      "label": "Q3 timeout 2",
+      "game_minute": 33,
+      "timestamp": "2026-05-31T01:12:36Z"
+    },
+    {
+      "label": "End of Q3",
+      "game_minute": 36,
+      "timestamp": "2026-05-31T01:19:12Z"
+    }
+  ]
+}

@@ -8,6 +8,7 @@ GitHub Pages serves that file; the dashboard JS polls it.
 from __future__ import annotations
 
 import json
+import os
 import pathlib
 import sys
 import time
@@ -15,13 +16,17 @@ import time
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from mrbet import forward as fwd
 from mrbet.config import GameConfig, Settings
 from mrbet.engine import Engine
 from mrbet.odds.theodds import TheOddsProvider
 from mrbet.web.server import DashboardState
 
-GAME_YAML = ROOT / "config" / "games" / "okc_sas_2026-05-28.yaml"
+# Active game: MRBET_GAME env overrides; default to the next scheduled game.
+GAME_YAML = pathlib.Path(os.environ.get(
+    "MRBET_GAME", ROOT / "config" / "games" / "sas_okc_2026-05-30.yaml"))
 STATE_JSON = ROOT / "docs" / "state.json"
+FORWARD_JSON = ROOT / "docs" / "forward.json"
 
 settings = Settings.load(ROOT / "config" / "settings.yaml")
 game = GameConfig.load(GAME_YAML)
@@ -35,6 +40,11 @@ if STATE_JSON.exists():
         state.signals = prev.get("signals", [])
     except Exception:
         pass
+
+# Real-line forward-test ledger persists across runs via the committed JSON.
+ledger = fwd.load_ledger(FORWARD_JSON)
+finals = getattr(game, "finals", None) or None
+matchup = f"{game.event.away_key} @ {game.event.home_key}"
 
 provider = TheOddsProvider(
     event=game.event,
@@ -60,9 +70,11 @@ try:
             break
         results = engine.process_snapshot(snap)
         state.update(snap, results)
+        ts = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         for r in results:
             if r.signal:
                 state.add_signal(r.signal)
+                fwd.merge_signal(ledger, r.evaluation, ts, matchup, finals)
         credits = snap.meta.get("credits_remaining")
         if credits is not None:
             print(f"API credits remaining: {credits}")
@@ -75,4 +87,6 @@ except Exception as exc:
     print(f"Error: {exc}", file=sys.stderr)
 
 STATE_JSON.write_bytes(state.to_json())
+fwd.dump(FORWARD_JSON, ledger, scope={"matchup": matchup, "game": game.event.id})
 print(f"Wrote {STATE_JSON}  ({len(state.signals)} signals, {len(state.rows)} rows)")
+print(f"Wrote {FORWARD_JSON}  ({len(ledger)} real bets in ledger)")

@@ -329,6 +329,37 @@ def sweep_cmd(
     console.print(table)
 
 
+@app.command("forward-export")
+def forward_export(
+    db: str = typer.Option("data/runtime/mrbet.sqlite", help="Observations SQLite from live runs"),
+    out: str = typer.Option("docs/forward.json", help="Output JSON for the dashboard panel"),
+    game: Optional[str] = typer.Option(None, help="Game YAML (for finals + matchup label)"),
+):
+    """Build the forward-test panel JSON from REAL captured bets in the log.
+
+    The honest, free edge readout: real lines captured live -> CLV + record.
+    Run after capturing games with `mrbet serve/run`, then commit docs/forward.json.
+    """
+    from . import forward as fwd
+
+    finals_by_event, matchup_by_event = {}, {}
+    if game:
+        g = GameConfig.load(game)
+        if getattr(g, "finals", None):
+            finals_by_event[g.event.id] = g.finals
+        matchup_by_event[g.event.id] = f"{g.event.away_key} @ {g.event.home_key}"
+    if not Path(db).exists():
+        console.print(f"[yellow]No log at {db}. Capture games first with `mrbet serve/run`.")
+        ledger = {}
+    else:
+        ledger = fwd.build_from_sqlite(db, finals_by_event, matchup_by_event)
+    fwd.dump(out, ledger, scope={"source": "live capture log", "db": db})
+    s = fwd.summarize(ledger)
+    console.print(f"[green]Wrote {out}[/green] — {s['bets']} real bets "
+                  f"({s['wins']}-{s['losses']}-{s['pushes']}, {s['pending']} pending), "
+                  f"CLV beat {s['clv_beat']}/{s['clv_graded']}")
+
+
 @app.command("notify-test")
 def notify_test():
     """Fire a test desktop + push notification."""

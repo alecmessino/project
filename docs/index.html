@@ -89,6 +89,13 @@
 
 <div class="view active" id="view-live">
 <main>
+  <section class="card" style="grid-column:1/-1">
+    <h2>Upcoming games</h2>
+    <table>
+      <thead><tr><th>Date</th><th>Matchup</th><th>Tip (ET)</th><th>Total</th><th>Spread</th><th>Round</th><th>Config</th></tr></thead>
+      <tbody id="upcoming"><tr><td colspan="7" class="empty">loading…</td></tr></tbody>
+    </table>
+  </section>
   <section class="card">
     <h2>Live markets — mean-reversion fair value</h2>
     <table>
@@ -108,6 +115,28 @@
 
 <div class="view" id="view-backtest">
   <div class="kpi" id="bt-kpi"></div>
+
+  <div class="full">
+    <p class="lead">Forward test — REAL captured lines <span class="chip">trustworthy</span></p>
+    <p class="note">The honest edge readout. As the engine sees flagged signals on real live
+      lines (timeout cadence), each bet is logged at its <b>entry</b> line and tracked to the
+      <b>close</b>. <b>CLV</b> (closing-line value) needs no final score; win/loss fills in after.
+      Empty until the first live game is captured — then it auto-populates here.</p>
+    <div class="kpi" id="fwd-kpi"></div>
+    <section class="card"><table>
+      <thead><tr><th>matchup</th><th>market</th><th>side</th><th>entry</th><th>close</th>
+        <th>CLV</th><th>odds</th><th>result</th></tr></thead>
+      <tbody id="fwd-rows"><tr><td colspan="8" class="empty">no live bets captured yet</td></tr></tbody>
+    </table></section>
+  </div>
+
+  <div class="full">
+    <p class="lead">Glossary — what the triggers &amp; terms mean</p>
+    <section class="card"><table>
+      <thead><tr><th>term</th><th>meaning</th></tr></thead>
+      <tbody id="glossary"></tbody>
+    </table></section>
+  </div>
 
   <div class="full">
     <p class="lead" id="meth-head">Methodology — does scoring mean-revert?</p>
@@ -241,7 +270,53 @@ function bar(frac, label){
   return `<div class="bar" title="${label}"><span style="width:${Math.min(100,frac*100)}%"></span></div>`;
 }
 
+function renderForward(f){
+  const s = f.summary || {};
+  document.getElementById('fwd-kpi').innerHTML = [
+    ['real bets', s.bets ?? 0],
+    ['record', `${s.wins||0}-${s.losses||0}-${s.pushes||0}`, `${s.pending||0} pending`],
+    ['ROI', s.roi!=null ? pct(s.roi) : '—', 'graded only'],
+    ['beat close', s.clv_graded ? `${s.clv_beat}/${s.clv_graded}` : '—',
+      s.avg_clv_pts!=null ? `avg ${s.avg_clv_pts>0?'+':''}${s.avg_clv_pts} pts` : ''],
+  ].map(([l,v,sub])=>`<div class="box"><div class="v">${v}</div><div class="l">${l}</div>
+     ${sub?`<div class="l" style="text-transform:none">${sub}</div>`:''}</div>`).join('');
+  const tb = document.getElementById('fwd-rows');
+  const bets = f.bets || [];
+  if(!bets.length){ tb.innerHTML='<tr><td colspan="8" class="empty">no live bets captured yet — fills in during the next game</td></tr>'; return; }
+  tb.innerHTML = bets.map(b=>{
+    const oc = {win:'pos',loss:'neg',push:'muted',pending:'muted'}[b.outcome]||'muted';
+    return `<tr><td>${b.matchup}</td><td>${b.market}</td>
+      <td class="${b.side==='over'?'over':'under'}">${b.side.toUpperCase()}</td>
+      <td>${b.entry_line}</td><td class="muted">${b.close_line}</td>
+      <td class="${cls(b.clv_pts)}">${b.clv_pts>0?'+':''}${b.clv_pts}</td>
+      <td class="muted">${b.entry_odds>0?'+':''}${b.entry_odds}</td>
+      <td class="${oc}">${b.outcome}</td></tr>`;
+  }).join('');
+}
+
+const GLOSSARY = [
+  ['Move (%)', 'How far the live line dropped vs the pregame number. The primary trigger.'],
+  ['Edge (pts)', 'Model fair total − live line. The reversion model must independently agree.'],
+  ['EV', 'Expected value per $1 at the offered odds. Must be ≥ threshold to flag.'],
+  ['Min (m)', 'Minutes remaining required in the period — time for reversion to play out (full 6 / half 4 / quarter 3).'],
+  ['β (beta)', 'Reversion weight: share of remaining scoring projected at the pregame rate (β=1) vs current pace (β=0). Fitted ≈ 1.0.'],
+  ['book_beta', 'Assumed book pace-chasing in the MODELED sweep (low = chases pace). The reason that ROI is illustrative.'],
+  ['R² vs momentum', 'Variance the reversion fit explains beyond a “pace continues” baseline. Higher = stronger reversion.'],
+  ['CLV', 'Closing-line value: did we bet a better number than the line closed at? Robust edge proof, needs no final score.'],
+  ['Cadence', 'Which game-clock stoppages we sample (timeout/quarter marks) to save Odds API credits.'],
+  ['Retention', 'Share of dense-sampling opportunities a sparse cadence still catches.'],
+];
+
 async function loadBacktest(){
+  // forward-test panel (real lines) — independent of backtest.json
+  try{
+    const f = await (await fetch('forward.json',{cache:'no-store'})).json();
+    renderForward(f);
+  }catch(e){ /* leave empty state */ }
+
+  document.getElementById('glossary').innerHTML = GLOSSARY.map(([t,m])=>
+    `<tr><td><b>${t}</b></td><td class="muted" style="text-align:left;white-space:normal">${m}</td></tr>`).join('');
+
   let d;
   try{ d = await (await fetch('backtest.json',{cache:'no-store'})).json(); }
   catch(e){ document.getElementById('bt-foot').textContent='backtest.json not found'; return; }
@@ -310,6 +385,21 @@ setInterval(()=>{
     `next refresh in ${countdown}s · updated by GH Actions every 5 min`;
 }, 1000);
 
+async function loadUpcoming(){
+  try{
+    const u = await (await fetch('upcoming.json',{cache:'no-store'})).json();
+    const tb = document.getElementById('upcoming');
+    if(!u.games || !u.games.length){ tb.innerHTML='<tr><td colspan="7" class="empty">none scheduled</td></tr>'; return; }
+    tb.innerHTML = u.games.map(g=>`<tr>
+      <td>${g.date}</td><td><b>${g.matchup}</b></td><td class="muted">${g.tip}</td>
+      <td>${g.total}</td><td class="muted">${g.spread}</td>
+      <td class="muted">${g.round}</td><td class="muted">${g.config}</td></tr>`).join('');
+  }catch(e){
+    document.getElementById('upcoming').innerHTML='<tr><td colspan="7" class="empty">upcoming.json not found</td></tr>';
+  }
+}
+
+loadUpcoming();
 tick();
 setInterval(tick, REFRESH_MS);
 </script>

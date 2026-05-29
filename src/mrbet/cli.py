@@ -333,6 +333,61 @@ def sweep_cmd(
     console.print(table)
 
 
+@app.command("backtest-from-file")
+def backtest_from_file(
+    data: str = typer.Option(..., help="JSON odds dump (see tests/data/sas_okc_historical_sample.json)"),
+    game: str = typer.Option(..., help="Game YAML with pregame baselines"),
+    settings: str = typer.Option(DEFAULT_SETTINGS, help="Settings YAML"),
+    out: str = typer.Option("docs/forward.json", help="Output path for forward panel JSON"),
+):
+    """Backtest the 9-point cadence against a pre-captured or mock odds JSON file.
+
+    Reads live lines at each cadence mark from the JSON dump, runs the full
+    engine pipeline, grades every flagged bet against the embedded finals, and
+    writes the result to docs/forward.json so the dashboard panel updates.
+
+    Seed file format: tests/data/sas_okc_historical_sample.json
+    """
+    from .historical import JsonFileSource, run_cadence_backtest
+    from .cadence import timeout_marks
+    from . import forward as fwd
+
+    s, g = _load(settings, game)
+    source = JsonFileSource(data)
+
+    if g.event.id not in source.game_ids():
+        console.print(f"[red]Event ID {g.event.id!r} not found in {data}. "
+                      f"Available IDs: {source.game_ids()}")
+        raise typer.Exit(1)
+
+    ledger = run_cadence_backtest(source, g, s)
+
+    fwd.dump(out, ledger, scope={
+        "source": "json_file_sim",
+        "data_file": data,
+        "game": g.event.id,
+        "matchup": f"{g.event.away_key} @ {g.event.home_key}",
+        "cadence": "9-point timeout",
+        "marks": timeout_marks(),
+        "note": "mock/historical data — overwritten by live capture at tip-off",
+    })
+
+    sv = fwd.summarize(ledger)
+    console.print(f"[green]Wrote {out}[/green]")
+    console.print(
+        f"  {sv['bets']} bets flagged  "
+        f"[green]{sv['wins']}W[/green]-[red]{sv['losses']}L[/red]-{sv['pushes']}P  "
+        f"({sv['pending']} pending)"
+        + (f"  ROI [{'green' if sv['roi'] and sv['roi']>0 else 'red'}]"
+           f"{sv['roi']:+.1%}[/]" if sv['roi'] is not None else "")
+    )
+    if sv['bets'] == 0:
+        console.print(
+            "[yellow]No signals fired. Check that pct_move_threshold vs the "
+            "line moves in your data file — live lines must be ≥10% below pregame."
+        )
+
+
 @app.command("forward-export")
 def forward_export(
     db: str = typer.Option("data/runtime/mrbet.sqlite", help="Observations SQLite from live runs"),

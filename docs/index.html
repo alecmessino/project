@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mrbet — OKC @ SAS live signals replay</title>
+<style>
+  :root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--txt:#e6edf3;--dim:#8b949e;
+        --green:#2ea043;--red:#da3633;--amber:#d29922;--accent:#388bfd;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+       font:14px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  header{padding:16px 20px;border-bottom:1px solid var(--line);
+         display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+  .brand{font-weight:700;font-size:18px;letter-spacing:.5px}
+  .brand span{color:var(--accent)}
+  .score{font-size:22px;font-weight:700}
+  .meta{color:var(--dim);font-size:13px}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+  .live .dot{background:var(--green);animation:pulse 1.4s infinite}
+  .stopped .dot{background:var(--dim)}
+  .waiting .dot{background:var(--amber)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  main{display:grid;grid-template-columns:1fr 360px;gap:16px;padding:16px 20px}
+  @media(max-width:900px){main{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .card h2{margin:0;padding:12px 16px;font-size:13px;text-transform:uppercase;
+           letter-spacing:.6px;color:var(--dim);border-bottom:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  th{color:var(--dim);font-weight:600;font-size:12px;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tr.flag td{background:rgba(46,160,67,.10)}
+  tr.flag.strong td{background:rgba(46,160,67,.22)}
+  .pill{padding:1px 7px;border-radius:20px;font-size:11px;font-weight:700}
+  .over{color:var(--green)} .under{color:var(--red)}
+  .pos{color:var(--green)} .neg{color:var(--red)} .muted{color:var(--dim)}
+  .badge{background:var(--green);color:#03130a;padding:2px 8px;border-radius:6px;font-weight:700;font-size:11px}
+  .badge.strong{background:var(--amber);color:#1a1300}
+  .sig{padding:12px 16px;border-bottom:1px solid var(--line)}
+  .sig .t{font-weight:700;margin-bottom:4px}
+  .sig .b{color:var(--dim);font-size:12px;white-space:pre-line}
+  .sig .ts{color:var(--dim);font-size:11px;float:right}
+  .empty{padding:18px 16px;color:var(--dim)}
+  footer{padding:10px 20px;color:var(--dim);font-size:12px;border-top:1px solid var(--line);display:flex;gap:16px;align-items:center}
+  /* replay controls */
+  #replay-bar{padding:10px 20px;background:var(--panel);border-bottom:1px solid var(--line);
+              display:flex;align-items:center;gap:12px;font-size:13px}
+  #replay-bar button{background:var(--accent);border:none;color:#fff;padding:4px 14px;
+                     border-radius:6px;cursor:pointer;font-size:13px}
+  #replay-bar button:disabled{opacity:.4;cursor:default}
+  #replay-bar input[type=range]{flex:1;accent-color:var(--accent)}
+  #replay-label{color:var(--dim);white-space:nowrap}
+  .replay-badge{background:var(--amber);color:#1a1300;padding:2px 8px;border-radius:6px;
+                font-size:11px;font-weight:700;margin-left:8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">mr<span>bet</span></div>
+  <div class="score" id="score">—</div>
+  <div class="meta" id="clock">—</div>
+  <div class="meta" id="status"><span class="dot"></span><span id="statusText">loading</span></div>
+  <div class="meta" id="alerts"></div>
+  <span class="replay-badge">REPLAY — OKC @ SAS · WCF · 2026-05-28</span>
+</header>
+<div id="replay-bar">
+  <button id="btn-prev" disabled>&#8592; Prev</button>
+  <button id="btn-play">&#9654; Play</button>
+  <button id="btn-next" disabled>Next &#8594;</button>
+  <input type="range" id="scrubber" min="0" value="0" step="1">
+  <span id="replay-label">frame — / —</span>
+</div>
+<main>
+  <section class="card">
+    <h2>Live markets — mean-reversion fair value</h2>
+    <table>
+      <thead><tr>
+        <th>Market</th><th>Book</th><th>Pre</th><th>Live</th><th>Move</th><th>Side</th>
+        <th>Fair</th><th>Edge</th><th>P</th><th>EV</th><th>Odds</th><th>Stake</th><th>Flag</th>
+      </tr></thead>
+      <tbody id="rows"><tr><td colspan="13" class="empty">loading replay…</td></tr></tbody>
+    </table>
+  </section>
+  <section class="card">
+    <h2>Flagged opportunities</h2>
+    <div id="signals"><div class="empty">none yet</div></div>
+  </section>
+</main>
+<footer>
+  <span id="foot">—</span>
+  <span style="margin-left:auto;color:var(--dim)">
+    <a href="https://github.com/alecmessino/project" style="color:var(--accent);text-decoration:none">github.com/alecmessino/project</a>
+    &nbsp;·&nbsp; mean-reversion NBA totals signal system
+  </span>
+</footer>
+
+<script>
+const fmtPct = v => (v>0?'+':'') + v.toFixed(1) + '%';
+const cls = v => v>0?'pos':(v<0?'neg':'muted');
+
+function renderFrame(d){
+  const h = d.header;
+  document.getElementById('score').textContent =
+    (h.away_score!=null) ? `${h.away} ${h.away_score} — ${h.home_score} ${h.home}` : '—';
+  document.getElementById('clock').textContent =
+    h.clock ? `${(h.period||'').toUpperCase()} ${h.clock}` :
+    (h.minutes_remaining!=null ? `${Math.round(h.minutes_remaining)} min left` : '—');
+  const st = document.getElementById('status');
+  st.className = 'meta ' + (h.status||'waiting');
+  document.getElementById('statusText').textContent = h.status || 'waiting';
+  document.getElementById('alerts').textContent = '';
+  document.getElementById('foot').textContent = 'snapshot ' + (h.updated||'—');
+  renderRows(d.rows||[]);
+  renderSignals(d.signals||[]);
+}
+
+function renderRows(rows){
+  const tb = document.getElementById('rows');
+  if(!rows.length){ tb.innerHTML='<tr><td colspan="13" class="empty">no rows</td></tr>'; return; }
+  tb.innerHTML = rows.map(r=>{
+    const flagCls = r.flagged ? (r.strong?'flag strong':'flag') : '';
+    const badge = r.flagged ? `<span class="badge ${r.strong?'strong':''}">${r.strong?'🔥 STRONG':'FLAG'}</span>` : '';
+    const sideCls = r.side==='OVER'?'over':'under';
+    return `<tr class="${flagCls}">
+      <td>${r.market}</td>
+      <td class="muted">${r.book||'—'}</td>
+      <td class="muted">${r.pre}</td>
+      <td>${r.live}</td>
+      <td class="${cls(r.move_pct)}">${fmtPct(r.move_pct)}</td>
+      <td class="${sideCls}">${r.side}</td>
+      <td>${r.fair}</td>
+      <td class="${cls(r.edge)}">${r.edge>0?'+':''}${r.edge}</td>
+      <td>${r.prob}%</td>
+      <td class="${cls(r.ev)}">${fmtPct(r.ev)}</td>
+      <td class="muted">${r.odds>0?'+':''}${r.odds}</td>
+      <td>$${r.stake.toFixed(2)}</td>
+      <td>${badge}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderSignals(sigs){
+  const el = document.getElementById('signals');
+  if(!sigs.length){ el.innerHTML='<div class="empty">none yet — fires when all thresholds clear.</div>'; return; }
+  el.innerHTML = sigs.map(s=>`<div class="sig"><span class="ts">${s.time}</span>
+    <div class="t">${s.title}</div><div class="b">${s.body}</div></div>`).join('');
+}
+
+// --- replay engine ---
+let frames = [], cur = 0, timer = null;
+
+function goTo(i){
+  cur = Math.max(0, Math.min(frames.length-1, i));
+  renderFrame(frames[cur]);
+  document.getElementById('scrubber').value = cur;
+  document.getElementById('replay-label').textContent = `frame ${cur+1} / ${frames.length}`;
+  document.getElementById('btn-prev').disabled = cur === 0;
+  document.getElementById('btn-next').disabled = cur === frames.length-1;
+}
+
+function startPlay(){
+  if(timer) return;
+  document.getElementById('btn-play').textContent = '⏸ Pause';
+  timer = setInterval(()=>{
+    if(cur >= frames.length-1){ stopPlay(); return; }
+    goTo(cur+1);
+  }, 2000);
+}
+function stopPlay(){
+  clearInterval(timer); timer = null;
+  document.getElementById('btn-play').textContent = '▶ Play';
+}
+
+document.getElementById('btn-play').addEventListener('click', ()=> timer ? stopPlay() : startPlay());
+document.getElementById('btn-prev').addEventListener('click', ()=>{ stopPlay(); goTo(cur-1); });
+document.getElementById('btn-next').addEventListener('click', ()=>{ stopPlay(); goTo(cur+1); });
+document.getElementById('scrubber').addEventListener('input', e=>{ stopPlay(); goTo(+e.target.value); });
+
+fetch('replay.json')
+  .then(r=>r.json())
+  .then(data=>{
+    frames = data;
+    document.getElementById('scrubber').max = frames.length-1;
+    goTo(0);
+    startPlay();
+  })
+  .catch(()=>{ document.getElementById('foot').textContent = 'failed to load replay.json'; });
+</script>
+</body>
+</html>

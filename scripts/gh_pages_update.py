@@ -26,7 +26,7 @@ from mrbet.cadence import timeout_marks
 from mrbet.config import GameConfig, Settings
 from mrbet.engine import Engine
 from mrbet.envload import load_env
-from mrbet.notify import Notifier
+from mrbet.notify import Notifier, _discord
 from mrbet.odds.theodds import TheOddsProvider
 from mrbet.web.server import DashboardState
 
@@ -52,6 +52,8 @@ prev_state = json.loads(STATE_JSON.read_text()) if STATE_JSON.exists() else {}
 prev_fwd = json.loads(FORWARD_JSON.read_text()) if FORWARD_JSON.exists() else {}
 ledger = prev_fwd.get("ledger", {})
 captured = set(prev_fwd.get("scope", {}).get("captured_marks", []))
+# One-time "game has started, live data flowing" heartbeat (persists across runs).
+started_notified = bool(prev_fwd.get("scope", {}).get("game_started_notified", False))
 finals = getattr(game, "finals", None) or None
 
 state = DashboardState(game)
@@ -74,6 +76,22 @@ if espn is None:
     })
     state.rows = []   # no live markets before tip / after final
 else:
+    # ESPN lists the game as "live" at 0-0 / 48:00 even pre-tip, so gate the
+    # heartbeat on real progress — the clock has ticked off the opening 48:00 or
+    # points are on the board. That's the true tip-off / data-flowing moment.
+    game_underway = espn.minutes_elapsed > 0 or (espn.away_score + espn.home_score) > 0
+    if game_underway and not started_notified:
+        _discord(
+            "🏀 Game started — live data flowing",
+            f"{matchup} is live on the ESPN scoreboard and the poller is now "
+            f"receiving score/clock data. Mean-reversion alerts are armed; you'll "
+            f"get a push here the moment any market clears every threshold.\n"
+            f"Score {espn.away_score}-{espn.home_score} · "
+            f"{round(espn.minutes_remaining, 1)} min remaining.",
+        )
+        started_notified = True
+        print("sent game-started heartbeat to Discord")
+
     elapsed = espn.minutes_elapsed
     # Earliest uncaptured mark the clock has reached (one capture per run).
     due = next((m for m in MARKS if m <= elapsed and m not in captured), None)
@@ -119,6 +137,7 @@ fwd.dump(FORWARD_JSON, ledger, scope={
     "matchup": matchup, "game": game.event.id,
     "cadence": "9-point timeout", "marks": MARKS,
     "captured_marks": sorted(captured),
+    "game_started_notified": started_notified,
 })
 print(f"Wrote {STATE_JSON} ({len(state.rows)} rows) and {FORWARD_JSON} "
       f"({len(ledger)} bets, {len(captured)}/{len(MARKS)} marks captured)"

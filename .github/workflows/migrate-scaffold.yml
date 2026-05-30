@@ -1,7 +1,7 @@
 name: Migrate scaffold → fair-value-territory
 
 # One-shot manual migration. Pushes the contents of this repo's
-# `mlb-scaffold-export` branch to the (empty) alecmessino/fair-value-territory
+# `mlb-scaffold-export` branch to the alecmessino/fair-value-territory
 # repository, authenticating with a PAT stored as the MIGRATION_PAT secret.
 #
 # This file must live on the default branch (master) for the "Run workflow"
@@ -45,10 +45,10 @@ jobs:
           git remote add target "https://x-access-token:${MIGRATION_PAT}@github.com/alecmessino/fair-value-territory.git"
 
           echo "Pushing $(git rev-parse --short HEAD) (mlb-scaffold-export) → fair-value-territory:${TARGET_BRANCH}"
-          if ! git push target "HEAD:refs/heads/${TARGET_BRANCH}" 2>push.log; then
+          if ! git push --force target "HEAD:refs/heads/${TARGET_BRANCH}" 2>push.log; then
             # Scrub any token that might surface in an error before printing.
             sed "s#x-access-token:[^@]*@#x-access-token:***@#g" push.log
-            echo "::error::Push failed. Common causes: target repo not empty (needs --force or a clean repo), or PAT lacks 'repo'/'contents:write' scope on fair-value-territory."
+            echo "::error::Push failed. Check that the PAT has 'contents:write' scope on fair-value-territory."
             exit 1
           fi
           echo "✅ Migration complete — mlb-scaffold-export pushed to fair-value-territory:${TARGET_BRANCH}"

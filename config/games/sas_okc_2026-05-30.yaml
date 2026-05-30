@@ -1,8 +1,8 @@
 # Pregame baselines for San Antonio Spurs @ Oklahoma City Thunder.
-# Western Conference Finals Game 7 (series tied 3-3). Tip 7:00 PM ET 5/30/26.
-# Full total + spread from DraftKings (O/U 212.5, OKC -3.5). Team/H1 lines are
-# DERIVED from the total+spread (no separate book screenshot yet) — refine when
-# you see the live ladder.
+# Western Conference Finals Game 7 (series tied 3-3). Tip 7:00 PM CT 5/30/26.
+# REAL captured pregame lines (5/30 afternoon): full + 1H + team totals from the
+# DraftKings/Bovada ladder, cross-checked vs the unabated.com composite and
+# oddschecker.com 1H totals. 1H total is the real 108.5 (was derived 106.0).
 
 event:
   id: sas_okc_2026-05-30
@@ -11,19 +11,17 @@ event:
   home: Oklahoma City Thunder
   away_key: SAS
   home_key: OKC
-  commence_time: "2026-05-30T19:00:00-04:00"
+  commence_time: "2026-05-30T19:00:00-05:00"
   bookmaker: draftkings
 
 totals:
-  full:    { line: 212.5, over: -110, under: -110 }
-  h1:      { line: 106.0, over: -110, under: -110 }   # derived ~ total/2
+  full:    { line: 214.0, over: -110, under: -110 }
+  h1:      { line: 108.5, over: -110, under: -110 }   # REAL 1H total (unabated/oddschecker)
 
-# Derived from total 212.5 with OKC favored by 3.5:
-#   OKC = 212.5/2 + 3.5/2 = 108.0 ;  SAS = 212.5/2 - 3.5/2 = 104.5
 team_totals:
-  OKC: { line: 108.0, over: -110, under: -110 }
-  SAS: { line: 104.5, over: -110, under: -110 }
+  OKC: { line: 108.5, over: -110, under: -120 }
+  SAS: { line: 105.5, over: -115, under: -115 }
 
 sides:
   spread:    { OKC: -3.5, SAS: 3.5, over: -110, under: -110 }
-  moneyline: { OKC: -160, SAS: 135 }
+  moneyline: { OKC: -145, SAS: 125 }

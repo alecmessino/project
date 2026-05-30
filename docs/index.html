@@ -21,7 +21,11 @@
   .stopped .dot{background:var(--dim)}
   .waiting .dot{background:var(--amber)}
   .error .dot{background:var(--red)}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.82)}}
+  /* always-on pulsing dot on the Live tab — shows the system is active */
+  .livedot{display:inline-block;width:8px;height:8px;border-radius:50%;
+           background:var(--green);margin-right:7px;vertical-align:middle;
+           box-shadow:0 0 0 0 rgba(46,160,67,.55);animation:pulse 1.6s ease-in-out infinite}
   main{display:grid;grid-template-columns:1fr 360px;gap:16px;padding:16px 20px}
   @media(max-width:900px){main{grid-template-columns:1fr}}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -43,7 +47,11 @@
   .sig .t{font-weight:700;margin-bottom:4px}
   .sig .b{color:var(--dim);font-size:12px;white-space:pre-line}
   .sig .ts{color:var(--dim);font-size:11px;float:right}
-  .empty{padding:18px 16px;color:var(--dim)}
+  .empty{padding:22px 16px;color:#888;text-align:center;font-style:italic;
+         border:1px dashed var(--line);border-radius:8px}
+  /* subtle row hover highlight across all tables */
+  tbody tr:hover td{background:#1c2128}
+  tr.flag:hover td{background:rgba(46,160,67,.18)}
   footer{padding:10px 20px;color:var(--dim);font-size:12px;border-top:1px solid var(--line);
          display:flex;gap:16px;align-items:center;flex-wrap:wrap}
   #refresh-info{margin-left:auto}
@@ -73,6 +81,12 @@
   .kpi .l{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
   .chip{display:inline-block;background:var(--green);color:#03130a;font-weight:700;
         padding:1px 7px;border-radius:6px;font-size:11px}
+  /* distance-to-trigger chart card */
+  .chart-card{grid-column:1/-1;background:var(--panel);border:1px solid var(--line);
+              border-radius:10px;padding:14px 16px 12px}
+  .chart-card .ct{font-size:13px;font-weight:700;color:var(--txt);margin:0 0 2px}
+  .chart-card .cs{font-size:11px;color:var(--dim);margin:0 0 10px;line-height:1.5}
+  .chart-wrap{position:relative;height:240px}
   /* threshold criterion badge — muted dark-grey fill, blue border + blue text */
   .crit{display:inline-block;background:rgba(110,118,129,.10);
         border:1px solid rgba(56,139,253,.45);color:var(--accent);
@@ -95,9 +109,10 @@
   .barcell .fill{position:absolute;left:0;top:0;bottom:0;
                  background:rgba(56,139,253,.65);border-radius:4px}
   .barcell .barnum{position:relative;display:block;line-height:18px;padding-right:8px}
-  /* quick-start explainer under the header */
-  .quickstart{margin:16px 20px 0;padding:14px 18px;background:var(--panel);
-              border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px}
+  /* quick-start explainer under the header — distinct, lighter card */
+  .quickstart{margin:16px 20px 0;padding:16px 20px;background:#1c2128;
+              border:1px solid var(--line);border-left:3px solid var(--accent);
+              border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
   .quickstart h3{margin:0 0 6px;font-size:14px}
   .quickstart p{margin:0 0 8px;color:var(--dim);font-size:13px;line-height:1.5}
   .quickstart ul{margin:0;padding-left:18px;color:var(--dim);font-size:13px;line-height:1.7}
@@ -131,7 +146,7 @@
   </ul>
 </section>
 <nav class="tabs">
-  <div class="tab active" data-view="live" id="tab-live">● Live</div>
+  <div class="tab active" data-view="live" id="tab-live"><span class="livedot"></span>Live</div>
   <div class="tab" data-view="backtest" id="tab-backtest">Backtest &amp; calibration</div>
 </nav>
 
@@ -143,6 +158,13 @@
       <thead><tr><th>Date</th><th>Matchup</th><th>Tip (ET)</th><th>Total</th><th>Spread</th><th>Round</th><th>Config</th></tr></thead>
       <tbody id="upcoming"><tr><td colspan="7" class="empty">loading…</td></tr></tbody>
     </table>
+  </section>
+  <section class="chart-card">
+    <p class="ct">In-Play Market Stress: Distance-to-Trigger (FULL GAME)</p>
+    <p class="cs">How close the full-game total is to firing. <b style="color:#388bfd">Move %</b>
+      (left) and <b style="color:#d29922">Edge pts</b> (right) climb as the live line drops;
+      when both cross their dashed threshold lines, a signal fires. Updates every cadence mark.</p>
+    <div class="chart-wrap"><canvas id="stressChart"></canvas></div>
   </section>
   <section class="card card-scroll">
     <h2>Live markets — mean-reversion fair value</h2>
@@ -270,6 +292,7 @@
   <span id="refresh-info" class="muted"></span>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
 const fmtPct = v => (v>0?'+':'') + v.toFixed(1)+'%';
 const cls    = v => v>0?'pos':(v<0?'neg':'muted');
@@ -372,6 +395,72 @@ function renderSignals(sigs){
     <div class="t">${s.title}</div><div class="b">${s.body}</div></div>`).join('');
 }
 
+// ---- Distance-to-Trigger chart ------------------------------------------- //
+let stressChart = null;
+const FULL_KEY = 'game_total:full:game';
+
+function buildStressChart(moveThr, edgeThr){
+  if (typeof Chart === 'undefined') return;
+  const ctx = document.getElementById('stressChart');
+  if (!ctx) return;
+  const thrLine = (val, color) => ({
+    data: [{x:0, y:val}, {x:60, y:val}], borderColor: color, borderWidth: 1.5,
+    borderDash: [6,5], pointRadius: 0, fill: false, tension: 0,
+  });
+  stressChart = new Chart(ctx, {
+    type: 'line',
+    data: { datasets: [
+      { label:'Move %', yAxisID:'yMove', data:[], borderColor:'#388bfd',
+        backgroundColor:'rgba(56,139,253,.12)', borderWidth:2, tension:.25,
+        pointRadius:3, pointBackgroundColor:'#388bfd', fill:true },
+      { label:'Edge pts', yAxisID:'yEdge', data:[], borderColor:'#d29922',
+        backgroundColor:'rgba(210,153,34,.10)', borderWidth:2, tension:.25,
+        pointRadius:3, pointBackgroundColor:'#d29922', fill:false },
+      { label:`Move threshold (${(moveThr*100).toFixed(0)}%)`, yAxisID:'yMove',
+        ...thrLine(moveThr*100, 'rgba(56,139,253,.85)') },
+      { label:`Edge threshold (${edgeThr.toFixed(1)} pts)`, yAxisID:'yEdge',
+        ...thrLine(edgeThr, 'rgba(218,54,51,.9)') },
+    ]},
+    options: {
+      responsive:true, maintainAspectRatio:false, animation:false,
+      interaction:{ mode:'index', intersect:false },
+      scales:{
+        x:{ type:'linear', min:0, max:60, title:{display:true,text:'Game time (min)',color:'#8b949e'},
+            ticks:{color:'#8b949e',stepSize:12}, grid:{color:'rgba(48,54,61,.5)'} },
+        yMove:{ position:'left', min:0, suggestedMax:Math.max(15, moveThr*100*1.4),
+            title:{display:true,text:'Move %',color:'#388bfd'},
+            ticks:{color:'#388bfd'}, grid:{color:'rgba(48,54,61,.35)'} },
+        yEdge:{ position:'right', min:0, suggestedMax:Math.max(6, edgeThr*1.8),
+            title:{display:true,text:'Edge pts',color:'#d29922'},
+            ticks:{color:'#d29922'}, grid:{drawOnChartArea:false} },
+      },
+      plugins:{ legend:{ labels:{color:'#e6edf3',boxWidth:18,font:{size:11}} } },
+    },
+  });
+}
+
+async function loadStressChart(){
+  let hist;
+  try{ hist = await (await fetch('odds_history.json',{cache:'no-store'})).json(); }
+  catch(e){ return; }                       // archive not present yet — skip
+  const thr = hist.thresholds || {};
+  const moveThr = thr.pct_move ?? 0.10, edgeThr = thr.edge_pts ?? 3.0;
+  if (!stressChart) buildStressChart(moveThr, edgeThr);
+  if (!stressChart) return;                  // Chart.js unavailable
+
+  const move=[], edge=[];
+  for (const cap of (hist.captures||[])){
+    const m = (cap.markets||[]).find(x=>x.market===FULL_KEY);
+    if (!m || m.pct_move==null) continue;
+    const t = cap.minutes_elapsed ?? cap.mark;
+    move.push({x:t, y:+(Math.abs(m.pct_move)*100).toFixed(1)});
+    edge.push({x:t, y:+(m.edge_pts ?? 0).toFixed(1)});
+  }
+  stressChart.data.datasets[0].data = move;
+  stressChart.data.datasets[1].data = edge;
+  stressChart.update();
+}
+
 async function tick(){
   try{
     const r = await fetch('state.json', {cache:'no-store'});
@@ -381,6 +470,7 @@ async function tick(){
   }catch(e){
     document.getElementById('foot').textContent = 'fetch failed — retrying…';
   }
+  loadStressChart();   // refresh the distance-to-trigger monitor each poll
 }
 
 // ---- tabs ---------------------------------------------------------------- //

@@ -92,7 +92,11 @@ else:
                 notifier.maybe_notify(r.signal)   # push the moment it flags
             fwd.merge_signal(ledger, r.evaluation, ts, matchup, finals)
         # Archive the raw quote (all markets, BOTH sides' prices) for forward testing.
-        fwd.append_capture(ODDS_HISTORY, game.event.id, snap, results, ts)
+        fwd.append_capture(ODDS_HISTORY, game.event.id, snap, results, ts, thresholds={
+            "pct_move": settings.triggers.pct_move_threshold,
+            "edge_pts": settings.triggers.edge_pts_threshold,
+            "ev": settings.triggers.ev_threshold,
+        })
         captured.add(due)
         captured_now = due
         print(f"captured cadence mark m{due:.0f} "

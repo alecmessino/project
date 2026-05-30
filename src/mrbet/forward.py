@@ -66,19 +66,24 @@ def merge_signal(ledger: dict, evaluation, ts: str, matchup: str,
 
 
 def append_capture(path: str | pathlib.Path, event_id: str, snap, results,
-                   ts: str) -> dict:
+                   ts: str, thresholds: Optional[dict] = None) -> dict:
     """Archive one raw cadence-mark snapshot for forward testing.
 
     Stores every tracked market's full quote — line plus BOTH the over and under
     prices — alongside the model's read (side/fair/edge/ev/flag). With both sides'
     odds preserved you can re-grade OVER or UNDER offline later. Idempotent per
     (event_id, mark) so re-runs of the poll workflow never duplicate a capture.
+
+    `thresholds` (e.g. {"pct_move": 0.10, "edge_pts": 3.0}) is stored at the top
+    level so the dashboard's distance-to-trigger chart can draw the live lines.
     """
     p = pathlib.Path(path)
     try:
         hist = json.loads(p.read_text()) if p.exists() else {}
     except (ValueError, OSError):
         hist = {}
+    if thresholds is not None:
+        hist["thresholds"] = thresholds
     captures = hist.setdefault("captures", [])
     mark = snap.meta.get("cadence_mark")
     if any(c.get("event_id") == event_id and c.get("mark") == mark for c in captures):

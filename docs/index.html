@@ -95,6 +95,19 @@
   .barcell .fill{position:absolute;left:0;top:0;bottom:0;
                  background:rgba(56,139,253,.65);border-radius:4px}
   .barcell .barnum{position:relative;display:block;line-height:18px;padding-right:8px}
+  /* quick-start explainer under the header */
+  .quickstart{margin:16px 20px 0;padding:14px 18px;background:var(--panel);
+              border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px}
+  .quickstart h3{margin:0 0 6px;font-size:14px}
+  .quickstart p{margin:0 0 8px;color:var(--dim);font-size:13px;line-height:1.5}
+  .quickstart ul{margin:0;padding-left:18px;color:var(--dim);font-size:13px;line-height:1.7}
+  .quickstart li b{color:var(--txt)}
+  /* accuracy pill in the worked-examples table */
+  .acc{display:inline-block;padding:1px 8px;border-radius:10px;font-weight:700;
+       font-size:12px;font-variant-numeric:tabular-nums}
+  .acc.good{background:rgba(46,160,67,.20);color:#3fb950}
+  .acc.mid{background:rgba(210,153,34,.22);color:#e3b341}
+  .acc.bad{background:rgba(218,54,51,.20);color:#f85149}
 </style>
 </head>
 <body>
@@ -106,6 +119,17 @@
   <div class="meta" id="credits"></div>
 </header>
 <div class="err-banner" id="err-banner"></div>
+<section class="quickstart">
+  <h3>What is this?</h3>
+  <p>This dashboard tracks a real-time <b>mean-reversion</b> model. It calculates the
+     “fair” score of an ongoing NBA game and alerts us when the bookmaker's live betting
+     line is significantly off-base.</p>
+  <ul>
+    <li><b>Forward Test</b> — Real bets the system has actually identified during live games.</li>
+    <li><b>Batch Backtest</b> — How the model would have performed if it had been running on past playoff games.</li>
+    <li><b>Thresholds</b> — Different “sensitivity” settings for the engine, balancing the number of bets taken vs. accuracy.</li>
+  </ul>
+</section>
 <nav class="tabs">
   <div class="tab active" data-view="live" id="tab-live">● Live</div>
   <div class="tab" data-view="backtest" id="tab-backtest">Backtest &amp; calibration</div>
@@ -229,9 +253,12 @@
 
   <div class="full">
     <p class="lead">Worked examples — projection vs real final (timeout cadence)</p>
-    <p class="note">Each row samples the game at the timeout/quarter marks; <b>proj</b> is the
-      β-weighted projected final, <b>err</b> = proj − real final. Shows the model anchoring to
-      the pregame baseline as the game unfolds.</p>
+    <p class="note">This table shows how the model's projected final score (based on the current
+      game pace) converges toward the actual final score as the game reaches its conclusion.</p>
+    <p class="note" style="margin-top:-4px"><b>Projection</b> = Predicted total based on current
+      scoring rate vs. pregame baseline. &nbsp;<b>Accuracy</b> = how close the projection lands to
+      the real final: <span class="acc good">≤3 pts</span> <span class="acc mid">3–7</span>
+      <span class="acc bad">&gt;7</span>.</p>
     <div id="examples"></div>
   </div>
 
@@ -277,6 +304,13 @@ function sweepProfile(label) {
   if (move>=10 && min<=4)              return 'Any Late Signal';
   if (move>=10 && move<15 && min>=6)   return 'Balanced Standard';
   return '—';
+}
+
+// Color-coded accuracy pill: green within 3 pts of final, yellow 3–7, red beyond 7.
+function accPill(err) {
+  const a = Math.abs(err);
+  const k = a <= 3 ? 'good' : (a <= 7 ? 'mid' : 'bad');
+  return `<span class="acc ${k}">${err>0?'+':''}${err}</span>`;
 }
 
 // Green heat-map background that scales with profitability (0 → transparent, max → 32% green).
@@ -426,6 +460,10 @@ const GLOSSARY = [
   ['CLV', 'Closing-line value: did we bet a better number than the line closed at? Robust edge proof, needs no final score.'],
   ['Cadence', 'Which game-clock stoppages we sample (timeout/quarter marks) to save Odds API credits.'],
   ['Retention', 'Share of dense-sampling opportunities a sparse cadence still catches.'],
+  ['Why isn\'t the highest-ROI profile the default?',
+   'Our "Current Config" is optimized for robustness — it catches the most reliable reversion '
+   + 'signals while avoiding rare, "lucky" bets that inflate short-term ROI but aren\'t '
+   + 'statistically repeatable.'],
 ];
 
 async function loadBacktest(){
@@ -517,9 +555,11 @@ async function loadBacktest(){
   document.getElementById('examples').innerHTML = d.examples.map(ex=>`
     <section class="card" style="margin-bottom:12px">
       <h2>${ex.matchup} — pregame ${ex.pregame}, real final <b>${ex.final}</b></h2>
-      <table><thead><tr><th>min</th><th>score</th><th>proj final (β=${d.config.beta})</th><th>err vs final</th></tr></thead>
-      <tbody>${ex.samples.map(s=>`<tr><td>${s.min}</td><td>${s.score}</td>
-        <td>${s.proj}</td><td class="${cls(-Math.abs(s.err))}">${s.err>0?'+':''}${s.err}</td></tr>`).join('')}</tbody>
+      <table><thead><tr><th>min</th><th>score</th>
+        <th title="Predicted total based on current scoring rate vs. pregame baseline">proj final (β=${d.config.beta})</th>
+        <th>accuracy (err vs final)</th></tr></thead>
+      <tbody>${ex.samples.map(s=>`<tr><td class="num">${s.min}</td><td class="num">${s.score}</td>
+        <td class="num">${s.proj}</td><td>${accPill(s.err)}</td></tr>`).join('')}</tbody>
       </table></section>`).join('');
 
   document.getElementById('bt-foot').textContent =

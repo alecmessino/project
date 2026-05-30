@@ -71,6 +71,8 @@ class NotificationSettings(BaseModel):
     desktop: bool = True
     push: bool = True
     sms: bool = False      # email-to-SMS gateway; configure via env (see .env.example)
+    discord: bool = False  # Discord webhook; set DISCORD_WEBHOOK_URL in env (see .env.example)
+    slack: bool = False    # Slack webhook; set SLACK_WEBHOOK_URL in env (see .env.example)
     reissue_ev_delta: float = 0.02
 
 

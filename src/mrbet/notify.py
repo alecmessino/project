@@ -42,6 +42,10 @@ class Notifier:
             _push(title, body, strong=signal.strong)
         if self.settings.sms:
             _sms_gateway(signal)
+        if self.settings.discord:
+            _discord(title, body, strong=signal.strong)
+        if self.settings.slack:
+            _slack(title, body, strong=signal.strong)
         return True
 
 
@@ -147,6 +151,42 @@ def _sms_gateway(signal: Signal) -> None:
             s.send_message(msg)
     except Exception as exc:
         print(f"[SMS error] {exc}")
+
+
+def _discord(title: str, body: str, strong: bool = False) -> None:
+    """Post the flagged signal to a Discord channel webhook (phone push via the app).
+
+    Set DISCORD_WEBHOOK_URL in env (.env or GitHub Secrets — never hardcode):
+      Discord → Server Settings → Integrations → Webhooks → New Webhook → Copy URL.
+    Subscribe to the channel on the Discord mobile app to get a push the moment a
+    signal clears every threshold.
+    """
+    url = os.environ.get("DISCORD_WEBHOOK_URL")
+    if not url:
+        return
+    color = 0xDA3633 if strong else 0x2EA043  # red = STRONG, green = standard flag
+    payload = {"embeds": [{"title": title, "description": body, "color": color}]}
+    try:
+        requests.post(url, json=payload, timeout=10)
+    except requests.RequestException as exc:  # pragma: no cover - network
+        print(f"[discord error] {exc}")
+
+
+def _slack(title: str, body: str, strong: bool = False) -> None:
+    """Post the flagged signal to a Slack incoming webhook (phone push via the app).
+
+    Set SLACK_WEBHOOK_URL in env (.env or GitHub Secrets — never hardcode):
+      Slack → Apps → Incoming Webhooks → Add to a channel → Copy the webhook URL.
+    """
+    url = os.environ.get("SLACK_WEBHOOK_URL")
+    if not url:
+        return
+    color = "#da3633" if strong else "#2ea043"
+    payload = {"attachments": [{"color": color, "title": title, "text": body}]}
+    try:
+        requests.post(url, json=payload, timeout=10)
+    except requests.RequestException as exc:  # pragma: no cover - network
+        print(f"[slack error] {exc}")
 
 
 def _pushover(title: str, body: str, token: str, user: str, strong: bool) -> None:

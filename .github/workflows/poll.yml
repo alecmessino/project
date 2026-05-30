@@ -25,6 +25,10 @@ jobs:
         run: python scripts/gh_pages_update.py
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          # Notification channels — empty/unset secrets simply no-op.
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           MRBET_GAME: config/games/sas_okc_2026-05-30.yaml   # WCF G7 (armed target)
 
       - name: Grade completed bets (no-op while game is in progress)

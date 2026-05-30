@@ -26,6 +26,7 @@ from mrbet.cadence import timeout_marks
 from mrbet.config import GameConfig, Settings
 from mrbet.engine import Engine
 from mrbet.envload import load_env
+from mrbet.notify import Notifier
 from mrbet.odds.theodds import TheOddsProvider
 from mrbet.web.server import DashboardState
 
@@ -40,6 +41,10 @@ MARKS = timeout_marks()   # [6,9,12,18,21,24,30,33,36]
 settings = Settings.load(ROOT / "config" / "settings.yaml")
 game = GameConfig.load(GAME_YAML)
 matchup = f"{game.event.away_key} @ {game.event.home_key}"
+
+# Fires desktop/push/SMS/Discord/Slack per settings.notifications, but only on a
+# real Signal (every threshold cleared). Webhook URLs come from env (secrets).
+notifier = Notifier(settings.notifications)
 
 # Restore prior dashboard state + forward ledger + captured marks.
 prev_state = json.loads(STATE_JSON.read_text()) if STATE_JSON.exists() else {}
@@ -83,6 +88,7 @@ else:
         for r in results:
             if r.signal:
                 state.add_signal(r.signal)
+                notifier.maybe_notify(r.signal)   # push the moment it flags
             fwd.merge_signal(ledger, r.evaluation, ts, matchup, finals)
         captured.add(due)
         captured_now = due

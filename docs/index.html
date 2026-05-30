@@ -29,7 +29,9 @@
            letter-spacing:.6px;color:var(--dim);border-bottom:1px solid var(--line)}
   table{width:100%;border-collapse:collapse}
   th,td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
-  th{color:var(--dim);font-weight:600;font-size:12px;text-transform:uppercase}
+  td{font-variant-numeric:tabular-nums}
+  th{color:var(--dim);font-weight:600;font-size:12px;text-transform:uppercase;
+     position:sticky;top:0;z-index:3;background:var(--panel)}
   th:first-child,td:first-child{text-align:left}
   tr.flag td{background:rgba(46,160,67,.10)}
   tr.flag.strong td{background:rgba(46,160,67,.22)}
@@ -63,7 +65,7 @@
   .warn{background:#2a2410;border:1px solid var(--amber);color:#e7c66b;
         padding:8px 12px;border-radius:8px;font-size:12px;margin:0 16px 10px}
   .bar{position:relative;background:#0d1117;border-radius:4px;height:16px;min-width:60px}
-  .bar > span{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:4px}
+  .bar > span{position:absolute;left:0;top:0;bottom:0;background:rgba(56,139,253,.65);border-radius:4px}
   .kpi{display:flex;gap:20px;flex-wrap:wrap;padding:4px 20px 12px}
   .kpi .box{background:var(--panel);border:1px solid var(--line);border-radius:10px;
             padding:12px 16px;min-width:130px}
@@ -71,16 +73,28 @@
   .kpi .l{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
   .chip{display:inline-block;background:var(--green);color:#03130a;font-weight:700;
         padding:1px 7px;border-radius:6px;font-size:11px}
-  /* threshold criterion badge */
-  .crit{display:inline-block;background:rgba(56,139,253,.11);
-        border:1px solid rgba(56,139,253,.22);color:var(--accent);
+  /* threshold criterion badge — muted dark-grey fill, blue border + blue text */
+  .crit{display:inline-block;background:rgba(110,118,129,.10);
+        border:1px solid rgba(56,139,253,.45);color:var(--accent);
         padding:1px 6px;border-radius:4px;margin:1px 2px;white-space:nowrap;
-        font:700 11px/1.7 'SF Mono',SFMono-Regular,Consolas,Menlo,monospace;
+        font:700 11px/1.7 ui-monospace,'SF Mono',SFMono-Regular,'Roboto Mono',Consolas,Menlo,monospace;
         letter-spacing:.2px}
-  /* profile label in sweep table */
-  .profile{color:var(--dim);font-size:11px;font-style:italic;white-space:nowrap}
+  /* profile label in sweep table (grouped, prints once per archetype) */
+  .profile{color:#adbac7;font-size:12px;font-weight:600;white-space:nowrap;vertical-align:top;
+           border-right:1px solid var(--line)}
   /* scrollable card shell for wide tables */
   .card-scroll{overflow-x:auto}
+  /* monospace + tabular numerics for odds / lines / EV so -115 aligns under +100 */
+  .num{font-family:ui-monospace,'SF Mono',SFMono-Regular,'Roboto Mono',Menlo,Consolas,monospace;
+       font-variant-numeric:tabular-nums;text-align:right}
+  /* threshold-pill cell stays left-aligned even on rowspan continuation rows */
+  .crit-cell{text-align:left;white-space:normal}
+  /* bar-behind-number cell: blue fill grows behind a right-aligned value */
+  .barcell{position:relative;background:#0d1117;border-radius:4px;height:18px;
+           min-width:96px;overflow:hidden}
+  .barcell .fill{position:absolute;left:0;top:0;bottom:0;
+                 background:rgba(56,139,253,.65);border-radius:4px}
+  .barcell .barnum{position:relative;display:block;line-height:18px;padding-right:8px}
 </style>
 </head>
 <body>
@@ -234,6 +248,8 @@ const fmtPct = v => (v>0?'+':'') + v.toFixed(1)+'%';
 const cls    = v => v>0?'pos':(v<0?'neg':'muted');
 const pct    = v => v!=null ? (v*100).toFixed(0)+'%' : '—';
 const bar    = (v,title='') => `<div class="bar" title="${title}"><span style="width:${Math.round(v*100)}%"></span></div>`;
+// Bar that grows behind a right-aligned percentage, so values scan straight down.
+const barNum = (v,title='') => `<div class="barcell" title="${title}"><span class="fill" style="width:${Math.round((v||0)*100)}%"></span><span class="num barnum">${pct(v)}</span></div>`;
 const REFRESH_MS = 60_000;
 
 // Wrap each threshold criterion (e.g. move≥15%) in a monospace badge.
@@ -300,16 +316,16 @@ function renderRows(rows){
     return `<tr class="${flagCls}">
       <td>${r.market}</td>
       <td class="muted">${r.book||'—'}</td>
-      <td class="muted">${r.pre}</td>
-      <td>${r.live}</td>
-      <td class="${cls(r.move_pct)}">${fmtPct(r.move_pct)}</td>
+      <td class="num muted">${r.pre}</td>
+      <td class="num">${r.live}</td>
+      <td class="num ${cls(r.move_pct)}">${fmtPct(r.move_pct)}</td>
       <td class="${sideCls}">${r.side}</td>
-      <td>${r.fair}</td>
-      <td class="${cls(r.edge)}">${r.edge>0?'+':''}${r.edge}</td>
-      <td>${r.prob}%</td>
-      <td class="${cls(r.ev)}">${fmtPct(r.ev)}</td>
-      <td class="muted">${r.odds>0?'+':''}${r.odds}</td>
-      <td>$${r.stake.toFixed(2)}</td>
+      <td class="num">${r.fair}</td>
+      <td class="num ${cls(r.edge)}">${r.edge>0?'+':''}${r.edge}</td>
+      <td class="num">${r.prob}%</td>
+      <td class="num ${cls(r.ev)}">${fmtPct(r.ev)}</td>
+      <td class="num muted">${r.odds>0?'+':''}${r.odds}</td>
+      <td class="num">$${r.stake.toFixed(2)}</td>
       <td>${badge}</td>
     </tr>`;
   }).join('');
@@ -363,9 +379,9 @@ function renderForward(f){
     const oc = {win:'pos',loss:'neg',push:'muted',pending:'muted'}[b.outcome]||'muted';
     return `<tr><td>${b.matchup}</td><td>${b.market}</td>
       <td class="${b.side==='over'?'over':'under'}">${b.side.toUpperCase()}</td>
-      <td>${b.entry_line}</td><td class="muted">${b.close_line}</td>
-      <td class="${cls(b.clv_pts)}">${b.clv_pts>0?'+':''}${b.clv_pts}</td>
-      <td class="muted">${b.entry_odds>0?'+':''}${b.entry_odds}</td>
+      <td class="num">${b.entry_line}</td><td class="num muted">${b.close_line}</td>
+      <td class="num ${cls(b.clv_pts)}">${b.clv_pts>0?'+':''}${b.clv_pts}</td>
+      <td class="num muted">${b.entry_odds>0?'+':''}${b.entry_odds}</td>
       <td class="${oc}">${b.outcome}</td></tr>`;
   }).join('');
 }
@@ -392,9 +408,9 @@ function renderBatch(f){
     return `<tr><td class="muted" style="font-size:11px">${eventLabel(gameKey)}</td>
       <td>${b.matchup}</td><td>${b.market}</td>
       <td class="${b.side==='over'?'over':'under'}">${b.side.toUpperCase()}</td>
-      <td>${b.entry_line}</td><td class="muted">${b.close_line}</td>
-      <td class="${cls(b.clv_pts)}">${b.clv_pts>0?'+':''}${b.clv_pts}</td>
-      <td class="muted">${b.entry_odds>0?'+':''}${b.entry_odds}</td>
+      <td class="num">${b.entry_line}</td><td class="num muted">${b.close_line}</td>
+      <td class="num ${cls(b.clv_pts)}">${b.clv_pts>0?'+':''}${b.clv_pts}</td>
+      <td class="num muted">${b.entry_odds>0?'+':''}${b.entry_odds}</td>
       <td class="${oc}">${b.outcome}</td></tr>`;
   }).join('');
 }
@@ -446,8 +462,8 @@ async function loadBacktest(){
   document.getElementById('meth-head').textContent = d.methodology.headline;
   document.getElementById('meth-note').textContent = d.methodology.explainer;
   document.getElementById('meth-rows').innerHTML = d.methodology.rows.map(r=>`<tr>
-    <td>${r.label}</td><td class="pos">${r.beta.toFixed(2)}</td><td class="muted">${r.n}</td>
-    <td class="${cls(r.r2)}">${r.r2.toFixed(2)}</td>
+    <td>${r.label}</td><td class="num pos">${r.beta.toFixed(2)}</td><td class="num muted">${r.n}</td>
+    <td class="num ${cls(r.r2)}">${r.r2.toFixed(2)}</td>
     <td style="width:160px">${bar(Math.max(0,r.r2), 'R²='+r.r2)}</td></tr>`).join('');
 
   // cadence
@@ -457,10 +473,10 @@ async function loadBacktest(){
     const chosen = r.name===d.cadence.chosen;
     return `<tr ${chosen?'style="background:rgba(46,160,67,.12)"':''}>
       <td>${r.name} ${chosen?'<span class="chip">default</span>':''}</td>
-      <td class="muted">${r.marks}</td>
-      <td>${pct(r.retain)} ${bar(r.retain,'retention')}</td>
-      <td class="muted">${r.line_delta}</td>
-      <td class="pos">${r.savings_vs_60s}×</td>
+      <td class="num muted">${r.marks}</td>
+      <td>${barNum(r.retain,'retention')}</td>
+      <td class="num muted">${r.line_delta}</td>
+      <td class="num pos">${r.savings_vs_60s}×</td>
       <td></td></tr>`;
   }).join('');
 
@@ -473,12 +489,29 @@ async function loadBacktest(){
   const sr = [{...d.sweep.current, label:'★ '+d.sweep.current.label}, ...d.sweep.top];
   const maxWR  = Math.max(...sr.map(r=>r.win_rate||0));
   const maxROI = Math.max(...sr.map(r=>r.roi||0));
-  document.getElementById('sweep-rows').innerHTML = sr.map(r=>`<tr>
-    <td class="profile">${sweepProfile(r.label)}</td>
-    <td>${fmtCriteria(r.label.replace(/^★\s*/,''))}${r.equiv>1?` <span class="muted" style="font-size:11px">×${r.equiv}</span>`:''}</td>
-    <td>${r.bets}</td><td>${r.wins}-${r.losses}-${r.pushes}</td>
-    <td style="${heatBg(r.win_rate,maxWR)}">${pct(r.win_rate)}</td>
-    <td class="${cls(r.roi)}" style="${heatBg(r.roi,maxROI)}">${(r.roi*100).toFixed(0)}%</td></tr>`).join('');
+  // Cluster rows by archetype so each profile name prints once (rowspan), with its
+  // threshold variations grouped underneath. Current config (★) is always its own group.
+  const current = sr[0], rest = sr.slice(1);
+  const order = [], byName = new Map();
+  rest.forEach(r=>{
+    const name = sweepProfile(r.label);
+    if(!byName.has(name)){ byName.set(name, []); order.push(name); }
+    byName.get(name).push(r);
+  });
+  const groups = [{name: sweepProfile(current.label), rows:[current]},
+                  ...order.map(name=>({name, rows: byName.get(name)}))];
+  const sweepRow = (r, profileCell) => `<tr>
+    ${profileCell}
+    <td class="crit-cell">${fmtCriteria(r.label.replace(/^★\s*/,''))}${r.equiv>1?` <span class="muted" style="font-size:11px">×${r.equiv}</span>`:''}</td>
+    <td class="num">${r.bets}</td>
+    <td class="num">${r.wins}-${r.losses}-${r.pushes}</td>
+    <td class="num" style="${heatBg(r.win_rate,maxWR)}">${pct(r.win_rate)}</td>
+    <td class="num ${cls(r.roi)}" style="${heatBg(r.roi,maxROI)}">${(r.roi*100).toFixed(0)}%</td></tr>`;
+  document.getElementById('sweep-rows').innerHTML = groups.map(g=>
+    g.rows.map((r,i)=> sweepRow(r,
+      i===0 ? `<td class="profile" rowspan="${g.rows.length}">${g.name}</td>` : ''
+    )).join('')
+  ).join('');
 
   // examples
   document.getElementById('examples').innerHTML = d.examples.map(ex=>`

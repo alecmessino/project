@@ -160,8 +160,15 @@
     </table>
   </section>
   <section class="chart-card">
-    <p class="ct">In-Play Market Stress: Distance-to-Trigger (FULL GAME)</p>
-    <p class="cs">How close the full-game total is to firing. <b style="color:#388bfd">Move %</b>
+    <p class="ct" style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <span>In-Play Market Stress: Distance-to-Trigger (FULL GAME)</span>
+      <select id="chartSel" style="background:#0d1117;color:#e6edf3;border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600">
+        <option value="live">Live Game (Default)</option>
+        <option value="triggered">Historical: Triggered Game</option>
+        <option value="dud">Historical: Dud Game</option>
+      </select>
+    </p>
+    <p class="cs" id="chart-sub">How close the full-game total is to firing. <b style="color:#388bfd">Move %</b>
       (left) and <b style="color:#d29922">Edge pts</b> (right) climb as the live line drops;
       when both cross their dashed threshold lines, a signal fires. Updates every cadence mark.</p>
     <div class="chart-wrap"><canvas id="stressChart"></canvas></div>
@@ -397,6 +404,7 @@ function renderSignals(sigs){
 
 // ---- Distance-to-Trigger chart ------------------------------------------- //
 let stressChart = null;
+let chartMode = 'live';
 const FULL_KEY = 'game_total:full:game';
 
 function buildStressChart(moveThr, edgeThr){
@@ -439,26 +447,50 @@ function buildStressChart(moveThr, edgeThr){
   });
 }
 
-async function loadStressChart(){
-  let hist;
-  try{ hist = await (await fetch('odds_history.json',{cache:'no-store'})).json(); }
-  catch(e){ return; }                       // archive not present yet — skip
-  const thr = hist.thresholds || {};
-  const moveThr = thr.pct_move ?? 0.10, edgeThr = thr.edge_pts ?? 3.0;
-  if (!stressChart) buildStressChart(moveThr, edgeThr);
-  if (!stressChart) return;                  // Chart.js unavailable
+function setSeries(move, edge){
+  if (!stressChart) return;
+  stressChart.data.datasets[0].data = move;
+  stressChart.data.datasets[1].data = edge;
+  stressChart.update();
+}
 
+function extractFull(captures){
   const move=[], edge=[];
-  for (const cap of (hist.captures||[])){
+  for (const cap of (captures||[])){
     const m = (cap.markets||[]).find(x=>x.market===FULL_KEY);
     if (!m || m.pct_move==null) continue;
     const t = cap.minutes_elapsed ?? cap.mark;
     move.push({x:t, y:+(Math.abs(m.pct_move)*100).toFixed(1)});
     edge.push({x:t, y:+(m.edge_pts ?? 0).toFixed(1)});
   }
-  stressChart.data.datasets[0].data = move;
-  stressChart.data.datasets[1].data = edge;
-  stressChart.update();
+  return {move, edge};
+}
+
+// Build the chart once, using thresholds from the live archive (fallback 10%/3.0).
+async function ensureChart(){
+  if (stressChart) return true;
+  let moveThr=0.10, edgeThr=3.0;
+  try{ const h = await (await fetch('odds_history.json',{cache:'no-store'})).json();
+       moveThr = h.thresholds?.pct_move ?? moveThr; edgeThr = h.thresholds?.edge_pts ?? edgeThr; }catch(e){}
+  buildStressChart(moveThr, edgeThr);
+  return !!stressChart;
+}
+
+let histCache = null;
+async function renderStress(){
+  if (!(await ensureChart())) return;            // Chart.js unavailable
+  const sub = document.getElementById('chart-sub');
+  if (chartMode === 'live'){
+    try{ const h = await (await fetch('odds_history.json',{cache:'no-store'})).json();
+         const {move,edge} = extractFull(h.captures); setSeries(move,edge); }catch(e){}
+    return;
+  }
+  // historical: read the precomputed trajectories baked into docs/chart_history.json
+  if (!histCache){ try{ histCache = await (await fetch('chart_history.json',{cache:'no-store'})).json(); }catch(e){ return; } }
+  const g = histCache.games?.[chartMode];
+  if (!g) return;
+  setSeries(g.move||[], g.edge||[]);
+  if (sub) sub.innerHTML = `Studying <b>${g.label}</b> — replaying its Move % and Edge pts at each cadence mark vs the dashed trigger lines.`;
 }
 
 async function tick(){
@@ -470,7 +502,7 @@ async function tick(){
   }catch(e){
     document.getElementById('foot').textContent = 'fetch failed — retrying…';
   }
-  loadStressChart();   // refresh the distance-to-trigger monitor each poll
+  if (chartMode === 'live') renderStress();   // only live mode auto-refreshes
 }
 
 // ---- tabs ---------------------------------------------------------------- //
@@ -677,8 +709,14 @@ async function loadUpcoming(){
   }
 }
 
+document.getElementById('chartSel')?.addEventListener('change', e=>{
+  chartMode = e.target.value;
+  renderStress();
+});
+
 loadUpcoming();
 tick();
+renderStress();
 setInterval(tick, REFRESH_MS);
 </script>
 </body>

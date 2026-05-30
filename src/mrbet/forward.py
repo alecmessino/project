@@ -65,6 +65,63 @@ def merge_signal(ledger: dict, evaluation, ts: str, matchup: str,
     return ledger
 
 
+def append_capture(path: str | pathlib.Path, event_id: str, snap, results,
+                   ts: str) -> dict:
+    """Archive one raw cadence-mark snapshot for forward testing.
+
+    Stores every tracked market's full quote — line plus BOTH the over and under
+    prices — alongside the model's read (side/fair/edge/ev/flag). With both sides'
+    odds preserved you can re-grade OVER or UNDER offline later. Idempotent per
+    (event_id, mark) so re-runs of the poll workflow never duplicate a capture.
+    """
+    p = pathlib.Path(path)
+    try:
+        hist = json.loads(p.read_text()) if p.exists() else {}
+    except (ValueError, OSError):
+        hist = {}
+    captures = hist.setdefault("captures", [])
+    mark = snap.meta.get("cadence_mark")
+    if any(c.get("event_id") == event_id and c.get("mark") == mark for c in captures):
+        return hist  # already archived this mark
+
+    evals = {
+        f"{r.evaluation.baseline.market_type.value}:{r.evaluation.baseline.period.value}:"
+        f"{r.evaluation.baseline.team or 'game'}": r
+        for r in results
+    }
+    markets = []
+    for ln in snap.lines:
+        key = f"{ln.market_type.value}:{ln.period.value}:{ln.team or 'game'}"
+        rec = {
+            "market": key, "line": ln.line,
+            "over_odds": ln.over_odds, "under_odds": ln.under_odds,
+            "book": ln.book,
+        }
+        r = evals.get(key)
+        if r is not None:
+            e = r.evaluation
+            rec.update({
+                "model_side": e.side.value,
+                "fair_final": round(e.fair_final, 1),
+                "pct_move": round(e.pct_move, 4),
+                "edge_pts": round(e.edge_pts, 1),
+                "ev": round(e.ev, 4), "prob": round(e.prob, 4),
+                "flagged": bool(r.signal),
+                "strong": bool(r.signal and r.signal.strong),
+            })
+        markets.append(rec)
+
+    captures.append({
+        "event_id": event_id, "ts": ts, "mark": mark,
+        "clock": snap.meta.get("clock"), "period": snap.state.period.value,
+        "away_score": snap.state.away_score, "home_score": snap.state.home_score,
+        "minutes_elapsed": round(snap.state.minutes_elapsed, 1),
+        "markets": markets,
+    })
+    p.write_text(json.dumps(hist, indent=2))
+    return hist
+
+
 def _actual_final(finals, market_type, period, team):
     try:
         if market_type == "team_total":

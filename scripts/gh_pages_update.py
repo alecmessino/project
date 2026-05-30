@@ -36,6 +36,7 @@ GAME_YAML = pathlib.Path(os.environ.get(
     "MRBET_GAME", ROOT / "config" / "games" / "sas_okc_2026-05-30.yaml"))
 STATE_JSON = ROOT / "docs" / "state.json"
 FORWARD_JSON = ROOT / "docs" / "forward.json"
+ODDS_HISTORY = ROOT / "docs" / "odds_history.json"   # raw both-sides quote archive
 MARKS = timeout_marks()   # [6,9,12,18,21,24,30,33,36]
 
 settings = Settings.load(ROOT / "config" / "settings.yaml")
@@ -90,6 +91,8 @@ else:
                 state.add_signal(r.signal)
                 notifier.maybe_notify(r.signal)   # push the moment it flags
             fwd.merge_signal(ledger, r.evaluation, ts, matchup, finals)
+        # Archive the raw quote (all markets, BOTH sides' prices) for forward testing.
+        fwd.append_capture(ODDS_HISTORY, game.event.id, snap, results, ts)
         captured.add(due)
         captured_now = due
         print(f"captured cadence mark m{due:.0f} "

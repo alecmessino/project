@@ -16,6 +16,10 @@ import requests
 from .config import NotificationSettings
 from .models import Signal
 
+# Public dashboard — appended to alerts so the phone push is tappable.
+DASHBOARD_URL = os.environ.get("MRBET_DASHBOARD_URL",
+                               "https://alecmessino.github.io/project/")
+
 
 @dataclass
 class _Sent:
@@ -62,7 +66,8 @@ def format_signal(signal: Signal) -> tuple[str, str]:
         f"P({e.side.value})={e.prob*100:.1f}% vs implied {e.implied_prob*100:.1f}%\n"
         f"EV {e.ev*100:+.1f}% | stake ${e.kelly_stake:.2f}\n"
         f"score {e.state.away_score}-{e.state.home_score}, "
-        f"{e.state.minutes_remaining:.1f} min left"
+        f"{e.state.minutes_remaining:.1f} min left\n"
+        f"→ {DASHBOARD_URL}"
     )
     return title, body
 
@@ -99,6 +104,7 @@ def _ntfy(title: str, body: str, topic: str, strong: bool) -> None:
             headers={
                 "Title": title,
                 "Priority": "high" if strong else "default",
+                "Click": DASHBOARD_URL,
                 "Tags": "money_with_wings",
             },
             timeout=10,
@@ -165,7 +171,8 @@ def _discord(title: str, body: str, strong: bool = False) -> None:
     if not url:
         return
     color = 0xDA3633 if strong else 0x2EA043  # red = STRONG, green = standard flag
-    payload = {"embeds": [{"title": title, "description": body, "color": color}]}
+    payload = {"embeds": [{"title": title, "url": DASHBOARD_URL,
+                           "description": body, "color": color}]}
     try:
         requests.post(url, json=payload, timeout=10)
     except requests.RequestException as exc:  # pragma: no cover - network

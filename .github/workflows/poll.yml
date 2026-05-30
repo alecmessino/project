@@ -40,6 +40,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/state.json docs/forward.json config/games/
+          git add docs/state.json docs/forward.json docs/odds_history.json config/games/
           git diff --cached --quiet && echo "no change" || \
             git commit -m "chore: update live state + forward ledger [skip ci]" && git push

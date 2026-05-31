@@ -1,0 +1,60 @@
+name: Live game loop
+
+# The reliable live runner. One long-running job (GitHub jobs run up to ~6h)
+# loops internally for the whole game — NO dependence on the throttled 5-min
+# cron or any interactive session. Start it from the Actions tab ~10 min before
+# tip: Run workflow → set the game YAML → Run.
+
+on:
+  workflow_dispatch:
+    inputs:
+      game:
+        description: "Game YAML path"
+        required: true
+        default: "config/games/sas_okc_2026-05-30.yaml"
+      max_minutes:
+        description: "Hard stop (minutes; 300 = 5h, covers OT)"
+        required: false
+        default: "300"
+      cycle_seconds:
+        description: "Seconds between cycles"
+        required: false
+        default: "75"
+
+permissions:
+  contents: write
+
+# Never run two live loops for the same repo at once.
+concurrency:
+  group: live-loop
+  cancel-in-progress: false
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340          # > max_minutes so the loop exits cleanly first
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Configure git
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run live loop
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          MRBET_GAME: ${{ github.event.inputs.game }}
+          LIVE_MAX_MINUTES: ${{ github.event.inputs.max_minutes }}
+          LIVE_CYCLE_SECONDS: ${{ github.event.inputs.cycle_seconds }}
+        run: python scripts/live_run.py

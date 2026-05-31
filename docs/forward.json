@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-31 01:51 UTC",
+  "generated": "2026-05-31 06:09 UTC",
   "scope": {
     "matchup": "SAS @ OKC",
     "game": "sas_okc_2026-05-30",
@@ -21,19 +21,35 @@
       12.0,
       18.0,
       21.0,
-      24.0
+      24.0,
+      30.0
     ],
-    "game_started_notified": true
+    "game_started_notified": true,
+    "finals": {
+      "game": {
+        "full": 214,
+        "h1": 109,
+        "q1": 57,
+        "q2": 52,
+        "q3": 48,
+        "q4": 57
+      },
+      "team": {
+        "SAS": 111,
+        "OKC": 103
+      }
+    },
+    "graded_ts": "2026-05-31T06:09:17Z"
   },
   "summary": {
     "bets": 8,
-    "wins": 4,
-    "losses": 0,
+    "wins": 6,
+    "losses": 2,
     "pushes": 0,
-    "pending": 4,
-    "win_rate": 1.0,
-    "roi": 0.889,
-    "profit_units": 3.56,
+    "pending": 0,
+    "win_rate": 0.75,
+    "roi": 0.417,
+    "profit_units": 3.34,
     "clv_beat": 5,
     "clv_graded": 8,
     "clv_beat_rate": 0.625,
@@ -117,8 +133,8 @@
       "close_line": 106.5,
       "close_ts": "2026-05-31T01:07:23Z",
       "clv_pts": -1.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "win",
+      "profit": 0.909
     },
     {
       "event": "game_total",
@@ -133,8 +149,8 @@
       "close_line": 110.0,
       "close_ts": "2026-05-31T01:14:33Z",
       "clv_pts": 2.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "win",
+      "profit": 0.87
     },
     {
       "event": "game_total",
@@ -149,8 +165,8 @@
       "close_line": 213.5,
       "close_ts": "2026-05-31T01:07:23Z",
       "clv_pts": 0.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "loss",
+      "profit": -1.0
     },
     {
       "event": "team_total",
@@ -165,8 +181,8 @@
       "close_line": 109.5,
       "close_ts": "2026-05-31T01:19:10Z",
       "clv_pts": 0.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "loss",
+      "profit": -1.0
     }
   ],
   "ledger": {
@@ -247,8 +263,8 @@
       "close_line": 106.5,
       "close_ts": "2026-05-31T01:07:23Z",
       "clv_pts": -1.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "win",
+      "profit": 0.909
     },
     "game_total:h1:game:under": {
       "event": "game_total",
@@ -263,8 +279,8 @@
       "close_line": 110.0,
       "close_ts": "2026-05-31T01:14:33Z",
       "clv_pts": 2.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "win",
+      "profit": 0.87
     },
     "game_total:full:game:under": {
       "event": "game_total",
@@ -279,8 +295,8 @@
       "close_line": 213.5,
       "close_ts": "2026-05-31T01:07:23Z",
       "clv_pts": 0.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "loss",
+      "profit": -1.0
     },
     "team_total:full:SAS:under": {
       "event": "team_total",
@@ -295,8 +311,8 @@
       "close_line": 109.5,
       "close_ts": "2026-05-31T01:19:10Z",
       "clv_pts": 0.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "loss",
+      "profit": -1.0
     }
   }
 }

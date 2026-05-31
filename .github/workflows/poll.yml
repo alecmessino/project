@@ -1,9 +1,11 @@
 name: Update live odds
 
+# NOTE: the 5-minute cron is DISABLED. GitHub throttled it to ~hourly, which made
+# it unreliable for live games AND let it clobber finished-game dashboards. The
+# reliable runner is now `.github/workflows/live.yml` (one long-running job per
+# game). This workflow remains for manual one-off refreshes only.
 on:
-  schedule:
-    - cron: '*/5 * * * *'   # every 5 minutes (GitHub minimum)
-  workflow_dispatch:         # also triggerable manually from the Actions tab
+  workflow_dispatch:         # manual only — run from the Actions tab
 
 permissions:
   contents: write            # needed to push docs/state.json

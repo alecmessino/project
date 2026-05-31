@@ -1,10 +1,16 @@
 """Cadence-aware forward-capture poller -> docs/state.json + docs/forward.json.
 
-Runs as the 5-minute GitHub Actions cron. Every run it checks the FREE ESPN
-clock; it spends a (paid) Odds API fetch ONLY when the game clock has crossed an
-uncaptured 9-point cadence mark (Q1-Q3 timeouts + breaks: 6,9,12,18,21,24,30,33,
-36). Captured marks persist across runs in docs/forward.json, so the whole game
-costs ~9 odds calls. Between marks it just refreshes the clock/score for free.
+Runs as the 5-minute GitHub Actions cron OR inside scripts/live_run.py's loop.
+Every run it checks the FREE ESPN clock; it spends a (paid) Odds API fetch ONLY
+when the game clock has crossed an uncaptured 9-point cadence mark (Q1-Q3
+timeouts + breaks: 6,9,12,18,21,24,30,33,36). Captured marks persist across runs
+in docs/forward.json, so the whole game costs ~9 odds calls. Between marks it
+just refreshes the clock/score for free.
+
+Two alert paths fire to Discord (both deduped):
+  1. Reversion trigger — the conjunctive gate in triggers.to_signal (via Notifier).
+  2. Edge alert — any market with edge >= EDGE_MIN pts AND EV >= EV_MIN%, regardless
+     of line move/direction. Catches high-confidence plays the move-gate suppresses.
 
 Active game: MRBET_GAME env (default sas_okc_2026-05-30.yaml). Key from the
 ODDS_API_KEY secret (CI) or .env (local).
@@ -39,6 +45,12 @@ FORWARD_JSON = ROOT / "docs" / "forward.json"
 ODDS_HISTORY = ROOT / "docs" / "odds_history.json"   # raw both-sides quote archive
 MARKS = timeout_marks()   # [6,9,12,18,21,24,30,33,36]
 
+# Edge-alert thresholds (parallel to the reversion trigger).
+EDGE_MIN = 3.0       # model edge in points
+EV_MIN = 15.0        # EV percent
+EV_REALERT_JUMP = 8.0  # re-alert same market/side/line only if EV jumps this much
+EDGE_MIN_REMAINING = 3.0  # require this many minutes left in the game
+
 settings = Settings.load(ROOT / "config" / "settings.yaml")
 game = GameConfig.load(GAME_YAML)
 matchup = f"{game.event.away_key} @ {game.event.home_key}"
@@ -54,6 +66,8 @@ ledger = prev_fwd.get("ledger", {})
 captured = set(prev_fwd.get("scope", {}).get("captured_marks", []))
 # One-time "game has started, live data flowing" heartbeat (persists across runs).
 started_notified = bool(prev_fwd.get("scope", {}).get("game_started_notified", False))
+# Edge-alert dedup map: "market|side|live" -> last EV alerted.
+edge_alerted = dict(prev_fwd.get("scope", {}).get("edge_alerted", {}))
 finals = getattr(game, "finals", None) or None
 
 state = DashboardState(game)
@@ -67,6 +81,33 @@ provider = TheOddsProvider(
 
 espn = provider._fetch_state()            # FREE clock/score
 captured_now = None
+
+
+def run_edge_alerts() -> None:
+    """Fire a Discord edge alert for any high-confidence market (deduped)."""
+    h = state.header
+    if h.get("minutes_remaining", 0) < EDGE_MIN_REMAINING:
+        return
+    for r in state.rows:
+        edge, ev = r.get("edge", 0), r.get("ev", 0)
+        if edge < EDGE_MIN or ev < EV_MIN:
+            continue
+        key = f"{r['market']}|{r['side']}|{r['live']}"
+        prev = edge_alerted.get(key)
+        if prev is not None and ev < prev + EV_REALERT_JUMP:
+            continue
+        edge_alerted[key] = ev
+        tag = "🔥 STRONG EDGE" if ev >= 30 else "📈 EDGE"
+        _discord(
+            f"{tag}: {r['market']} {r['side']} {r['live']}",
+            f"fair {r['fair']} · edge {r['edge']:+} pts · EV {r['ev']:+}% · "
+            f"win {r.get('prob','?')}% @ {r['odds']:+} · stake ${r.get('stake',0):.2f}\n"
+            f"{h.get('clock','?')} · SA {h.get('away_score')} OKC {h.get('home_score')} "
+            f"({h.get('minutes_remaining','?')} min left)",
+            strong=ev >= 30,
+        )
+        print(f"edge alert: {r['market']} {r['side']} EV {ev}%")
+
 
 if espn is None:
     # Game not live yet (or finished/not found) — refresh header, spend nothing.
@@ -84,8 +125,8 @@ else:
         _discord(
             "🏀 Game started — live data flowing",
             f"{matchup} is live on the ESPN scoreboard and the poller is now "
-            f"receiving score/clock data. Mean-reversion alerts are armed; you'll "
-            f"get a push here the moment any market clears every threshold.\n"
+            f"receiving score/clock data. Mean-reversion + edge alerts are armed; "
+            f"you'll get a push here the moment a play qualifies.\n"
             f"Score {espn.away_score}-{espn.home_score} · "
             f"{round(espn.minutes_remaining, 1)} min remaining.",
         )
@@ -107,7 +148,7 @@ else:
         for r in results:
             if r.signal:
                 state.add_signal(r.signal)
-                notifier.maybe_notify(r.signal)   # push the moment it flags
+                notifier.maybe_notify(r.signal)   # reversion push the moment it flags
             fwd.merge_signal(ledger, r.evaluation, ts, matchup, finals)
         # Archive the raw quote (all markets, BOTH sides' prices) for forward testing.
         fwd.append_capture(ODDS_HISTORY, game.event.id, snap, results, ts, thresholds={
@@ -132,12 +173,16 @@ else:
         state.rows = prev_state.get("rows", [])
         print(f"between marks at {elapsed:.1f}m elapsed — no odds call (captured: {sorted(captured)})")
 
+    # Parallel edge alert over whatever rows we have (fresh at a mark, else cached).
+    run_edge_alerts()
+
 STATE_JSON.write_bytes(state.to_json())
 fwd.dump(FORWARD_JSON, ledger, scope={
     "matchup": matchup, "game": game.event.id,
     "cadence": "9-point timeout", "marks": MARKS,
     "captured_marks": sorted(captured),
     "game_started_notified": started_notified,
+    "edge_alerted": edge_alerted,
 })
 print(f"Wrote {STATE_JSON} ({len(state.rows)} rows) and {FORWARD_JSON} "
       f"({len(ledger)} bets, {len(captured)}/{len(MARKS)} marks captured)"

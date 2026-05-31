@@ -15,8 +15,10 @@ model:
   min_minutes_elapsed: 5.0
 
 triggers:
-  # Minimum absolute line move vs pregame (fraction). 0.10 = line moved >= 10%.
-  pct_move_threshold: 0.10
+  # Minimum absolute line move vs pregame (fraction). Lowered 0.10 -> 0.04 for the
+  # 5/30 G7 hot-start: the book tracks pace upward slowly, so a 10% move rarely
+  # clears even when edge/EV are large. 0.04 lets strong-edge plays fire.
+  pct_move_threshold: 0.04
   # Minimum model edge in points (|fair_final - market_line|).
   edge_pts_threshold: 3.0
   # Minimum expected value per $1 staked at the offered odds to flag at all.

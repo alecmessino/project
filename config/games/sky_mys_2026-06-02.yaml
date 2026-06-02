@@ -1,0 +1,26 @@
+# Auto-generated from the live Bovada board (scripts/board_update.py --write-configs).
+# WNBA — 40-min regulation. FULL total/spread/ML are
+# REAL Bovada lines; 1H and team totals are DERIVED (1H ~= 51% of full; team TT =
+# (total +/- spread)/2). Refine from the book at tip if needed.
+
+event:
+  id: sky_mys_2026-06-02
+  league: WNBA
+  away: Chicago Sky
+  home: Washington Mystics
+  away_key: SKY
+  home_key: MYS
+  commence_time: "2026-06-02T23:30:00+0000"
+  bookmaker: bovada
+
+totals:
+  full:    { line: 161.0, over: -110, under: -110 }
+  h1:      { line: 82.0, over: -110, under: -110 }
+
+team_totals:
+  MYS: { line: 79.5, over: -110, under: -110 }
+  SKY: { line: 81.5, over: -110, under: -110 }
+
+sides:
+  spread:    { MYS: +2, SKY: -2, over: -110, under: -110 }
+  moneyline: { MYS: 115, SKY: -135 }

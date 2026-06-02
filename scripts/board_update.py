@@ -58,9 +58,54 @@ def _game_markets(raw: dict):
     return total, spread, ml_home, ml_away
 
 
+def _write_config(ev, league, total, spread, ml_home, ml_away, tip_ms) -> str:
+    """Auto-generate a config/games/*.yaml from the discovered board entry."""
+    date = (time.strftime("%Y-%m-%d", time.localtime(tip_ms / 1000))
+            if isinstance(tip_ms, (int, float)) else time.strftime("%Y-%m-%d"))
+    iso = (time.strftime("%Y-%m-%dT%H:%M:%S%z", time.localtime(tip_ms / 1000))
+           if isinstance(tip_ms, (int, float)) else "")
+    gid = f"{ev.away_key.lower()}_{ev.home_key.lower()}_{date}"
+    h1 = round(total * 0.51 * 2) / 2.0 if total else 0.0
+    s = spread if spread is not None else 0.0
+    home_tt = round((total - s) / 2.0 * 2) / 2.0 if total else 0.0
+    away_tt = round((total + s) / 2.0 * 2) / 2.0 if total else 0.0
+    body = f"""# Auto-generated from the live Bovada board (scripts/board_update.py --write-configs).
+# {league.upper()} — {'40' if league == 'wnba' else '48'}-min regulation. FULL total/spread/ML are
+# REAL Bovada lines; 1H and team totals are DERIVED (1H ~= 51% of full; team TT =
+# (total +/- spread)/2). Refine from the book at tip if needed.
+
+event:
+  id: {gid}
+  league: {league.upper()}
+  away: {ev.away}
+  home: {ev.home}
+  away_key: {ev.away_key}
+  home_key: {ev.home_key}
+  commence_time: "{iso}"
+  bookmaker: bovada
+
+totals:
+  full:    {{ line: {total}, over: -110, under: -110 }}
+  h1:      {{ line: {h1}, over: -110, under: -110 }}
+
+team_totals:
+  {ev.home_key}: {{ line: {home_tt}, over: -110, under: -110 }}
+  {ev.away_key}: {{ line: {away_tt}, over: -110, under: -110 }}
+
+sides:
+  spread:    {{ {ev.home_key}: {s:+g}, {ev.away_key}: {-s:+g}, over: -110, under: -110 }}
+  moneyline: {{ {ev.home_key}: {ml_home if ml_home is not None else 0}, {ev.away_key}: {ml_away if ml_away is not None else 0} }}
+"""
+    path = ROOT / "config" / "games" / f"{gid}.yaml"
+    path.write_text(body)
+    return str(path.relative_to(ROOT))
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Write docs/board.json for a league's slate")
     ap.add_argument("--league", default="wnba")
+    ap.add_argument("--write-configs", action="store_true",
+                    help="also auto-generate config/games/*.yaml for each game")
     args = ap.parse_args(argv)
 
     events = board_events(args.league)
@@ -73,7 +118,11 @@ def main(argv=None) -> int:
         tip_ms = raw.get("startTime")
         tip = (time.strftime("%-I:%M %p", time.localtime(tip_ms / 1000))
                if isinstance(tip_ms, (int, float)) else "—")
+        cfg_path = None
+        if args.write_configs and total is not None:
+            cfg_path = _write_config(ev, args.league, total, spread, ml_home, ml_away, tip_ms)
         games.append({
+            "config": cfg_path,
             "matchup": f"{ev.away} @ {ev.home}",
             "away": ev.away, "home": ev.home,
             "away_key": ev.away_key, "home_key": ev.home_key,

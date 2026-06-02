@@ -51,6 +51,28 @@ HEADERS = {
 QUARTER_MIN = 12.0
 REGULATION_MIN = 48.0
 
+# Per-league dimensions. NBA = 4x12min; WNBA = 4x10min. The coupon path differs
+# only by the sport slug. Add a league here to support it everywhere.
+LEAGUES = {
+    "nba": {
+        "slug": "nba",
+        "quarter_min": 12.0,
+        "regulation_min": 48.0,
+        "referer": "https://www.bovada.lv/sports/basketball/nba",
+    },
+    "wnba": {
+        "slug": "wnba",
+        "quarter_min": 10.0,
+        "regulation_min": 40.0,
+        "referer": "https://www.bovada.lv/sports/basketball/wnba",
+    },
+}
+
+
+def _coupon_url(slug: str) -> str:
+    return ("https://www.bovada.lv/services/sports/event/coupon/events/A/description/"
+            f"basketball/{slug}?marketFilterId=def&preMatchOnly=false&lang=en")
+
 # Bovada market keys (period abbreviation distinguishes game vs half).
 KEY_TOTAL = "2W-OU"      # Over/Under
 KEY_SPREAD = "2W-HCAP"   # Point spread
@@ -109,8 +131,15 @@ class BovadaProvider:
     .home_key) so we can locate the right game and key team totals.
     """
 
-    def __init__(self, event, poll_interval: float = 60.0, max_polls: Optional[int] = 1):
+    def __init__(self, event, league: str = "nba", poll_interval: float = 60.0,
+                 max_polls: Optional[int] = 1):
         self.event = event
+        self.league = league.lower()
+        cfg = LEAGUES.get(self.league, LEAGUES["nba"])
+        self.quarter_min = cfg["quarter_min"]
+        self.regulation_min = cfg["regulation_min"]
+        self.coupon_url = _coupon_url(cfg["slug"])
+        self._referer = cfg["referer"]
         self.poll_interval = poll_interval
         self.max_polls = max_polls
         self._clock: Optional[str] = None
@@ -119,7 +148,8 @@ class BovadaProvider:
 
     # ---- network ---------------------------------------------------------- #
     def _fetch_coupon(self) -> list:
-        req = urllib.request.Request(NBA_COUPON_URL, headers=HEADERS)
+        headers = {**HEADERS, "Referer": self._referer}
+        req = urllib.request.Request(self.coupon_url, headers=headers)
         with urllib.request.urlopen(req, timeout=20) as r:
             return json.loads(r.read())
 
@@ -224,9 +254,10 @@ class BovadaProvider:
             mins, secs = 0.0, 0.0
         remaining_in_q = mins + secs / 60.0
         reg_period = int(period_num)
-        elapsed = max(0.0, (reg_period - 1) * QUARTER_MIN + (QUARTER_MIN - remaining_in_q))
-        elapsed = min(elapsed, REGULATION_MIN)
-        remaining = max(0.0, REGULATION_MIN - elapsed)
+        q = self.quarter_min
+        elapsed = max(0.0, (reg_period - 1) * q + (q - remaining_in_q))
+        elapsed = min(elapsed, self.regulation_min)
+        remaining = max(0.0, self.regulation_min - elapsed)
         self._clock = f"Q{reg_period} {int(mins)}:{int(secs):02d}"
         away_pts, home_pts = self._scores(ev)
         return GameState(
@@ -341,6 +372,44 @@ class BovadaProvider:
 
 
 # --------------------------------------------------------------------------- #
+# Board discovery (enumerate a whole league's slate, no game YAML needed)      #
+# --------------------------------------------------------------------------- #
+from types import SimpleNamespace   # noqa: E402
+
+
+def _team_key(name: str) -> str:
+    """Cheap, stable 3-letter-ish key from a team name (display/grouping only)."""
+    last = (name or "").split()[-1]
+    return last[:3].upper() if last else "???"
+
+
+def event_from_bovada(raw: dict) -> SimpleNamespace:
+    """Build the minimal event object BovadaProvider needs from a raw Bovada event."""
+    home = away = ""
+    for c in raw.get("competitors", []):
+        if c.get("home"):
+            home = c.get("name", "")
+        else:
+            away = c.get("name", "")
+    return SimpleNamespace(
+        id=str(raw.get("id", "")), away=away, home=home,
+        away_key=_team_key(away), home_key=_team_key(home),
+    )
+
+
+def board_events(league: str = "nba") -> list[dict]:
+    """Fetch a league's whole coupon and return its raw event dicts (may be [])."""
+    p = BovadaProvider(SimpleNamespace(home="", away="", home_key="", away_key=""),
+                       league=league, max_polls=1)
+    try:
+        coupon = p._fetch_coupon()
+    except Exception as exc:
+        print(f"[bovada] board fetch failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return []
+    return [e for g in (coupon or []) for e in g.get("events", [])]
+
+
+# --------------------------------------------------------------------------- #
 # Dry run                                                                      #
 # --------------------------------------------------------------------------- #
 def dry_run(game_yaml: str) -> int:
@@ -350,7 +419,7 @@ def dry_run(game_yaml: str) -> int:
     p = BovadaProvider(game.event, max_polls=1)
 
     print(f"DRY RUN · {game.event.away} @ {game.event.home}  ({game.event.id})")
-    print(f"endpoint: {NBA_COUPON_URL}\n")
+    print(f"endpoint: {p.coupon_url}\n")
 
     ev = p._refresh()
     if ev is None:

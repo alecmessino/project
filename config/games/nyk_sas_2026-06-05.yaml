@@ -1,0 +1,26 @@
+# Pregame baselines — 2026 NBA Finals Game 2: New York Knicks @ San Antonio Spurs.
+# Spurs homecourt. Tip ~7:30 PM CT, 6/5/26 (ABC).
+# ESTIMATE ONLY — books had not posted G2 lines as of 6/2. Numbers seeded from
+# G1; UPDATE all of these from DraftKings before tip (edit, then run live.yml).
+
+event:
+  id: nyk_sas_2026-06-05
+  league: NBA
+  away: New York Knicks
+  home: San Antonio Spurs
+  away_key: NYK
+  home_key: SAS
+  commence_time: "2026-06-05T19:30:00-05:00"
+  bookmaker: draftkings
+
+totals:
+  full:    { line: 218.5, over: -110, under: -110 }   # ESTIMATE — update at tip
+  h1:      { line: 111.5, over: -110, under: -110 }    # ESTIMATE — update at tip
+
+team_totals:
+  SAS: { line: 111.5, over: -110, under: -110 }        # ESTIMATE — update at tip
+  NYK: { line: 107.0, over: -110, under: -110 }        # ESTIMATE — update at tip
+
+sides:
+  spread:    { SAS: -4.5, NYK: 4.5, over: -110, under: -110 }   # ESTIMATE
+  moneyline: { SAS: -185, NYK: 154 }                            # ESTIMATE

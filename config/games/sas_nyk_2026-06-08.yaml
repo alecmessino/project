@@ -1,0 +1,26 @@
+# Pregame baselines — 2026 NBA Finals Game 3: San Antonio Spurs @ New York Knicks.
+# Knicks homecourt (series shifts to NY). Tip ~7:30 PM CT / 8:30 ET, 6/8/26 (ABC).
+# ESTIMATE ONLY — books had not posted G3 lines as of 6/2, and the spread will
+# shift now that NYK is home. UPDATE all numbers from DraftKings before tip.
+
+event:
+  id: sas_nyk_2026-06-08
+  league: NBA
+  away: San Antonio Spurs
+  home: New York Knicks
+  away_key: SAS
+  home_key: NYK
+  commence_time: "2026-06-08T20:30:00-04:00"
+  bookmaker: draftkings
+
+totals:
+  full:    { line: 218.5, over: -110, under: -110 }   # ESTIMATE — update at tip
+  h1:      { line: 111.5, over: -110, under: -110 }    # ESTIMATE — update at tip
+
+team_totals:
+  NYK: { line: 110.0, over: -110, under: -110 }        # ESTIMATE (NYK now home) — update
+  SAS: { line: 108.5, over: -110, under: -110 }        # ESTIMATE — update at tip
+
+sides:
+  spread:    { NYK: -1.5, SAS: 1.5, over: -110, under: -110 }   # ESTIMATE (home edge)
+  moneyline: { NYK: -120, SAS: 100 }                            # ESTIMATE

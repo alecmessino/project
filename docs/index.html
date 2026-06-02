@@ -39,6 +39,15 @@
   th:first-child,td:first-child{text-align:left}
   tr.flag td{background:rgba(46,160,67,.10)}
   tr.flag.strong td{background:rgba(46,160,67,.22)}
+  /* VALUE HIGHLIGHT: live line breached the alert threshold (>=6 pts off pregame).
+     Bright orange so the opportunity is unmissable on a phone. */
+  tr.row-alert td{background:rgba(255,138,0,.32)!important;color:#fff}
+  tr.row-alert:hover td{background:rgba(255,138,0,.45)!important}
+  tr.row-alert td:first-child{box-shadow:inset 4px 0 0 #ff8a00}
+  /* pace arrows on the board */
+  .pace-slow{color:var(--red);font-weight:800}
+  .pace-fast{color:var(--green);font-weight:800}
+  .pace-even{color:var(--dim)}
   .over{color:var(--green)} .under{color:var(--red)}
   .pos{color:var(--green)} .neg{color:var(--red)} .muted{color:var(--dim)}
   .badge{background:var(--green);color:#03130a;padding:2px 8px;border-radius:6px;font-weight:700;font-size:11px}
@@ -163,9 +172,9 @@
   <section class="card" style="grid-column:1/-1">
     <h2>Tonight's board — live pre-game lines <span class="chip" id="board-league">Bovada</span></h2>
     <table>
-      <thead><tr><th>Status</th><th>Matchup</th><th>Tip</th><th>Total</th><th>Spread</th>
+      <thead><tr><th>Status</th><th>Matchup</th><th>Tip</th><th>Total</th><th>Pace</th><th>Spread</th>
         <th>ML&nbsp;away</th><th>ML&nbsp;home</th></tr></thead>
-      <tbody id="board-rows"><tr><td colspan="7" class="empty">loading…</td></tr></tbody>
+      <tbody id="board-rows"><tr><td colspan="8" class="empty">loading…</td></tr></tbody>
     </table>
   </section>
   <section class="card" style="grid-column:1/-1">
@@ -389,11 +398,15 @@ function renderState(d){
 function renderRows(rows){
   const tb = document.getElementById('rows');
   if(!rows.length){ tb.innerHTML='<tr><td colspan="13" class="empty">no tracked markets — game may not be live yet</td></tr>'; return; }
+  const ALERT_MOVE_PTS = 6;   // bright-orange when the live line is >=6 pts off pregame
   tb.innerHTML = rows.map(r=>{
     const flagCls = r.flagged?(r.strong?'flag strong':'flag'):'';
+    // Value highlight: |live - pregame| >= alert threshold (mobile attention-grab).
+    const moved = Math.abs((+r.live||0) - (+r.pre||0));
+    const alertCls = moved >= ALERT_MOVE_PTS ? 'row-alert' : '';
     const badge = r.flagged?`<span class="badge ${r.strong?'strong':''}">${r.strong?'🔥 STRONG':'FLAG'}</span>`:'';
     const sideCls = r.side==='OVER'?'over':'under';
-    return `<tr class="${flagCls}">
+    return `<tr class="${flagCls} ${alertCls}">
       <td>${r.market}</td>
       <td class="muted">${r.book||'—'}</td>
       <td class="num muted">${r.pre}</td>
@@ -741,23 +754,33 @@ const stageBadge = s =>
   s==='live'  ? '<span class="badge">● LIVE</span>' :
   s==='final' ? '<span class="muted">final</span>' :
                 '<span class="muted">pre</span>';
+// Pace arrow: red ▼ when live pace is significantly slower than the pregame
+// expectation (total trending UNDER), green ▲ when faster, → when on pace.
+const paceArrow = (p, proj) => {
+  const t = proj!=null ? ` (proj ${proj})` : '';
+  if(p==='slow') return `<span class="pace-slow" title="live pace below pregame${t}">▼ slow</span>`;
+  if(p==='fast') return `<span class="pace-fast" title="live pace above pregame${t}">▲ fast</span>`;
+  if(p==='even') return `<span class="pace-even" title="on pace${t}">→</span>`;
+  return '<span class="muted">—</span>';
+};
 async function loadBoard(){
   const tb = document.getElementById('board-rows');
   try{
     const b = await (await fetch('board.json',{cache:'no-store'})).json();
     document.getElementById('board-league').textContent = `${b.league} · ${b.count} games`;
-    if(!b.games || !b.games.length){ tb.innerHTML='<tr><td colspan="7" class="empty">no games on the board</td></tr>'; return; }
+    if(!b.games || !b.games.length){ tb.innerHTML='<tr><td colspan="8" class="empty">no games on the board</td></tr>'; return; }
     tb.innerHTML = b.games.map(g=>`<tr>
       <td>${stageBadge(g.stage)}</td>
       <td><b>${g.away_key}</b> @ <b>${g.home_key}</b> <span class="muted" style="font-size:12px">${g.matchup}</span></td>
       <td class="muted">${g.tip||'—'}</td>
       <td class="num">${g.total??'—'}</td>
+      <td>${paceArrow(g.pace, g.proj)}</td>
       <td class="num muted">${g.spread??'—'}</td>
       <td class="num muted">${ml(g.ml_away)}</td>
       <td class="num muted">${ml(g.ml_home)}</td>
     </tr>`).join('');
   }catch(e){
-    tb.innerHTML='<tr><td colspan="7" class="empty">board.json not found — run scripts/board_update.py</td></tr>';
+    tb.innerHTML='<tr><td colspan="8" class="empty">board.json not found — run scripts/board_update.py</td></tr>';
   }
 }
 

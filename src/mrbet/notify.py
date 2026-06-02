@@ -47,7 +47,17 @@ class Notifier:
         if self.settings.sms:
             _sms_gateway(signal)
         if self.settings.discord:
-            _discord(title, body, strong=signal.strong)
+            e = signal.evaluation
+            # "Hot" (orange/red) when the value is big: EV >= 15% OR >= 3 pts of edge.
+            hot = (e.ev >= 0.15) or (abs(e.edge_pts) >= 3.0)
+            header = (f"{e.side.value.upper()} · {e.baseline.team or 'Game'} "
+                      f"{e.baseline.period.value.upper()} {e.live.line}")
+            desc = (f"**{header}**\n"
+                    f"line moved `{e.pct_move*100:+.1f}%` from pregame "
+                    f"`{e.baseline.line}` → `{e.live.line}`\n"
+                    f"score `{e.state.away_score}-{e.state.home_score}` · "
+                    f"`{e.state.minutes_remaining:.0f}` min left")
+            _discord(title, desc, strong=hot, fields=_discord_fields(signal))
         if self.settings.slack:
             _slack(title, body, strong=signal.strong)
         return True
@@ -159,20 +169,44 @@ def _sms_gateway(signal: Signal) -> None:
         print(f"[SMS error] {exc}")
 
 
-def _discord(title: str, body: str, strong: bool = False) -> None:
-    """Post the flagged signal to a Discord channel webhook (phone push via the app).
+def _discord_fields(signal: Signal) -> list:
+    """High-contrast inline fields (mobile): each key number in a code block."""
+    e = signal.evaluation
+    return [
+        {"name": "Value (EV)", "value": f"```{e.ev*100:+.1f}%```", "inline": True},
+        {"name": "Edge", "value": f"```{e.edge_pts:+.1f} pts```", "inline": True},
+        {"name": "Win prob", "value": f"```{e.prob*100:.0f}%```", "inline": True},
+        {"name": "Fair / Line", "value": f"```{e.fair_final:.1f} / {e.live.line}```", "inline": True},
+        {"name": "Odds", "value": f"```{e.offered_odds:+d}```", "inline": True},
+        {"name": "Stake", "value": f"```${e.kelly_stake:.2f}```", "inline": True},
+    ]
+
+
+def _discord(title: str, body: str, strong: bool = False, fields: Optional[list] = None) -> None:
+    """Post a high-contrast Rich Embed to a Discord channel webhook (mobile push).
 
     Set DISCORD_WEBHOOK_URL in env (.env or GitHub Secrets — never hardcode):
       Discord → Server Settings → Integrations → Webhooks → New Webhook → Copy URL.
-    Subscribe to the channel on the Discord mobile app to get a push the moment a
-    signal clears every threshold.
+
+    Color: GREEN for standard value, bright ORANGE for strong signals. `fields`
+    (when provided) render the key numbers as a clean code-block grid on mobile.
     """
     url = os.environ.get("DISCORD_WEBHOOK_URL")
     if not url:
         return
-    color = 0xDA3633 if strong else 0x2EA043  # red = STRONG, green = standard flag
-    payload = {"embeds": [{"title": title, "url": DASHBOARD_URL,
-                           "description": body, "color": color}]}
+    color = 0xE2541E if strong else 0x2EA043   # bright orange = STRONG, green = standard
+    embed = {
+        "title": ("🔥 " if strong else "📈 ") + title,
+        "url": DASHBOARD_URL,
+        "description": body,
+        "color": color,
+        "footer": {"text": "mrbet · tap the title for the live dashboard"},
+    }
+    if fields:
+        embed["fields"] = fields
+    payload = {"embeds": [embed]}
+    if strong:
+        payload["content"] = "🔥 **STRONG VALUE** — high-edge opportunity"
     try:
         requests.post(url, json=payload, timeout=10)
     except requests.RequestException as exc:  # pragma: no cover - network

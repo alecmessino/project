@@ -101,6 +101,28 @@ sides:
     return str(path.relative_to(ROOT))
 
 
+def _live_pace(provider, raw, stage, total):
+    """For a LIVE game, classify pace vs pregame expectation (league-aware).
+
+    Returns (pace, proj) where pace in {'slow','fast','even', None} and proj is the
+    model's projected final total. 'slow' (a red ▼ on the board) means the live
+    scoring rate is well under the pregame pace — the total is trending UNDER.
+    """
+    from mrbet.reversion import projected_final
+    if stage != "live" or not total:
+        return None, None
+    provider._raw_event = raw                 # use this discovered game directly
+    st = provider._fetch_state()
+    if st is None or st.minutes_elapsed <= 0:
+        return None, None
+    live_rate = st.total_score / st.minutes_elapsed
+    pregame_rate = total / provider.regulation_min        # 40 (WNBA) / 48 (NBA)
+    ratio = live_rate / pregame_rate if pregame_rate else 1.0
+    pace = "slow" if ratio < 0.92 else ("fast" if ratio > 1.08 else "even")
+    proj = round(projected_final(total, st.total_score, st, beta=0.9, min_minutes_elapsed=5.0), 1)
+    return pace, proj
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Write docs/board.json for a league's slate")
     ap.add_argument("--league", default="wnba")
@@ -121,6 +143,10 @@ def main(argv=None) -> int:
         cfg_path = None
         if args.write_configs and total is not None:
             cfg_path = _write_config(ev, args.league, total, spread, ml_home, ml_away, tip_ms)
+
+        # Live pace vs pregame expectation, using the league-aware clock + model.
+        pace, proj = _live_pace(p, raw, stage, total)
+
         games.append({
             "config": cfg_path,
             "matchup": f"{ev.away} @ {ev.home}",
@@ -128,6 +154,7 @@ def main(argv=None) -> int:
             "away_key": ev.away_key, "home_key": ev.home_key,
             "tip": tip, "stage": stage,
             "total": total,
+            "pace": pace, "proj": proj,
             "spread": (f"{ev.home_key} {spread:+g}" if spread is not None else None),
             "ml_away": ml_away, "ml_home": ml_home,
         })

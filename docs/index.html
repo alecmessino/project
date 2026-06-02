@@ -40,14 +40,33 @@
   tr.flag td{background:rgba(46,160,67,.10)}
   tr.flag.strong td{background:rgba(46,160,67,.22)}
   /* VALUE HIGHLIGHT: live line breached the alert threshold (>=6 pts off pregame).
-     Bright orange so the opportunity is unmissable on a phone. */
-  tr.row-alert td{background:rgba(255,138,0,.32)!important;color:#fff}
-  tr.row-alert:hover td{background:rgba(255,138,0,.45)!important}
-  tr.row-alert td:first-child{box-shadow:inset 4px 0 0 #ff8a00}
+     Orange-500 glassmorphic fill + external neon glow so it's unmissable on mobile. */
+  tr.row-alert td{background:rgba(249,115,22,.20)!important;color:#fff}
+  tr.row-alert:hover td{background:rgba(249,115,22,.30)!important}
+  tr.row-alert td:first-child{box-shadow:inset 4px 0 0 #f97316}
   /* pace arrows on the board */
   .pace-slow{color:var(--red);font-weight:800}
   .pace-fast{color:var(--green);font-weight:800}
   .pace-even{color:var(--dim)}
+
+  /* ---- Pulsing red LIVE pill ------------------------------------------- */
+  .badge-live{display:inline-block;border-radius:9999px;padding:4px 12px;
+              background:#dc2626;color:#fff;font-weight:800;font-size:11px;
+              text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;
+              box-shadow:0 0 0 0 rgba(220,38,38,.7);animation:livepulse 1.4s infinite}
+  @keyframes livepulse{
+    0%{box-shadow:0 0 0 0 rgba(220,38,38,.7)}
+    70%{box-shadow:0 0 0 9px rgba(220,38,38,0)}
+    100%{box-shadow:0 0 0 0 rgba(220,38,38,0)}
+  }
+
+  /* ---- High-contrast KPI cards (neon border, big figures) -------------- */
+  .kpi .box{background:linear-gradient(180deg,#1b2230,#11151b);
+            border:2px solid rgba(56,139,253,.45);border-radius:14px;
+            padding:14px 18px;min-width:140px;
+            box-shadow:inset 0 0 0 1px rgba(56,139,253,.08),0 6px 16px rgba(0,0,0,.38)}
+  .kpi .box .v{font-size:30px;font-weight:900;letter-spacing:-.6px;color:#fff;line-height:1.05}
+  .kpi .box .l{color:#9fb3c8;font-size:11px;text-transform:uppercase;letter-spacing:.6px}
   .over{color:var(--green)} .under{color:var(--red)}
   .pos{color:var(--green)} .neg{color:var(--red)} .muted{color:var(--dim)}
   .badge{background:var(--green);color:#03130a;padding:2px 8px;border-radius:6px;font-weight:700;font-size:11px}
@@ -139,6 +158,70 @@
              border:2px solid rgba(210,153,34,.35);border-top-color:var(--amber);
              vertical-align:-1px;animation:netspin .7s linear infinite}
   @keyframes netspin{to{transform:rotate(360deg)}}
+
+  /* ===================================================================== */
+  /*  MOBILE-FIRST (<=768px): wide tables -> vertically stacked game cards  */
+  /*  Each .rcards <tr> becomes a card: matchup header on top, then the     */
+  /*  market data wraps as a horizontal row of label/value chips. No        */
+  /*  horizontal scrolling. JS data bindings are untouched (data-label only).*/
+  /* ===================================================================== */
+  @media (max-width:768px){
+    main{padding:12px}
+    .card-scroll{overflow:visible}
+    .rcards .card-scroll, .rcards{overflow:visible}
+
+    .rcards table, .rcards tbody{display:block;width:100%;min-width:0!important}
+    .rcards thead{display:none}                 /* hide the desktop header row */
+    .rcards colgroup{display:none}
+
+    .rcards tr{
+      display:flex;flex-wrap:wrap;gap:10px 16px;align-items:flex-start;
+      background:var(--panel);border:1px solid var(--line);border-radius:14px;
+      padding:14px 16px;margin:0 0 12px;
+      box-shadow:0 2px 8px rgba(0,0,0,.35);
+    }
+    .rcards td{
+      display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+      border:0;padding:0;text-align:left;white-space:normal;
+      font-variant-numeric:tabular-nums;
+    }
+    .rcards td::before{
+      content:attr(data-label);color:var(--dim);font-size:10px;font-weight:700;
+      text-transform:uppercase;letter-spacing:.5px;
+    }
+    /* first cell = full-width card header (matchup / market name) */
+    .rcards td:first-child{
+      flex-basis:100%;font-size:16px;font-weight:800;
+      padding-bottom:10px;margin-bottom:4px;border-bottom:1px solid var(--line);
+    }
+    .rcards td:first-child::before{display:none}
+    /* an empty datum collapses instead of leaving a lonely label */
+    .rcards td:empty{display:none}
+
+    /* Glassmorphic neon-orange ALERT card: blurred orange fill + external glow */
+    .rcards tr.row-alert{
+      background:rgba(249,115,22,.16);
+      -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+      border:1px solid rgba(249,115,22,.65);
+      box-shadow:0 0 15px rgba(249,115,22,.5),inset 0 0 0 1px rgba(249,115,22,.25);
+      animation:alertglow 1.8s ease-in-out infinite;
+    }
+    .rcards tr.row-alert td, .rcards tr.row-alert td:first-child{
+      background:transparent!important;color:#fff;border-bottom-color:rgba(255,255,255,.25)}
+    @keyframes alertglow{
+      0%,100%{box-shadow:0 0 12px rgba(249,115,22,.40),inset 0 0 0 1px rgba(249,115,22,.25)}
+      50%{box-shadow:0 0 22px rgba(249,115,22,.75),inset 0 0 0 1px rgba(249,115,22,.4)}
+    }
+
+    /* KPI cards go full-bleed 2-up on phones */
+    .kpi{gap:12px;padding:8px 12px 14px}
+    .kpi .box{flex:1 1 calc(50% - 12px);min-width:0}
+    .kpi .box .v{font-size:26px}
+
+    header{gap:10px 16px}
+    .score{font-size:19px}
+    .quickstart{margin:12px}
+  }
 </style>
 </head>
 <body>
@@ -169,18 +252,18 @@
 
 <div class="view active" id="view-live">
 <main>
-  <section class="card" style="grid-column:1/-1">
+  <section class="card rcards" style="grid-column:1/-1">
     <h2>Tonight's board — live pre-game lines <span class="chip" id="board-league">Bovada</span></h2>
     <table>
-      <thead><tr><th>Status</th><th>Matchup</th><th>Tip</th><th>Total</th><th>Pace</th><th>Spread</th>
+      <thead><tr><th>Matchup</th><th>Status</th><th>Tip</th><th>Total</th><th>Pace</th><th>Spread</th>
         <th>ML&nbsp;away</th><th>ML&nbsp;home</th></tr></thead>
       <tbody id="board-rows"><tr><td colspan="8" class="empty">loading…</td></tr></tbody>
     </table>
   </section>
-  <section class="card" style="grid-column:1/-1">
+  <section class="card rcards" style="grid-column:1/-1">
     <h2>Upcoming games</h2>
     <table>
-      <thead><tr><th>Date</th><th>Matchup</th><th>Tip (ET)</th><th>Total</th><th>Spread</th><th>Round</th><th>Config</th></tr></thead>
+      <thead><tr><th>Matchup</th><th>Date</th><th>Tip (ET)</th><th>Total</th><th>Spread</th><th>Round</th><th>Config</th></tr></thead>
       <tbody id="upcoming"><tr><td colspan="7" class="empty">loading…</td></tr></tbody>
     </table>
   </section>
@@ -198,7 +281,7 @@
       when both cross their dashed threshold lines, a signal fires. Updates every cadence mark.</p>
     <div class="chart-wrap"><canvas id="stressChart"></canvas></div>
   </section>
-  <section class="card card-scroll">
+  <section class="card card-scroll rcards">
     <h2>Live markets — mean-reversion fair value</h2>
     <table style="min-width:820px">
       <colgroup>
@@ -408,18 +491,18 @@ function renderRows(rows){
     const sideCls = r.side==='OVER'?'over':'under';
     return `<tr class="${flagCls} ${alertCls}">
       <td>${r.market}</td>
-      <td class="muted">${r.book||'—'}</td>
-      <td class="num muted">${r.pre}</td>
-      <td class="num">${r.live}</td>
-      <td class="num ${cls(r.move_pct)}">${fmtPct(r.move_pct)}</td>
-      <td class="${sideCls}">${r.side}</td>
-      <td class="num">${r.fair}</td>
-      <td class="num ${cls(r.edge)}">${r.edge>0?'+':''}${r.edge}</td>
-      <td class="num">${r.prob}%</td>
-      <td class="num ${cls(r.ev)}">${fmtPct(r.ev)}</td>
-      <td class="num muted">${r.odds>0?'+':''}${r.odds}</td>
-      <td class="num">$${r.stake.toFixed(2)}</td>
-      <td>${badge}</td>
+      <td class="muted" data-label="Book">${r.book||'—'}</td>
+      <td class="num muted" data-label="Pre">${r.pre}</td>
+      <td class="num" data-label="Live">${r.live}</td>
+      <td class="num ${cls(r.move_pct)}" data-label="Move">${fmtPct(r.move_pct)}</td>
+      <td class="${sideCls}" data-label="Side">${r.side}</td>
+      <td class="num" data-label="Fair">${r.fair}</td>
+      <td class="num ${cls(r.edge)}" data-label="Edge">${r.edge>0?'+':''}${r.edge}</td>
+      <td class="num" data-label="Win %">${r.prob}%</td>
+      <td class="num ${cls(r.ev)}" data-label="EV">${fmtPct(r.ev)}</td>
+      <td class="num muted" data-label="Odds">${r.odds>0?'+':''}${r.odds}</td>
+      <td class="num" data-label="Stake">$${r.stake.toFixed(2)}</td>
+      <td data-label="Flag">${badge}</td>
     </tr>`;
   }).join('');
 }
@@ -740,9 +823,13 @@ async function loadUpcoming(){
     const tb = document.getElementById('upcoming');
     if(!u.games || !u.games.length){ tb.innerHTML='<tr><td colspan="7" class="empty">none scheduled</td></tr>'; return; }
     tb.innerHTML = u.games.map(g=>`<tr>
-      <td>${g.date}</td><td><b>${g.matchup}</b></td><td class="muted">${g.tip}</td>
-      <td>${g.total}</td><td class="muted">${g.spread}</td>
-      <td class="muted">${g.round}</td><td class="muted">${g.config}</td></tr>`).join('');
+      <td><b>${g.matchup}</b></td>
+      <td class="muted" data-label="Date">${g.date}</td>
+      <td class="muted" data-label="Tip (ET)">${g.tip}</td>
+      <td data-label="Total">${g.total}</td>
+      <td class="muted" data-label="Spread">${g.spread}</td>
+      <td class="muted" data-label="Round">${g.round}</td>
+      <td class="muted" data-label="Config">${g.config}</td></tr>`).join('');
   }catch(e){
     document.getElementById('upcoming').innerHTML='<tr><td colspan="7" class="empty">upcoming.json not found</td></tr>';
   }
@@ -751,7 +838,7 @@ async function loadUpcoming(){
 // ---- tonight's board (all games' pre-game lines, discovered from Bovada) -- //
 const ml = v => v==null ? '—' : (v>0?'+':'') + v;
 const stageBadge = s =>
-  s==='live'  ? '<span class="badge">● LIVE</span>' :
+  s==='live'  ? '<span class="badge-live">● LIVE</span>' :
   s==='final' ? '<span class="muted">final</span>' :
                 '<span class="muted">pre</span>';
 // Pace arrow: red ▼ when live pace is significantly slower than the pregame
@@ -770,14 +857,14 @@ async function loadBoard(){
     document.getElementById('board-league').textContent = `${b.league} · ${b.count} games`;
     if(!b.games || !b.games.length){ tb.innerHTML='<tr><td colspan="8" class="empty">no games on the board</td></tr>'; return; }
     tb.innerHTML = b.games.map(g=>`<tr>
-      <td>${stageBadge(g.stage)}</td>
       <td><b>${g.away_key}</b> @ <b>${g.home_key}</b> <span class="muted" style="font-size:12px">${g.matchup}</span></td>
-      <td class="muted">${g.tip||'—'}</td>
-      <td class="num">${g.total??'—'}</td>
-      <td>${paceArrow(g.pace, g.proj)}</td>
-      <td class="num muted">${g.spread??'—'}</td>
-      <td class="num muted">${ml(g.ml_away)}</td>
-      <td class="num muted">${ml(g.ml_home)}</td>
+      <td data-label="Status">${stageBadge(g.stage)}</td>
+      <td class="muted" data-label="Tip">${g.tip||'—'}</td>
+      <td class="num" data-label="Total">${g.total??'—'}</td>
+      <td data-label="Pace">${paceArrow(g.pace, g.proj)}</td>
+      <td class="num muted" data-label="Spread">${g.spread??'—'}</td>
+      <td class="num muted" data-label="ML away">${ml(g.ml_away)}</td>
+      <td class="num muted" data-label="ML home">${ml(g.ml_home)}</td>
     </tr>`).join('');
   }catch(e){
     tb.innerHTML='<tr><td colspan="8" class="empty">board.json not found — run scripts/board_update.py</td></tr>';

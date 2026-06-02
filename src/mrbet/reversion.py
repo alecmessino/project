@@ -22,6 +22,19 @@ class ReversionParams:
     min_minutes_elapsed: float = 5.0
 
 
+def _period_length(state: GameState) -> float:
+    """Regulation length of the market's period, league-correct.
+
+    The live clock already encodes the league: a provider sets
+    `minutes_elapsed + minutes_remaining` to the true regulation (NBA full = 48,
+    WNBA full = 40; NBA H1 = 24, WNBA H1 = 20). We trust that sum so the pace
+    math is automatically right for any sport, falling back to the enum's NBA
+    length only if the clock is empty (pre-tip / degenerate state).
+    """
+    clock_len = state.minutes_elapsed + state.minutes_remaining
+    return clock_len if clock_len > 0 else state.period.length_minutes
+
+
 def projected_final(
     pregame_total: float,
     points_so_far: float,
@@ -42,7 +55,7 @@ def projected_final(
     `min_minutes_elapsed` the current-pace estimate is too noisy, so the pace term
     falls back to the pregame rate.
     """
-    length = state.period.length_minutes
+    length = _period_length(state)
     elapsed = max(0.0, state.minutes_elapsed)
     remaining = max(0.0, state.minutes_remaining)
 
@@ -64,7 +77,7 @@ def sigma_for(state: GameState, base_sigma: float) -> float:
     Variance accrues with the remaining fraction of the period: at tip-off the
     full `base_sigma` applies; with little time left, uncertainty collapses.
     """
-    length = state.period.length_minutes
+    length = _period_length(state)
     if length <= 0:
         return base_sigma
     remaining_share = max(0.0, min(1.0, state.minutes_remaining / length))

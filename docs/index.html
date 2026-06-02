@@ -161,6 +161,14 @@
 <div class="view active" id="view-live">
 <main>
   <section class="card" style="grid-column:1/-1">
+    <h2>Tonight's board — live pre-game lines <span class="chip" id="board-league">Bovada</span></h2>
+    <table>
+      <thead><tr><th>Status</th><th>Matchup</th><th>Tip</th><th>Total</th><th>Spread</th>
+        <th>ML&nbsp;away</th><th>ML&nbsp;home</th></tr></thead>
+      <tbody id="board-rows"><tr><td colspan="7" class="empty">loading…</td></tr></tbody>
+    </table>
+  </section>
+  <section class="card" style="grid-column:1/-1">
     <h2>Upcoming games</h2>
     <table>
       <thead><tr><th>Date</th><th>Matchup</th><th>Tip (ET)</th><th>Total</th><th>Spread</th><th>Round</th><th>Config</th></tr></thead>
@@ -727,15 +735,43 @@ async function loadUpcoming(){
   }
 }
 
+// ---- tonight's board (all games' pre-game lines, discovered from Bovada) -- //
+const ml = v => v==null ? '—' : (v>0?'+':'') + v;
+const stageBadge = s =>
+  s==='live'  ? '<span class="badge">● LIVE</span>' :
+  s==='final' ? '<span class="muted">final</span>' :
+                '<span class="muted">pre</span>';
+async function loadBoard(){
+  const tb = document.getElementById('board-rows');
+  try{
+    const b = await (await fetch('board.json',{cache:'no-store'})).json();
+    document.getElementById('board-league').textContent = `${b.league} · ${b.count} games`;
+    if(!b.games || !b.games.length){ tb.innerHTML='<tr><td colspan="7" class="empty">no games on the board</td></tr>'; return; }
+    tb.innerHTML = b.games.map(g=>`<tr>
+      <td>${stageBadge(g.stage)}</td>
+      <td><b>${g.away_key}</b> @ <b>${g.home_key}</b> <span class="muted" style="font-size:12px">${g.matchup}</span></td>
+      <td class="muted">${g.tip||'—'}</td>
+      <td class="num">${g.total??'—'}</td>
+      <td class="num muted">${g.spread??'—'}</td>
+      <td class="num muted">${ml(g.ml_away)}</td>
+      <td class="num muted">${ml(g.ml_home)}</td>
+    </tr>`).join('');
+  }catch(e){
+    tb.innerHTML='<tr><td colspan="7" class="empty">board.json not found — run scripts/board_update.py</td></tr>';
+  }
+}
+
 document.getElementById('chartSel')?.addEventListener('change', e=>{
   chartMode = e.target.value;
   renderStress();
 });
 
+loadBoard();
 loadUpcoming();
 tick();
 renderStress();
 setInterval(tick, REFRESH_MS);
+setInterval(loadBoard, REFRESH_MS);   // refresh stages (pre -> live) alongside state
 </script>
 </body>
 </html>

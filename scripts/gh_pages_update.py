@@ -33,7 +33,8 @@ from mrbet.config import GameConfig, Settings
 from mrbet.engine import Engine
 from mrbet.envload import load_env
 from mrbet.notify import Notifier, _discord
-from mrbet.odds.theodds import TheOddsProvider
+from mrbet.bovada_feed import BovadaProvider
+from mrbet.odds.theodds import TheOddsProvider   # fallback if Bovada is unreachable
 from mrbet.web.server import DashboardState
 
 load_env()
@@ -73,13 +74,25 @@ finals = getattr(game, "finals", None) or None
 state = DashboardState(game)
 state.signals = prev_state.get("signals", [])
 
-provider = TheOddsProvider(
-    event=game.event, markets=settings.engine.markets, poll_interval=0,
-    books=settings.engine.books, region=settings.engine.region,
-    fallback_consensus=settings.engine.fallback_consensus, max_polls=1,
-)
+# --- THE FLIP: live Bovada feed is now primary --------------------------- #
+# League comes from the game config (NBA full=48 / WNBA full=40); BovadaProvider
+# auto-detects pre->live and pulls clock+score+lines from one source.
+_league = str(getattr(game.event, "league", "nba")).lower()
+provider = BovadaProvider(event=game.event, league=_league, max_polls=1)
 
-espn = provider._fetch_state()            # FREE clock/score
+# Safety net: Bovada is geo/Cloudflare-fronted and a GitHub Actions IP may be
+# blocked even though it works from a residential host. If we can't reach/match
+# the game on Bovada, fall back to the Odds API so the dashboard never goes dark.
+if provider._refresh() is None:
+    print("[poller] Bovada unreachable/no match — falling back to TheOddsProvider",
+          file=sys.stderr)
+    provider = TheOddsProvider(
+        event=game.event, markets=settings.engine.markets, poll_interval=0,
+        books=settings.engine.books, region=settings.engine.region,
+        fallback_consensus=settings.engine.fallback_consensus, max_polls=1,
+    )
+
+espn = provider._fetch_state()            # live clock/score (Bovada or ESPN fallback)
 captured_now = None
 
 

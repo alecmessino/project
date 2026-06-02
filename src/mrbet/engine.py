@@ -36,12 +36,16 @@ def derive_state(snap_state: GameState, target: Period) -> Optional[GameState]:
     if target in (Period.FULL,):
         return snap_state
     if target == Period.H1:
-        if elapsed_full >= 24.0:
+        # Half length = regulation/2, derived from the live clock so it is
+        # league-correct (NBA 24, WNBA 20) rather than a hardcoded NBA half.
+        regulation = snap_state.minutes_elapsed + snap_state.minutes_remaining
+        half_len = (regulation / 2.0) if regulation > 0 else 24.0
+        if elapsed_full >= half_len:
             return None  # first half already over
         return GameState(
             period=Period.H1,
             minutes_elapsed=elapsed_full,
-            minutes_remaining=24.0 - elapsed_full,
+            minutes_remaining=half_len - elapsed_full,
             home_score=snap_state.home_score,
             away_score=snap_state.away_score,
         )

@@ -115,6 +115,7 @@ class BovadaProvider:
         self.max_polls = max_polls
         self._clock: Optional[str] = None
         self._raw_event: Optional[dict] = None
+        self._stage: str = "pre"   # auto-detected: "pre" -> "live" -> "final"
 
     # ---- network ---------------------------------------------------------- #
     def _fetch_coupon(self) -> list:
@@ -144,19 +145,76 @@ class BovadaProvider:
         self._raw_event = self._find_event(coupon)
         return self._raw_event
 
+    # ---- pre/live/final auto-detection ----------------------------------- #
+    def _classify_stage(self, ev: dict) -> str:
+        """Classify an event as 'pre', 'live', or 'final' from MULTIPLE signals.
+
+        Bovada's `live` boolean can lag the actual tip by a minute or more, so we
+        treat the game as live the moment ANY independent signal appears:
+          * a running clock (clock.periodNumber present), or
+          * a non-null / non-zero score, or
+          * a status that has moved off 'U' (unstarted) to an in-play code, or
+          * the explicit `live` flag.
+        Final is detected from end-of-game status/flags so we don't re-arm.
+        """
+        status = str(ev.get("status") or "").upper()
+        clock = ev.get("clock") or {}
+        away, home = self._scores(ev)
+        has_score = (away + home) > 0
+        has_clock = bool(clock.get("periodNumber"))
+
+        if status in ("F", "FT", "ENDED", "FINAL") or ev.get("gameEnded") or ev.get("finalized"):
+            return "final"
+        if ev.get("live") or has_clock or has_score or (status and status not in ("U", "")):
+            return "live"
+        return "pre"
+
+    def detect_mode(self, ev: Optional[dict] = None) -> str:
+        """Auto-detect and latch the current stage; logs the pre->live flip once.
+
+        This is the single source of truth for 'are we live?'. Call it (or read
+        `self._stage`) instead of trusting `ev['live']` directly.
+        """
+        ev = ev if ev is not None else (self._raw_event or self._refresh())
+        if ev is None:
+            return self._stage   # no data this poll — keep the last known stage
+        new = self._classify_stage(ev)
+        # Monotonic latch: a game only moves forward pre -> live -> final. This
+        # stops one stale/odd poll from reverting us (e.g. live -> pre).
+        rank = {"pre": 0, "live": 1, "final": 2}
+        if rank[new] > rank[self._stage]:
+            prev, self._stage = self._stage, new
+            if prev == "pre" and new == "live":
+                away, home = self._scores(ev)
+                pn = (ev.get("clock") or {}).get("periodNumber")
+                print(f"[bovada] AUTO-DETECT: {self.event.away_key}@{self.event.home_key} "
+                      f"PRE->LIVE (score {away}-{home}, period {pn}, "
+                      f"live_flag={ev.get('live')}, status={ev.get('status')})",
+                      file=sys.stderr)
+        return self._stage
+
+    def is_live(self) -> bool:
+        """True once the game has been auto-detected as in-play."""
+        return self.detect_mode() == "live"
+
     # ---- game state (clock/score) ---------------------------------------- #
     def _fetch_state(self) -> Optional[GameState]:
         """Live clock/score -> GameState. Returns None pre-tip or if not live.
 
-        Mirrors the ESPN mapping verbatim:
+        Switches to live mode via `detect_mode()` (score OR clock OR stage change),
+        not Bovada's `live` flag alone. Mirrors the ESPN mapping verbatim:
             elapsed = (period-1)*12 + (12 - clock_remaining_min), capped at 48.
         """
         ev = self._raw_event or self._refresh()
-        if not ev or not ev.get("live"):
+        if not ev or self.detect_mode(ev) != "live":
             return None
         clock = ev.get("clock") or {}
         period_num = clock.get("periodNumber")
         if not period_num:
+            # Detected live (score/stage) but Bovada hasn't exposed the clock yet —
+            # we can't time the pace without it, so wait for the next poll.
+            print("[bovada] live detected but clock not exposed yet — awaiting clock",
+                  file=sys.stderr)
             return None
         # Bovada gives time REMAINING in the current quarter (may be int or str).
         try:
@@ -274,7 +332,8 @@ class BovadaProvider:
             state = self._fetch_state()
             if state is not None:
                 yield Snapshot(state=state, lines=self._fetch_lines(),
-                               meta={"source": "bovada", "clock": self._clock})
+                               meta={"source": "bovada", "clock": self._clock,
+                                     "stage": self._stage})
             polls += 1
             if self.max_polls is not None and polls >= self.max_polls:
                 break
@@ -299,7 +358,9 @@ def dry_run(game_yaml: str) -> int:
         print("   If this host is geo-blocked, run from the target environment instead.")
         return 1
 
-    print(f"✓ matched event id={ev.get('id')}  live={ev.get('live')}  status={ev.get('status')}")
+    stage = p.detect_mode(ev)
+    print(f"✓ matched event id={ev.get('id')}  live={ev.get('live')}  "
+          f"status={ev.get('status')}  auto-detected stage={stage.upper()}")
     state = p._fetch_state()
     if state is None:
         print("  clock: not in-play yet (pre-match) — live GameState available once tipped.")

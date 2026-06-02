@@ -1,0 +1,38 @@
+name: Verify WNBA (live clock + pace)
+
+# Runs the WNBA Bovada verification automatically at 7:35 PM ET — ~35 minutes
+# after the 7:00 PM tips — so the games are in-play and we can confirm the
+# auto-detection flipped pre->live and the 40-min clock maps correctly.
+# Check the run's logs for the PASS / FAIL output. Also runnable on demand.
+
+on:
+  workflow_dispatch:
+    inputs:
+      league:
+        description: "League to verify"
+        required: true
+        default: "wnba"
+  schedule:
+    # 23:35 UTC = 7:35 PM EDT (US Eastern, June = daylight time).
+    # NOTE: GitHub throttles scheduled jobs and can start them several minutes
+    # late — fine for a ~35-min-after-tip check, but don't expect 7:35 exactly.
+    - cron: "35 23 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Verify WNBA pre->live + clock mapping
+        run: python scripts/verify_bovada_basketball.py --league "${{ github.event.inputs.league || 'wnba' }}"

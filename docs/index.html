@@ -868,7 +868,10 @@ async function loadBoard(){
     const b = await (await fetch('board.json',{cache:'no-store'})).json();
     document.getElementById('board-league').textContent = `${b.league} · ${b.count} games`;
     if(!b.games || !b.games.length){ tb.innerHTML='<tr><td colspan="8" class="empty">no games on the board</td></tr>'; return; }
-    tb.innerHTML = b.games.map(g=>`<tr class="${g.stage==='live'?'row-live':''}">
+    // Auto-sort: LIVE games to the very top, then PRE, then FINAL (stable within).
+    const stageRank = {live:0, pre:1, final:2};
+    const games = b.games.slice().sort((a,c)=>(stageRank[a.stage]??1)-(stageRank[c.stage]??1));
+    tb.innerHTML = games.map(g=>`<tr class="${g.stage==='live'?'row-live':''}">
       <td><b>${g.away_key}</b> @ <b>${g.home_key}</b> <span class="muted" style="font-size:12px">${g.matchup}</span></td>
       <td data-label="Status">${stageBadge(g.stage)}</td>
       <td class="muted" data-label="Tip">${g.tip||'—'}</td>

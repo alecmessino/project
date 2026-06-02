@@ -49,6 +49,14 @@
   .pace-fast{color:var(--green);font-weight:800}
   .pace-even{color:var(--dim)}
 
+  /* LIVE game card pulses red so an in-play game is obvious at a glance */
+  tr.row-live td:first-child{box-shadow:inset 4px 0 0 #dc2626}
+  tr.row-live td{background:rgba(220,38,38,.06)}
+  @keyframes livecardpulse{
+    0%,100%{box-shadow:0 0 8px rgba(220,38,38,.30)}
+    50%{box-shadow:0 0 20px rgba(220,38,38,.70)}
+  }
+
   /* ---- Pulsing red LIVE pill ------------------------------------------- */
   .badge-live{display:inline-block;border-radius:9999px;padding:4px 12px;
               background:#dc2626;color:#fff;font-weight:800;font-size:11px;
@@ -212,6 +220,10 @@
       0%,100%{box-shadow:0 0 12px rgba(249,115,22,.40),inset 0 0 0 1px rgba(249,115,22,.25)}
       50%{box-shadow:0 0 22px rgba(249,115,22,.75),inset 0 0 0 1px rgba(249,115,22,.4)}
     }
+
+    /* LIVE game card: red border + pulsing red glow on mobile */
+    .rcards tr.row-live{border:1px solid rgba(220,38,38,.6);
+      animation:livecardpulse 1.8s ease-in-out infinite}
 
     /* KPI cards go full-bleed 2-up on phones */
     .kpi{gap:12px;padding:8px 12px 14px}
@@ -856,7 +868,7 @@ async function loadBoard(){
     const b = await (await fetch('board.json',{cache:'no-store'})).json();
     document.getElementById('board-league').textContent = `${b.league} · ${b.count} games`;
     if(!b.games || !b.games.length){ tb.innerHTML='<tr><td colspan="8" class="empty">no games on the board</td></tr>'; return; }
-    tb.innerHTML = b.games.map(g=>`<tr>
+    tb.innerHTML = b.games.map(g=>`<tr class="${g.stage==='live'?'row-live':''}">
       <td><b>${g.away_key}</b> @ <b>${g.home_key}</b> <span class="muted" style="font-size:12px">${g.matchup}</span></td>
       <td data-label="Status">${stageBadge(g.stage)}</td>
       <td class="muted" data-label="Tip">${g.tip||'—'}</td>

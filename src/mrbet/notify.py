@@ -206,7 +206,17 @@ def _discord(title: str, body: str, strong: bool = False, fields: Optional[list]
         embed["fields"] = fields
     payload = {"embeds": [embed]}
     if strong:
-        payload["content"] = "🔥 **STRONG VALUE** — high-edge opportunity"
+        # Force a phone push by pinging. DISCORD_PING = "everyone" (default) or a
+        # numeric Discord user id; allowed_mentions makes the mention actually fire.
+        ping = (os.environ.get("DISCORD_PING", "everyone") or "").strip().lstrip("@")
+        if ping.isdigit():
+            payload["content"] = f"<@{ping}> 🔥 **STRONG VALUE** — high-edge opportunity"
+            payload["allowed_mentions"] = {"users": [ping]}
+        elif ping.lower() == "everyone":
+            payload["content"] = "@everyone 🔥 **STRONG VALUE** — high-edge opportunity"
+            payload["allowed_mentions"] = {"parse": ["everyone"]}
+        else:
+            payload["content"] = "🔥 **STRONG VALUE** — high-edge opportunity"
     try:
         requests.post(url, json=payload, timeout=10)
     except requests.RequestException as exc:  # pragma: no cover - network

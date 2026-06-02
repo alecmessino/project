@@ -28,8 +28,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
+import urllib.parse
 import urllib.request
 from typing import Iterator, Optional
 
@@ -72,6 +74,39 @@ LEAGUES = {
 def _coupon_url(slug: str) -> str:
     return ("https://www.bovada.lv/services/sports/event/coupon/events/A/description/"
             f"basketball/{slug}?marketFilterId=def&preMatchOnly=false&lang=en")
+
+
+# Live clock + score live here, NOT in the coupon (the coupon omits the game clock
+# for in-play games — that was the WNBA verification failure).
+def _scores_url(event_id) -> str:
+    return f"https://www.bovada.lv/services/sports/results/api/v1/scores/{event_id}"
+
+
+# AllOrigins is a free CORS/proxy that fetches a URL server-side — a geo-block
+# escape hatch. BOVADA_PROXY: "" = direct-first then proxy fallback (default),
+# "allorigins" = force proxy, "off"/"none" = direct only.
+def _allorigins(url: str) -> str:
+    return "https://api.allorigins.win/raw?url=" + urllib.parse.quote(url, safe="")
+
+
+def _http_get_json(url: str, referer: str):
+    """GET JSON, trying direct then the AllOrigins proxy (per BOVADA_PROXY)."""
+    headers = {**HEADERS, "Referer": referer}
+    mode = os.environ.get("BOVADA_PROXY", "").lower().strip()
+    if mode == "allorigins":
+        attempts = [("allorigins", _allorigins(url))]
+    elif mode in ("off", "none", "direct"):
+        attempts = [("direct", url)]
+    else:                                   # default: direct first, proxy fallback
+        attempts = [("direct", url), ("allorigins", _allorigins(url))]
+    for name, u in attempts:
+        try:
+            req = urllib.request.Request(u, headers=headers)
+            with urllib.request.urlopen(req, timeout=25) as r:
+                return json.loads(r.read())
+        except Exception as exc:            # network / geo-block / schema
+            print(f"[bovada] {name} fetch failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+    return None
 
 # Bovada market keys (period abbreviation distinguishes game vs half).
 KEY_TOTAL = "2W-OU"      # Over/Under
@@ -148,10 +183,16 @@ class BovadaProvider:
 
     # ---- network ---------------------------------------------------------- #
     def _fetch_coupon(self) -> list:
-        headers = {**HEADERS, "Referer": self._referer}
-        req = urllib.request.Request(self.coupon_url, headers=headers)
-        with urllib.request.urlopen(req, timeout=20) as r:
-            return json.loads(r.read())
+        data = _http_get_json(self.coupon_url, self._referer)
+        if data is None:
+            raise RuntimeError("coupon fetch failed (direct + proxy)")
+        return data
+
+    def _fetch_scores(self, event_id) -> Optional[dict]:
+        """Live clock + score from Bovada's scores endpoint (proxy-aware)."""
+        if not event_id:
+            return None
+        return _http_get_json(_scores_url(event_id), self._referer)
 
     def _find_event(self, coupon: list) -> Optional[dict]:
         """Locate our game in the coupon by matching both team names (last word)."""
@@ -229,37 +270,56 @@ class BovadaProvider:
 
     # ---- game state (clock/score) ---------------------------------------- #
     def _fetch_state(self) -> Optional[GameState]:
-        """Live clock/score -> GameState. Returns None pre-tip or if not live.
+        """Live clock/score -> GameState, sourced from the SCORES endpoint.
 
-        Switches to live mode via `detect_mode()` (score OR clock OR stage change),
-        not Bovada's `live` flag alone. Mirrors the ESPN mapping verbatim:
-            elapsed = (period-1)*12 + (12 - clock_remaining_min), capped at 48.
+        The coupon omits the in-play clock, so we read clock+score from
+        /services/sports/results/api/v1/scores/{id}. Returns None until the game
+        is actually IN_PROGRESS with a ticking clock. Mapping (league-aware):
+            elapsed = (periodNumber-1)*quarter + (quarter - gameTime_remaining)
         """
         ev = self._raw_event or self._refresh()
-        if not ev or self.detect_mode(ev) != "live":
+        if not ev:
             return None
-        clock = ev.get("clock") or {}
-        period_num = clock.get("periodNumber")
-        if not period_num:
-            # Detected live (score/stage) but Bovada hasn't exposed the clock yet —
-            # we can't time the pace without it, so wait for the next poll.
-            print("[bovada] live detected but clock not exposed yet — awaiting clock",
+        sc = self._fetch_scores(ev.get("id"))
+        if not sc:
+            return None
+        status = str(sc.get("gameStatus", "")).upper()
+        clock = sc.get("clock") or {}
+        period_num = int(clock.get("periodNumber") or 0)
+
+        if status in ("GAME_END", "FINAL", "ENDED", "COMPLETE"):
+            self._stage = "final"
+            return None
+        # Truly live only when the scores feed has a real period + ticking clock.
+        ticking = bool(clock.get("isTicking")) or (clock.get("relativeGameTimeInSecs", -1) or -1) >= 0
+        if period_num < 1 or status == "PRE_GAME" or not (status == "IN_PROGRESS" or ticking):
+            print(f"[bovada] not in-play yet (status={status or 'n/a'}, "
+                  f"period={period_num}, ticking={ticking}) — awaiting live clock",
                   file=sys.stderr)
             return None
-        # Bovada gives time REMAINING in the current quarter (may be int or str).
+
+        # gameTime is time REMAINING in the current period, "M:SS".
+        gt = str(clock.get("gameTime") or "0:00")
         try:
-            mins = float(clock.get("minutes", 0) or 0)
-            secs = float(clock.get("seconds", 0) or 0)
+            mm, ss = (gt.split(":") + ["0"])[:2]
+            mins, secs = float(mm or 0), float(ss or 0)
         except (TypeError, ValueError):
             mins, secs = 0.0, 0.0
         remaining_in_q = mins + secs / 60.0
-        reg_period = int(period_num)
         q = self.quarter_min
-        elapsed = max(0.0, (reg_period - 1) * q + (q - remaining_in_q))
+        elapsed = max(0.0, (period_num - 1) * q + (q - remaining_in_q))
         elapsed = min(elapsed, self.regulation_min)
         remaining = max(0.0, self.regulation_min - elapsed)
-        self._clock = f"Q{reg_period} {int(mins)}:{int(secs):02d}"
-        away_pts, home_pts = self._scores(ev)
+        self._clock = f"Q{period_num} {int(mins)}:{int(secs):02d}"
+
+        ls = sc.get("latestScore") or {}
+        try:
+            away_pts = int(ls.get("visitor", 0) or 0)
+            home_pts = int(ls.get("home", 0) or 0)
+        except (TypeError, ValueError):
+            away_pts = home_pts = 0
+        if self._stage == "pre":            # latch forward now that we're truly live
+            self._stage = "live"
         return GameState(
             period=Period.FULL,
             minutes_elapsed=elapsed,

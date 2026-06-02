@@ -50,4 +50,8 @@ def get_provider(name: str, **kwargs) -> OddsProvider:
         from .theodds import TheOddsProvider
 
         return TheOddsProvider(**kwargs)
+    if name in ("bovada", "bodog"):
+        from ..bovada_feed import BovadaProvider
+
+        return BovadaProvider(**kwargs)
     raise ValueError(f"unknown provider: {name!r}")

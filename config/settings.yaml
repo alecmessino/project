@@ -19,8 +19,12 @@ triggers:
   # 5/30 G7 hot-start: the book tracks pace upward slowly, so a 10% move rarely
   # clears even when edge/EV are large. 0.04 lets strong-edge plays fire.
   pct_move_threshold: 0.04
-  # Minimum model edge in points (|fair_final - market_line|).
-  edge_pts_threshold: 3.0
+  # Minimum model edge in points (|fair_final - market_line|). Lowered 3.0 -> 2.0
+  # for the higher-volatility NBA Finals env (sigma_full=11): a 2-pt edge with the
+  # line-move + EV gates still clears as a genuine value crack, and 3.0 was missing
+  # high-EV spots (e.g. an inflated-line UNDER at edge +2.2 / EV +17%). The move +
+  # EV gates remain the real guards against chasing noise.
+  edge_pts_threshold: 2.0
   # Minimum expected value per $1 staked at the offered odds to flag at all.
   ev_threshold: 0.0
   # EV at/above this is tagged "STRONG".

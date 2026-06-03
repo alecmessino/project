@@ -46,8 +46,12 @@ FORWARD_JSON = ROOT / "docs" / "forward.json"
 ODDS_HISTORY = ROOT / "docs" / "odds_history.json"   # raw both-sides quote archive
 MARKS = timeout_marks()   # [6,9,12,18,21,24,30,33,36]
 
-# Edge-alert thresholds (parallel to the reversion trigger).
-EDGE_MIN = 3.0       # model edge in points
+# Edge-alert thresholds (parallel to the reversion trigger). The edge here is the
+# directional model edge for whichever side the model favors (e.row['side'] is
+# OVER or UNDER), so a hot start that inflates the line above fair fires a
+# symmetric UNDER alert exactly like a cold-start OVER. Lowered 3.0 -> 2.0 to match
+# the config net for the higher-variance NBA Finals env (EV_MIN keeps it selective).
+EDGE_MIN = 2.0       # model edge in points (directional: OVER or UNDER)
 EV_MIN = 15.0        # EV percent
 EV_REALERT_JUMP = 8.0  # re-alert same market/side/line only if EV jumps this much
 EDGE_MIN_REMAINING = 3.0  # require this many minutes left in the game

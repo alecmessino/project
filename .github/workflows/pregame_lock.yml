@@ -1,0 +1,49 @@
+name: Pregame lock-in → final NBA closing lines
+
+# 15 minutes before tip (8:15 PM ET) re-discover the NBA slate from Bovada and
+# rewrite docs/board.json + the per-game config YAML, so the baseline we judge the
+# live line against is Bovada's *closing* pregame number (it drifts a point or two
+# during the afternoon). Also runnable on demand from the Actions tab.
+# NOTE: GitHub throttles scheduled jobs and may start a few minutes late — fine for
+# a 15-min-before-tip lock, but dispatch manually if you need it exact.
+
+on:
+  schedule:
+    - cron: "15 0 * * *"          # 00:15 UTC = 8:15 PM ET (EDT, June)
+  workflow_dispatch:
+    inputs:
+      league:
+        description: "League to lock (default nba)"
+        required: true
+        default: "nba"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: board-refresh            # never overlap with board.yml / midnight_reset.yml
+  cancel-in-progress: true
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Lock closing lines into board.json + game configs
+        run: python scripts/board_update.py --league "${{ github.event.inputs.league || 'nba' }}" --write-configs
+
+      - name: Commit closing baseline
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/board.json config/games/
+          git diff --cached --quiet && echo "no change" || \
+            git commit -m "chore: pregame lock — Bovada closing baseline [skip ci]" && git push

@@ -376,19 +376,8 @@
   </div>
 
   <div class="full">
-    <p class="lead" id="cad-head">Live capture cadence — efficiency vs coverage</p>
-    <p class="note" id="cad-note"></p>
-    <section class="card"><table>
-      <thead><tr><th>cadence</th><th>marks/game</th><th>opportunity retention</th>
-        <th>Δline (pts)</th><th>credit savings</th><th></th></tr></thead>
-      <tbody id="cad-rows"></tbody>
-    </table></section>
-  </div>
-
-  <div class="full">
     <p class="lead">Threshold sweep — relative behavior across all games</p>
     <p class="note" id="sweep-note"></p>
-    <div class="warn" id="sweep-caveat"></div>
     <section class="card card-scroll"><table style="min-width:580px">
       <colgroup>
         <col style="width:162px"><col>
@@ -590,10 +579,11 @@ function extractFull(captures){
   return {move, edge};
 }
 
-// Build the chart once, using thresholds from the live archive (fallback 10%/3.0).
+// Build the chart once, using thresholds from the live archive (fallbacks match
+// the tuned config in settings.yaml: pct_move 4%, edge 2.0 pts).
 async function ensureChart(){
   if (stressChart) return true;
-  let moveThr=0.10, edgeThr=3.0;
+  let moveThr=0.04, edgeThr=2.0;
   try{ const h = await (await fetch('odds_history.json',{cache:'no-store'})).json();
        moveThr = h.thresholds?.pct_move ?? moveThr; edgeThr = h.thresholds?.edge_pts ?? edgeThr; }catch(e){}
   buildStressChart(moveThr, edgeThr);
@@ -748,7 +738,6 @@ async function loadBacktest(){
     ['games', d.scope.games],
     ['fitted β', betaFull, 'empirical reversion'],
     ['config β', d.config.beta, 'in settings.yaml'],
-    ['best cadence', d.cadence.rows.find(r=>r.name===d.cadence.chosen)?.savings_vs_60s+'×', 'fewer credits'],
   ].map(([l,v,sub])=>`<div class="box"><div class="v">${v}</div><div class="l">${l}</div>
      ${sub?`<div class="l" style="text-transform:none">${sub}</div>`:''}</div>`).join('');
 
@@ -760,26 +749,11 @@ async function loadBacktest(){
     <td class="num ${cls(r.r2)}">${r.r2.toFixed(2)}</td>
     <td style="width:160px">${bar(Math.max(0,r.r2), 'R²='+r.r2)}</td></tr>`).join('');
 
-  // cadence
-  document.getElementById('cad-head').textContent = d.cadence.headline;
-  document.getElementById('cad-note').textContent = d.cadence.explainer;
-  document.getElementById('cad-rows').innerHTML = d.cadence.rows.map(r=>{
-    const chosen = r.name===d.cadence.chosen;
-    return `<tr ${chosen?'style="background:rgba(46,160,67,.12)"':''}>
-      <td>${r.name} ${chosen?'<span class="chip">default</span>':''}</td>
-      <td class="num muted">${r.marks}</td>
-      <td>${barNum(r.retain,'retention')}</td>
-      <td class="num muted">${r.line_delta}</td>
-      <td class="num pos">${r.savings_vs_60s}×</td>
-      <td></td></tr>`;
-  }).join('');
-
   // sweep
   document.getElementById('sweep-note').textContent =
     `${d.sweep.evals} graded evaluations (book_beta=${d.sweep.book_beta}). Current config: `
     + `${d.sweep.current.bets} bets, ${d.sweep.current.wins}-${d.sweep.current.losses}-`
     + `${d.sweep.current.pushes}, win ${pct(d.sweep.current.win_rate)}, ROI ${pct(d.sweep.current.roi)}.`;
-  document.getElementById('sweep-caveat').textContent = '⚠ ' + d.sweep.caveat;
   const sr = [{...d.sweep.current, label:'★ '+d.sweep.current.label}, ...d.sweep.top];
   const maxWR  = Math.max(...sr.map(r=>r.win_rate||0));
   const maxROI = Math.max(...sr.map(r=>r.roi||0));

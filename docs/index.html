@@ -416,7 +416,25 @@ const pct    = v => v!=null ? (v*100).toFixed(0)+'%' : '—';
 const bar    = (v,title='') => `<div class="bar" title="${title}"><span style="width:${Math.round(v*100)}%"></span></div>`;
 // Bar that grows behind a right-aligned percentage, so values scan straight down.
 const barNum = (v,title='') => `<div class="barcell" title="${title}"><span class="fill" style="width:${Math.round((v||0)*100)}%"></span><span class="num barnum">${pct(v)}</span></div>`;
-const REFRESH_MS = 60_000;
+const REFRESH_MS = 60_000;           // board / pre-game lines (change slowly)
+const LIVE_REFRESH_MS = 20_000;      // hot live stream (table + chart)
+const LIVE_FILE = 'live_market_state.json';
+
+// Optionally stream the live JSON from another origin while testing locally, e.g.
+//   open the page as  ?data=http://localhost:8000   (or set localStorage
+//   'mrbet_data_base'). Defaults to same-origin, i.e. the published gh-pages files.
+// NOTE: a browser will block an https page from fetching http://localhost (mixed
+// content), so for pure local testing just serve docs/ and open localhost directly
+// — the relative fetches already hit your local server. DATA_BASE is for same-scheme
+// hosts (another https box / port behind CORS).
+const DATA_BASE = (new URLSearchParams(location.search).get('data')
+                   || localStorage.getItem('mrbet_data_base') || '').replace(/\/$/, '');
+const dataURL = f => DATA_BASE ? `${DATA_BASE}/${f}` : f;
+async function fetchJSON(file){
+  const r = await fetch(dataURL(file), {cache:'no-store'});
+  if(!r.ok) throw new Error(`HTTP ${r.status} for ${file}`);
+  return r.json();
+}
 
 // Wrap each threshold criterion (e.g. move≥15%) in a monospace badge.
 function fmtCriteria(label) {
@@ -584,7 +602,7 @@ function extractFull(captures){
 async function ensureChart(){
   if (stressChart) return true;
   let moveThr=0.04, edgeThr=2.0;
-  try{ const h = await (await fetch('odds_history.json',{cache:'no-store'})).json();
+  try{ const h = await fetchJSON('odds_history.json');
        moveThr = h.thresholds?.pct_move ?? moveThr; edgeThr = h.thresholds?.edge_pts ?? edgeThr; }catch(e){}
   buildStressChart(moveThr, edgeThr);
   return !!stressChart;
@@ -595,8 +613,14 @@ async function renderStress(){
   if (!(await ensureChart())) return;            // Chart.js unavailable
   const sub = document.getElementById('chart-sub');
   if (chartMode === 'live'){
-    try{ const h = await (await fetch('odds_history.json',{cache:'no-store'})).json();
-         const {move,edge} = extractFull(h.captures); setSeries(move,edge); }catch(e){}
+    // Prefer the series streamed inside the live payload (no second fetch);
+    // fall back to the capture archive if this deploy hasn't embedded it yet.
+    if (liveChartSeries && ((liveChartSeries.move||[]).length || (liveChartSeries.edge||[]).length)){
+      setSeries(liveChartSeries.move||[], liveChartSeries.edge||[]);
+    } else {
+      try{ const h = await fetchJSON('odds_history.json');
+           const {move,edge} = extractFull(h.captures); setSeries(move,edge); }catch(e){}
+    }
     return;
   }
   // historical: read the precomputed trajectories baked into docs/chart_history.json
@@ -614,13 +638,17 @@ function setNet(state, msg){
   el.innerHTML = (state==='loading' ? '<span class="spin"></span>' : '') + msg;
 }
 
+let liveChartSeries = null;   // chart series embedded in the latest live payload
+
 async function tick(){
   setNet('loading', 'syncing…');
   try{
-    const r = await fetch('state.json', {cache:'no-store'});
-    if(!r.ok) throw new Error(`HTTP ${r.status}`);
-    renderState(await r.json());
-    countdown = REFRESH_MS / 1000;
+    let d;
+    try{ d = await fetchJSON(LIVE_FILE); }
+    catch(_){ d = await fetchJSON('state.json'); }   // legacy fallback during rollout
+    renderState(d);
+    liveChartSeries = d.chart || null;               // one payload feeds the chart too
+    countdown = LIVE_REFRESH_MS / 1000;
     setNet('ok', '✓ updated ' + new Date().toLocaleTimeString());
   }catch(e){
     document.getElementById('foot').textContent = 'fetch failed — retrying…';
@@ -800,12 +828,13 @@ async function loadBacktest(){
 setInterval(()=>{
   countdown = Math.max(0, countdown-1);
   document.getElementById('refresh-info').textContent =
-    `next refresh in ${countdown}s · updated by GH Actions every 5 min`;
+    `next refresh in ${countdown}s · live stream every ${LIVE_REFRESH_MS/1000}s`
+    + (DATA_BASE ? ` · source ${DATA_BASE}` : '');
 }, 1000);
 
 async function loadUpcoming(){
   try{
-    const u = await (await fetch('upcoming.json',{cache:'no-store'})).json();
+    const u = await fetchJSON('upcoming.json');
     const tb = document.getElementById('upcoming');
     if(!u.games || !u.games.length){ tb.innerHTML='<tr><td colspan="7" class="empty">none scheduled</td></tr>'; return; }
     tb.innerHTML = u.games.map(g=>`<tr>
@@ -839,7 +868,7 @@ const paceArrow = (p, proj) => {
 async function loadBoard(){
   const tb = document.getElementById('board-rows');
   try{
-    const b = await (await fetch('board.json',{cache:'no-store'})).json();
+    const b = await fetchJSON('board.json');
     document.getElementById('board-league').textContent = `${b.league} · ${b.count} games`;
     if(!b.games || !b.games.length){ tb.innerHTML='<tr><td colspan="8" class="empty">no games on the board</td></tr>'; return; }
     // Auto-sort: LIVE games to the very top, then PRE, then FINAL (stable within).
@@ -869,8 +898,8 @@ loadBoard();
 loadUpcoming();
 tick();
 renderStress();
-setInterval(tick, REFRESH_MS);
-setInterval(loadBoard, REFRESH_MS);   // refresh stages (pre -> live) alongside state
+setInterval(tick, LIVE_REFRESH_MS);   // hot live stream: table + chart every 20s
+setInterval(loadBoard, REFRESH_MS);   // board / pre-game lines refresh at 60s
 </script>
 </body>
 </html>

@@ -41,10 +41,43 @@ load_env()
 
 GAME_YAML = pathlib.Path(os.environ.get(
     "MRBET_GAME", ROOT / "config" / "games" / "sas_okc_2026-05-30.yaml"))
-STATE_JSON = ROOT / "docs" / "state.json"
+STATE_JSON = ROOT / "docs" / "state.json"           # legacy alias (older deploys)
+LIVE_STATE_JSON = ROOT / "docs" / "live_market_state.json"  # the hot stream file
 FORWARD_JSON = ROOT / "docs" / "forward.json"
 ODDS_HISTORY = ROOT / "docs" / "odds_history.json"   # raw both-sides quote archive
 MARKS = timeout_marks()   # [6,9,12,18,21,24,30,33,36]
+
+# The full-game total market key the Distance-to-Trigger chart tracks.
+FULL_MARKET_KEY = "game_total:full:game"
+
+
+def _chart_series(captures, thresholds=None, event_id=None) -> dict:
+    """Compact full-game (move%, edge-pts) time series for the stress chart.
+
+    Mirrors the dashboard's extractFull() so the embedded series renders without
+    a second fetch — one live_market_state.json drives both the table and chart.
+    The capture archive accumulates ACROSS games (one list, deduped per
+    event_id+mark), so we filter to `event_id` to avoid drawing a prior game's
+    curve onto tonight's chart.
+    """
+    move, edge = [], []
+    for cap in sorted(captures or [], key=lambda c: (c.get("minutes_elapsed")
+                                                      or c.get("mark") or 0)):
+        if event_id is not None and cap.get("event_id") != event_id:
+            continue
+        m = next((x for x in cap.get("markets", [])
+                  if x.get("market") == FULL_MARKET_KEY), None)
+        if not m or m.get("pct_move") is None:
+            continue
+        t = cap.get("minutes_elapsed")
+        if t is None:
+            t = cap.get("mark")
+        move.append({"x": t, "y": round(abs(m["pct_move"]) * 100, 1)})
+        edge.append({"x": t, "y": round(m.get("edge_pts") or 0, 1)})
+    out = {"move": move, "edge": edge}
+    if thresholds:
+        out["thresholds"] = thresholds
+    return out
 
 # Edge-alert thresholds (parallel to the reversion trigger). The edge here is the
 # directional model edge for whichever side the model favors (e.row['side'] is
@@ -64,8 +97,10 @@ matchup = f"{game.event.away_key} @ {game.event.home_key}"
 # real Signal (every threshold cleared). Webhook URLs come from env (secrets).
 notifier = Notifier(settings.notifications)
 
-# Restore prior dashboard state + forward ledger + captured marks.
-prev_state = json.loads(STATE_JSON.read_text()) if STATE_JSON.exists() else {}
+# Restore prior dashboard state + forward ledger + captured marks. Prefer the new
+# live stream file, falling back to the legacy state.json if a deploy predates it.
+_prev_path = LIVE_STATE_JSON if LIVE_STATE_JSON.exists() else STATE_JSON
+prev_state = json.loads(_prev_path.read_text()) if _prev_path.exists() else {}
 prev_fwd = json.loads(FORWARD_JSON.read_text()) if FORWARD_JSON.exists() else {}
 ledger = prev_fwd.get("ledger", {})
 captured = set(prev_fwd.get("scope", {}).get("captured_marks", []))
@@ -193,7 +228,19 @@ else:
     # Parallel edge alert over whatever rows we have (fresh at a mark, else cached).
     run_edge_alerts()
 
-STATE_JSON.write_bytes(state.to_json())
+# The hot stream payload: current table + signals + an embedded chart series so a
+# single ~20s fetch advances both the "Live markets" table and the chart. Built by
+# attaching the full-game move/edge series (from the capture archive) to the state.
+live_payload = json.loads(state.to_json().decode())
+try:
+    _hist = json.loads(ODDS_HISTORY.read_text()) if ODDS_HISTORY.exists() else {}
+    live_payload["chart"] = _chart_series(_hist.get("captures"), _hist.get("thresholds"),
+                                          event_id=game.event.id)
+except Exception as exc:   # never let a chart-build hiccup drop the live update
+    print(f"[chart-series skipped] {exc}")
+LIVE_STATE_JSON.write_bytes(json.dumps(live_payload).encode())
+STATE_JSON.write_bytes(state.to_json())   # legacy alias, kept for older deploys
+
 fwd.dump(FORWARD_JSON, ledger, scope={
     "matchup": matchup, "game": game.event.id,
     "cadence": "9-point timeout", "marks": MARKS,
@@ -201,6 +248,7 @@ fwd.dump(FORWARD_JSON, ledger, scope={
     "game_started_notified": started_notified,
     "edge_alerted": edge_alerted,
 })
-print(f"Wrote {STATE_JSON} ({len(state.rows)} rows) and {FORWARD_JSON} "
+print(f"Wrote {LIVE_STATE_JSON.name} ({len(state.rows)} rows, "
+      f"{len(live_payload.get('chart',{}).get('move',[]))} chart pts) and {FORWARD_JSON.name} "
       f"({len(ledger)} bets, {len(captured)}/{len(MARKS)} marks captured)"
       + (f" [+m{captured_now:.0f}]" if captured_now is not None else ""))

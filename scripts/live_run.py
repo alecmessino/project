@@ -39,8 +39,10 @@ def run_cycle() -> None:
 
 
 def git_sync() -> None:
-    subprocess.run(["git", "add", "docs/state.json", "docs/forward.json",
-                    "docs/odds_history.json"], cwd=ROOT, check=False)
+    # live_market_state.json is the file the dashboard streams (every ~20s); state.json
+    # is kept as a legacy alias. Push both so the hot stream stays current.
+    subprocess.run(["git", "add", "docs/live_market_state.json", "docs/state.json",
+                    "docs/forward.json", "docs/odds_history.json"], cwd=ROOT, check=False)
     if subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT).returncode != 0:
         subprocess.run(["git", "commit", "-m", "chore: live loop state [skip ci]"],
                        cwd=ROOT, check=False)

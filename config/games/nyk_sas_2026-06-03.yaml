@@ -1,9 +1,5 @@
-# Pregame baselines — 2026 NBA Finals Game 1: New York Knicks @ San Antonio Spurs.
-# Spurs have homecourt. Tip ~7:30 PM CT, 6/3/26 (ABC).
-# FULL total, spread, and moneyline are REAL pregame lines pulled from DraftKings
-# via The Odds API on 6/2. 1H total and team totals are DERIVED from total+spread
-# (1H ~= 51% of full; team TT = (total ± spread)/2) — refine from the book at tip.
-
+# Auto-refreshed closing lines (scripts/board_update.py --refresh-config).
+# Event block preserved; line values are Bovada's latest pregame numbers.
 event:
   id: nyk_sas_2026-06-03
   league: NBA
@@ -11,17 +7,33 @@ event:
   home: San Antonio Spurs
   away_key: NYK
   home_key: SAS
-  commence_time: "2026-06-03T19:30:00-05:00"
-  bookmaker: draftkings
-
+  commence_time: 2026-06-04T00:30:00+0000
+  bookmaker: bovada
+  bovada_event_id: '26107913'
 totals:
-  full:    { line: 218.5, over: -110, under: -110 }   # REAL (DraftKings 6/2)
-  h1:      { line: 111.5, over: -110, under: -110 }    # derived (~51% of full)
-
+  full:
+    line: 217.0
+    over: -110
+    under: -110
+  h1:
+    line: 110.5
+    over: -110
+    under: -110
 team_totals:
-  SAS: { line: 111.5, over: -110, under: -110 }        # derived: (218.5 + 4.5)/2
-  NYK: { line: 107.0, over: -110, under: -110 }        # derived: (218.5 - 4.5)/2
-
+  SAS:
+    line: 111.0
+    over: -110
+    under: -110
+  NYK:
+    line: 106.0
+    over: -110
+    under: -110
 sides:
-  spread:    { SAS: -4.5, NYK: 4.5, over: -110, under: -110 }   # REAL
-  moneyline: { SAS: -185, NYK: 154 }                            # REAL
+  spread:
+    SAS: -5.0
+    NYK: 5.0
+    over: -110
+    under: -110
+  moneyline:
+    SAS: -185
+    NYK: 160

@@ -123,14 +123,77 @@ def _live_pace(provider, raw, stage, total):
     return pace, proj
 
 
+def _refresh_config_lines(path, events) -> bool:
+    """Lock the latest Bovada lines into an EXISTING unified config, in place.
+
+    Finds the discovered board event matching the file's event.bovada_event_id
+    (falling back to team-name match) and rewrites only the totals / team_totals /
+    sides line values — the event block (id, keys, bovada_event_id, bookmaker) is
+    preserved. Returns True if the file was updated. Comments may be dropped on
+    rewrite; the values are what the engine reads.
+    """
+    import yaml
+    p = pathlib.Path(path)
+    if not p.exists():
+        print(f"  refresh-config: {path} not found — skipping")
+        return False
+    cfg = yaml.safe_load(p.read_text()) or {}
+    ev_block = cfg.get("event", {})
+    want_id = str(ev_block.get("bovada_event_id") or "")
+    home_tag = str(ev_block.get("home", "")).split()[-1].lower()
+    away_tag = str(ev_block.get("away", "")).split()[-1].lower()
+    hk, ak = ev_block.get("home_key"), ev_block.get("away_key")
+
+    raw = None
+    for e in events:
+        if want_id and str(e.get("id")) == want_id:
+            raw = e
+            break
+        hay = (" ".join(c.get("name", "") for c in e.get("competitors", []))
+               + " " + e.get("description", "")).lower()
+        if home_tag and away_tag and home_tag in hay and away_tag in hay:
+            raw = e
+    if raw is None:
+        print(f"  refresh-config: no board match for {path} (id={want_id or 'n/a'}) — kept as-is")
+        return False
+
+    total, spread, ml_home, ml_away = _game_markets(raw)
+    if total is None:
+        print(f"  refresh-config: board has no total yet — kept {path} as-is")
+        return False
+
+    cfg.setdefault("totals", {})["full"] = {"line": total, "over": -110, "under": -110}
+    cfg["totals"]["h1"] = {"line": round(total * 0.51 * 2) / 2, "over": -110, "under": -110}
+    if spread is not None:
+        home_tt = round((total - spread) / 2.0 * 2) / 2.0
+        away_tt = round((total + spread) / 2.0 * 2) / 2.0
+        cfg.setdefault("team_totals", {})[hk] = {"line": home_tt, "over": -110, "under": -110}
+        cfg["team_totals"][ak] = {"line": away_tt, "over": -110, "under": -110}
+        cfg.setdefault("sides", {})["spread"] = {hk: spread, ak: -spread, "over": -110, "under": -110}
+    cfg.setdefault("sides", {})["moneyline"] = {hk: ml_home or 0, ak: ml_away or 0}
+
+    header = ("# Auto-refreshed closing lines (scripts/board_update.py --refresh-config).\n"
+              "# Event block preserved; line values are Bovada's latest pregame numbers.\n")
+    p.write_text(header + yaml.safe_dump(cfg, sort_keys=False))
+    print(f"  refresh-config: locked closing lines into {path} "
+          f"(total {total}, {hk} {spread:+g})" if spread is not None
+          else f"  refresh-config: locked total {total} into {path}")
+    return True
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Write docs/board.json for a league's slate")
     ap.add_argument("--league", default="wnba")
     ap.add_argument("--write-configs", action="store_true",
                     help="also auto-generate config/games/*.yaml for each game")
+    ap.add_argument("--refresh-config", metavar="PATH", default=None,
+                    help="lock latest Bovada lines into an existing unified config "
+                         "in place (preserves its event block / bovada_event_id)")
     args = ap.parse_args(argv)
 
     events = board_events(args.league)
+    if args.refresh_config:
+        _refresh_config_lines(args.refresh_config, events)
     games = []
     for raw in events:
         ev = event_from_bovada(raw)

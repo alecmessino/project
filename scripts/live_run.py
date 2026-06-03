@@ -49,15 +49,37 @@ def git_sync() -> None:
         subprocess.run(["git", "push"], cwd=ROOT, check=False)
 
 
+def _game_team_tags() -> tuple[str | None, str | None]:
+    """(away, home) team nicknames from MRBET_GAME, lowercased — game-agnostic."""
+    cfg = os.environ.get("MRBET_GAME", "")
+    try:
+        import yaml
+        ev = (yaml.safe_load(pathlib.Path(cfg).read_text()) or {}).get("event", {})
+        return ev["away"].split()[-1].lower(), ev["home"].split()[-1].lower()
+    except Exception:
+        return None, None
+
+
 def espn_is_final() -> bool:
-    """Authoritative final check straight from ESPN (state == 'post')."""
+    """Authoritative final check from ESPN (state == 'post') for THIS game.
+
+    Matches the configured game by team nickname (e.g. 'knicks'/'spurs') instead of
+    a hardcoded matchup, so the loop exits cleanly for any game we track.
+    """
+    away_tag, home_tag = _game_team_tags()
+    if not (away_tag and home_tag):
+        return False
     try:
         d = json.loads(urllib.request.urlopen(ESPN, timeout=10).read())
-        ev = next(e for e in d["events"]
-                  if "OKC" in e.get("shortName", "") and "SA" in e.get("shortName", ""))
-        return ev["status"]["type"]["state"] == "post"
+        for e in d.get("events", []):
+            comps = (e.get("competitions") or [{}])[0].get("competitors", [])
+            names = " ".join(c.get("team", {}).get("displayName", "") for c in comps)
+            hay = f"{e.get('shortName','')} {e.get('name','')} {names}".lower()
+            if away_tag in hay and home_tag in hay:
+                return e.get("status", {}).get("type", {}).get("state") == "post"
     except Exception:
         return False
+    return False
 
 
 def main() -> None:
@@ -71,7 +93,8 @@ def main() -> None:
             git_sync()
             h = json.loads(STATE.read_text()).get("header", {})
             print(f"[{time.strftime('%H:%M:%S')}] {h.get('clock')} "
-                  f"SA {h.get('away_score')} OKC {h.get('home_score')} "
+                  f"{h.get('away','away')} {h.get('away_score')} "
+                  f"{h.get('home','home')} {h.get('home_score')} "
                   f"rem {h.get('minutes_remaining')}", flush=True)
         except Exception as e:  # never let one bad cycle kill the loop
             print(f"cycle error: {type(e).__name__}: {e}", flush=True)

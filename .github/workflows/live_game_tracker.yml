@@ -1,0 +1,68 @@
+name: Live Game Tracker — NBA Finals G1
+
+# Fully automated in-game runner. At tip-off it launches scripts/live_run.py — one
+# long-running job that, every cycle, pulls the Bovada live clock/lines for the
+# unified game config, recomputes mean-reversion fair value, fires alerts, and
+# pushes docs/live_market_state.json so the dashboard streams live. The job exits
+# itself when ESPN reports the game final.
+#
+# IMPORTANT (so it actually fires hands-off):
+#   * schedule: only runs from the repo DEFAULT branch (master) — this file must be
+#     on master for the cron to trigger.
+#   * The dashboard streams the JSON from GitHub Pages. With Pages set to "Deploy
+#     from a branch" (master /docs), the pushed JSON is served within ~a minute and
+#     the 20s client poll shows it live. (Artifact/Actions Pages mode would need a
+#     redeploy per push and is much slower — branch mode is the hands-off path.)
+
+on:
+  schedule:
+    - cron: "30 0 * * *"        # 00:30 UTC = 8:30 PM ET tip-off
+  workflow_dispatch:
+    inputs:
+      game:
+        description: "Game config to track"
+        required: true
+        default: "config/games/nyk_sas_2026-06-03.yaml"
+      max_minutes:
+        description: "Hard stop for the live loop (covers OT)"
+        required: true
+        default: "210"
+
+permissions:
+  contents: write              # live_run.py pushes docs/ JSON updates
+
+concurrency:
+  group: live-tracker          # never run two trackers at once
+  cancel-in-progress: false    # let an in-progress game finish
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240       # full game + OT + buffer (GH cap is 360)
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Stream the live game to the dashboard
+        env:
+          MRBET_GAME: ${{ github.event.inputs.game || 'config/games/nyk_sas_2026-06-03.yaml' }}
+          LIVE_MAX_MINUTES: ${{ github.event.inputs.max_minutes || '210' }}
+          LIVE_CYCLE_SECONDS: "75"
+          # Secrets — unset ones simply no-op (Bovada needs no key; these power the
+          # paid-odds fallback + push channels).
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_PING: ${{ secrets.DISCORD_PING }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          BOVADA_PROXY: ${{ secrets.BOVADA_PROXY }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          python scripts/live_run.py

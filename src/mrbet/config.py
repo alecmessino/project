@@ -101,6 +101,9 @@ class EventMeta(BaseModel):
     home_key: str
     commence_time: Optional[str] = None
     bookmaker: str = "bovada"
+    # Bovada's numeric event id (from the coupon/board). When set, the live feed
+    # maps to the game deterministically instead of fuzzy team-name matching.
+    bovada_event_id: Optional[str] = None
 
 
 class OverUnder(BaseModel):

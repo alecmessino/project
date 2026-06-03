@@ -194,8 +194,23 @@ class BovadaProvider:
             return None
         return _http_get_json(_scores_url(event_id), self._referer)
 
+    def _bovada_id(self) -> Optional[str]:
+        """The configured Bovada numeric event id, if any (deterministic mapping)."""
+        bid = getattr(self.event, "bovada_event_id", None)
+        return str(bid) if bid else None
+
     def _find_event(self, coupon: list) -> Optional[dict]:
-        """Locate our game in the coupon by matching both team names (last word)."""
+        """Locate our game in the coupon.
+
+        Prefer an exact match on the configured Bovada numeric event id (set in the
+        game YAML) so mapping is deterministic; fall back to fuzzy team-name match.
+        """
+        want_id = self._bovada_id()
+        if want_id:
+            for group in coupon or []:
+                for ev in group.get("events", []):
+                    if str(ev.get("id")) == want_id:
+                        return ev
         home_tag = self.event.home.split()[-1].lower()
         away_tag = self.event.away.split()[-1].lower()
         for group in coupon or []:
@@ -278,9 +293,12 @@ class BovadaProvider:
             elapsed = (periodNumber-1)*quarter + (quarter - gameTime_remaining)
         """
         ev = self._raw_event or self._refresh()
-        if not ev:
+        # Prefer the configured Bovada id so the live clock can be polled even if a
+        # transient coupon miss left us without the matched event this cycle.
+        event_id = self._bovada_id() or (ev.get("id") if ev else None)
+        if not event_id:
             return None
-        sc = self._fetch_scores(ev.get("id"))
+        sc = self._fetch_scores(event_id)
         if not sc:
             return None
         status = str(sc.get("gameStatus", "")).upper()

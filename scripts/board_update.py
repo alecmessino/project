@@ -25,6 +25,53 @@ from mrbet.bovada_feed import (   # noqa: E402
 )
 
 OUT = ROOT / "docs" / "board.json"
+UPCOMING_OUT = ROOT / "docs" / "upcoming.json"
+
+try:
+    from zoneinfo import ZoneInfo
+    _ET = ZoneInfo("America/New_York")
+except Exception:                       # pragma: no cover
+    _ET = None
+
+
+def _et(tip_ms, fmt: str) -> str:
+    """Format a Bovada startTime (ms) in US Eastern, matching the dashboard's label."""
+    from datetime import datetime
+    if not isinstance(tip_ms, (int, float)):
+        return "—"
+    dt = datetime.fromtimestamp(tip_ms / 1000, _ET) if _ET else datetime.fromtimestamp(tip_ms / 1000)
+    return dt.strftime(fmt)
+
+
+def _write_upcoming(games: list) -> None:
+    """Auto-generate docs/upcoming.json from the discovered slate (no hand-edits).
+
+    Shows games that haven't tipped yet (stage 'pre'), sorted by tip time, in the
+    shape the Upcoming Games table renders. 'round'/series labels aren't in the
+    Bovada feed, so we use the league as light context.
+    """
+    # "Upcoming" = tips in the future. The coupon's stage flag is unreliable
+    # (it can read 'live' pre-tip), so trust Bovada's scheduled startTime instead.
+    now = time.time()
+    future = [x for x in games
+              if isinstance(x.get("tip_ms"), (int, float)) and x["tip_ms"] / 1000 > now]
+    upcoming = []
+    for g in sorted(future, key=lambda x: x["tip_ms"]):
+        # City = team name minus the nickname (last word), best-effort.
+        away_city = " ".join(str(g["away"]).split()[:-1]) or g["away"]
+        home_city = " ".join(str(g["home"]).split()[:-1]) or g["home"]
+        cfg = g.get("config")
+        upcoming.append({
+            "date": g.get("date", "—"),
+            "matchup": f"{away_city} @ {home_city}",
+            "tip": g.get("tip", "—"),
+            "total": (f"{g['total']:g}" if g.get("total") is not None else "—"),
+            "spread": g.get("spread") or "—",
+            "round": g.get("league", ""),
+            "config": (cfg.split("/")[-1] if cfg else "—"),
+        })
+    UPCOMING_OUT.write_text(json.dumps({"games": upcoming}, indent=2))
+    print(f"wrote {UPCOMING_OUT} — {len(upcoming)} upcoming game(s)")
 
 
 def _game_markets(raw: dict):
@@ -198,11 +245,15 @@ def main(argv=None) -> int:
     for raw in events:
         ev = event_from_bovada(raw)
         p = BovadaProvider(ev, league=args.league, max_polls=1)
-        stage = p._classify_stage(raw)
         total, spread, ml_home, ml_away = _game_markets(raw)
         tip_ms = raw.get("startTime")
-        tip = (time.strftime("%-I:%M %p", time.localtime(tip_ms / 1000))
-               if isinstance(tip_ms, (int, float)) else "—")
+        tip = _et(tip_ms, "%-I:%M %p")              # ET (matches the dashboard label)
+        date = _et(tip_ms, "%a %b %-d, %Y")
+        stage = p._classify_stage(raw)
+        # The coupon's live flag can fire before tip; a game can't be live before its
+        # scheduled start, so force 'pre' when the tip is still in the future.
+        if isinstance(tip_ms, (int, float)) and tip_ms / 1000 > time.time():
+            stage = "pre"
         cfg_path = None
         if args.write_configs and total is not None:
             cfg_path = _write_config(ev, args.league, total, spread, ml_home, ml_away, tip_ms)
@@ -215,7 +266,8 @@ def main(argv=None) -> int:
             "matchup": f"{ev.away} @ {ev.home}",
             "away": ev.away, "home": ev.home,
             "away_key": ev.away_key, "home_key": ev.home_key,
-            "tip": tip, "stage": stage,
+            "tip": tip, "date": date, "tip_ms": tip_ms,
+            "league": args.league.upper(), "stage": stage,
             "total": total,
             "pace": pace, "proj": proj,
             "spread": (f"{ev.home_key} {spread:+g}" if spread is not None else None),
@@ -230,6 +282,7 @@ def main(argv=None) -> int:
     }
     OUT.write_text(json.dumps(payload, indent=2))
     print(f"wrote {OUT} — {len(games)} {args.league.upper()} games")
+    _write_upcoming(games)   # keep docs/upcoming.json self-maintained
     for g in games:
         print(f"  {g['stage']:5} {g['matchup']:42} tot {g['total']} | {g['spread']} | "
               f"ML {g['ml_away']}/{g['ml_home']}")

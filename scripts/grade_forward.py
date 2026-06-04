@@ -48,18 +48,39 @@ else:
     finals = None
 
 if espn_fetch_needed:
-    # Derive YYYYMMDD from commence_time (e.g. "2026-05-30T19:00:00-04:00").
+    # ESPN files a game under its US-Eastern calendar date. commence_time may be in
+    # UTC (e.g. "2026-06-04T00:30:00+0000" = 8:30 PM ET on 6/3), so convert to ET
+    # and also try +/-1 day to be safe around the date boundary.
+    from datetime import datetime, timedelta
+    try:
+        from zoneinfo import ZoneInfo
+        _ET = ZoneInfo("America/New_York")
+    except Exception:
+        _ET = None
+
     ct = game.event.commence_time or ""
-    if len(ct) < 10:
+    dt = None
+    for _fmt in ("%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%dT%H:%M:%S"):
+        try:
+            dt = datetime.strptime(ct.replace("Z", "+0000"), _fmt)
+            break
+        except ValueError:
+            continue
+    if dt is None:
         print(f"Cannot derive game date from commence_time={ct!r} — skipping")
         sys.exit(0)
-    game_date = ct[:10].replace("-", "")   # "2026-05-30" -> "20260530"
+    base = (dt.astimezone(_ET).date() if (dt.tzinfo and _ET) else dt.date())
+    candidates = [(base + timedelta(days=d)).strftime("%Y%m%d") for d in (0, -1, 1)]
 
     client = ESPNClient(use_cache=False)
-    found = client.find_completed_game(game_date, game.event.home, game.event.away)
+    found = None
+    for game_date in candidates:
+        found = client.find_completed_game(game_date, game.event.home, game.event.away)
+        if found:
+            break
     if not found:
         print(f"Game {game.event.id} not yet complete on ESPN "
-              f"(date {game_date}) — skipping grade")
+              f"(tried dates {candidates}) — skipping grade")
         sys.exit(0)
 
     espn_id, sname = found

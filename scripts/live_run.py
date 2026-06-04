@@ -38,24 +38,57 @@ def run_cycle() -> None:
                    cwd=ROOT, check=False)
 
 
-def git_sync() -> None:
-    # live_market_state.json is the file the dashboard streams (every ~20s); state.json
-    # is kept as a legacy alias. Push both so the hot stream stays current.
-    subprocess.run(["git", "add", "docs/live_market_state.json", "docs/state.json",
-                    "docs/forward.json", "docs/odds_history.json"], cwd=ROOT, check=False)
+def _commit_push(paths: list[str], msg: str) -> None:
+    """Stage `paths`, commit if anything changed, push with rebase+retry.
+
+    Concurrent bot workflows (board/midnight) also push to master, which would
+    reject our push as non-fast-forward — so we rebase our commit on top and retry
+    rather than let live updates get permanently blocked.
+    """
+    subprocess.run(["git", "add", *paths], cwd=ROOT, check=False)
     if subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT).returncode == 0:
-        return  # nothing changed this cycle
-    subprocess.run(["git", "commit", "-m", "chore: live loop state [skip ci]"],
-                   cwd=ROOT, check=False)
-    # Concurrent bot workflows (board/midnight) also push to master, which would
-    # reject our push as non-fast-forward. Rebase our commit on top and retry so
-    # live updates are never permanently blocked.
+        return  # nothing changed
+    subprocess.run(["git", "commit", "-m", msg], cwd=ROOT, check=False)
     for _ in range(5):
         if subprocess.run(["git", "push"], cwd=ROOT).returncode == 0:
             return
         subprocess.run(["git", "pull", "--rebase", "--no-edit"], cwd=ROOT, check=False)
         time.sleep(2)
-    print("git_sync: push still failing after retries", flush=True)
+    print(f"push still failing after retries ({msg})", flush=True)
+
+
+def git_sync() -> None:
+    # live_market_state.json is the file the dashboard streams (every ~20s); state.json
+    # is kept as a legacy alias. Push both so the hot stream stays current.
+    _commit_push(["docs/live_market_state.json", "docs/state.json",
+                  "docs/forward.json", "docs/odds_history.json"],
+                 "chore: live loop state [skip ci]")
+
+
+def grade_and_sync() -> None:
+    """Post-final: settle the forward ledger (W/L + CLV) and push it.
+
+    grade_forward.py is idempotent and safe before the game is final (it no-ops
+    until ESPN reports the box score). ESPN's summary can lag the final whistle by
+    a minute, so retry a few times until no pending bets remain, then push the
+    graded forward.json plus the YAML finals block the grader patches in.
+    """
+    import json as _json
+    fpath = ROOT / "docs" / "forward.json"
+    for attempt in range(4):
+        subprocess.run([sys.executable, str(ROOT / "scripts" / "grade_forward.py")],
+                       cwd=ROOT, check=False)
+        try:
+            led = _json.loads(fpath.read_text()).get("ledger", {})
+            if not any(b.get("outcome") in ("pending", None, "") for b in led.values()):
+                break
+        except Exception:
+            pass
+        if attempt < 3:
+            print(f"grade: finals not ready, retry in 30s ({attempt + 1}/4)", flush=True)
+            time.sleep(30)
+    _commit_push(["docs/forward.json", "config/games/"],
+                 "chore: final grade — settle forward bets + CLV [skip ci]")
 
 
 def _game_team_tags() -> tuple[str | None, str | None]:
@@ -117,7 +150,8 @@ def main() -> None:
         else:
             final_streak = 0
         time.sleep(CYCLE)
-    print("live_run done.", flush=True)
+    print("live_run done — grading forward bets.", flush=True)
+    grade_and_sync()   # settle W/L + CLV the moment the game is final
 
 
 if __name__ == "__main__":

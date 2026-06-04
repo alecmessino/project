@@ -481,7 +481,8 @@ function heatBg(val, maxVal) {
 let countdown = REFRESH_MS / 1000;
 
 function renderState(d){
-  const h = d.header;
+  const h = d.header || {};
+  const live = (h.status === 'live');
   document.getElementById('score').textContent =
     (h.away_score!=null) ? `${h.away} ${h.away_score} — ${h.home_score} ${h.home}` : '—';
   document.getElementById('clock').textContent =
@@ -494,15 +495,29 @@ function renderState(d){
     (h.credits!=null) ? `API credits: ${h.credits}` : '';
   document.getElementById('foot').textContent = 'last data: ' + (h.updated||'—');
   const banner = document.getElementById('err-banner');
-  if(h.error){ banner.textContent = '⚠ ' + h.error; banner.style.display='block'; }
-  else { banner.style.display='none'; }
-  renderRows(d.rows||[]);
+  if(h.error){
+    banner.textContent = '⚠ ' + h.error; banner.style.display='block';
+  } else if(!live){
+    // No live game: show a clean idle message (final score if we have one).
+    const fin = (h.status==='final' && h.away_score!=null)
+      ? `🏁 Final — ${h.away} ${h.away_score}–${h.home_score} ${h.home}.  `
+      : '';
+    banner.textContent = `${fin}No live game in progress — check Upcoming Games below.`;
+    banner.style.display='block';
+  } else { banner.style.display='none'; }
+  renderRows(d.rows||[], h.status);
   renderSignals(d.signals||[]);
 }
 
-function renderRows(rows){
+function renderRows(rows, status){
   const tb = document.getElementById('rows');
-  if(!rows.length){ tb.innerHTML='<tr><td colspan="13" class="empty">no tracked markets — game may not be live yet</td></tr>'; return; }
+  if(!rows.length){
+    const msg = (status==='live')
+      ? 'no tracked markets yet — first lines capture shortly after tip'
+      : 'No live game in progress — check Upcoming Games below';
+    tb.innerHTML = `<tr><td colspan="13" class="empty">${msg}</td></tr>`;
+    return;
+  }
   const ALERT_MOVE_PTS = 6;   // bright-orange when the live line is >=6 pts off pregame
   tb.innerHTML = rows.map(r=>{
     const flagCls = r.flagged?(r.strong?'flag strong':'flag'):'';

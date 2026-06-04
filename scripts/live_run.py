@@ -124,6 +124,21 @@ def espn_is_final() -> bool:
     return False
 
 
+def finalize_state() -> None:
+    """Mark the live payload as final so the dashboard shows a clean idle state
+    ('No live game in progress') instead of a frozen 'live' game after the buzzer."""
+    import json as _json
+    p = ROOT / "docs" / "live_market_state.json"
+    try:
+        d = _json.loads(p.read_text())
+    except Exception:
+        return
+    d.setdefault("header", {})["status"] = "final"
+    p.write_text(_json.dumps(d))
+    _commit_push(["docs/live_market_state.json", "docs/state.json"],
+                 "chore: mark game final [skip ci]")
+
+
 def main() -> None:
     deadline = time.time() + MAX_MINUTES * 60
     print(f"live_run start: cycle={CYCLE}s max={MAX_MINUTES}m game={os.environ.get('MRBET_GAME')}",
@@ -152,6 +167,7 @@ def main() -> None:
         time.sleep(CYCLE)
     print("live_run done — grading forward bets.", flush=True)
     grade_and_sync()   # settle W/L + CLV the moment the game is final
+    finalize_state()   # flip the live payload to 'final' for a clean idle dashboard
 
 
 if __name__ == "__main__":

@@ -43,10 +43,19 @@ def git_sync() -> None:
     # is kept as a legacy alias. Push both so the hot stream stays current.
     subprocess.run(["git", "add", "docs/live_market_state.json", "docs/state.json",
                     "docs/forward.json", "docs/odds_history.json"], cwd=ROOT, check=False)
-    if subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT).returncode != 0:
-        subprocess.run(["git", "commit", "-m", "chore: live loop state [skip ci]"],
-                       cwd=ROOT, check=False)
-        subprocess.run(["git", "push"], cwd=ROOT, check=False)
+    if subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT).returncode == 0:
+        return  # nothing changed this cycle
+    subprocess.run(["git", "commit", "-m", "chore: live loop state [skip ci]"],
+                   cwd=ROOT, check=False)
+    # Concurrent bot workflows (board/midnight) also push to master, which would
+    # reject our push as non-fast-forward. Rebase our commit on top and retry so
+    # live updates are never permanently blocked.
+    for _ in range(5):
+        if subprocess.run(["git", "push"], cwd=ROOT).returncode == 0:
+            return
+        subprocess.run(["git", "pull", "--rebase", "--no-edit"], cwd=ROOT, check=False)
+        time.sleep(2)
+    print("git_sync: push still failing after retries", flush=True)
 
 
 def _game_team_tags() -> tuple[str | None, str | None]:

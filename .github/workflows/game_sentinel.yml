@@ -1,0 +1,43 @@
+name: Game sentinel — auto-start the live tracker
+
+# Reliability layer over the schedule. GitHub's cron is unreliable (it skipped
+# tonight's tip), so this runs FREQUENTLY: every tick it asks ESPN whether a game
+# we have a config for is in progress and, if so and no tracker is running, it
+# dispatches live_game_tracker.yml. Because it re-checks every few minutes it both
+# catches the tip (even if cron ticks are skipped) and RESTARTS the tracker if it
+# dies mid-game.
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"     # every 10 min; redundancy beats GitHub's flaky timing
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write              # needed to dispatch the tracker workflow
+
+concurrency:
+  group: game-sentinel
+  cancel-in-progress: true
+
+jobs:
+  sentinel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Ensure tracker is running if a game is live
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          TRACKER_WORKFLOW: live_game_tracker.yml
+          TRACKER_REF: master
+          TRACKER_MAX_MINUTES: "210"
+        run: python scripts/game_sentinel.py

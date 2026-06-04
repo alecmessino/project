@@ -430,8 +430,11 @@ const LIVE_FILE = 'live_market_state.json';
 const DATA_BASE = (new URLSearchParams(location.search).get('data')
                    || localStorage.getItem('mrbet_data_base') || '').replace(/\/$/, '');
 const dataURL = f => DATA_BASE ? `${DATA_BASE}/${f}` : f;
+// Append a per-request cache-buster so neither the browser nor the GitHub Pages
+// CDN can ever hand back a stale JSON payload (belt-and-suspenders over no-store).
+const bust = u => u + (u.includes('?') ? '&' : '?') + '_=' + Date.now();
 async function fetchJSON(file){
-  const r = await fetch(dataURL(file), {cache:'no-store'});
+  const r = await fetch(bust(dataURL(file)), {cache:'no-store'});
   if(!r.ok) throw new Error(`HTTP ${r.status} for ${file}`);
   return r.json();
 }
@@ -624,7 +627,7 @@ async function renderStress(){
     return;
   }
   // historical: read the precomputed trajectories baked into docs/chart_history.json
-  if (!histCache){ try{ histCache = await (await fetch('chart_history.json',{cache:'no-store'})).json(); }catch(e){ return; } }
+  if (!histCache){ try{ histCache = await fetchJSON('chart_history.json'); }catch(e){ return; } }
   const g = histCache.games?.[chartMode];
   if (!g) return;
   setSeries(g.move||[], g.edge||[]);
@@ -741,23 +744,19 @@ const GLOSSARY = [
 ];
 
 async function loadBacktest(){
-  // forward-test panel (real lines) — independent of backtest.json
-  try{
-    const f = await (await fetch('forward.json',{cache:'no-store'})).json();
-    renderForward(f);
-  }catch(e){ /* leave empty state */ }
+  // forward-test panel (real captured live bets) — independent of backtest.json
+  try{ renderForward(await fetchJSON('forward.json')); }
+  catch(e){ /* leave empty state */ }
 
   // batch backtest panel
-  try{
-    const b = await (await fetch('batch.json',{cache:'no-store'})).json();
-    renderBatch(b);
-  }catch(e){ /* leave empty state */ }
+  try{ renderBatch(await fetchJSON('batch.json')); }
+  catch(e){ /* leave empty state */ }
 
   document.getElementById('glossary').innerHTML = GLOSSARY.map(([t,m])=>
     `<tr><td><b>${t}</b></td><td class="muted" style="text-align:left;white-space:normal">${m}</td></tr>`).join('');
 
   let d;
-  try{ d = await (await fetch('backtest.json',{cache:'no-store'})).json(); }
+  try{ d = await fetchJSON('backtest.json'); }
   catch(e){ document.getElementById('bt-foot').textContent='backtest.json not found'; return; }
 
   // KPIs

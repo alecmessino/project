@@ -45,7 +45,14 @@ STATE_JSON = ROOT / "docs" / "state.json"           # legacy alias (older deploy
 LIVE_STATE_JSON = ROOT / "docs" / "live_market_state.json"  # the hot stream file
 FORWARD_JSON = ROOT / "docs" / "forward.json"
 ODDS_HISTORY = ROOT / "docs" / "odds_history.json"   # raw both-sides quote archive
-MARKS = timeout_marks()   # [6,9,12,18,21,24,30,33,36]
+# Capture at the opening tip (~1 min in) plus the 9-point timeout cadence, so the
+# first half is fully auditable from the very first live line. Bovada lines are
+# free, so the extra opening capture costs nothing.
+OPENING_MARK = 1.0
+MARKS = sorted({OPENING_MARK, *timeout_marks()})   # [1,6,9,12,18,21,24,30,33,36]
+# Don't archive a mark we're already well past: on a mid-game (re)start the current
+# lines would be mislabeled as an old elapsed point, corrupting the audit trail.
+BACKFILL_WINDOW = 4.0
 
 # The full-game total market key the Distance-to-Trigger chart tracks.
 FULL_MARKET_KEY = "game_total:full:game"
@@ -186,8 +193,20 @@ else:
         print("sent game-started heartbeat to Discord")
 
     elapsed = espn.minutes_elapsed
-    # Earliest uncaptured mark the clock has reached (one capture per run).
-    due = next((m for m in MARKS if m <= elapsed and m not in captured), None)
+    # Earliest uncaptured mark the clock has reached (one capture per run). Marks we
+    # are already well past (a mid-game restart) are retired without capturing, so we
+    # never label current lines as a stale elapsed point.
+    due = None
+    for m in MARKS:
+        if m in captured:
+            continue
+        if m > elapsed:
+            break
+        if elapsed - m <= BACKFILL_WINDOW:
+            due = m
+            break
+        captured.add(m)   # too far behind to capture accurately — retire it
+
     if due is not None:
         lines = provider._fetch_lines()    # PAID — only at a cadence mark
         from mrbet.odds.base import Snapshot

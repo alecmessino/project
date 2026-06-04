@@ -22,10 +22,16 @@ jobs:
       - name: Rebuild docs/backtest.json
         run: python scripts/build_backtest_json.py
 
+      - name: Rebuild docs/batch.json (forward-test replay the page serves)
+        run: mrbet backtest-batch --data tests/data/2026_playoffs_batch.json --out docs/batch.json
+
+      - name: Rebuild docs/chart_history.json (historical chart trajectories)
+        run: python scripts/build_chart_history.py
+
       - name: Commit if changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/backtest.json
+          git add docs/backtest.json docs/batch.json docs/chart_history.json
           git diff --cached --quiet && echo "no change" || \
-            git commit -m "chore: refresh backtest data [skip ci]" && git push
+            git commit -m "chore: refresh backtest + batch + chart data [skip ci]" && git push

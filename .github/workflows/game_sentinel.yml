@@ -9,7 +9,11 @@ name: Game sentinel — auto-start the live tracker
 
 on:
   schedule:
-    - cron: "*/10 * * * *"     # every 10 min; redundancy beats GitHub's flaky timing
+    # Every 10 min, but only during NBA game hours (≈7 PM–2 AM ET = 23:00–06:59
+    # UTC) to save runner minutes overnight/daytime. Redundancy across many ticks
+    # beats GitHub's flaky single-cron timing.
+    - cron: "*/10 23 * * *"
+    - cron: "*/10 0-6 * * *"
   workflow_dispatch:
 
 permissions:

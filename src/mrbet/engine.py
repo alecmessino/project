@@ -91,7 +91,8 @@ class Engine:
             if state is None:
                 continue
             pts = points_for(state, line, self.game)
-            ev = evaluate_market(baseline, line, state, pts, self.settings)
+            ev = evaluate_market(baseline, line, state, pts, self.settings,
+                                 league=getattr(self.game.event, "league", None))
             sig = to_signal(ev, self.settings)
             results.append(Result(evaluation=ev, signal=sig))
         return results

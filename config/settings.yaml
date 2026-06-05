@@ -10,6 +10,13 @@ model:
   # normal distribution around the projected fair final. Scaled by sqrt(r/L).
   sigma_full: 11.0
   sigma_team: 8.0
+  # Per-league sigma overrides. The defaults above are NBA-fit (Finals totals ~217).
+  # WNBA totals run ~160 (~74% of NBA), so scale sigma down proportionally — final
+  # totals vary less in absolute points. Tune against logged WNBA games over time.
+  leagues:
+    wnba:
+      sigma_full: 8.0    # 11 * (160/217) ≈ 8.1
+      sigma_team: 6.0    # 8  * (160/217) ≈ 5.9
   # Minimum minutes elapsed before the current-pace term is trusted (avoids a
   # tiny early-game sample whipsawing the projection).
   min_minutes_elapsed: 5.0

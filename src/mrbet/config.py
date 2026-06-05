@@ -15,11 +15,31 @@ from .reversion import ReversionParams
 # --------------------------------------------------------------------------- #
 # settings.yaml schema
 # --------------------------------------------------------------------------- #
+class LeagueSigma(BaseModel):
+    """Per-league sigma override (either field optional; missing → use the default)."""
+    sigma_full: Optional[float] = None
+    sigma_team: Optional[float] = None
+
+
 class ModelSettings(BaseModel):
     beta: float = 0.70
     sigma_full: float = 11.0
     sigma_team: float = 8.0
     min_minutes_elapsed: float = 5.0
+    # Per-league sigma overrides keyed by lowercase league (e.g. "wnba"). The
+    # top-level sigma_full/sigma_team stay the default (NBA); a league entry scales
+    # them for that league's lower totals/variance.
+    leagues: dict[str, LeagueSigma] = {}
+
+    def sigmas_for(self, league: Optional[str]) -> tuple[float, float]:
+        """(sigma_full, sigma_team) for a league, falling back to the defaults."""
+        sf, st = self.sigma_full, self.sigma_team
+        if league:
+            o = self.leagues.get(league.lower())
+            if o is not None:
+                sf = o.sigma_full if o.sigma_full is not None else sf
+                st = o.sigma_team if o.sigma_team is not None else st
+        return sf, st
 
     def to_params(self) -> ReversionParams:
         return ReversionParams(

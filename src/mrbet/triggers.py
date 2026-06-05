@@ -31,10 +31,16 @@ def evaluate_market(
     state: GameState,
     points_so_far: float,
     settings: Settings,
+    league: Optional[str] = None,
 ) -> Evaluation:
-    """Run the mean-reversion model for one market and price both sides."""
+    """Run the mean-reversion model for one market and price both sides.
+
+    `league` selects the league-specific sigma (e.g. WNBA's lower variance);
+    omitted → the default NBA sigma.
+    """
     m = settings.model
-    base_sigma = m.sigma_team if baseline.market_type == MarketType.TEAM_TOTAL else m.sigma_full
+    sigma_full, sigma_team = m.sigmas_for(league)
+    base_sigma = sigma_team if baseline.market_type == MarketType.TEAM_TOTAL else sigma_full
 
     fair_final = projected_final(
         pregame_total=baseline.line,

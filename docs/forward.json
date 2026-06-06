@@ -1,8 +1,8 @@
 {
-  "generated": "2026-06-06 04:39 UTC",
+  "generated": "2026-06-06 22:42 UTC",
   "scope": {
-    "matchup": "NYK @ SAS",
-    "game": "nyk_sas_2026-06-05",
+    "matchup": "WAS @ ATL",
+    "game": "was_atl_2026-06-06",
     "cadence": "9-point timeout",
     "marks": [
       1.0,
@@ -20,51 +20,27 @@
       1.0,
       6.0,
       9.0,
-      12.0,
-      18.0,
-      21.0,
-      24.0,
-      30.0,
-      33.0,
-      36.0
+      12.0
     ],
     "game_started_notified": true,
     "edge_alerted": {
-      "SAS full|OVER|113.0": 32.0,
-      "NYK full|UNDER|106.0": 23.5,
-      "GAME full|OVER|219.5": 21.6,
-      "SAS full|OVER|115.0": 48.8,
-      "GAME full|OVER|222.0": 18.7
-    },
-    "finals": {
-      "game": {
-        "full": 209,
-        "h1": 108,
-        "q1": 59,
-        "q2": 49,
-        "q3": 51,
-        "q4": 50
-      },
-      "team": {
-        "NYK": 105,
-        "SAS": 104
-      }
-    },
-    "graded_ts": "2026-06-06T04:39:24Z"
+      "GAME full|OVER|160.5": 48.9,
+      "ATL full|OVER|85.0": 79.7
+    }
   },
   "summary": {
-    "bets": 6,
+    "bets": 8,
     "wins": 4,
     "losses": 2,
     "pushes": 0,
-    "pending": 0,
+    "pending": 2,
     "win_rate": 0.667,
     "roi": 0.266,
     "profit_units": 1.6,
-    "clv_beat": 3,
-    "clv_graded": 6,
-    "clv_beat_rate": 0.5,
-    "avg_clv_pts": 2.0
+    "clv_beat": 2,
+    "clv_graded": 8,
+    "clv_beat_rate": 0.25,
+    "avg_clv_pts": -5.0
   },
   "bets": [
     {
@@ -77,9 +53,9 @@
       "entry_odds": -115,
       "entry_ev": 0.3756,
       "entry_prob": 0.7358,
-      "close_line": 212.5,
-      "close_ts": "2026-06-06T02:40:44Z",
-      "clv_pts": 14.0,
+      "close_line": 160.5,
+      "close_ts": "2026-06-06T22:42:48Z",
+      "clv_pts": -38.0,
       "outcome": "win",
       "profit": 0.87
     },
@@ -162,6 +138,38 @@
       "clv_pts": -5.0,
       "outcome": "loss",
       "profit": -1.0
+    },
+    {
+      "event": "team_total",
+      "matchup": "WAS @ ATL",
+      "market": "team_total:full:ATL",
+      "side": "over",
+      "entry_line": 85.0,
+      "entry_ts": "2026-06-06T22:42:48Z",
+      "entry_odds": -110,
+      "entry_ev": 0.7967,
+      "entry_prob": 0.9258,
+      "close_line": 85.0,
+      "close_ts": "2026-06-06T22:42:48Z",
+      "clv_pts": 0.0,
+      "outcome": "pending",
+      "profit": 0.0
+    },
+    {
+      "event": "team_total",
+      "matchup": "WAS @ ATL",
+      "market": "team_total:full:WAS",
+      "side": "under",
+      "entry_line": 75.0,
+      "entry_ts": "2026-06-06T22:42:48Z",
+      "entry_odds": -110,
+      "entry_ev": 0.2665,
+      "entry_prob": 0.622,
+      "close_line": 75.0,
+      "close_ts": "2026-06-06T22:42:48Z",
+      "clv_pts": 0.0,
+      "outcome": "pending",
+      "profit": 0.0
     }
   ],
   "ledger": {
@@ -175,9 +183,9 @@
       "entry_odds": -115,
       "entry_ev": 0.3756,
       "entry_prob": 0.7358,
-      "close_line": 212.5,
-      "close_ts": "2026-06-06T02:40:44Z",
-      "clv_pts": 14.0,
+      "close_line": 160.5,
+      "close_ts": "2026-06-06T22:42:48Z",
+      "clv_pts": -38.0,
       "outcome": "win",
       "profit": 0.87
     },
@@ -260,6 +268,38 @@
       "clv_pts": -5.0,
       "outcome": "loss",
       "profit": -1.0
+    },
+    "team_total:full:ATL:over": {
+      "event": "team_total",
+      "matchup": "WAS @ ATL",
+      "market": "team_total:full:ATL",
+      "side": "over",
+      "entry_line": 85.0,
+      "entry_ts": "2026-06-06T22:42:48Z",
+      "entry_odds": -110,
+      "entry_ev": 0.7967,
+      "entry_prob": 0.9258,
+      "close_line": 85.0,
+      "close_ts": "2026-06-06T22:42:48Z",
+      "clv_pts": 0.0,
+      "outcome": "pending",
+      "profit": 0.0
+    },
+    "team_total:full:WAS:under": {
+      "event": "team_total",
+      "matchup": "WAS @ ATL",
+      "market": "team_total:full:WAS",
+      "side": "under",
+      "entry_line": 75.0,
+      "entry_ts": "2026-06-06T22:42:48Z",
+      "entry_odds": -110,
+      "entry_ev": 0.2665,
+      "entry_prob": 0.622,
+      "close_line": 75.0,
+      "close_ts": "2026-06-06T22:42:48Z",
+      "clv_pts": 0.0,
+      "outcome": "pending",
+      "profit": 0.0
     }
   }
 }

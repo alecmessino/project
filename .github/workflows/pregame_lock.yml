@@ -41,12 +41,12 @@ jobs:
         run: |
           python scripts/board_update.py \
             --league "${{ github.event.inputs.league || 'nba' }}" \
-            --refresh-config config/games/nyk_sas_2026-06-03.yaml
+            --refresh-config config/games/nyk_sas_2026-06-05.yaml
 
       - name: Commit closing baseline
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/board.json docs/upcoming.json config/games/nyk_sas_2026-06-03.yaml
+          git add docs/board.json docs/upcoming.json config/games/nyk_sas_2026-06-05.yaml
           git diff --cached --quiet && echo "no change" || \
             git commit -m "chore: pregame lock — Bovada closing baseline [skip ci]" && git push

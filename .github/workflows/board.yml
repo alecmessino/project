@@ -9,9 +9,9 @@ on:
   workflow_dispatch:
     inputs:
       league:
-        description: "League to discover (wnba tonight, nba tomorrow)"
+        description: "League to discover (nba locked for the Finals; wnba dispatchable)"
         required: true
-        default: "wnba"
+        default: "nba"
   schedule:
     - cron: "*/15 * * * *"   # best-effort; dispatch is the reliable trigger
 
@@ -33,7 +33,7 @@ jobs:
       - name: Install package
         run: pip install -e ".[dev]"
       - name: Build board.json
-        run: python scripts/board_update.py --league "${{ github.event.inputs.league || 'wnba' }}"
+        run: python scripts/board_update.py --league "${{ github.event.inputs.league || 'nba' }}"
       - name: Commit board.json
         run: |
           git config user.name  "github-actions[bot]"

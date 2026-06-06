@@ -22,7 +22,7 @@ on:
       game:
         description: "Game config to track"
         required: true
-        default: "config/games/nyk_sas_2026-06-03.yaml"
+        default: "config/games/nyk_sas_2026-06-05.yaml"
       max_minutes:
         description: "Hard stop for the live loop (covers OT)"
         required: true
@@ -51,7 +51,7 @@ jobs:
 
       - name: Stream the live game to the dashboard
         env:
-          MRBET_GAME: ${{ github.event.inputs.game || 'config/games/nyk_sas_2026-06-03.yaml' }}
+          MRBET_GAME: ${{ github.event.inputs.game || 'config/games/nyk_sas_2026-06-05.yaml' }}
           LIVE_MAX_MINUTES: ${{ github.event.inputs.max_minutes || '210' }}
           LIVE_CYCLE_SECONDS: "75"
           # Secrets — unset ones simply no-op (Bovada needs no key; these power the

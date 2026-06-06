@@ -125,18 +125,37 @@ def espn_is_final() -> bool:
 
 
 def finalize_state() -> None:
-    """Mark the live payload as final so the dashboard shows a clean idle state
-    ('No live game in progress') instead of a frozen 'live' game after the buzzer."""
+    """Post-game cleanup: wipe the live payload back to a clean idle/pre-game state.
+
+    By the time we get here grade_and_sync() has already logged the closing data
+    (graded forward bets + the capture archive), so the result is preserved on the
+    Backtest tab. This just clears the LIVE view — header reset, empty markets table,
+    empty chart arrays — so the dashboard returns to a clean idle state ready for the
+    next matchup instead of staying frozen on the finished game.
+    """
     import json as _json
-    p = ROOT / "docs" / "live_market_state.json"
+    thresholds = {"pct_move": 0.04, "edge_pts": 2.0, "ev": 0.0}
     try:
-        d = _json.loads(p.read_text())
+        thresholds = _json.loads((ROOT / "docs" / "odds_history.json").read_text()).get(
+            "thresholds", thresholds)
     except Exception:
-        return
-    d.setdefault("header", {})["status"] = "final"
-    p.write_text(_json.dumps(d))
+        pass
+    idle = {
+        "header": {
+            "status": "idle", "period": None, "clock": None,
+            "away": None, "home": None, "away_name": None, "home_name": None,
+            "away_score": None, "home_score": None,
+            "minutes_remaining": None, "minutes_elapsed": None,
+            "updated": time.strftime("%H:%M:%S"), "error": "",
+        },
+        "rows": [], "signals": [],
+        "chart": {"move": [], "edge": [], "thresholds": thresholds},
+    }
+    payload = _json.dumps(idle)
+    (ROOT / "docs" / "live_market_state.json").write_text(payload)
+    (ROOT / "docs" / "state.json").write_text(payload)
     _commit_push(["docs/live_market_state.json", "docs/state.json"],
-                 "chore: mark game final [skip ci]")
+                 "chore: post-game cleanup — reset dashboard to idle [skip ci]")
 
 
 def main() -> None:
@@ -167,7 +186,7 @@ def main() -> None:
         time.sleep(CYCLE)
     print("live_run done — grading forward bets.", flush=True)
     grade_and_sync()   # settle W/L + CLV the moment the game is final
-    finalize_state()   # flip the live payload to 'final' for a clean idle dashboard
+    finalize_state()   # wipe the live payload back to a clean idle/pre-game state
 
 
 if __name__ == "__main__":

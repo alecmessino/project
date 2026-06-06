@@ -43,6 +43,34 @@ def _et(tip_ms, fmt: str) -> str:
     return dt.strftime(fmt)
 
 
+def _merge_board(this_league: str, fresh: list) -> list:
+    """Merge freshly-discovered `this_league` games with other leagues already on the
+    board, so refreshing one league never clobbers another (NBA Finals + WNBA coexist).
+
+    - This league's games are fully replaced by `fresh` (a finished game that Bovada
+      no longer lists simply drops out).
+    - Other leagues persist, except games whose tip is >6h in the past — that retires
+      yesterday's finished games over time without a separate cleanup job.
+    """
+    now = time.time()
+    STALE_SECONDS = 6 * 3600
+    try:
+        prev = json.loads(OUT.read_text()).get("games", []) if OUT.exists() else []
+    except (ValueError, OSError):
+        prev = []
+    kept = []
+    for g in prev:
+        if str(g.get("league", "")).upper() == this_league.upper():
+            continue   # this league is fully refreshed from `fresh`
+        tms = g.get("tip_ms")
+        if isinstance(tms, (int, float)) and tms / 1000 < now - STALE_SECONDS:
+            continue   # stale finished game from another league — retire it
+        kept.append(g)
+    merged = kept + fresh
+    merged.sort(key=lambda x: (x.get("tip_ms") or 0))
+    return merged
+
+
 def _write_upcoming(games: list) -> None:
     """Auto-generate docs/upcoming.json from the discovered slate (no hand-edits).
 
@@ -274,18 +302,20 @@ def main(argv=None) -> int:
             "ml_away": ml_away, "ml_home": ml_home,
         })
 
+    merged = _merge_board(args.league, games)
+    leagues = sorted({str(g.get("league", "")).upper() for g in merged if g.get("league")})
     payload = {
-        "league": args.league.upper(),
+        "league": " + ".join(leagues) or args.league.upper(),
         "generated": time.strftime("%Y-%m-%d %H:%M:%S"),
-        "count": len(games),
-        "games": games,
+        "count": len(merged),
+        "games": merged,
     }
     OUT.write_text(json.dumps(payload, indent=2))
-    print(f"wrote {OUT} — {len(games)} {args.league.upper()} games")
-    _write_upcoming(games)   # keep docs/upcoming.json self-maintained
-    for g in games:
-        print(f"  {g['stage']:5} {g['matchup']:42} tot {g['total']} | {g['spread']} | "
-              f"ML {g['ml_away']}/{g['ml_home']}")
+    print(f"wrote {OUT} — {len(games)} fresh {args.league.upper()} + "
+          f"{len(merged) - len(games)} kept = {len(merged)} games ({'+'.join(leagues)})")
+    _write_upcoming(merged)   # keep docs/upcoming.json self-maintained (all leagues)
+    for g in merged:
+        print(f"  {g.get('league',''):4} {g['stage']:5} {g['matchup']:42} tot {g['total']} | {g['spread']}")
     return 0
 
 

@@ -494,17 +494,12 @@ function renderState(d){
   document.getElementById('credits').textContent =
     (h.credits!=null) ? `API credits: ${h.credits}` : '';
   document.getElementById('foot').textContent = 'last data: ' + (h.updated||'—');
+  // Only the err-banner is reserved for real errors now. Idle/final states are
+  // conveyed cleanly by the "—" score, the status pill, and the markets table's
+  // empty-state message — no stuck red banner after a game ends.
   const banner = document.getElementById('err-banner');
-  if(h.error){
-    banner.textContent = '⚠ ' + h.error; banner.style.display='block';
-  } else if(!live){
-    // No live game: show a clean idle message (final score if we have one).
-    const fin = (h.status==='final' && h.away_score!=null)
-      ? `🏁 Final — ${h.away} ${h.away_score}–${h.home_score} ${h.home}.  `
-      : '';
-    banner.textContent = `${fin}No live game in progress — check Upcoming Games below.`;
-    banner.style.display='block';
-  } else { banner.style.display='none'; }
+  if(h.error){ banner.textContent = '⚠ ' + h.error; banner.style.display='block'; }
+  else { banner.style.display='none'; }
   renderRows(d.rows||[], h.status);
   renderSignals(d.signals||[]);
 }

@@ -32,8 +32,17 @@ jobs:
           python-version: '3.11'
       - name: Install package
         run: pip install -e ".[dev]"
-      - name: Build board.json
-        run: python scripts/board_update.py --league "${{ github.event.inputs.league || 'nba' }}"
+      - name: Build board.json (merge NBA + WNBA; one league if dispatched)
+        run: |
+          L="${{ github.event.inputs.league }}"
+          if [ -n "$L" ]; then
+            python scripts/board_update.py --league "$L"
+          else
+            # Cron: refresh BOTH leagues. Each call merges, so NBA + WNBA coexist
+            # and neither clobbers the other.
+            python scripts/board_update.py --league nba
+            python scripts/board_update.py --league wnba
+          fi
       - name: Commit board.json
         run: |
           git config user.name  "github-actions[bot]"

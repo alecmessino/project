@@ -631,14 +631,12 @@ async function renderStress(){
   if (!(await ensureChart())) return;            // Chart.js unavailable
   const sub = document.getElementById('chart-sub');
   if (chartMode === 'live'){
-    // Prefer the series streamed inside the live payload (no second fetch);
-    // fall back to the capture archive if this deploy hasn't embedded it yet.
-    if (liveChartSeries && ((liveChartSeries.move||[]).length || (liveChartSeries.edge||[]).length)){
-      setSeries(liveChartSeries.move||[], liveChartSeries.edge||[]);
-    } else {
-      try{ const h = await fetchJSON('odds_history.json');
-           const {move,edge} = extractFull(h.captures); setSeries(move,edge); }catch(e){}
-    }
+    // Plot ONLY the current game's series, which the backend embeds in the live
+    // payload event-scoped. Early in a game this is empty (correct) — we must NOT
+    // fall back to the raw odds_history archive, which holds prior games' captures
+    // and would replot a finished game's trajectory onto tonight's chart.
+    const s = liveChartSeries || {move:[], edge:[]};
+    setSeries(s.move||[], s.edge||[]);
     return;
   }
   // historical: read the precomputed trajectories baked into docs/chart_history.json

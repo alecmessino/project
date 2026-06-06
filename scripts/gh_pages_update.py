@@ -109,12 +109,18 @@ notifier = Notifier(settings.notifications)
 _prev_path = LIVE_STATE_JSON if LIVE_STATE_JSON.exists() else STATE_JSON
 prev_state = json.loads(_prev_path.read_text()) if _prev_path.exists() else {}
 prev_fwd = json.loads(FORWARD_JSON.read_text()) if FORWARD_JSON.exists() else {}
+_prev_scope = prev_fwd.get("scope", {})
+# Capture state (which cadence marks are done, the started heartbeat, edge-alert
+# dedup) belongs to ONE game. If forward.json is from a different game, start fresh
+# so a new game doesn't inherit the prior game's "already captured" marks (which
+# would suppress every capture and leave the table + chart empty).
+_same_game = _prev_scope.get("game") == game.event.id
 ledger = prev_fwd.get("ledger", {})
-captured = set(prev_fwd.get("scope", {}).get("captured_marks", []))
+captured = set(_prev_scope.get("captured_marks", [])) if _same_game else set()
 # One-time "game has started, live data flowing" heartbeat (persists across runs).
-started_notified = bool(prev_fwd.get("scope", {}).get("game_started_notified", False))
+started_notified = bool(_prev_scope.get("game_started_notified", False)) if _same_game else False
 # Edge-alert dedup map: "market|side|live" -> last EV alerted.
-edge_alerted = dict(prev_fwd.get("scope", {}).get("edge_alerted", {}))
+edge_alerted = dict(_prev_scope.get("edge_alerted", {})) if _same_game else {}
 finals = getattr(game, "finals", None) or None
 
 state = DashboardState(game)

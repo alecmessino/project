@@ -199,9 +199,9 @@ else:
         print("sent game-started heartbeat to Discord")
 
     elapsed = espn.minutes_elapsed
-    # Earliest uncaptured mark the clock has reached (one capture per run). Marks we
-    # are already well past (a mid-game restart) are retired without capturing, so we
-    # never label current lines as a stale elapsed point.
+    # Earliest uncaptured cadence mark for the ARCHIVE (the clean forward-test record).
+    # Marks we're already well past (a mid-game restart) are retired without capturing,
+    # so we never label current lines as a stale elapsed point.
     due = None
     for m in MARKS:
         if m in captured:
@@ -213,32 +213,44 @@ else:
             break
         captured.add(m)   # too far behind to capture accurately — retire it
 
-    if due is not None:
-        lines = provider._fetch_lines()    # PAID — only at a cadence mark
+    # Bovada lines are FREE, so refresh the DISPLAY (markets table) EVERY cycle — the
+    # live total now tracks the book within one cycle (~75s) instead of going stale
+    # between cadence marks. The paid Odds-API fallback still only fetches at a mark.
+    is_free = isinstance(provider, BovadaProvider)
+    lines = provider._fetch_lines() if (is_free or due is not None) else None
+
+    if lines:
         from mrbet.odds.base import Snapshot
         snap = Snapshot(state=espn, lines=lines, meta={
             "credits_remaining": provider.credits_remaining(),
             "clock": provider._clock, "cadence_mark": due})
-        results = engine = Engine(settings, game, provider=None).process_snapshot(snap)
-        state.update(snap, results)
-        ts = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        results = Engine(settings, game, provider=None).process_snapshot(snap)
+        state.update(snap, results)                 # fresh rows + header every cycle
         for r in results:
             if r.signal:
                 state.add_signal(r.signal)
-                notifier.maybe_notify(r.signal)   # reversion push the moment it flags
-            fwd.merge_signal(ledger, r.evaluation, ts, matchup, finals)
-        # Archive the raw quote (all markets, BOTH sides' prices) for forward testing.
-        fwd.append_capture(ODDS_HISTORY, game.event.id, snap, results, ts, thresholds={
-            "pct_move": settings.triggers.pct_move_threshold,
-            "edge_pts": settings.triggers.edge_pts_threshold,
-            "ev": settings.triggers.ev_threshold,
-        })
-        captured.add(due)
-        captured_now = due
-        print(f"captured cadence mark m{due:.0f} "
-              f"(credits remaining: {provider.credits_remaining()})")
+                notifier.maybe_notify(r.signal)      # reversion push the moment it flags
+        # Append to the forward-test ARCHIVE only at a cadence mark (keeps the record
+        # clean), even though the live table refreshes every cycle.
+        if due is not None:
+            ts = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            for r in results:
+                fwd.merge_signal(ledger, r.evaluation, ts, matchup, finals)
+            fwd.append_capture(ODDS_HISTORY, game.event.id, snap, results, ts, thresholds={
+                "pct_move": settings.triggers.pct_move_threshold,
+                "edge_pts": settings.triggers.edge_pts_threshold,
+                "ev": settings.triggers.ev_threshold,
+            })
+            captured.add(due)
+            captured_now = due
+            print(f"archived cadence mark m{due:.0f}")
+        else:
+            full = next((r.evaluation.live.line for r in results
+                         if r.evaluation.baseline.market_type.value == "game_total"
+                         and r.evaluation.baseline.period.value == "full"), "?")
+            print(f"display refresh at {elapsed:.1f}m — live game total {full}")
     else:
-        # Between marks — free clock refresh, keep prior rows.
+        # Paid feed between marks (or fetch failed) — keep prior rows, refresh clock.
         state.header.update({
             "status": "live", "period": espn.period.value,
             "clock": provider._clock, "away_score": espn.away_score,
@@ -248,7 +260,7 @@ else:
             "updated": time.strftime("%H:%M:%S"),
         })
         state.rows = prev_state.get("rows", [])
-        print(f"between marks at {elapsed:.1f}m elapsed — no odds call (captured: {sorted(captured)})")
+        print(f"between marks at {elapsed:.1f}m — no fresh lines, keeping prior rows")
 
     # Parallel edge alert over whatever rows we have (fresh at a mark, else cached).
     run_edge_alerts()

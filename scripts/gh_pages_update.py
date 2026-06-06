@@ -167,7 +167,8 @@ def run_edge_alerts() -> None:
             f"{tag}: {r['market']} {r['side']} {r['live']}",
             f"fair {r['fair']} · edge {r['edge']:+} pts · EV {r['ev']:+}% · "
             f"win {r.get('prob','?')}% @ {r['odds']:+} · stake ${r.get('stake',0):.2f}\n"
-            f"{h.get('clock','?')} · SA {h.get('away_score')} OKC {h.get('home_score')} "
+            f"{h.get('clock','?')} · {h.get('away','away')} {h.get('away_score')} "
+            f"{h.get('home','home')} {h.get('home_score')} "
             f"({h.get('minutes_remaining','?')} min left)",
             strong=ev >= 30,
         )

@@ -162,6 +162,7 @@ event:
   home_key: {ev.home_key}
   commence_time: "{iso}"
   bookmaker: bovada
+  bovada_event_id: "{ev.id}"
 
 totals:
   full:    {{ line: {total}, over: -110, under: -110 }}
@@ -178,6 +179,55 @@ sides:
     path = ROOT / "config" / "games" / f"{gid}.yaml"
     path.write_text(body)
     return str(path.relative_to(ROOT))
+
+
+def _find_existing_config(eid: str, ev, league: str) -> Optional[str]:
+    """A config matching this Bovada game — by bovada_event_id, else by team names +
+    league. Returns its repo-relative path, or None (so we know to auto-generate)."""
+    away_tag = str(ev.away).split()[-1].lower()
+    home_tag = str(ev.home).split()[-1].lower()
+    for p in glob.glob(str(ROOT / "config" / "games" / "*.yaml")):
+        try:
+            block = (yaml.safe_load(pathlib.Path(p).read_text()) or {}).get("event", {})
+        except Exception:
+            continue
+        if str(block.get("bovada_event_id") or "") == str(eid):
+            return str(pathlib.Path(p).relative_to(ROOT))
+        if str(block.get("league", "")).lower() != league.lower():
+            continue
+        a = str(block.get("away", "")).split()[-1].lower()
+        h = str(block.get("home", "")).split()[-1].lower()
+        if a and h and a == away_tag and h == home_tag:
+            return str(pathlib.Path(p).relative_to(ROOT))
+    return None
+
+
+def ensure_live_config(league: str) -> Optional[tuple]:
+    """If a Bovada game in `league` is LIVE, return (config_relpath, detail, created)
+    — generating a config from the discovered Bovada metadata when none exists, so
+    the tracker can attach to ANY live game without a hand-made config. Pre-built
+    configs are always reused if present (hand-tuning still wins). None if nothing live.
+    """
+    for raw in board_events(league):
+        ev = event_from_bovada(raw)
+        provider = BovadaProvider(ev, league=league, max_polls=1)
+        provider._raw_event = raw
+        st = provider._fetch_state()            # scores endpoint — None unless truly live
+        if st is None:
+            continue
+        eid = str(raw.get("id"))
+        detail = f"{provider._clock} {ev.away_key} {st.away_score}-{st.home_score} {ev.home_key}"
+        existing = _find_existing_config(eid, ev, league)
+        if existing:
+            return existing, detail, False      # hand-tuned / prior config wins
+        total, spread, ml_home, ml_away = _game_markets(raw)
+        if total is None:
+            print(f"  live {ev.away_key}@{ev.home_key} but no total posted yet — skip")
+            continue
+        path = _write_config(ev, league, total, spread, ml_home, ml_away, raw.get("startTime"))
+        print(f"  auto-generated config {path} for live {ev.away_key}@{ev.home_key}")
+        return path, detail + " (auto-config)", True
+    return None
 
 
 def _live_pace(provider, raw, stage, total):

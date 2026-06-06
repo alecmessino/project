@@ -1,11 +1,11 @@
 name: Game sentinel — auto-start the live tracker
 
-# Reliability layer over the schedule. GitHub's cron is unreliable (it skipped
-# tonight's tip), so this runs FREQUENTLY: every tick it asks ESPN whether a game
-# we have a config for is in progress and, if so and no tracker is running, it
-# dispatches live_game_tracker.yml. Because it re-checks every few minutes it both
-# catches the tip (even if cron ticks are skipped) and RESTARTS the tracker if it
-# dies mid-game.
+# Reliability layer over the schedule. Runs FREQUENTLY: every tick it asks Bovada
+# whether any NBA/WNBA game is live and, if so and no tracker is running, dispatches
+# live_game_tracker.yml. If a live game has no config, it AUTO-GENERATES one from the
+# discovered Bovada metadata (so any game tracks with zero hand-config). Re-checking
+# every few minutes both catches the tip (even if cron ticks slip) and RESTARTS the
+# tracker if it dies mid-game.
 
 on:
   schedule:
@@ -17,8 +17,8 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  actions: write              # needed to dispatch the tracker workflow
+  contents: write             # push auto-generated game configs
+  actions: write              # dispatch the tracker workflow
 
 concurrency:
   group: game-sentinel
@@ -34,8 +34,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install PyYAML
-        run: pip install pyyaml
+      - name: Install package (Bovada discovery + config generation)
+        run: pip install -e ".[dev]"
 
       - name: Ensure tracker is running if a game is live
         env:

@@ -1,14 +1,16 @@
-"""Self-healing trigger: ensure the live tracker is running whenever our game is live.
+"""Self-healing trigger: ensure the live tracker is running whenever a game is live.
 
-GitHub's `schedule:` cron is unreliable (it skipped tonight's tip entirely). This
-sentinel runs on a FREQUENT cron — every tick it asks ESPN whether a game we have
-a config for is in progress, and if so and no tracker run is active, it dispatches
-`live_game_tracker.yml`. Because it re-checks every few minutes it (a) catches the
-tip even if some cron ticks are skipped, and (b) RESTARTS the tracker automatically
-if it ever dies mid-game. Redundant with the direct schedule — belt and suspenders.
+Every tick (frequent cron) it asks Bovada whether any NBA/WNBA game is live. For a
+live game it locates a matching config — and if NONE exists, it AUTO-GENERATES one
+from the discovered Bovada metadata (event id, total, spread, league) so the tracker
+can attach to ANY live game without a hand-made config. Pre-built configs always win
+(hand-tuning preserved). It then commits the new config and dispatches
+`live_game_tracker.yml` (unless a tracker run is already active). Because it
+re-checks every few minutes it both catches the tip (even if cron ticks slip) and
+RESTARTS the tracker if it dies mid-game.
 
 Env (provided by the workflow):
-  GITHUB_TOKEN        to read workflow runs + dispatch (needs actions:write)
+  GITHUB_TOKEN        read workflow runs + dispatch (needs actions:write)
   GITHUB_REPOSITORY   "owner/repo"
   TRACKER_WORKFLOW    workflow file to dispatch (default live_game_tracker.yml)
   TRACKER_REF         git ref to run on (default master)
@@ -17,22 +19,19 @@ Env (provided by the workflow):
 
 from __future__ import annotations
 
-import glob
 import json
 import os
 import pathlib
+import subprocess
 import sys
 import urllib.error
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "scripts"))
 API = "https://api.github.com"
-# Basketball leagues the sentinel watches. ESPN scoreboard endpoint per league.
-LEAGUES = ("nba", "wnba")
-
-
-def _espn_scoreboard(league: str) -> str:
-    return f"https://site.api.espn.com/apis/site/v2/sports/basketball/{league.lower()}/scoreboard"
+LEAGUES = ("nba", "wnba")   # basketball leagues the sentinel watches
 
 
 def _gh(method: str, path: str, token: str, body: dict | None = None):
@@ -48,66 +47,42 @@ def _gh(method: str, path: str, token: str, body: dict | None = None):
         return r.status, (json.loads(raw) if raw else {})
 
 
-def _configs():
-    """Every game config we have, league-tagged:
-    {league: [(away_tag, home_tag, commence_epoch, config_relpath), ...]}."""
-    from datetime import datetime
-    import yaml
-    out: dict[str, list] = {lg: [] for lg in LEAGUES}
-    for p in glob.glob(str(ROOT / "config" / "games" / "*.yaml")):
+def _detect_live():
+    """Across leagues, return (config_relpath, detail, created) for a live game —
+    auto-generating a config from Bovada metadata when none exists. None if nothing
+    is live. board_update.ensure_live_config does the discovery + config-gen so the
+    Bovada/line/league logic lives in one place."""
+    import board_update as bu
+    for league in LEAGUES:
         try:
-            ev = (yaml.safe_load(pathlib.Path(p).read_text()) or {}).get("event", {})
-        except Exception:
+            res = bu.ensure_live_config(league)
+        except Exception as e:           # never let one league's hiccup kill the run
+            print(f"[{league}] detect failed: {type(e).__name__}: {e}")
             continue
-        league = str(ev.get("league", "")).lower()
-        if league not in out:
-            continue                      # only leagues we watch
-        away = str(ev.get("away", "")).split()[-1].lower()
-        home = str(ev.get("home", "")).split()[-1].lower()
-        if not (away and home):
-            continue
-        epoch = 0.0
-        ct = str(ev.get("commence_time", "") or "")
-        for fmt in ("%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%dT%H:%M:%S"):
-            try:
-                epoch = datetime.strptime(ct.replace("Z", "+0000"), fmt).timestamp()
-                break
-            except ValueError:
-                continue
-        out[league].append((away, home, epoch, str(pathlib.Path(p).relative_to(ROOT))))
-    return out
+        if res:
+            rel, detail, created = res
+            print(f"[{league}] LIVE → {rel}  ({detail}){' [auto]' if created else ''}")
+            return rel, detail, created
+        print(f"[{league}] nothing live")
+    return None
 
 
-def _live_game(configs_by_league):
-    """Scan EACH league's own ESPN scoreboard for a live game we have a config for.
-    Returns (config_relpath, detail) for the live game whose tip-off is nearest now
-    (so the right series game / league is picked automatically)."""
-    import time as _t
-    now = _t.time()
-    candidates = []
-    for league, configs in configs_by_league.items():
-        if not configs:
-            continue
-        try:
-            d = json.loads(urllib.request.urlopen(_espn_scoreboard(league), timeout=15).read())
-        except Exception as e:
-            print(f"[{league}] ESPN fetch failed: {e}")
-            continue
-        for e in d.get("events", []):
-            comps = (e.get("competitions") or [{}])[0].get("competitors", [])
-            names = " ".join(c.get("team", {}).get("displayName", "") for c in comps)
-            hay = f"{e.get('shortName','')} {e.get('name','')} {names}".lower()
-            state = e.get("status", {}).get("type", {}).get("state")
-            detail = e.get("status", {}).get("type", {}).get("detail", "")
-            for away, home, epoch, rel in configs:
-                if away in hay and home in hay:
-                    print(f"[{league}] matched {rel}: ESPN '{e.get('shortName')}' state={state} ({detail})")
-                    if state == "in":
-                        candidates.append((abs((epoch or now) - now), rel, detail))
-    if not candidates:
-        return None, None
-    candidates.sort()                       # nearest tip-off first
-    return candidates[0][1], candidates[0][2]
+def _commit_config(rel: str) -> None:
+    """Commit + push a newly auto-generated config so the tracker's checkout sees it."""
+    subprocess.run(["git", "config", "user.name", "github-actions[bot]"], cwd=ROOT, check=False)
+    subprocess.run(["git", "config", "user.email",
+                    "github-actions[bot]@users.noreply.github.com"], cwd=ROOT, check=False)
+    subprocess.run(["git", "add", "config/games/"], cwd=ROOT, check=False)
+    if subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT).returncode == 0:
+        return
+    subprocess.run(["git", "commit", "-m",
+                    f"chore: auto-generate live config {rel} [skip ci]"], cwd=ROOT, check=False)
+    for _ in range(4):
+        if subprocess.run(["git", "push"], cwd=ROOT).returncode == 0:
+            print(f"pushed auto-generated {rel}")
+            return
+        subprocess.run(["git", "pull", "--rebase", "--no-edit"], cwd=ROOT, check=False)
+    print(f"WARNING: could not push {rel} — tracker may not see it")
 
 
 def main() -> int:
@@ -120,18 +95,15 @@ def main() -> int:
         print("GITHUB_TOKEN / GITHUB_REPOSITORY missing — cannot run sentinel")
         return 1
 
-    configs = _configs()
-    print(f"watching {sum(len(v) for v in configs.values())} config(s) across "
-          f"{', '.join(lg.upper() for lg in configs if configs[lg])}")
-    rel, detail = _live_game(configs)
-    if not rel:
-        print("no tracked game is live right now — nothing to do.")
+    found = _detect_live()
+    if not found:
+        print("no live game right now — nothing to do.")
         return 0
+    rel, detail, created = found
 
     # Already covered? Skip if a tracker run is queued or in progress.
     try:
-        _, runs = _gh("GET", f"/repos/{repo}/actions/workflows/{wf}/runs"
-                              "?per_page=20", token)
+        _, runs = _gh("GET", f"/repos/{repo}/actions/workflows/{wf}/runs?per_page=20", token)
         active = [r for r in runs.get("workflow_runs", [])
                   if r.get("status") in ("queued", "in_progress", "waiting", "requested")]
         if active:
@@ -140,7 +112,11 @@ def main() -> int:
     except Exception as e:
         print(f"run-status check failed ({e}); will attempt dispatch anyway.")
 
-    # Game is live and nothing is running — start the tracker.
+    # Push the freshly auto-generated config BEFORE dispatch so the tracker's
+    # checkout of `ref` includes it.
+    if created:
+        _commit_config(rel)
+
     print(f"GAME LIVE ({detail}) and no tracker running → dispatching {wf} for {rel}")
     try:
         status, _ = _gh("POST", f"/repos/{repo}/actions/workflows/{wf}/dispatches", token,

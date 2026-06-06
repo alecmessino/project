@@ -1,0 +1,27 @@
+# WNBA — Washington Mystics @ Atlanta Dream. Tip 6:00 PM ET (22:00 UTC 6/6).
+# Created mid-game (joined in Q2), so FULL/spread are the PREGAME baseline estimate
+# (~162.5 / DRE -9.5) — NOT the live-adjusted number — which is what the reversion
+# model must compare the live line against. No finals block.
+
+event:
+  id: was_atl_2026-06-06
+  league: WNBA
+  away: Washington Mystics
+  home: Atlanta Dream
+  away_key: WAS
+  home_key: ATL
+  commence_time: "2026-06-06T22:00:00+0000"
+  bookmaker: bovada
+  bovada_event_id: "26260331"
+
+totals:
+  full:    { line: 162.5, over: -110, under: -110 }
+  h1:      { line: 82.5, over: -110, under: -110 }
+
+team_totals:
+  ATL: { line: 86.0, over: -110, under: -110 }   # (162.5 + 9.5)/2
+  WAS: { line: 76.5, over: -110, under: -110 }   # (162.5 - 9.5)/2
+
+sides:
+  spread:    { ATL: -9.5, WAS: +9.5, over: -110, under: -110 }
+  moneyline: { ATL: -1300, WAS: 625 }

@@ -501,7 +501,7 @@ function renderState(d){
   if(h.error){ banner.textContent = '⚠ ' + h.error; banner.style.display='block'; }
   else { banner.style.display='none'; }
   renderRows(d.rows||[], h.status);
-  renderSignals(d.signals||[]);
+  renderSignals(d.signals||[], d.rows||[]);
 }
 
 function renderRows(rows, status){
@@ -539,11 +539,36 @@ function renderRows(rows, status){
   }).join('');
 }
 
-function renderSignals(sigs){
+const STALE_PTS = 3;   // an alert is a "ghost" once its market's live line moves this far
+
+function renderSignals(sigs, rows){
   const el = document.getElementById('signals');
-  if(!sigs.length){ el.innerHTML='<div class="empty">none yet — fires when all thresholds clear.</div>'; return; }
-  el.innerHTML = sigs.map(s=>`<div class="sig"><span class="ts">${s.time}</span>
-    <div class="t">${s.title}</div><div class="b">${s.body}</div></div>`).join('');
+  // Current live line per market, to stale-check each alert against.
+  const liveByMarket = {};
+  (rows||[]).forEach(r => { liveByMarket[r.market] = +r.live; });
+
+  // Auto-dismiss ghosts: drop any alert whose market's live line has moved more
+  // than STALE_PTS since the alert fired (the edge it was based on is gone).
+  const fresh = (sigs||[]).filter(s => {
+    const cur = liveByMarket[s.market];
+    if (s.line == null || cur == null) return true;   // can't verify -> keep
+    return Math.abs(cur - s.line) <= STALE_PTS;
+  });
+  const dropped = (sigs||[]).length - fresh.length;
+
+  if(!fresh.length){
+    const note = dropped ? `none active — ${dropped} stale alert${dropped>1?'s':''} auto-dismissed (line moved).`
+                         : 'none yet — fires when all thresholds clear.';
+    el.innerHTML = `<div class="empty">${note}</div>`;
+    return;
+  }
+  el.innerHTML = fresh.map(s=>{
+    const cur = liveByMarket[s.market];
+    const moved = (cur!=null && s.line!=null) ? ` <span class="muted">(line ${s.line}→${cur})</span>` : '';
+    return `<div class="sig"><span class="ts">${s.time}</span>
+      <div class="t">${s.title}</div><div class="b">${s.body}${moved}</div></div>`;
+  }).join('')
+    + (dropped ? `<div class="empty" style="margin-top:8px">${dropped} stale alert${dropped>1?'s':''} auto-dismissed (line moved &gt;${STALE_PTS} pts).</div>` : '');
 }
 
 // ---- Distance-to-Trigger chart ------------------------------------------- //

@@ -64,6 +64,8 @@ class DashboardState:
 
     def add_signal(self, signal: Signal) -> None:
         title, body = format_signal(signal)
+        e = signal.evaluation
+        b = e.baseline
         with self._lock:
             self.signals.insert(
                 0,
@@ -72,6 +74,11 @@ class DashboardState:
                     "title": title,
                     "body": body,
                     "strong": signal.strong,
+                    # Structured fields so the UI can stale-check an alert against the
+                    # market's CURRENT live line (matches the rows' "market" format).
+                    "market": f"{b.team or 'GAME'} {b.period.value}",
+                    "side": e.side.value.upper(),
+                    "line": e.live.line,
                 },
             )
             self.signals = self.signals[:50]

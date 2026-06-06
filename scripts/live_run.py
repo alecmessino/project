@@ -30,7 +30,8 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 STATE = ROOT / "docs" / "state.json"
 CYCLE = int(os.environ.get("LIVE_CYCLE_SECONDS", "75"))
 MAX_MINUTES = int(os.environ.get("LIVE_MAX_MINUTES", "300"))
-ESPN = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard"
+def _espn_url(league: str = "nba") -> str:
+    return f"https://site.api.espn.com/apis/site/v2/sports/basketball/{(league or 'nba').lower()}/scoreboard"
 
 
 def run_cycle() -> None:
@@ -91,15 +92,16 @@ def grade_and_sync() -> None:
                  "chore: final grade — settle forward bets + CLV [skip ci]")
 
 
-def _game_team_tags() -> tuple[str | None, str | None]:
-    """(away, home) team nicknames from MRBET_GAME, lowercased — game-agnostic."""
+def _game_meta() -> tuple[str | None, str | None, str]:
+    """(away_tag, home_tag, league) from MRBET_GAME — game- AND league-agnostic."""
     cfg = os.environ.get("MRBET_GAME", "")
     try:
         import yaml
         ev = (yaml.safe_load(pathlib.Path(cfg).read_text()) or {}).get("event", {})
-        return ev["away"].split()[-1].lower(), ev["home"].split()[-1].lower()
+        league = str(ev.get("league", "nba")).lower()
+        return ev["away"].split()[-1].lower(), ev["home"].split()[-1].lower(), league
     except Exception:
-        return None, None
+        return None, None, "nba"
 
 
 def espn_is_final() -> bool:
@@ -108,11 +110,11 @@ def espn_is_final() -> bool:
     Matches the configured game by team nickname (e.g. 'knicks'/'spurs') instead of
     a hardcoded matchup, so the loop exits cleanly for any game we track.
     """
-    away_tag, home_tag = _game_team_tags()
+    away_tag, home_tag, league = _game_meta()
     if not (away_tag and home_tag):
         return False
     try:
-        d = json.loads(urllib.request.urlopen(ESPN, timeout=10).read())
+        d = json.loads(urllib.request.urlopen(_espn_url(league), timeout=10).read())
         for e in d.get("events", []):
             comps = (e.get("competitions") or [{}])[0].get("competitors", [])
             names = " ".join(c.get("team", {}).get("displayName", "") for c in comps)

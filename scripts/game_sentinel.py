@@ -26,8 +26,13 @@ import urllib.error
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-ESPN = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard"
 API = "https://api.github.com"
+# Basketball leagues the sentinel watches. ESPN scoreboard endpoint per league.
+LEAGUES = ("nba", "wnba")
+
+
+def _espn_scoreboard(league: str) -> str:
+    return f"https://site.api.espn.com/apis/site/v2/sports/basketball/{league.lower()}/scoreboard"
 
 
 def _gh(method: str, path: str, token: str, body: dict | None = None):
@@ -43,19 +48,20 @@ def _gh(method: str, path: str, token: str, body: dict | None = None):
         return r.status, (json.loads(raw) if raw else {})
 
 
-def _nba_configs():
-    """(away_tag, home_tag, commence_epoch, config_relpath) for every NBA config."""
-    import time as _t
+def _configs():
+    """Every game config we have, league-tagged:
+    {league: [(away_tag, home_tag, commence_epoch, config_relpath), ...]}."""
     from datetime import datetime
     import yaml
-    out = []
+    out: dict[str, list] = {lg: [] for lg in LEAGUES}
     for p in glob.glob(str(ROOT / "config" / "games" / "*.yaml")):
         try:
             ev = (yaml.safe_load(pathlib.Path(p).read_text()) or {}).get("event", {})
         except Exception:
             continue
-        if str(ev.get("league", "")).upper() != "NBA":
-            continue
+        league = str(ev.get("league", "")).lower()
+        if league not in out:
+            continue                      # only leagues we watch
         away = str(ev.get("away", "")).split()[-1].lower()
         home = str(ev.get("home", "")).split()[-1].lower()
         if not (away and home):
@@ -68,32 +74,36 @@ def _nba_configs():
                 break
             except ValueError:
                 continue
-        out.append((away, home, epoch, str(pathlib.Path(p).relative_to(ROOT))))
+        out[league].append((away, home, epoch, str(pathlib.Path(p).relative_to(ROOT))))
     return out
 
 
-def _live_game(configs):
-    """Return (config_relpath, detail) for a live ESPN game; if several same-matchup
-    configs match, pick the one whose tip-off is nearest now (correct series game)."""
+def _live_game(configs_by_league):
+    """Scan EACH league's own ESPN scoreboard for a live game we have a config for.
+    Returns (config_relpath, detail) for the live game whose tip-off is nearest now
+    (so the right series game / league is picked automatically)."""
     import time as _t
-    try:
-        d = json.loads(urllib.request.urlopen(ESPN, timeout=15).read())
-    except Exception as e:
-        print(f"ESPN fetch failed: {e}")
-        return None, None
     now = _t.time()
     candidates = []
-    for e in d.get("events", []):
-        comps = (e.get("competitions") or [{}])[0].get("competitors", [])
-        names = " ".join(c.get("team", {}).get("displayName", "") for c in comps)
-        hay = f"{e.get('shortName','')} {e.get('name','')} {names}".lower()
-        state = e.get("status", {}).get("type", {}).get("state")
-        detail = e.get("status", {}).get("type", {}).get("detail", "")
-        for away, home, epoch, rel in configs:
-            if away in hay and home in hay:
-                print(f"matched {rel}: ESPN '{e.get('shortName')}' state={state} ({detail})")
-                if state == "in":
-                    candidates.append((abs((epoch or now) - now), rel, detail))
+    for league, configs in configs_by_league.items():
+        if not configs:
+            continue
+        try:
+            d = json.loads(urllib.request.urlopen(_espn_scoreboard(league), timeout=15).read())
+        except Exception as e:
+            print(f"[{league}] ESPN fetch failed: {e}")
+            continue
+        for e in d.get("events", []):
+            comps = (e.get("competitions") or [{}])[0].get("competitors", [])
+            names = " ".join(c.get("team", {}).get("displayName", "") for c in comps)
+            hay = f"{e.get('shortName','')} {e.get('name','')} {names}".lower()
+            state = e.get("status", {}).get("type", {}).get("state")
+            detail = e.get("status", {}).get("type", {}).get("detail", "")
+            for away, home, epoch, rel in configs:
+                if away in hay and home in hay:
+                    print(f"[{league}] matched {rel}: ESPN '{e.get('shortName')}' state={state} ({detail})")
+                    if state == "in":
+                        candidates.append((abs((epoch or now) - now), rel, detail))
     if not candidates:
         return None, None
     candidates.sort()                       # nearest tip-off first
@@ -110,8 +120,9 @@ def main() -> int:
         print("GITHUB_TOKEN / GITHUB_REPOSITORY missing — cannot run sentinel")
         return 1
 
-    configs = _nba_configs()
-    print(f"watching {len(configs)} NBA config(s)")
+    configs = _configs()
+    print(f"watching {sum(len(v) for v in configs.values())} config(s) across "
+          f"{', '.join(lg.upper() for lg in configs if configs[lg])}")
     rel, detail = _live_game(configs)
     if not rel:
         print("no tracked game is live right now — nothing to do.")

@@ -12,10 +12,14 @@ or before tip:
 from __future__ import annotations
 
 import argparse
+import glob
 import json
 import pathlib
 import sys
 import time
+from typing import Optional
+
+import yaml
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -256,6 +260,33 @@ def _refresh_config_lines(path, events) -> bool:
     return True
 
 
+def _nearest_upcoming_config(league: str) -> Optional[str]:
+    """Path to the league's config whose tip is nearest in the FUTURE (the next game
+    to lock), so a pregame refresh never has to hardcode a filename."""
+    from datetime import datetime
+    now = time.time()
+    best, best_dt = None, None
+    for p in glob.glob(str(ROOT / "config" / "games" / "*.yaml")):
+        try:
+            ev = (yaml.safe_load(pathlib.Path(p).read_text()) or {}).get("event", {})
+        except Exception:
+            continue
+        if str(ev.get("league", "")).lower() != league.lower():
+            continue
+        ct = str(ev.get("commence_time", "") or "")
+        epoch = None
+        for fmt in ("%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%dT%H:%M:%S"):
+            try:
+                epoch = datetime.strptime(ct.replace("Z", "+0000"), fmt).timestamp(); break
+            except ValueError:
+                continue
+        if epoch is None or epoch <= now - 6 * 3600:   # skip games already well past
+            continue
+        if best_dt is None or epoch < best_dt:
+            best, best_dt = p, epoch
+    return best
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Write docs/board.json for a league's slate")
     ap.add_argument("--league", default="wnba")
@@ -264,11 +295,18 @@ def main(argv=None) -> int:
     ap.add_argument("--refresh-config", metavar="PATH", default=None,
                     help="lock latest Bovada lines into an existing unified config "
                          "in place (preserves its event block / bovada_event_id)")
+    ap.add_argument("--refresh-upcoming", action="store_true",
+                    help="auto-find the league's nearest UPCOMING config and refresh "
+                         "its lines (no hardcoded filename)")
     args = ap.parse_args(argv)
 
     events = board_events(args.league)
-    if args.refresh_config:
-        _refresh_config_lines(args.refresh_config, events)
+    target = args.refresh_config
+    if args.refresh_upcoming and not target:
+        target = _nearest_upcoming_config(args.league)
+        print(f"refresh-upcoming: nearest {args.league.upper()} config -> {target or 'none found'}")
+    if target:
+        _refresh_config_lines(target, events)
     games = []
     for raw in events:
         ev = event_from_bovada(raw)

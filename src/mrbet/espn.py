@@ -20,6 +20,13 @@ import requests
 SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard"
 SUMMARY = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary"
 
+
+def espn_urls(league: str = "nba") -> tuple[str, str]:
+    """(scoreboard, summary) ESPN endpoints for a basketball league (nba | wnba)."""
+    lg = (league or "nba").lower()
+    base = f"https://site.api.espn.com/apis/site/v2/sports/basketball/{lg}"
+    return f"{base}/scoreboard", f"{base}/summary"
+
 # ESPN season types: 2 = regular, 3 = postseason.
 POSTSEASON = 3
 
@@ -82,8 +89,10 @@ def _full_elapsed(period: int, clock_min: float) -> float:
 
 
 class ESPNClient:
-    def __init__(self, use_cache: bool = True):
+    def __init__(self, use_cache: bool = True, league: str = "nba"):
         self.use_cache = use_cache
+        self.league = (league or "nba").lower()
+        self.scoreboard, self.summary = espn_urls(self.league)
         if use_cache:
             CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -105,7 +114,7 @@ class ESPNClient:
         """Return (event_id, shortName) for completed postseason games on the dates."""
         out: list[tuple[str, str]] = []
         for d in dates:
-            data = self._get(SCOREBOARD, {"dates": d}, f"sb_{d}")
+            data = self._get(self.scoreboard, {"dates": d}, f"sb_{self.league}_{d}")
             if not data:
                 continue
             for ev in data.get("events", []):
@@ -118,7 +127,7 @@ class ESPNClient:
         return out
 
     def game_history(self, event_id: str) -> Optional[GameHistory]:
-        data = self._get(SUMMARY, {"event": event_id}, f"sum_{event_id}")
+        data = self._get(self.summary, {"event": event_id}, f"sum_{self.league}_{event_id}")
         if not data:
             return None
         header = data.get("header", {})
@@ -211,7 +220,7 @@ class ESPNClient:
         Returns None if the game is not found OR if it has not yet completed —
         both cases mean the grader should skip this run.
         """
-        data = self._get(SCOREBOARD, {"dates": date}, f"sb_{date}")
+        data = self._get(self.scoreboard, {"dates": date}, f"sb_{self.league}_{date}")
         if not data:
             return None
         home_last = home_name.split()[-1].lower()
@@ -239,7 +248,7 @@ class ESPNClient:
         Unlike game_history(), does not require play-by-play to be present.
         finals_dict mirrors the structure produced by _finals().
         """
-        data = self._get(SUMMARY, {"event": event_id}, f"sum_{event_id}")
+        data = self._get(self.summary, {"event": event_id}, f"sum_{self.league}_{event_id}")
         if not data:
             return None
         header = data.get("header", {})

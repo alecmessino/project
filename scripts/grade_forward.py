@@ -72,7 +72,7 @@ if espn_fetch_needed:
     base = (dt.astimezone(_ET).date() if (dt.tzinfo and _ET) else dt.date())
     candidates = [(base + timedelta(days=d)).strftime("%Y%m%d") for d in (0, -1, 1)]
 
-    client = ESPNClient(use_cache=False)
+    client = ESPNClient(use_cache=False, league=str(getattr(game.event, "league", "nba")))
     found = None
     for game_date in candidates:
         found = client.find_completed_game(game_date, game.event.home, game.event.away)

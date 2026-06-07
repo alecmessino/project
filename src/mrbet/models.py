@@ -17,6 +17,7 @@ class Period(str, Enum):
 
     FULL = "full"
     H1 = "h1"
+    H2 = "h2"
     Q1 = "q1"
     Q2 = "q2"
     Q3 = "q3"
@@ -28,6 +29,7 @@ class Period(str, Enum):
         return {
             Period.FULL: 48.0,
             Period.H1: 24.0,
+            Period.H2: 24.0,
             Period.Q1: 12.0,
             Period.Q2: 12.0,
             Period.Q3: 12.0,
@@ -39,7 +41,7 @@ class Period(str, Enum):
         """Coarse category used to pick min-minutes-remaining thresholds."""
         if self is Period.FULL:
             return "full"
-        if self is Period.H1:
+        if self in (Period.H1, Period.H2):
             return "half"
         return "quarter"
 
@@ -70,6 +72,10 @@ class GameState:
     minutes_remaining: float
     home_score: int
     away_score: int
+    # H1-final scores, when known (settled at halftime). Carried on a live FULL-game
+    # state so the engine can derive the 2nd-half (H2) slice: H2 pts = current - H1.
+    h1_home: Optional[int] = None
+    h1_away: Optional[int] = None
 
     @property
     def total_score(self) -> int:

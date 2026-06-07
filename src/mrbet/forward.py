@@ -131,7 +131,15 @@ def _actual_final(finals, market_type, period, team):
     try:
         if market_type == "team_total":
             return float(finals["team"][team])
-        return float(finals["game"][period])
+        game = finals["game"]
+        # 2nd-half total isn't stored directly; derive it from full - 1H (or Q3+Q4).
+        if period == "h2" and "h2" not in game:
+            if "full" in game and "h1" in game:
+                return float(game["full"]) - float(game["h1"])
+            if "q3" in game and "q4" in game:
+                return float(game["q3"]) + float(game["q4"])
+            return None
+        return float(game[period])
     except (KeyError, TypeError, ValueError):
         return None
 

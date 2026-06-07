@@ -121,6 +121,9 @@ captured = set(_prev_scope.get("captured_marks", [])) if _same_game else set()
 started_notified = bool(_prev_scope.get("game_started_notified", False)) if _same_game else False
 # Edge-alert dedup map: "market|side|live" -> last EV alerted.
 edge_alerted = dict(_prev_scope.get("edge_alerted", {})) if _same_game else {}
+# Settled H1 final [away, home], captured once at halftime so the engine can derive
+# the 2nd-half (H2) slice. Persists across cycles in the forward scope.
+h1_final = _prev_scope.get("h1_final") if _same_game else None
 finals = getattr(game, "finals", None) or None
 
 state = DashboardState(game)
@@ -200,6 +203,23 @@ else:
         print("sent game-started heartbeat to Discord")
 
     elapsed = espn.minutes_elapsed
+    # Once the 2nd half is underway, capture the settled H1 final (Q1+Q2 from ESPN,
+    # exact) so the engine can derive the H2 total. Fetch once, then carry it via the
+    # forward scope. Stamp it onto the live state so derive_state(H2) can split scores.
+    _reg = espn.minutes_elapsed + espn.minutes_remaining
+    _half_len = (_reg / 2.0) if _reg > 0 else 24.0
+    if elapsed >= _half_len:
+        if not h1_final:
+            from mrbet.espn import live_h1_final
+            away_tag = str(game.event.away).split()[-1]
+            home_tag = str(game.event.home).split()[-1]
+            got = live_h1_final(_league, away_tag, home_tag)
+            if got:
+                h1_final = list(got)   # [away_h1, home_h1]
+                print(f"captured H1 final {away_tag} {got[0]} - {got[1]} {home_tag}")
+        if h1_final:
+            espn.h1_away, espn.h1_home = int(h1_final[0]), int(h1_final[1])
+
     # Earliest uncaptured cadence mark for the ARCHIVE (the clean forward-test record).
     # Marks we're already well past (a mid-game restart) are retired without capturing,
     # so we never label current lines as a stale elapsed point.
@@ -285,6 +305,7 @@ fwd.dump(FORWARD_JSON, ledger, scope={
     "captured_marks": sorted(captured),
     "game_started_notified": started_notified,
     "edge_alerted": edge_alerted,
+    "h1_final": h1_final,
 })
 print(f"Wrote {LIVE_STATE_JSON.name} ({len(state.rows)} rows, "
       f"{len(live_payload.get('chart',{}).get('move',[]))} chart pts) and {FORWARD_JSON.name} "

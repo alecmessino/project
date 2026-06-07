@@ -27,6 +27,39 @@ def espn_urls(league: str = "nba") -> tuple[str, str]:
     base = f"https://site.api.espn.com/apis/site/v2/sports/basketball/{lg}"
     return f"{base}/scoreboard", f"{base}/summary"
 
+
+def live_h1_final(league: str, away_tag: str, home_tag: str):
+    """(away_h1, home_h1) — the settled first-half score (Q1+Q2) from ESPN linescores
+    for the live game matching away_tag/home_tag (team nicknames). None until both Q1
+    and Q2 have closed, or if the game can't be found. Lets the engine derive the 2nd
+    half from a cumulative score without needing per-quarter live data from the book.
+    """
+    sb, _ = espn_urls(league)
+    try:
+        data = requests.get(sb, timeout=15).json()
+    except (requests.RequestException, ValueError):
+        return None
+    at, ht = (away_tag or "").lower(), (home_tag or "").lower()
+    for e in data.get("events", []):
+        comp = (e.get("competitions") or [{}])[0]
+        names = " ".join(c.get("team", {}).get("displayName", "")
+                         for c in comp.get("competitors", [])).lower()
+        hay = f"{e.get('shortName','')} {e.get('name','')} {names}".lower()
+        if not (at and ht and at in hay and ht in hay):
+            continue
+        out = {}
+        for c in comp.get("competitors", []):
+            ls = c.get("linescores") or []
+            if len(ls) < 2:        # Q1/Q2 not both final yet — H1 not settled
+                return None
+            try:
+                out[c.get("homeAway")] = int(ls[0].get("value", 0)) + int(ls[1].get("value", 0))
+            except (TypeError, ValueError):
+                return None
+        if "away" in out and "home" in out:
+            return out["away"], out["home"]
+    return None
+
 # ESPN season types: 2 = regular, 3 = postseason.
 POSTSEASON = 3
 

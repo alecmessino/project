@@ -149,6 +149,7 @@ def _period_from_abbrev(abbrev: str) -> Optional[Period]:
     return {
         "G": Period.FULL,
         "1H": Period.H1, "H1": Period.H1,
+        "2H": Period.H2, "H2": Period.H2,
         "1Q": Period.Q1, "Q1": Period.Q1,
         "2Q": Period.Q2, "Q2": Period.Q2,
         "3Q": Period.Q3, "Q3": Period.Q3,

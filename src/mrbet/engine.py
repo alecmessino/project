@@ -35,11 +35,11 @@ def derive_state(snap_state: GameState, target: Period) -> Optional[GameState]:
     elapsed_full = snap_state.minutes_elapsed
     if target in (Period.FULL,):
         return snap_state
+    # Half length = regulation/2, derived from the live clock so it is league-correct
+    # (NBA 24, WNBA 20) rather than a hardcoded NBA half.
+    regulation = snap_state.minutes_elapsed + snap_state.minutes_remaining
+    half_len = (regulation / 2.0) if regulation > 0 else 24.0
     if target == Period.H1:
-        # Half length = regulation/2, derived from the live clock so it is
-        # league-correct (NBA 24, WNBA 20) rather than a hardcoded NBA half.
-        regulation = snap_state.minutes_elapsed + snap_state.minutes_remaining
-        half_len = (regulation / 2.0) if regulation > 0 else 24.0
         if elapsed_full >= half_len:
             return None  # first half already over
         return GameState(
@@ -48,6 +48,20 @@ def derive_state(snap_state: GameState, target: Period) -> Optional[GameState]:
             minutes_remaining=half_len - elapsed_full,
             home_score=snap_state.home_score,
             away_score=snap_state.away_score,
+        )
+    if target == Period.H2:
+        # 2nd half: need the settled H1-final to split the cumulative score.
+        if elapsed_full < half_len:
+            return None  # 2nd half hasn't started
+        if snap_state.h1_home is None or snap_state.h1_away is None:
+            return None  # H1-final not known yet — can't derive H2 scoring
+        h2_elapsed = elapsed_full - half_len
+        return GameState(
+            period=Period.H2,
+            minutes_elapsed=h2_elapsed,
+            minutes_remaining=max(0.0, half_len - h2_elapsed),
+            home_score=snap_state.home_score - snap_state.h1_home,
+            away_score=snap_state.away_score - snap_state.h1_away,
         )
     # Quarter markets need per-quarter scoring, which a cumulative score can't
     # provide; only the replay/manual path (period match above) handles them.

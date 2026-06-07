@@ -49,17 +49,19 @@ staking:
 
 engine:
   poll_interval_seconds: 60
-  # Markets to track. Valid: total_full, total_h1, total_q1..q4, team_total
+  # Markets to track. Valid: total_full, total_h1, total_h2, total_q1..q4, team_total
   markets:
     - total_full
     - total_h1
+    - total_h2
     - team_total
   # Per-league overrides. WNBA team totals aren't reliably offered for live wagering,
-  # so track only the combined game totals there (full + 1H). NBA keeps team totals.
+  # so track only the combined game totals there (full + 1H + 2H). NBA keeps team totals.
   league_markets:
     wnba:
       - total_full
       - total_h1
+      - total_h2
   # Warn / stop polling when remaining API credits drop below this.
   min_api_credits: 50
   # Sportsbook selection. We request a whole region in one call (cost = markets x

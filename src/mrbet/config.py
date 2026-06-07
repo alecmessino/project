@@ -75,11 +75,11 @@ class StakingSettings(BaseModel):
 
 class EngineSettings(BaseModel):
     poll_interval_seconds: int = 60
-    markets: list[str] = Field(default_factory=lambda: ["total_full", "total_h1", "team_total"])
+    markets: list[str] = Field(default_factory=lambda: ["total_full", "total_h1", "total_h2", "team_total"])
     # Per-league market override. WNBA team totals aren't reliably offered for live
-    # wagering, so focus WNBA on combined game totals. Falls back to `markets`.
+    # wagering, so focus WNBA on combined game totals (full + 1H + 2H). Falls back to `markets`.
     league_markets: dict[str, list[str]] = Field(
-        default_factory=lambda: {"wnba": ["total_full", "total_h1"]})
+        default_factory=lambda: {"wnba": ["total_full", "total_h1", "total_h2"]})
     min_api_credits: int = 50
     region: str = "us"
     books: list[str] = Field(default_factory=lambda: ["bovada"])
@@ -165,6 +165,7 @@ class GameConfig(BaseModel):
         period_map = {
             "full": Period.FULL,
             "h1": Period.H1,
+            "h2": Period.H2,
             "q1": Period.Q1,
             "q2": Period.Q2,
             "q3": Period.Q3,
@@ -181,6 +182,18 @@ class GameConfig(BaseModel):
                     line=ou.line,
                     over_odds=ou.over,
                     under_odds=ou.under,
+                )
+            )
+        # Synthesize a 2nd-half (H2) baseline from full - 1H when not given explicitly,
+        # so existing configs get an H2 pregame number for free (pregame 2H ~ full-1H).
+        if "h2" not in self.totals and "full" in self.totals and "h1" in self.totals:
+            out.append(
+                Baseline(
+                    market_type=MarketType.GAME_TOTAL,
+                    period=Period.H2,
+                    line=round((self.totals["full"].line - self.totals["h1"].line) * 2) / 2,
+                    over_odds=-110,
+                    under_odds=-110,
                 )
             )
         for team, ou in self.team_totals.items():

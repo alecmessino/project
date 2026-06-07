@@ -149,6 +149,7 @@ if provider._refresh() is None:
 
 espn = provider._fetch_state()            # live clock/score (Bovada or ESPN fallback)
 captured_now = None
+projections = {}   # model's projected period totals (full / 1H / 2H) for the dashboard
 
 
 def run_edge_alerts() -> None:
@@ -219,6 +220,22 @@ else:
                 print(f"captured H1 final {away_tag} {got[0]} - {got[1]} {home_tag}")
         if h1_final:
             espn.h1_away, espn.h1_home = int(h1_final[0]), int(h1_final[1])
+
+    # Model PROJECTIONS for combined-total periods (full / 1H / 2H). Bovada's coupon
+    # only carries the live FULL line, so for the halves we surface the model's
+    # projected total — you compare it to the book's live 1H/2H O/U on your phone.
+    from mrbet.engine import derive_state as _derive
+    from mrbet.reversion import projected_final as _proj
+    from mrbet.models import Period as _P, MarketType as _MT
+    for _pk, _per in (("full", _P.FULL), ("h1", _P.H1), ("h2", _P.H2)):
+        _pst = _derive(espn, _per)
+        _base = game.baseline_for(_MT.GAME_TOTAL, _per)
+        if _pst is None or _base is None:
+            continue
+        projections[_pk] = round(_proj(_base.line, _pst.total_score, _pst,
+                                       settings.model.beta, settings.model.min_minutes_elapsed), 1)
+    if projections:
+        print(f"projections: {projections}")
 
     # Earliest uncaptured cadence mark for the ARCHIVE (the clean forward-test record).
     # Marks we're already well past (a mid-game restart) are retired without capturing,
@@ -296,6 +313,7 @@ try:
                                           event_id=game.event.id)
 except Exception as exc:   # never let a chart-build hiccup drop the live update
     print(f"[chart-series skipped] {exc}")
+live_payload["projections"] = projections   # model full/1H/2H projected totals
 LIVE_STATE_JSON.write_bytes(json.dumps(live_payload).encode())
 STATE_JSON.write_bytes(state.to_json())   # legacy alias, kept for older deploys
 

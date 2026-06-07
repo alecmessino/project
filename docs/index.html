@@ -57,6 +57,10 @@
     50%{box-shadow:0 0 20px rgba(220,38,38,.70)}
   }
 
+  /* ---- Model projections strip (halves not on the book's feed) --------- */
+  .proj{margin:0 0 10px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;
+        background:rgba(56,139,253,.08);color:var(--dim);font-size:13px;line-height:1.5}
+  .proj b{color:var(--txt)}
   /* ---- Pulsing red LIVE pill ------------------------------------------- */
   .badge-live{display:inline-block;border-radius:9999px;padding:4px 12px;
               background:#dc2626;color:#fff;font-weight:800;font-size:11px;
@@ -295,6 +299,7 @@
   </section>
   <section class="card card-scroll rcards">
     <h2>Live markets — mean-reversion fair value</h2>
+    <div id="projections" class="proj" style="display:none"></div>
     <table style="min-width:820px">
       <colgroup>
         <col style="width:105px"><col style="width:82px">
@@ -500,8 +505,20 @@ function renderState(d){
   const banner = document.getElementById('err-banner');
   if(h.error){ banner.textContent = '⚠ ' + h.error; banner.style.display='block'; }
   else { banner.style.display='none'; }
+  renderProjections(d.projections);
   renderRows(d.rows||[], h.status);
   renderSignals(d.signals||[], d.rows||[]);
+}
+
+function renderProjections(proj){
+  const el = document.getElementById('projections');
+  if(!el) return;
+  const items = [['Full',proj&&proj.full],['1st half',proj&&proj.h1],['2nd half',proj&&proj.h2]]
+    .filter(([,v]) => v!=null)
+    .map(([k,v]) => `<b>${k}: ${v}</b>`);
+  if(!items.length){ el.style.display='none'; return; }
+  el.innerHTML = `📐 Model projected totals — compare to the book's live O/U: ${items.join(' &nbsp;·&nbsp; ')}`;
+  el.style.display = '';
 }
 
 function renderRows(rows, status){
@@ -887,7 +904,7 @@ const ml = v => v==null ? '—' : (v>0?'+':'') + v;
 const stageBadge = s =>
   s==='live'  ? '<span class="badge-live">● LIVE</span>' :
   s==='final' ? '<span class="muted">final</span>' :
-                '<span class="muted">pre</span>';
+                '';   // pre-game: hide the redundant "pre"; the tip time leads the row
 // Pace arrow: red ▼ when live pace is significantly slower than the pregame
 // expectation (total trending UNDER), green ▲ when faster, → when on pace.
 const paceArrow = (p, proj) => {

@@ -1,7 +1,5 @@
-# NBA Finals Game 3 — San Antonio Spurs @ New York Knicks (series shifts to NY).
-# Tip 8:30 PM ET (00:30 UTC 6/9). REAL live Bovada lines; 1H + team totals derived.
-# No finals block (not played) so the tracker treats it as live, not settled.
-
+# Auto-refreshed closing lines (scripts/board_update.py --refresh-config).
+# Event block preserved; line values are Bovada's latest pregame numbers.
 event:
   id: sas_nyk_2026-06-08
   league: NBA
@@ -9,18 +7,33 @@ event:
   home: New York Knicks
   away_key: SAS
   home_key: NYK
-  commence_time: "2026-06-09T00:30:00+0000"   # 8:30 PM ET tip
+  commence_time: 2026-06-09T00:30:00+0000
   bookmaker: bovada
-  bovada_event_id: "26395103"
-
+  bovada_event_id: '26395103'
 totals:
-  full:    { line: 216.0, over: -110, under: -110 }
-  h1:      { line: 110.0, over: -110, under: -110 }
-
+  full:
+    line: 216.0
+    over: -110
+    under: -110
+  h1:
+    line: 110.0
+    over: -110
+    under: -110
 team_totals:
-  NYK: { line: 109.0, over: -110, under: -110 }   # (216 + 2)/2
-  SAS: { line: 107.0, over: -110, under: -110 }   # (216 - 2)/2
-
+  NYK:
+    line: 109.0
+    over: -110
+    under: -110
+  SAS:
+    line: 107.0
+    over: -110
+    under: -110
 sides:
-  spread:    { NYK: -2, SAS: +2, over: -110, under: -110 }
-  moneyline: { NYK: -135, SAS: 115 }
+  spread:
+    NYK: -2.0
+    SAS: 2.0
+    over: -110
+    under: -110
+  moneyline:
+    NYK: -135
+    SAS: 115

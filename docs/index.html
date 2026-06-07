@@ -59,8 +59,21 @@
 
   /* ---- Model projections strip (halves not on the book's feed) --------- */
   .proj{margin:0 0 10px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;
-        background:rgba(56,139,253,.08);color:var(--dim);font-size:13px;line-height:1.5}
+        background:rgba(56,139,253,.08);color:var(--dim);font-size:13px;line-height:1.7}
   .proj b{color:var(--txt)}
+  .proj input{width:58px;background:#0d1117;color:#e6edf3;border:1px solid var(--line);
+        border-radius:5px;padding:2px 6px;font-size:12px;text-align:right}
+  /* edge trend arrows + volatility pills */
+  .trend{font-weight:800;font-size:12px}
+  .trend.up{color:#2ea043} .trend.dn{color:#da3633} .trend.flat{color:#8b949e}
+  .vol{display:inline-block;border-radius:6px;padding:1px 7px;font-size:11px;font-weight:700}
+  .vol.pos{background:rgba(46,160,67,.18);color:#3fb950}
+  .vol.mid{background:rgba(210,153,34,.18);color:#d29922}
+  .vol.neg{background:rgba(218,54,51,.20);color:#f85149}
+  .vol.muted{color:#8b949e}
+  .pin{cursor:pointer;background:none;border:none;font-size:15px;padding:0 4px;opacity:.5}
+  .pin.on{opacity:1}
+  tr.pinned{background:rgba(56,139,253,.10)}
   /* ---- Pulsing red LIVE pill ------------------------------------------- */
   .badge-live{display:inline-block;border-radius:9999px;padding:4px 12px;
               background:#dc2626;color:#fff;font-weight:800;font-size:11px;
@@ -279,8 +292,8 @@
   <section class="card rcards" style="grid-column:1/-1">
     <h2>Upcoming games</h2>
     <table>
-      <thead><tr><th>Matchup</th><th>Date</th><th>Tip (ET)</th><th>Total</th><th>Spread</th><th>Round</th><th>Config</th></tr></thead>
-      <tbody id="upcoming"><tr><td colspan="7" class="empty">loading…</td></tr></tbody>
+      <thead><tr><th>📌</th><th>Matchup</th><th>Date</th><th>Tip (ET)</th><th>Total</th><th>Spread</th><th>Round</th><th>Config</th></tr></thead>
+      <tbody id="upcoming"><tr><td colspan="8" class="empty">loading…</td></tr></tbody>
     </table>
   </section>
   <section class="chart-card">
@@ -305,12 +318,13 @@
         <col style="width:105px"><col style="width:82px">
         <col style="width:52px"><col style="width:52px"><col style="width:64px">
         <col style="width:50px"><col style="width:52px"><col style="width:56px">
-        <col style="width:46px"><col style="width:60px"><col style="width:60px">
+        <col style="width:64px"><col style="width:52px"><col style="width:46px">
+        <col style="width:60px"><col style="width:60px">
         <col style="width:62px"><col style="width:48px">
       </colgroup>
       <thead><tr>
         <th>Market</th><th>Book</th><th>Pre</th><th>Live</th><th>Move</th><th>Side</th>
-        <th>Fair</th><th>Edge</th><th>P</th><th>EV</th><th>Odds</th><th>Stake</th><th>Flag</th>
+        <th>Fair</th><th>Diff</th><th>Edge</th><th>Vol</th><th>P</th><th>EV</th><th>Odds</th><th>Stake</th><th>Flag</th>
       </tr></thead>
       <tbody id="rows"><tr><td colspan="13" class="empty">loading…</td></tr></tbody>
     </table>
@@ -485,9 +499,50 @@ function heatBg(val, maxVal) {
 }
 let countdown = REFRESH_MS / 1000;
 
+// ---- client-side market history (for volatility + edge trend) ------------ //
+// Tracks distinct (line, edge) updates per market over the last ~6 min, built from
+// our own poll stream — no backend needed.
+const mktHist = {};
+function pushHistory(rows){
+  const now = Date.now();
+  (rows||[]).forEach(r=>{
+    const k = r.market;
+    const arr = (mktHist[k] = mktHist[k] || []);
+    const last = arr[arr.length-1];
+    // record only when the line or edge actually changed (a real market update)
+    if(!last || last.live !== +r.live || last.edge !== +r.edge){
+      arr.push({t:now, live:+r.live, edge:+r.edge, fair:+r.fair});
+    }
+    mktHist[k] = arr.filter(x => now - x.t <= 360000).slice(-60);
+  });
+}
+// Sum of absolute line moves over the last `mins` minutes -> Low/Med/High.
+function volatility(market, mins=5){
+  const arr = mktHist[market] || [];
+  const cut = Date.now() - mins*60000;
+  const recent = arr.filter(x => x.t >= cut);
+  let move = 0;
+  for(let i=1;i<recent.length;i++) move += Math.abs(recent[i].live - recent[i-1].live);
+  if(recent.length < 2) return {label:'—', cls:'muted', move:0};
+  if(move >= 4) return {label:'High', cls:'neg', move};
+  if(move >= 1.5) return {label:'Med', cls:'mid', move};
+  return {label:'Low', cls:'pos', move};
+}
+// Edge change vs ~3 distinct updates ago -> ↑ toward value / ↓ away / → flat.
+function edgeTrend(market, curEdge){
+  const arr = mktHist[market] || [];
+  if(arr.length < 2) return '';
+  const prev = arr[Math.max(0, arr.length-4)].edge;   // ~3 updates back
+  const d = curEdge - prev;
+  if(d > 0.3) return '<span class="trend up" title="edge rising toward value">↑</span>';
+  if(d < -0.3) return '<span class="trend dn" title="edge falling away">↓</span>';
+  return '<span class="trend flat" title="edge steady">→</span>';
+}
+
 function renderState(d){
   const h = d.header || {};
   const live = (h.status === 'live');
+  pushHistory(d.rows);
   document.getElementById('score').textContent =
     (h.away_score!=null) ? `${h.away} ${h.away_score} — ${h.home_score} ${h.home}` : '—';
   document.getElementById('clock').textContent =
@@ -510,15 +565,38 @@ function renderState(d){
   renderSignals(d.signals||[], d.rows||[]);
 }
 
+function fmtDiff(d){
+  const c = d>0?'pos':(d<0?'neg':'muted');
+  return `<b class="${c}">→ diff ${(d>0?'+':'')+d.toFixed(1)}</b>`;
+}
+// Recompute a half's diff (model projection − the book O/U you typed) on the fly.
+function onBookInput(inp){
+  const k=inp.dataset.k, proj=parseFloat(inp.dataset.proj), v=parseFloat(inp.value);
+  localStorage.setItem('bookline:'+k, inp.value);
+  const out=document.getElementById('diff-'+k);
+  if(out) out.innerHTML = (inp.value!=='' && !isNaN(v) && !isNaN(proj)) ? fmtDiff(proj - v) : '';
+}
+// Half projections only (the full game lives in the table with its own Diff column).
+// You type the book's live 1H/2H O/U and it auto-shows model − book.
 function renderProjections(proj){
   const el = document.getElementById('projections');
   if(!el) return;
-  const items = [['Full',proj&&proj.full],['1st half',proj&&proj.h1],['2nd half',proj&&proj.h2]]
-    .filter(([,v]) => v!=null)
-    .map(([k,v]) => `<b>${k}: ${v}</b>`);
-  if(!items.length){ el.style.display='none'; return; }
-  el.innerHTML = `📐 Model projected totals — compare to the book's live O/U: ${items.join(' &nbsp;·&nbsp; ')}`;
-  el.style.display = '';
+  const halves = [['h1','1st half'],['h2','2nd half']].filter(([k]) => proj && proj[k]!=null);
+  if(!halves.length){ el.style.display='none'; el.dataset.sig=''; return; }
+  el.style.display='';
+  const sig = JSON.stringify(halves.map(([k]) => [k, proj[k]]));
+  if(el.dataset.sig === sig) return;   // projections unchanged → don't clobber the inputs
+  el.dataset.sig = sig;
+  el.innerHTML = "📐 Model half projections — type the book's live O/U for your edge: "
+    + halves.map(([k,label])=>{
+        const pv = proj[k];
+        const saved = localStorage.getItem('bookline:'+k) || '';
+        const diff = saved!=='' && !isNaN(parseFloat(saved)) ? fmtDiff(pv - parseFloat(saved)) : '';
+        return `<span style="white-space:nowrap"><b>${label}: ${pv}</b> vs book `
+          + `<input type="number" step="0.5" value="${saved}" data-k="${k}" data-proj="${pv}" `
+          + `oninput="onBookInput(this)" placeholder="O/U"> `
+          + `<span class="diff" id="diff-${k}">${diff}</span></span>`;
+      }).join(' &nbsp;&nbsp;&nbsp; ');
 }
 
 function renderRows(rows, status){
@@ -527,7 +605,7 @@ function renderRows(rows, status){
     const msg = (status==='live')
       ? 'no tracked markets yet — first lines capture shortly after tip'
       : 'No live game in progress — check Upcoming Games below';
-    tb.innerHTML = `<tr><td colspan="13" class="empty">${msg}</td></tr>`;
+    tb.innerHTML = `<tr><td colspan="15" class="empty">${msg}</td></tr>`;
     return;
   }
   const ALERT_MOVE_PTS = 6;   // bright-orange when the live line is >=6 pts off pregame
@@ -538,6 +616,8 @@ function renderRows(rows, status){
     const alertCls = moved >= ALERT_MOVE_PTS ? 'row-alert' : '';
     const badge = r.flagged?`<span class="badge ${r.strong?'strong':''}">${r.strong?'🔥 STRONG':'FLAG'}</span>`:'';
     const sideCls = r.side==='OVER'?'over':'under';
+    const diff = (+r.fair) - (+r.live);                 // model − book (signed)
+    const vol = volatility(r.market);
     return `<tr class="${flagCls} ${alertCls}">
       <td>${r.market}</td>
       <td class="muted" data-label="Book">${r.book||'—'}</td>
@@ -546,7 +626,9 @@ function renderRows(rows, status){
       <td class="num ${cls(r.move_pct)}" data-label="Move">${fmtPct(r.move_pct)}</td>
       <td class="${sideCls}" data-label="Side">${r.side}</td>
       <td class="num" data-label="Fair">${r.fair}</td>
-      <td class="num ${cls(r.edge)}" data-label="Edge">${r.edge>0?'+':''}${r.edge}</td>
+      <td class="num ${cls(diff)}" data-label="Diff">${diff>0?'+':''}${diff.toFixed(1)}</td>
+      <td class="num ${cls(r.edge)}" data-label="Edge">${r.edge>0?'+':''}${r.edge} ${edgeTrend(r.market, +r.edge)}</td>
+      <td data-label="Vol"><span class="vol ${vol.cls}">${vol.label}</span></td>
       <td class="num" data-label="Win %">${r.prob}%</td>
       <td class="num ${cls(r.ev)}" data-label="EV">${fmtPct(r.ev)}</td>
       <td class="num muted" data-label="Odds">${r.odds>0?'+':''}${r.odds}</td>
@@ -881,21 +963,39 @@ setInterval(()=>{
     + (DATA_BASE ? ` · source ${DATA_BASE}` : '');
 }, 1000);
 
+// ---- pin-to-top (watchlist) — persisted in localStorage ------------------ //
+function getPinned(){ try{ return new Set(JSON.parse(localStorage.getItem('pinned')||'[]')); }catch(e){ return new Set(); } }
+function togglePin(key){
+  const s=getPinned(); s.has(key)?s.delete(key):s.add(key);
+  localStorage.setItem('pinned', JSON.stringify([...s]));
+  loadUpcoming();   // re-sort the upcoming watchlist with the new pin state
+}
+
 async function loadUpcoming(){
   try{
     const u = await fetchJSON('upcoming.json');
     const tb = document.getElementById('upcoming');
-    if(!u.games || !u.games.length){ tb.innerHTML='<tr><td colspan="7" class="empty">none scheduled</td></tr>'; return; }
-    tb.innerHTML = u.games.map(g=>`<tr>
+    if(!u.games || !u.games.length){ tb.innerHTML='<tr><td colspan="8" class="empty">none scheduled</td></tr>'; return; }
+    const pins = getPinned();
+    const keyOf = g => `${g.matchup}|${g.date}`;
+    // Pinned games float to the top, original order preserved within each group.
+    const games = u.games.map((g,i)=>({g,i}))
+      .sort((a,b)=> (pins.has(keyOf(b.g))?1:0)-(pins.has(keyOf(a.g))?1:0) || a.i-b.i)
+      .map(x=>x.g);
+    tb.innerHTML = games.map(g=>{
+      const key=keyOf(g).replace(/'/g,''); const on=pins.has(keyOf(g));
+      return `<tr class="${on?'pinned':''}">
+      <td><button class="pin ${on?'on':''}" title="Pin to top" onclick="togglePin('${key}')">📌</button></td>
       <td><b>${g.matchup}</b></td>
       <td class="muted" data-label="Date">${g.date}</td>
       <td class="muted" data-label="Tip (ET)">${g.tip}</td>
       <td data-label="Total">${g.total}</td>
       <td class="muted" data-label="Spread">${g.spread}</td>
       <td class="muted" data-label="Round">${g.round}</td>
-      <td class="muted" data-label="Config">${g.config}</td></tr>`).join('');
+      <td class="muted" data-label="Config">${g.config}</td></tr>`;
+    }).join('');
   }catch(e){
-    document.getElementById('upcoming').innerHTML='<tr><td colspan="7" class="empty">upcoming.json not found</td></tr>';
+    document.getElementById('upcoming').innerHTML='<tr><td colspan="8" class="empty">upcoming.json not found</td></tr>';
   }
 }
 

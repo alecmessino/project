@@ -54,6 +54,14 @@ def derive_state(snap_state: GameState, target: Period) -> Optional[GameState]:
     return None
 
 
+def market_key(line: MarketLine) -> str:
+    """Settings-vocabulary key for a market line: 'team_total' or 'total_<period>'
+    (e.g. total_full, total_h1, total_q1) — used to filter tracked markets per league."""
+    if line.market_type == MarketType.TEAM_TOTAL:
+        return "team_total"
+    return f"total_{line.period.value}"
+
+
 def points_for(state: GameState, line: MarketLine, cfg: GameConfig) -> float:
     """Points scored so far relevant to this market within its period."""
     if line.market_type == MarketType.TEAM_TOTAL:
@@ -83,7 +91,11 @@ class Engine:
 
     def process_snapshot(self, snap: Snapshot) -> list[Result]:
         results: list[Result] = []
+        league = getattr(self.game.event, "league", None)
+        allowed = set(self.settings.engine.markets_for(league))
         for line in snap.lines:
+            if market_key(line) not in allowed:
+                continue   # market not tracked for this league (e.g. WNBA team totals)
             baseline = self._baseline_for(line)
             if baseline is None:
                 continue

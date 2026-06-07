@@ -54,6 +54,12 @@ engine:
     - total_full
     - total_h1
     - team_total
+  # Per-league overrides. WNBA team totals aren't reliably offered for live wagering,
+  # so track only the combined game totals there (full + 1H). NBA keeps team totals.
+  league_markets:
+    wnba:
+      - total_full
+      - total_h1
   # Warn / stop polling when remaining API credits drop below this.
   min_api_credits: 50
   # Sportsbook selection. We request a whole region in one call (cost = markets x

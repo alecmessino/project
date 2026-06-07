@@ -76,6 +76,10 @@ class StakingSettings(BaseModel):
 class EngineSettings(BaseModel):
     poll_interval_seconds: int = 60
     markets: list[str] = Field(default_factory=lambda: ["total_full", "total_h1", "team_total"])
+    # Per-league market override. WNBA team totals aren't reliably offered for live
+    # wagering, so focus WNBA on combined game totals. Falls back to `markets`.
+    league_markets: dict[str, list[str]] = Field(
+        default_factory=lambda: {"wnba": ["total_full", "total_h1"]})
     min_api_credits: int = 50
     region: str = "us"
     books: list[str] = Field(default_factory=lambda: ["bovada"])
@@ -85,6 +89,12 @@ class EngineSettings(BaseModel):
     # the ~6:00/3:00 marks of Q1-Q3 (~25x fewer credits).
     cadence: str = "interval"
     clock_poll_interval: int = 45
+
+    def markets_for(self, league: Optional[str]) -> list[str]:
+        """Tracked market keys for a league (per-league override, else the default)."""
+        if league and league.lower() in self.league_markets:
+            return self.league_markets[league.lower()]
+        return self.markets
 
 
 class NotificationSettings(BaseModel):

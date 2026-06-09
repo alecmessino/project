@@ -91,5 +91,7 @@ notifications:
   sms: true               # email-to-SMS gateway; set SMS_EMAIL_TARGET / SMTP_USERNAME / SMTP_PASSWORD in env (see .env.example)
   discord: true           # Discord webhook (phone push); set DISCORD_WEBHOOK_URL in env (see .env.example)
   slack: false            # Slack webhook; set SLACK_WEBHOOK_URL in env and flip to true to enable
-  # Re-alert on the same signal only if EV improves by at least this much.
-  reissue_ev_delta: 0.02
+  # Re-alert on the same signal only if EV improves by at least this much. Raised
+  # 0.02 -> 0.08 to cut alert frequency now that the table refreshes every cycle (a
+  # moving line no longer re-pings the same signal on small EV wiggles).
+  reissue_ev_delta: 0.08

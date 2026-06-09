@@ -93,8 +93,12 @@ def _chart_series(captures, thresholds=None, event_id=None) -> dict:
 # the config net for the higher-variance NBA Finals env (EV_MIN keeps it selective).
 EDGE_MIN = 2.0       # model edge in points (directional: OVER or UNDER)
 EV_MIN = 15.0        # EV percent
-EV_REALERT_JUMP = 8.0  # re-alert same market/side/line only if EV jumps this much
-EDGE_MIN_REMAINING = 3.0  # require this many minutes left in the game
+# Re-alert the same market/side only on a BIG EV improvement AND after a cooldown —
+# the dedup key is market|side (NOT the live line), so a moving line no longer fires
+# a fresh alert every cycle. This is the main lever for alert frequency.
+EV_REALERT_JUMP = 12.0       # EV must improve at least this much (percentage points)
+ALERT_COOLDOWN_SEC = 360.0   # ...and at least this long since the last alert (6 min)
+EDGE_MIN_REMAINING = 3.0     # require this many minutes left in the game
 
 settings = Settings.load(ROOT / "config" / "settings.yaml")
 game = GameConfig.load(GAME_YAML)
@@ -157,15 +161,25 @@ def run_edge_alerts() -> None:
     h = state.header
     if h.get("minutes_remaining", 0) < EDGE_MIN_REMAINING:
         return
+    now = time.time()
     for r in state.rows:
         edge, ev = r.get("edge", 0), r.get("ev", 0)
         if edge < EDGE_MIN or ev < EV_MIN:
             continue
-        key = f"{r['market']}|{r['side']}|{r['live']}"
+        key = f"{r['market']}|{r['side']}"          # not the line — no per-tick spam
         prev = edge_alerted.get(key)
-        if prev is not None and ev < prev + EV_REALERT_JUMP:
-            continue
-        edge_alerted[key] = ev
+        if isinstance(prev, dict):                  # new format {ev, ts}
+            prev_ev, prev_ts = prev.get("ev"), prev.get("ts", 0.0)
+        elif prev is not None:                      # legacy float (just an EV)
+            prev_ev, prev_ts = float(prev), 0.0
+        else:
+            prev_ev, prev_ts = None, 0.0
+        if prev_ev is not None:
+            # Already alerted this market/side: re-alert only on a big EV jump AND
+            # after the cooldown — otherwise stay quiet.
+            if not (ev >= prev_ev + EV_REALERT_JUMP and now - prev_ts >= ALERT_COOLDOWN_SEC):
+                continue
+        edge_alerted[key] = {"ev": ev, "ts": now}
         tag = "🔥 STRONG EDGE" if ev >= 30 else "📈 EDGE"
         _discord(
             f"{tag}: {r['market']} {r['side']} {r['live']}",

@@ -119,7 +119,10 @@ _prev_scope = prev_fwd.get("scope", {})
 # so a new game doesn't inherit the prior game's "already captured" marks (which
 # would suppress every capture and leave the table + chart empty).
 _same_game = _prev_scope.get("game") == game.event.id
-ledger = prev_fwd.get("ledger", {})
+# The forward ledger keys aren't event-scoped (game_total:full:game:over is the same
+# key every game), so a new game must start with a FRESH ledger — otherwise games
+# clobber each other and the Forward Test shows a mix of the wrong game's bets.
+ledger = prev_fwd.get("ledger", {}) if _same_game else {}
 captured = set(_prev_scope.get("captured_marks", [])) if _same_game else set()
 # One-time "game has started, live data flowing" heartbeat (persists across runs).
 started_notified = bool(_prev_scope.get("game_started_notified", False)) if _same_game else False

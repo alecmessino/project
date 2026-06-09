@@ -182,23 +182,29 @@ sides:
 
 
 def _find_existing_config(eid: str, ev, league: str) -> Optional[str]:
-    """A config matching this Bovada game — by bovada_event_id, else by team names +
-    league. Returns its repo-relative path, or None (so we know to auto-generate)."""
+    """A config matching this Bovada game. An EXACT bovada_event_id match wins across
+    ALL configs first (so a series with several same-matchup files — G3 vs G4 — resolves
+    to the right game); only then fall back to a team-name + league match. Returns the
+    repo-relative path, or None (so we know to auto-generate)."""
     away_tag = str(ev.away).split()[-1].lower()
     home_tag = str(ev.home).split()[-1].lower()
+    blocks = []
     for p in glob.glob(str(ROOT / "config" / "games" / "*.yaml")):
         try:
             block = (yaml.safe_load(pathlib.Path(p).read_text()) or {}).get("event", {})
         except Exception:
             continue
+        rel = str(pathlib.Path(p).relative_to(ROOT))
         if str(block.get("bovada_event_id") or "") == str(eid):
-            return str(pathlib.Path(p).relative_to(ROOT))
+            return rel                              # exact id match — always wins
+        blocks.append((rel, block))
+    for rel, block in blocks:                       # fall back to team-name match
         if str(block.get("league", "")).lower() != league.lower():
             continue
         a = str(block.get("away", "")).split()[-1].lower()
         h = str(block.get("home", "")).split()[-1].lower()
         if a and h and a == away_tag and h == home_tag:
-            return str(pathlib.Path(p).relative_to(ROOT))
+            return rel
     return None
 
 

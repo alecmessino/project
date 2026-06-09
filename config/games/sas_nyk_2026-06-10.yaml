@@ -1,7 +1,6 @@
-# Pregame baselines — 2026 NBA Finals Game 4: San Antonio Spurs @ New York Knicks.
-# Knicks homecourt. Tip ~7:30 PM CT / 8:30 ET, 6/10/26 (ABC).
-# ESTIMATE ONLY — books had not posted G4 lines as of 6/2. UPDATE all numbers
-# from DraftKings before tip (edit this file, then run live.yml with this game).
+# NBA Finals Game 4 — San Antonio Spurs @ New York Knicks (Knicks homecourt).
+# Tip 8:30 PM ET (00:30 UTC 6/11). REAL live Bovada lines; 1H + team totals derived.
+# No finals block (not played) so the tracker treats it as live, not settled.
 
 event:
   id: sas_nyk_2026-06-10
@@ -10,17 +9,18 @@ event:
   home: New York Knicks
   away_key: SAS
   home_key: NYK
-  commence_time: "2026-06-10T20:30:00-04:00"
-  bookmaker: draftkings
+  commence_time: "2026-06-11T00:30:00+0000"   # 8:30 PM ET tip
+  bookmaker: bovada
+  bovada_event_id: "26486728"
 
 totals:
-  full:    { line: 218.5, over: -110, under: -110 }   # ESTIMATE — update at tip
-  h1:      { line: 111.5, over: -110, under: -110 }    # ESTIMATE — update at tip
+  full:    { line: 216.5, over: -110, under: -110 }
+  h1:      { line: 110.5, over: -110, under: -110 }
 
 team_totals:
-  NYK: { line: 110.0, over: -110, under: -110 }        # ESTIMATE — update at tip
-  SAS: { line: 108.5, over: -110, under: -110 }        # ESTIMATE — update at tip
+  NYK: { line: 109.0, over: -110, under: -110 }   # (216.5 + 2)/2
+  SAS: { line: 107.0, over: -110, under: -110 }   # (216.5 - 2)/2
 
 sides:
-  spread:    { NYK: -1.5, SAS: 1.5, over: -110, under: -110 }   # ESTIMATE
-  moneyline: { NYK: -120, SAS: 100 }                            # ESTIMATE
+  spread:    { NYK: -2, SAS: +2, over: -110, under: -110 }
+  moneyline: { NYK: -125, SAS: 105 }

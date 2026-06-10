@@ -168,6 +168,56 @@ def dump(path: str | pathlib.Path, ledger: dict, scope: Optional[dict] = None) -
     pathlib.Path(path).write_text(json.dumps(payload, indent=2))
 
 
+def append_season(path: str | pathlib.Path, game_id: str, matchup: str,
+                  league: str, ledger: dict) -> dict:
+    """Archive one game's settled forward bets into the append-only season ledger.
+
+    The per-game forward.json resets each game (its keys aren't event-scoped), so
+    this is the durable record: per-game record/units/CLV plus rolled-up totals
+    across the whole run. Idempotent per game_id — re-grading a game replaces its
+    entry instead of duplicating it. Games with no graded bets are skipped.
+    """
+    bets = sorted(ledger.values(), key=lambda b: b.get("entry_ts", ""))
+    graded = [b for b in bets if b.get("outcome") in ("win", "loss", "push")]
+    if not graded:
+        return {}
+    s = summarize(ledger)
+    entry = {
+        "game": game_id, "matchup": matchup, "league": league,
+        "date": time.strftime("%Y-%m-%d", time.gmtime()),
+        "wins": s["wins"], "losses": s["losses"], "pushes": s["pushes"],
+        "profit_units": s["profit_units"], "avg_clv_pts": s["avg_clv_pts"],
+        "bets": bets,
+    }
+    p = pathlib.Path(path)
+    try:
+        season = json.loads(p.read_text()) if p.exists() else {}
+    except (ValueError, OSError):
+        season = {}
+    games = [g for g in season.get("games", []) if g.get("game") != game_id]
+    games.append(entry)
+    games.sort(key=lambda g: g.get("date", ""))
+    allb = [b for g in games for b in g.get("bets", [])
+            if b.get("outcome") in ("win", "loss", "push")]
+    wins = sum(1 for b in allb if b["outcome"] == "win")
+    losses = sum(1 for b in allb if b["outcome"] == "loss")
+    pushes = sum(1 for b in allb if b["outcome"] == "push")
+    units = round(sum(b.get("profit", 0.0) for b in allb), 3)
+    clvs = [b["clv_pts"] for b in allb if b.get("clv_pts") is not None]
+    season = {
+        "generated": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()),
+        "totals": {
+            "games": len(games), "wins": wins, "losses": losses, "pushes": pushes,
+            "profit_units": units,
+            "roi": round(units / len(allb), 3) if allb else None,
+            "avg_clv_pts": round(sum(clvs) / len(clvs), 2) if clvs else None,
+        },
+        "games": games,
+    }
+    p.write_text(json.dumps(season, indent=2))
+    return season
+
+
 def build_from_sqlite(db_path: str | pathlib.Path,
                       finals_by_event: Optional[dict] = None,
                       matchup_by_event: Optional[dict] = None) -> dict:

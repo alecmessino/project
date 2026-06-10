@@ -131,7 +131,48 @@ edge_alerted = dict(_prev_scope.get("edge_alerted", {})) if _same_game else {}
 # Settled H1 final [away, home], captured once at halftime so the engine can derive
 # the 2nd-half (H2) slice. Persists across cycles in the forward scope.
 h1_final = _prev_scope.get("h1_final") if _same_game else None
+# Rolling per-market line history [[ts, line], ...] for the volatility gate.
+line_hist = dict(_prev_scope.get("line_hist", {})) if _same_game else {}
 finals = getattr(game, "finals", None) or None
+
+# Volatility gate: a strict rolling coefficient-of-variation filter on each market's
+# line history. When the line is jumping (CV of the last VOL_WINDOW_SEC of quotes
+# >= VOL_CV_MAX), the edge readout is least trustworthy exactly when it looks
+# biggest — so Discord alerts for that market are SUPPRESSED, while the row stays
+# on the dashboard flagged "High Volatility — Paused" for live monitoring.
+VOL_WINDOW_SEC = 300.0    # rolling window (5 min)
+VOL_CV_MAX = 0.005        # CV (std/mean) >= 0.5% of the line -> high volatility
+VOL_MIN_POINTS = 3        # need >= this many distinct quotes to judge
+
+
+def _vol_cv(market: str, now: float) -> float | None:
+    """Rolling CV (std/mean) of a market's line over the window; None if too few."""
+    pts = [v for t, v in line_hist.get(market, []) if now - t <= VOL_WINDOW_SEC]
+    if len(pts) < VOL_MIN_POINTS:
+        return None
+    mean = sum(pts) / len(pts)
+    if not mean:
+        return None
+    var = sum((v - mean) ** 2 for v in pts) / len(pts)
+    return (var ** 0.5) / abs(mean)
+
+
+def _update_volatility(rows: list) -> None:
+    """Append current lines to the history and stamp vol_paused/vol_cv on each row."""
+    now = time.time()
+    for r in rows:
+        m, live = r.get("market"), r.get("live")
+        if m is None or live is None:
+            continue
+        hist = line_hist.setdefault(m, [])
+        if not hist or hist[-1][1] != live:      # record only real line changes
+            hist.append([now, float(live)])
+        line_hist[m] = [p for p in hist if now - p[0] <= VOL_WINDOW_SEC * 2][-40:]
+        cv = _vol_cv(m, now)
+        r["vol_cv"] = round(cv, 5) if cv is not None else None
+        r["vol_paused"] = bool(cv is not None and cv >= VOL_CV_MAX)
+        if r["vol_paused"]:
+            print(f"volatility gate: {m} CV={cv:.4f} >= {VOL_CV_MAX} — alerts paused")
 
 state = DashboardState(game)
 state.signals = prev_state.get("signals", [])
@@ -168,6 +209,12 @@ def run_edge_alerts() -> None:
     for r in state.rows:
         edge, ev = r.get("edge", 0), r.get("ev", 0)
         if edge < EDGE_MIN or ev < EV_MIN:
+            continue
+        if r.get("vol_paused"):
+            # High rolling CV — the line is jumping, so the edge readout is suspect.
+            # Suppress the webhook; the dashboard row still shows it for monitoring.
+            print(f"edge alert SUPPRESSED (high volatility): {r['market']} {r['side']} "
+                  f"EV {ev}% CV {r.get('vol_cv')}")
             continue
         key = f"{r['market']}|{r['side']}"          # not the line — no per-tick spam
         prev = edge_alerted.get(key)
@@ -281,6 +328,7 @@ else:
             "clock": provider._clock, "cadence_mark": due})
         results = Engine(settings, game, provider=None).process_snapshot(snap)
         state.update(snap, results)                 # fresh rows + header every cycle
+        _update_volatility(state.rows)              # rolling-CV gate per market
         for r in results:
             if r.signal:
                 state.add_signal(r.signal)
@@ -341,6 +389,7 @@ fwd.dump(FORWARD_JSON, ledger, scope={
     "game_started_notified": started_notified,
     "edge_alerted": edge_alerted,
     "h1_final": h1_final,
+    "line_hist": line_hist,
 })
 print(f"Wrote {LIVE_STATE_JSON.name} ({len(state.rows)} rows, "
       f"{len(live_payload.get('chart',{}).get('move',[]))} chart pts) and {FORWARD_JSON.name} "

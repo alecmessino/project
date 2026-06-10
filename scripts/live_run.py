@@ -88,7 +88,26 @@ def grade_and_sync() -> None:
         if attempt < 3:
             print(f"grade: finals not ready, retry in 30s ({attempt + 1}/4)", flush=True)
             time.sleep(30)
-    _commit_push(["docs/forward.json", "config/games/"],
+    # Archive the settled game into the append-only SEASON ledger — the per-game
+    # forward.json resets each game, so this is the durable cumulative record.
+    try:
+        sys.path.insert(0, str(ROOT / "src"))
+        import yaml as _yaml
+        from mrbet import forward as _fwd
+        cfg = (_yaml.safe_load(pathlib.Path(os.environ.get("MRBET_GAME", "")).read_text())
+               or {}).get("event", {})
+        led = _json.loads(fpath.read_text()).get("ledger", {})
+        season = _fwd.append_season(
+            ROOT / "docs" / "season.json", cfg.get("id", "unknown"),
+            f"{cfg.get('away_key','?')} @ {cfg.get('home_key','?')}",
+            str(cfg.get("league", "")), led)
+        if season:
+            t = season["totals"]
+            print(f"season ledger: {t['games']} games, {t['wins']}-{t['losses']}-{t['pushes']}, "
+                  f"{t['profit_units']:+}u", flush=True)
+    except Exception as e:
+        print(f"season-ledger append failed: {type(e).__name__}: {e}", flush=True)
+    _commit_push(["docs/forward.json", "docs/season.json", "config/games/"],
                  "chore: final grade — settle forward bets + CLV [skip ci]")
 
 

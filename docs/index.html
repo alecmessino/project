@@ -340,6 +340,19 @@
   <div class="kpi" id="bt-kpi"></div>
 
   <div class="full">
+    <p class="lead">Season ledger — every settled game <span class="chip">cumulative</span></p>
+    <p class="note">The durable record. Each game's forward bets are archived here at the final
+      buzzer (the per-game panel below resets between games). Record, units, and CLV roll up
+      across the whole run.</p>
+    <div class="kpi" id="season-kpi"></div>
+    <section class="card card-scroll"><table style="min-width:560px">
+      <thead><tr><th>date</th><th>matchup</th><th>league</th><th>record</th>
+        <th>units</th><th>avg CLV</th></tr></thead>
+      <tbody id="season-rows"><tr><td colspan="6" class="empty">no settled games archived yet — populates at each final buzzer</td></tr></tbody>
+    </table></section>
+  </div>
+
+  <div class="full">
     <p class="lead">Forward test — REAL captured lines <span class="chip">trustworthy</span></p>
     <p class="note">The honest edge readout. As the engine sees flagged signals on real live
       lines (timeout cadence), each bet is logged at its <b>entry</b> line and tracked to the
@@ -617,7 +630,11 @@ function renderRows(rows, status){
     const badge = r.flagged?`<span class="badge ${r.strong?'strong':''}">${r.strong?'🔥 STRONG':'FLAG'}</span>`:'';
     const sideCls = r.side==='OVER'?'over':'under';
     const diff = (+r.fair) - (+r.live);                 // model − book (signed)
-    const vol = volatility(r.market);
+    // Backend rolling-CV gate is authoritative: vol_paused means Discord alerts for
+    // this market are suppressed — show it loud so it can still be monitored live.
+    const vol = r.vol_paused
+      ? {label:'High · ⏸ Paused', cls:'neg', paused:true}
+      : volatility(r.market);
     return `<tr class="${flagCls} ${alertCls}">
       <td>${r.market}</td>
       <td class="muted" data-label="Book">${r.book||'—'}</td>
@@ -628,7 +645,7 @@ function renderRows(rows, status){
       <td class="num" data-label="Fair">${r.fair}</td>
       <td class="num ${cls(diff)}" data-label="Diff">${diff>0?'+':''}${diff.toFixed(1)}</td>
       <td class="num ${cls(r.edge)}" data-label="Edge">${r.edge>0?'+':''}${r.edge} ${edgeTrend(r.market, +r.edge)}</td>
-      <td data-label="Vol"><span class="vol ${vol.cls}">${vol.label}</span></td>
+      <td data-label="Vol"><span class="vol ${vol.cls}" ${vol.paused?`title="Line CV ${r.vol_cv??''} over 5 min — Discord alerts suppressed; monitoring only"`:''}>${vol.label}</span></td>
       <td class="num" data-label="Win %">${r.prob}%</td>
       <td class="num ${cls(r.ev)}" data-label="EV">${fmtPct(r.ev)}</td>
       <td class="num muted" data-label="Odds">${r.odds>0?'+':''}${r.odds}</td>
@@ -805,6 +822,28 @@ document.querySelectorAll('.tab').forEach(tab=>{
   });
 });
 
+function renderSeason(s){
+  const t = s.totals || {};
+  document.getElementById('season-kpi').innerHTML = [
+    ['games settled', t.games ?? 0],
+    ['record', `${t.wins??0}-${t.losses??0}-${t.pushes??0}`],
+    ['units', (t.profit_units>0?'+':'')+(t.profit_units??0), 'profit at flat 1u'],
+    ['avg CLV', t.avg_clv_pts!=null ? `${t.avg_clv_pts>0?'+':''}${t.avg_clv_pts} pts` : '—', 'beat the close?'],
+  ].map(([l,v,sub])=>`<div class="box"><div class="v">${v}</div><div class="l">${l}</div>
+     ${sub?`<div class="l" style="text-transform:none">${sub}</div>`:''}</div>`).join('');
+  const tb = document.getElementById('season-rows');
+  const games = s.games || [];
+  if(!games.length) return;
+  tb.innerHTML = games.slice().reverse().map(g=>`<tr>
+    <td class="muted" data-label="Date">${g.date}</td>
+    <td data-label="Matchup"><b>${g.matchup}</b></td>
+    <td class="muted" data-label="League">${g.league}</td>
+    <td class="num" data-label="Record">${g.wins}-${g.losses}-${g.pushes}</td>
+    <td class="num ${cls(g.profit_units)}" data-label="Units">${g.profit_units>0?'+':''}${g.profit_units}</td>
+    <td class="num ${cls(g.avg_clv_pts??0)}" data-label="Avg CLV">${g.avg_clv_pts!=null?(g.avg_clv_pts>0?'+':'')+g.avg_clv_pts:'—'}</td>
+  </tr>`).join('');
+}
+
 function renderForward(f){
   const s = f.summary || {};
   document.getElementById('fwd-kpi').innerHTML = [
@@ -876,6 +915,10 @@ const GLOSSARY = [
 ];
 
 async function loadBacktest(){
+  // season ledger (cumulative across games) — independent of the per-game panels
+  try{ renderSeason(await fetchJSON('season.json')); }
+  catch(e){ /* leave empty state */ }
+
   // forward-test panel (real captured live bets) — independent of backtest.json
   try{ renderForward(await fetchJSON('forward.json')); }
   catch(e){ /* leave empty state */ }

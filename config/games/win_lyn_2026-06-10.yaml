@@ -1,8 +1,5 @@
-# Auto-generated from the live Bovada board (scripts/board_update.py --write-configs).
-# WNBA — 40-min regulation. FULL total/spread/ML are
-# REAL Bovada lines; 1H and team totals are DERIVED (1H ~= 51% of full; team TT =
-# (total +/- spread)/2). Refine from the book at tip if needed.
-
+# Auto-refreshed closing lines (scripts/board_update.py --refresh-config).
+# Event block preserved; line values are Bovada's latest pregame numbers.
 event:
   id: win_lyn_2026-06-10
   league: WNBA
@@ -10,18 +7,33 @@ event:
   home: Minnesota Lynx
   away_key: WIN
   home_key: LYN
-  commence_time: "2026-06-10T00:00:00+0000"
+  commence_time: 2026-06-10T00:00:00+0000
   bookmaker: bovada
-  bovada_event_id: "26390501"
-
+  bovada_event_id: '26390501'
 totals:
-  full:    { line: 179.0, over: -110, under: -110 }
-  h1:      { line: 91.5, over: -110, under: -110 }
-
+  full:
+    line: 180.5
+    over: -110
+    under: -110
+  h1:
+    line: 92.0
+    over: -110
+    under: -110
 team_totals:
-  LYN: { line: 99.0, over: -110, under: -110 }
-  WIN: { line: 80.0, over: -110, under: -110 }
-
+  LYN:
+    line: 100.0
+    over: -110
+    under: -110
+  WIN:
+    line: 80.0
+    over: -110
+    under: -110
 sides:
-  spread:    { LYN: -19.5, WIN: +19.5, over: -110, under: -110 }
-  moneyline: { LYN: -6600, WIN: 1200 }
+  spread:
+    LYN: -20.0
+    WIN: 20.0
+    over: -110
+    under: -110
+  moneyline:
+    LYN: -6600
+    WIN: 1200

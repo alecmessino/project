@@ -16,12 +16,13 @@ Design: this implements the same ``OddsProvider`` surface as ``theodds.py`` —
 The clock->GameState math is copied verbatim from the ESPN path so the Pace
 Tracker (reversion.projected_final) behaves identically.
 
-VALIDATION STATUS (2026-06-02):
+VALIDATION STATUS (2026-06-11):
   * Pre-match parsing (Total / Spread / Moneyline, team-total derivation): VERIFIED
-    against the live Bovada board (Finals G1).
-  * Live clock + live score parsing: CODED to Bovada's known in-play schema but
-    NOT yet verified against a live game (none was in-play at build time). The dry
-    run prints exactly what it sees so you can confirm on the first live tip.
+    against the live Bovada board (Finals G1, 2026-06-02).
+  * Live clock + live score parsing: VERIFIED in-play (Finals SAS@NYK 2026-06-11
+    tip): scores-endpoint clock/score matched ESPN exactly (Q1 10:55, 5-2). Note
+    the scores feed reports PRE_GAME for ~1-2 min after the actual tip; the
+    provider correctly withholds the GameState until the clock ticks.
 """
 
 from __future__ import annotations

@@ -100,8 +100,8 @@ EV_REALERT_JUMP = 12.0       # EV must improve at least this much (percentage po
 ALERT_COOLDOWN_SEC = 360.0   # ...and at least this long since the last alert (6 min)
 EDGE_MIN_REMAINING = 3.0     # require this many minutes left in the game
 # Execution-logic layer (Discord only — the dashboard always shows raw rows):
-ALERTS_PER_GAME_MAX = 4      # hard cap of alerts fired per game id
-COOLDOWN_CLOCK_MIN = 5.0     # min GAME-CLOCK minutes between any two alerts
+ALERTS_PER_GAME_MAX = 6      # hard cap of alerts fired per game id
+COOLDOWN_CLOCK_MIN = 3.0     # min GAME-CLOCK minutes between any two alerts
 LINE_SHIFT_MIN = 4.0         # re-alert same market+side only if the line moved this far
 HYSTERESIS_EDGE = 3.0        # opposite side of an alerted market needs this much extra edge
 

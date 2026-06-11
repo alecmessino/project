@@ -1,8 +1,8 @@
 {
-  "generated": "2026-06-11 03:37 UTC",
+  "generated": "2026-06-11 05:10 UTC",
   "scope": {
-    "matchup": "SAS @ NYK",
-    "game": "sas_nyk_2026-06-10",
+    "matchup": "NYK @ SAS",
+    "game": "nyk_sas_2026-06-05",
     "cadence": "9-point timeout",
     "marks": [
       1.0,
@@ -29,31 +29,11 @@
       36.0
     ],
     "game_started_notified": true,
-    "edge_alerted": {
-      "NYK full|UNDER": {
-        "ev": 67.0,
-        "ts": 1781140675.087947
-      },
-      "SAS full|OVER": {
-        "ev": 82.3,
-        "ts": 1781140828.7023523
-      },
-      "GAME full|OVER": {
-        "ev": 70.0,
-        "ts": 1781141290.4490838
-      },
-      "GAME full|UNDER": {
-        "ev": 61.8,
-        "ts": 1781147449.643565
-      },
-      "SAS full|UNDER": {
-        "ev": 75.9,
-        "ts": 1781147449.643565
-      },
-      "NYK full|OVER": {
-        "ev": 90.2,
-        "ts": 1781147989.048241
-      }
+    "edge_alerted": {},
+    "alert_state": {
+      "count": 0,
+      "last_elapsed": null,
+      "markets": {}
     },
     "h1_final": [
       76,
@@ -62,247 +42,38 @@
     "line_hist": {
       "GAME full": [
         [
-          1781148837.8138127,
-          218.0
-        ]
-      ],
-      "NYK full": [
-        [
-          1781148837.8138127,
-          107.0
+          1781154623.80035,
+          216.5
         ]
       ],
       "SAS full": [
         [
-          1781148837.8138127,
+          1781154623.80035,
           111.0
         ]
+      ],
+      "NYK full": [
+        [
+          1781154623.80035,
+          105.5
+        ]
       ]
-    },
-    "finals": {
-      "game": {
-        "full": 213,
-        "h1": 125,
-        "q1": 63,
-        "q2": 62,
-        "q3": 40,
-        "q4": 48
-      },
-      "team": {
-        "SAS": 106,
-        "NYK": 107
-      }
-    },
-    "graded_ts": "2026-06-11T03:37:49Z"
+    }
   },
   "summary": {
-    "bets": 6,
-    "wins": 4,
-    "losses": 2,
+    "bets": 0,
+    "wins": 0,
+    "losses": 0,
     "pushes": 0,
     "pending": 0,
-    "win_rate": 0.667,
-    "roi": 0.266,
-    "profit_units": 1.6,
-    "clv_beat": 2,
-    "clv_graded": 6,
-    "clv_beat_rate": 0.333,
-    "avg_clv_pts": -0.5
+    "win_rate": null,
+    "roi": null,
+    "profit_units": 0,
+    "clv_beat": 0,
+    "clv_graded": 0,
+    "clv_beat_rate": null,
+    "avg_clv_pts": null
   },
-  "bets": [
-    {
-      "event": "game_total",
-      "matchup": "SAS @ NYK",
-      "market": "game_total:full:game",
-      "side": "under",
-      "entry_line": 219.5,
-      "entry_ts": "2026-06-11T00:52:13Z",
-      "entry_odds": -115,
-      "entry_ev": -0.0045,
-      "entry_prob": 0.5325,
-      "close_line": 229.0,
-      "close_ts": "2026-06-11T02:36:08Z",
-      "clv_pts": -9.5,
-      "outcome": "win",
-      "profit": 0.87
-    },
-    {
-      "event": "team_total",
-      "matchup": "SAS @ NYK",
-      "market": "team_total:full:NYK",
-      "side": "under",
-      "entry_line": 111.0,
-      "entry_ts": "2026-06-11T00:52:13Z",
-      "entry_odds": -110,
-      "entry_ev": 0.2357,
-      "entry_prob": 0.6221,
-      "close_line": 106.0,
-      "close_ts": "2026-06-11T02:36:08Z",
-      "clv_pts": 5.0,
-      "outcome": "win",
-      "profit": 0.909
-    },
-    {
-      "event": "team_total",
-      "matchup": "SAS @ NYK",
-      "market": "team_total:full:SAS",
-      "side": "over",
-      "entry_line": 109.0,
-      "entry_ts": "2026-06-11T00:52:13Z",
-      "entry_odds": -110,
-      "entry_ev": 0.0611,
-      "entry_prob": 0.5295,
-      "close_line": 115.0,
-      "close_ts": "2026-06-11T02:51:34Z",
-      "clv_pts": 6.0,
-      "outcome": "loss",
-      "profit": -1.0
-    },
-    {
-      "event": "game_total",
-      "matchup": "SAS @ NYK",
-      "market": "game_total:full:game",
-      "side": "over",
-      "entry_line": 220.0,
-      "entry_ts": "2026-06-11T01:05:04Z",
-      "entry_odds": -115,
-      "entry_ev": 0.6428,
-      "entry_prob": 0.8675,
-      "close_line": 217.0,
-      "close_ts": "2026-06-11T02:51:34Z",
-      "clv_pts": -3.0,
-      "outcome": "loss",
-      "profit": -1.0
-    },
-    {
-      "event": "team_total",
-      "matchup": "SAS @ NYK",
-      "market": "team_total:full:SAS",
-      "side": "under",
-      "entry_line": 123.0,
-      "entry_ts": "2026-06-11T02:36:08Z",
-      "entry_odds": -110,
-      "entry_ev": 0.353,
-      "entry_prob": 0.6695,
-      "close_line": 123.0,
-      "close_ts": "2026-06-11T02:36:08Z",
-      "clv_pts": 0.0,
-      "outcome": "win",
-      "profit": 0.909
-    },
-    {
-      "event": "team_total",
-      "matchup": "SAS @ NYK",
-      "market": "team_total:full:NYK",
-      "side": "over",
-      "entry_line": 103.5,
-      "entry_ts": "2026-06-11T02:43:53Z",
-      "entry_odds": -110,
-      "entry_ev": -0.0012,
-      "entry_prob": 0.5232,
-      "close_line": 102.0,
-      "close_ts": "2026-06-11T02:51:34Z",
-      "clv_pts": -1.5,
-      "outcome": "win",
-      "profit": 0.909
-    }
-  ],
-  "ledger": {
-    "game_total:full:game:under": {
-      "event": "game_total",
-      "matchup": "SAS @ NYK",
-      "market": "game_total:full:game",
-      "side": "under",
-      "entry_line": 219.5,
-      "entry_ts": "2026-06-11T00:52:13Z",
-      "entry_odds": -115,
-      "entry_ev": -0.0045,
-      "entry_prob": 0.5325,
-      "close_line": 229.0,
-      "close_ts": "2026-06-11T02:36:08Z",
-      "clv_pts": -9.5,
-      "outcome": "win",
-      "profit": 0.87
-    },
-    "team_total:full:NYK:under": {
-      "event": "team_total",
-      "matchup": "SAS @ NYK",
-      "market": "team_total:full:NYK",
-      "side": "under",
-      "entry_line": 111.0,
-      "entry_ts": "2026-06-11T00:52:13Z",
-      "entry_odds": -110,
-      "entry_ev": 0.2357,
-      "entry_prob": 0.6221,
-      "close_line": 106.0,
-      "close_ts": "2026-06-11T02:36:08Z",
-      "clv_pts": 5.0,
-      "outcome": "win",
-      "profit": 0.909
-    },
-    "team_total:full:SAS:over": {
-      "event": "team_total",
-      "matchup": "SAS @ NYK",
-      "market": "team_total:full:SAS",
-      "side": "over",
-      "entry_line": 109.0,
-      "entry_ts": "2026-06-11T00:52:13Z",
-      "entry_odds": -110,
-      "entry_ev": 0.0611,
-      "entry_prob": 0.5295,
-      "close_line": 115.0,
-      "close_ts": "2026-06-11T02:51:34Z",
-      "clv_pts": 6.0,
-      "outcome": "loss",
-      "profit": -1.0
-    },
-    "game_total:full:game:over": {
-      "event": "game_total",
-      "matchup": "SAS @ NYK",
-      "market": "game_total:full:game",
-      "side": "over",
-      "entry_line": 220.0,
-      "entry_ts": "2026-06-11T01:05:04Z",
-      "entry_odds": -115,
-      "entry_ev": 0.6428,
-      "entry_prob": 0.8675,
-      "close_line": 217.0,
-      "close_ts": "2026-06-11T02:51:34Z",
-      "clv_pts": -3.0,
-      "outcome": "loss",
-      "profit": -1.0
-    },
-    "team_total:full:SAS:under": {
-      "event": "team_total",
-      "matchup": "SAS @ NYK",
-      "market": "team_total:full:SAS",
-      "side": "under",
-      "entry_line": 123.0,
-      "entry_ts": "2026-06-11T02:36:08Z",
-      "entry_odds": -110,
-      "entry_ev": 0.353,
-      "entry_prob": 0.6695,
-      "close_line": 123.0,
-      "close_ts": "2026-06-11T02:36:08Z",
-      "clv_pts": 0.0,
-      "outcome": "win",
-      "profit": 0.909
-    },
-    "team_total:full:NYK:over": {
-      "event": "team_total",
-      "matchup": "SAS @ NYK",
-      "market": "team_total:full:NYK",
-      "side": "over",
-      "entry_line": 103.5,
-      "entry_ts": "2026-06-11T02:43:53Z",
-      "entry_odds": -110,
-      "entry_ev": -0.0012,
-      "entry_prob": 0.5232,
-      "close_line": 102.0,
-      "close_ts": "2026-06-11T02:51:34Z",
-      "clv_pts": -1.5,
-      "outcome": "win",
-      "profit": 0.909
-    }
-  }
+  "bets": [],
+  "ledger": {}
 }

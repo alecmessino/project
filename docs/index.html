@@ -71,6 +71,13 @@
   .vol.mid{background:rgba(210,153,34,.18);color:#d29922}
   .vol.neg{background:rgba(218,54,51,.20);color:#f85149}
   .vol.muted{color:#8b949e}
+  /* execution-layer lock pills (mirror the backend sniper rules) */
+  .lock{display:inline-block;border-radius:6px;padding:1px 7px;font-size:11px;
+        font-weight:700;white-space:nowrap}
+  .lock.amber{background:rgba(210,153,34,.18);color:#d29922;border:1px solid rgba(210,153,34,.4)}
+  .lock.red{background:rgba(218,54,51,.20);color:#f85149;border:1px solid rgba(218,54,51,.45)}
+  .lock.ok{background:rgba(46,160,67,.14);color:#3fb950}
+  tr.capped td{opacity:.55}
   .pin{cursor:pointer;background:none;border:none;font-size:15px;padding:0 4px;opacity:.5}
   .pin.on{opacity:1}
   tr.pinned{background:rgba(56,139,253,.10)}
@@ -320,13 +327,13 @@
         <col style="width:50px"><col style="width:52px"><col style="width:56px">
         <col style="width:64px"><col style="width:52px"><col style="width:46px">
         <col style="width:60px"><col style="width:60px">
-        <col style="width:62px"><col style="width:48px">
+        <col style="width:62px"><col style="width:48px"><col style="width:118px">
       </colgroup>
       <thead><tr>
         <th>Market</th><th>Book</th><th>Pre</th><th>Live</th><th>Move</th><th>Side</th>
-        <th>Fair</th><th>Diff</th><th>Edge</th><th>Vol</th><th>P</th><th>EV</th><th>Odds</th><th>Stake</th><th>Flag</th>
+        <th>Fair</th><th>Diff</th><th>Edge</th><th>Vol</th><th>P</th><th>EV</th><th>Odds</th><th>Stake</th><th>Flag</th><th>Exec</th>
       </tr></thead>
-      <tbody id="rows"><tr><td colspan="13" class="empty">loading…</td></tr></tbody>
+      <tbody id="rows"><tr><td colspan="16" class="empty">loading…</td></tr></tbody>
     </table>
   </section>
   <section class="card">
@@ -574,7 +581,7 @@ function renderState(d){
   if(h.error){ banner.textContent = '⚠ ' + h.error; banner.style.display='block'; }
   else { banner.style.display='none'; }
   renderProjections(d.projections);
-  renderRows(d.rows||[], h.status);
+  renderRows(d.rows||[], h.status, d.exec);
   renderSignals(d.signals||[], d.rows||[]);
 }
 
@@ -612,13 +619,44 @@ function renderProjections(proj){
       }).join(' &nbsp;&nbsp;&nbsp; ');
 }
 
-function renderRows(rows, status){
+// Execution-layer lock state for a row, mirroring run_edge_alerts' rules from the
+// SAME backend cycle (exec ships inside the live payload — no client/server desync).
+// Returns {cls, txt, capped} or null (row not alert-eligible / no exec data).
+function execLock(r, ex){
+  if(!ex || ex.count==null) return null;
+  const meets = (+r.edge >= (ex.edge_min ?? 2)) && (+r.ev >= (ex.ev_min ?? 15));
+  if(!meets) return null;          // below alert thresholds — no lock to show
+  if(r.vol_paused) return null;    // Vol column already shows the paused state
+  const last = (ex.markets || {})[r.market];
+  if(last && last.side === r.side){            // dedup: needs a real line shift
+    const moved = Math.abs((+r.live) - (+last.line));
+    if(moved < ex.line_shift_min)
+      return {cls:'amber', txt:`🔒 Δ need ±${ex.line_shift_min} (now ${moved.toFixed(1)})`};
+  } else if(last){                              // hysteresis: opposite side needs extra edge
+    const need = (+ex.edge_min) + (+ex.hysteresis_edge);
+    if((+r.edge) < need)
+      return {cls:'amber', txt:`🔒 Hyst: edge ≥ ${need}`};
+  }
+  if((ex.count ?? 0) >= (ex.max ?? 4))          // hard cap per game
+    return {cls:'red', txt:`❌ Hard Cap ${ex.count}/${ex.max}`, capped:true};
+  if(ex.last_elapsed != null && ex.elapsed != null){   // game-clock cooldown
+    const since = ex.elapsed - ex.last_elapsed;
+    if(since < ex.cooldown_min){
+      const rem = ex.cooldown_min - since;
+      const mm = Math.floor(rem), ss = Math.round((rem - mm) * 60);
+      return {cls:'amber', txt:`🔒 Cooldown ${mm}:${String(ss).padStart(2,'0')}`};
+    }
+  }
+  return {cls:'ok', txt:'✅ armed'};            // would fire next cycle
+}
+
+function renderRows(rows, status, exec){
   const tb = document.getElementById('rows');
   if(!rows.length){
     const msg = (status==='live')
       ? 'no tracked markets yet — first lines capture shortly after tip'
       : 'No live game in progress — check Upcoming Games below';
-    tb.innerHTML = `<tr><td colspan="15" class="empty">${msg}</td></tr>`;
+    tb.innerHTML = `<tr><td colspan="16" class="empty">${msg}</td></tr>`;
     return;
   }
   const ALERT_MOVE_PTS = 6;   // bright-orange when the live line is >=6 pts off pregame
@@ -630,12 +668,14 @@ function renderRows(rows, status){
     const badge = r.flagged?`<span class="badge ${r.strong?'strong':''}">${r.strong?'🔥 STRONG':'FLAG'}</span>`:'';
     const sideCls = r.side==='OVER'?'over':'under';
     const diff = (+r.fair) - (+r.live);                 // model − book (signed)
+    const lock = execLock(r, exec);
+    const cappedCls = lock && lock.capped ? 'capped' : '';
     // Backend rolling-CV gate is authoritative: vol_paused means Discord alerts for
     // this market are suppressed — show it loud so it can still be monitored live.
     const vol = r.vol_paused
       ? {label:'High · ⏸ Paused', cls:'neg', paused:true}
       : volatility(r.market);
-    return `<tr class="${flagCls} ${alertCls}">
+    return `<tr class="${flagCls} ${alertCls} ${cappedCls}">
       <td>${r.market}</td>
       <td class="muted" data-label="Book">${r.book||'—'}</td>
       <td class="num muted" data-label="Pre">${r.pre}</td>
@@ -651,6 +691,7 @@ function renderRows(rows, status){
       <td class="num muted" data-label="Odds">${r.odds>0?'+':''}${r.odds}</td>
       <td class="num" data-label="Stake">$${r.stake.toFixed(2)}</td>
       <td data-label="Flag">${badge}</td>
+      <td data-label="Exec">${lock?`<span class="lock ${lock.cls}">${lock.txt}</span>`:''}</td>
     </tr>`;
   }).join('');
 }

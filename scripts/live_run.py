@@ -62,7 +62,8 @@ def git_sync() -> None:
     # live_market_state.json is the file the dashboard streams (every ~20s); state.json
     # is kept as a legacy alias. Push both so the hot stream stays current.
     _commit_push(["docs/live_market_state.json", "docs/state.json",
-                  "docs/forward.json", "docs/odds_history.json"],
+                  "docs/forward.json", "docs/odds_history.json",
+                  "docs/alert_state.json"],
                  "chore: live loop state [skip ci]")
 
 
@@ -175,7 +176,9 @@ def finalize_state() -> None:
     payload = _json.dumps(idle)
     (ROOT / "docs" / "live_market_state.json").write_text(payload)
     (ROOT / "docs" / "state.json").write_text(payload)
-    _commit_push(["docs/live_market_state.json", "docs/state.json"],
+    (ROOT / "docs" / "alert_state.json").write_text("{}")   # clear exec locks too
+    _commit_push(["docs/live_market_state.json", "docs/state.json",
+                  "docs/alert_state.json"],
                  "chore: post-game cleanup — reset dashboard to idle [skip ci]")
 
 

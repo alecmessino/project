@@ -414,6 +414,25 @@ try:
 except Exception as exc:   # never let a chart-build hiccup drop the live update
     print(f"[chart-series skipped] {exc}")
 live_payload["projections"] = projections   # model full/1H/2H projected totals
+# Execution-layer state for the UI's lock pills. Embedded in the live payload so the
+# rows and lock states always come from the SAME cycle (no client/server desync);
+# docs/alert_state.json is the same snapshot as a standalone payload for debugging.
+exec_payload = {
+    "game": game.event.id,
+    "updated": time.strftime("%H:%M:%S"),
+    "elapsed": state.header.get("minutes_elapsed"),
+    "count": alert_state.get("count", 0),
+    "max": ALERTS_PER_GAME_MAX,
+    "cooldown_min": COOLDOWN_CLOCK_MIN,
+    "line_shift_min": LINE_SHIFT_MIN,
+    "hysteresis_edge": HYSTERESIS_EDGE,
+    "edge_min": EDGE_MIN,
+    "ev_min": EV_MIN,
+    "last_elapsed": alert_state.get("last_elapsed"),
+    "markets": alert_state.get("markets", {}),
+}
+live_payload["exec"] = exec_payload
+(ROOT / "docs" / "alert_state.json").write_text(json.dumps(exec_payload))
 LIVE_STATE_JSON.write_bytes(json.dumps(live_payload).encode())
 STATE_JSON.write_bytes(state.to_json())   # legacy alias, kept for older deploys
 

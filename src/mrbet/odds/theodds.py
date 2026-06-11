@@ -17,6 +17,7 @@ from typing import Iterator, Optional
 
 import requests
 
+from ..espn import h1_from_competitors
 from ..models import GameState, MarketLine, MarketType, Period
 from .base import Snapshot
 
@@ -30,6 +31,7 @@ SPORT = "basketball_nba"
 MARKET_KEYS = {
     "total_full": "totals",
     "total_h1": "totals_h1",
+    "total_h2": "totals_h2",
     "total_q1": "totals_q1",
     "total_q2": "totals_q2",
     "total_q3": "totals_q3",
@@ -40,6 +42,7 @@ MARKET_KEYS = {
 _PERIOD_FOR_KEY = {
     "totals": Period.FULL,
     "totals_h1": Period.H1,
+    "totals_h2": Period.H2,
     "totals_q1": Period.Q1,
     "totals_q2": Period.Q2,
     "totals_q3": Period.Q3,
@@ -87,6 +90,7 @@ class TheOddsProvider:
         self._credits: Optional[int] = None
         self._event_id: Optional[str] = None
         self._clock: Optional[str] = None
+        self._h1: Optional[tuple[int, int]] = None   # settled (away_h1, home_h1)
 
     def credits_remaining(self) -> Optional[int]:
         return self._credits
@@ -315,12 +319,20 @@ class TheOddsProvider:
         elapsed = max(0.0, (reg_period - 1) * 12 + (12 - clock / 60.0)) if period else 0.0
         elapsed = min(elapsed, 48.0)
         remaining = max(0.0, 48.0 - elapsed)
+        # H1-final (settled at halftime) lets the engine derive live H2 markets.
+        # The scoreboard payload we already hold carries the linescores; only
+        # trust the Q1+Q2 sum once the clock is past halftime (24 min).
+        if self._h1 is None and elapsed >= 24.0:
+            self._h1 = h1_from_competitors([away_c, home_c])
+        h1_away, h1_home = self._h1 if self._h1 else (None, None)
         return GameState(
             period=Period.FULL,
             minutes_elapsed=elapsed,
             minutes_remaining=remaining,
             home_score=home_score,
             away_score=away_score,
+            h1_home=h1_home,
+            h1_away=h1_away,
         )
 
 

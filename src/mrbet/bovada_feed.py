@@ -35,6 +35,7 @@ import urllib.parse
 import urllib.request
 from typing import Iterator, Optional
 
+from .espn import live_h1_final
 from .models import GameState, MarketLine, MarketType, Period
 from .odds.base import Snapshot
 
@@ -181,6 +182,7 @@ class BovadaProvider:
         self._clock: Optional[str] = None
         self._raw_event: Optional[dict] = None
         self._stage: str = "pre"   # auto-detected: "pre" -> "live" -> "final"
+        self._h1: Optional[tuple[int, int]] = None   # settled (away_h1, home_h1)
 
     # ---- network ---------------------------------------------------------- #
     def _fetch_coupon(self) -> list:
@@ -339,13 +341,31 @@ class BovadaProvider:
             away_pts = home_pts = 0
         if self._stage == "pre":            # latch forward now that we're truly live
             self._stage = "live"
+        h1_away, h1_home = self._h1_final(elapsed)
         return GameState(
             period=Period.FULL,
             minutes_elapsed=elapsed,
             minutes_remaining=remaining,
             home_score=home_pts,
             away_score=away_pts,
+            h1_home=h1_home,
+            h1_away=h1_away,
         )
+
+    def _h1_final(self, elapsed: float) -> tuple[Optional[int], Optional[int]]:
+        """Settled (away_h1, home_h1), or (None, None) until known.
+
+        Bovada's scores endpoint only carries a cumulative score, so the H1-final
+        needed to derive live 2nd-half (H2) markets comes from ESPN's free
+        scoreboard. Fetched once the clock is past halftime, then cached — it
+        never changes after Q2 closes.
+        """
+        if self._h1 is None and elapsed >= self.regulation_min / 2.0:
+            away_words = (self.event.away or "").split()
+            home_words = (self.event.home or "").split()
+            if away_words and home_words:
+                self._h1 = live_h1_final(self.league, away_words[-1], home_words[-1])
+        return self._h1 if self._h1 else (None, None)
 
     def _scores(self, ev: dict) -> tuple[int, int]:
         """Best-effort live score (away, home). Bovada exposes score in-play."""

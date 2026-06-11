@@ -28,6 +28,27 @@ def espn_urls(league: str = "nba") -> tuple[str, str]:
     return f"{base}/scoreboard", f"{base}/summary"
 
 
+def h1_from_competitors(competitors) -> Optional[tuple[int, int]]:
+    """(away_h1, home_h1) summed from scoreboard competitor linescores (Q1+Q2).
+
+    ESPN includes the in-progress period's running value in linescores, so the
+    sum is only the *settled* first half once the game clock is at/past halftime
+    — callers must gate on that before trusting the result.
+    """
+    out = {}
+    for c in competitors or []:
+        ls = c.get("linescores") or []
+        if len(ls) < 2:        # Q1/Q2 not both present — H1 not settled
+            return None
+        try:
+            out[c.get("homeAway")] = int(ls[0].get("value", 0)) + int(ls[1].get("value", 0))
+        except (TypeError, ValueError):
+            return None
+    if "away" in out and "home" in out:
+        return out["away"], out["home"]
+    return None
+
+
 def live_h1_final(league: str, away_tag: str, home_tag: str):
     """(away_h1, home_h1) — the settled first-half score (Q1+Q2) from ESPN linescores
     for the live game matching away_tag/home_tag (team nicknames). None until both Q1
@@ -47,17 +68,7 @@ def live_h1_final(league: str, away_tag: str, home_tag: str):
         hay = f"{e.get('shortName','')} {e.get('name','')} {names}".lower()
         if not (at and ht and at in hay and ht in hay):
             continue
-        out = {}
-        for c in comp.get("competitors", []):
-            ls = c.get("linescores") or []
-            if len(ls) < 2:        # Q1/Q2 not both final yet — H1 not settled
-                return None
-            try:
-                out[c.get("homeAway")] = int(ls[0].get("value", 0)) + int(ls[1].get("value", 0))
-            except (TypeError, ValueError):
-                return None
-        if "away" in out and "home" in out:
-            return out["away"], out["home"]
+        return h1_from_competitors(comp.get("competitors", []))
     return None
 
 # ESPN season types: 2 = regular, 3 = postseason.

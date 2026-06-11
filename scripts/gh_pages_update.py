@@ -99,6 +99,11 @@ EV_MIN = 15.0        # EV percent
 EV_REALERT_JUMP = 12.0       # EV must improve at least this much (percentage points)
 ALERT_COOLDOWN_SEC = 360.0   # ...and at least this long since the last alert (6 min)
 EDGE_MIN_REMAINING = 3.0     # require this many minutes left in the game
+# Execution-logic layer (Discord only — the dashboard always shows raw rows):
+ALERTS_PER_GAME_MAX = 4      # hard cap of alerts fired per game id
+COOLDOWN_CLOCK_MIN = 5.0     # min GAME-CLOCK minutes between any two alerts
+LINE_SHIFT_MIN = 4.0         # re-alert same market+side only if the line moved this far
+HYSTERESIS_EDGE = 3.0        # opposite side of an alerted market needs this much extra edge
 
 settings = Settings.load(ROOT / "config" / "settings.yaml")
 game = GameConfig.load(GAME_YAML)
@@ -128,6 +133,11 @@ captured = set(_prev_scope.get("captured_marks", [])) if _same_game else set()
 started_notified = bool(_prev_scope.get("game_started_notified", False)) if _same_game else False
 # Edge-alert dedup map: "market|side|live" -> last EV alerted.
 edge_alerted = dict(_prev_scope.get("edge_alerted", {})) if _same_game else {}
+# Stateful execution tracker (per game id): how many alerts fired, the game clock at
+# the last alert, and the last-alerted side/line/edge per market — drives the dedup,
+# hysteresis, hard-cap and cooldown rules below.
+alert_state = (_prev_scope.get("alert_state") if _same_game else None) or \
+    {"count": 0, "last_elapsed": None, "markets": {}}
 # Settled H1 final [away, home], captured once at halftime so the engine can derive
 # the 2nd-half (H2) slice. Persists across cycles in the forward scope.
 h1_final = _prev_scope.get("h1_final") if _same_game else None
@@ -201,38 +211,59 @@ projections = {}   # model's projected period totals (full / 1H / 2H) for the da
 
 
 def run_edge_alerts() -> None:
-    """Fire a Discord edge alert for any high-confidence market (deduped)."""
+    """Fire Discord edge alerts through the EXECUTION-LOGIC layer (the dashboard rows
+    always show raw data; only the webhook is filtered):
+      * volatility gate — suppress while the line is jumping (high rolling CV),
+      * dedup — same market+side re-alerts only if the line moved >= LINE_SHIFT_MIN,
+      * hysteresis — the opposite side needs +HYSTERESIS_EDGE extra edge (anti flip-flop),
+      * hard cap — at most ALERTS_PER_GAME_MAX alerts per game,
+      * cooldown — >= COOLDOWN_CLOCK_MIN of GAME CLOCK between any two alerts.
+    """
     h = state.header
     if h.get("minutes_remaining", 0) < EDGE_MIN_REMAINING:
         return
-    now = time.time()
+    elapsed = h.get("minutes_elapsed") or 0.0
+    mkts = alert_state.setdefault("markets", {})
     for r in state.rows:
         edge, ev = r.get("edge", 0), r.get("ev", 0)
         if edge < EDGE_MIN or ev < EV_MIN:
             continue
         if r.get("vol_paused"):
-            # High rolling CV — the line is jumping, so the edge readout is suspect.
-            # Suppress the webhook; the dashboard row still shows it for monitoring.
-            print(f"edge alert SUPPRESSED (high volatility): {r['market']} {r['side']} "
-                  f"EV {ev}% CV {r.get('vol_cv')}")
+            print(f"exec: {r['market']} {r['side']} suppressed — high volatility "
+                  f"(CV {r.get('vol_cv')})")
             continue
-        key = f"{r['market']}|{r['side']}"          # not the line — no per-tick spam
-        prev = edge_alerted.get(key)
-        if isinstance(prev, dict):                  # new format {ev, ts}
-            prev_ev, prev_ts = prev.get("ev"), prev.get("ts", 0.0)
-        elif prev is not None:                      # legacy float (just an EV)
-            prev_ev, prev_ts = float(prev), 0.0
-        else:
-            prev_ev, prev_ts = None, 0.0
-        if prev_ev is not None:
-            # Already alerted this market/side: re-alert only on a big EV jump AND
-            # after the cooldown — otherwise stay quiet.
-            if not (ev >= prev_ev + EV_REALERT_JUMP and now - prev_ts >= ALERT_COOLDOWN_SEC):
+        market, side = r["market"], r["side"]
+        try:
+            live = float(r["live"])
+        except (TypeError, ValueError):
+            continue
+        last = mkts.get(market)
+        # Rule 2 — hysteresis: opposite side of an already-alerted market needs extra edge.
+        if last and last.get("side") != side:
+            if edge < EDGE_MIN + HYSTERESIS_EDGE:
+                print(f"exec: {market} {side} held — opp of alerted {last['side']}, "
+                      f"edge {edge} < {EDGE_MIN + HYSTERESIS_EDGE} (hysteresis)")
                 continue
-        edge_alerted[key] = {"ev": ev, "ts": now}
+        # Rule 1 — dedup: same side re-alerts only if the line moved far enough.
+        elif last and last.get("side") == side:
+            if abs(live - last.get("line", live)) < LINE_SHIFT_MIN:
+                print(f"exec: {market} {side} held — line {live} within "
+                      f"{LINE_SHIFT_MIN} of last alert {last.get('line')}")
+                continue
+        # Rule 3a — hard cap of alerts per game.
+        if alert_state.get("count", 0) >= ALERTS_PER_GAME_MAX:
+            print(f"exec: {market} {side} held — hard cap {ALERTS_PER_GAME_MAX} reached")
+            continue
+        # Rule 3b — minimum game-clock cooldown between any two alerts.
+        le = alert_state.get("last_elapsed")
+        if le is not None and (elapsed - le) < COOLDOWN_CLOCK_MIN:
+            print(f"exec: {market} {side} held — {elapsed - le:.1f}m < "
+                  f"{COOLDOWN_CLOCK_MIN}m game-clock cooldown")
+            continue
+        # ---- passes the execution layer: FIRE ----
         tag = "🔥 STRONG EDGE" if ev >= 30 else "📈 EDGE"
         _discord(
-            f"{tag}: {r['market']} {r['side']} {r['live']}",
+            f"{tag}: {market} {side} {r['live']}",
             f"fair {r['fair']} · edge {r['edge']:+} pts · EV {r['ev']:+}% · "
             f"win {r.get('prob','?')}% @ {r['odds']:+} · stake ${r.get('stake',0):.2f}\n"
             f"{h.get('clock','?')} · {h.get('away','away')} {h.get('away_score')} "
@@ -240,7 +271,11 @@ def run_edge_alerts() -> None:
             f"({h.get('minutes_remaining','?')} min left)",
             strong=ev >= 30,
         )
-        print(f"edge alert: {r['market']} {r['side']} EV {ev}%")
+        alert_state["count"] = alert_state.get("count", 0) + 1
+        alert_state["last_elapsed"] = elapsed
+        mkts[market] = {"side": side, "line": live, "edge": edge}
+        print(f"edge alert [{alert_state['count']}/{ALERTS_PER_GAME_MAX}]: "
+              f"{market} {side} EV {ev}% @ line {live}")
 
 
 if espn is None:
@@ -388,6 +423,7 @@ fwd.dump(FORWARD_JSON, ledger, scope={
     "captured_marks": sorted(captured),
     "game_started_notified": started_notified,
     "edge_alerted": edge_alerted,
+    "alert_state": alert_state,
     "h1_final": h1_final,
     "line_hist": line_hist,
 })

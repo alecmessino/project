@@ -31,7 +31,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 API = "https://api.github.com"
-LEAGUES = ("nba", "wnba")   # basketball leagues the sentinel watches
+LEAGUES = ("nba",)          # basketball leagues the sentinel watches (WNBA removed)
 
 
 def _gh(method: str, path: str, token: str, body: dict | None = None):

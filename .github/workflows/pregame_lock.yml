@@ -37,12 +37,11 @@ jobs:
       - name: Install package
         run: pip install -e ".[dev]"
 
-      - name: Lock closing lines into the nearest upcoming game config (NBA + WNBA)
+      - name: Lock closing lines into the nearest upcoming game config (NBA only)
         run: |
-          # Auto-targets each league's next game — no hardcoded filename, so it
-          # follows the series (G2 -> G3 -> ...) and tracks WNBA without edits.
+          # Auto-targets the next NBA game — no hardcoded filename, so it follows
+          # the series (G2 -> G3 -> ...). WNBA removed.
           python scripts/board_update.py --league nba  --refresh-upcoming
-          python scripts/board_update.py --league wnba --refresh-upcoming
 
       - name: Commit closing baseline
         run: |

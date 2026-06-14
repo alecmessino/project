@@ -40,7 +40,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import game_sentinel as gs  # reuse the single source of detect→dispatch truth
 
-LEAGUES = ("nba", "wnba")
+LEAGUES = ("nba",)   # WNBA removed — sentinel/watchdog track NBA only
 
 
 def _scoreboard(league: str) -> dict:

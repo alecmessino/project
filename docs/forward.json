@@ -69,17 +69,32 @@
           93.5
         ]
       ]
-    }
+    },
+    "finals": {
+      "game": {
+        "full": 184,
+        "h1": 79,
+        "q1": 36,
+        "q2": 43,
+        "q3": 58,
+        "q4": 47
+      },
+      "team": {
+        "NYK": 94,
+        "SAS": 90
+      }
+    },
+    "graded_ts": "2026-06-14T03:32:09Z"
   },
   "summary": {
     "bets": 6,
-    "wins": 0,
-    "losses": 0,
+    "wins": 4,
+    "losses": 2,
     "pushes": 0,
-    "pending": 6,
-    "win_rate": null,
-    "roi": null,
-    "profit_units": 0.0,
+    "pending": 0,
+    "win_rate": 0.667,
+    "roi": 0.26,
+    "profit_units": 1.56,
     "clv_beat": 3,
     "clv_graded": 6,
     "clv_beat_rate": 0.5,
@@ -99,8 +114,8 @@
       "close_line": 189.5,
       "close_ts": "2026-06-14T02:31:53Z",
       "clv_pts": -5.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "win",
+      "profit": 0.87
     },
     {
       "event": "team_total",
@@ -115,8 +130,8 @@
       "close_line": 98.0,
       "close_ts": "2026-06-14T02:31:53Z",
       "clv_pts": 3.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "loss",
+      "profit": -1.0
     },
     {
       "event": "team_total",
@@ -131,8 +146,8 @@
       "close_line": 91.0,
       "close_ts": "2026-06-14T02:31:53Z",
       "clv_pts": -2.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "loss",
+      "profit": -1.0
     },
     {
       "event": "game_total",
@@ -147,8 +162,8 @@
       "close_line": 188.0,
       "close_ts": "2026-06-14T02:40:52Z",
       "clv_pts": 4.5,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "win",
+      "profit": 0.87
     },
     {
       "event": "team_total",
@@ -163,8 +178,8 @@
       "close_line": 88.5,
       "close_ts": "2026-06-14T02:40:52Z",
       "clv_pts": 0.5,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "win",
+      "profit": 0.909
     },
     {
       "event": "team_total",
@@ -179,8 +194,8 @@
       "close_line": 99.5,
       "close_ts": "2026-06-14T02:40:52Z",
       "clv_pts": 0.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "win",
+      "profit": 0.909
     }
   ],
   "ledger": {
@@ -197,8 +212,8 @@
       "close_line": 189.5,
       "close_ts": "2026-06-14T02:31:53Z",
       "clv_pts": -5.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "win",
+      "profit": 0.87
     },
     "team_total:full:SAS:over": {
       "event": "team_total",
@@ -213,8 +228,8 @@
       "close_line": 98.0,
       "close_ts": "2026-06-14T02:31:53Z",
       "clv_pts": 3.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "loss",
+      "profit": -1.0
     },
     "team_total:full:NYK:under": {
       "event": "team_total",
@@ -229,8 +244,8 @@
       "close_line": 91.0,
       "close_ts": "2026-06-14T02:31:53Z",
       "clv_pts": -2.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "loss",
+      "profit": -1.0
     },
     "game_total:full:game:over": {
       "event": "game_total",
@@ -245,8 +260,8 @@
       "close_line": 188.0,
       "close_ts": "2026-06-14T02:40:52Z",
       "clv_pts": 4.5,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "win",
+      "profit": 0.87
     },
     "team_total:full:NYK:over": {
       "event": "team_total",
@@ -261,8 +276,8 @@
       "close_line": 88.5,
       "close_ts": "2026-06-14T02:40:52Z",
       "clv_pts": 0.5,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "win",
+      "profit": 0.909
     },
     "team_total:full:SAS:under": {
       "event": "team_total",
@@ -277,8 +292,8 @@
       "close_line": 99.5,
       "close_ts": "2026-06-14T02:40:52Z",
       "clv_pts": 0.0,
-      "outcome": "pending",
-      "profit": 0.0
+      "outcome": "win",
+      "profit": 0.909
     }
   }
 }

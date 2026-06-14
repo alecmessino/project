@@ -1,0 +1,27 @@
+# NBA Finals Game 5 — New York Knicks @ San Antonio Spurs (NYK lead series 3-1).
+# 48-min regulation. FULL total/spread are REAL Bovada pregame lines (total 215,
+# SAS -5.5 home favorite); 1H and team totals are DERIVED (1H ~= 51% of full; team TT
+# = (total -/+ spread)/2). bovada_event_id is the LIVE G5 event for line streaming.
+
+event:
+  id: nyk_sas_2026-06-13
+  league: NBA
+  away: New York Knicks
+  home: San Antonio Spurs
+  away_key: NYK
+  home_key: SAS
+  commence_time: "2026-06-14T00:30:00+0000"
+  bookmaker: bovada
+  bovada_event_id: "26659943"
+
+totals:
+  full:    { line: 215.0, over: -110, under: -110 }
+  h1:      { line: 109.5, over: -110, under: -110 }
+
+team_totals:
+  SAS:     { line: 110.0, over: -110, under: -110 }
+  NYK:     { line: 105.0, over: -110, under: -110 }
+
+sides:
+  spread:    { SAS: -5.5, NYK: +5.5, over: -110, under: -110 }
+  moneyline: { SAS: -240, NYK: +200 }

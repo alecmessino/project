@@ -1,13 +1,13 @@
 {
-  "generated": "2026-06-11 03:37 UTC",
+  "generated": "2026-06-14 01:54 UTC",
   "totals": {
-    "games": 1,
-    "wins": 4,
-    "losses": 2,
+    "games": 2,
+    "wins": 5,
+    "losses": 3,
     "pushes": 0,
-    "profit_units": 1.597,
-    "roi": 0.266,
-    "avg_clv_pts": -0.5
+    "profit_units": 1.506,
+    "roi": 0.188,
+    "avg_clv_pts": -0.81
   },
   "games": [
     {
@@ -114,6 +114,51 @@
           "close_line": 102.0,
           "close_ts": "2026-06-11T02:51:34Z",
           "clv_pts": -1.5,
+          "outcome": "win",
+          "profit": 0.909
+        }
+      ]
+    },
+    {
+      "game": "fev_sun_2026-06-13",
+      "matchup": "FEV @ SUN",
+      "league": "WNBA",
+      "date": "2026-06-14",
+      "wins": 1,
+      "losses": 1,
+      "pushes": 0,
+      "profit_units": -0.09,
+      "avg_clv_pts": -1.75,
+      "bets": [
+        {
+          "event": "game_total",
+          "matchup": "FEV @ SUN",
+          "market": "game_total:full:game",
+          "side": "over",
+          "entry_line": 164.5,
+          "entry_ts": "2026-06-13T23:37:10Z",
+          "entry_odds": -120,
+          "entry_ev": 0.7228,
+          "entry_prob": 0.9397,
+          "close_line": 161.0,
+          "close_ts": "2026-06-14T00:09:21Z",
+          "clv_pts": -3.5,
+          "outcome": "loss",
+          "profit": -1.0
+        },
+        {
+          "event": "game_total",
+          "matchup": "FEV @ SUN",
+          "market": "game_total:full:game",
+          "side": "under",
+          "entry_line": 164.0,
+          "entry_ts": "2026-06-14T00:02:57Z",
+          "entry_odds": -110,
+          "entry_ev": 0.4532,
+          "entry_prob": 0.706,
+          "close_line": 164.0,
+          "close_ts": "2026-06-14T00:02:57Z",
+          "clv_pts": 0.0,
           "outcome": "win",
           "profit": 0.909
         }

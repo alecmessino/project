@@ -1,0 +1,57 @@
+name: Sentinel watchdog — continuous live-game coverage
+
+# The reliability layer that does NOT trust GitHub's cron cadence. Instead of a
+# `*/10` schedule (which in practice fires only ~hourly and goes silent for 2h+ —
+# how NBA Finals G5 tipped into a dead window and was never tracked), this launches
+# ONE long-running job that polls Bovada every few minutes for the whole life of the
+# run (~5.5h) and dispatches live_game_tracker.yml the instant a game goes live. Near
+# the Actions timeout it re-arms itself while the slate is still active, so coverage
+# is continuous across a game day. The cron below is only a *bootstrap* (start it /
+# restart it after the overnight idle) — landing on a tip-off is no longer its job.
+#
+# cancel-in-progress: true → any bootstrap tick or self re-arm just replaces the
+# current watchdog with a fresh one (which detects immediately on startup, so no gap)
+# instead of piling up overlapping 5.5h runs.
+
+on:
+  schedule:
+    - cron: "5 13,17,21,1 * * *"   # every ~4h — bootstrap/restart only (not tip timing)
+  workflow_dispatch:
+
+permissions:
+  contents: write              # _commit_config pushes auto-generated game configs
+  actions: write               # dispatch the tracker + re-arm self
+
+concurrency:
+  group: sentinel-watch
+  cancel-in-progress: true     # newest trigger wins; never stack 5.5h runs
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 345       # must exceed WATCH_MAX_MINUTES; GH cap is 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install package (Bovada discovery + config generation)
+        run: pip install -e ".[dev]"
+
+      - name: Watch for live games and keep the tracker running
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          TRACKER_WORKFLOW: live_game_tracker.yml
+          SELF_WORKFLOW: sentinel_watch.yml
+          TRACKER_REF: master
+          TRACKER_MAX_MINUTES: "210"
+          WATCH_INTERVAL: "180"        # detect pass every 3 min
+          WATCH_MAX_MINUTES: "330"     # run 5.5h, then re-arm if still active
+          REARM_WINDOW_HOURS: "6"
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          python scripts/sentinel_watch.py

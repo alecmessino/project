@@ -85,16 +85,10 @@ def _commit_config(rel: str) -> None:
     print(f"WARNING: could not push {rel} — tracker may not see it")
 
 
-def main() -> int:
-    token = os.environ.get("GITHUB_TOKEN")
-    repo = os.environ.get("GITHUB_REPOSITORY", "")
-    wf = os.environ.get("TRACKER_WORKFLOW", "live_game_tracker.yml")
-    ref = os.environ.get("TRACKER_REF", "master")
-    max_minutes = os.environ.get("TRACKER_MAX_MINUTES", "210")
-    if not (token and repo):
-        print("GITHUB_TOKEN / GITHUB_REPOSITORY missing — cannot run sentinel")
-        return 1
-
+def tick(token: str, repo: str, wf: str, ref: str, max_minutes: str) -> int:
+    """One detect→dispatch pass. Reused by both the 10-min cron (`main`) and the
+    long-running watchdog (`sentinel_watch.py`), so the Bovada/dispatch logic lives
+    in exactly one place. Returns 0 on success (live game covered or nothing live)."""
     found = _detect_live()
     if not found:
         print("no live game right now — nothing to do.")
@@ -126,6 +120,18 @@ def main() -> int:
     except urllib.error.HTTPError as e:
         print(f"dispatch failed: HTTP {e.code} {e.read().decode()[:300]}")
         return 1
+
+
+def main() -> int:
+    token = os.environ.get("GITHUB_TOKEN")
+    repo = os.environ.get("GITHUB_REPOSITORY", "")
+    wf = os.environ.get("TRACKER_WORKFLOW", "live_game_tracker.yml")
+    ref = os.environ.get("TRACKER_REF", "master")
+    max_minutes = os.environ.get("TRACKER_MAX_MINUTES", "210")
+    if not (token and repo):
+        print("GITHUB_TOKEN / GITHUB_REPOSITORY missing — cannot run sentinel")
+        return 1
+    return tick(token, repo, wf, ref, max_minutes)
 
 
 if __name__ == "__main__":

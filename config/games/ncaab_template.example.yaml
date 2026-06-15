@@ -1,0 +1,31 @@
+# TEMPLATE — College men's basketball (NCAAB). Copy to config/games/<away>_<home>_<date>.yaml
+# and fill in real Bovada numbers, or let the board auto-generate one at tip-off.
+#
+# NCAAB structure differs from the pros: 40-min regulation = TWO 20-min HALVES (no
+# quarters). The engine derives H1/H2 from the first-half final (ESPN linescores),
+# and live timing uses 20-min periods. Team totals are rarely offered live, so only
+# combined game totals are tracked (full + 1H + 2H) — see config/settings.yaml.
+#
+# Sigmas for ncaab in settings.yaml are UNTUNED placeholders. Calibrate against a
+# few weeks of logged games before trusting the live edge/EV output.
+event:
+  id: duke_unc_2026-11-15            # <away_key>_<home_key>_<YYYY-MM-DD>, lowercase
+  league: NCAAB
+  away: Duke Blue Devils
+  home: North Carolina Tar Heels
+  away_key: DUKE
+  home_key: UNC
+  commence_time: "2026-11-15T00:00:00+0000"
+  bookmaker: bovada
+  bovada_event_id: "REPLACE_WITH_REAL_BOVADA_ID"   # exact id wins over name match
+
+totals:
+  full:    { line: 152.5, over: -110, under: -110 }   # REAL Bovada pregame total
+  h1:      { line: 74.5,  over: -110, under: -110 }    # ~half of full (college 1H ≈ 0.49)
+
+# Team totals usually aren't posted live for college — left out on purpose. Add a
+# team_totals block only if your book actually offers them for the game.
+
+sides:
+  spread:    { UNC: -3.5, DUKE: +3.5, over: -110, under: -110 }
+  moneyline: { UNC: -160, DUKE: +135 }

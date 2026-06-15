@@ -53,20 +53,34 @@ HEADERS = {
 QUARTER_MIN = 12.0
 REGULATION_MIN = 48.0
 
-# Per-league dimensions. NBA = 4x12min; WNBA = 4x10min. The coupon path differs
-# only by the sport slug. Add a league here to support it everywhere.
+# Per-league dimensions. NBA = 4x12min; WNBA = 4x10min; NCAAB (men's college) =
+# 2x20min HALVES, so its "period" length is 20 and there is no quarter concept —
+# the elapsed math (period_num-1)*period_min + (period_min - remaining) still holds.
+# `period_tag` labels the live clock (Q for quarters, H for halves). The coupon path
+# differs only by the sport slug. Add a league here to support it everywhere.
 LEAGUES = {
     "nba": {
         "slug": "nba",
         "quarter_min": 12.0,
         "regulation_min": 48.0,
+        "period_tag": "Q",
         "referer": "https://www.bovada.lv/sports/basketball/nba",
     },
     "wnba": {
         "slug": "wnba",
         "quarter_min": 10.0,
         "regulation_min": 40.0,
+        "period_tag": "Q",
         "referer": "https://www.bovada.lv/sports/basketball/wnba",
+    },
+    # College men's: halves. Sigmas/markets are UNTUNED placeholders — calibrate on
+    # logged NCAAB data before trusting live output (see config/settings.yaml).
+    "ncaab": {
+        "slug": "college-basketball",
+        "quarter_min": 20.0,        # half length (period), not a quarter
+        "regulation_min": 40.0,
+        "period_tag": "H",
+        "referer": "https://www.bovada.lv/sports/basketball/college-basketball",
     },
 }
 
@@ -174,6 +188,7 @@ class BovadaProvider:
         cfg = LEAGUES.get(self.league, LEAGUES["nba"])
         self.quarter_min = cfg["quarter_min"]
         self.regulation_min = cfg["regulation_min"]
+        self.period_tag = cfg.get("period_tag", "Q")
         self.coupon_url = _coupon_url(cfg["slug"])
         self._referer = cfg["referer"]
         self.poll_interval = poll_interval
@@ -329,7 +344,7 @@ class BovadaProvider:
         elapsed = max(0.0, (period_num - 1) * q + (q - remaining_in_q))
         elapsed = min(elapsed, self.regulation_min)
         remaining = max(0.0, self.regulation_min - elapsed)
-        self._clock = f"Q{period_num} {int(mins)}:{int(secs):02d}"
+        self._clock = f"{self.period_tag}{period_num} {int(mins)}:{int(secs):02d}"
 
         ls = sc.get("latestScore") or {}
         try:

@@ -17,6 +17,12 @@ model:
     wnba:
       sigma_full: 8.0    # 11 * (160/217) ≈ 8.1
       sigma_team: 6.0    # 8  * (160/217) ≈ 5.9
+    # College men's totals run ~145 but pace/variance is HIGHER than the pros.
+    # These are UNTUNED placeholders — calibrate on logged NCAAB games before
+    # trusting live output. (Halves, not quarters; team totals rarely live.)
+    ncaab:
+      sigma_full: 10.0
+      sigma_team: 7.0
   # Minimum minutes elapsed before the current-pace term is trusted (avoids a
   # tiny early-game sample whipsawing the projection).
   min_minutes_elapsed: 5.0
@@ -59,6 +65,12 @@ engine:
   # so track only the combined game totals there (full + 1H + 2H). NBA keeps team totals.
   league_markets:
     wnba:
+      - total_full
+      - total_h1
+      - total_h2
+    # College men's: combined game totals only (full + halves). Team totals are
+    # rarely posted live; H1/H2 follow the two-half structure.
+    ncaab:
       - total_full
       - total_h1
       - total_h2

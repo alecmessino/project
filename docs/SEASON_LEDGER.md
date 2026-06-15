@@ -1,6 +1,6 @@
 # Season Ledger — Mean-Reversion Forward Test
 
-_Generated 2026-06-15 01:45 UTC from `docs/season.json`. Flat 1u stake per bet; P/L and ROI in units. CLV in points (positive = line moved your way)._
+_Generated 2026-06-15 05:39 UTC from `docs/season.json`. Flat 1u stake per bet; P/L and ROI in units. CLV in points (positive = line moved your way)._
 
 ## Overall
 

@@ -108,7 +108,11 @@ def grade_and_sync() -> None:
                   f"{t['profit_units']:+}u", flush=True)
     except Exception as e:
         print(f"season-ledger append failed: {type(e).__name__}: {e}", flush=True)
-    _commit_push(["docs/forward.json", "docs/season.json", "config/games/"],
+    # Regenerate the detailed, human-readable ledger (league-agnostic) from season.json.
+    subprocess.run([sys.executable, str(ROOT / "scripts" / "season_ledger.py")],
+                   cwd=ROOT, check=False)
+    _commit_push(["docs/forward.json", "docs/season.json", "docs/SEASON_LEDGER.md",
+                  "config/games/"],
                  "chore: final grade — settle forward bets + CLV [skip ci]")
 
 

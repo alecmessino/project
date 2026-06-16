@@ -43,9 +43,35 @@ drift simulate --replay prices.csv --config config/drift.yaml   # stream from a 
 # Live feeds (real data):
 drift live --source coinbase --instrument BTC-USD,ETH-USD --config config/drift.yaml
 drift live --source polygon  --instrument SPY,QQQ --backtest --config config/drift.yaml
+
+# Cross-sectional (relative-strength) variant:
+drift rank      --source coinbase --instrument BTC-USD,ETH-USD,LTC-USD,BCH-USD
+drift xbacktest --source coinbase --instrument BTC-USD,ETH-USD,LTC-USD,BCH-USD
+
+# Dashboard / exhibits:
+drift serve  --source coinbase --instrument BTC-USD,ETH-USD,LTC-USD,BCH-USD   # live at :8000
+drift export --source coinbase --instrument BTC-USD,ETH-USD --out docs/drift.html  # static
 ```
 
 `prices.csv` columns: `asof,close[,high,low,volume[,instrument]]`.
+
+## Two models, one harness
+
+- **Time-series momentum** (`triggers.py`) — trade each instrument on its own
+  absolute, vol-normalized trend; breakout-confirmed; vol-targeted. This is what
+  `simulate`, `live`, and the per-instrument `backtest` run.
+- **Cross-sectional momentum** (`cross_section.py`) — rank the universe each bar
+  and go long the strongest / short the weakest names (dollar-neutral by default).
+  This is what `rank` and `xbacktest` run.
+
+## Dashboard
+
+`drift serve` runs a dependency-free stdlib server (single auto-refreshing page +
+`/api/state` JSON); `drift export` writes the same view as a **self-contained
+static HTML** (`docs/drift.html`) you can commit or host on GitHub Pages — state
+is embedded inline, so it renders with no server. Both share one render path
+(`exhibit.build_state` → `web/index.html`) and show the cross-sectional book, the
+relative-strength ranking, and a signal + equity-sparkline card per instrument.
 
 ## Live feeds
 

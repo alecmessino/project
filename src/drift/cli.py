@@ -168,6 +168,40 @@ def xbacktest(
 
 
 @app.command()
+def export(
+    source: str = typer.Option("coinbase", "--source", help="coinbase | polygon | synthetic"),
+    instrument: str = typer.Option("BTC-USD,ETH-USD,LTC-USD,BCH-USD", "--instrument"),
+    series: Optional[str] = typer.Option(None, "--series", help="multi-instrument CSV"),
+    config: Optional[str] = typer.Option(None, "--config"),
+    out: str = typer.Option("docs/drift.html", "--out", help="static HTML exhibit path"),
+):
+    """Build a self-contained static dashboard HTML (shareable, no server)."""
+    from .exhibit import export_html
+    settings = _load_settings(config)
+    instruments = [s.strip() for s in instrument.split(",") if s.strip()]
+    series_dict = _universe(source, instruments, series)
+    path = export_html(series_dict, settings, out, source=source)
+    console.print(f"[green]wrote[/] {path}  ({len(series_dict)} instruments)")
+
+
+@app.command()
+def serve(
+    source: str = typer.Option("coinbase", "--source", help="coinbase | polygon | synthetic"),
+    instrument: str = typer.Option("BTC-USD,ETH-USD,LTC-USD,BCH-USD", "--instrument"),
+    series: Optional[str] = typer.Option(None, "--series", help="multi-instrument CSV"),
+    config: Optional[str] = typer.Option(None, "--config"),
+    host: str = typer.Option("127.0.0.1", "--host"),
+    port: int = typer.Option(8000, "--port"),
+):
+    """Serve the live dashboard for a universe."""
+    from .web.server import serve as serve_dashboard
+    settings = _load_settings(config)
+    instruments = [s.strip() for s in instrument.split(",") if s.strip()]
+    series_dict = _universe(source, instruments, series)
+    serve_dashboard(series_dict, settings, source=source, host=host, port=port)
+
+
+@app.command()
 def demo(
     n_bars: int = typer.Option(750, "--bars"),
     config: Optional[str] = typer.Option(None, "--config"),

@@ -78,3 +78,10 @@ def test_fails_over_to_second_host(monkeypatch):
 def test_factory_builds_yahoo_for_equity_aliases():
     for alias in ("yahoo", "equities", "stocks"):
         assert isinstance(get_feed(alias, instruments=["SPY"]), YahooFeed)
+
+
+def test_params_uses_range_by_default_and_epochs_when_set():
+    assert YahooFeed(range="2y")._params() == {"range": "2y", "interval": "1d"}
+    # Explicit epoch bounds force true daily history (range=max is coarsened to monthly).
+    p = YahooFeed(period1=0, period2=1000)._params()
+    assert p["period1"] == 0 and p["period2"] == 1000 and "range" not in p

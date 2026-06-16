@@ -74,15 +74,54 @@ def _max_drawdown(equity: Sequence[float]) -> float:
     return mdd
 
 
+@dataclass
+class Step:
+    """One realized bar of the strategy: weight held into the next bar and the
+    returns realized over it. The dated, per-bar record the analytics layer
+    (tearsheet, ledger) consumes."""
+
+    asof: str
+    weight: float
+    dweight: float       # |weight change| this bar (drives cost/turnover)
+    net_ret: float       # strategy return net of cost
+    asset_ret: float     # the instrument's own (buy-and-hold) return over the bar
+
+
+def strategy_steps(instrument: str, bars: Sequence[Bar], settings: Settings) -> list[Step]:
+    """Walk the gated, hysteresis-held momentum strategy bar by bar (no lookahead).
+
+    Single source of truth for the position logic — `backtest`, the tearsheet, and
+    the forward ledger all read these steps so they can never disagree.
+    """
+    cost = settings.sizing.cost_bps_per_side / 1e4
+    exit_thresh = settings.triggers.exit_score_threshold
+    # evaluate() depends only on the recent tail, so feed it a bounded window:
+    # identical results, but O(n) over the series instead of O(n^2) — this is what
+    # makes a multi-decade daily backtest tractable.
+    window = settings.signal.min_history + settings.signal.lookback
+    prev_weight = 0.0
+    steps: list[Step] = []
+    for i in range(len(bars) - 1):
+        lo = max(0, i + 1 - window)
+        ev = evaluate(instrument, bars[lo: i + 1], settings)
+        weight = _next_weight(prev_weight, ev, exit_thresh, settings)
+        dw = abs(weight - prev_weight)
+        cur, nxt = bars[i].close, bars[i + 1].close
+        asset_ret = (nxt / cur - 1.0) if cur > 0 else 0.0
+        steps.append(Step(asof=bars[i + 1].asof, weight=weight, dweight=dw,
+                          net_ret=weight * asset_ret - cost * dw, asset_ret=asset_ret))
+        prev_weight = weight
+    return steps
+
+
 def backtest(instrument: str, bars: Sequence[Bar], settings: Settings) -> BacktestResult:
     """Run the gated momentum strategy over one instrument's bar series."""
     bpy = settings.engine.bars_per_year
     cost = settings.sizing.cost_bps_per_side / 1e4
 
-    exit_thresh = settings.triggers.exit_score_threshold
+    steps = strategy_steps(instrument, bars, settings)
     prev_weight = 0.0
     gross_eq, net_eq = 1.0, 1.0
-    gross_curve: list[float] = []
     net_curve: list[float] = []
     net_rets: list[float] = []
     n_trades = 0
@@ -90,41 +129,20 @@ def backtest(instrument: str, bars: Sequence[Bar], settings: Settings) -> Backte
     active_exposures: list[float] = []
     wins = active = 0
 
-    # Decide the weight at bar i from history[:i+1], realize it over (i -> i+1).
-    # Entry is strict (a gated Signal); holding is governed by hysteresis so a
-    # live trend isn't churned in and out around the entry threshold.
-    for i in range(len(bars) - 1):
-        hist = bars[: i + 1]
-        ev = evaluate(instrument, hist, settings)
-        weight = _next_weight(prev_weight, ev, exit_thresh, settings)
-
-        dw = abs(weight - prev_weight)
-        # Count a trade only on a genuine entry/exit/flip — not every vol-resize
-        # (the per-bar re-sizing cost is captured by `turnover` instead).
-        if _sign(weight) != _sign(prev_weight):
+    for st in steps:
+        if _sign(st.weight) != _sign(prev_weight):
             n_trades += 1
-        turnover += dw
-
-        nxt = bars[i + 1].close
-        cur = bars[i].close
-        asset_ret = (nxt / cur - 1.0) if cur > 0 else 0.0
-
-        gross_pnl = weight * asset_ret
-        net_pnl = gross_pnl - cost * dw
-
-        gross_eq *= (1.0 + gross_pnl)
-        net_eq *= (1.0 + net_pnl)
-        gross_curve.append(gross_eq)
+        turnover += st.dweight
+        gross_eq *= (1.0 + st.weight * st.asset_ret)
+        net_eq *= (1.0 + st.net_ret)
         net_curve.append(net_eq)
-        net_rets.append(net_pnl)
-
-        if abs(weight) > 1e-9:
+        net_rets.append(st.net_ret)
+        if abs(st.weight) > 1e-9:
             active += 1
-            active_exposures.append(abs(weight))
-            if net_pnl > 0:
+            active_exposures.append(abs(st.weight))
+            if st.net_ret > 0:
                 wins += 1
-
-        prev_weight = weight
+        prev_weight = st.weight
 
     mean = sum(net_rets) / len(net_rets) if net_rets else 0.0
     var = sum((r - mean) ** 2 for r in net_rets) / len(net_rets) if len(net_rets) > 1 else 0.0

@@ -1,0 +1,70 @@
+# Driftwood — time-series-momentum (trend-following) signal settings.
+# Every threshold is tunable; see src/drift/config.py for the schema + defaults.
+# All windows are in BARS, so re-tune them when you change bar frequency
+# (daily vs. 15-minute crypto) along with engine.bars_per_year.
+
+signal:
+  # Bars over which trend strength is measured. ~3 trading months on daily bars.
+  lookback: 60
+  # Bars for the per-bar volatility estimate that normalizes the trend score.
+  vol_window: 30
+  # Donchian channel length for the independent breakout confirmation.
+  breakout_channel: 40
+  # Fraction of recent drift assumed to persist next bar. This is the momentum
+  # analog of mrbet's reversion weight beta — an UNVALIDATED default. Fit it
+  # against logged data before trusting the expected-edge / net-edge numbers.
+  continuation: 0.10
+
+triggers:
+  # Minimum |trend z-score|: how far price has drifted relative to its own noise.
+  score_threshold: 1.0
+  # Require a same-direction Donchian breakout (the independent confirmation that
+  # keeps a strong score alone from firing — the guard against chasing noise).
+  require_breakout: true
+  # Minimum expected edge over the hold horizon, net of round-trip cost. 0.0 = any
+  # positive net edge qualifies; raise it to demand a real cushion over frictions.
+  min_edge_after_cost: 0.0
+  # |score| at/above this is tagged STRONG.
+  strong_score_threshold: 2.0
+  # Ignore negligible target weights.
+  min_weight: 0.05
+  # Hysteresis exit band: once in a position the backtest keeps holding while the
+  # trend score keeps its sign and |score| stays above this (looser than entry).
+  # Stops a noisy trend from churning in and out around score_threshold.
+  exit_score_threshold: 0.25
+
+sizing:
+  # Annualized volatility target per position (managed-futures style).
+  target_vol: 0.15
+  # Hard cap on |weight| — never lever a single position past this.
+  max_leverage: 2.0
+  # Fractional-Kelly scaler on the vol-target weight (cf. mrbet's quarter-Kelly).
+  kelly_fraction: 0.50
+  # Transaction cost PER SIDE, in basis points. The headline risk for short-horizon
+  # strategies — keep this honest (retail equity ~1-5bps, thin crypto far more).
+  cost_bps_per_side: 5.0
+  # Assumed holding horizon (bars) used for the cost hurdle in the trigger.
+  hold_bars: 10
+
+engine:
+  # Instruments to track; empty = track every instrument the feed emits.
+  instruments: []
+  # Bars per year for annualizing vol/Sharpe: 252 daily, 52 weekly,
+  # 35040 for 15-minute crypto (24*4*365), etc.
+  bars_per_year: 252.0
+
+cross_section:
+  # The relative-strength variant: rank the universe each bar, long the strongest
+  # and short the weakest, rather than trading each name on its own absolute trend.
+  # Top/bottom fraction of the universe taken into each leg.
+  quantile: 0.34
+  # True -> dollar-neutral long/short; False -> long-only the top quantile.
+  long_short: true
+  # Total |weight| budget split across the legs.
+  gross_exposure: 1.0
+  # Within-leg weighting: "equal", "inv_vol" (risk-balanced), or "score".
+  weighting: inv_vol
+  # Minimum ranked names before the book trades at all.
+  min_universe: 3
+  # Per-name |weight| cap.
+  max_weight: 0.50

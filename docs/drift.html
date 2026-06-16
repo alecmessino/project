@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Driftwood — trend-following dashboard</title>
+<style>
+  :root{
+    --bg:#ffffff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#717179;
+    --pos:#2f6f5b; --neg:#9b4439; --slate:#4a4f57; --rule:#222226;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.6 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1060px;margin:0 auto;padding:48px 28px 80px}
+  header{border-top:3px solid var(--rule);padding-top:20px;margin-bottom:26px}
+  header h1{font-size:23px;margin:0 0 6px;font-weight:650;letter-spacing:-.2px}
+  header h1 .w{color:var(--slate)}
+  .sub{color:var(--dim);font-size:13.5px;display:flex;flex-wrap:wrap;gap:6px 20px}
+  .sub b{color:var(--ink);font-weight:600}
+  section.block{margin-bottom:34px}
+  h2.sec{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);
+    margin:0 0 14px;font-weight:600}
+  .metrics{display:flex;flex-wrap:wrap;gap:30px;margin-bottom:16px}
+  .metric .v{font-size:21px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+  .metric .l{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-top:1px}
+  .pos{color:var(--pos)} .neg{color:var(--neg)} .neutral{color:var(--ink)}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13.5px}
+  th,td{padding:8px 12px;text-align:right;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  thead th{color:var(--dim);font-weight:500;font-size:11px;text-transform:uppercase;
+    letter-spacing:.6px;border-bottom:1px solid var(--rule)}
+  .tag{font-size:11px;font-weight:600;letter-spacing:.3px}
+  .tag.LONG{color:var(--pos)} .tag.SHORT{color:var(--neg)} .tag.FLAT,.tag--{color:var(--dim)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line)}
+  .card{background:#fff;padding:15px 16px}
+  .card.flagged{background:var(--soft)}
+  .card .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .card .sym{font-weight:650;font-size:15px}
+  .card .nums{display:flex;gap:14px;color:var(--dim);font-size:12px;margin:4px 0}
+  .card .nums b{color:var(--ink);font-weight:600}
+  .reasons{font-size:11.5px;color:var(--slate);margin-top:6px;line-height:1.45}
+  svg.spark{display:block;width:100%;height:42px;margin-top:8px}
+  .foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+    color:var(--dim);font-size:12.5px}
+  .foot .note{color:var(--slate)}
+  .star{color:var(--slate)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Drift<span class="w">wood</span> · trend dashboard</h1>
+    <div class="sub" id="sub"></div>
+  </header>
+
+  <section class="block">
+    <h2 class="sec">Cross-sectional book — long strongest / short weakest</h2>
+    <div class="metrics" id="xstats"></div>
+    <svg class="spark" id="xspark" preserveAspectRatio="none"></svg>
+  </section>
+
+  <section class="block">
+    <h2 class="sec">Relative-strength ranking</h2>
+    <table id="ranktable"><thead><tr>
+      <th>Instrument</th><th>Trend z</th><th>Ann vol</th><th>Leg</th><th>Weight</th>
+    </tr></thead><tbody></tbody></table>
+  </section>
+
+  <section class="block">
+    <h2 class="sec">Per-instrument signals &amp; single-name backtests</h2>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <div class="foot">
+    <span class="note">Signal system — research only.</span> Backtests are walk-forward,
+    net of modeled transaction cost; the <code>continuation</code> coefficient is an
+    unvalidated default. <span id="gen"></span>
+  </div>
+</div>
+
+<script>
+window.__STATE__ = {"header": {"source": "coinbase", "n_instruments": 4, "n_bars": 350, "n_flagged": 0, "generated": "2026-06-16 02:27:07", "model": "lookback 60 \u00b7 vol 30 \u00b7 channel 40"}, "instruments": [{"instrument": "BCH-USD", "asof": "2026-06-16T00:00:00+00:00", "last_close": 222.05, "score": -1.81, "side": "SHORT", "breakout": 0, "weight": -0.093, "ann_vol": 0.8091, "flagged": false, "strong": false, "reasons": [], "backtest": {"net_return": -0.0272, "gross_return": -0.027, "sharpe": -1.08, "max_drawdown": 0.0272, "n_trades": 2, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.998085, 0.995471, 0.992538, 0.987521, 0.979213, 0.986181, 0.985798, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767, 0.972767]}}, {"instrument": "BTC-USD", "asof": "2026-06-16T00:00:00+00:00", "last_close": 65995.95, "score": -0.921, "side": "SHORT", "breakout": 0, "weight": -0.217, "ann_vol": 0.3461, "flagged": false, "strong": false, "reasons": [], "backtest": {"net_return": -0.0617, "gross_return": -0.0613, "sharpe": -1.63, "max_drawdown": 0.0659, "n_trades": 2, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.99923, 0.994475, 0.990201, 0.98802, 0.98571, 0.970415, 0.959812, 0.938311, 0.938311, 0.938311]}}, {"instrument": "ETH-USD", "asof": "2026-06-16T00:00:00+00:00", "last_close": 1784.94, "score": -1.216, "side": "SHORT", "breakout": 0, "weight": -0.146, "ann_vol": 0.513, "flagged": false, "strong": false, "reasons": [], "backtest": {"net_return": 0.0, "gross_return": 0.0, "sharpe": 0.0, "max_drawdown": 0.0, "n_trades": 0, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]}}, {"instrument": "LTC-USD", "asof": "2026-06-16T00:00:00+00:00", "last_close": 45.44, "score": -1.154, "side": "SHORT", "breakout": 0, "weight": -0.195, "ann_vol": 0.3843, "flagged": false, "strong": false, "reasons": [], "backtest": {"net_return": 0.0, "gross_return": 0.0, "sharpe": 0.0, "max_drawdown": 0.0, "n_trades": 0, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]}}], "rankings": [{"instrument": "BTC-USD", "score": -0.921, "ann_vol": 0.3461, "weight": 0.5, "leg": "LONG"}, {"instrument": "LTC-USD", "score": -1.154, "ann_vol": 0.3843, "weight": 0.0, "leg": "\u2014"}, {"instrument": "ETH-USD", "score": -1.216, "ann_vol": 0.513, "weight": 0.0, "leg": "\u2014"}, {"instrument": "BCH-USD", "score": -1.81, "ann_vol": 0.8091, "weight": -0.5, "leg": "SHORT"}], "cross_backtest": {"net_return": 0.2833, "gross_return": 0.3073, "cost_drag": 0.024, "sharpe": 0.97, "max_drawdown": 0.1811, "turnover": 37.0, "avg_names_held": 1.7, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.990413, 0.977366, 0.9694, 0.992318, 0.982862, 0.959232, 0.953628, 0.94816, 0.927664, 0.937973, 0.969817, 0.948833, 0.972701, 0.961679, 0.931167, 0.922416, 0.957304, 0.944193, 0.936015, 0.980792, 0.960398, 0.938921, 0.910512, 0.923327, 0.939076, 0.948584, 0.952553, 0.935738, 0.972747, 0.957928, 1.001188, 0.972734, 0.987397, 0.993692, 1.017213, 1.003483, 1.036728, 1.034303, 1.022998, 1.041275, 1.048612, 1.101829, 1.08272, 1.13325, 1.124858, 1.087751, 1.021147, 1.010228, 1.00772, 1.002441, 0.994964, 0.983762, 1.005489, 0.983577, 0.944766, 0.947057, 0.975106, 0.998531, 1.014097, 0.999239, 0.994703, 1.000942, 1.005816, 1.010295, 1.021447, 1.030268, 1.044925, 1.09665, 1.132241, 1.185508, 1.180354, 1.277448, 1.299404, 1.310141]}};
+
+function pct(x){ return (x>=0?"+":"") + (x*100).toFixed(1) + "%"; }
+function cls(x){ return x>0 ? "pos" : x<0 ? "neg" : "neutral"; }
+
+function spark(el, data){
+  el.innerHTML = "";
+  if(!data || data.length < 2) return;
+  const w = el.clientWidth || 600, h = el.clientHeight || 42, pad = 3;
+  const lo = Math.min(...data), hi = Math.max(...data), rng = (hi-lo)||1;
+  const xs = i => pad + (w-2*pad)*i/(data.length-1);
+  const ys = v => h-pad - (h-2*pad)*(v-lo)/rng;
+  const ns = "http://www.w3.org/2000/svg";
+  const base = document.createElementNS(ns,"line");
+  base.setAttribute("x1",pad); base.setAttribute("x2",w-pad);
+  base.setAttribute("y1",ys(data[0]).toFixed(1)); base.setAttribute("y2",ys(data[0]).toFixed(1));
+  base.setAttribute("stroke","#dcdce0"); base.setAttribute("stroke-dasharray","2 3");
+  el.appendChild(base);
+  const line = document.createElementNS(ns,"polyline");
+  line.setAttribute("points", data.map((v,i)=>xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" "));
+  line.setAttribute("fill","none"); line.setAttribute("stroke","#4a4f57"); line.setAttribute("stroke-width","1.5");
+  el.appendChild(line);
+}
+
+function render(s){
+  const h = s.header;
+  document.getElementById("sub").innerHTML =
+    `<span><b>${h.n_instruments}</b> instruments</span>`+
+    `<span>source <b>${h.source}</b></span>`+
+    `<span><b>${h.n_bars}</b> bars</span>`+
+    `<span><b>${h.n_flagged}</b> flagged</span>`+
+    `<span>${h.model}</span>`;
+  document.getElementById("gen").textContent = "Generated "+h.generated+".";
+
+  const x = s.cross_backtest;
+  document.getElementById("xstats").innerHTML = [
+    ["Net return", pct(x.net_return), cls(x.net_return)],
+    ["Gross", pct(x.gross_return), cls(x.gross_return)],
+    ["Sharpe", x.sharpe.toFixed(2), cls(x.sharpe)],
+    ["Max DD", pct(-x.max_drawdown), "neg"],
+    ["Turnover", x.turnover.toFixed(1), "neutral"],
+    ["Avg names", x.avg_names_held.toFixed(1), "neutral"],
+  ].map(([l,v,c])=>`<div class="metric"><div class="v ${c}">${v}</div><div class="l">${l}</div></div>`).join("");
+  requestAnimationFrame(()=>spark(document.getElementById("xspark"), x.equity));
+
+  document.querySelector("#ranktable tbody").innerHTML = s.rankings.map(r=>`<tr>
+    <td>${r.instrument}</td>
+    <td class="${cls(r.score)}">${r.score>=0?"+":""}${r.score.toFixed(2)}</td>
+    <td>${(r.ann_vol*100).toFixed(0)}%</td>
+    <td><span class="tag ${r.leg==='—'?'--':r.leg}">${r.leg}</span></td>
+    <td>${r.weight>=0?"+":""}${r.weight.toFixed(2)}</td>
+  </tr>`).join("");
+
+  document.getElementById("cards").innerHTML = s.instruments.map((it,idx)=>{
+    const b = it.backtest;
+    const reasons = it.flagged ? `<div class="reasons">▸ ${it.reasons.join(" · ")}</div>` : "";
+    return `<div class="card${it.flagged?" flagged":""}">
+      <div class="top">
+        <span class="sym">${it.instrument}</span>
+        <span class="tag ${it.side}">${it.side}${it.strong?' <span class="star">★</span>':""}</span>
+      </div>
+      <div class="nums">
+        <span>z <b class="${cls(it.score||0)}">${it.score==null?"—":(it.score>=0?"+":"")+it.score.toFixed(2)}</b></span>
+        <span>w <b>${it.weight>=0?"+":""}${it.weight.toFixed(2)}</b></span>
+        <span>last <b>${it.last_close==null?"—":it.last_close}</b></span>
+      </div>
+      <div class="nums">
+        <span>net <b class="${cls(b.net_return)}">${pct(b.net_return)}</b></span>
+        <span>sharpe <b class="${cls(b.sharpe)}">${b.sharpe.toFixed(2)}</b></span>
+        <span>DD <b>${pct(-b.max_drawdown)}</b></span>
+        <span>trades <b>${b.n_trades}</b></span>
+      </div>
+      <svg class="spark" id="sp${idx}" preserveAspectRatio="none"></svg>
+      ${reasons}
+    </div>`;
+  }).join("");
+  requestAnimationFrame(()=>s.instruments.forEach((it,idx)=>{
+    const el = document.getElementById("sp"+idx); if(el) spark(el, it.backtest.equity);
+  }));
+}
+
+async function load(){
+  let state = window.__STATE__;
+  if(!state){ try{ state = await (await fetch("/api/state")).json(); }catch(e){} }
+  if(state) render(state);
+}
+load();
+if(!window.__STATE__) setInterval(load, 15000);
+</script>
+</body>
+</html>

@@ -63,9 +63,10 @@ def test_fetch_and_snapshots_with_fake_session():
 
 
 def test_fails_over_to_second_host(monkeypatch):
-    # First host raises (status 500), retry path returns the same fake — fetch
-    # should still raise only if BOTH hosts fail. Here the session always 500s.
-    feed = YahooFeed(instruments=["SPY"], session=_Session(_payload(), status=500))
+    # Both hosts always 500: fetch retries across the rotating hosts, then gives up.
+    # retries=2, backoff=0 -> exactly one attempt per host, no real sleeping.
+    feed = YahooFeed(instruments=["SPY"], session=_Session(_payload(), status=500),
+                     retries=2, backoff=0)
     raised = False
     try:
         feed.fetch("SPY")

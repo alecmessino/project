@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from typing import Iterator, Optional, Sequence
 
 from ..models import Bar
+from ._retry import with_retries
 from .base import Snapshot
 from .replay import ReplayFeed
 
@@ -34,10 +35,14 @@ class CoinbaseFeed:
         instruments: Sequence[str] = ("BTC-USD",),
         granularity: int = 86_400,
         session: Optional[object] = None,
+        retries: int = 4,
+        backoff: float = 1.0,
     ):
         self.instruments = list(instruments)
         self.granularity = granularity
         self._session = session
+        self.retries = retries
+        self.backoff = backoff
 
     @staticmethod
     def parse_candles(rows: Sequence[Sequence[float]]) -> list[Bar]:
@@ -56,13 +61,15 @@ class CoinbaseFeed:
         return self._session
 
     def fetch(self, instrument: str) -> list[Bar]:
-        resp = self._get().get(
-            f"{self.BASE}/products/{instrument}/candles",
-            params={"granularity": self.granularity},
-            timeout=15,
-        )
-        resp.raise_for_status()
-        return self.parse_candles(resp.json())
+        def _attempt(_i: int) -> list[Bar]:
+            resp = self._get().get(
+                f"{self.BASE}/products/{instrument}/candles",
+                params={"granularity": self.granularity},
+                timeout=15,
+            )
+            resp.raise_for_status()
+            return self.parse_candles(resp.json())
+        return with_retries(_attempt, attempts=self.retries, backoff=self.backoff)
 
     def snapshots(self) -> Iterator[Snapshot]:
         series = {inst: self.fetch(inst) for inst in self.instruments}

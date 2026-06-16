@@ -38,6 +38,20 @@ class PriceFeed(Protocol):
         ...
 
 
+def collect_series(feed: "PriceFeed") -> dict[str, list[Bar]]:
+    """Drain a feed once into per-instrument, time-ordered bar series.
+
+    Works uniformly across every feed (replay, synthetic, live) because it only
+    relies on the `snapshots()` stream — the cross-sectional backtest and the
+    dashboard both build their universe through this.
+    """
+    series: dict[str, list[Bar]] = {}
+    for snap in feed.snapshots():
+        for inst, bar in snap.bars.items():
+            series.setdefault(inst, []).append(bar)
+    return series
+
+
 def get_feed(name: str, **kwargs) -> PriceFeed:
     """Factory: build a feed by name. Imported lazily so the synthetic/replay
     paths never pull in any network code."""

@@ -16,8 +16,9 @@ from rich.table import Table
 
 from .backtest import backtest
 from .config import Settings
+from .cross_section import cross_backtest, rank_snapshot
 from .engine import Engine, Result
-from .feed.base import get_feed
+from .feed.base import collect_series, get_feed
 from .feed.replay import ReplayFeed
 from .feed.synthetic import SyntheticFeed
 
@@ -105,6 +106,65 @@ def live(
     if backtest_too:
         for inst in instruments:
             _print_backtest(backtest(inst, feed.fetch(inst), settings))
+
+
+def _universe(source: str, instruments: list[str], series_csv: Optional[str]) -> dict:
+    """Build a per-instrument series dict from a CSV or a feed source."""
+    if series_csv:
+        return ReplayFeed.from_csv(series_csv).series
+    return collect_series(get_feed(source, instruments=instruments))
+
+
+@app.command()
+def rank(
+    source: str = typer.Option("coinbase", "--source", help="coinbase | polygon | synthetic"),
+    instrument: str = typer.Option("BTC-USD,ETH-USD,LTC-USD", "--instrument", help="comma-separated universe"),
+    series: Optional[str] = typer.Option(None, "--series", help="multi-instrument CSV (overrides --source)"),
+    config: Optional[str] = typer.Option(None, "--config"),
+):
+    """Show the current cross-sectional ranking (relative-strength momentum)."""
+    settings = _load_settings(config)
+    instruments = [s.strip() for s in instrument.split(",") if s.strip()]
+    rows = rank_snapshot(_universe(source, instruments, series), settings)
+    if not rows:
+        console.print("[yellow]Not enough history to rank the universe.[/]")
+        raise typer.Exit()
+    t = Table(title="Driftwood cross-sectional ranking")
+    t.add_column("instrument"); t.add_column("score", justify="right")
+    t.add_column("ann vol", justify="right"); t.add_column("leg"); t.add_column("weight", justify="right")
+    for r in rows:
+        colour = {"LONG": "green", "SHORT": "red"}.get(r.leg, "dim")
+        t.add_row(r.instrument, f"{r.score:+.2f}", f"{r.ann_vol*100:.0f}%",
+                  f"[{colour}]{r.leg}[/]", f"{r.weight:+.2f}")
+    console.print(t)
+
+
+@app.command()
+def xbacktest(
+    source: str = typer.Option("synthetic", "--source", help="coinbase | polygon | synthetic"),
+    instrument: str = typer.Option("BTC-USD,ETH-USD,LTC-USD,BCH-USD", "--instrument"),
+    series: Optional[str] = typer.Option(None, "--series", help="multi-instrument CSV"),
+    config: Optional[str] = typer.Option(None, "--config"),
+    out: Optional[str] = typer.Option(None, "--out", help="Write the result JSON here"),
+):
+    """Cross-sectional (long-strong / short-weak) backtest over a universe."""
+    settings = _load_settings(config)
+    instruments = [s.strip() for s in instrument.split(",") if s.strip()]
+    res = cross_backtest(_universe(source, instruments, series), settings)
+    t = Table(title=f"Driftwood cross-sectional backtest — {len(res.instruments)} names", show_header=False)
+    t.add_row("universe", ", ".join(res.instruments))
+    t.add_row("bars", str(res.n_bars))
+    t.add_row("net return", f"{res.net_return*100:+.1f}%")
+    t.add_row("gross return", f"{res.gross_return*100:+.1f}%")
+    t.add_row("cost drag", f"{res.cost_drag*100:.1f}%")
+    t.add_row("sharpe (net, ann.)", f"{res.sharpe:.2f}")
+    t.add_row("max drawdown", f"{res.max_drawdown*100:.1f}%")
+    t.add_row("turnover", f"{res.turnover:.1f}")
+    t.add_row("avg names held", f"{res.avg_names_held:.1f}")
+    console.print(t)
+    if out:
+        Path(out).write_text(json.dumps(res.to_dict(), indent=2))
+        console.print(f"[dim]wrote {out}[/]")
 
 
 @app.command()

@@ -57,11 +57,28 @@ class EngineSettings(BaseModel):
     bars_per_year: float = 252.0    # 252 daily, 52 weekly, 35040 15-min crypto, etc.
 
 
+class CrossSectionSettings(BaseModel):
+    """The cross-sectional (relative-strength) momentum variant.
+
+    Instead of trading each instrument on its own absolute trend (time-series
+    momentum), rank the universe each bar and go long the strongest / short the
+    weakest names — classic Jegadeesh-Titman cross-sectional momentum.
+    """
+
+    quantile: float = 0.34          # top/bottom fraction of the universe per leg
+    long_short: bool = True         # True -> dollar-neutral L/S; False -> long-only top
+    gross_exposure: float = 1.0     # total |weight| budget across both legs
+    weighting: str = "inv_vol"      # "equal" | "inv_vol" | "score"
+    min_universe: int = 3           # need at least this many ranked names to trade
+    max_weight: float = 0.50        # per-name |weight| cap
+
+
 class Settings(BaseModel):
     signal: SignalSettings = Field(default_factory=SignalSettings)
     triggers: TriggerSettings = Field(default_factory=TriggerSettings)
     sizing: SizingSettings = Field(default_factory=SizingSettings)
     engine: EngineSettings = Field(default_factory=EngineSettings)
+    cross_section: CrossSectionSettings = Field(default_factory=CrossSectionSettings)
 
     @classmethod
     def load(cls, path: str | Path) -> "Settings":

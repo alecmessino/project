@@ -43,6 +43,30 @@ def crypto_universe(symbols: Sequence[str], granularity: int = 86_400) -> dict[s
     return series
 
 
+def equity_universe(symbols: Sequence[str], pause: float = 0.0,
+                    timespan: str = "day") -> dict[str, list[Bar]]:
+    """Pull an equities universe from Polygon, skipping any symbol that fails.
+
+    `pause` seconds between fetches keeps the free tier (5 requests/min) happy;
+    set 0 on a paid plan. With no POLYGON_API_KEY the per-symbol fetch raises and
+    is skipped, so the report degrades gracefully to the synthetic control only.
+    """
+    import time
+    from .feed.polygon import PolygonFeed
+    feed = PolygonFeed(timespan=timespan)
+    series: dict[str, list[Bar]] = {}
+    for i, sym in enumerate(symbols):
+        if pause and i:
+            time.sleep(pause)
+        try:
+            bars = feed.fetch(sym)
+        except Exception:
+            continue
+        if len(bars) >= 60:
+            series[sym] = bars
+    return series
+
+
 def _clone(settings: Settings, *, lookback: Optional[int] = None,
            cost: Optional[float] = None) -> Settings:
     s = settings.model_copy(deep=True)
@@ -87,7 +111,7 @@ def study_timeseries(series: dict[str, list[Bar]], settings: Settings) -> dict:
     agg_net = (eq[-1] - 1.0) if eq else 0.0
     win = sum(1 for n in nets if n > 0)
     return {
-        "name": "Crypto trend-following (time-series)",
+        "name": "Trend-following (time-series)",
         "description": "Each instrument traded on its own absolute, vol-normalized "
                        "trend; breakout-confirmed; shown as an equal-weight book.",
         "metrics": [
@@ -104,7 +128,7 @@ def study_timeseries(series: dict[str, list[Bar]], settings: Settings) -> dict:
 def study_cross(series: dict[str, list[Bar]], settings: Settings) -> dict:
     xbt = cross_backtest(series, settings)
     return {
-        "name": "Crypto relative-strength (cross-sectional)",
+        "name": "Relative-strength (cross-sectional)",
         "description": "Rank the universe each bar; long the strongest, short the "
                        "weakest (dollar-neutral). Bets on dispersion, not market level.",
         "metrics": [

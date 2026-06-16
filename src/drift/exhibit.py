@@ -23,6 +23,7 @@ from .triggers import evaluate, to_signal
 TEMPLATE = Path(__file__).with_name("web") / "index.html"
 REPORT_TEMPLATE = Path(__file__).with_name("web") / "report.html"
 TEARSHEET_TEMPLATE = Path(__file__).with_name("web") / "tearsheet.html"
+LEDGER_TEMPLATE = Path(__file__).with_name("web") / "ledger.html"
 
 
 def _spark(curve: Sequence[float], n: int = 90) -> list[float]:
@@ -136,4 +137,17 @@ def export_tearsheet(report: dict, out: str | Path) -> Path:
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render_tearsheet(report))
+    return out
+
+
+def render_ledger(state: dict) -> str:
+    """Static, self-contained forward-ledger HTML with state embedded."""
+    template = LEDGER_TEMPLATE.read_text()
+    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+
+
+def export_ledger(state: dict, out: str | Path) -> Path:
+    out = Path(out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(render_ledger(state))
     return out

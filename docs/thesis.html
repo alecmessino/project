@@ -11,17 +11,19 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
-    font:16px/1.72 ui-serif,Georgia,"Times New Roman",serif;-webkit-font-smoothing:antialiased}
+    font:16px/1.74 ui-serif,Georgia,"Times New Roman",serif;-webkit-font-smoothing:antialiased}
   .wrap{max-width:720px;margin:0 auto;padding:64px 26px 96px}
   header{border-top:3px solid var(--rule);padding-top:22px;margin-bottom:8px}
-  h1{font-size:32px;line-height:1.15;margin:0 0 8px;font-weight:680;letter-spacing:-.5px;
+  .kicker{color:var(--dim);font-size:13.5px;font-family:ui-sans-serif,system-ui,sans-serif;
+    text-transform:uppercase;letter-spacing:1px}
+  h1{font-size:31px;line-height:1.16;margin:8px 0 0;font-weight:680;letter-spacing:-.5px;
     font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif}
   h1 .w{color:var(--slate)}
-  .kicker{color:var(--dim);font-size:14px;font-family:ui-sans-serif,system-ui,sans-serif;
-    text-transform:uppercase;letter-spacing:1px}
   .lede{font-size:18px;line-height:1.7;color:var(--ink);margin:20px 0 4px}
   h2{font-size:13px;text-transform:uppercase;letter-spacing:1.1px;color:var(--dim);
-    margin:42px 0 6px;font-weight:700;font-family:ui-sans-serif,system-ui,sans-serif}
+    margin:44px 0 6px;font-weight:700;font-family:ui-sans-serif,system-ui,sans-serif}
+  h3{font-size:17px;margin:24px 0 2px;font-weight:640;
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",sans-serif}
   p{margin:14px 0}
   .muted{color:var(--dim)}
   b{font-weight:680}
@@ -32,11 +34,13 @@
   .card .v{font-size:21px;font-weight:680;font-variant-numeric:tabular-nums;letter-spacing:-.4px}
   .card .l{font-size:11.5px;color:var(--dim);margin-top:3px;line-height:1.35}
   .pos{color:var(--pos)} .neg{color:var(--neg)}
-  .pull{border-left:3px solid var(--slate);padding:2px 0 2px 18px;margin:24px 0;color:var(--ink);
-    font-size:18px;line-height:1.6}
+  .pull{border-left:3px solid var(--slate);padding:2px 0 2px 18px;margin:26px 0;color:var(--ink);
+    font-size:19px;line-height:1.55;font-weight:500}
   code{background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:0 5px;
     font-size:14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-  .foot{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);
+  .note{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:16px 18px;
+    margin:26px 0 0;font-size:14.5px;line-height:1.65;color:var(--ink)}
+  .foot{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);
     font-size:13px;line-height:1.6;font-family:ui-sans-serif,system-ui,sans-serif}
   a.back{color:var(--slate);text-decoration:none;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
   a.back:hover{text-decoration:underline}
@@ -46,49 +50,44 @@
 <div class="wrap">
   <header>
     <div class="kicker">Driftwood · thesis &amp; findings</div>
-    <h1>Trend-following, judged by the drawdown it avoids — not the return it promises.</h1>
+    <h1>Detect the drift. Refuse the diffusion.</h1>
   </header>
 
   <p class="lede">
-    Driftwood is a trend-following <b>signal</b> system for equities and ETFs (with a crypto
-    sibling). It bets that price trends <b>persist</b>: an instrument drifting far relative to
-    its own volatility tends to keep drifting. It does not forecast prices and it does not place
-    trades — it flags and sizes trends, and reports the result honestly.
+    Driftwood is a trend-following <b>signal</b> system for region- and factor-tilted equity ETFs
+    (with a crypto sibling). It flags and sizes trends — it does not place trades — and it reports
+    the result, including the unflattering parts, honestly.
   </p>
 
   <div class="cards" id="cards"></div>
 
-  <h2>The bet</h2>
+  <h2>The drift and the diffusion</h2>
   <p>
-    Across a universe of region- and factor-tilted ETFs — US, developed-international and
-    emerging markets, crossed with value, growth, size, momentum, quality and min-vol — Driftwood
-    measures, for each fund, how large its recent move is <i>relative to its own noise</i>
-    (a volatility-normalized trend z-score), confirms direction with a channel breakout, sizes
-    the position to a constant volatility budget, and only acts when the expected edge clears the
-    transaction cost. It runs both <b>time-series</b> (each ETF on its own trend) and
-    <b>cross-sectional</b> (long the strongest funds, short the weakest) — and can neutralize
-    within region or factor to separate <i>which style is leading</i> from <i>which region is leading</i>.
+    In the standard model of how a price moves — geometric Brownian motion — there are exactly two
+    forces. One is <b>drift</b>: the deterministic, directional component, the expected return, the part
+    that actually goes somewhere. The other is <b>diffusion</b>: undirected noise that averages to
+    nothing. Every price path is a tug-of-war between them. Trend following is, almost literally, the
+    attempt to detect and harvest the drift while refusing to be fooled by the diffusion — which is why
+    the core signal of the strategy is simply measuring how large a fund's recent move is relative to
+    the noise that could have produced it.
   </p>
 
   <h2>The name</h2>
   <p>
-    In the standard model of how a price moves — geometric Brownian motion,
-    <code>dS = μS·dt + σS·dW</code> — there are exactly two forces. One is <b>drift</b> (the
-    <code>μ</code> term): the deterministic, directional component — the expected return, the part
-    that actually goes somewhere. The other is <b>diffusion</b> (the <code>σ·dW</code> term):
-    undirected noise that averages to nothing. Every price path is a tug-of-war between them.
-    Trend-following is, almost literally, the attempt to detect and harvest the <b>drift</b> while
-    refusing to be fooled by the diffusion — which is why the core signal is simply
-    <i>“how large is the move relative to the noise that could have produced it?”</i> The system is
-    named for the quantity it targets.
+    The image the name reaches for is the driftwood that washes up on the shores of Lake Michigan.
+    Picture wood that the lake's relentless currents have tumbled and weathered until the soft, volatile
+    material is worn away, leaving a denser, harder core. Whether or not that wood ever made a better
+    fire, it is the right picture for what the mathematics does: by applying a volatility-normalized
+    trend <i>z</i>-score across a universe of region- and factor-tilted equity ETFs, the strategy wears
+    away the volatile <i>sap</i> of market noise and exposes the seasoned core of macro drift.
   </p>
   <p>
-    <b>Driftwood</b> carries the metaphor the rest of the way. Driftwood does not swim — it is
-    <i>carried</i>, shaped and moved by the prevailing current, going where the water is already
-    going. That is precisely the trend-follower’s posture: don’t predict, don’t fight the tide;
-    identify the drift and let it do the work. It is patient and cumulative, too — driftwood is the
-    product of a long journey, weathered into its shape over time, the way the strategy only pays
-    when a trend persists long enough to matter.
+    The metaphor extends to the posture. Driftwood does not swim; it is carried, shaped and moved by the
+    prevailing current, going where the water is already going. Rather than predicting or fighting the
+    tide, the strategy confirms direction with a channel breakout, sizes positions to a constant
+    volatility budget, and acts only when the expected edge clears the transaction cost. It is patient
+    and cumulative — the product of a long journey, weathered into shape over time — and it pays off
+    only when a trend persists long enough to matter.
   </p>
   <p class="muted">
     It is also a deliberate foil to its sibling system, <code>mrbet</code>, which trades
@@ -96,54 +95,83 @@
     Driftwood goes with it. The two names encode opposite theses about the same data.
   </p>
 
-  <h2>The research</h2>
+  <h2>Portfolio construction &amp; risk management</h2>
   <p>
-    The two effects are among the best-documented anomalies in finance: <b>time-series momentum</b>
-    (Moskowitz, Ooi &amp; Pedersen, 2012) and <b>cross-sectional momentum</b> (Jegadeesh &amp; Titman,
-    1993), with the practitioner lineage in managed-futures “trend.” But the claim worth testing isn’t
-    “momentum prints money.” It is that trend-following delivers <b>convexity</b>: it cuts exposure into
-    sustained declines, trading away some upside for a fundamentally different drawdown profile. That —
-    not raw return — is the pitch, and it is what the ETF backtests below put to the test.
+    To turn the core signal into a robust portfolio, Driftwood runs a dual-engine execution model under
+    strict risk limits — capturing structural trends across the ETF universe while neutralizing unwanted
+    exposures and minimizing frictional drag.
   </p>
 
-  <h2>What the ETF backtests show</h2>
+  <h3>The dual execution model</h3>
   <p>
-    Run walk-forward and net of cost, with parameters fit <b>in-sample</b> on the early history and
-    reported <b>out-of-sample</b> on the held-out remainder, over <b id="eq-span">—</b>
-    (<b id="eq-n">—</b> region/factor ETFs):
+    <b>Time-series execution — absolute momentum.</b> Each ETF is judged entirely on its own path: the
+    volatility-normalized trend <i>z</i>-score says whether the fund has positive or negative absolute
+    drift, and a channel breakout confirms it is definitively moving. This is the primary drawdown
+    defense: as broad markets fall and absolute trends break, the mechanism naturally de-levers and can
+    take the other side rather than ride the decline down.
   </p>
   <p>
-    <b>Drawdown control is the headline.</b> The strategy’s worst drawdown was
-    <b id="eq-sdd" class="pos">—</b> against buy-and-hold’s <b id="eq-bdd" class="neg">—</b> — roughly
-    a <b id="eq-ddx">—</b> reduction in peak-to-trough pain. <span class="muted">The crypto sibling is
-    even starker (<b id="cr-sdd">—</b> vs <b id="cr-bdd">—</b>), where it also beats buy-and-hold on
-    risk-adjusted return.</span>
+    <b>Cross-sectional execution — relative strength.</b> The system ranks the whole universe and can
+    pair long exposure to the strongest funds against short exposure to the weakest — dollar-neutral by
+    construction, harvesting the dispersion between leaders and laggards. <span class="muted">(In
+    trending-up regimes the realized book often tilts net long; shorting is a capability the gating
+    invokes when trends genuinely break.)</span>
+  </p>
+
+  <h3>Orthogonal neutralization</h3>
+  <p>
+    A core difficulty in systematic equity allocation is untangling overlapping risks: when an emerging-
+    markets value fund rallies, is the market rewarding <i>value</i> or simply buying <i>emerging
+    markets</i>? Driftwood addresses this by demeaning each fund's trend score within its group before
+    ranking. Neutralize within region and the common "US" (or "EM") component drops out, so the book
+    expresses <i>which style is leading inside each region</i> rather than merely that a region is
+    leading; neutralize within factor and it isolates <i>which region is leading</i> for a given style.
+    The portfolio then takes only the specific, measured exposure it intends to.
+  </p>
+
+  <h3>Constant volatility budgeting &amp; the execution hurdle</h3>
+  <p>
+    Risk control is embedded in the sizing, not bolted on. Rather than equal dollars, Driftwood
+    allocates equal <i>risk</i>: position sizes are inversely proportional to recent volatility, so a
+    wild, noisy ETF receives a smaller allocation and a steady, quiet drifter a larger one — the core
+    philosophy of rewarding drift and penalizing diffusion, enforced mechanically. And a signal is acted
+    on only when the expected edge clears the estimated cost of crossing the spread and paying fees. The
+    strategy stays patient, refusing to trade unless the current is strong enough to justify the move.
+  </p>
+
+  <h2>What the evidence shows</h2>
+  <p>
+    Tested the honest way — walk-forward, net of cost, with parameters fit <b>in-sample</b> on the early
+    history and reported <b>out-of-sample</b> on the held-out remainder, over <b id="eq-span">—</b>
+    across <b id="eq-n">—</b> region/factor ETFs — the result is <b>not</b> a higher return than buying
+    and holding. The ETF book compounded at <b id="eq-bcagr">—</b> a year buy-and-hold versus
+    <b id="eq-scagr">—</b> for the strategy; a flat-when-no-signal trend book gives up upside in a
+    secular bull.
   </p>
   <p>
-    <b>It does not beat buy-and-hold on raw return, and that is stated plainly.</b> Over the full sample
-    the ETF book compounded at <b id="eq-bcagr">—</b> a year buying and holding versus
-    <b id="eq-scagr">—</b> for the strategy: a flat-when-no-signal trend book gives up upside in a
-    secular bull market. <b>The trade is risk, not return.</b> Out-of-sample Sharpe stayed positive
-    (<b id="eq-oos">—</b>) and degraded honestly from in-sample — evidence it isn’t curve-fit. And a
-    synthetic control confirms the engine harvests trend, not noise: on identical parameters it profits
-    on a manufactured trend and makes ~nothing on a driftless random walk.
+    What it delivers instead is a structurally smaller <b>drawdown</b>: a worst peak-to-trough of
+    <b id="eq-sdd" class="pos">—</b> against buy-and-hold's <b id="eq-bdd" class="neg">—</b> — roughly a
+    <b id="eq-ddx">—</b> reduction in the deepest loss. <span class="muted">The crypto sibling is starker
+    still (<b id="cr-sdd">—</b> vs <b id="cr-bdd">—</b>), where it also wins on risk-adjusted return.</span>
+    Out-of-sample Sharpe stayed positive (<b id="eq-oos">—</b>) and degraded honestly from in-sample, and
+    a synthetic control confirms the engine harvests trend, not noise.
   </p>
 
   <div class="pull">
-    Driftwood doesn’t promise more return than buying and holding — it demonstrates, out-of-sample and
-    net of cost, that disciplined trend-following can deliver a structurally smaller drawdown. That is
-    where its value lives.
+    Driftwood doesn't promise more return than buying and holding — it demonstrates, out-of-sample and
+    net of cost, that disciplined trend-following can deliver a structurally smaller drawdown. The trade
+    is risk, not return. That is where its value lives.
   </div>
 
   <p class="muted" id="ledger-line"></p>
 
-  <h2>Honesty</h2>
-  <p class="muted">
-    The model’s <code>continuation</code> parameter is a fitted-but-not-deeply-validated default;
-    momentum is a public, partly-arbitraged anomaly; the equity windows are short relative to the claims;
-    and this is a signal system, <b>not</b> investment advice. The figures are engineering validation,
-    not expected returns. Past performance does not predict future results.
-  </p>
+  <div class="note">
+    <b>Honesty.</b> The <code>continuation</code> coefficient that converts trend into expected edge is a
+    fitted-but-not-deeply-validated default; momentum is a public, partly-arbitraged anomaly; and the
+    equity windows are short relative to the claims. This is a signal system — it does not place trades —
+    and nothing here is investment advice. The figures are engineering validation, not expected returns.
+    Past performance does not predict future results.
+  </div>
 
   <div class="foot">
     <a class="back" href="index.html">← back to Driftwood</a>
@@ -152,7 +180,7 @@
 </div>
 
 <script>
-window.__STATE__ = {"header": {"generated": "2026-06-16 22:33:42 UTC"}, "equities": {"name": "Equities & ETFs", "span": "1993\u20132026", "n_names": 18, "strat_maxdd": 0.09685643550779428, "bench_maxdd": 0.506429260544305, "strat_sharpe": 0.5897492376972492, "bench_sharpe": 0.682503320568132, "strat_cagr": 0.02462429143524214, "bench_cagr": 0.1065207251999587, "oos_sharpe": 0.38652438252922755}, "crypto": {"name": "Crypto", "span": "2014\u20132026", "n_names": 4, "strat_maxdd": 0.060507528332328434, "bench_maxdd": 0.9178753081394819, "strat_sharpe": 1.0172779122973998, "bench_sharpe": 0.7223682655248267, "strat_cagr": 0.040422566203040855, "bench_cagr": 0.2983864246546708, "oos_sharpe": 0.4652393185391763}, "ledger": {"total_return": -0.01415999999999995, "sessions": 120, "inception": "2026-02-17", "universe": 22}};
+window.__STATE__ = {"header": {"generated": "2026-06-16 23:21:58 UTC"}, "equities": {"name": "Equities & ETFs", "span": "1993\u20132026", "n_names": 18, "strat_maxdd": 0.09685643550779428, "bench_maxdd": 0.506429260544305, "strat_sharpe": 0.5897492376972492, "bench_sharpe": 0.682503320568132, "strat_cagr": 0.02462429143524214, "bench_cagr": 0.1065207251999587, "oos_sharpe": 0.38652438252922755}, "crypto": {"name": "Crypto", "span": "2014\u20132026", "n_names": 4, "strat_maxdd": 0.060507528332328434, "bench_maxdd": 0.9178753081394819, "strat_sharpe": 1.0172779122973998, "bench_sharpe": 0.7223682655248267, "strat_cagr": 0.040422566203040855, "bench_cagr": 0.2983864246546708, "oos_sharpe": 0.4652393185391763}, "ledger": {"total_return": -0.01415999999999995, "sessions": 120, "inception": "2026-02-17", "universe": 22}};
 const pct=(x,d=1)=>x==null?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
 const apct=(x,d=0)=>x==null?"—":(x*100).toFixed(d)+"%";
 const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;};
@@ -160,7 +188,6 @@ const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v
 function render(s){
   set("gen","Generated "+(s.header?s.header.generated:"")+" · figures pulled live from the tearsheet & ledger.");
   const e=s.equities, c=s.crypto, l=s.ledger;
-  // headline cards
   const cards=[];
   if(e){
     cards.push(["max drawdown", apct(e.strat_maxdd)+" vs "+apct(e.bench_maxdd), "strategy vs buy &amp; hold · ETF book", "pos"]);
@@ -169,8 +196,8 @@ function render(s){
   if(l){
     cards.push(["forward ledger", pct(l.total_return), l.sessions+" sessions · live, append-only", l.total_return>=0?"pos":"neg"]);
   }
-  document.getElementById("cards").innerHTML = cards.map(([l,v,sub,t])=>
-    `<div class="card"><div class="v ${t||''}">${v}</div><div class="l"><b>${l}</b><br>${sub}</div></div>`).join("");
+  document.getElementById("cards").innerHTML = cards.map(([lab,v,sub,t])=>
+    `<div class="card"><div class="v ${t||''}">${v}</div><div class="l"><b>${lab}</b><br>${sub}</div></div>`).join("");
 
   if(e){
     set("eq-span", e.span); set("eq-n", e.n_names);
@@ -182,8 +209,8 @@ function render(s){
   if(c){ set("cr-sdd", apct(c.strat_maxdd)); set("cr-bdd", apct(c.bench_maxdd)); }
   if(l){
     document.getElementById("ledger-line").textContent =
-      `A live, append-only forward ledger has been marking the equal-weight book daily since `+
-      `${l.inception} (${l.sessions} sessions, ${l.universe} instruments) — the one record that can’t be overfit.`;
+      `A live, append-only forward ledger has marked the equal-weight book daily since `+
+      `${l.inception} (${l.sessions} sessions, ${l.universe} instruments) — the one record that can't be overfit.`;
   }
 }
 async function load(){

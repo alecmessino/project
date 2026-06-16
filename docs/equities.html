@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Driftwood — trend-following dashboard</title>
+<style>
+  :root{
+    --bg:#ffffff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#717179;
+    --pos:#2f6f5b; --neg:#9b4439; --slate:#4a4f57; --rule:#222226;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.6 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1060px;margin:0 auto;padding:48px 28px 80px}
+  header{border-top:3px solid var(--rule);padding-top:20px;margin-bottom:26px}
+  header h1{font-size:23px;margin:0 0 6px;font-weight:650;letter-spacing:-.2px}
+  header h1 .w{color:var(--slate)}
+  .sub{color:var(--dim);font-size:13.5px;display:flex;flex-wrap:wrap;gap:6px 20px}
+  .sub b{color:var(--ink);font-weight:600}
+  section.block{margin-bottom:34px}
+  h2.sec{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);
+    margin:0 0 14px;font-weight:600}
+  .metrics{display:flex;flex-wrap:wrap;gap:30px;margin-bottom:16px}
+  .metric .v{font-size:21px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+  .metric .l{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-top:1px}
+  .pos{color:var(--pos)} .neg{color:var(--neg)} .neutral{color:var(--ink)}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13.5px}
+  th,td{padding:8px 12px;text-align:right;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  thead th{color:var(--dim);font-weight:500;font-size:11px;text-transform:uppercase;
+    letter-spacing:.6px;border-bottom:1px solid var(--rule)}
+  .tag{font-size:11px;font-weight:600;letter-spacing:.3px}
+  .tag.LONG{color:var(--pos)} .tag.SHORT{color:var(--neg)} .tag.FLAT,.tag--{color:var(--dim)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line)}
+  .card{background:#fff;padding:15px 16px}
+  .card.flagged{background:var(--soft)}
+  .card .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .card .sym{font-weight:650;font-size:15px}
+  .card .nums{display:flex;gap:14px;color:var(--dim);font-size:12px;margin:4px 0}
+  .card .nums b{color:var(--ink);font-weight:600}
+  .reasons{font-size:11.5px;color:var(--slate);margin-top:6px;line-height:1.45}
+  svg.spark{display:block;width:100%;height:42px;margin-top:8px}
+  .foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+    color:var(--dim);font-size:12.5px}
+  .foot .note{color:var(--slate)}
+  .star{color:var(--slate)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Drift<span class="w">wood</span> · trend dashboard</h1>
+    <div class="sub" id="sub"></div>
+  </header>
+
+  <section class="block">
+    <h2 class="sec">Cross-sectional book — long strongest / short weakest</h2>
+    <div class="metrics" id="xstats"></div>
+    <svg class="spark" id="xspark" preserveAspectRatio="none"></svg>
+  </section>
+
+  <section class="block">
+    <h2 class="sec">Relative-strength ranking</h2>
+    <table id="ranktable"><thead><tr>
+      <th>Instrument</th><th>Trend z</th><th>Ann vol</th><th>Leg</th><th>Weight</th>
+    </tr></thead><tbody></tbody></table>
+  </section>
+
+  <section class="block">
+    <h2 class="sec">Per-instrument signals &amp; single-name backtests</h2>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <div class="foot">
+    <span class="note">Signal system — research only.</span> Backtests are walk-forward,
+    net of modeled transaction cost; the <code>continuation</code> coefficient is an
+    unvalidated default. <span id="gen"></span>
+  </div>
+</div>
+
+<script>
+window.__STATE__ = {"header": {"source": "yahoo", "n_instruments": 10, "n_bars": 500, "n_flagged": 1, "generated": "2026-06-16 03:04:23", "model": "lookback 60 \u00b7 vol 30 \u00b7 channel 40"}, "instruments": [{"instrument": "AAPL", "asof": "2026-06-15T13:30:00+00:00", "last_close": 296.420013, "score": 1.578, "side": "LONG", "breakout": 0, "weight": 0.329, "ann_vol": 0.2278, "flagged": false, "strong": false, "reasons": [], "backtest": {"net_return": -0.0054, "gross_return": -0.0035, "sharpe": -0.05, "max_drawdown": 0.0612, "n_trades": 5, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.005705, 1.016155, 1.016188, 1.031865, 1.009143, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.989575, 0.990852, 0.986921, 1.00907, 1.009353, 1.013504, 1.002372, 1.015083, 1.029012, 1.02532, 1.031582, 1.037103, 1.052548, 1.03946, 1.026414, 1.02857, 1.004923, 1.002756, 0.9951, 0.9951, 0.9951, 0.9951, 0.9951, 0.9951, 0.9951, 0.9951, 0.9951, 0.9951, 0.9951, 0.9951, 0.9951, 0.9951, 0.999263, 1.00622, 1.014239, 1.001503]}}, {"instrument": "DIA", "asof": "2026-06-15T13:30:00+00:00", "last_close": 518.440002, "score": 1.802, "side": "LONG", "breakout": 1, "weight": 0.548, "ann_vol": 0.137, "flagged": true, "strong": false, "reasons": ["trend z=+1.80", "+1 donchian breakout", "net edge +10.1bps over 10 bars", "weight +0.55 @ 14% vol"], "backtest": {"net_return": 0.0298, "gross_return": 0.0339, "sharpe": 0.29, "max_drawdown": 0.0574, "n_trades": 7, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.001244, 1.001662, 1.000354, 1.018596, 1.007204, 0.992993, 1.028547, 1.025381, 1.036457, 1.04239, 1.036936, 1.010853, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.010564, 1.014608, 1.009601, 1.007758, 1.012734, 1.003032, 1.016233, 1.016545, 1.028984, 1.026089, 1.034291, 1.041563, 1.0435, 1.047606, 1.037011, 1.045453, 1.059051, 1.050211, 1.054671, 1.035887, 1.035887, 1.035887, 1.035887, 1.035887, 1.035887, 1.030893, 1.031982, 1.027057, 1.042054, 1.035144, 1.031209, 1.023928, 1.023647, 1.023647, 1.023647, 1.023647, 1.023647, 1.023647, 1.023647, 1.023647, 1.023647, 1.023647, 1.023647, 1.020338]}}, {"instrument": "GLD", "asof": "2026-06-15T13:30:00+00:00", "last_close": 396.549988, "score": -0.563, "side": "SHORT", "breakout": 0, "weight": -0.284, "ann_vol": 0.2641, "flagged": false, "strong": false, "reasons": [], "backtest": {"net_return": 0.2496, "gross_return": 0.2539, "sharpe": 1.55, "max_drawdown": 0.0489, "n_trades": 6, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.00519, 1.014587, 1.021718, 1.01313, 1.02565, 1.035637, 1.04193, 1.028603, 1.002074, 1.026626, 1.015962, 1.02365, 1.016677, 1.016677, 1.016677, 1.016677, 1.016677, 1.016677, 1.015755, 1.032368, 1.027552, 1.028737, 1.030076, 1.051717, 1.058649, 1.048716, 1.07435, 1.095314, 1.086829, 1.094102, 1.081888, 1.086683, 1.095386, 1.090277, 1.09599, 1.08935, 1.090043, 1.09182, 1.089338, 1.089338, 1.089338, 1.089338, 1.089338, 1.089338, 1.094333, 1.109, 1.123828, 1.141673, 1.175042, 1.197783, 1.190269, 1.182916, 1.181407, 1.187765, 1.191163, 1.19671, 1.199348, 1.213403, 1.243106, 1.23075, 1.240816, 1.273196, 1.313832, 1.277645, 1.28079, 1.285998, 1.283497, 1.286822, 1.258324, 1.249606, 1.249606, 1.249606, 1.249606, 1.249606, 1.249606, 1.249606, 1.249606, 1.249606, 1.249606]}}, {"instrument": "IWM", "asof": "2026-06-15T13:30:00+00:00", "last_close": 294.640015, "score": 1.63, "side": "LONG", "breakout": 0, "weight": 0.339, "ann_vol": 0.2215, "flagged": false, "strong": false, "reasons": [], "backtest": {"net_return": -0.0102, "gross_return": -0.008, "sharpe": -0.08, "max_drawdown": 0.0572, "n_trades": 7, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.998602, 0.987673, 1.001944, 1.0037, 0.999088, 0.977613, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.977451, 0.986908, 0.987443, 0.983253, 0.985995, 0.981362, 1.00096, 0.990987, 1.00986, 1.012391, 1.015097, 1.024484, 1.021556, 1.030533, 1.032647, 1.025827, 1.02343, 1.018101, 1.011726, 1.004625, 1.004625, 1.004625, 1.004625, 1.004625, 1.004625, 1.004625, 1.01775, 1.005201, 1.007457, 1.003957, 1.004392, 0.998297, 0.985848, 0.985848, 0.985848, 0.985848, 0.985848, 0.985848, 0.985848, 0.985848, 0.985848, 0.985848, 0.985548, 0.976562]}}, {"instrument": "MSFT", "asof": "2026-06-15T13:30:00+00:00", "last_close": 399.76001, "score": 0.191, "side": "LONG", "breakout": 0, "weight": 0.238, "ann_vol": 0.315, "flagged": false, "strong": false, "reasons": [], "backtest": {"net_return": 0.0664, "gross_return": 0.0675, "sharpe": 0.93, "max_drawdown": 0.0322, "n_trades": 2, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.000639, 1.007544, 1.012321, 1.036025, 1.03748, 1.042781, 1.052824, 1.055842, 1.079305, 1.073092, 1.060125, 1.064255, 1.051472, 1.068947, 1.063546, 1.07298, 1.080867, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382, 1.066382]}}, {"instrument": "NVDA", "asof": "2026-06-15T13:30:00+00:00", "last_close": 212.449997, "score": 0.816, "side": "LONG", "breakout": 0, "weight": 0.171, "ann_vol": 0.4395, "flagged": false, "strong": false, "reasons": [], "backtest": {"net_return": 0.0479, "gross_return": 0.0489, "sharpe": 0.53, "max_drawdown": 0.0341, "n_trades": 5, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.994603, 0.984297, 1.007622, 0.997726, 0.998095, 0.996198, 0.988926, 0.979947, 0.993341, 1.012003, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.999102, 0.997549, 1.014688, 1.021644, 1.029742, 1.042988, 1.049723, 1.054434, 1.059787, 1.048066, 1.056146, 1.031885, 1.051533, 1.053329, 1.065237, 1.068967, 1.056418, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.057921, 1.05259, 1.044659, 1.044375]}}, {"instrument": "QQQ", "asof": "2026-06-15T13:30:00+00:00", "last_close": 744.0, "score": 1.874, "side": "LONG", "breakout": 0, "weight": 0.301, "ann_vol": 0.2494, "flagged": false, "strong": false, "reasons": [], "backtest": {"net_return": 0.0983, "gross_return": 0.101, "sharpe": 0.89, "max_drawdown": 0.0334, "n_trades": 5, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.007011, 0.991489, 0.999446, 1.009261, 1.012573, 1.00831, 1.014497, 1.016713, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.002514, 1.003937, 1.002545, 1.018341, 1.028734, 1.028972, 1.038981, 1.042991, 1.030186, 1.054199, 1.036504, 1.049078, 1.04756, 1.063314, 1.0723, 1.075116, 1.090935, 1.070563, 1.078227, 1.091682, 1.079284, 1.07923, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.063759, 1.076582, 1.087805, 1.087133, 1.104412, 1.085168]}}, {"instrument": "SPY", "asof": "2026-06-15T13:30:00+00:00", "last_close": 754.830017, "score": 1.977, "side": "LONG", "breakout": 0, "weight": 0.527, "ann_vol": 0.1423, "flagged": false, "strong": false, "reasons": [], "backtest": {"net_return": 0.0656, "gross_return": 0.0692, "sharpe": 0.61, "max_drawdown": 0.0439, "n_trades": 5, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.997941, 0.991367, 0.978175, 1.010999, 1.000816, 1.010787, 1.019641, 1.018381, 0.998076, 1.009989, 1.010457, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995685, 0.995895, 0.993946, 1.008714, 1.022843, 1.022457, 1.02779, 1.037054, 1.023871, 1.045926, 1.036945, 1.050643, 1.048311, 1.063926, 1.069923, 1.074263, 1.084927, 1.066163, 1.073287, 1.081904, 1.073318, 1.074666, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.058347, 1.060585, 1.060538, 1.074976, 1.054053]}}, {"instrument": "TLT", "asof": "2026-06-15T13:30:00+00:00", "last_close": 85.720001, "score": -0.192, "side": "SHORT", "breakout": 0, "weight": -0.796, "ann_vol": 0.0943, "flagged": false, "strong": false, "reasons": [], "backtest": {"net_return": -0.0875, "gross_return": -0.085, "sharpe": -1.41, "max_drawdown": 0.0911, "n_trades": 6, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.983208, 0.984127, 0.960005, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.956048, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.921401, 0.919779, 0.913459, 0.91395, 0.915298, 0.925952, 0.931714, 0.923897, 0.91736, 0.911397, 0.921799, 0.912908, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503, 0.912503]}}, {"instrument": "XLE", "asof": "2026-06-15T13:30:00+00:00", "last_close": 55.549999, "score": -0.443, "side": "SHORT", "breakout": 0, "weight": -0.271, "ann_vol": 0.2767, "flagged": false, "strong": false, "reasons": [], "backtest": {"net_return": -0.0007, "gross_return": 0.001, "sharpe": 0.01, "max_drawdown": 0.0565, "n_trades": 6, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.00044, 0.988041, 0.968279, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.963449, 0.948298, 0.947015, 0.947015, 0.947015, 0.947015, 0.947015, 0.947015, 0.947015, 0.947015, 0.947015, 0.947015, 0.947015, 0.947015, 0.947015, 0.947015, 0.947015, 0.947015, 0.952424, 0.96242, 0.979946, 0.986646, 0.990818, 1.000383, 1.003249, 1.01875, 1.037691, 1.022283, 1.006361, 0.999058, 1.009182, 1.005866, 0.999267, 0.999267, 0.999267, 0.999267]}}], "rankings": [{"instrument": "SPY", "score": 1.977, "ann_vol": 0.1423, "weight": 0.1916, "leg": "LONG"}, {"instrument": "QQQ", "score": 1.874, "ann_vol": 0.2494, "weight": 0.1093, "leg": "LONG"}, {"instrument": "DIA", "score": 1.802, "ann_vol": 0.137, "weight": 0.1991, "leg": "LONG"}, {"instrument": "IWM", "score": 1.63, "ann_vol": 0.2215, "weight": 0.0, "leg": "\u2014"}, {"instrument": "AAPL", "score": 1.578, "ann_vol": 0.2278, "weight": 0.0, "leg": "\u2014"}, {"instrument": "NVDA", "score": 0.816, "ann_vol": 0.4395, "weight": 0.0, "leg": "\u2014"}, {"instrument": "MSFT", "score": 0.191, "ann_vol": 0.315, "weight": 0.0, "leg": "\u2014"}, {"instrument": "TLT", "score": -0.192, "ann_vol": 0.0943, "weight": -0.2945, "leg": "SHORT"}, {"instrument": "XLE", "score": -0.443, "ann_vol": 0.2767, "weight": -0.1004, "leg": "SHORT"}, {"instrument": "GLD", "score": -0.563, "ann_vol": 0.2641, "weight": -0.1051, "leg": "SHORT"}], "cross_backtest": {"net_return": -0.106, "gross_return": -0.0579, "cost_drag": 0.0481, "sharpe": -0.65, "max_drawdown": 0.1382, "turnover": 104.8, "avg_names_held": 5.3, "equity": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.99982, 0.991648, 0.998471, 0.978496, 0.975357, 0.975862, 0.97364, 0.969909, 0.962859, 0.962779, 0.950977, 0.947159, 0.959999, 0.968555, 0.956383, 0.93055, 0.935386, 0.926446, 0.916189, 0.920231, 0.914715, 0.905156, 0.914354, 0.923506, 0.927873, 0.954375, 0.920215, 0.935338, 0.912688, 0.912548, 0.880867, 0.895452, 0.90272, 0.908181, 0.901803, 0.918445, 0.916714, 0.919717, 0.917387, 0.920086, 0.914624, 0.914355, 0.906959, 0.905701, 0.883884, 0.881205, 0.885281, 0.887925, 0.895602, 0.905631, 0.895656, 0.886951, 0.89729, 0.895995, 0.91287, 0.901288, 0.899639, 0.897815, 0.900555, 0.896945, 0.89882, 0.919751, 0.927317, 0.92481, 0.921041, 0.901378, 0.898358, 0.891807, 0.899124, 0.905996, 0.892341, 0.871796, 0.865859, 0.876076, 0.874656, 0.885103, 0.888695, 0.897342, 0.889325]}};
+
+function pct(x){ return (x>=0?"+":"") + (x*100).toFixed(1) + "%"; }
+function cls(x){ return x>0 ? "pos" : x<0 ? "neg" : "neutral"; }
+
+function spark(el, data){
+  el.innerHTML = "";
+  if(!data || data.length < 2) return;
+  const w = el.clientWidth || 600, h = el.clientHeight || 42, pad = 3;
+  const lo = Math.min(...data), hi = Math.max(...data), rng = (hi-lo)||1;
+  const xs = i => pad + (w-2*pad)*i/(data.length-1);
+  const ys = v => h-pad - (h-2*pad)*(v-lo)/rng;
+  const ns = "http://www.w3.org/2000/svg";
+  const base = document.createElementNS(ns,"line");
+  base.setAttribute("x1",pad); base.setAttribute("x2",w-pad);
+  base.setAttribute("y1",ys(data[0]).toFixed(1)); base.setAttribute("y2",ys(data[0]).toFixed(1));
+  base.setAttribute("stroke","#dcdce0"); base.setAttribute("stroke-dasharray","2 3");
+  el.appendChild(base);
+  const line = document.createElementNS(ns,"polyline");
+  line.setAttribute("points", data.map((v,i)=>xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" "));
+  line.setAttribute("fill","none"); line.setAttribute("stroke","#4a4f57"); line.setAttribute("stroke-width","1.5");
+  el.appendChild(line);
+}
+
+function render(s){
+  const h = s.header;
+  document.getElementById("sub").innerHTML =
+    `<span><b>${h.n_instruments}</b> instruments</span>`+
+    `<span>source <b>${h.source}</b></span>`+
+    `<span><b>${h.n_bars}</b> bars</span>`+
+    `<span><b>${h.n_flagged}</b> flagged</span>`+
+    `<span>${h.model}</span>`;
+  document.getElementById("gen").textContent = "Generated "+h.generated+".";
+
+  const x = s.cross_backtest;
+  document.getElementById("xstats").innerHTML = [
+    ["Net return", pct(x.net_return), cls(x.net_return)],
+    ["Gross", pct(x.gross_return), cls(x.gross_return)],
+    ["Sharpe", x.sharpe.toFixed(2), cls(x.sharpe)],
+    ["Max DD", pct(-x.max_drawdown), "neg"],
+    ["Turnover", x.turnover.toFixed(1), "neutral"],
+    ["Avg names", x.avg_names_held.toFixed(1), "neutral"],
+  ].map(([l,v,c])=>`<div class="metric"><div class="v ${c}">${v}</div><div class="l">${l}</div></div>`).join("");
+  requestAnimationFrame(()=>spark(document.getElementById("xspark"), x.equity));
+
+  document.querySelector("#ranktable tbody").innerHTML = s.rankings.map(r=>`<tr>
+    <td>${r.instrument}</td>
+    <td class="${cls(r.score)}">${r.score>=0?"+":""}${r.score.toFixed(2)}</td>
+    <td>${(r.ann_vol*100).toFixed(0)}%</td>
+    <td><span class="tag ${r.leg==='—'?'--':r.leg}">${r.leg}</span></td>
+    <td>${r.weight>=0?"+":""}${r.weight.toFixed(2)}</td>
+  </tr>`).join("");
+
+  document.getElementById("cards").innerHTML = s.instruments.map((it,idx)=>{
+    const b = it.backtest;
+    const reasons = it.flagged ? `<div class="reasons">▸ ${it.reasons.join(" · ")}</div>` : "";
+    return `<div class="card${it.flagged?" flagged":""}">
+      <div class="top">
+        <span class="sym">${it.instrument}</span>
+        <span class="tag ${it.side}">${it.side}${it.strong?' <span class="star">★</span>':""}</span>
+      </div>
+      <div class="nums">
+        <span>z <b class="${cls(it.score||0)}">${it.score==null?"—":(it.score>=0?"+":"")+it.score.toFixed(2)}</b></span>
+        <span>w <b>${it.weight>=0?"+":""}${it.weight.toFixed(2)}</b></span>
+        <span>last <b>${it.last_close==null?"—":it.last_close}</b></span>
+      </div>
+      <div class="nums">
+        <span>net <b class="${cls(b.net_return)}">${pct(b.net_return)}</b></span>
+        <span>sharpe <b class="${cls(b.sharpe)}">${b.sharpe.toFixed(2)}</b></span>
+        <span>DD <b>${pct(-b.max_drawdown)}</b></span>
+        <span>trades <b>${b.n_trades}</b></span>
+      </div>
+      <svg class="spark" id="sp${idx}" preserveAspectRatio="none"></svg>
+      ${reasons}
+    </div>`;
+  }).join("");
+  requestAnimationFrame(()=>s.instruments.forEach((it,idx)=>{
+    const el = document.getElementById("sp"+idx); if(el) spark(el, it.backtest.equity);
+  }));
+}
+
+async function load(){
+  let state = window.__STATE__;
+  if(!state){ try{ state = await (await fetch("/api/state")).json(); }catch(e){} }
+  if(state) render(state);
+}
+load();
+if(!window.__STATE__) setInterval(load, 15000);
+</script>
+</body>
+</html>

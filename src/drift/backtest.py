@@ -114,6 +114,16 @@ def strategy_steps(instrument: str, bars: Sequence[Bar], settings: Settings) -> 
     return steps
 
 
+def current_weight(instrument: str, bars: Sequence[Bar], prev_weight: float,
+                   settings: Settings) -> float:
+    """The position the live strategy would hold *from the latest bar forward*,
+    given the weight currently held (so hysteresis carries across days). This is
+    the decision the forward ledger records each session."""
+    window = settings.signal.min_history + settings.signal.lookback
+    ev = evaluate(instrument, bars[-window:], settings)
+    return _next_weight(prev_weight, ev, settings.triggers.exit_score_threshold, settings)
+
+
 def backtest(instrument: str, bars: Sequence[Bar], settings: Settings) -> BacktestResult:
     """Run the gated momentum strategy over one instrument's bar series."""
     bpy = settings.engine.bars_per_year

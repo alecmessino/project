@@ -229,6 +229,56 @@ def studies(
 
 
 @app.command()
+def ledger(
+    equities: str = typer.Option("SPY,QQQ,IWM,GLD,TLT,XLE", "--equities"),
+    crypto: str = typer.Option("BTC-USD,ETH-USD,LTC-USD", "--crypto"),
+    state: str = typer.Option("docs/ledger.json", "--state", help="append-only ledger JSON"),
+    out: str = typer.Option("docs/ledger.html", "--out", help="ledger exhibit HTML"),
+    seed_sessions: int = typer.Option(120, "--seed-sessions", help="walk-forward seed length on first run"),
+    config: Optional[str] = typer.Option(None, "--config"),
+):
+    """Advance the forward paper-trade ledger by one session and render it.
+
+    First run seeds from a walk-forward replay of recent history (no lookahead);
+    later runs append only the newest session. Keyless via Yahoo.
+    """
+    import json as _json
+    from .ledger import build_ledger_state, seed_ledger, update_ledger
+    from .exhibit import export_ledger
+    settings = _load_settings(config)
+    syms = [s.strip() for s in (equities + "," + crypto).split(",") if s.strip()]
+    console.print(f"[dim]pulling daily history for {len(syms)} instruments …[/]")
+    from .feed.yahoo import YahooFeed
+    feed = YahooFeed(range="2y", interval="1d")
+    series = {}
+    for s in syms:
+        try:
+            bars = feed.fetch(s)
+        except Exception:
+            continue
+        if len(bars) >= settings.signal.min_history:
+            series[s] = bars
+
+    path = Path(state)
+    if path.exists() and _json.loads(path.read_text() or "{}").get("entries"):
+        led = _json.loads(path.read_text())
+        update_ledger(led, series, settings)
+        console.print("appended one session")
+    else:
+        led = seed_ledger(series, settings, sessions=seed_sessions)
+        console.print(f"seeded {len(led['entries'])} sessions (walk-forward)")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(_json.dumps(led, indent=0))
+    st = build_ledger_state(led)
+    export_ledger(st, out)
+    h = st["header"]
+    console.print(f"[bold]ledger[/] {h['days']} sessions ({h['live_days']} live), "
+                  f"total return {h['total_return']*100:+.2f}%, "
+                  f"book {h['n_long']}L/{h['n_short']}S")
+    console.print(f"[green]wrote[/] {state} + {out}")
+
+
+@app.command()
 def tearsheet(
     equities: str = typer.Option("SPY,QQQ,IWM,GLD,TLT,XLE", "--equities"),
     crypto: str = typer.Option("BTC-USD,ETH-USD,LTC-USD", "--crypto"),

@@ -45,10 +45,26 @@ def _leg_weights(
     return {k: sign * budget * raw[k] / total for k in keys}
 
 
+def _demean_within_groups(scores: dict[str, float], groups: dict[str, str]) -> dict[str, float]:
+    """Subtract each group's mean trend score, so the ranking reflects within-group
+    relative strength only — i.e. neutral to the group-level (region or factor) tilt."""
+    members: dict[str, list[str]] = {}
+    for k, s in scores.items():
+        if s is not None:
+            members.setdefault(groups.get(k, "_other"), []).append(k)
+    out = dict(scores)
+    for keys in members.values():
+        mean = sum(scores[k] for k in keys) / len(keys)
+        for k in keys:
+            out[k] = scores[k] - mean
+    return out
+
+
 def rank_weights(
     scores: dict[str, float],
     vols: dict[str, float],
     cs: CrossSectionSettings,
+    groups: Optional[dict[str, str]] = None,
 ) -> dict[str, float]:
     """Portfolio weights from a cross-sectional ranking of trend scores.
 
@@ -56,7 +72,12 @@ def rank_weights(
     `long_short`), each leg distributed by `weighting` and capped at `max_weight`.
     Returns a weight for every key in `scores` (0.0 for un-held names). Below
     `min_universe` ranked names, everything is flat.
+
+    When `cs.neutralize` is set and `groups` is supplied, trend scores are demeaned
+    within each group first, so the long/short book is neutral to that grouping.
     """
+    if cs.neutralize and cs.neutralize != "none" and groups:
+        scores = _demean_within_groups(scores, groups)
     out = {k: 0.0 for k in scores}
     ranked = sorted(
         ((k, s) for k, s in scores.items() if s is not None),
@@ -89,6 +110,14 @@ def rank_weights(
     return out
 
 
+def _groups_for(cs: CrossSectionSettings) -> Optional[dict[str, str]]:
+    """Ticker->group map for the configured neutralization dimension, or None."""
+    if cs.neutralize in ("region", "factor"):
+        from .universes import group_map
+        return group_map(cs.neutralize)
+    return None
+
+
 @dataclass
 class RankRow:
     instrument: str
@@ -111,7 +140,7 @@ def rank_snapshot(series: dict[str, list[Bar]], settings: Settings) -> list[Rank
         vols[inst] = sizing.annualize_vol(
             sig.realized_vol(closes, s.vol_window), settings.engine.bars_per_year
         )
-    weights = rank_weights(scores, vols, settings.cross_section)
+    weights = rank_weights(scores, vols, settings.cross_section, _groups_for(settings.cross_section))
     rows = [
         RankRow(
             instrument=inst,
@@ -161,6 +190,7 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
     """
     s = settings.signal
     cs = settings.cross_section
+    groups = _groups_for(cs)
     cost = settings.sizing.cost_bps_per_side / 1e4
     bpy = settings.engine.bars_per_year
     instruments = list(series)
@@ -186,7 +216,7 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
             scores[inst] = sig.momentum_score(closes, s.lookback, s.vol_window)
             vols[inst] = sizing.annualize_vol(sig.realized_vol(closes, s.vol_window), bpy)
 
-        weights = rank_weights(scores, vols, cs) if scores else {inst: 0.0 for inst in instruments}
+        weights = rank_weights(scores, vols, cs, groups) if scores else {inst: 0.0 for inst in instruments}
 
         gross_pnl = net_pnl = 0.0
         held = 0

@@ -135,10 +135,12 @@ def rank(
     source: str = typer.Option("coinbase", "--source", help="coinbase | polygon | synthetic"),
     instrument: str = typer.Option("BTC-USD,ETH-USD,LTC-USD", "--instrument", help="comma-separated universe"),
     series: Optional[str] = typer.Option(None, "--series", help="multi-instrument CSV (overrides --source)"),
+    neutralize: str = typer.Option("none", "--neutralize", help="none | region | factor"),
     config: Optional[str] = typer.Option(None, "--config"),
 ):
     """Show the current cross-sectional ranking (relative-strength momentum)."""
     settings = _load_settings(config)
+    settings.cross_section.neutralize = neutralize
     instruments = [s.strip() for s in instrument.split(",") if s.strip()]
     rows = rank_snapshot(_universe(source, instruments, series), settings)
     if not rows:
@@ -159,11 +161,13 @@ def xbacktest(
     source: str = typer.Option("synthetic", "--source", help="coinbase | polygon | synthetic"),
     instrument: str = typer.Option("BTC-USD,ETH-USD,LTC-USD,BCH-USD", "--instrument"),
     series: Optional[str] = typer.Option(None, "--series", help="multi-instrument CSV"),
+    neutralize: str = typer.Option("none", "--neutralize", help="none | region | factor"),
     config: Optional[str] = typer.Option(None, "--config"),
     out: Optional[str] = typer.Option(None, "--out", help="Write the result JSON here"),
 ):
     """Cross-sectional (long-strong / short-weak) backtest over a universe."""
     settings = _load_settings(config)
+    settings.cross_section.neutralize = neutralize
     instruments = [s.strip() for s in instrument.split(",") if s.strip()]
     res = cross_backtest(_universe(source, instruments, series), settings)
     t = Table(title=f"Driftwood cross-sectional backtest — {len(res.instruments)} names", show_header=False)

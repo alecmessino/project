@@ -71,6 +71,11 @@ class CrossSectionSettings(BaseModel):
     weighting: str = "inv_vol"      # "equal" | "inv_vol" | "score"
     min_universe: int = 3           # need at least this many ranked names to trade
     max_weight: float = 0.50        # per-name |weight| cap
+    # Neutralize the ranking within a grouping before ranking: "none", "region",
+    # or "factor". Region-neutral isolates which STYLE is trending (controlling for
+    # region); factor-neutral isolates which REGION is trending. Demeaning trend
+    # scores within each group removes the group-level tilt from the long/short book.
+    neutralize: str = "none"
 
 
 class Settings(BaseModel):

@@ -68,10 +68,11 @@ def test_render_report_embeds_state():
     assert html.lstrip().startswith("<!DOCTYPE html>")
 
 
-def test_equity_universe_skips_when_no_key(monkeypatch):
-    # With no POLYGON_API_KEY the per-symbol fetch raises and is skipped (no network).
+def test_equity_universe_polygon_skips_when_no_key(monkeypatch):
+    # Polygon source with no POLYGON_API_KEY: each fetch raises and is skipped
+    # (no network — the key check happens before any HTTP call).
     monkeypatch.delenv("POLYGON_API_KEY", raising=False)
-    assert cs.equity_universe(["SPY", "QQQ"]) == {}
+    assert cs.equity_universe(["SPY", "QQQ"], source="polygon") == {}
 
 
 def test_build_report_labels_are_asset_agnostic():

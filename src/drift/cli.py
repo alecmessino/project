@@ -117,9 +117,12 @@ def _universe(source: str, instruments: list[str], series_csv: Optional[str],
     """
     if series_csv:
         return ReplayFeed.from_csv(series_csv).series
-    if source in ("polygon", "equity", "equities", "stocks"):
+    if source in ("yahoo", "yf", "equity", "equities", "stocks"):
         from .case_studies import equity_universe
-        return equity_universe(instruments, pause=pause)
+        return equity_universe(instruments, source="yahoo", pause=0.3)
+    if source == "polygon":
+        from .case_studies import equity_universe
+        return equity_universe(instruments, source="polygon", pause=pause)
     if source in ("coinbase", "crypto"):
         from .case_studies import crypto_universe
         return crypto_universe(instruments)

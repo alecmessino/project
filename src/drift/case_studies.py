@@ -43,17 +43,22 @@ def crypto_universe(symbols: Sequence[str], granularity: int = 86_400) -> dict[s
     return series
 
 
-def equity_universe(symbols: Sequence[str], pause: float = 0.0,
-                    timespan: str = "day") -> dict[str, list[Bar]]:
-    """Pull an equities universe from Polygon, skipping any symbol that fails.
+def equity_universe(symbols: Sequence[str], source: str = "yahoo",
+                    pause: float = 0.0) -> dict[str, list[Bar]]:
+    """Pull an equities universe, skipping any symbol that fails.
 
-    `pause` seconds between fetches keeps the free tier (5 requests/min) happy;
-    set 0 on a paid plan. With no POLYGON_API_KEY the per-symbol fetch raises and
-    is skipped, so the report degrades gracefully to the synthetic control only.
+    `source="yahoo"` (default) is keyless and comprehensive; `source="polygon"`
+    uses Polygon (needs POLYGON_API_KEY) — with no key its fetches raise and are
+    skipped, so the report degrades gracefully to the synthetic control only.
+    `pause` seconds between fetches is light insurance against burst rate-limiting.
     """
     import time
-    from .feed.polygon import PolygonFeed
-    feed = PolygonFeed(timespan=timespan)
+    if source == "polygon":
+        from .feed.polygon import PolygonFeed
+        feed = PolygonFeed()
+    else:
+        from .feed.yahoo import YahooFeed
+        feed = YahooFeed()
     series: dict[str, list[Bar]] = {}
     for i, sym in enumerate(symbols):
         if pause and i:

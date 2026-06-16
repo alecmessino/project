@@ -68,7 +68,11 @@ def get_feed(name: str, **kwargs) -> PriceFeed:
         from .coinbase import CoinbaseFeed
 
         return CoinbaseFeed(**kwargs)
-    if name in ("polygon", "equity", "equities", "stocks"):
+    if name in ("yahoo", "yf", "equity", "equities", "stocks"):
+        from .yahoo import YahooFeed
+
+        return YahooFeed(**kwargs)
+    if name in ("polygon",):
         from .polygon import PolygonFeed
 
         return PolygonFeed(**kwargs)

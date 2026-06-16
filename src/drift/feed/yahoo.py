@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 from typing import Iterator, Optional, Sequence
 
 from ..models import Bar
+from ._retry import with_retries
 from .base import Snapshot
 from .replay import ReplayFeed
 
@@ -45,6 +46,8 @@ class YahooFeed:
         period1: Optional[int] = None,
         period2: Optional[int] = None,
         session: Optional[object] = None,
+        retries: int = 4,
+        backoff: float = 1.0,
     ):
         self.instruments = list(instruments)
         self.range = range
@@ -54,6 +57,8 @@ class YahooFeed:
         self.period1 = period1
         self.period2 = period2
         self._session = session
+        self.retries = retries
+        self.backoff = backoff
 
     def _params(self) -> dict:
         if self.period1 is not None or self.period2 is not None:
@@ -104,19 +109,16 @@ class YahooFeed:
         return self._session
 
     def fetch(self, instrument: str) -> list[Bar]:
-        last_exc: Optional[Exception] = None
-        for host in self.HOSTS:                       # fail over query1 -> query2
-            try:
-                resp = self._get().get(
-                    f"{host}/v8/finance/chart/{instrument}",
-                    params=self._params(),
-                    timeout=20,
-                )
-                resp.raise_for_status()
-                return self.parse_chart(resp.json())
-            except Exception as exc:
-                last_exc = exc
-        raise last_exc if last_exc else RuntimeError("yahoo fetch failed")
+        def _attempt(i: int) -> list[Bar]:
+            host = self.HOSTS[i % len(self.HOSTS)]   # rotate query1 <-> query2
+            resp = self._get().get(
+                f"{host}/v8/finance/chart/{instrument}",
+                params=self._params(),
+                timeout=20,
+            )
+            resp.raise_for_status()
+            return self.parse_chart(resp.json())
+        return with_retries(_attempt, attempts=self.retries, backoff=self.backoff)
 
     def snapshots(self) -> Iterator[Snapshot]:
         series = {inst: self.fetch(inst) for inst in self.instruments}

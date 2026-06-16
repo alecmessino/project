@@ -51,9 +51,24 @@ drift xbacktest --source coinbase --instrument BTC-USD,ETH-USD,LTC-USD,BCH-USD
 # Dashboard / exhibits:
 drift serve  --source coinbase --instrument BTC-USD,ETH-USD,LTC-USD,BCH-USD   # live at :8000
 drift export --source coinbase --instrument BTC-USD,ETH-USD --out docs/drift.html  # static
+
+# Credibility & track record:
+drift studies   --source yahoo  --instrument SPY,QQQ,AAPL,...   # 5-study backtest report
+drift tearsheet --config config/drift.yaml                      # long-history, OOS, vs buy&hold
+drift ledger    --config config/drift.yaml                      # advance the forward paper ledger
+drift hub       --docs docs --out docs/index.html               # markets-only landing page
 ```
 
 `prices.csv` columns: `asof,close[,high,low,volume[,instrument]]`.
+
+## Site (GitHub Pages, markets-only)
+
+`docs/index.html` is the Driftwood hub (the public front door); it links the
+dashboards, case studies, the long-history **tearsheet** (strategy vs buy-and-hold
+with an in-sample/out-of-sample split), and the append-only forward **ledger**.
+The daily `drift-pages.yml` Action regenerates them all keyless (Yahoo + Coinbase)
+and the Pages workflow deploys `docs/`. The mrbet betting dashboard is kept
+separate at `docs/mrbet.html` and is not linked from the markets hub.
 
 ## Two models, one harness
 

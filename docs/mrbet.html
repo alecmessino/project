@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mrbet — live signals</title>
+<style>
+  :root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--txt:#e6edf3;--dim:#8b949e;
+        --green:#2ea043;--red:#da3633;--amber:#d29922;--accent:#388bfd;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+       font:14px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  header{padding:16px 20px;border-bottom:1px solid var(--line);
+         display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+  .brand{font-weight:700;font-size:18px;letter-spacing:.5px}
+  .brand span{color:var(--accent)}
+  .score{font-size:22px;font-weight:700}
+  .meta{color:var(--dim);font-size:13px}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+  .live .dot{background:var(--green);animation:pulse 1.4s infinite}
+  .stopped .dot{background:var(--dim)}
+  .waiting .dot{background:var(--amber)}
+  .error .dot{background:var(--red)}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.82)}}
+  /* always-on pulsing dot on the Live tab — shows the system is active */
+  .livedot{display:inline-block;width:8px;height:8px;border-radius:50%;
+           background:var(--green);margin-right:7px;vertical-align:middle;
+           box-shadow:0 0 0 0 rgba(46,160,67,.55);animation:pulse 1.6s ease-in-out infinite}
+  main{display:grid;grid-template-columns:1fr 360px;gap:16px;padding:16px 20px}
+  @media(max-width:900px){main{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .card h2{margin:0;padding:12px 16px;font-size:13px;text-transform:uppercase;
+           letter-spacing:.6px;color:var(--dim);border-bottom:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{font-variant-numeric:tabular-nums}
+  th{color:var(--dim);font-weight:600;font-size:12px;text-transform:uppercase;
+     position:sticky;top:0;z-index:3;background:var(--panel)}
+  th:first-child,td:first-child{text-align:left}
+  tr.flag td{background:rgba(46,160,67,.10)}
+  tr.flag.strong td{background:rgba(46,160,67,.22)}
+  /* VALUE HIGHLIGHT: live line breached the alert threshold (>=6 pts off pregame).
+     Orange-500 glassmorphic fill + external neon glow so it's unmissable on mobile. */
+  tr.row-alert td{background:rgba(249,115,22,.20)!important;color:#fff}
+  tr.row-alert:hover td{background:rgba(249,115,22,.30)!important}
+  tr.row-alert td:first-child{box-shadow:inset 4px 0 0 #f97316}
+  /* pace arrows on the board */
+  .pace-slow{color:var(--red);font-weight:800}
+  .pace-fast{color:var(--green);font-weight:800}
+  .pace-even{color:var(--dim)}
+
+  /* LIVE game card pulses red so an in-play game is obvious at a glance */
+  tr.row-live td:first-child{box-shadow:inset 4px 0 0 #dc2626}
+  tr.row-live td{background:rgba(220,38,38,.06)}
+  @keyframes livecardpulse{
+    0%,100%{box-shadow:0 0 8px rgba(220,38,38,.30)}
+    50%{box-shadow:0 0 20px rgba(220,38,38,.70)}
+  }
+
+  /* ---- Model projections strip (halves not on the book's feed) --------- */
+  .proj{margin:0 0 10px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;
+        background:rgba(56,139,253,.08);color:var(--dim);font-size:13px;line-height:1.7}
+  .proj b{color:var(--txt)}
+  .proj input{width:58px;background:#0d1117;color:#e6edf3;border:1px solid var(--line);
+        border-radius:5px;padding:2px 6px;font-size:12px;text-align:right}
+  /* edge trend arrows + volatility pills */
+  .trend{font-weight:800;font-size:12px}
+  .trend.up{color:#2ea043} .trend.dn{color:#da3633} .trend.flat{color:#8b949e}
+  .vol{display:inline-block;border-radius:6px;padding:1px 7px;font-size:11px;font-weight:700}
+  .vol.pos{background:rgba(46,160,67,.18);color:#3fb950}
+  .vol.mid{background:rgba(210,153,34,.18);color:#d29922}
+  .vol.neg{background:rgba(218,54,51,.20);color:#f85149}
+  .vol.muted{color:#8b949e}
+  /* execution-layer lock pills (mirror the backend sniper rules) */
+  .lock{display:inline-block;border-radius:6px;padding:1px 7px;font-size:11px;
+        font-weight:700;white-space:nowrap}
+  .lock.amber{background:rgba(210,153,34,.18);color:#d29922;border:1px solid rgba(210,153,34,.4)}
+  .lock.red{background:rgba(218,54,51,.20);color:#f85149;border:1px solid rgba(218,54,51,.45)}
+  .lock.ok{background:rgba(46,160,67,.14);color:#3fb950}
+  tr.capped td{opacity:.55}
+  .pin{cursor:pointer;background:none;border:none;font-size:15px;padding:0 4px;opacity:.5}
+  .pin.on{opacity:1}
+  tr.pinned{background:rgba(56,139,253,.10)}
+  /* ---- Pulsing red LIVE pill ------------------------------------------- */
+  .badge-live{display:inline-block;border-radius:9999px;padding:4px 12px;
+              background:#dc2626;color:#fff;font-weight:800;font-size:11px;
+              text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;
+              box-shadow:0 0 0 0 rgba(220,38,38,.7);animation:livepulse 1.4s infinite}
+  @keyframes livepulse{
+    0%{box-shadow:0 0 0 0 rgba(220,38,38,.7)}
+    70%{box-shadow:0 0 0 9px rgba(220,38,38,0)}
+    100%{box-shadow:0 0 0 0 rgba(220,38,38,0)}
+  }
+
+  /* ---- High-contrast KPI cards (neon border, big figures) -------------- */
+  .kpi .box{background:linear-gradient(180deg,#1b2230,#11151b);
+            border:2px solid rgba(56,139,253,.45);border-radius:14px;
+            padding:14px 18px;min-width:140px;
+            box-shadow:inset 0 0 0 1px rgba(56,139,253,.08),0 6px 16px rgba(0,0,0,.38)}
+  .kpi .box .v{font-size:30px;font-weight:900;letter-spacing:-.6px;color:#fff;line-height:1.05}
+  .kpi .box .l{color:#9fb3c8;font-size:11px;text-transform:uppercase;letter-spacing:.6px}
+  .over{color:var(--green)} .under{color:var(--red)}
+  .pos{color:var(--green)} .neg{color:var(--red)} .muted{color:var(--dim)}
+  .badge{background:var(--green);color:#03130a;padding:2px 8px;border-radius:6px;font-weight:700;font-size:11px}
+  .badge.strong{background:var(--amber);color:#1a1300}
+  .sig{padding:12px 16px;border-bottom:1px solid var(--line)}
+  .sig .t{font-weight:700;margin-bottom:4px}
+  .sig .b{color:var(--dim);font-size:12px;white-space:pre-line}
+  .sig .ts{color:var(--dim);font-size:11px;float:right}
+  .empty{padding:22px 16px;color:#888;text-align:center;font-style:italic;
+         border:1px dashed var(--line);border-radius:8px}
+  /* subtle row hover highlight across all tables */
+  tbody tr:hover td{background:#1c2128}
+  tr.flag:hover td{background:rgba(46,160,67,.18)}
+  footer{padding:10px 20px;color:var(--dim);font-size:12px;border-top:1px solid var(--line);
+         display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  #refresh-info{margin-left:auto}
+  .err-banner{background:#2d1a1a;border:1px solid var(--red);color:#ff7b72;
+              padding:10px 20px;font-size:13px;display:none}
+  /* tabs */
+  .tabs{display:flex;gap:4px;padding:8px 20px 0;border-bottom:1px solid var(--line)}
+  .tab{padding:8px 16px;cursor:pointer;color:var(--dim);border:1px solid transparent;
+       border-bottom:none;border-radius:8px 8px 0 0;font-weight:600;font-size:13px}
+  .tab.active{color:var(--txt);background:var(--panel);border-color:var(--line)}
+  .view{display:none}
+  .view.active{display:block}
+  /* backtest blocks */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px 20px}
+  @media(max-width:900px){.grid2{grid-template-columns:1fr}}
+  .full{padding:16px 20px}
+  .lead{font-size:15px;font-weight:700;color:var(--txt);margin:0 0 4px}
+  .note{color:var(--dim);font-size:12px;margin:0 0 10px;line-height:1.45}
+  .warn{background:#2a2410;border:1px solid var(--amber);color:#e7c66b;
+        padding:8px 12px;border-radius:8px;font-size:12px;margin:0 16px 10px}
+  .bar{position:relative;background:#0d1117;border-radius:4px;height:16px;min-width:60px}
+  .bar > span{position:absolute;left:0;top:0;bottom:0;background:rgba(56,139,253,.65);border-radius:4px}
+  .kpi{display:flex;gap:20px;flex-wrap:wrap;padding:4px 20px 12px}
+  .kpi .box{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+            padding:12px 16px;min-width:130px}
+  .kpi .v{font-size:22px;font-weight:800}
+  .kpi .l{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  .chip{display:inline-block;background:var(--green);color:#03130a;font-weight:700;
+        padding:1px 7px;border-radius:6px;font-size:11px}
+  /* distance-to-trigger chart card */
+  .chart-card{grid-column:1/-1;background:var(--panel);border:1px solid var(--line);
+              border-radius:10px;padding:14px 16px 12px}
+  .chart-card .ct{font-size:13px;font-weight:700;color:var(--txt);margin:0 0 2px}
+  .chart-card .cs{font-size:11px;color:var(--dim);margin:0 0 10px;line-height:1.5}
+  .chart-wrap{position:relative;height:240px}
+  /* threshold criterion badge — muted dark-grey fill, blue border + blue text */
+  .crit{display:inline-block;background:rgba(110,118,129,.10);
+        border:1px solid rgba(56,139,253,.45);color:var(--accent);
+        padding:1px 6px;border-radius:4px;margin:1px 2px;white-space:nowrap;
+        font:700 11px/1.7 ui-monospace,'SF Mono',SFMono-Regular,'Roboto Mono',Consolas,Menlo,monospace;
+        letter-spacing:.2px}
+  /* profile label in sweep table (grouped, prints once per archetype) */
+  .profile{color:#adbac7;font-size:12px;font-weight:600;white-space:nowrap;vertical-align:top;
+           border-right:1px solid var(--line)}
+  /* scrollable card shell for wide tables */
+  .card-scroll{overflow-x:auto}
+  /* monospace + tabular numerics for odds / lines / EV so -115 aligns under +100 */
+  .num{font-family:ui-monospace,'SF Mono',SFMono-Regular,'Roboto Mono',Menlo,Consolas,monospace;
+       font-variant-numeric:tabular-nums;text-align:right}
+  /* threshold-pill cell stays left-aligned even on rowspan continuation rows */
+  .crit-cell{text-align:left;white-space:normal}
+  /* bar-behind-number cell: blue fill grows behind a right-aligned value */
+  .barcell{position:relative;background:#0d1117;border-radius:4px;height:18px;
+           min-width:96px;overflow:hidden}
+  .barcell .fill{position:absolute;left:0;top:0;bottom:0;
+                 background:rgba(56,139,253,.65);border-radius:4px}
+  .barcell .barnum{position:relative;display:block;line-height:18px;padding-right:8px}
+  /* quick-start explainer under the header — distinct, lighter card */
+  .quickstart{margin:16px 20px 0;padding:16px 20px;background:#1c2128;
+              border:1px solid var(--line);border-left:3px solid var(--accent);
+              border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .quickstart h3{margin:0 0 6px;font-size:14px}
+  .quickstart p{margin:0 0 8px;color:var(--dim);font-size:13px;line-height:1.5}
+  .quickstart ul{margin:0;padding-left:18px;color:var(--dim);font-size:13px;line-height:1.7}
+  .quickstart li b{color:var(--txt)}
+  /* accuracy pill in the worked-examples table */
+  .acc{display:inline-block;padding:2px 9px;border-radius:10px;font-weight:700;
+       font-size:12px;font-variant-numeric:tabular-nums;color:#fff}
+  .acc.good{background:var(--green)}
+  .acc.mid{background:#bf8700}
+  .acc.bad{background:var(--red)}
+  /* network sync feedback (immediate visual feedback for each refresh) */
+  #net{font-size:12px;transition:color .25s}
+  #net.loading{color:var(--amber)} #net.ok{color:var(--green)} #net.fail{color:var(--red)}
+  #net .spin{display:inline-block;width:9px;height:9px;margin-right:5px;border-radius:50%;
+             border:2px solid rgba(210,153,34,.35);border-top-color:var(--amber);
+             vertical-align:-1px;animation:netspin .7s linear infinite}
+  @keyframes netspin{to{transform:rotate(360deg)}}
+
+  /* ===================================================================== */
+  /*  MOBILE-FIRST (<=768px): wide tables -> vertically stacked game cards  */
+  /*  Each .rcards <tr> becomes a card: matchup header on top, then the     */
+  /*  market data wraps as a horizontal row of label/value chips. No        */
+  /*  horizontal scrolling. JS data bindings are untouched (data-label only).*/
+  /* ===================================================================== */
+  @media (max-width:768px){
+    main{padding:12px}
+    .card-scroll{overflow:visible}
+    .rcards .card-scroll, .rcards{overflow:visible}
+
+    .rcards table, .rcards tbody{display:block;width:100%;min-width:0!important}
+    .rcards thead{display:none}                 /* hide the desktop header row */
+    .rcards colgroup{display:none}
+
+    .rcards tr{
+      display:flex;flex-wrap:wrap;gap:10px 16px;align-items:flex-start;
+      background:var(--panel);border:1px solid var(--line);border-radius:14px;
+      padding:14px 16px;margin:0 0 12px;
+      box-shadow:0 2px 8px rgba(0,0,0,.35);
+    }
+    .rcards td{
+      display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+      border:0;padding:0;text-align:left;white-space:normal;
+      font-variant-numeric:tabular-nums;
+    }
+    .rcards td::before{
+      content:attr(data-label);color:var(--dim);font-size:10px;font-weight:700;
+      text-transform:uppercase;letter-spacing:.5px;
+    }
+    /* first cell = full-width card header (matchup / market name) */
+    .rcards td:first-child{
+      flex-basis:100%;font-size:16px;font-weight:800;
+      padding-bottom:10px;margin-bottom:4px;border-bottom:1px solid var(--line);
+    }
+    .rcards td:first-child::before{display:none}
+    /* an empty datum collapses instead of leaving a lonely label */
+    .rcards td:empty{display:none}
+
+    /* Glassmorphic neon-orange ALERT card: blurred orange fill + external glow */
+    .rcards tr.row-alert{
+      background:rgba(249,115,22,.16);
+      -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+      border:1px solid rgba(249,115,22,.65);
+      box-shadow:0 0 15px rgba(249,115,22,.5),inset 0 0 0 1px rgba(249,115,22,.25);
+      animation:alertglow 1.8s ease-in-out infinite;
+    }
+    .rcards tr.row-alert td, .rcards tr.row-alert td:first-child{
+      background:transparent!important;color:#fff;border-bottom-color:rgba(255,255,255,.25)}
+    @keyframes alertglow{
+      0%,100%{box-shadow:0 0 12px rgba(249,115,22,.40),inset 0 0 0 1px rgba(249,115,22,.25)}
+      50%{box-shadow:0 0 22px rgba(249,115,22,.75),inset 0 0 0 1px rgba(249,115,22,.4)}
+    }
+
+    /* LIVE game card: red border + pulsing red glow on mobile */
+    .rcards tr.row-live{border:1px solid rgba(220,38,38,.6);
+      animation:livecardpulse 1.8s ease-in-out infinite}
+
+    /* KPI cards go full-bleed 2-up on phones */
+    .kpi{gap:12px;padding:8px 12px 14px}
+    .kpi .box{flex:1 1 calc(50% - 12px);min-width:0}
+    .kpi .box .v{font-size:26px}
+
+    header{gap:10px 16px}
+    .score{font-size:19px}
+    .quickstart{margin:12px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">mr<span>bet</span></div>
+  <div class="score" id="score">—</div>
+  <div class="meta" id="clock">—</div>
+  <div class="meta" id="status"><span class="dot"></span><span id="statusText">loading</span></div>
+  <div class="meta" id="credits"></div>
+  <div class="meta" id="net" aria-live="polite"></div>
+</header>
+<div class="err-banner" id="err-banner"></div>
+<section class="quickstart">
+  <h3>What is this?</h3>
+  <p>This dashboard tracks a real-time <b>mean-reversion</b> model. It calculates the
+     “fair” score of an ongoing NBA game and alerts us when the bookmaker's live betting
+     line is significantly off-base.</p>
+  <ul>
+    <li><b>Forward Test</b> — Real bets the system has actually identified during live games.</li>
+    <li><b>Batch Backtest</b> — How the model would have performed if it had been running on past playoff games.</li>
+    <li><b>Thresholds</b> — Different “sensitivity” settings for the engine, balancing the number of bets taken vs. accuracy.</li>
+  </ul>
+</section>
+<nav class="tabs">
+  <div class="tab active" data-view="live" id="tab-live"><span class="livedot"></span>Live</div>
+  <div class="tab" data-view="backtest" id="tab-backtest">Backtest &amp; calibration</div>
+</nav>
+
+<div class="view active" id="view-live">
+<main>
+  <section class="card rcards" style="grid-column:1/-1">
+    <h2>Tonight's board — live pre-game lines <span class="chip" id="board-league">Bovada</span></h2>
+    <table>
+      <thead><tr><th>Matchup</th><th>Status</th><th>Tip</th><th>Total</th><th>Pace</th><th>Spread</th>
+        <th>ML&nbsp;away</th><th>ML&nbsp;home</th></tr></thead>
+      <tbody id="board-rows"><tr><td colspan="8" class="empty">loading…</td></tr></tbody>
+    </table>
+  </section>
+  <section class="card rcards" style="grid-column:1/-1">
+    <h2>Upcoming games</h2>
+    <table>
+      <thead><tr><th>📌</th><th>Matchup</th><th>Date</th><th>Tip (ET)</th><th>Total</th><th>Spread</th><th>Round</th><th>Config</th></tr></thead>
+      <tbody id="upcoming"><tr><td colspan="8" class="empty">loading…</td></tr></tbody>
+    </table>
+  </section>
+  <section class="chart-card">
+    <p class="ct" style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <span>In-Play Market Stress: Distance-to-Trigger (FULL GAME)</span>
+      <select id="chartSel" style="background:#0d1117;color:#e6edf3;border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600">
+        <option value="live">Live Game (Default)</option>
+        <option value="triggered">Historical: Triggered Game</option>
+        <option value="dud">Historical: Dud Game</option>
+      </select>
+    </p>
+    <p class="cs" id="chart-sub">How close the full-game total is to firing. <b style="color:#388bfd">Move %</b>
+      (left) and <b style="color:#d29922">Edge pts</b> (right) climb as the live line drops;
+      when both cross their dashed threshold lines, a signal fires. Updates every cadence mark.</p>
+    <div class="chart-wrap"><canvas id="stressChart"></canvas></div>
+  </section>
+  <section class="card card-scroll rcards">
+    <h2>Live markets — mean-reversion fair value</h2>
+    <div id="projections" class="proj" style="display:none"></div>
+    <table style="min-width:820px">
+      <colgroup>
+        <col style="width:105px"><col style="width:82px">
+        <col style="width:52px"><col style="width:52px"><col style="width:64px">
+        <col style="width:50px"><col style="width:52px"><col style="width:56px">
+        <col style="width:64px"><col style="width:52px"><col style="width:46px">
+        <col style="width:60px"><col style="width:60px">
+        <col style="width:62px"><col style="width:48px"><col style="width:118px">
+      </colgroup>
+      <thead><tr>
+        <th>Market</th><th>Book</th><th>Pre</th><th>Live</th><th>Move</th><th>Side</th>
+        <th>Fair</th><th>Diff</th><th>Edge</th><th>Vol</th><th>P</th><th>EV</th><th>Odds</th><th>Stake</th><th>Flag</th><th>Exec</th>
+      </tr></thead>
+      <tbody id="rows"><tr><td colspan="16" class="empty">loading…</td></tr></tbody>
+    </table>
+  </section>
+  <section class="card">
+    <h2>Flagged opportunities</h2>
+    <div id="signals"><div class="empty">none yet — the engine fires here when all thresholds clear.</div></div>
+  </section>
+</main>
+</div>
+
+<div class="view" id="view-backtest">
+  <div class="kpi" id="bt-kpi"></div>
+
+  <div class="full">
+    <p class="lead">Season ledger — every settled game <span class="chip">cumulative</span></p>
+    <p class="note">The durable record. Each game's forward bets are archived here at the final
+      buzzer (the per-game panel below resets between games). Record, units, and CLV roll up
+      across the whole run.</p>
+    <div class="kpi" id="season-kpi"></div>
+    <section class="card card-scroll"><table style="min-width:560px">
+      <thead><tr><th>date</th><th>matchup</th><th>league</th><th>record</th>
+        <th>units</th><th>avg CLV</th></tr></thead>
+      <tbody id="season-rows"><tr><td colspan="6" class="empty">no settled games archived yet — populates at each final buzzer</td></tr></tbody>
+    </table></section>
+  </div>
+
+  <div class="full">
+    <p class="lead">Forward test — REAL captured lines <span class="chip">trustworthy</span></p>
+    <p class="note">The honest edge readout. As the engine sees flagged signals on real live
+      lines (timeout cadence), each bet is logged at its <b>entry</b> line and tracked to the
+      <b>close</b>. <b>CLV</b> (closing-line value) needs no final score; win/loss fills in after.
+      Empty until the first live game is captured — then it auto-populates here.</p>
+    <div class="kpi" id="fwd-kpi"></div>
+    <section class="card card-scroll"><table style="min-width:620px">
+      <colgroup>
+        <col style="width:115px"><col style="min-width:150px">
+        <col style="width:52px"><col style="width:64px"><col style="width:64px">
+        <col style="width:62px"><col style="width:68px"><col style="width:74px">
+      </colgroup>
+      <thead><tr><th>matchup</th><th>market</th><th>side</th><th>entry</th><th>close</th>
+        <th>CLV</th><th>odds</th><th>result</th></tr></thead>
+      <tbody id="fwd-rows"><tr><td colspan="8" class="empty">no live bets captured yet</td></tr></tbody>
+    </table></section>
+  </div>
+
+  <div class="full">
+    <p class="lead">Batch backtest — offline game replay <span class="chip">JSON lines</span></p>
+    <p class="note">Engine replayed against real or mock odds at every 9-point cadence mark.
+      Lines come from <code>tests/data/2026_playoffs_batch.json</code>; run
+      <code>mrbet backtest-batch --data tests/data/2026_playoffs_batch.json --out docs/batch.json</code>
+      to refresh. Template/incomplete games are automatically skipped.</p>
+    <div class="kpi" id="batch-kpi"></div>
+    <section class="card card-scroll"><table style="min-width:660px">
+      <colgroup>
+        <col style="width:115px"><col style="width:115px"><col style="min-width:150px">
+        <col style="width:52px"><col style="width:64px"><col style="width:64px">
+        <col style="width:62px"><col style="width:68px"><col style="width:74px">
+      </colgroup>
+      <thead><tr><th>game</th><th>matchup</th><th>market</th><th>side</th>
+        <th>entry</th><th>close</th><th>CLV</th><th>odds</th><th>result</th></tr></thead>
+      <tbody id="batch-rows"><tr><td colspan="9" class="empty">batch.json not found — run backtest-batch to generate</td></tr></tbody>
+    </table></section>
+  </div>
+
+  <div class="full">
+    <p class="lead">Glossary — what the triggers &amp; terms mean</p>
+    <section class="card"><table>
+      <thead><tr><th>term</th><th>meaning</th></tr></thead>
+      <tbody id="glossary"></tbody>
+    </table></section>
+  </div>
+
+  <div class="full">
+    <p class="lead" id="meth-head">Methodology — does scoring mean-revert?</p>
+    <p class="note" id="meth-note"></p>
+    <section class="card"><table>
+      <thead><tr><th>sample</th><th>fitted β</th><th>n</th><th>R² vs momentum</th><th></th></tr></thead>
+      <tbody id="meth-rows"></tbody>
+    </table></section>
+  </div>
+
+  <div class="full">
+    <p class="lead">Threshold sweep — relative behavior across all games</p>
+    <p class="note" id="sweep-note"></p>
+    <section class="card card-scroll"><table style="min-width:580px">
+      <colgroup>
+        <col style="width:162px"><col>
+        <col style="width:50px"><col style="width:88px">
+        <col style="width:68px"><col style="width:68px">
+      </colgroup>
+      <thead><tr><th>profile</th><th>thresholds</th><th>bets</th><th>W-L-P</th><th>win%</th><th>ROI*</th></tr></thead>
+      <tbody id="sweep-rows"></tbody>
+    </table></section>
+  </div>
+
+  <div class="full">
+    <p class="lead">Worked examples — projection vs real final (timeout cadence)</p>
+    <p class="note">This table shows how the model's projected final score (based on the current
+      game pace) converges toward the actual final score as the game reaches its conclusion.</p>
+    <p class="note" style="margin-top:-4px"><b>Projection</b> = Predicted total based on current
+      scoring rate vs. pregame baseline. &nbsp;<b>Accuracy</b> = how close the projection lands to
+      the real final: <span class="acc good">≤3 pts</span> <span class="acc mid">3–7</span>
+      <span class="acc bad">&gt;7</span>.</p>
+    <div id="examples"></div>
+  </div>
+
+  <footer><span id="bt-foot" class="muted"></span></footer>
+</div>
+
+<footer id="live-footer">
+  <span id="foot">—</span>
+  <span id="refresh-info" class="muted"></span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const fmtPct = v => (v>0?'+':'') + v.toFixed(1)+'%';
+const cls    = v => v>0?'pos':(v<0?'neg':'muted');
+const pct    = v => v!=null ? (v*100).toFixed(0)+'%' : '—';
+const bar    = (v,title='') => `<div class="bar" title="${title}"><span style="width:${Math.round(v*100)}%"></span></div>`;
+// Bar that grows behind a right-aligned percentage, so values scan straight down.
+const barNum = (v,title='') => `<div class="barcell" title="${title}"><span class="fill" style="width:${Math.round((v||0)*100)}%"></span><span class="num barnum">${pct(v)}</span></div>`;
+const REFRESH_MS = 60_000;           // board / pre-game lines (change slowly)
+const LIVE_REFRESH_MS = 20_000;      // hot live stream (table + chart)
+const LIVE_FILE = 'live_market_state.json';
+
+// Optionally stream the live JSON from another origin while testing locally, e.g.
+//   open the page as  ?data=http://localhost:8000   (or set localStorage
+//   'mrbet_data_base'). Defaults to same-origin, i.e. the published gh-pages files.
+// NOTE: a browser will block an https page from fetching http://localhost (mixed
+// content), so for pure local testing just serve docs/ and open localhost directly
+// — the relative fetches already hit your local server. DATA_BASE is for same-scheme
+// hosts (another https box / port behind CORS).
+const DATA_BASE = (new URLSearchParams(location.search).get('data')
+                   || localStorage.getItem('mrbet_data_base') || '').replace(/\/$/, '');
+const dataURL = f => DATA_BASE ? `${DATA_BASE}/${f}` : f;
+// Append a per-request cache-buster so neither the browser nor the GitHub Pages
+// CDN can ever hand back a stale JSON payload (belt-and-suspenders over no-store).
+const bust = u => u + (u.includes('?') ? '&' : '?') + '_=' + Date.now();
+async function fetchJSON(file){
+  const r = await fetch(bust(dataURL(file)), {cache:'no-store'});
+  if(!r.ok) throw new Error(`HTTP ${r.status} for ${file}`);
+  return r.json();
+}
+
+// Wrap each threshold criterion (e.g. move≥15%) in a monospace badge.
+function fmtCriteria(label) {
+  return label.split(' ').map(w =>
+    /[≥><=]/.test(w) ? `<span class="crit">${w}</span>` : w
+  ).join(' ');
+}
+
+// Map threshold combo params to a human-readable strategy archetype.
+function sweepProfile(label) {
+  if (label.startsWith('★')) return '⚙ Current config';
+  const m = (label.match(/move[≥>]=?\s*(\d+)%/)    ||[])[1];
+  const e = (label.match(/edge[≥>]=?\s*(\d+\.?\d*)/))||[];
+  const n = (label.match(/min[≥>]=?\s*(\d+)/)       ||[])[1];
+  const v = (label.match(/ev[≥>]=?\+?\s*(\d+)%/)   ||[])[1];
+  if (!m) return '—';
+  const move=+m, edge=e[1]?+e[1]:0, min=n?+n:0, ev=v?+v:0;
+  if (move>=20 && min>=9)              return 'Conservative Core';
+  if (move>=15 && edge>=5 && min>=6)   return 'Selective High-Edge';
+  if (move>=15 && min<=4)              return 'Late Panic Reversal';
+  if (move>=10 && edge>=7)             return 'Strong Edge Only';
+  if (move<=10 && edge>=5)             return 'Early Pace Anomaly';
+  if (move>=15 && ev>=3)               return 'Value Screener';
+  if (move>=10 && min<=4)              return 'Any Late Signal';
+  if (move>=10 && move<15 && min>=6)   return 'Balanced Standard';
+  return '—';
+}
+
+// Color-coded accuracy pill: green within 3 pts of final, yellow 3–7, red beyond 7.
+function accPill(err) {
+  const a = Math.abs(err);
+  const k = a <= 3 ? 'good' : (a <= 7 ? 'mid' : 'bad');
+  return `<span class="acc ${k}">${err>0?'+':''}${err}</span>`;
+}
+
+// Green heat-map background that scales with profitability (0 → transparent, max → 32% green).
+function heatBg(val, maxVal) {
+  if (val==null || val<=0 || maxVal<=0) return '';
+  return `background:rgba(46,160,67,${(Math.min(val/maxVal,1)*0.32).toFixed(2)})`;
+}
+let countdown = REFRESH_MS / 1000;
+
+// ---- client-side market history (for volatility + edge trend) ------------ //
+// Tracks distinct (line, edge) updates per market over the last ~6 min, built from
+// our own poll stream — no backend needed.
+const mktHist = {};
+function pushHistory(rows){
+  const now = Date.now();
+  (rows||[]).forEach(r=>{
+    const k = r.market;
+    const arr = (mktHist[k] = mktHist[k] || []);
+    const last = arr[arr.length-1];
+    // record only when the line or edge actually changed (a real market update)
+    if(!last || last.live !== +r.live || last.edge !== +r.edge){
+      arr.push({t:now, live:+r.live, edge:+r.edge, fair:+r.fair});
+    }
+    mktHist[k] = arr.filter(x => now - x.t <= 360000).slice(-60);
+  });
+}
+// Sum of absolute line moves over the last `mins` minutes -> Low/Med/High.
+function volatility(market, mins=5){
+  const arr = mktHist[market] || [];
+  const cut = Date.now() - mins*60000;
+  const recent = arr.filter(x => x.t >= cut);
+  let move = 0;
+  for(let i=1;i<recent.length;i++) move += Math.abs(recent[i].live - recent[i-1].live);
+  if(recent.length < 2) return {label:'—', cls:'muted', move:0};
+  if(move >= 4) return {label:'High', cls:'neg', move};
+  if(move >= 1.5) return {label:'Med', cls:'mid', move};
+  return {label:'Low', cls:'pos', move};
+}
+// Edge change vs ~3 distinct updates ago -> ↑ toward value / ↓ away / → flat.
+function edgeTrend(market, curEdge){
+  const arr = mktHist[market] || [];
+  if(arr.length < 2) return '';
+  const prev = arr[Math.max(0, arr.length-4)].edge;   // ~3 updates back
+  const d = curEdge - prev;
+  if(d > 0.3) return '<span class="trend up" title="edge rising toward value">↑</span>';
+  if(d < -0.3) return '<span class="trend dn" title="edge falling away">↓</span>';
+  return '<span class="trend flat" title="edge steady">→</span>';
+}
+
+function renderState(d){
+  const h = d.header || {};
+  const live = (h.status === 'live');
+  pushHistory(d.rows);
+  document.getElementById('score').textContent =
+    (h.away_score!=null) ? `${h.away} ${h.away_score} — ${h.home_score} ${h.home}` : '—';
+  document.getElementById('clock').textContent =
+    h.clock ? `${(h.period||'').toUpperCase()} ${h.clock}` :
+    (h.minutes_remaining!=null ? `${Math.round(h.minutes_remaining)} min left` : '—');
+  const st = document.getElementById('status');
+  st.className = 'meta ' + (h.status||'waiting');
+  document.getElementById('statusText').textContent = h.status || 'waiting';
+  document.getElementById('credits').textContent =
+    (h.credits!=null) ? `API credits: ${h.credits}` : '';
+  document.getElementById('foot').textContent = 'last data: ' + (h.updated||'—');
+  // Only the err-banner is reserved for real errors now. Idle/final states are
+  // conveyed cleanly by the "—" score, the status pill, and the markets table's
+  // empty-state message — no stuck red banner after a game ends.
+  const banner = document.getElementById('err-banner');
+  if(h.error){ banner.textContent = '⚠ ' + h.error; banner.style.display='block'; }
+  else { banner.style.display='none'; }
+  renderProjections(d.projections);
+  renderRows(d.rows||[], h.status, d.exec);
+  renderSignals(d.signals||[], d.rows||[]);
+}
+
+function fmtDiff(d){
+  const c = d>0?'pos':(d<0?'neg':'muted');
+  return `<b class="${c}">→ diff ${(d>0?'+':'')+d.toFixed(1)}</b>`;
+}
+// Recompute a half's diff (model projection − the book O/U you typed) on the fly.
+function onBookInput(inp){
+  const k=inp.dataset.k, proj=parseFloat(inp.dataset.proj), v=parseFloat(inp.value);
+  localStorage.setItem('bookline:'+k, inp.value);
+  const out=document.getElementById('diff-'+k);
+  if(out) out.innerHTML = (inp.value!=='' && !isNaN(v) && !isNaN(proj)) ? fmtDiff(proj - v) : '';
+}
+// Half projections only (the full game lives in the table with its own Diff column).
+// You type the book's live 1H/2H O/U and it auto-shows model − book.
+function renderProjections(proj){
+  const el = document.getElementById('projections');
+  if(!el) return;
+  const halves = [['h1','1st half'],['h2','2nd half']].filter(([k]) => proj && proj[k]!=null);
+  if(!halves.length){ el.style.display='none'; el.dataset.sig=''; return; }
+  el.style.display='';
+  const sig = JSON.stringify(halves.map(([k]) => [k, proj[k]]));
+  if(el.dataset.sig === sig) return;   // projections unchanged → don't clobber the inputs
+  el.dataset.sig = sig;
+  el.innerHTML = "📐 Model half projections — type the book's live O/U for your edge: "
+    + halves.map(([k,label])=>{
+        const pv = proj[k];
+        const saved = localStorage.getItem('bookline:'+k) || '';
+        const diff = saved!=='' && !isNaN(parseFloat(saved)) ? fmtDiff(pv - parseFloat(saved)) : '';
+        return `<span style="white-space:nowrap"><b>${label}: ${pv}</b> vs book `
+          + `<input type="number" step="0.5" value="${saved}" data-k="${k}" data-proj="${pv}" `
+          + `oninput="onBookInput(this)" placeholder="O/U"> `
+          + `<span class="diff" id="diff-${k}">${diff}</span></span>`;
+      }).join(' &nbsp;&nbsp;&nbsp; ');
+}
+
+// Execution-layer lock state for a row, mirroring run_edge_alerts' rules from the
+// SAME backend cycle (exec ships inside the live payload — no client/server desync).
+// Returns {cls, txt, capped} or null (row not alert-eligible / no exec data).
+function execLock(r, ex){
+  if(!ex || ex.count==null) return null;
+  const meets = (+r.edge >= (ex.edge_min ?? 2)) && (+r.ev >= (ex.ev_min ?? 15));
+  if(!meets) return null;          // below alert thresholds — no lock to show
+  if(r.vol_paused) return null;    // Vol column already shows the paused state
+  const last = (ex.markets || {})[r.market];
+  if(last && last.side === r.side){            // dedup: needs a real line shift
+    const moved = Math.abs((+r.live) - (+last.line));
+    if(moved < ex.line_shift_min)
+      return {cls:'amber', txt:`🔒 Δ need ±${ex.line_shift_min} (now ${moved.toFixed(1)})`};
+  } else if(last){                              // hysteresis: opposite side needs extra edge
+    const need = (+ex.edge_min) + (+ex.hysteresis_edge);
+    if((+r.edge) < need)
+      return {cls:'amber', txt:`🔒 Hyst: edge ≥ ${need}`};
+  }
+  if((ex.count ?? 0) >= (ex.max ?? 4))          // hard cap per game
+    return {cls:'red', txt:`❌ Hard Cap ${ex.count}/${ex.max}`, capped:true};
+  if(ex.last_elapsed != null && ex.elapsed != null){   // game-clock cooldown
+    const since = ex.elapsed - ex.last_elapsed;
+    if(since < ex.cooldown_min){
+      const rem = ex.cooldown_min - since;
+      const mm = Math.floor(rem), ss = Math.round((rem - mm) * 60);
+      return {cls:'amber', txt:`🔒 Cooldown ${mm}:${String(ss).padStart(2,'0')}`};
+    }
+  }
+  return {cls:'ok', txt:'✅ armed'};            // would fire next cycle
+}
+
+function renderRows(rows, status, exec){
+  const tb = document.getElementById('rows');
+  if(!rows.length){
+    const msg = (status==='live')
+      ? 'no tracked markets yet — first lines capture shortly after tip'
+      : 'No live game in progress — check Upcoming Games below';
+    tb.innerHTML = `<tr><td colspan="16" class="empty">${msg}</td></tr>`;
+    return;
+  }
+  const ALERT_MOVE_PTS = 6;   // bright-orange when the live line is >=6 pts off pregame
+  tb.innerHTML = rows.map(r=>{
+    const flagCls = r.flagged?(r.strong?'flag strong':'flag'):'';
+    // Value highlight: |live - pregame| >= alert threshold (mobile attention-grab).
+    const moved = Math.abs((+r.live||0) - (+r.pre||0));
+    const alertCls = moved >= ALERT_MOVE_PTS ? 'row-alert' : '';
+    const badge = r.flagged?`<span class="badge ${r.strong?'strong':''}">${r.strong?'🔥 STRONG':'FLAG'}</span>`:'';
+    const sideCls = r.side==='OVER'?'over':'under';
+    const diff = (+r.fair) - (+r.live);                 // model − book (signed)
+    const lock = execLock(r, exec);
+    const cappedCls = lock && lock.capped ? 'capped' : '';
+    // Backend rolling-CV gate is authoritative: vol_paused means Discord alerts for
+    // this market are suppressed — show it loud so it can still be monitored live.
+    const vol = r.vol_paused
+      ? {label:'High · ⏸ Paused', cls:'neg', paused:true}
+      : volatility(r.market);
+    return `<tr class="${flagCls} ${alertCls} ${cappedCls}">
+      <td>${r.market}</td>
+      <td class="muted" data-label="Book">${r.book||'—'}</td>
+      <td class="num muted" data-label="Pre">${r.pre}</td>
+      <td class="num" data-label="Live">${r.live}</td>
+      <td class="num ${cls(r.move_pct)}" data-label="Move">${fmtPct(r.move_pct)}</td>
+      <td class="${sideCls}" data-label="Side">${r.side}</td>
+      <td class="num" data-label="Fair">${r.fair}</td>
+      <td class="num ${cls(diff)}" data-label="Diff">${diff>0?'+':''}${diff.toFixed(1)}</td>
+      <td class="num ${cls(r.edge)}" data-label="Edge">${r.edge>0?'+':''}${r.edge} ${edgeTrend(r.market, +r.edge)}</td>
+      <td data-label="Vol"><span class="vol ${vol.cls}" ${vol.paused?`title="Line CV ${r.vol_cv??''} over 5 min — Discord alerts suppressed; monitoring only"`:''}>${vol.label}</span></td>
+      <td class="num" data-label="Win %">${r.prob}%</td>
+      <td class="num ${cls(r.ev)}" data-label="EV">${fmtPct(r.ev)}</td>
+      <td class="num muted" data-label="Odds">${r.odds>0?'+':''}${r.odds}</td>
+      <td class="num" data-label="Stake">$${r.stake.toFixed(2)}</td>
+      <td data-label="Flag">${badge}</td>
+      <td data-label="Exec">${lock?`<span class="lock ${lock.cls}">${lock.txt}</span>`:''}</td>
+    </tr>`;
+  }).join('');
+}
+
+const STALE_PTS = 3;   // an alert is a "ghost" once its market's live line moves this far
+
+function renderSignals(sigs, rows){
+  const el = document.getElementById('signals');
+  // Current live line per market, to stale-check each alert against.
+  const liveByMarket = {};
+  (rows||[]).forEach(r => { liveByMarket[r.market] = +r.live; });
+
+  // Auto-dismiss ghosts: drop any alert whose market's live line has moved more
+  // than STALE_PTS since the alert fired (the edge it was based on is gone).
+  const fresh = (sigs||[]).filter(s => {
+    const cur = liveByMarket[s.market];
+    if (s.line == null || cur == null) return true;   // can't verify -> keep
+    return Math.abs(cur - s.line) <= STALE_PTS;
+  });
+  const dropped = (sigs||[]).length - fresh.length;
+
+  if(!fresh.length){
+    const note = dropped ? `none active — ${dropped} stale alert${dropped>1?'s':''} auto-dismissed (line moved).`
+                         : 'none yet — fires when all thresholds clear.';
+    el.innerHTML = `<div class="empty">${note}</div>`;
+    return;
+  }
+  el.innerHTML = fresh.map(s=>{
+    const cur = liveByMarket[s.market];
+    const moved = (cur!=null && s.line!=null) ? ` <span class="muted">(line ${s.line}→${cur})</span>` : '';
+    return `<div class="sig"><span class="ts">${s.time}</span>
+      <div class="t">${s.title}</div><div class="b">${s.body}${moved}</div></div>`;
+  }).join('')
+    + (dropped ? `<div class="empty" style="margin-top:8px">${dropped} stale alert${dropped>1?'s':''} auto-dismissed (line moved &gt;${STALE_PTS} pts).</div>` : '');
+}
+
+// ---- Distance-to-Trigger chart ------------------------------------------- //
+let stressChart = null;
+let chartMode = 'live';
+const FULL_KEY = 'game_total:full:game';
+
+function buildStressChart(moveThr, edgeThr){
+  if (typeof Chart === 'undefined') return;
+  const ctx = document.getElementById('stressChart');
+  if (!ctx) return;
+  const thrLine = (val, color) => ({
+    data: [{x:0, y:val}, {x:60, y:val}], borderColor: color, borderWidth: 1.5,
+    borderDash: [6,5], pointRadius: 0, fill: false, tension: 0,
+  });
+  stressChart = new Chart(ctx, {
+    type: 'line',
+    data: { datasets: [
+      { label:'Move %', yAxisID:'yMove', data:[], borderColor:'#388bfd',
+        backgroundColor:'rgba(56,139,253,.12)', borderWidth:2, tension:.25,
+        pointRadius:3, pointBackgroundColor:'#388bfd', fill:true },
+      { label:'Edge pts', yAxisID:'yEdge', data:[], borderColor:'#d29922',
+        backgroundColor:'rgba(210,153,34,.10)', borderWidth:2, tension:.25,
+        pointRadius:3, pointBackgroundColor:'#d29922', fill:false },
+      { label:`Move threshold (${(moveThr*100).toFixed(0)}%)`, yAxisID:'yMove',
+        ...thrLine(moveThr*100, 'rgba(56,139,253,.85)') },
+      { label:`Edge threshold (${edgeThr.toFixed(1)} pts)`, yAxisID:'yEdge',
+        ...thrLine(edgeThr, 'rgba(218,54,51,.9)') },
+    ]},
+    options: {
+      responsive:true, maintainAspectRatio:false, animation:false,
+      interaction:{ mode:'index', intersect:false },
+      scales:{
+        x:{ type:'linear', min:0, max:60, title:{display:true,text:'Game time (min)',color:'#8b949e'},
+            ticks:{color:'#8b949e',stepSize:12}, grid:{color:'rgba(48,54,61,.5)'} },
+        yMove:{ position:'left', min:0, suggestedMax:Math.max(15, moveThr*100*1.4),
+            title:{display:true,text:'Move %',color:'#388bfd'},
+            ticks:{color:'#388bfd'}, grid:{color:'rgba(48,54,61,.35)'} },
+        yEdge:{ position:'right', min:0, suggestedMax:Math.max(6, edgeThr*1.8),
+            title:{display:true,text:'Edge pts',color:'#d29922'},
+            ticks:{color:'#d29922'}, grid:{drawOnChartArea:false} },
+      },
+      plugins:{ legend:{ labels:{color:'#e6edf3',boxWidth:18,font:{size:11}} } },
+    },
+  });
+}
+
+function setSeries(move, edge){
+  if (!stressChart) return;
+  stressChart.data.datasets[0].data = move;
+  stressChart.data.datasets[1].data = edge;
+  stressChart.update();
+}
+
+function extractFull(captures){
+  const move=[], edge=[];
+  for (const cap of (captures||[])){
+    const m = (cap.markets||[]).find(x=>x.market===FULL_KEY);
+    if (!m || m.pct_move==null) continue;
+    const t = cap.minutes_elapsed ?? cap.mark;
+    move.push({x:t, y:+(Math.abs(m.pct_move)*100).toFixed(1)});
+    edge.push({x:t, y:+(m.edge_pts ?? 0).toFixed(1)});
+  }
+  return {move, edge};
+}
+
+// Build the chart once, using thresholds from the live archive (fallbacks match
+// the tuned config in settings.yaml: pct_move 4%, edge 2.0 pts).
+async function ensureChart(){
+  if (stressChart) return true;
+  let moveThr=0.04, edgeThr=2.0;
+  try{ const h = await fetchJSON('odds_history.json');
+       moveThr = h.thresholds?.pct_move ?? moveThr; edgeThr = h.thresholds?.edge_pts ?? edgeThr; }catch(e){}
+  buildStressChart(moveThr, edgeThr);
+  return !!stressChart;
+}
+
+let histCache = null;
+async function renderStress(){
+  if (!(await ensureChart())) return;            // Chart.js unavailable
+  const sub = document.getElementById('chart-sub');
+  if (chartMode === 'live'){
+    // Plot ONLY the current game's series, which the backend embeds in the live
+    // payload event-scoped. Early in a game this is empty (correct) — we must NOT
+    // fall back to the raw odds_history archive, which holds prior games' captures
+    // and would replot a finished game's trajectory onto tonight's chart.
+    const s = liveChartSeries || {move:[], edge:[]};
+    setSeries(s.move||[], s.edge||[]);
+    return;
+  }
+  // historical: read the precomputed trajectories baked into docs/chart_history.json
+  if (!histCache){ try{ histCache = await fetchJSON('chart_history.json'); }catch(e){ return; } }
+  const g = histCache.games?.[chartMode];
+  if (!g) return;
+  setSeries(g.move||[], g.edge||[]);
+  if (sub) sub.innerHTML = `Studying <b>${g.label}</b> — replaying its Move % and Edge pts at each cadence mark vs the dashed trigger lines.`;
+}
+
+function setNet(state, msg){
+  const el = document.getElementById('net');
+  if(!el) return;
+  el.className = 'meta ' + state;
+  el.innerHTML = (state==='loading' ? '<span class="spin"></span>' : '') + msg;
+}
+
+let liveChartSeries = null;   // chart series embedded in the latest live payload
+
+async function tick(){
+  setNet('loading', 'syncing…');
+  try{
+    let d;
+    try{ d = await fetchJSON(LIVE_FILE); }
+    catch(_){ d = await fetchJSON('state.json'); }   // legacy fallback during rollout
+    renderState(d);
+    liveChartSeries = d.chart || null;               // one payload feeds the chart too
+    countdown = LIVE_REFRESH_MS / 1000;
+    setNet('ok', '✓ updated ' + new Date().toLocaleTimeString());
+  }catch(e){
+    document.getElementById('foot').textContent = 'fetch failed — retrying…';
+    setNet('fail', '⚠ sync failed — retrying…');
+  }
+  if (chartMode === 'live') renderStress();   // only live mode auto-refreshes
+}
+
+// ---- tabs ---------------------------------------------------------------- //
+let backtestLoaded = false;
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    const view = tab.dataset.view;
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t===tab));
+    document.getElementById('view-live').classList.toggle('active', view==='live');
+    document.getElementById('view-backtest').classList.toggle('active', view==='backtest');
+    document.getElementById('live-footer').style.display = view==='live' ? '' : 'none';
+    if(view==='backtest' && !backtestLoaded){ backtestLoaded = true; loadBacktest(); }
+  });
+});
+
+function renderSeason(s){
+  const t = s.totals || {};
+  document.getElementById('season-kpi').innerHTML = [
+    ['games settled', t.games ?? 0],
+    ['record', `${t.wins??0}-${t.losses??0}-${t.pushes??0}`],
+    ['units', (t.profit_units>0?'+':'')+(t.profit_units??0), 'profit at flat 1u'],
+    ['avg CLV', t.avg_clv_pts!=null ? `${t.avg_clv_pts>0?'+':''}${t.avg_clv_pts} pts` : '—', 'beat the close?'],
+  ].map(([l,v,sub])=>`<div class="box"><div class="v">${v}</div><div class="l">${l}</div>
+     ${sub?`<div class="l" style="text-transform:none">${sub}</div>`:''}</div>`).join('');
+  const tb = document.getElementById('season-rows');
+  const games = s.games || [];
+  if(!games.length) return;
+  tb.innerHTML = games.slice().reverse().map(g=>`<tr>
+    <td class="muted" data-label="Date">${g.date}</td>
+    <td data-label="Matchup"><b>${g.matchup}</b></td>
+    <td class="muted" data-label="League">${g.league}</td>
+    <td class="num" data-label="Record">${g.wins}-${g.losses}-${g.pushes}</td>
+    <td class="num ${cls(g.profit_units)}" data-label="Units">${g.profit_units>0?'+':''}${g.profit_units}</td>
+    <td class="num ${cls(g.avg_clv_pts??0)}" data-label="Avg CLV">${g.avg_clv_pts!=null?(g.avg_clv_pts>0?'+':'')+g.avg_clv_pts:'—'}</td>
+  </tr>`).join('');
+}
+
+function renderForward(f){
+  const s = f.summary || {};
+  document.getElementById('fwd-kpi').innerHTML = [
+    ['real bets', s.bets ?? 0],
+    ['record', `${s.wins||0}-${s.losses||0}-${s.pushes||0}`, `${s.pending||0} pending`],
+    ['ROI', s.roi!=null ? pct(s.roi) : '—', 'graded only'],
+    ['beat close', s.clv_graded ? `${s.clv_beat}/${s.clv_graded}` : '—',
+      s.avg_clv_pts!=null ? `avg ${s.avg_clv_pts>0?'+':''}${s.avg_clv_pts} pts` : ''],
+  ].map(([l,v,sub])=>`<div class="box"><div class="v">${v}</div><div class="l">${l}</div>
+     ${sub?`<div class="l" style="text-transform:none">${sub}</div>`:''}</div>`).join('');
+  const tb = document.getElementById('fwd-rows');
+  const bets = f.bets || [];
+  if(!bets.length){ tb.innerHTML='<tr><td colspan="8" class="empty">no live bets captured yet — fills in during the next game</td></tr>'; return; }
+  tb.innerHTML = bets.map(b=>{
+    const oc = {win:'pos',loss:'neg',push:'muted',pending:'muted'}[b.outcome]||'muted';
+    return `<tr><td>${b.matchup}</td><td>${b.market}</td>
+      <td class="${b.side==='over'?'over':'under'}">${b.side.toUpperCase()}</td>
+      <td class="num">${b.entry_line}</td><td class="num muted">${b.close_line}</td>
+      <td class="num ${cls(b.clv_pts)}">${b.clv_pts>0?'+':''}${b.clv_pts}</td>
+      <td class="num muted">${b.entry_odds>0?'+':''}${b.entry_odds}</td>
+      <td class="${oc}">${b.outcome}</td></tr>`;
+  }).join('');
+}
+
+function renderBatch(f){
+  const s = f.summary || {};
+  document.getElementById('batch-kpi').innerHTML = [
+    ['games', f.scope?.games ?? '?'],
+    ['batch bets', s.bets ?? 0],
+    ['record', `${s.wins||0}-${s.losses||0}-${s.pushes||0}`, `${s.pending||0} pending`],
+    ['ROI', s.roi!=null ? pct(s.roi) : '—', 'graded only'],
+    ['beat close', s.clv_graded ? `${s.clv_beat}/${s.clv_graded}` : '—',
+      s.avg_clv_pts!=null ? `avg ${s.avg_clv_pts>0?'+':''}${s.avg_clv_pts} pts` : ''],
+  ].map(([l,v,sub])=>`<div class="box"><div class="v">${v}</div><div class="l">${l}</div>
+     ${sub?`<div class="l" style="text-transform:none">${sub}</div>`:''}</div>`).join('');
+  const tb = document.getElementById('batch-rows');
+  const bets = f.bets || [];
+  if(!bets.length){ tb.innerHTML='<tr><td colspan="9" class="empty">no signals fired in batch — adjust thresholds or check line moves in the data file</td></tr>'; return; }
+  // Extract event_id from the namespaced ledger key (event_id:market:period:team:side).
+  const eventLabel = key => (key||'').split(':')[0].replace(/_/g,' ');
+  tb.innerHTML = bets.map((b,i)=>{
+    const oc = {win:'pos',loss:'neg',push:'muted',pending:'muted'}[b.outcome]||'muted';
+    const gameKey = Object.keys(f.ledger||{})[i] || '';
+    return `<tr><td class="muted" style="font-size:11px">${eventLabel(gameKey)}</td>
+      <td>${b.matchup}</td><td>${b.market}</td>
+      <td class="${b.side==='over'?'over':'under'}">${b.side.toUpperCase()}</td>
+      <td class="num">${b.entry_line}</td><td class="num muted">${b.close_line}</td>
+      <td class="num ${cls(b.clv_pts)}">${b.clv_pts>0?'+':''}${b.clv_pts}</td>
+      <td class="num muted">${b.entry_odds>0?'+':''}${b.entry_odds}</td>
+      <td class="${oc}">${b.outcome}</td></tr>`;
+  }).join('');
+}
+
+const GLOSSARY = [
+  ['Move (%)', 'How far the live line dropped vs the pregame number. The primary trigger.'],
+  ['Edge (pts)', 'Model fair total − live line. The reversion model must independently agree.'],
+  ['EV', 'Expected value per $1 at the offered odds. Must be ≥ threshold to flag.'],
+  ['Min (m)', 'Minutes remaining required in the period — time for reversion to play out (full 6 / half 4 / quarter 3).'],
+  ['β (beta)', 'Reversion weight: share of remaining scoring projected at the pregame rate (β=1) vs current pace (β=0). Fitted ≈ 1.0.'],
+  ['book_beta', 'Assumed book pace-chasing in the MODELED sweep (low = chases pace). The reason that ROI is illustrative.'],
+  ['R² vs momentum', 'Variance the reversion fit explains beyond a “pace continues” baseline. Higher = stronger reversion.'],
+  ['CLV', 'Closing-line value: did we bet a better number than the line closed at? Robust edge proof, needs no final score.'],
+  ['Cadence', 'Which game-clock stoppages we sample (timeout/quarter marks) to save Odds API credits.'],
+  ['Retention', 'Share of dense-sampling opportunities a sparse cadence still catches.'],
+  ['Why isn\'t the highest-ROI profile the default?',
+   'Our "Current Config" is optimized for robustness — it catches the most reliable reversion '
+   + 'signals while avoiding rare, "lucky" bets that inflate short-term ROI but aren\'t '
+   + 'statistically repeatable.'],
+];
+
+async function loadBacktest(){
+  // season ledger (cumulative across games) — independent of the per-game panels
+  try{ renderSeason(await fetchJSON('season.json')); }
+  catch(e){ /* leave empty state */ }
+
+  // forward-test panel (real captured live bets) — independent of backtest.json
+  try{ renderForward(await fetchJSON('forward.json')); }
+  catch(e){ /* leave empty state */ }
+
+  // batch backtest panel
+  try{ renderBatch(await fetchJSON('batch.json')); }
+  catch(e){ /* leave empty state */ }
+
+  document.getElementById('glossary').innerHTML = GLOSSARY.map(([t,m])=>
+    `<tr><td><b>${t}</b></td><td class="muted" style="text-align:left;white-space:normal">${m}</td></tr>`).join('');
+
+  let d;
+  try{ d = await fetchJSON('backtest.json'); }
+  catch(e){ document.getElementById('bt-foot').textContent='backtest.json not found'; return; }
+
+  // KPIs
+  const betaFull = (d.methodology.rows.find(r=>r.label.includes('@>=6'))||{}).beta;
+  document.getElementById('bt-kpi').innerHTML = [
+    ['games', d.scope.games],
+    ['fitted β', betaFull, 'empirical reversion'],
+    ['config β', d.config.beta, 'in settings.yaml'],
+  ].map(([l,v,sub])=>`<div class="box"><div class="v">${v}</div><div class="l">${l}</div>
+     ${sub?`<div class="l" style="text-transform:none">${sub}</div>`:''}</div>`).join('');
+
+  // methodology
+  document.getElementById('meth-head').textContent = d.methodology.headline;
+  document.getElementById('meth-note').textContent = d.methodology.explainer;
+  document.getElementById('meth-rows').innerHTML = d.methodology.rows.map(r=>`<tr>
+    <td>${r.label}</td><td class="num pos">${r.beta.toFixed(2)}</td><td class="num muted">${r.n}</td>
+    <td class="num ${cls(r.r2)}">${r.r2.toFixed(2)}</td>
+    <td style="width:160px">${bar(Math.max(0,r.r2), 'R²='+r.r2)}</td></tr>`).join('');
+
+  // sweep
+  document.getElementById('sweep-note').textContent =
+    `${d.sweep.evals} graded evaluations (book_beta=${d.sweep.book_beta}). Current config: `
+    + `${d.sweep.current.bets} bets, ${d.sweep.current.wins}-${d.sweep.current.losses}-`
+    + `${d.sweep.current.pushes}, win ${pct(d.sweep.current.win_rate)}, ROI ${pct(d.sweep.current.roi)}.`;
+  const sr = [{...d.sweep.current, label:'★ '+d.sweep.current.label}, ...d.sweep.top];
+  const maxWR  = Math.max(...sr.map(r=>r.win_rate||0));
+  const maxROI = Math.max(...sr.map(r=>r.roi||0));
+  // Cluster rows by archetype so each profile name prints once (rowspan), with its
+  // threshold variations grouped underneath. Current config (★) is always its own group.
+  const current = sr[0], rest = sr.slice(1);
+  const order = [], byName = new Map();
+  rest.forEach(r=>{
+    const name = sweepProfile(r.label);
+    if(!byName.has(name)){ byName.set(name, []); order.push(name); }
+    byName.get(name).push(r);
+  });
+  const groups = [{name: sweepProfile(current.label), rows:[current]},
+                  ...order.map(name=>({name, rows: byName.get(name)}))];
+  const sweepRow = (r, profileCell) => `<tr>
+    ${profileCell}
+    <td class="crit-cell">${fmtCriteria(r.label.replace(/^★\s*/,''))}${r.equiv>1?` <span class="muted" style="font-size:11px">×${r.equiv}</span>`:''}</td>
+    <td class="num">${r.bets}</td>
+    <td class="num">${r.wins}-${r.losses}-${r.pushes}</td>
+    <td class="num" style="${heatBg(r.win_rate,maxWR)}">${pct(r.win_rate)}</td>
+    <td class="num ${cls(r.roi)}" style="${heatBg(r.roi,maxROI)}">${(r.roi*100).toFixed(0)}%</td></tr>`;
+  document.getElementById('sweep-rows').innerHTML = groups.map(g=>
+    g.rows.map((r,i)=> sweepRow(r,
+      i===0 ? `<td class="profile" rowspan="${g.rows.length}">${g.name}</td>` : ''
+    )).join('')
+  ).join('');
+
+  // examples
+  document.getElementById('examples').innerHTML = d.examples.map(ex=>`
+    <section class="card" style="margin-bottom:12px">
+      <h2>${ex.matchup} — pregame ${ex.pregame}, real final <b>${ex.final}</b></h2>
+      <table><thead><tr><th>min</th><th>score</th>
+        <th title="Predicted total based on current scoring rate vs. pregame baseline">proj final (β=${d.config.beta})</th>
+        <th>accuracy (err vs final)</th></tr></thead>
+      <tbody>${ex.samples.map(s=>`<tr><td class="num">${s.min}</td><td class="num">${s.score}</td>
+        <td class="num">${s.proj}</td><td>${accPill(s.err)}</td></tr>`).join('')}</tbody>
+      </table></section>`).join('');
+
+  document.getElementById('bt-foot').textContent =
+    `${d.scope.league} · ${d.scope.games} games · generated ${d.generated} · static precompute (no in-browser compute)`;
+}
+
+// Countdown display
+setInterval(()=>{
+  countdown = Math.max(0, countdown-1);
+  document.getElementById('refresh-info').textContent =
+    `next refresh in ${countdown}s · live stream every ${LIVE_REFRESH_MS/1000}s`
+    + (DATA_BASE ? ` · source ${DATA_BASE}` : '');
+}, 1000);
+
+// ---- pin-to-top (watchlist) — persisted in localStorage ------------------ //
+function getPinned(){ try{ return new Set(JSON.parse(localStorage.getItem('pinned')||'[]')); }catch(e){ return new Set(); } }
+function togglePin(key){
+  const s=getPinned(); s.has(key)?s.delete(key):s.add(key);
+  localStorage.setItem('pinned', JSON.stringify([...s]));
+  loadUpcoming();   // re-sort the upcoming watchlist with the new pin state
+}
+
+async function loadUpcoming(){
+  try{
+    const u = await fetchJSON('upcoming.json');
+    const tb = document.getElementById('upcoming');
+    if(!u.games || !u.games.length){ tb.innerHTML='<tr><td colspan="8" class="empty">none scheduled</td></tr>'; return; }
+    const pins = getPinned();
+    const keyOf = g => `${g.matchup}|${g.date}`;
+    // Pinned games float to the top, original order preserved within each group.
+    const games = u.games.map((g,i)=>({g,i}))
+      .sort((a,b)=> (pins.has(keyOf(b.g))?1:0)-(pins.has(keyOf(a.g))?1:0) || a.i-b.i)
+      .map(x=>x.g);
+    tb.innerHTML = games.map(g=>{
+      const key=keyOf(g).replace(/'/g,''); const on=pins.has(keyOf(g));
+      return `<tr class="${on?'pinned':''}">
+      <td><button class="pin ${on?'on':''}" title="Pin to top" onclick="togglePin('${key}')">📌</button></td>
+      <td><b>${g.matchup}</b></td>
+      <td class="muted" data-label="Date">${g.date}</td>
+      <td class="muted" data-label="Tip (ET)">${g.tip}</td>
+      <td data-label="Total">${g.total}</td>
+      <td class="muted" data-label="Spread">${g.spread}</td>
+      <td class="muted" data-label="Round">${g.round}</td>
+      <td class="muted" data-label="Config">${g.config}</td></tr>`;
+    }).join('');
+  }catch(e){
+    document.getElementById('upcoming').innerHTML='<tr><td colspan="8" class="empty">upcoming.json not found</td></tr>';
+  }
+}
+
+// ---- tonight's board (all games' pre-game lines, discovered from Bovada) -- //
+const ml = v => v==null ? '—' : (v>0?'+':'') + v;
+const stageBadge = s =>
+  s==='live'  ? '<span class="badge-live">● LIVE</span>' :
+  s==='final' ? '<span class="muted">final</span>' :
+                '';   // pre-game: hide the redundant "pre"; the tip time leads the row
+// Pace arrow: red ▼ when live pace is significantly slower than the pregame
+// expectation (total trending UNDER), green ▲ when faster, → when on pace.
+const paceArrow = (p, proj) => {
+  const t = proj!=null ? ` (proj ${proj})` : '';
+  if(p==='slow') return `<span class="pace-slow" title="live pace below pregame${t}">▼ slow</span>`;
+  if(p==='fast') return `<span class="pace-fast" title="live pace above pregame${t}">▲ fast</span>`;
+  if(p==='even') return `<span class="pace-even" title="on pace${t}">→</span>`;
+  return '<span class="muted">—</span>';
+};
+async function loadBoard(){
+  const tb = document.getElementById('board-rows');
+  try{
+    const b = await fetchJSON('board.json');
+    document.getElementById('board-league').textContent = `${b.league} · ${b.count} games`;
+    if(!b.games || !b.games.length){ tb.innerHTML='<tr><td colspan="8" class="empty">no games on the board</td></tr>'; return; }
+    // Auto-sort: LIVE games to the very top, then PRE, then FINAL (stable within).
+    const stageRank = {live:0, pre:1, final:2};
+    const games = b.games.slice().sort((a,c)=>(stageRank[a.stage]??1)-(stageRank[c.stage]??1));
+    tb.innerHTML = games.map(g=>`<tr class="${g.stage==='live'?'row-live':''}">
+      <td><b>${g.away_key}</b> @ <b>${g.home_key}</b> <span class="muted" style="font-size:12px">${g.matchup}</span></td>
+      <td data-label="Status">${stageBadge(g.stage)}</td>
+      <td class="muted" data-label="Tip">${g.tip||'—'}</td>
+      <td class="num" data-label="Total">${g.total??'—'}</td>
+      <td data-label="Pace">${paceArrow(g.pace, g.proj)}</td>
+      <td class="num muted" data-label="Spread">${g.spread??'—'}</td>
+      <td class="num muted" data-label="ML away">${ml(g.ml_away)}</td>
+      <td class="num muted" data-label="ML home">${ml(g.ml_home)}</td>
+    </tr>`).join('');
+  }catch(e){
+    tb.innerHTML='<tr><td colspan="8" class="empty">board.json not found — run scripts/board_update.py</td></tr>';
+  }
+}
+
+document.getElementById('chartSel')?.addEventListener('change', e=>{
+  chartMode = e.target.value;
+  renderStress();
+});
+
+loadBoard();
+loadUpcoming();
+tick();
+renderStress();
+setInterval(tick, LIVE_REFRESH_MS);   // hot live stream: table + chart every 20s
+setInterval(loadBoard, REFRESH_MS);   // board / pre-game lines refresh at 60s
+</script>
+</body>
+</html>

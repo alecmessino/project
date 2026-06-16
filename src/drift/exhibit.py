@@ -24,6 +24,7 @@ TEMPLATE = Path(__file__).with_name("web") / "index.html"
 REPORT_TEMPLATE = Path(__file__).with_name("web") / "report.html"
 TEARSHEET_TEMPLATE = Path(__file__).with_name("web") / "tearsheet.html"
 LEDGER_TEMPLATE = Path(__file__).with_name("web") / "ledger.html"
+HUB_TEMPLATE = Path(__file__).with_name("web") / "hub.html"
 
 
 def _spark(curve: Sequence[float], n: int = 90) -> list[float]:
@@ -150,4 +151,17 @@ def export_ledger(state: dict, out: str | Path) -> Path:
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render_ledger(state))
+    return out
+
+
+def render_hub(state: dict) -> str:
+    """Static, self-contained markets-only landing hub with state embedded."""
+    template = HUB_TEMPLATE.read_text()
+    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+
+
+def export_hub(state: dict, out: str | Path) -> Path:
+    out = Path(out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(render_hub(state))
     return out

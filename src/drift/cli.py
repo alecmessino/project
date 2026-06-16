@@ -229,6 +229,21 @@ def studies(
 
 
 @app.command()
+def hub(
+    docs: str = typer.Option("docs", "--docs", help="directory holding the exhibits"),
+    out: str = typer.Option("docs/index.html", "--out", help="hub landing page"),
+):
+    """Build the markets-only landing hub (links every exhibit + live headlines)."""
+    from .hub import build_hub
+    from .exhibit import export_hub
+    state = build_hub(docs)
+    path = export_hub(state, out)
+    present = sum(1 for e in state["exhibits"] if e["present"])
+    console.print(f"[green]wrote[/] {path}  ({present}/{len(state['exhibits'])} exhibits linked, "
+                  f"{len(state['headline'])} headline stats)")
+
+
+@app.command()
 def ledger(
     equities: str = typer.Option("SPY,QQQ,IWM,GLD,TLT,XLE", "--equities"),
     crypto: str = typer.Option("BTC-USD,ETH-USD,LTC-USD", "--crypto"),

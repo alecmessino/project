@@ -42,12 +42,25 @@ class YahooFeed:
         instruments: Sequence[str] = ("SPY",),
         range: str = "2y",
         interval: str = "1d",
+        period1: Optional[int] = None,
+        period2: Optional[int] = None,
         session: Optional[object] = None,
     ):
         self.instruments = list(instruments)
         self.range = range
         self.interval = interval
+        # Explicit epoch bounds force TRUE daily history; `range=max` is silently
+        # coarsened to monthly by Yahoo, which would wreck annualized metrics.
+        self.period1 = period1
+        self.period2 = period2
         self._session = session
+
+    def _params(self) -> dict:
+        if self.period1 is not None or self.period2 is not None:
+            import time as _t
+            return {"period1": int(self.period1 or 0),
+                    "period2": int(self.period2 or _t.time()), "interval": self.interval}
+        return {"range": self.range, "interval": self.interval}
 
     @staticmethod
     def parse_chart(payload: dict) -> list[Bar]:
@@ -96,7 +109,7 @@ class YahooFeed:
             try:
                 resp = self._get().get(
                     f"{host}/v8/finance/chart/{instrument}",
-                    params={"range": self.range, "interval": self.interval},
+                    params=self._params(),
                     timeout=20,
                 )
                 resp.raise_for_status()

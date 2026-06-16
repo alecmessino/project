@@ -229,6 +229,35 @@ def studies(
 
 
 @app.command()
+def tearsheet(
+    equities: str = typer.Option("SPY,QQQ,IWM,GLD,TLT,XLE", "--equities"),
+    crypto: str = typer.Option("BTC-USD,ETH-USD,LTC-USD", "--crypto"),
+    years: float = typer.Option(40.0, "--years", help="how many years of daily history to pull"),
+    train_frac: float = typer.Option(0.6, "--train-frac", help="in-sample fraction"),
+    config: Optional[str] = typer.Option(None, "--config"),
+    out: str = typer.Option("docs/tearsheet.html", "--out"),
+):
+    """Long-history tearsheet: strategy vs buy-and-hold, in-sample/out-of-sample."""
+    from .tearsheet import build_tearsheet
+    from .exhibit import export_tearsheet
+    settings = _load_settings(config)
+    eq = [s.strip() for s in equities.split(",") if s.strip()]
+    cr = [s.strip() for s in crypto.split(",") if s.strip()]
+    console.print(f"[dim]pulling daily history (~{years:.0f}y) for {len(eq)} equities + {len(cr)} crypto …[/]")
+    report = build_tearsheet(settings, equities=eq, crypto=cr, years=years, train_frac=train_frac)
+    path = export_tearsheet(report, out)
+    for bk in report["books"]:
+        s, b, o = bk["strategy"], bk["benchmark"], bk["oos"]
+        console.print(
+            f"[bold]{bk['name']}[/] ({bk['span'][0]}→{bk['span'][1]}, fit L={bk['fit']['lookback']}/"
+            f"c={bk['fit']['continuation']})\n"
+            f"  strategy: CAGR {s['cagr']*100:+.1f}%  Sharpe {s['sharpe']:.2f}  maxDD {s['max_drawdown']*100:.1f}%"
+            f"   |  buy&hold: CAGR {b['cagr']*100:+.1f}%  Sharpe {b['sharpe']:.2f}  maxDD {b['max_drawdown']*100:.1f}%\n"
+            f"  out-of-sample: Sharpe {o['test']['sharpe']:.2f}  CAGR {o['test']['cagr']*100:+.1f}%")
+    console.print(f"[green]wrote[/] {path}  ({len(report['books'])} books)")
+
+
+@app.command()
 def serve(
     source: str = typer.Option("coinbase", "--source", help="coinbase | polygon | synthetic"),
     instrument: str = typer.Option("BTC-USD,ETH-USD,LTC-USD,BCH-USD", "--instrument"),

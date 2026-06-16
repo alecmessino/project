@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Driftwood — long-history tearsheet</title>
+<style>
+  :root{
+    --bg:#ffffff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#717179;
+    --pos:#2f6f5b; --neg:#9b4439; --slate:#4a4f57; --rule:#222226; --bench:#b8bcc2;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.65 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:900px;margin:0 auto;padding:56px 28px 80px}
+  header{border-top:3px solid var(--rule);padding-top:20px}
+  header h1{font-size:25px;margin:0 0 6px;font-weight:650;letter-spacing:-.2px}
+  header h1 .w{color:var(--slate)}
+  .method{color:var(--dim);font-size:13.5px;max-width:70ch;margin:6px 0 0}
+  .book{padding:30px 0;border-top:1px solid var(--line);margin-top:8px}
+  .book h2{font-size:19px;margin:0 0 2px;font-weight:640}
+  .book .uni{color:var(--dim);font-size:12.5px;margin-bottom:16px}
+  .book .uni b{color:var(--ink)}
+  .cmp{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:0 14px;font-variant-numeric:tabular-nums;
+    border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:18px}
+  .cmp>div{padding:8px 12px;border-bottom:1px solid var(--line)}
+  .cmp .h{background:var(--soft);font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--dim)}
+  .cmp .k{color:var(--dim)}
+  .cmp .v{text-align:right;font-weight:600}
+  .cmp>div:nth-last-child(-n+3){border-bottom:none}
+  .pos{color:var(--pos)} .neg{color:var(--neg)}
+  svg.eq{display:block;width:100%;height:150px;margin:6px 0 4px}
+  .legend{font-size:12px;color:var(--dim);display:flex;gap:18px;margin-bottom:14px}
+  .legend i{display:inline-block;width:14px;height:2px;vertical-align:middle;margin-right:5px}
+  .oos{display:flex;gap:26px;flex-wrap:wrap;margin:6px 0 16px;font-size:13px}
+  .oos .b{border:1px solid var(--line);border-radius:8px;padding:10px 14px;min-width:150px}
+  .oos .b .t{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);margin-bottom:4px}
+  .oos .b .r{display:flex;justify-content:space-between;gap:14px}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13px;margin-top:6px}
+  th,td{padding:6px 10px;text-align:right;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  thead th{color:var(--dim);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.5px;
+    border-bottom:1px solid var(--rule)}
+  .foot{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--dim);font-size:12.5px}
+  .foot .note{color:var(--slate)}
+  details{margin-top:10px} summary{cursor:pointer;color:var(--slate);font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Drift<span class="w">wood</span> · long-history tearsheet</h1>
+    <p class="method" id="method"></p>
+  </header>
+  <div id="books"></div>
+  <div class="foot">
+    <span class="note">Signal system — research only, not investment advice.</span>
+    Out-of-sample = the held-out remainder after parameters were fit on the in-sample
+    head; net of modeled transaction cost. Past performance does not predict future results.
+    <div id="gen" style="margin-top:6px"></div>
+  </div>
+</div>
+
+<script>
+window.__STATE__ = {"header": {"title": "Driftwood \u2014 long-history tearsheet", "generated": "2026-06-16 03:29:25 UTC", "method": "params fit on first 60% (in-sample), reported on the held-out remainder (out-of-sample); benchmark = equal-weight buy-and-hold; net of 5bps/side."}, "books": [{"name": "Equities & ETFs", "universe": ["GLD", "IWM", "QQQ", "SPY", "TLT", "XLE"], "n_names": 6, "span": ["1993-02-01", "2026-06-15"], "fit": {"train_frac": 0.6, "split": "2013-02-05", "lookback": 80, "continuation": 0.25}, "strategy": {"total_return": 1.1887380526223272, "cagr": 0.02377804928819427, "sharpe": 0.6372543934697881, "sortino": 0.89, "calmar": 0.34805390043159057, "max_drawdown": 0.06831714644975745, "ann_vol": 0.0380133253754703, "hit_rate": 0.5403264141974331, "n_bars": 8400}, "benchmark": {"total_return": 39.58347997377169, "cagr": 0.11727001916527868, "sharpe": 0.7790860444953607, "sortino": 1.12, "calmar": 0.23135639169090513, "max_drawdown": 0.5068803948237264, "ann_vol": 0.15884083755042128, "hit_rate": 0.5448564593301436, "n_bars": 8400}, "oos": {"train": {"total_return": 0.8048706768217551, "cagr": 0.029958582469355788, "sharpe": 0.71976172600055, "sortino": 1.03, "calmar": 0.5242967391819076, "max_drawdown": 0.057140508857831174, "ann_vol": 0.04225556224071279, "hit_rate": 0.5331369661266568, "n_bars": 5041}, "test": {"total_return": 0.2126841444820431, "cagr": 0.014542371743269111, "sharpe": 0.4888389392924693, "sortino": 0.64, "calmar": 0.21286562011139862, "max_drawdown": 0.06831714644975866, "ann_vol": 0.030551749945753083, "hit_rate": 0.5486968449931413, "n_bars": 3359}}, "by_year": [{"year": "1993", "strat": 0.0394, "bench": 0.0871}, {"year": "1994", "strat": 0.0052, "bench": 0.004}, {"year": "1995", "strat": 0.2917, "bench": 0.3805}, {"year": "1996", "strat": 0.0461, "bench": 0.225}, {"year": "1997", "strat": 0.0042, "bench": 0.3348}, {"year": "1998", "strat": 0.0566, "bench": 0.2753}, {"year": "1999", "strat": 0.03, "bench": 0.4005}, {"year": "2000", "strat": -0.018, "bench": -0.0406}, {"year": "2001", "strat": 0.0, "bench": -0.1421}, {"year": "2002", "strat": -0.0155, "bench": -0.2103}, {"year": "2003", "strat": 0.0539, "bench": 0.305}, {"year": "2004", "strat": 0.0277, "bench": 0.16}, {"year": "2005", "strat": -0.0005, "bench": 0.1301}, {"year": "2006", "strat": 0.0455, "bench": 0.1456}, {"year": "2007", "strat": -0.0009, "bench": 0.1686}, {"year": "2008", "strat": -0.0088, "bench": -0.1936}, {"year": "2009", "strat": 0.0177, "bench": 0.2225}, {"year": "2010", "strat": 0.0278, "bench": 0.2147}, {"year": "2011", "strat": 0.0437, "bench": 0.094}, {"year": "2012", "strat": -0.0108, "bench": 0.1146}, {"year": "2013", "strat": 0.0524, "bench": 0.1266}, {"year": "2014", "strat": -0.0065, "bench": 0.0906}, {"year": "2015", "strat": 0.0029, "bench": -0.0419}, {"year": "2016", "strat": -0.0317, "bench": 0.1377}, {"year": "2017", "strat": 0.0632, "bench": 0.1501}, {"year": "2018", "strat": -0.0098, "bench": -0.0576}, {"year": "2019", "strat": -0.0025, "bench": 0.2373}, {"year": "2020", "strat": 0.0267, "bench": 0.1766}, {"year": "2021", "strat": 0.0357, "bench": 0.1892}, {"year": "2022", "strat": 0.0025, "bench": -0.0948}, {"year": "2023", "strat": -0.0109, "bench": 0.1864}, {"year": "2024", "strat": 0.0087, "bench": 0.1451}, {"year": "2025", "strat": 0.0533, "bench": 0.2111}, {"year": "2026", "strat": 0.0152, "bench": 0.1335}], "equity": {"split_frac": 0.6001190476190477, "strat": [1.0, 1.0, 1.00914, 1.02684, 1.0515, 1.0515, 1.04471, 1.04471, 1.1259, 1.23082, 1.29565, 1.39659, 1.37779, 1.36685, 1.3905, 1.4429, 1.46595, 1.49058, 1.4175, 1.47167, 1.48967, 1.48967, 1.50826, 1.51218, 1.48446, 1.5207, 1.52275, 1.52275, 1.51489, 1.51489, 1.51489, 1.51489, 1.51489, 1.50936, 1.49769, 1.49769, 1.49139, 1.48593, 1.53337, 1.55093, 1.59372, 1.57814, 1.58327, 1.59106, 1.61289, 1.63032, 1.61479, 1.63799, 1.65206, 1.64703, 1.69386, 1.6739, 1.69511, 1.67438, 1.69609, 1.69038, 1.66281, 1.66438, 1.65439, 1.65494, 1.67638, 1.72183, 1.71395, 1.66957, 1.72102, 1.77776, 1.77824, 1.82544, 1.82195, 1.8788, 1.85027, 1.83099, 1.80487, 1.83278, 1.83431, 1.87041, 1.88102, 1.89961, 1.90067, 1.89868, 1.89426, 1.89258, 1.89258, 1.88791, 1.88553, 1.83901, 1.83438, 1.86802, 1.88716, 1.88905, 1.94991, 1.93911, 1.95506, 1.92908, 1.93665, 1.90357, 1.90548, 1.95387, 1.91476, 1.96488, 1.95951, 2.0135, 2.03091, 2.0555, 2.04712, 2.06062, 2.05712, 2.05732, 2.04176, 2.03628, 2.05776, 2.00949, 2.06933, 2.08361, 2.05241, 2.05957, 2.06751, 2.0949, 2.13477, 2.19586], "bench": [1.00711, 1.01901, 1.05502, 1.07391, 1.08709, 1.06516, 1.09874, 1.10526, 1.21962, 1.3604, 1.43235, 1.5913, 1.6499, 1.63158, 1.80009, 1.9319, 2.3192, 2.4466, 2.45793, 2.78315, 2.76727, 3.0397, 3.17727, 3.64007, 3.65731, 4.22866, 4.2363, 4.71968, 4.67069, 4.29103, 4.14843, 3.52382, 3.63082, 3.62349, 2.88331, 2.81103, 2.82131, 3.13471, 3.35482, 3.5906, 3.85465, 3.92818, 4.06353, 4.19767, 4.28097, 4.68941, 4.69831, 5.12248, 5.23553, 5.15822, 5.61731, 5.79641, 6.18686, 6.48195, 6.28613, 6.58685, 6.36075, 4.85927, 4.73452, 5.38109, 6.04924, 6.61966, 7.03918, 6.85211, 7.58866, 8.10955, 8.3207, 8.28082, 8.54909, 9.2775, 9.17046, 9.58737, 9.90439, 10.17688, 10.2312, 10.6081, 11.26453, 11.73526, 11.41815, 11.64491, 12.25572, 11.57848, 11.36649, 11.22509, 12.28512, 12.71301, 12.85765, 13.31248, 13.62071, 14.06424, 14.64458, 15.18911, 15.64893, 14.53204, 15.40183, 16.00661, 15.96303, 17.55781, 16.69372, 18.71549, 19.26628, 21.20805, 22.65521, 22.671, 24.0856, 24.03451, 21.73969, 21.42333, 23.27161, 23.24303, 24.58009, 24.69722, 27.31727, 28.105, 29.75696, 30.74977, 29.76355, 32.62234, 34.7637, 38.50003]}}, {"name": "Crypto", "universe": ["BTC-USD", "ETH-USD", "LTC-USD"], "n_names": 3, "span": ["2014-09-18", "2026-06-16"], "fit": {"train_frac": 0.6, "split": "2021-10-04", "lookback": 40, "continuation": 0.1}, "strategy": {"total_return": 1.0828539507705712, "cagr": 0.044053573991661876, "sharpe": 1.0697175541652442, "sortino": 1.64, "calmar": 0.6558370035591308, "max_drawdown": 0.06717152852399243, "ann_vol": 0.04109329515751116, "hit_rate": 0.5349214943151056, "n_bars": 4289}, "benchmark": {"total_return": 104.3342298089868, "cagr": 0.3205852123125077, "sharpe": 0.7516901943916149, "sortino": 1.1, "calmar": 0.3604315320940564, "max_drawdown": 0.8894482967401681, "ann_vol": 0.6312279950687693, "hit_rate": 0.5283282816507344, "n_bars": 4289}, "oos": {"train": {"total_return": 0.9184482224458801, "cagr": 0.06586304944269727, "sharpe": 1.4135185047947714, "sortino": 2.19, "calmar": 1.2812991100108233, "max_drawdown": 0.05140333660431632, "ann_vol": 0.04587442485594264, "hit_rate": 0.5552903739061257, "n_bars": 2574}, "test": {"total_return": 0.0856972455139231, "cagr": 0.012154937299125868, "sharpe": 0.38768546421417355, "sortino": 0.58, "calmar": 0.1919708847250017, "max_drawdown": 0.06331656655402623, "ann_vol": 0.03252832189416168, "hit_rate": 0.4915254237288136, "n_bars": 1715}}, "by_year": [{"year": "2014", "strat": 0.0, "bench": -0.3839}, {"year": "2015", "strat": 0.1029, "bench": 0.4873}, {"year": "2016", "strat": 0.1218, "bench": 0.6956}, {"year": "2017", "strat": 0.1769, "bench": 33.4704}, {"year": "2018", "strat": -0.0183, "bench": -0.8058}, {"year": "2019", "strat": 0.1009, "bench": 0.4285}, {"year": "2020", "strat": 0.1373, "bench": 3.2989}, {"year": "2021", "strat": 0.0593, "bench": 1.2954}, {"year": "2022", "strat": -0.0404, "bench": -0.6035}, {"year": "2023", "strat": 0.0531, "bench": 0.7676}, {"year": "2024", "strat": 0.0865, "bench": 0.7525}, {"year": "2025", "strat": 0.0114, "bench": -0.1009}, {"year": "2026", "strat": -0.0107, "bench": -0.3495}], "equity": {"split_frac": 0.6001398927488926, "strat": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.02136, 1.05946, 1.0462, 1.0462, 1.08684, 1.10779, 1.0863, 1.0863, 1.0863, 1.08247, 1.15028, 1.15989, 1.15895, 1.15895, 1.16523, 1.18133, 1.25113, 1.23246, 1.24108, 1.23784, 1.36613, 1.3758, 1.36791, 1.39949, 1.34497, 1.36697, 1.46648, 1.46575, 1.45997, 1.45997, 1.4571, 1.44203, 1.44203, 1.42959, 1.42959, 1.42959, 1.42959, 1.42959, 1.42683, 1.43333, 1.44525, 1.53929, 1.57823, 1.57391, 1.57391, 1.57391, 1.57391, 1.57391, 1.58588, 1.59105, 1.58468, 1.59948, 1.60667, 1.60394, 1.64345, 1.61677, 1.65772, 1.71142, 1.85862, 1.88991, 1.87206, 1.89062, 1.89075, 1.89075, 1.90891, 1.92338, 1.91551, 1.90557, 1.89615, 1.89615, 1.89615, 1.87823, 1.87823, 1.87823, 1.87823, 1.86221, 1.86221, 1.82469, 1.81957, 1.83848, 1.87072, 1.86265, 1.84627, 1.84627, 1.84627, 1.83351, 1.83351, 1.86643, 1.88774, 1.92225, 1.90874, 2.03383, 2.01082, 2.01082, 2.01082, 2.01082, 2.01082, 2.01082, 2.04186, 2.0881, 2.0818, 2.0818, 2.0818, 2.0818, 2.07369, 2.0823, 2.09828, 2.10546, 2.10546, 2.10546, 2.10546, 2.10546, 2.10546, 2.10343, 2.08285], "bench": [0.92714, 0.76252, 0.75644, 0.60817, 0.41443, 0.52346, 0.38508, 0.39874, 0.57405, 0.84575, 0.57284, 0.63904, 0.78686, 0.97739, 0.86092, 0.89582, 0.87326, 0.96823, 1.23507, 1.24691, 1.08694, 1.13395, 1.25931, 1.30252, 1.58821, 1.48515, 1.71966, 2.91825, 7.02202, 8.82756, 9.61649, 16.97294, 16.29469, 21.06415, 63.1118, 51.71892, 51.26589, 27.66247, 40.77564, 28.96711, 27.67172, 19.4408, 19.04787, 16.65214, 8.59364, 10.61539, 11.15642, 13.59314, 16.46869, 26.4165, 31.51062, 27.02033, 22.17355, 18.82896, 17.45816, 14.63135, 21.74757, 22.39919, 17.22218, 19.76704, 20.40542, 21.94996, 28.06584, 25.23914, 32.81369, 41.83812, 89.86981, 133.07368, 114.6401, 159.93531, 135.93714, 102.88763, 138.59045, 156.57725, 182.42636, 187.51443, 148.54529, 111.83018, 110.65878, 118.65924, 83.16988, 56.25432, 70.57314, 62.95273, 58.31349, 57.69452, 60.80959, 73.22437, 81.19678, 86.52765, 88.69952, 85.93572, 98.96731, 76.22427, 74.52109, 86.48892, 93.8152, 101.06266, 106.49958, 161.06445, 137.40159, 154.00051, 137.44184, 134.86015, 114.29107, 116.3906, 156.02842, 181.99156, 195.34419, 167.65397, 134.28939, 161.71294, 168.90446, 203.39224, 222.76527, 206.69654, 200.18546, 172.39694, 169.78382, 113.75476, 121.45649, 130.53637, 118.27596]}}]};
+function pct(x){ return (x>=0?"+":"")+(x*100).toFixed(1)+"%"; }
+function cls(x){ return x>0?"pos":x<0?"neg":""; }
+function num(x){ return x==null ? "∞" : x.toFixed(2); }
+
+function eqchart(el, strat, bench, splitFrac){
+  el.innerHTML=""; if(!strat||strat.length<2) return;
+  const w=el.clientWidth||820,h=el.clientHeight||150,pad=4;
+  const all=strat.concat(bench).map(v=>Math.log(Math.max(v,1e-6)));
+  const lo=Math.min(...all),hi=Math.max(...all),rng=(hi-lo)||1;
+  const xs=i=>pad+(w-2*pad)*i/(strat.length-1);
+  const ys=v=>h-pad-(h-2*pad)*(Math.log(Math.max(v,1e-6))-lo)/rng;
+  const ns="http://www.w3.org/2000/svg";
+  // in-sample / out-of-sample divider
+  const sx=pad+(w-2*pad)*splitFrac;
+  const sep=document.createElementNS(ns,"line");
+  sep.setAttribute("x1",sx);sep.setAttribute("x2",sx);sep.setAttribute("y1",pad);sep.setAttribute("y2",h-pad);
+  sep.setAttribute("stroke","#cfcfd4");sep.setAttribute("stroke-dasharray","3 3");el.appendChild(sep);
+  for(const [data,color,wdt] of [[bench,"#b8bcc2",1.3],[strat,"#4a4f57",1.7]]){
+    const p=document.createElementNS(ns,"polyline");
+    p.setAttribute("points",data.map((v,i)=>xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" "));
+    p.setAttribute("fill","none");p.setAttribute("stroke",color);p.setAttribute("stroke-width",wdt);
+    el.appendChild(p);
+  }
+}
+
+function metricRows(s,b){
+  const rows=[["Total return",pct(s.total_return),pct(b.total_return),true],
+    ["CAGR",pct(s.cagr),pct(b.cagr),true],["Sharpe",num(s.sharpe),num(b.sharpe),true],
+    ["Sortino",num(s.sortino),num(b.sortino),true],["Calmar",num(s.calmar),num(b.calmar),true],
+    ["Max drawdown",pct(-s.max_drawdown),pct(-b.max_drawdown),false],
+    ["Ann. vol",pct(s.ann_vol),pct(b.ann_vol),false]];
+  let html=`<div class="h">Metric</div><div class="h v">Strategy</div><div class="h v">Buy &amp; hold</div>`;
+  for(const [k,sv,bv,tone] of rows)
+    html+=`<div class="k">${k}</div><div class="v ${tone?cls(parseFloat(sv)):''}">${sv}</div><div class="v">${bv}</div>`;
+  return html;
+}
+
+function render(st){
+  document.getElementById("method").textContent=st.header.method;
+  document.getElementById("gen").textContent="Generated "+st.header.generated;
+  document.getElementById("books").innerHTML=st.books.map((bk,i)=>{
+    const f=bk.fit, o=bk.oos;
+    const yr=bk.by_year.map(r=>`<tr><td>${r.year}</td>
+      <td class="${cls(r.strat)}">${pct(r.strat)}</td><td>${pct(r.bench)}</td></tr>`).join("");
+    return `<section class="book">
+      <h2>${bk.name}</h2>
+      <div class="uni"><b>${bk.n_names}</b> names · ${bk.span[0]} → ${bk.span[1]} ·
+        fit lookback <b>${f.lookback}</b>, continuation <b>${f.continuation}</b>
+        on first ${(f.train_frac*100)|0}%</div>
+      <div class="cmp">${metricRows(bk.strategy,bk.benchmark)}</div>
+      <div class="legend"><span><i style="background:#4a4f57"></i>Strategy</span>
+        <span><i style="background:#b8bcc2"></i>Buy &amp; hold</span>
+        <span><i style="background:#cfcfd4"></i>in-sample / out-of-sample split</span></div>
+      <svg class="eq" id="eq${i}" preserveAspectRatio="none"></svg>
+      <div class="oos">
+        <div class="b"><div class="t">In-sample (fit)</div>
+          <div class="r"><span>Sharpe</span><b>${num(o.train.sharpe)}</b></div>
+          <div class="r"><span>CAGR</span><b>${pct(o.train.cagr)}</b></div>
+          <div class="r"><span>Max DD</span><b>${pct(-o.train.max_drawdown)}</b></div></div>
+        <div class="b"><div class="t">Out-of-sample</div>
+          <div class="r"><span>Sharpe</span><b class="${cls(o.test.sharpe)}">${num(o.test.sharpe)}</b></div>
+          <div class="r"><span>CAGR</span><b class="${cls(o.test.cagr)}">${pct(o.test.cagr)}</b></div>
+          <div class="r"><span>Max DD</span><b>${pct(-o.test.max_drawdown)}</b></div></div>
+      </div>
+      <details><summary>Returns by year (strategy vs buy &amp; hold)</summary>
+        <table><thead><tr><th>Year</th><th>Strategy</th><th>Buy &amp; hold</th></tr></thead>
+        <tbody>${yr}</tbody></table></details>
+    </section>`;
+  }).join("");
+  requestAnimationFrame(()=>st.books.forEach((bk,i)=>{
+    const el=document.getElementById("eq"+i); if(el) eqchart(el,bk.equity.strat,bk.equity.bench,bk.equity.split_frac);
+  }));
+}
+
+async function load(){
+  let s=window.__STATE__;
+  if(!s){ try{ s=await (await fetch("/api/tearsheet")).json(); }catch(e){} }
+  if(s) render(s);
+}
+load();
+</script>
+</body>
+</html>

@@ -42,10 +42,14 @@ jobs:
           drift export --source yahoo --instrument "$EQUITIES" \
             --config config/drift.yaml --out docs/equities.html
 
+      - name: Build long-history tearsheet (docs/tearsheet.html)
+        run: drift tearsheet --config config/drift.yaml --out docs/tearsheet.html
+
       - name: Commit if changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/drift.html docs/case_studies.html docs/equities.html docs/equities_case_studies.html
+          git add docs/drift.html docs/case_studies.html docs/equities.html \
+            docs/equities_case_studies.html docs/tearsheet.html
           git diff --cached --quiet && echo "no change" || \
             git commit -m "chore: refresh Driftwood exhibits [skip ci]" && git push

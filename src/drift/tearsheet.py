@@ -149,8 +149,8 @@ def build_book(name: str, series: dict[str, list[Bar]], settings: Settings,
 
 
 # Default books — keyless via Yahoo (equities + crypto both available there).
-EQUITY_UNIVERSE = ("SPY", "QQQ", "IWM", "GLD", "TLT", "XLE")
-CRYPTO_UNIVERSE = ("BTC-USD", "ETH-USD", "LTC-USD")
+# The equities book is the curated region × factor universe.
+from .universes import CRYPTO as CRYPTO_UNIVERSE, EQUITIES as EQUITY_UNIVERSE  # noqa: E402
 
 
 def build_tearsheet(settings: Settings, equities: Sequence[str] = EQUITY_UNIVERSE,

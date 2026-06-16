@@ -14,6 +14,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from . import universes as _universes
 from .backtest import backtest
 from .config import Settings
 from .cross_section import cross_backtest, rank_snapshot
@@ -245,8 +246,8 @@ def hub(
 
 @app.command()
 def ledger(
-    equities: str = typer.Option("SPY,QQQ,IWM,GLD,TLT,XLE", "--equities"),
-    crypto: str = typer.Option("BTC-USD,ETH-USD,LTC-USD", "--crypto"),
+    equities: str = typer.Option(_universes.csv(_universes.EQUITIES), "--equities"),
+    crypto: str = typer.Option(_universes.csv(_universes.CRYPTO), "--crypto"),
     state: str = typer.Option("docs/ledger.json", "--state", help="append-only ledger JSON"),
     out: str = typer.Option("docs/ledger.html", "--out", help="ledger exhibit HTML"),
     seed_sessions: int = typer.Option(120, "--seed-sessions", help="walk-forward seed length on first run"),
@@ -295,8 +296,8 @@ def ledger(
 
 @app.command()
 def tearsheet(
-    equities: str = typer.Option("SPY,QQQ,IWM,GLD,TLT,XLE", "--equities"),
-    crypto: str = typer.Option("BTC-USD,ETH-USD,LTC-USD", "--crypto"),
+    equities: str = typer.Option(_universes.csv(_universes.EQUITIES), "--equities"),
+    crypto: str = typer.Option(_universes.csv(_universes.CRYPTO), "--crypto"),
     years: float = typer.Option(40.0, "--years", help="how many years of daily history to pull"),
     train_frac: float = typer.Option(0.6, "--train-frac", help="in-sample fraction"),
     config: Optional[str] = typer.Option(None, "--config"),

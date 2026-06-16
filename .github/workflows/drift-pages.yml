@@ -34,9 +34,11 @@ jobs:
              --config config/drift.yaml --out docs/case_studies.html
 
       # Equities exhibits — keyless via Yahoo Finance (no repo secret required).
+      # Universe is the curated region × factor set (single source: drift.universes).
       - name: Build equities exhibits (docs/equities*.html)
         run: |
-          EQUITIES="SPY,QQQ,DIA,IWM,GLD,TLT,XLE,AAPL,MSFT,NVDA"
+          EQUITIES=$(python -c "from drift.universes import EQUITIES, csv; print(csv(EQUITIES))")
+          echo "universe: $EQUITIES"
           drift studies --source yahoo --instrument "$EQUITIES" \
             --config config/drift.yaml --out docs/equities_case_studies.html
           drift export --source yahoo --instrument "$EQUITIES" \

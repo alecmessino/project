@@ -51,3 +51,25 @@ LABELS = {
 
 def csv(symbols) -> str:
     return ",".join(symbols)
+
+
+# --- Group maps for neutralized cross-sections ------------------------------ #
+# Region/asset bucket per ticker (US / developed-intl / emerging / diversifier).
+REGION_OF = {
+    **{t: "US" for t in US}, **{t: "DEV" for t in DEV_INTL},
+    **{t: "EM" for t in EM}, **{t: "DIV" for t in DIVERSIFIERS},
+}
+# Style/factor bucket per ticker (core = broad market, no tilt).
+FACTOR_OF = {
+    "SPY": "core", "IWM": "size", "VTV": "value", "VUG": "growth", "VBR": "smallvalue",
+    "MTUM": "momentum", "QUAL": "quality", "USMV": "minvol",
+    "EFA": "core", "EFV": "value", "EFG": "growth", "SCZ": "size",
+    "DLS": "smallvalue", "IMTM": "momentum",
+    "EEM": "core", "DGS": "smallvalue", "TLT": "bond", "GLD": "gold",
+}
+
+
+def group_map(dim: str) -> dict[str, str]:
+    """Ticker -> group for a neutralization dimension ('region' or 'factor')."""
+    return dict(REGION_OF if dim == "region" else FACTOR_OF)
+

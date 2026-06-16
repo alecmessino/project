@@ -148,6 +148,30 @@ def study_cross(series: dict[str, list[Bar]], settings: Settings) -> dict:
     }
 
 
+def study_cross_neutral(series: dict[str, list[Bar]], settings: Settings,
+                        dim: str = "region") -> dict:
+    """Cross-sectional, but neutral to `dim` (region/factor): demean trend scores
+    within each group so the book bets on within-group leadership only."""
+    s = settings.model_copy(deep=True)
+    s.cross_section.neutralize = dim
+    xbt = cross_backtest(series, s)
+    other = "style" if dim == "region" else "region"
+    return {
+        "name": f"{dim.capitalize()}-neutral relative-strength",
+        "description": f"The cross-section with each {dim}'s mean trend removed, so it "
+                       f"bets purely on which {other} is leading WITHIN every {dim} — "
+                       f"isolating {other} rotation from {dim} rotation.",
+        "metrics": [
+            _metric("Net return", f"{xbt.net_return*100:+.1f}%", _tone(xbt.net_return)),
+            _metric("Sharpe", f"{xbt.sharpe:.2f}", _tone(xbt.sharpe)),
+            _metric("Max DD", f"{xbt.max_drawdown*100:.1f}%", "neg"),
+            _metric("Turnover", f"{xbt.turnover:.1f}"),
+        ],
+        "table": None,
+        "equity": _spark(xbt.equity_curve),
+    }
+
+
 def study_lookback_sensitivity(series: dict[str, list[Bar]], settings: Settings,
                                lookbacks=(20, 40, 60, 120)) -> dict:
     inst, bars = max(series.items(), key=lambda kv: len(kv[1]))
@@ -226,6 +250,11 @@ def build_report(series: dict[str, list[Bar]], settings: Settings, source: str =
         studies.append(study_timeseries(series, settings))
         if len(series) >= settings.cross_section.min_universe:
             studies.append(study_cross(series, settings))
+            # Region-neutral variant, only when the universe spans >=2 known regions.
+            from .universes import REGION_OF
+            regions = {REGION_OF[i] for i in series if i in REGION_OF}
+            if len(regions) >= 2:
+                studies.append(study_cross_neutral(series, settings, dim="region"))
         studies.append(study_lookback_sensitivity(series, settings))
         if len(series) >= settings.cross_section.min_universe:
             studies.append(study_cost_sensitivity(series, settings))

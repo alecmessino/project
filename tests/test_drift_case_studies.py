@@ -68,6 +68,20 @@ def test_render_report_embeds_state():
     assert html.lstrip().startswith("<!DOCTYPE html>")
 
 
+def test_equity_universe_skips_when_no_key(monkeypatch):
+    # With no POLYGON_API_KEY the per-symbol fetch raises and is skipped (no network).
+    monkeypatch.delenv("POLYGON_API_KEY", raising=False)
+    assert cs.equity_universe(["SPY", "QQQ"]) == {}
+
+
+def test_build_report_labels_are_asset_agnostic():
+    report = cs.build_report(_universe(), _settings(), source="polygon")
+    names = [st["name"] for st in report["studies"]]
+    assert "Trend-following (time-series)" in names
+    assert "Relative-strength (cross-sectional)" in names
+    assert not any("Crypto" in n for n in names)  # works for equities too
+
+
 def test_equal_weight_equity_aggregates():
     eq = cs._equal_weight_equity([[1.0, 1.1, 1.21], [1.0, 0.9, 0.81]])
     assert len(eq) == 3

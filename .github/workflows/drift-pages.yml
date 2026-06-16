@@ -28,15 +28,32 @@ jobs:
              --instrument BTC-USD,ETH-USD,LTC-USD,BCH-USD
              --config config/drift.yaml --out docs/drift.html
 
-      - name: Build case studies (docs/case_studies.html)
+      - name: Build crypto case studies (docs/case_studies.html)
         run: drift studies --source coinbase
              --instrument BTC-USD,ETH-USD,LTC-USD,BCH-USD,ETC-USD,LINK-USD,ADA-USD,XLM-USD
              --config config/drift.yaml --out docs/case_studies.html
+
+      # Equities exhibits — only when the Polygon key is configured as a repo secret.
+      # --pause 13 keeps the Polygon free tier (5 req/min) under its rate limit.
+      - name: Build equities exhibits (docs/equities*.html)
+        env:
+          POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
+        run: |
+          if [ -z "$POLYGON_API_KEY" ]; then
+            echo "POLYGON_API_KEY not set — skipping equities exhibits."
+            exit 0
+          fi
+          EQUITIES="SPY,QQQ,DIA,IWM,GLD,TLT,XLE,AAPL,MSFT,NVDA"
+          drift studies --source polygon --instrument "$EQUITIES" --pause 13 \
+            --config config/drift.yaml --out docs/equities_case_studies.html
+          drift export --source polygon --instrument "$EQUITIES" \
+            --config config/drift.yaml --out docs/equities.html
 
       - name: Commit if changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/drift.html docs/case_studies.html
+          git add docs/drift.html docs/case_studies.html docs/equities*.html 2>/dev/null || \
+            git add docs/drift.html docs/case_studies.html
           git diff --cached --quiet && echo "no change" || \
             git commit -m "chore: refresh Driftwood exhibits [skip ci]" && git push

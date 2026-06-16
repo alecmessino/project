@@ -108,10 +108,21 @@ def live(
             _print_backtest(backtest(inst, feed.fetch(inst), settings))
 
 
-def _universe(source: str, instruments: list[str], series_csv: Optional[str]) -> dict:
-    """Build a per-instrument series dict from a CSV or a feed source."""
+def _universe(source: str, instruments: list[str], series_csv: Optional[str],
+              pause: float = 13.0) -> dict:
+    """Build a per-instrument series dict from a CSV or a feed source.
+
+    Live sources use the resilient universe pulls (skip a symbol that fails);
+    Polygon paces requests by `pause` seconds to respect the free-tier rate limit.
+    """
     if series_csv:
         return ReplayFeed.from_csv(series_csv).series
+    if source in ("polygon", "equity", "equities", "stocks"):
+        from .case_studies import equity_universe
+        return equity_universe(instruments, pause=pause)
+    if source in ("coinbase", "crypto"):
+        from .case_studies import crypto_universe
+        return crypto_universe(instruments)
     return collect_series(get_feed(source, instruments=instruments))
 
 
@@ -186,22 +197,25 @@ def export(
 
 @app.command()
 def studies(
-    source: str = typer.Option("coinbase", "--source", help="coinbase | synthetic"),
+    source: str = typer.Option("coinbase", "--source", help="coinbase | polygon | synthetic"),
     instrument: str = typer.Option(
         "BTC-USD,ETH-USD,LTC-USD,BCH-USD,ETC-USD,LINK-USD,ADA-USD,XLM-USD", "--instrument"),
     config: Optional[str] = typer.Option(None, "--config"),
     out: str = typer.Option("docs/case_studies.html", "--out", help="static report HTML path"),
+    pause: float = typer.Option(13.0, "--pause", help="seconds between Polygon fetches (free-tier rate limit)"),
 ):
-    """Run the multi-case-study backtest report and write a clean static HTML."""
-    from .case_studies import build_report, crypto_universe
+    """Run the multi-case-study backtest report and write a clean static HTML.
+
+    Works on crypto (`--source coinbase`, keyless) or equities (`--source polygon`,
+    needs POLYGON_API_KEY). Without a usable source it still runs the synthetic
+    control study so the report is never empty.
+    """
+    from .case_studies import build_report
     from .exhibit import export_report
     settings = _load_settings(config)
     instruments = [s.strip() for s in instrument.split(",") if s.strip()]
-    if source in ("coinbase", "crypto"):
-        console.print(f"[dim]pulling {len(instruments)} crypto symbols …[/]")
-        series = crypto_universe(instruments)
-    else:
-        series = _universe(source, instruments, None)
+    console.print(f"[dim]pulling {len(instruments)} {source} symbols …[/]")
+    series = _universe(source, instruments, None, pause=pause)
     report = build_report(series, settings, source=source)
     path = export_report(report, out)
     # Console digest of every study.

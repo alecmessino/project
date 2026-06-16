@@ -1,0 +1,42 @@
+name: Refresh Driftwood exhibits
+
+# Regenerates the Driftwood dashboard + case-studies report from live Coinbase
+# data and commits them to docs/. The existing "Deploy to GitHub Pages" workflow
+# then publishes docs/ on the resulting push to master.
+
+on:
+  schedule:
+    - cron: '20 13 * * *'      # daily, 13:20 UTC (after most daily crypto bars close)
+  workflow_dispatch:            # run on demand from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -e ".[dev]"
+
+      # Coinbase public candles — no API key required.
+      - name: Build dashboard (docs/drift.html)
+        run: drift export --source coinbase
+             --instrument BTC-USD,ETH-USD,LTC-USD,BCH-USD
+             --config config/drift.yaml --out docs/drift.html
+
+      - name: Build case studies (docs/case_studies.html)
+        run: drift studies --source coinbase
+             --instrument BTC-USD,ETH-USD,LTC-USD,BCH-USD,ETC-USD,LINK-USD,ADA-USD,XLM-USD
+             --config config/drift.yaml --out docs/case_studies.html
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/drift.html docs/case_studies.html
+          git diff --cached --quiet && echo "no change" || \
+            git commit -m "chore: refresh Driftwood exhibits [skip ci]" && git push

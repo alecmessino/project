@@ -21,6 +21,7 @@ from .models import Bar
 from .triggers import evaluate, to_signal
 
 TEMPLATE = Path(__file__).with_name("web") / "index.html"
+REPORT_TEMPLATE = Path(__file__).with_name("web") / "report.html"
 
 
 def _spark(curve: Sequence[float], n: int = 90) -> list[float]:
@@ -107,4 +108,18 @@ def export_html(series: dict[str, list[Bar]], settings: Settings, out: str | Pat
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render_html(state))
+    return out
+
+
+def render_report(report: dict) -> str:
+    """Static, self-contained case-studies HTML with the report embedded inline."""
+    template = REPORT_TEMPLATE.read_text()
+    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(report))
+
+
+def export_report(report: dict, out: str | Path) -> Path:
+    """Write a self-contained case-studies report HTML to `out`."""
+    out = Path(out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(render_report(report))
     return out

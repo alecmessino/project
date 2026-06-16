@@ -185,6 +185,33 @@ def export(
 
 
 @app.command()
+def studies(
+    source: str = typer.Option("coinbase", "--source", help="coinbase | synthetic"),
+    instrument: str = typer.Option(
+        "BTC-USD,ETH-USD,LTC-USD,BCH-USD,ETC-USD,LINK-USD,ADA-USD,XLM-USD", "--instrument"),
+    config: Optional[str] = typer.Option(None, "--config"),
+    out: str = typer.Option("docs/case_studies.html", "--out", help="static report HTML path"),
+):
+    """Run the multi-case-study backtest report and write a clean static HTML."""
+    from .case_studies import build_report, crypto_universe
+    from .exhibit import export_report
+    settings = _load_settings(config)
+    instruments = [s.strip() for s in instrument.split(",") if s.strip()]
+    if source in ("coinbase", "crypto"):
+        console.print(f"[dim]pulling {len(instruments)} crypto symbols …[/]")
+        series = crypto_universe(instruments)
+    else:
+        series = _universe(source, instruments, None)
+    report = build_report(series, settings, source=source)
+    path = export_report(report, out)
+    # Console digest of every study.
+    for st in report["studies"]:
+        line = "  ".join(f"{m['label']}: {m['value']}" for m in st["metrics"])
+        console.print(f"[bold]{st['name']}[/]\n  {line}")
+    console.print(f"[green]wrote[/] {path}  ({report['header']['n_instruments']} instruments)")
+
+
+@app.command()
 def serve(
     source: str = typer.Option("coinbase", "--source", help="coinbase | polygon | synthetic"),
     instrument: str = typer.Option("BTC-USD,ETH-USD,LTC-USD,BCH-USD", "--instrument"),

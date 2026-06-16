@@ -17,6 +17,7 @@ from rich.table import Table
 from .backtest import backtest
 from .config import Settings
 from .engine import Engine, Result
+from .feed.base import get_feed
 from .feed.replay import ReplayFeed
 from .feed.synthetic import SyntheticFeed
 
@@ -83,6 +84,27 @@ def simulate(
     settings = _load_settings(config)
     feed = ReplayFeed.from_csv(replay, instrument=instrument)
     Engine(settings, feed).run(on_result=_print_signal)
+
+
+@app.command()
+def live(
+    source: str = typer.Option("coinbase", "--source", help="coinbase | polygon"),
+    instrument: str = typer.Option("BTC-USD", "--instrument", help="comma-separated symbols"),
+    config: Optional[str] = typer.Option(None, "--config"),
+    backtest_too: bool = typer.Option(False, "--backtest", help="also backtest the pulled history"),
+):
+    """Pull a live feed (Coinbase crypto / Polygon equities) and print fired signals.
+
+    Coinbase needs no key; Polygon reads POLYGON_API_KEY from .env / the environment.
+    """
+    settings = _load_settings(config)
+    instruments = [s.strip() for s in instrument.split(",") if s.strip()]
+    feed = get_feed(source, instruments=instruments)
+    console.print(f"[bold]Pulling {source}[/] for {', '.join(instruments)} …")
+    Engine(settings, feed).run(on_result=_print_signal)
+    if backtest_too:
+        for inst in instruments:
+            _print_backtest(backtest(inst, feed.fetch(inst), settings))
 
 
 @app.command()

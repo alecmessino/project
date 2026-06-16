@@ -38,10 +38,28 @@ pytest -q tests/test_drift_*.py        # the Driftwood suite
 
 drift demo --config config/drift.yaml  # full pipeline on a seeded synthetic trend
 drift backtest --series prices.csv --instrument SPY --config config/drift.yaml
-drift simulate --replay prices.csv --config config/drift.yaml   # stream live-style signals
+drift simulate --replay prices.csv --config config/drift.yaml   # stream from a CSV
+
+# Live feeds (real data):
+drift live --source coinbase --instrument BTC-USD,ETH-USD --config config/drift.yaml
+drift live --source polygon  --instrument SPY,QQQ --backtest --config config/drift.yaml
 ```
 
 `prices.csv` columns: `asof,close[,high,low,volume[,instrument]]`.
+
+## Live feeds
+
+Both sit behind the same `PriceFeed` protocol, so the engine and backtest don't
+know or care where bars come from:
+
+- **`coinbase`** — Coinbase Exchange public candles, **no API key**. Daily by
+  default; set `granularity` (60/300/900/3600/21600/86400 s) for intraday crypto
+  and bump `engine.bars_per_year` to match.
+- **`polygon`** — Polygon.io aggregates for equities. Set `POLYGON_API_KEY` in
+  `.env` (gitignored) or the environment. Defaults to ~2 years of daily bars.
+
+For intraday, remember every window is in **bars**: re-tune `lookback`,
+`vol_window`, `breakout_channel`, and `engine.bars_per_year` together.
 
 ## The model in one paragraph
 

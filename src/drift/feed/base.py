@@ -50,4 +50,12 @@ def get_feed(name: str, **kwargs) -> PriceFeed:
         from .synthetic import SyntheticFeed
 
         return SyntheticFeed(**kwargs)
+    if name in ("coinbase", "crypto"):
+        from .coinbase import CoinbaseFeed
+
+        return CoinbaseFeed(**kwargs)
+    if name in ("polygon", "equity", "equities", "stocks"):
+        from .polygon import PolygonFeed
+
+        return PolygonFeed(**kwargs)
     raise ValueError(f"unknown feed: {name!r}")

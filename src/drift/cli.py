@@ -199,6 +199,9 @@ def export(
     settings = _load_settings(config)
     instruments = [s.strip() for s in instrument.split(",") if s.strip()]
     series_dict = _universe(source, instruments, series)
+    if not series_dict and source != "synthetic":
+        console.print("[yellow]no data pulled (rate-limited?) — keeping existing exhibit.[/]")
+        raise typer.Exit()
     path = export_html(series_dict, settings, out, source=source)
     console.print(f"[green]wrote[/] {path}  ({len(series_dict)} instruments)")
 
@@ -224,6 +227,9 @@ def studies(
     instruments = [s.strip() for s in instrument.split(",") if s.strip()]
     console.print(f"[dim]pulling {len(instruments)} {source} symbols …[/]")
     series = _universe(source, instruments, None, pause=pause)
+    if not series and source != "synthetic":
+        console.print("[yellow]no data pulled (rate-limited?) — keeping existing report.[/]")
+        raise typer.Exit()
     report = build_report(series, settings, source=source)
     path = export_report(report, out)
     # Console digest of every study.
@@ -231,6 +237,23 @@ def studies(
         line = "  ".join(f"{m['label']}: {m['value']}" for m in st["metrics"])
         console.print(f"[bold]{st['name']}[/]\n  {line}")
     console.print(f"[green]wrote[/] {path}  ({report['header']['n_instruments']} instruments)")
+
+
+@app.command()
+def thesis(
+    docs: str = typer.Option("docs", "--docs", help="directory holding the exhibits"),
+    out: str = typer.Option("docs/thesis.html", "--out", help="thesis page"),
+):
+    """Build the equities-first thesis page (live figures from the tearsheet & ledger)."""
+    from .thesis import build_thesis
+    from .exhibit import export_thesis
+    state = build_thesis(docs)
+    path = export_thesis(state, out)
+    eq = state.get("equities")
+    if eq:
+        console.print(f"thesis: equities {eq['span']} maxDD "
+                      f"{eq['strat_maxdd']*100:.1f}% vs {eq['bench_maxdd']*100:.1f}% buy&hold")
+    console.print(f"[green]wrote[/] {path}")
 
 
 @app.command()
@@ -315,6 +338,9 @@ def tearsheet(
     cr = [s.strip() for s in crypto.split(",") if s.strip()]
     console.print(f"[dim]pulling daily history (~{years:.0f}y) for {len(eq)} equities + {len(cr)} crypto …[/]")
     report = build_tearsheet(settings, equities=eq, crypto=cr, years=years, train_frac=train_frac)
+    if not report["books"]:
+        console.print("[yellow]no data pulled (rate-limited?) — keeping existing tearsheet.[/]")
+        raise typer.Exit()
     path = export_tearsheet(report, out)
     for bk in report["books"]:
         s, b, o = bk["strategy"], bk["benchmark"], bk["oos"]

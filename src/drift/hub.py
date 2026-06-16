@@ -16,6 +16,8 @@ from typing import Optional
 
 # (title, file, blurb) — order is the order shown on the hub.
 EXHIBITS = [
+    ("Thesis & findings", "thesis.html",
+     "The trend-following thesis, the research, the equities results — and the name."),
     ("Live forward ledger", "ledger.html",
      "Append-only, out-of-sample paper track record — marked and committed daily."),
     ("Long-history tearsheet", "tearsheet.html",

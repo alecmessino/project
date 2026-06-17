@@ -35,12 +35,22 @@ def test_fit_params_returns_grid_member():
 
 def test_build_book_shape_and_oos_split():
     bk = ts.build_book("Test", _series([0.6, -0.3, 0.1]), _settings(), train_frac=0.6)
-    for key in ("strategy", "benchmark", "oos", "by_year", "equity", "fit"):
+    for key in ("strategy", "benchmark", "oos", "by_year", "equity", "fit", "market"):
         assert key in bk
     assert "train" in bk["oos"] and "test" in bk["oos"]
     # equity overlay arrays align and the split marker is within (0,1)
     assert len(bk["equity"]["strat"]) == len(bk["equity"]["bench"])
     assert 0.0 < bk["equity"]["split_frac"] < 1.0
+    assert bk["market"] is None                         # no market series passed -> None
+
+
+def test_build_book_market_block_aligns_and_overlays():
+    series = _series([0.6, -0.3, 0.1])
+    market = SyntheticFeed(instruments=("MKT",), n_bars=400, regimes=[(400, 0.4)], seed=99).series("MKT")
+    bk = ts.build_book("Test", series, _settings(), train_frac=0.6, market=market)
+    assert bk["market"] and "summary" in bk["market"]
+    # market equity overlay aligns with the strategy curve length
+    assert len(bk["equity"]["market"]) == len(bk["equity"]["strat"])
 
 
 def test_build_tearsheet_with_injected_series_is_serializable():

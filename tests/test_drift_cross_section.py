@@ -11,7 +11,7 @@ def _cs(**kw):
 def test_rank_weights_longs_top_shorts_bottom():
     scores = {"A": 2.0, "B": 1.0, "C": 0.0, "D": -1.0, "E": -2.0}
     vols = {k: 0.2 for k in scores}
-    w = rank_weights(scores, vols, _cs(quantile=0.2, weighting="equal"))
+    w = rank_weights(scores, vols, _cs(quantile=0.2, weighting="equal", long_short=True))
     assert w["A"] > 0 and w["E"] < 0      # best long, worst short
     assert w["C"] == 0.0                  # middle untouched
 

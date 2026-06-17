@@ -21,8 +21,9 @@ def test_region_neutral_changes_the_book():
     scores = {"a": 5.0, "b": 4.0, "c": 0.5, "d": 0.1}
     vols = {k: 0.2 for k in scores}
     groups = {"a": "G1", "b": "G1", "c": "G2", "d": "G2"}
-    cs_raw = CrossSectionSettings(quantile=0.25, neutralize="none")
-    cs_neu = CrossSectionSettings(quantile=0.25, neutralize="region")
+    # min_score=-10 disables the trend gate so this isolates the neutralization.
+    cs_raw = CrossSectionSettings(quantile=0.25, neutralize="none", long_short=True, min_score=-10)
+    cs_neu = CrossSectionSettings(quantile=0.25, neutralize="region", long_short=True, min_score=-10)
     raw = rank_weights(scores, vols, cs_raw)
     neu = rank_weights(scores, vols, cs_neu, groups)
     assert raw["a"] > 0 and raw["d"] < 0          # raw: long best abs, short worst abs
@@ -33,7 +34,7 @@ def test_region_neutral_changes_the_book():
 def test_neutralize_ignored_without_groups():
     scores = {"a": 2.0, "b": 1.0, "c": -2.0}
     vols = {k: 0.2 for k in scores}
-    cs = CrossSectionSettings(quantile=0.34, neutralize="region")
+    cs = CrossSectionSettings(quantile=0.34, neutralize="region", long_short=True)
     # No groups passed -> behaves like raw ranking (no crash).
     w = rank_weights(scores, vols, cs, None)
     assert w["a"] > 0 and w["c"] < 0

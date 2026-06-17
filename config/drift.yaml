@@ -68,7 +68,8 @@ cross_section:
   min_universe: 3
   # Per-name |weight| cap.
   max_weight: 0.50
-  # Neutralize the ranking within a grouping: "none", "region", or "factor".
-  # Region-neutral demeans trend within each region -> isolates which STYLE leads;
-  # factor-neutral demeans within each factor -> isolates which REGION leads.
+  # Neutralize the ranking within a grouping: "none", "region", "size", or "style".
+  # region-neutral -> isolates which size/style leads within each region;
+  # size-neutral   -> isolates region/style within each size bucket;
+  # style-neutral  -> isolates which region/size leads within each style.
   neutralize: none

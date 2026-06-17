@@ -42,12 +42,23 @@ def test_neutralize_ignored_without_groups():
 def test_cross_backtest_runs_region_neutral():
     settings = Settings(signal={"lookback": 20, "vol_window": 10, "breakout_channel": 15})
     settings.cross_section.neutralize = "region"
-    # Use real tickers so the region map applies.
-    syms = ["SPY", "IWM", "EFA", "EFV", "EEM", "DGS"]
+    # Real matrix tickers so the region map applies (US, DEV, EM represented).
+    syms = ["IVE", "IWN", "EFA", "EFV", "VWO", "AVEE"]
     series = {}
     for i, s in enumerate(syms):
         series[s] = SyntheticFeed(instruments=(s,), n_bars=250,
                                   regimes=[(250, 0.4 - 0.1 * i)], seed=60 + i).series(s)
     res = cross_backtest(series, settings)
     assert res.n_bars == 250
+    assert res.equity_curve
+
+
+def test_cross_backtest_runs_style_neutral():
+    settings = Settings(signal={"lookback": 20, "vol_window": 10, "breakout_channel": 15})
+    settings.cross_section.neutralize = "style"
+    syms = ["IVE", "IVW", "IWN", "IWO"]   # value vs growth across sizes
+    series = {s: SyntheticFeed(instruments=(s,), n_bars=240,
+                               regimes=[(240, 0.3 - 0.1 * i)], seed=70 + i).series(s)
+              for i, s in enumerate(syms)}
+    res = cross_backtest(series, settings)
     assert res.equity_curve

@@ -103,7 +103,13 @@ function metricRows(s,b){
 
 function render(st){
   document.getElementById("method").textContent=st.header.method;
-  document.getElementById("gen").textContent="Generated "+st.header.generated;
+  const px=st.header.proxied||{};
+  const pxkeys=Object.keys(px);
+  const pxline=pxkeys.length
+    ? " Pre-inception history for "+pxkeys.map(k=>k+" (proxied by "+px[k]+")").join(", ")+
+      " is return-spliced from the passive proxy, scaled to join continuously at inception."
+    : "";
+  document.getElementById("gen").textContent="Generated "+st.header.generated+pxline;
   document.getElementById("books").innerHTML=st.books.map((bk,i)=>{
     const f=bk.fit, o=bk.oos;
     const yr=bk.by_year.map(r=>`<tr><td>${r.year}</td>

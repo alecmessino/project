@@ -1,27 +1,44 @@
 from drift import universes as u
 
 
-def test_equities_spans_regions_and_factors_without_dupes():
+def test_matrix_spans_regions_sizes_styles_without_dupes():
     assert len(u.EQUITIES) == len(set(u.EQUITIES))          # no duplicate tickers
-    # all three regions represented
-    assert {"SPY"} <= set(u.US)
-    assert {"EFA"} <= set(u.DEV_INTL)
-    assert {"EEM"} <= set(u.EM)
-    # regional×factor sleeves present (e.g. international small-cap value)
-    assert "DLS" in u.DEV_INTL          # intl small value
-    assert "DGS" in u.EM                # EM small value
-    assert "VBR" in u.US                # US small value
+    assert set(u.REGION_OF.values()) == {"US", "DEV", "EM"}
+    assert {"value", "blend", "growth"} <= set(u.STYLE_OF.values())
+    assert {"large", "mid", "small"} <= set(u.SIZE_OF.values())
+    # the full US 3x3 size x style box is present
+    us = [t for t in u.EQUITIES if u.REGION_OF[t] == "US"]
+    assert len(us) == 9
+    assert {(u.SIZE_OF[t], u.STYLE_OF[t]) for t in us} == {
+        (sz, st) for sz in ("large", "mid", "small") for st in ("value", "blend", "growth")}
 
 
-def test_groups_cover_the_full_equities_universe():
-    grouped = [t for syms in u.GROUPS.values() for t in syms]
-    assert sorted(grouped) == sorted(u.EQUITIES)
+def test_known_cells_mapped_correctly():
+    assert u.MATRIX["IWN"] == ("US", "small", "value")
+    assert u.MATRIX["EFG"] == ("DEV", "largemid", "growth")
+    assert u.MATRIX["AVEE"] == ("EM", "small", "value")
+
+
+def test_group_map_dimensions():
+    assert u.group_map("region")["IVV"] == "US"
+    assert u.group_map("size")["IWN"] == "small"
+    assert u.group_map("style")["IVE"] == "value"
+    assert u.group_map("factor")["IVE"] == "value"     # alias for style
+    assert u.group_map("none") == {}
+
+
+def test_proxies_point_to_longer_history_funds():
+    # Every young fund with a proxy is itself in the traded universe.
+    for fund in u.PROXY:
+        assert fund in u.EQUITIES
+    assert u.PROXY["AVEE"] == "EEMS"
 
 
 def test_every_ticker_has_a_label():
-    for t in u.EQUITIES + u.CRYPTO:
+    for t in u.EQUITIES + u.CRYPTO + u.BASELINES:
         assert t in u.LABELS and u.LABELS[t]
 
 
-def test_csv_helper():
-    assert u.csv(["A", "B", "C"]) == "A,B,C"
+def test_groups_cover_the_universe():
+    grouped = [t for syms in u.GROUPS.values() for t in syms]
+    assert sorted(grouped) == sorted(u.EQUITIES)

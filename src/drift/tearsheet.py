@@ -29,26 +29,65 @@ GRID_LOOKBACK = (40, 80, 120)
 GRID_CONTINUATION = (0.10, 0.25)
 
 
-def _pull(symbols: Sequence[str], years: float = 40.0, pause: float = 0.2) -> dict[str, list[Bar]]:
+def _splice(fund: list[Bar], proxy: list[Bar]) -> list[Bar]:
+    """Return-splice a proxy's history onto a fund before the fund's inception.
+
+    The proxy is scaled so its level connects continuously at the fund's first bar,
+    so pre-inception *returns* are the proxy's and post-inception returns are the
+    fund's. Because the strategy reads returns / log-returns, the trend z-score is
+    continuous across the join — exactly the point of a tight-tracking proxy.
+    """
+    from .models import Bar as _Bar
+    if not fund or not proxy:
+        return fund
+    t0 = fund[0].asof[:10]
+    pre = [b for b in proxy if b.asof[:10] < t0]
+    if not pre or not pre[-1].close:
+        return fund
+    factor = fund[0].close / pre[-1].close
+    spliced = [_Bar(asof=b.asof, close=b.close * factor,
+                    high=(b.high * factor if b.high is not None else None),
+                    low=(b.low * factor if b.low is not None else None),
+                    volume=b.volume) for b in pre]
+    return spliced + fund
+
+
+def _pull(symbols: Sequence[str], years: float = 40.0, pause: float = 0.2,
+          proxies: bool = True) -> tuple[dict[str, list[Bar]], dict[str, str]]:
     """Pull TRUE daily history from Yahoo (keyless), skipping any symbol that fails.
 
     Uses explicit epoch bounds (not `range=max`, which Yahoo coarsens to monthly)
-    so the daily annualization (252 bars/yr) is correct.
+    so daily annualization (252 bars/yr) is correct. Young pure-factor funds are
+    back-filled before inception with their passive proxy (see `universes.PROXY`);
+    returns the spliced series plus a map of {fund: proxy} actually applied.
     """
     from .feed.yahoo import YahooFeed
+    from .universes import PROXY
     now = int(time.time())
     feed = YahooFeed(interval="1d", period1=now - int(years * 31_557_600), period2=now)
+
+    def _fetch(sym):
+        try:
+            return feed.fetch(sym)
+        except Exception:
+            return None
+
     series: dict[str, list[Bar]] = {}
+    applied: dict[str, str] = {}
     for i, sym in enumerate(symbols):
         if pause and i:
             time.sleep(pause)
-        try:
-            bars = feed.fetch(sym)
-        except Exception:
+        bars = _fetch(sym)
+        if bars is None:
             continue
+        if proxies and sym in PROXY:
+            pbars = _fetch(PROXY[sym])
+            if pbars and pbars[0].asof[:10] < bars[0].asof[:10]:
+                bars = _splice(bars, pbars)
+                applied[sym] = PROXY[sym]
         if len(bars) >= 252:           # need at least ~1y of daily history
             series[sym] = bars
-    return series
+    return series, applied
 
 
 def _clone(settings: Settings, lookback: int, continuation: float) -> Settings:
@@ -158,13 +197,15 @@ def build_tearsheet(settings: Settings, equities: Sequence[str] = EQUITY_UNIVERS
                     train_frac: float = 0.6, _series: Optional[dict] = None) -> dict:
     """Assemble the multi-book tearsheet report (pulls long history unless injected)."""
     books = []
+    proxied: dict[str, str] = {}
     if _series is not None:
         for nm, ser in _series.items():
             if ser:
                 books.append(build_book(nm, ser, settings, train_frac))
     else:
-        eq = _pull(equities, years=years)
-        cr = _pull(crypto, years=years)
+        eq, eq_px = _pull(equities, years=years)
+        cr, _ = _pull(crypto, years=years)
+        proxied.update(eq_px)
         if eq:
             books.append(build_book("Equities & ETFs", eq, settings, train_frac))
         if cr:
@@ -176,6 +217,8 @@ def build_tearsheet(settings: Settings, equities: Sequence[str] = EQUITY_UNIVERS
             "method": f"params fit on first {int(train_frac*100)}% (in-sample), "
                       f"reported on the held-out remainder (out-of-sample); benchmark "
                       f"= equal-weight buy-and-hold; net of {settings.sizing.cost_bps_per_side:.0f}bps/side.",
+            # Disclose any pre-inception proxy splices, e.g. {"AVEE": "EEMS"}.
+            "proxied": proxied,
         },
         "books": books,
     }

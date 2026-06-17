@@ -25,7 +25,7 @@ from .config import Settings
 from .exhibit import _spark
 from .models import Bar
 
-GRID_LOOKBACK = (40, 80, 120)
+GRID_LOOKBACK = (40, 60, 80, 120)
 GRID_CONTINUATION = (0.10, 0.25)
 
 
@@ -138,8 +138,23 @@ def fit_params(series: dict[str, list[Bar]], settings: Settings, split: str
     return best[1], best[2], best[0]
 
 
+def _market_block(market: list[Bar], dates: list[str], idx: list[int], bpy: float) -> Optional[dict]:
+    """Buy-and-hold metrics + equity for a global-market reference, aligned to the
+    book's trading dates (so the curves overlay on the same axis)."""
+    if not market:
+        return None
+    mret = {}
+    for i in range(1, len(market)):
+        if market[i - 1].close:
+            mret[market[i].asof[:10]] = market[i].close / market[i - 1].close - 1.0
+    dated = [(d, mret.get(d[:10], 0.0)) for d in dates]
+    eq = analytics.equity_from_returns([r for _, r in dated])
+    return {"label": "Global market (VT)", "summary": analytics.summary(dated, bpy),
+            "equity": [round(eq[i], 5) for i in idx]}
+
+
 def build_book(name: str, series: dict[str, list[Bar]], settings: Settings,
-               train_frac: float = 0.6) -> dict:
+               train_frac: float = 0.6, market: Optional[list[Bar]] = None) -> dict:
     """One book's tearsheet: fit on train, evaluate OOS, benchmark, by-year."""
     bpy = settings.engine.bars_per_year
     base_strat, _ = book_streams(series, settings)
@@ -172,6 +187,7 @@ def build_book(name: str, series: dict[str, list[Bar]], settings: Settings,
         },
         "strategy": analytics.summary(strat, bpy),
         "benchmark": analytics.summary(bench, bpy),
+        "market": _market_block(market, [d for d, _ in strat], idx, bpy),
         "oos": {
             "train": analytics.summary(train, bpy),
             "test": analytics.summary(test, bpy),
@@ -183,6 +199,7 @@ def build_book(name: str, series: dict[str, list[Bar]], settings: Settings,
             "split_frac": (sum(1 for d, _ in strat if d <= split) / n) if n else 0.0,
             "strat": [round(strat_eq[i], 5) for i in idx],
             "bench": [round(bench_eq[i], 5) for i in idx],
+            "market": (_market_block(market, [d for d, _ in strat], idx, bpy) or {}).get("equity"),
         },
     }
 
@@ -198,6 +215,7 @@ def build_tearsheet(settings: Settings, equities: Sequence[str] = EQUITY_UNIVERS
     """Assemble the multi-book tearsheet report (pulls long history unless injected)."""
     books = []
     proxied: dict[str, str] = {}
+    market = None
     if _series is not None:
         for nm, ser in _series.items():
             if ser:
@@ -206,8 +224,13 @@ def build_tearsheet(settings: Settings, equities: Sequence[str] = EQUITY_UNIVERS
         eq, eq_px = _pull(equities, years=years)
         cr, _ = _pull(crypto, years=years)
         proxied.update(eq_px)
+        # Global-market reference: VT, extended with VTI before VT's 2008 inception.
+        mkt, mkt_px = _pull(["VT"], years=years)
+        if mkt.get("VT"):
+            market = mkt["VT"]
+            proxied.update(mkt_px)
         if eq:
-            books.append(build_book("Equities & ETFs", eq, settings, train_frac))
+            books.append(build_book("Equities & ETFs", eq, settings, train_frac, market=market))
         if cr:
             books.append(build_book("Crypto", cr, settings, train_frac))
     return {

@@ -52,6 +52,7 @@ PROXY = {
     "AVDV": "DLS",    # Intl small value  <- WisdomTree intl small-cap dividend (2006)
     "AVEE": "EEMS",   # EM small value    <- iShares EM small-cap (2011)
     "FNDE": "EEM",    # EM value          <- iShares EM core (2003)
+    "VT": "VTI",      # Global market ref <- US total market before VT's 2008 inception
 }
 
 # Crypto majors (Coinbase for the live dashboard; Yahoo for long history).

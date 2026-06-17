@@ -68,10 +68,11 @@ function pct(x){ return (x>=0?"+":"")+(x*100).toFixed(1)+"%"; }
 function cls(x){ return x>0?"pos":x<0?"neg":""; }
 function num(x){ return x==null ? "∞" : x.toFixed(2); }
 
-function eqchart(el, strat, bench, splitFrac){
+function eqchart(el, strat, bench, splitFrac, market){
   el.innerHTML=""; if(!strat||strat.length<2) return;
   const w=el.clientWidth||820,h=el.clientHeight||150,pad=4;
-  const all=strat.concat(bench).map(v=>Math.log(Math.max(v,1e-6)));
+  let allv=strat.concat(bench); if(market&&market.length) allv=allv.concat(market);
+  const all=allv.map(v=>Math.log(Math.max(v,1e-6)));
   const lo=Math.min(...all),hi=Math.max(...all),rng=(hi-lo)||1;
   const xs=i=>pad+(w-2*pad)*i/(strat.length-1);
   const ys=v=>h-pad-(h-2*pad)*(Math.log(Math.max(v,1e-6))-lo)/rng;
@@ -81,10 +82,14 @@ function eqchart(el, strat, bench, splitFrac){
   const sep=document.createElementNS(ns,"line");
   sep.setAttribute("x1",sx);sep.setAttribute("x2",sx);sep.setAttribute("y1",pad);sep.setAttribute("y2",h-pad);
   sep.setAttribute("stroke","#cfcfd4");sep.setAttribute("stroke-dasharray","3 3");el.appendChild(sep);
-  for(const [data,color,wdt] of [[bench,"#b8bcc2",1.3],[strat,"#4a4f57",1.7]]){
+  const lines=[[bench,"#b8bcc2",1.3,null]];
+  if(market&&market.length) lines.push([market,"#9aa0c0",1.2,"3 2"]);   // global market (VT)
+  lines.push([strat,"#4a4f57",1.7,null]);
+  for(const [data,color,wdt,dash] of lines){
     const p=document.createElementNS(ns,"polyline");
     p.setAttribute("points",data.map((v,i)=>xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" "));
     p.setAttribute("fill","none");p.setAttribute("stroke",color);p.setAttribute("stroke-width",wdt);
+    if(dash) p.setAttribute("stroke-dasharray",dash);
     el.appendChild(p);
   }
 }
@@ -120,8 +125,12 @@ function render(st){
         fit lookback <b>${f.lookback}</b>, continuation <b>${f.continuation}</b>
         on first ${(f.train_frac*100)|0}%</div>
       <div class="cmp">${metricRows(bk.strategy,bk.benchmark)}</div>
+      ${bk.market ? `<p class="uni" style="margin:-6px 0 10px">${bk.market.label}: `+
+        `CAGR <b>${pct(bk.market.summary.cagr)}</b> · Sharpe <b>${num(bk.market.summary.sharpe)}</b> · `+
+        `max DD <b>${pct(-bk.market.summary.max_drawdown)}</b></p>` : ``}
       <div class="legend"><span><i style="background:#4a4f57"></i>Strategy</span>
-        <span><i style="background:#b8bcc2"></i>Buy &amp; hold</span>
+        <span><i style="background:#b8bcc2"></i>Buy &amp; hold (universe)</span>
+        ${bk.market ? '<span><i style="background:#9aa0c0"></i>Global market (VT)</span>' : ''}
         <span><i style="background:#cfcfd4"></i>in-sample / out-of-sample split</span></div>
       <svg class="eq" id="eq${i}" preserveAspectRatio="none"></svg>
       <div class="oos">
@@ -140,7 +149,7 @@ function render(st){
     </section>`;
   }).join("");
   requestAnimationFrame(()=>st.books.forEach((bk,i)=>{
-    const el=document.getElementById("eq"+i); if(el) eqchart(el,bk.equity.strat,bk.equity.bench,bk.equity.split_frac);
+    const el=document.getElementById("eq"+i); if(el) eqchart(el,bk.equity.strat,bk.equity.bench,bk.equity.split_frac,bk.equity.market);
   }));
 }
 

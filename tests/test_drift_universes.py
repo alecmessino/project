@@ -28,10 +28,11 @@ def test_group_map_dimensions():
 
 
 def test_proxies_point_to_longer_history_funds():
-    # Every young fund with a proxy is itself in the traded universe.
+    # Every proxied fund is either a traded cell or the VT global-market reference.
     for fund in u.PROXY:
-        assert fund in u.EQUITIES
+        assert fund in u.EQUITIES or fund == "VT"
     assert u.PROXY["AVEE"] == "EEMS"
+    assert u.PROXY["VT"] == "VTI"
 
 
 def test_every_ticker_has_a_label():

@@ -90,8 +90,10 @@ def rank_weights(
 
     cap_k = n // 2 if cs.long_short else n
     k = max(1, min(round(n * cs.quantile), cap_k))
-    longs = ranked[:k]
-    shorts = ranked[-k:] if cs.long_short else []
+    # A name is only held if its (demeaned) trend clears min_score — so when nothing
+    # is trending the book lightens up rather than holding the least-bad name.
+    longs = [(key, s) for key, s in ranked[:k] if s >= cs.min_score]
+    shorts = [(key, s) for key, s in ranked[-k:] if s <= -cs.min_score] if cs.long_short else []
 
     long_budget = cs.gross_exposure / 2 if cs.long_short else cs.gross_exposure
     short_budget = cs.gross_exposure / 2 if cs.long_short else 0.0
@@ -198,7 +200,9 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
         return CrossBacktestResult(instruments, 0, 0, 0, 0, 0, 0, 0, 0, [])
 
     length = min(len(bars) for bars in series.values())
+    rebalance = max(1, cs.rebalance_bars)
     prev: dict[str, float] = {inst: 0.0 for inst in instruments}
+    weights: dict[str, float] = {inst: 0.0 for inst in instruments}
     gross_eq = net_eq = 1.0
     net_curve: list[float] = []
     net_rets: list[float] = []
@@ -206,17 +210,19 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
     held_counts: list[int] = []
 
     for i in range(length - 1):
-        scores: dict[str, float] = {}
-        vols: dict[str, float] = {}
-        for inst in instruments:
-            hist = series[inst][: i + 1]
-            if len(hist) < s.min_history:
-                continue
-            closes = [b.close for b in hist]
-            scores[inst] = sig.momentum_score(closes, s.lookback, s.vol_window)
-            vols[inst] = sizing.annualize_vol(sig.realized_vol(closes, s.vol_window), bpy)
-
-        weights = rank_weights(scores, vols, cs, groups) if scores else {inst: 0.0 for inst in instruments}
+        # Re-rank only on the rebalance cadence; hold the target weights in between
+        # so no turnover (and no cost) is incurred on the off-bars.
+        if i % rebalance == 0:
+            scores: dict[str, float] = {}
+            vols: dict[str, float] = {}
+            for inst in instruments:
+                hist = series[inst][: i + 1]
+                if len(hist) < s.min_history:
+                    continue
+                closes = [b.close for b in hist]
+                scores[inst] = sig.momentum_score(closes, s.lookback, s.vol_window)
+                vols[inst] = sizing.annualize_vol(sig.realized_vol(closes, s.vol_window), bpy)
+            weights = rank_weights(scores, vols, cs, groups) if scores else {inst: 0.0 for inst in instruments}
 
         gross_pnl = net_pnl = 0.0
         held = 0

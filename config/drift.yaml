@@ -56,10 +56,10 @@ engine:
 cross_section:
   # The relative-strength variant: rank the universe each bar, long the strongest
   # and short the weakest, rather than trading each name on its own absolute trend.
-  # Top/bottom fraction of the universe taken into each leg.
-  quantile: 0.34
-  # True -> dollar-neutral long/short; False -> long-only the top quantile.
-  long_short: true
+  # Top/bottom fraction of the universe taken into each leg (0.5 = top half; sweep-best).
+  quantile: 0.50
+  # False -> long-only the top quantile (default); True -> dollar-neutral long/short.
+  long_short: false
   # Total |weight| budget split across the legs.
   gross_exposure: 1.0
   # Within-leg weighting: "equal", "inv_vol" (risk-balanced), or "score".
@@ -68,6 +68,12 @@ cross_section:
   min_universe: 3
   # Per-name |weight| cap.
   max_weight: 0.50
+  # Turnover controls (keep it agile without churning):
+  #   rebalance_bars: re-rank only every N bars (cuts turnover ~Nx). 21 ~ monthly.
+  #   min_score: only hold a name whose trend z clears this; when nothing trends the
+  #   book lightens up rather than holding the least-bad — flexible vs a static index.
+  rebalance_bars: 21
+  min_score: 0.0
   # Neutralize the ranking within a grouping: "none", "region", "size", or "style".
   # region-neutral -> isolates which size/style leads within each region;
   # size-neutral   -> isolates region/style within each size bucket;

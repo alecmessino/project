@@ -65,12 +65,17 @@ class CrossSectionSettings(BaseModel):
     weakest names — classic Jegadeesh-Titman cross-sectional momentum.
     """
 
-    quantile: float = 0.34          # top/bottom fraction of the universe per leg
-    long_short: bool = True         # True -> dollar-neutral L/S; False -> long-only top
+    quantile: float = 0.50          # top/bottom fraction of the universe per leg (sweep-best)
+    long_short: bool = False        # False -> long-only top (default); True -> dollar-neutral L/S
     gross_exposure: float = 1.0     # total |weight| budget across both legs
     weighting: str = "inv_vol"      # "equal" | "inv_vol" | "score"
     min_universe: int = 3           # need at least this many ranked names to trade
     max_weight: float = 0.50        # per-name |weight| cap
+    # Turnover controls — keep the book agile without churning it (and paying for it):
+    rebalance_bars: int = 21        # re-rank only every N bars (1 = every bar); cuts turnover ~Nx
+    min_score: float = 0.0          # only hold a name whose (demeaned) trend z clears this —
+                                    # when nothing is trending the book lightens up rather than
+                                    # holding the "least-bad", i.e. flexible vs a static index
     # Neutralize the ranking within a grouping before ranking: "none", "region",
     # or "factor". Region-neutral isolates which STYLE is trending (controlling for
     # region); factor-neutral isolates which REGION is trending. Demeaning trend

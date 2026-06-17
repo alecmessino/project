@@ -112,9 +112,9 @@ def rank_weights(
 
 def _groups_for(cs: CrossSectionSettings) -> Optional[dict[str, str]]:
     """Ticker->group map for the configured neutralization dimension, or None."""
-    if cs.neutralize in ("region", "factor"):
+    if cs.neutralize in ("region", "size", "style", "factor"):
         from .universes import group_map
-        return group_map(cs.neutralize)
+        return group_map(cs.neutralize) or None
     return None
 
 

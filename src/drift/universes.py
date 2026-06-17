@@ -1,75 +1,93 @@
 """Curated, liquid, Yahoo-available instrument universes.
 
-Single source of truth for what the exhibits trade. The equities side deliberately
-spans BOTH regions (US / developed-international / emerging) and factors (value,
-growth, small, small-value, momentum, quality, min-vol), including regional×factor
-sleeves (e.g. international small-cap value). Region and factor leadership rotates
-over time, so this dispersion is exactly what the cross-sectional (relative-
-strength) engine and the daily-marked book are built to harvest.
+Single source of truth for what the exhibits trade. The equities side is a
+**size × style × region matrix**: three regions (US / developed-international /
+emerging) crossed with the size/style box (large / mid / small × value / blend /
+growth). This dispersion is exactly what the cross-sectional engine and the
+daily-marked book harvest, and it lets the book be neutralized along any one axis
+(region, size, or style) to isolate the others.
 
-History/inception varies (newer factor ETFs start later); the date-aligned books
+Ticker selection rule: the longest-history liquid instrument per cell (verified on
+Yahoo). A few cells have no liquid instrument and are intentionally omitted:
+international small-cap growth, and both emerging-markets growth cells. EM large/mid
+value uses FNDE (fundamentally-weighted, value-tilted) since cap-weighted EM value
+ETFs are not reliably tradeable.
+
+History varies (the pure-factor funds AVDV/AVEE are younger); the date-aligned books
 handle ragged histories — a name simply joins once it has enough bars.
 """
 
 from __future__ import annotations
 
-# US — region core + factor tilts.
-US = ["SPY", "IWM", "VTV", "VUG", "VBR", "MTUM", "QUAL", "USMV"]
-# Developed international — core + factor tilts (incl. small-cap value via DLS).
-DEV_INTL = ["EFA", "EFV", "EFG", "SCZ", "DLS", "IMTM"]
-# Emerging markets — core + small-cap value (DGS).
-EM = ["EEM", "DGS"]
-# Cross-asset diversifiers that lead at different times (long bonds, gold).
-DIVERSIFIERS = ["TLT", "GLD"]
+# Each entry: ticker -> (region, size, style). Regions: US / DEV / EM.
+# Sizes: large / mid / small (US split out), largemid (intl & EM combined cells).
+MATRIX: dict[str, tuple[str, str, str]] = {
+    # --- United States (full 3x3 size x style box) ---
+    "IVE": ("US", "large", "value"),  "IVV": ("US", "large", "blend"),  "IVW": ("US", "large", "growth"),
+    "IWS": ("US", "mid", "value"),    "IWR": ("US", "mid", "blend"),    "IWP": ("US", "mid", "growth"),
+    "IWN": ("US", "small", "value"),  "IJR": ("US", "small", "blend"),  "IWO": ("US", "small", "growth"),
+    # --- Developed international ex-US (small-growth omitted: no liquid instrument) ---
+    "EFV": ("DEV", "largemid", "value"), "EFA": ("DEV", "largemid", "blend"), "EFG": ("DEV", "largemid", "growth"),
+    "AVDV": ("DEV", "small", "value"),   "SCZ": ("DEV", "small", "blend"),
+    # --- Emerging markets (both growth cells omitted: no liquid instrument) ---
+    "FNDE": ("EM", "largemid", "value"), "VWO": ("EM", "largemid", "blend"),
+    "AVEE": ("EM", "small", "value"),    "EWX": ("EM", "small", "blend"),
+}
 
-# Region × factor equity book (the default equities universe for the exhibits).
-EQUITIES = US + DEV_INTL + EM + DIVERSIFIERS
+# The traded universe (the matrix cells).
+EQUITIES = list(MATRIX)
+
+REGION_OF = {t: v[0] for t, v in MATRIX.items()}
+SIZE_OF = {t: v[1] for t, v in MATRIX.items()}
+STYLE_OF = {t: v[2] for t, v in MATRIX.items()}
+
+# Broad-market core-beta baselines (longest-history total-market references).
+BASELINES = ["VTI", "VEA", "VWO"]
+
+# Passive proxies for the young pure-factor funds, used ONLY to back-fill long
+# history before the fund's inception (return-splice). The proxy tracks the cell's
+# style closely, so the volatility-normalized z-score stays continuous across the
+# join. Live exhibits (2y) use the real fund and never touch these.
+PROXY = {
+    "AVDV": "DLS",    # Intl small value  <- WisdomTree intl small-cap dividend (2006)
+    "AVEE": "EEMS",   # EM small value    <- iShares EM small-cap (2011)
+    "FNDE": "EEM",    # EM value          <- iShares EM core (2003)
+}
 
 # Crypto majors (Coinbase for the live dashboard; Yahoo for long history).
 CRYPTO = ["BTC-USD", "ETH-USD", "LTC-USD", "BCH-USD"]
 
-# Labeled groups, for display / documentation.
+# Region groupings, for display / documentation.
 GROUPS = {
-    "US (region + factors)": US,
-    "Developed international (region + factors)": DEV_INTL,
-    "Emerging markets": EM,
-    "Cross-asset diversifiers": DIVERSIFIERS,
+    "United States": [t for t in EQUITIES if REGION_OF[t] == "US"],
+    "Developed international": [t for t in EQUITIES if REGION_OF[t] == "DEV"],
+    "Emerging markets": [t for t in EQUITIES if REGION_OF[t] == "EM"],
 }
 
-# What each ticker is, so exhibits can annotate the cross-section.
+_REGION_NAME = {"US": "US", "DEV": "Intl", "EM": "EM"}
 LABELS = {
-    "SPY": "US large", "IWM": "US small", "VTV": "US large value",
-    "VUG": "US large growth", "VBR": "US small value", "MTUM": "US momentum",
-    "QUAL": "US quality", "USMV": "US min-vol",
-    "EFA": "Intl developed", "EFV": "Intl value", "EFG": "Intl growth",
-    "SCZ": "Intl small", "DLS": "Intl small value", "IMTM": "Intl momentum",
-    "EEM": "Emerging mkts", "DGS": "EM small value",
-    "TLT": "Long Treasuries", "GLD": "Gold",
-    "BTC-USD": "Bitcoin", "ETH-USD": "Ethereum", "LTC-USD": "Litecoin", "BCH-USD": "Bitcoin Cash",
+    t: f"{_REGION_NAME[r]} {s if s != 'largemid' else 'large/mid'} {st}"
+    for t, (r, s, st) in MATRIX.items()
 }
+LABELS.update({"VTI": "US total market", "VEA": "Intl developed core", "VWO": "EM core",
+               "BTC-USD": "Bitcoin", "ETH-USD": "Ethereum",
+               "LTC-USD": "Litecoin", "BCH-USD": "Bitcoin Cash"})
 
 
 def csv(symbols) -> str:
     return ",".join(symbols)
 
 
-# --- Group maps for neutralized cross-sections ------------------------------ #
-# Region/asset bucket per ticker (US / developed-intl / emerging / diversifier).
-REGION_OF = {
-    **{t: "US" for t in US}, **{t: "DEV" for t in DEV_INTL},
-    **{t: "EM" for t in EM}, **{t: "DIV" for t in DIVERSIFIERS},
-}
-# Style/factor bucket per ticker (core = broad market, no tilt).
-FACTOR_OF = {
-    "SPY": "core", "IWM": "size", "VTV": "value", "VUG": "growth", "VBR": "smallvalue",
-    "MTUM": "momentum", "QUAL": "quality", "USMV": "minvol",
-    "EFA": "core", "EFV": "value", "EFG": "growth", "SCZ": "size",
-    "DLS": "smallvalue", "IMTM": "momentum",
-    "EEM": "core", "DGS": "smallvalue", "TLT": "bond", "GLD": "gold",
-}
-
-
 def group_map(dim: str) -> dict[str, str]:
-    """Ticker -> group for a neutralization dimension ('region' or 'factor')."""
-    return dict(REGION_OF if dim == "region" else FACTOR_OF)
+    """Ticker -> group for a neutralization dimension.
 
+    'region' (US/DEV/EM), 'size' (large/mid/small/largemid), 'style' (value/
+    blend/growth). 'factor' is accepted as an alias for 'style'.
+    """
+    if dim == "region":
+        return dict(REGION_OF)
+    if dim == "size":
+        return dict(SIZE_OF)
+    if dim in ("style", "factor"):
+        return dict(STYLE_OF)
+    return {}

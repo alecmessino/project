@@ -283,7 +283,7 @@ def ledger(
     from .exhibit import export_ledger
     settings = _load_settings(config)
     syms = [s.strip() for s in equities.split(",") if s.strip()]
-    console.print(f"[dim]pulling daily history for {len(syms)} instruments …[/]")
+    console.print(f"[dim]pulling daily history for {len(syms)} instruments + VT benchmark …[/]")
     from .feed.yahoo import YahooFeed
     feed = YahooFeed(range="2y", interval="1d")
     series = {}
@@ -294,18 +294,23 @@ def ledger(
             continue
         if len(bars) >= settings.signal.min_history:
             series[s] = bars
+    try:
+        bench = feed.fetch("VT")           # global market buy-and-hold benchmark
+    except Exception:
+        bench = None
 
     path = Path(state)
     if path.exists() and _json.loads(path.read_text() or "{}").get("entries"):
         led = _json.loads(path.read_text())
-        update_ledger(led, series, settings)
+        update_ledger(led, series, settings, benchmark_bars=bench)
         console.print("appended one session")
     else:
-        led = seed_ledger(series, settings, sessions=seed_sessions)
+        led = seed_ledger(series, settings, sessions=seed_sessions, benchmark_bars=bench)
         console.print(f"seeded {len(led['entries'])} sessions (walk-forward)")
+    led["benchmark"] = "VT" if bench else None
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(_json.dumps(led, indent=0))
-    st = build_ledger_state(led)
+    st = build_ledger_state(led, bars_per_year=settings.engine.bars_per_year)
     export_ledger(st, out)
     h = st["header"]
     console.print(f"[bold]ledger[/] {h['days']} sessions ({h['live_days']} live), "

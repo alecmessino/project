@@ -36,6 +36,20 @@
   .foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:var(--dim);font-size:12.5px}
   .foot .note{color:var(--slate)}
   .empty{color:var(--dim);padding:30px 0}
+  .expo{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:4px;align-items:start}
+  @media(max-width:620px){.expo{grid-template-columns:1fr}}
+  .expo h3{font-size:12px;color:var(--dim);font-weight:600;margin:0 0 10px;letter-spacing:.3px}
+  .bar{display:flex;align-items:center;gap:9px;margin:6px 0;font-size:12.5px}
+  .bar .lbl{width:118px;color:var(--ink)}
+  .bar .track{flex:1;background:var(--soft);border:1px solid var(--line);border-radius:4px;height:13px;overflow:hidden}
+  .bar .fill{height:100%;background:var(--slate)}
+  .bar .pct{width:38px;text-align:right;color:var(--dim);font-variant-numeric:tabular-nums}
+  .box{display:grid;grid-template-columns:46px 1fr 1fr 1fr;gap:3px;font-size:11px;max-width:330px}
+  .box .hd{color:var(--dim);text-align:center;padding:3px 0}
+  .box .rl{color:var(--dim);display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
+  .box .cell{height:40px;border:1px solid var(--line);border-radius:3px;display:flex;align-items:center;
+    justify-content:center;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
+  .invested{font-size:12px;color:var(--dim);margin:14px 0 0}
 </style>
 </head>
 <body>
@@ -47,22 +61,23 @@
   <div id="body"></div>
   <div class="foot">
     <span class="note">Paper track record — research only, not investment advice.</span>
-    Equal-weight book of the per-instrument trend positions, marked daily net of cost.
-    Append-only: history is never recomputed. Pre-inception points are a walk-forward
-    replay (no lookahead); everything after is recorded live.
+    The trend-throttled cross-sectional rotation, marked daily net of cost, vs a
+    buy-and-hold benchmark. Append-only: history is never recomputed. Pre-inception
+    points are a walk-forward replay (no lookahead); everything after is recorded live.
     <div id="gen" style="margin-top:6px"></div>
   </div>
 </div>
 
 <script>
-window.__STATE__ = {"header": {"days": 120, "live_days": 0, "seeded_days": 120, "inception": "2025-12-26", "updated": "2026-06-18 19:27:23 UTC", "total_return": 0.051667, "universe": ["AVDV", "AVEE", "EFA", "EFG", "EFV", "EWX", "FNDE", "IJR", "IVE", "IVV", "IVW", "IWN", "IWO", "IWP", "IWR", "IWS", "SCZ", "VWO"], "n_long": 9, "n_short": 0}, "equity": [0.99958, 0.99696, 0.99716, 0.99247, 1.00041, 1.00809, 1.01235, 1.00901, 1.01251, 1.01746, 1.02197, 1.01926, 1.02396, 1.0265, 1.02644, 1.01608, 1.02773, 1.03373, 1.03437, 1.0375, 1.04626, 1.0426, 1.04542, 1.0303, 1.03375, 1.03987, 1.04275, 1.03035, 1.05185, 1.06313, 1.06655, 1.07264, 1.06298, 1.06541, 1.06483, 1.06681, 1.06533, 1.07529, 1.06835, 1.07448, 1.08156, 1.07872, 1.07648, 1.06267, 1.03292, 1.0392, 1.02337, 1.01709, 1.02219, 1.02389, 1.02394, 1.00833, 1.0001, 1.01501, 1.0187, 1.00566, 1.00611, 0.9814, 1.00001, 0.99382, 1.00859, 0.98976, 0.98386, 0.98293, 0.99169, 0.99413, 0.99421, 0.99573, 0.99592, 1.00634, 1.00684, 1.00694, 1.01034, 1.01262, 1.01192, 1.01278, 1.01823, 1.01827, 1.01461, 1.0165, 1.01441, 1.01559, 1.01505, 1.01409, 1.01148, 1.02342, 1.02393, 1.0203, 1.02948, 1.03915, 1.03218, 1.03784, 1.03842, 1.03189, 1.03349, 1.03622, 1.02275, 1.02286, 1.01693, 1.02714, 1.02991, 1.03509, 1.04594, 1.04361, 1.04611, 1.04491, 1.04508, 1.05074, 1.04343, 1.05107, 1.02539, 1.02846, 1.03124, 1.01817, 1.03903, 1.04739, 1.05868, 1.0527, 1.04099, 1.05167], "dates": ["2025-12-26", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20", "2026-02-23", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-05", "2026-03-06", "2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13", "2026-03-16", "2026-03-17", "2026-03-18", "2026-03-19", "2026-03-20", "2026-03-23", "2026-03-24", "2026-03-25", "2026-03-26", "2026-03-27", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-27", "2026-04-28", "2026-04-29", "2026-04-30", "2026-05-01", "2026-05-04", "2026-05-05", "2026-05-06", "2026-05-07", "2026-05-08", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-18", "2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18"], "split_frac": 1.0, "positions": [{"instrument": "IVE", "weight": 0.1923, "leg": "LONG"}, {"instrument": "IVV", "weight": 0.144, "leg": "LONG"}, {"instrument": "IWS", "weight": 0.1221, "leg": "LONG"}, {"instrument": "IWR", "weight": 0.1216, "leg": "LONG"}, {"instrument": "IVW", "weight": 0.0964, "leg": "LONG"}, {"instrument": "IJR", "weight": 0.0944, "leg": "LONG"}, {"instrument": "IWN", "weight": 0.0884, "leg": "LONG"}, {"instrument": "EWX", "weight": 0.074, "leg": "LONG"}, {"instrument": "IWO", "weight": 0.0667, "leg": "LONG"}, {"instrument": "AVDV", "weight": 0.0, "leg": "\u2014"}, {"instrument": "AVEE", "weight": 0.0, "leg": "\u2014"}, {"instrument": "EFA", "weight": 0.0, "leg": "\u2014"}, {"instrument": "EFG", "weight": 0.0, "leg": "\u2014"}, {"instrument": "EFV", "weight": 0.0, "leg": "\u2014"}, {"instrument": "FNDE", "weight": 0.0, "leg": "\u2014"}, {"instrument": "IWP", "weight": 0.0, "leg": "\u2014"}, {"instrument": "SCZ", "weight": 0.0, "leg": "\u2014"}, {"instrument": "VWO", "weight": 0.0, "leg": "\u2014"}], "recent": [{"date": "2026-06-18", "realized_return": 0.01026, "equity": 1.051667}, {"date": "2026-06-17", "realized_return": -0.011125, "equity": 1.040986}, {"date": "2026-06-16", "realized_return": -0.005656, "equity": 1.052697}, {"date": "2026-06-15", "realized_return": 0.010785, "equity": 1.058684}, {"date": "2026-06-12", "realized_return": 0.008042, "equity": 1.047388}, {"date": "2026-06-11", "realized_return": 0.020486, "equity": 1.039032}, {"date": "2026-06-10", "realized_return": -0.012671, "equity": 1.018173}, {"date": "2026-06-09", "realized_return": 0.002702, "equity": 1.031239}, {"date": "2026-06-08", "realized_return": 0.002998, "equity": 1.02846}, {"date": "2026-06-05", "realized_return": -0.024436, "equity": 1.025386}, {"date": "2026-06-04", "realized_return": 0.007318, "equity": 1.05107}, {"date": "2026-06-03", "realized_return": -0.006956, "equity": 1.043434}, {"date": "2026-06-02", "realized_return": 0.005421, "equity": 1.050743}, {"date": "2026-06-01", "realized_return": 0.000158, "equity": 1.045078}, {"date": "2026-05-29", "realized_return": -0.001146, "equity": 1.044913}, {"date": "2026-05-28", "realized_return": 0.002401, "equity": 1.046112}, {"date": "2026-05-27", "realized_return": -0.002233, "equity": 1.043606}, {"date": "2026-05-26", "realized_return": 0.010484, "equity": 1.045941}, {"date": "2026-05-22", "realized_return": 0.00503, "equity": 1.035089}, {"date": "2026-05-21", "realized_return": 0.002696, "equity": 1.029909}]};
+window.__STATE__ = {"header": {"days": 120, "live_days": 0, "seeded_days": 120, "inception": "2025-12-26", "updated": "2026-06-18 21:37:01 UTC", "total_return": 0.053515, "bench_label": "VT", "bench_return": 0.108981, "sharpe": 0.89, "max_drawdown": 0.0926, "hit_rate": 0.617, "universe": ["AVDV", "AVEE", "EFA", "EFG", "EFV", "EWX", "FNDE", "IJR", "IVE", "IVV", "IVW", "IWN", "IWO", "IWP", "IWR", "IWS", "SCZ", "VWO"], "n_long": 9, "n_short": 0}, "equity": [0.99958, 0.99696, 0.99716, 0.99247, 1.00041, 1.00809, 1.01235, 1.00901, 1.01251, 1.01746, 1.02197, 1.01926, 1.02396, 1.0265, 1.02644, 1.01608, 1.02773, 1.03373, 1.03437, 1.0375, 1.04626, 1.0426, 1.04542, 1.0303, 1.03375, 1.03987, 1.04275, 1.03035, 1.05185, 1.06313, 1.06655, 1.07264, 1.06298, 1.06541, 1.06483, 1.06681, 1.06533, 1.07529, 1.06835, 1.07448, 1.08156, 1.07872, 1.07648, 1.06267, 1.03292, 1.0392, 1.02337, 1.01709, 1.02219, 1.02389, 1.02394, 1.00833, 1.0001, 1.01501, 1.0187, 1.00566, 1.00611, 0.9814, 1.00001, 0.99382, 1.00859, 0.98976, 0.98386, 0.98293, 0.99169, 0.99413, 0.99421, 0.99573, 0.99592, 1.00634, 1.00684, 1.00694, 1.01034, 1.01262, 1.01192, 1.01278, 1.01823, 1.01827, 1.01461, 1.0165, 1.01441, 1.01559, 1.01505, 1.01409, 1.01148, 1.02342, 1.02393, 1.0203, 1.02948, 1.03915, 1.03218, 1.03784, 1.03842, 1.03189, 1.03349, 1.03622, 1.02275, 1.02286, 1.01693, 1.02714, 1.02991, 1.03509, 1.04594, 1.04361, 1.04611, 1.04491, 1.04508, 1.05074, 1.04343, 1.05107, 1.02539, 1.02846, 1.03124, 1.01817, 1.03903, 1.04739, 1.05868, 1.0527, 1.04099, 1.05351], "bench": [1.0, 0.99656, 0.99635, 0.98989, 0.99719, 1.00561, 1.01151, 1.0073, 1.008, 1.01467, 1.01923, 1.01544, 1.01474, 1.01705, 1.01705, 0.99965, 1.01137, 1.01698, 1.01895, 1.02344, 1.03193, 1.03017, 1.02961, 1.0207, 1.02561, 1.02182, 1.01846, 1.00611, 1.02779, 1.03628, 1.03565, 1.03845, 1.02428, 1.02695, 1.0266, 1.03165, 1.02933, 1.03825, 1.02912, 1.03649, 1.04498, 1.0414, 1.03747, 1.03123, 1.0108, 1.01937, 1.00751, 0.996, 1.00519, 1.00505, 1.00379, 0.98631, 0.97908, 0.99291, 0.99663, 0.98119, 0.9793, 0.95888, 0.97491, 0.96999, 0.97892, 0.95972, 0.94692, 0.94389, 0.97294, 0.98258, 0.98033, 0.98525, 0.98567, 1.01697, 1.01958, 1.01979, 1.02978, 1.04166, 1.04539, 1.04659, 1.06101, 1.05848, 1.04638, 1.0558, 1.04912, 1.05749, 1.05735, 1.0513, 1.04764, 1.06354, 1.06523, 1.05904, 1.07001, 1.09069, 1.08127, 1.09154, 1.09252, 1.0857, 1.09308, 1.09745, 1.07986, 1.0812, 1.0736, 1.08767, 1.09175, 1.09428, 1.10701, 1.10546, 1.11046, 1.11222, 1.11559, 1.12087, 1.11102, 1.11517, 1.08099, 1.08661, 1.08535, 1.06861, 1.09456, 1.09934, 1.11644, 1.1113, 1.10019, 1.10898], "dates": ["2025-12-26", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20", "2026-02-23", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-05", "2026-03-06", "2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13", "2026-03-16", "2026-03-17", "2026-03-18", "2026-03-19", "2026-03-20", "2026-03-23", "2026-03-24", "2026-03-25", "2026-03-26", "2026-03-27", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-27", "2026-04-28", "2026-04-29", "2026-04-30", "2026-05-01", "2026-05-04", "2026-05-05", "2026-05-06", "2026-05-07", "2026-05-08", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-18", "2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18"], "split_frac": 1.0, "positions": [{"instrument": "IVE", "weight": 0.1923, "leg": "LONG"}, {"instrument": "IVV", "weight": 0.144, "leg": "LONG"}, {"instrument": "IWS", "weight": 0.1221, "leg": "LONG"}, {"instrument": "IWR", "weight": 0.1216, "leg": "LONG"}, {"instrument": "IVW", "weight": 0.0964, "leg": "LONG"}, {"instrument": "IJR", "weight": 0.0944, "leg": "LONG"}, {"instrument": "IWN", "weight": 0.0884, "leg": "LONG"}, {"instrument": "EWX", "weight": 0.074, "leg": "LONG"}, {"instrument": "IWO", "weight": 0.0667, "leg": "LONG"}, {"instrument": "AVDV", "weight": 0.0, "leg": "\u2014"}, {"instrument": "AVEE", "weight": 0.0, "leg": "\u2014"}, {"instrument": "EFA", "weight": 0.0, "leg": "\u2014"}, {"instrument": "EFG", "weight": 0.0, "leg": "\u2014"}, {"instrument": "EFV", "weight": 0.0, "leg": "\u2014"}, {"instrument": "FNDE", "weight": 0.0, "leg": "\u2014"}, {"instrument": "IWP", "weight": 0.0, "leg": "\u2014"}, {"instrument": "SCZ", "weight": 0.0, "leg": "\u2014"}, {"instrument": "VWO", "weight": 0.0, "leg": "\u2014"}], "exposure": {"gross": 0.9999, "by_region": {"Emerging mkts": 0.074, "United States": 0.926}, "by_style": {"blend": 0.434, "value": 0.4028, "growth": 0.1631}, "style_box": {"small|blend": 0.1684, "large|value": 0.1923, "large|blend": 0.144, "large|growth": 0.0964, "small|value": 0.0884, "small|growth": 0.0667, "mid|blend": 0.1216, "mid|value": 0.1221}}, "recent": [{"date": "2026-06-18", "realized_return": 0.012036, "equity": 1.053515}, {"date": "2026-06-17", "realized_return": -0.011125, "equity": 1.040986}, {"date": "2026-06-16", "realized_return": -0.005656, "equity": 1.052697}, {"date": "2026-06-15", "realized_return": 0.010785, "equity": 1.058684}, {"date": "2026-06-12", "realized_return": 0.008042, "equity": 1.047388}, {"date": "2026-06-11", "realized_return": 0.020486, "equity": 1.039032}, {"date": "2026-06-10", "realized_return": -0.012671, "equity": 1.018173}, {"date": "2026-06-09", "realized_return": 0.002702, "equity": 1.031239}, {"date": "2026-06-08", "realized_return": 0.002998, "equity": 1.02846}, {"date": "2026-06-05", "realized_return": -0.024436, "equity": 1.025386}, {"date": "2026-06-04", "realized_return": 0.007318, "equity": 1.05107}, {"date": "2026-06-03", "realized_return": -0.006956, "equity": 1.043434}, {"date": "2026-06-02", "realized_return": 0.005421, "equity": 1.050743}, {"date": "2026-06-01", "realized_return": 0.000158, "equity": 1.045078}, {"date": "2026-05-29", "realized_return": -0.001146, "equity": 1.044913}, {"date": "2026-05-28", "realized_return": 0.002401, "equity": 1.046112}, {"date": "2026-05-27", "realized_return": -0.002233, "equity": 1.043606}, {"date": "2026-05-26", "realized_return": 0.010484, "equity": 1.045941}, {"date": "2026-05-22", "realized_return": 0.00503, "equity": 1.035089}, {"date": "2026-05-21", "realized_return": 0.002696, "equity": 1.029909}]};
 function pct(x){ return (x>=0?"+":"")+(x*100).toFixed(2)+"%"; }
 function cls(x){ return x>0?"pos":x<0?"neg":""; }
 
-function eqchart(el, data, splitFrac){
+function eqchart(el, data, splitFrac, bench){
   el.innerHTML=""; if(!data||data.length<2){ return; }
   const w=el.clientWidth||800,h=el.clientHeight||170,pad=4;
-  const lo=Math.min(...data),hi=Math.max(...data),rng=(hi-lo)||1;
+  let allv=data.slice(); if(bench&&bench.length) allv=allv.concat(bench);
+  const lo=Math.min(...allv),hi=Math.max(...allv),rng=(hi-lo)||1;
   const xs=i=>pad+(w-2*pad)*i/(data.length-1);
   const ys=v=>h-pad-(h-2*pad)*(v-lo)/rng;
   const ns="http://www.w3.org/2000/svg";
@@ -76,10 +91,37 @@ function eqchart(el, data, splitFrac){
     sep.setAttribute("x1",sx);sep.setAttribute("x2",sx);sep.setAttribute("y1",pad);sep.setAttribute("y2",h-pad);
     sep.setAttribute("stroke","#cfcfd4");sep.setAttribute("stroke-dasharray","3 3");el.appendChild(sep);
   }
+  if(bench&&bench.length){
+    const pb=document.createElementNS(ns,"polyline");
+    pb.setAttribute("points",bench.map((v,i)=>xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" "));
+    pb.setAttribute("fill","none");pb.setAttribute("stroke","#9aa0c0");pb.setAttribute("stroke-width",1.2);
+    pb.setAttribute("stroke-dasharray","3 2");el.appendChild(pb);
+  }
   const p=document.createElementNS(ns,"polyline");
   p.setAttribute("points",data.map((v,i)=>xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" "));
   p.setAttribute("fill","none");p.setAttribute("stroke","#4a4f57");p.setAttribute("stroke-width",1.7);
   el.appendChild(p);
+}
+
+function bars(obj){
+  const items=Object.entries(obj).sort((a,b)=>b[1]-a[1]);
+  if(!items.length) return '<div class="bar"><span class="lbl">—</span></div>';
+  return items.map(([k,v])=>`<div class="bar"><span class="lbl">${k}</span>
+    <span class="track"><span class="fill" style="width:${(v*100).toFixed(0)}%"></span></span>
+    <span class="pct">${(v*100).toFixed(0)}%</span></div>`).join("");
+}
+function stylebox(box){
+  const sizes=["large","mid","small"], styles=["value","blend","growth"];
+  const vals=Object.values(box); const max=Math.max(0.0001,...vals);
+  let html=`<div class="box"><div></div><div class="hd">Value</div><div class="hd">Blend</div><div class="hd">Growth</div>`;
+  for(const sz of sizes){
+    html+=`<div class="rl">${sz[0].toUpperCase()+sz.slice(1)}</div>`;
+    for(const st of styles){
+      const v=box[sz+"|"+st]||0, a=(v/max*0.55).toFixed(2);
+      html+=`<div class="cell" style="background:rgba(74,79,87,${a})">${v>0.005?Math.round(v*100)+"%":""}</div>`;
+    }
+  }
+  return html+`</div>`;
 }
 
 function render(s){
@@ -91,28 +133,41 @@ function render(s){
     document.getElementById("body").innerHTML='<p class="empty">No entries yet — the ledger begins on the next run.</p>';
     return;
   }
+  const excess = (h.bench_return!=null) ? (h.total_return - h.bench_return) : null;
   const stats=[
     ["Total return", pct(h.total_return), cls(h.total_return)],
+    (excess!=null ? [`vs ${h.bench_label||"mkt"}`, pct(excess), cls(excess)] : null),
+    ["Sharpe", (h.sharpe!=null?h.sharpe.toFixed(2):"—"), cls(h.sharpe||0)],
+    ["Max DD", pct(-(h.max_drawdown||0)), "neg"],
     ["Sessions", String(h.days), ""],
-    ["Live", String(h.live_days), ""],
     ["Long / short", `${h.n_long} / ${h.n_short}`, ""],
-  ].map(([k,v,c])=>`<div class="metric"><div class="v ${c}">${v}</div><div class="l">${k}</div></div>`).join("");
+  ].filter(Boolean).map(([k,v,c])=>`<div class="metric"><div class="v ${c}">${v}</div><div class="l">${k}</div></div>`).join("");
   const positions = s.positions.map(p=>`<tr><td>${p.instrument}</td>
     <td><span class="tag ${p.leg==='—'?'--':p.leg}">${p.leg}</span></td>
     <td>${p.weight>=0?"+":""}${p.weight.toFixed(2)}</td></tr>`).join("");
   const recent = s.recent.map(r=>`<tr><td>${r.date}</td>
     <td class="${cls(r.realized_return)}">${pct(r.realized_return)}</td>
     <td>${r.equity.toFixed(4)}</td></tr>`).join("");
+  const x=s.exposure;
+  const exposureHTML = x ? `
+    <h2 class="sec">Current exposure</h2>
+    <div class="expo">
+      <div><h3>By region</h3>${bars(x.by_region)}
+        <p class="invested">Net invested: <b>${(x.gross*100).toFixed(0)}%</b> (rest in cash via the trend throttle)</p></div>
+      <div><h3>Style box (size × style)</h3>${stylebox(x.style_box)}</div>
+    </div>` : "";
   document.getElementById("body").innerHTML = `
     <div class="metrics">${stats}</div>
-    <div class="legend"><span><i style="background:#4a4f57"></i>equity</span>
-      ${h.seeded_days?'<span><i style="background:#cfcfd4"></i>walk-forward seed / live divider</span>':''}</div>
+    <div class="legend"><span><i style="background:#4a4f57"></i>strategy</span>
+      ${h.bench_label?`<span><i style="background:#9aa0c0"></i>${h.bench_label} (buy &amp; hold)</span>`:''}
+      ${h.seeded_days?'<span><i style="background:#cfcfd4"></i>seed / live divider</span>':''}</div>
     <svg class="eq" id="eq" preserveAspectRatio="none"></svg>
+    ${exposureHTML}
     <h2 class="sec">Current book</h2>
     <table><thead><tr><th>Instrument</th><th>Leg</th><th>Weight</th></tr></thead><tbody>${positions}</tbody></table>
     <h2 class="sec">Recent sessions</h2>
     <table><thead><tr><th>Date</th><th>Realized</th><th>Equity</th></tr></thead><tbody>${recent}</tbody></table>`;
-  requestAnimationFrame(()=>eqchart(document.getElementById("eq"), s.equity, s.split_frac));
+  requestAnimationFrame(()=>eqchart(document.getElementById("eq"), s.equity, s.split_frac, s.bench));
 }
 
 async function load(){

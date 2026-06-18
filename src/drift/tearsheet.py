@@ -21,6 +21,7 @@ from typing import Optional, Sequence
 
 from . import analytics
 from .backtest import strategy_steps
+from .cross_section import cross_book_streams
 from .config import Settings
 from .exhibit import _spark
 from .models import Bar
@@ -130,7 +131,7 @@ def fit_params(series: dict[str, list[Bar]], settings: Settings, split: str
     best: Optional[tuple[float, int, float]] = None
     for L in GRID_LOOKBACK:
         for c in GRID_CONTINUATION:
-            strat, _ = book_streams(series, _clone(settings, L, c))
+            strat = cross_book_streams(series, _clone(settings, L, c))
             train = [r for d, r in strat if d <= split]
             sh = analytics.sharpe(train, bpy)
             if best is None or sh > best[0]:
@@ -157,12 +158,15 @@ def build_book(name: str, series: dict[str, list[Bar]], settings: Settings,
                train_frac: float = 0.6, market: Optional[list[Bar]] = None) -> dict:
     """One book's tearsheet: fit on train, evaluate OOS, benchmark, by-year."""
     bpy = settings.engine.bars_per_year
-    base_strat, _ = book_streams(series, settings)
+    # Strategy = the trend-throttled cross-sectional rotation; benchmark = equal-weight
+    # buy-and-hold of the same universe.
+    base_strat = cross_book_streams(series, settings)
     split = _split_date(base_strat, train_frac)
 
     lookback, continuation, train_sharpe = fit_params(series, settings, split)
     tuned = _clone(settings, lookback, continuation)
-    strat, bench = book_streams(series, tuned)
+    strat = cross_book_streams(series, tuned)
+    _, bench = book_streams(series, tuned)
 
     train = [(d, r) for d, r in strat if d <= split]
     test = [(d, r) for d, r in strat if d > split]

@@ -55,9 +55,6 @@ PROXY = {
     "VT": "VTI",      # Global market ref <- US total market before VT's 2008 inception
 }
 
-# Crypto majors (Coinbase for the live dashboard; Yahoo for long history).
-CRYPTO = ["BTC-USD", "ETH-USD", "LTC-USD", "BCH-USD"]
-
 # Region groupings, for display / documentation.
 GROUPS = {
     "United States": [t for t in EQUITIES if REGION_OF[t] == "US"],
@@ -70,9 +67,7 @@ LABELS = {
     t: f"{_REGION_NAME[r]} {s if s != 'largemid' else 'large/mid'} {st}"
     for t, (r, s, st) in MATRIX.items()
 }
-LABELS.update({"VTI": "US total market", "VEA": "Intl developed core", "VWO": "EM core",
-               "BTC-USD": "Bitcoin", "ETH-USD": "Ethereum",
-               "LTC-USD": "Litecoin", "BCH-USD": "Bitcoin Cash"})
+LABELS.update({"VTI": "US total market", "VEA": "Intl developed core", "VWO": "EM core"})
 
 
 def csv(symbols) -> str:

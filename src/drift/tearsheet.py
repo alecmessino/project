@@ -124,14 +124,22 @@ def _split_date(dated: Sequence[tuple[str, float]], train_frac: float) -> Option
     return dated[idx][0]
 
 
-def fit_params(series: dict[str, list[Bar]], settings: Settings, split: str
-               ) -> tuple[int, float, float]:
+def _strat_stream(series: dict[str, list[Bar]], settings: Settings, mode: str) -> list[tuple[str, float]]:
+    """The strategy's dated return stream: cross-sectional rotation ('cross') or the
+    per-instrument time-series book ('timeseries', for thin universes like crypto)."""
+    if mode == "timeseries":
+        return book_streams(series, settings)[0]
+    return cross_book_streams(series, settings)
+
+
+def fit_params(series: dict[str, list[Bar]], settings: Settings, split: str,
+               mode: str = "cross") -> tuple[int, float, float]:
     """Grid-fit (lookback, continuation) by maximizing IN-SAMPLE Sharpe (dates <= split)."""
     bpy = settings.engine.bars_per_year
     best: Optional[tuple[float, int, float]] = None
     for L in GRID_LOOKBACK:
         for c in GRID_CONTINUATION:
-            strat = cross_book_streams(series, _clone(settings, L, c))
+            strat = _strat_stream(series, _clone(settings, L, c), mode)
             train = [r for d, r in strat if d <= split]
             sh = analytics.sharpe(train, bpy)
             if best is None or sh > best[0]:
@@ -155,17 +163,21 @@ def _market_block(market: list[Bar], dates: list[str], idx: list[int], bpy: floa
 
 
 def build_book(name: str, series: dict[str, list[Bar]], settings: Settings,
-               train_frac: float = 0.6, market: Optional[list[Bar]] = None) -> dict:
-    """One book's tearsheet: fit on train, evaluate OOS, benchmark, by-year."""
+               train_frac: float = 0.6, market: Optional[list[Bar]] = None,
+               mode: str = "cross") -> dict:
+    """One book's tearsheet: fit on train, evaluate OOS, benchmark, by-year.
+
+    `mode="cross"` = the trend-throttled cross-sectional rotation (the headline,
+    for the broad equity matrix); `mode="timeseries"` = each instrument on its own
+    absolute trend (for thin universes like crypto, where ranking has no breadth).
+    """
     bpy = settings.engine.bars_per_year
-    # Strategy = the trend-throttled cross-sectional rotation; benchmark = equal-weight
-    # buy-and-hold of the same universe.
-    base_strat = cross_book_streams(series, settings)
+    base_strat = _strat_stream(series, settings, mode)
     split = _split_date(base_strat, train_frac)
 
-    lookback, continuation, train_sharpe = fit_params(series, settings, split)
+    lookback, continuation, train_sharpe = fit_params(series, settings, split, mode)
     tuned = _clone(settings, lookback, continuation)
-    strat = cross_book_streams(series, tuned)
+    strat = _strat_stream(series, tuned, mode)
     _, bench = book_streams(series, tuned)
 
     train = [(d, r) for d, r in strat if d <= split]
@@ -208,15 +220,14 @@ def build_book(name: str, series: dict[str, list[Bar]], settings: Settings,
     }
 
 
-# Default books — keyless via Yahoo (equities + crypto both available there).
-# The equities book is the curated region × factor universe.
-from .universes import CRYPTO as CRYPTO_UNIVERSE, EQUITIES as EQUITY_UNIVERSE  # noqa: E402
+# The traded universe is the curated region × factor equity matrix.
+from .universes import EQUITIES as EQUITY_UNIVERSE  # noqa: E402
 
 
 def build_tearsheet(settings: Settings, equities: Sequence[str] = EQUITY_UNIVERSE,
-                    crypto: Sequence[str] = CRYPTO_UNIVERSE, years: float = 40.0,
-                    train_frac: float = 0.6, _series: Optional[dict] = None) -> dict:
-    """Assemble the multi-book tearsheet report (pulls long history unless injected)."""
+                    years: float = 40.0, train_frac: float = 0.6,
+                    _series: Optional[dict] = None) -> dict:
+    """Assemble the (equity-only) tearsheet report (pulls long history unless injected)."""
     books = []
     proxied: dict[str, str] = {}
     market = None
@@ -226,7 +237,6 @@ def build_tearsheet(settings: Settings, equities: Sequence[str] = EQUITY_UNIVERS
                 books.append(build_book(nm, ser, settings, train_frac))
     else:
         eq, eq_px = _pull(equities, years=years)
-        cr, _ = _pull(crypto, years=years)
         proxied.update(eq_px)
         # Global-market reference: VT, extended with VTI before VT's 2008 inception.
         mkt, mkt_px = _pull(["VT"], years=years)
@@ -234,9 +244,8 @@ def build_tearsheet(settings: Settings, equities: Sequence[str] = EQUITY_UNIVERS
             market = mkt["VT"]
             proxied.update(mkt_px)
         if eq:
-            books.append(build_book("Equities & ETFs", eq, settings, train_frac, market=market))
-        if cr:
-            books.append(build_book("Crypto", cr, settings, train_frac))
+            books.append(build_book("Equities & ETFs", eq, settings, train_frac,
+                                    market=market, mode="cross"))
     return {
         "header": {
             "title": "Driftwood — long-history tearsheet",

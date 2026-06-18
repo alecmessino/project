@@ -36,7 +36,7 @@ def test_proxies_point_to_longer_history_funds():
 
 
 def test_every_ticker_has_a_label():
-    for t in u.EQUITIES + u.CRYPTO + u.BASELINES:
+    for t in u.EQUITIES + u.BASELINES:
         assert t in u.LABELS and u.LABELS[t]
 
 

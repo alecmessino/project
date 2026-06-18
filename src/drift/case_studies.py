@@ -4,15 +4,15 @@ The studies are chosen to show the strategy honestly — not just a single flatt
 curve, but how it behaves across instruments, across parameters, against cost, and
 against a no-trend null:
 
-1. Crypto trend-following (time-series) — each name on its own trend, equal-weighted.
-2. Crypto relative-strength (cross-sectional) — long strongest / short weakest.
+1. Trend-following (time-series) — each instrument on its own trend, equal-weighted.
+2. Relative-strength (cross-sectional) — long strongest / short weakest.
 3. Lookback sensitivity — is the edge robust to the window, or curve-fit to one?
 4. Transaction-cost sensitivity — where does the net edge decay to zero?
 5. Trend vs. random walk — the control: momentum should profit on a trend and
    make ~nothing (net of cost) on a driftless walk.
 
 Everything here is pure given the input series, so it is fully unit-testable; the
-live crypto pull is isolated in `crypto_universe`.
+live equities pull is isolated in `equity_universe`.
 """
 
 from __future__ import annotations
@@ -26,21 +26,6 @@ from .cross_section import cross_backtest
 from .exhibit import _spark
 from .feed.synthetic import SyntheticFeed
 from .models import Bar
-
-
-def crypto_universe(symbols: Sequence[str], granularity: int = 86_400) -> dict[str, list[Bar]]:
-    """Pull a crypto universe from Coinbase, skipping any symbol that fails."""
-    from .feed.coinbase import CoinbaseFeed
-    feed = CoinbaseFeed(granularity=granularity)
-    series: dict[str, list[Bar]] = {}
-    for sym in symbols:
-        try:
-            bars = feed.fetch(sym)
-        except Exception:
-            continue
-        if len(bars) >= 60:
-            series[sym] = bars
-    return series
 
 
 def equity_universe(symbols: Sequence[str], source: str = "yahoo",

@@ -54,9 +54,9 @@
   </header>
 
   <p class="lede">
-    Driftwood is a trend-following <b>signal</b> system for region- and factor-tilted equity ETFs
-    (with a crypto sibling). It flags and sizes trends — it does not place trades — and it reports
-    the result, including the unflattering parts, honestly.
+    Driftwood is a trend-following <b>signal</b> system for region- and factor-tilted equity ETFs.
+    It flags and sizes trends — it does not place trades — and it reports the result, including the
+    unflattering parts, honestly.
   </p>
 
   <div class="cards" id="cards"></div>
@@ -190,7 +190,7 @@ const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v
 
 function render(s){
   set("gen","Generated "+(s.header?s.header.generated:"")+" · figures pulled live from the tearsheet & ledger.");
-  const e=s.equities, c=s.crypto, l=s.ledger;
+  const e=s.equities, l=s.ledger;
   const cards=[];
   if(e){
     cards.push(["max drawdown", apct(e.strat_maxdd)+" vs "+apct(e.bench_maxdd), "strategy vs buy &amp; hold · ETF book", "pos"]);
@@ -209,7 +209,6 @@ function render(s){
     set("eq-bcagr", pct(e.bench_cagr)); set("eq-scagr", pct(e.strat_cagr));
     set("eq-oos", e.oos_sharpe.toFixed(2));
   }
-  if(c){ set("cr-sdd", apct(c.strat_maxdd)); set("cr-bdd", apct(c.bench_maxdd)); }
   if(l){
     document.getElementById("ledger-line").textContent =
       `A live, append-only forward ledger has marked the equal-weight book daily since `+

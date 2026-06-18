@@ -90,15 +90,12 @@ def simulate(
 
 @app.command()
 def live(
-    source: str = typer.Option("coinbase", "--source", help="coinbase | polygon"),
-    instrument: str = typer.Option("BTC-USD", "--instrument", help="comma-separated symbols"),
+    source: str = typer.Option("yahoo", "--source", help="yahoo | polygon"),
+    instrument: str = typer.Option("SPY,QQQ,IWM,EFA,EEM", "--instrument", help="comma-separated symbols"),
     config: Optional[str] = typer.Option(None, "--config"),
     backtest_too: bool = typer.Option(False, "--backtest", help="also backtest the pulled history"),
 ):
-    """Pull a live feed (Coinbase crypto / Polygon equities) and print fired signals.
-
-    Coinbase needs no key; Polygon reads POLYGON_API_KEY from .env / the environment.
-    """
+    """Pull a live equity feed (Yahoo, keyless; or Polygon with a key) and print fired signals."""
     settings = _load_settings(config)
     instruments = [s.strip() for s in instrument.split(",") if s.strip()]
     feed = get_feed(source, instruments=instruments)
@@ -124,18 +121,15 @@ def _universe(source: str, instruments: list[str], series_csv: Optional[str],
     if source == "polygon":
         from .case_studies import equity_universe
         return equity_universe(instruments, source="polygon", pause=pause)
-    if source in ("coinbase", "crypto"):
-        from .case_studies import crypto_universe
-        return crypto_universe(instruments)
     return collect_series(get_feed(source, instruments=instruments))
 
 
 @app.command()
 def rank(
-    source: str = typer.Option("coinbase", "--source", help="coinbase | polygon | synthetic"),
-    instrument: str = typer.Option("BTC-USD,ETH-USD,LTC-USD", "--instrument", help="comma-separated universe"),
+    source: str = typer.Option("yahoo", "--source", help="yahoo | polygon | synthetic"),
+    instrument: str = typer.Option(_universes.csv(_universes.EQUITIES), "--instrument", help="comma-separated universe"),
     series: Optional[str] = typer.Option(None, "--series", help="multi-instrument CSV (overrides --source)"),
-    neutralize: str = typer.Option("none", "--neutralize", help="none | region | factor"),
+    neutralize: str = typer.Option("none", "--neutralize", help="none | region | size | style"),
     config: Optional[str] = typer.Option(None, "--config"),
 ):
     """Show the current cross-sectional ranking (relative-strength momentum)."""
@@ -158,10 +152,10 @@ def rank(
 
 @app.command()
 def xbacktest(
-    source: str = typer.Option("synthetic", "--source", help="coinbase | polygon | synthetic"),
-    instrument: str = typer.Option("BTC-USD,ETH-USD,LTC-USD,BCH-USD", "--instrument"),
+    source: str = typer.Option("yahoo", "--source", help="yahoo | polygon | synthetic"),
+    instrument: str = typer.Option(_universes.csv(_universes.EQUITIES), "--instrument"),
     series: Optional[str] = typer.Option(None, "--series", help="multi-instrument CSV"),
-    neutralize: str = typer.Option("none", "--neutralize", help="none | region | factor"),
+    neutralize: str = typer.Option("none", "--neutralize", help="none | region | size | style"),
     config: Optional[str] = typer.Option(None, "--config"),
     out: Optional[str] = typer.Option(None, "--out", help="Write the result JSON here"),
 ):
@@ -188,11 +182,11 @@ def xbacktest(
 
 @app.command()
 def export(
-    source: str = typer.Option("coinbase", "--source", help="coinbase | polygon | synthetic"),
-    instrument: str = typer.Option("BTC-USD,ETH-USD,LTC-USD,BCH-USD", "--instrument"),
+    source: str = typer.Option("yahoo", "--source", help="yahoo | polygon | synthetic"),
+    instrument: str = typer.Option(_universes.csv(_universes.EQUITIES), "--instrument"),
     series: Optional[str] = typer.Option(None, "--series", help="multi-instrument CSV"),
     config: Optional[str] = typer.Option(None, "--config"),
-    out: str = typer.Option("docs/drift.html", "--out", help="static HTML exhibit path"),
+    out: str = typer.Option("docs/equities.html", "--out", help="static HTML exhibit path"),
 ):
     """Build a self-contained static dashboard HTML (shareable, no server)."""
     from .exhibit import export_html
@@ -208,18 +202,17 @@ def export(
 
 @app.command()
 def studies(
-    source: str = typer.Option("coinbase", "--source", help="coinbase | polygon | synthetic"),
-    instrument: str = typer.Option(
-        "BTC-USD,ETH-USD,LTC-USD,BCH-USD,ETC-USD,LINK-USD,ADA-USD,XLM-USD", "--instrument"),
+    source: str = typer.Option("yahoo", "--source", help="yahoo | polygon | synthetic"),
+    instrument: str = typer.Option(_universes.csv(_universes.EQUITIES), "--instrument"),
     config: Optional[str] = typer.Option(None, "--config"),
-    out: str = typer.Option("docs/case_studies.html", "--out", help="static report HTML path"),
+    out: str = typer.Option("docs/equities_case_studies.html", "--out", help="static report HTML path"),
     pause: float = typer.Option(13.0, "--pause", help="seconds between Polygon fetches (free-tier rate limit)"),
 ):
     """Run the multi-case-study backtest report and write a clean static HTML.
 
-    Works on crypto (`--source coinbase`, keyless) or equities (`--source polygon`,
-    needs POLYGON_API_KEY). Without a usable source it still runs the synthetic
-    control study so the report is never empty.
+    Keyless via Yahoo (`--source yahoo`); Polygon optional with POLYGON_API_KEY.
+    Without a usable source it still runs the synthetic control study so the report
+    is never empty.
     """
     from .case_studies import build_report
     from .exhibit import export_report
@@ -274,7 +267,6 @@ def hub(
 @app.command()
 def ledger(
     equities: str = typer.Option(_universes.csv(_universes.EQUITIES), "--equities"),
-    crypto: str = typer.Option(_universes.csv(_universes.CRYPTO), "--crypto"),
     state: str = typer.Option("docs/ledger.json", "--state", help="append-only ledger JSON"),
     out: str = typer.Option("docs/ledger.html", "--out", help="ledger exhibit HTML"),
     seed_sessions: int = typer.Option(120, "--seed-sessions", help="walk-forward seed length on first run"),
@@ -282,14 +274,15 @@ def ledger(
 ):
     """Advance the forward paper-trade ledger by one session and render it.
 
-    First run seeds from a walk-forward replay of recent history (no lookahead);
-    later runs append only the newest session. Keyless via Yahoo.
+    The headline book is the equities region/factor rotation only — crypto is too
+    thin to rank cross-sectionally, so it's not in this book. First run seeds from a
+    walk-forward replay (no lookahead); later runs append the newest session. Keyless.
     """
     import json as _json
     from .ledger import build_ledger_state, seed_ledger, update_ledger
     from .exhibit import export_ledger
     settings = _load_settings(config)
-    syms = [s.strip() for s in (equities + "," + crypto).split(",") if s.strip()]
+    syms = [s.strip() for s in equities.split(",") if s.strip()]
     console.print(f"[dim]pulling daily history for {len(syms)} instruments …[/]")
     from .feed.yahoo import YahooFeed
     feed = YahooFeed(range="2y", interval="1d")
@@ -324,7 +317,6 @@ def ledger(
 @app.command()
 def tearsheet(
     equities: str = typer.Option(_universes.csv(_universes.EQUITIES), "--equities"),
-    crypto: str = typer.Option(_universes.csv(_universes.CRYPTO), "--crypto"),
     years: float = typer.Option(40.0, "--years", help="how many years of daily history to pull"),
     train_frac: float = typer.Option(0.6, "--train-frac", help="in-sample fraction"),
     config: Optional[str] = typer.Option(None, "--config"),
@@ -335,9 +327,8 @@ def tearsheet(
     from .exhibit import export_tearsheet
     settings = _load_settings(config)
     eq = [s.strip() for s in equities.split(",") if s.strip()]
-    cr = [s.strip() for s in crypto.split(",") if s.strip()]
-    console.print(f"[dim]pulling daily history (~{years:.0f}y) for {len(eq)} equities + {len(cr)} crypto …[/]")
-    report = build_tearsheet(settings, equities=eq, crypto=cr, years=years, train_frac=train_frac)
+    console.print(f"[dim]pulling daily history (~{years:.0f}y) for {len(eq)} equities …[/]")
+    report = build_tearsheet(settings, equities=eq, years=years, train_frac=train_frac)
     if not report["books"]:
         console.print("[yellow]no data pulled (rate-limited?) — keeping existing tearsheet.[/]")
         raise typer.Exit()
@@ -355,8 +346,8 @@ def tearsheet(
 
 @app.command()
 def serve(
-    source: str = typer.Option("coinbase", "--source", help="coinbase | polygon | synthetic"),
-    instrument: str = typer.Option("BTC-USD,ETH-USD,LTC-USD,BCH-USD", "--instrument"),
+    source: str = typer.Option("yahoo", "--source", help="yahoo | polygon | synthetic"),
+    instrument: str = typer.Option(_universes.csv(_universes.EQUITIES), "--instrument"),
     series: Optional[str] = typer.Option(None, "--series", help="multi-instrument CSV"),
     config: Optional[str] = typer.Option(None, "--config"),
     host: str = typer.Option("127.0.0.1", "--host"),

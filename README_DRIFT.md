@@ -1,7 +1,7 @@
 # Driftwood 🪵
 
-A time-series-**momentum** (trend-following) signal system for public markets —
-equities and crypto. Driftwood is the structural sibling of `mrbet`: it reuses the
+A **momentum** (trend-following) signal system for region- and factor-tilted
+**equity ETFs**. Driftwood is the structural sibling of `mrbet`: it reuses the
 same harness (an interchangeable data-feed protocol → a streaming engine → a
 conjunctive trigger gate → signals, plus a cost-aware backtest), but the model is
 the **mirror image**. Where mean reversion fades an extreme, Driftwood rides it.
@@ -40,67 +40,61 @@ drift demo --config config/drift.yaml  # full pipeline on a seeded synthetic tre
 drift backtest --series prices.csv --instrument SPY --config config/drift.yaml
 drift simulate --replay prices.csv --config config/drift.yaml   # stream from a CSV
 
-# Live feeds (real data):
-drift live --source coinbase --instrument BTC-USD,ETH-USD --config config/drift.yaml
-drift live --source polygon  --instrument SPY,QQQ --backtest --config config/drift.yaml
+# Live feed (real data, keyless via Yahoo) — defaults to the region/factor matrix:
+drift live --source yahoo --backtest --config config/drift.yaml
 
-# Cross-sectional (relative-strength) variant:
-drift rank      --source coinbase --instrument BTC-USD,ETH-USD,LTC-USD,BCH-USD
-drift xbacktest --source coinbase --instrument BTC-USD,ETH-USD,LTC-USD,BCH-USD
+# Cross-sectional (relative-strength) rotation — the headline strategy:
+drift rank      --config config/drift.yaml                      # current ranking + weights
+drift xbacktest --config config/drift.yaml                      # universe backtest
 
 # Dashboard / exhibits:
-drift serve  --source coinbase --instrument BTC-USD,ETH-USD,LTC-USD,BCH-USD   # live at :8000
-drift export --source coinbase --instrument BTC-USD,ETH-USD --out docs/drift.html  # static
+drift serve  --config config/drift.yaml                         # live dashboard at :8000
+drift export --config config/drift.yaml --out docs/equities.html  # static dashboard
 
 # Credibility & track record:
-drift studies   --source yahoo  --instrument SPY,QQQ,AAPL,...   # 5-study backtest report
+drift studies   --config config/drift.yaml                      # 5-study backtest report
 drift tearsheet --config config/drift.yaml                      # long-history, OOS, vs buy&hold
 drift ledger    --config config/drift.yaml                      # advance the forward paper ledger
-drift hub       --docs docs --out docs/index.html               # markets-only landing page
+drift hub       --docs docs --out docs/index.html               # equity landing page
 ```
 
 `prices.csv` columns: `asof,close[,high,low,volume[,instrument]]`.
 
-## Site (GitHub Pages, markets-only)
+## Site (GitHub Pages, equity-only)
 
 `docs/index.html` is the Driftwood hub (the public front door); it links the
-dashboards, case studies, the long-history **tearsheet** (strategy vs buy-and-hold
-with an in-sample/out-of-sample split), and the append-only forward **ledger**.
-The daily `drift-pages.yml` Action regenerates them all keyless (Yahoo + Coinbase)
-and the Pages workflow deploys `docs/`. The mrbet betting dashboard is kept
-separate at `docs/mrbet.html` and is not linked from the markets hub.
+**thesis**, the append-only forward **ledger**, the long-history **tearsheet**
+(strategy vs buy-and-hold with an in-sample/out-of-sample split), the live
+**dashboard**, and the **case studies**. The daily `drift-pages.yml` Action
+regenerates them all keyless (Yahoo Finance) and the Pages workflow deploys
+`docs/`. The mrbet betting dashboard is kept separate at `docs/mrbet.html` and is
+not linked from the equity hub.
 
-## Two models, one harness
+## The strategy
 
-- **Time-series momentum** (`triggers.py`) — trade each instrument on its own
-  absolute, vol-normalized trend; breakout-confirmed; vol-targeted. This is what
-  `simulate`, `live`, and the per-instrument `backtest` run.
-- **Cross-sectional momentum** (`cross_section.py`) — rank the universe each bar
-  and go long the strongest / short the weakest names (dollar-neutral by default).
-  This is what `rank` and `xbacktest` run.
+The headline is a **trend-throttled cross-sectional rotation** over the region ×
+factor ETF matrix (`cross_section.py`):
 
-## Dashboard
+- **Selection** — each month, rank the universe by vol-normalized trend and hold
+  the strongest half, long-only, inverse-volatility weighted.
+- **Exposure** — total invested exposure is scaled by the breadth of positive
+  absolute trend (full in a broad uptrend, throttled toward a floor in a broad
+  bear): the drawdown-control overlay.
 
-`drift serve` runs a dependency-free stdlib server (single auto-refreshing page +
-`/api/state` JSON); `drift export` writes the same view as a **self-contained
-static HTML** (`docs/drift.html`) you can commit or host on GitHub Pages — state
-is embedded inline, so it renders with no server. Both share one render path
-(`exhibit.build_state` → `web/index.html`) and show the cross-sectional book, the
-relative-strength ranking, and a signal + equity-sparkline card per instrument.
+A per-instrument **time-series** model (`triggers.py`, absolute trend + breakout +
+vol-target) also exists and drives the signal cards/`live` stream.
 
-## Live feeds
+## Feeds
 
-Both sit behind the same `PriceFeed` protocol, so the engine and backtest don't
-know or care where bars come from:
+Behind the same `PriceFeed` protocol, so the engine and backtest don't care where
+bars come from. The product is keyless:
 
-- **`coinbase`** — Coinbase Exchange public candles, **no API key**. Daily by
-  default; set `granularity` (60/300/900/3600/21600/86400 s) for intraday crypto
-  and bump `engine.bars_per_year` to match.
-- **`polygon`** — Polygon.io aggregates for equities. Set `POLYGON_API_KEY` in
-  `.env` (gitignored) or the environment. Defaults to ~2 years of daily bars.
+- **`yahoo`** — Yahoo Finance daily bars, **no API key** (the default). Uses
+  explicit epoch bounds for true daily history (decades) and retries with backoff.
+- **`polygon`** — optional Polygon.io aggregates; set `POLYGON_API_KEY` in `.env`.
 
-For intraday, remember every window is in **bars**: re-tune `lookback`,
-`vol_window`, `breakout_channel`, and `engine.bars_per_year` together.
+Every window is in **bars**: re-tune `lookback`, `vol_window`,
+`breakout_channel`, and `engine.bars_per_year` together if you change frequency.
 
 ## The model in one paragraph
 

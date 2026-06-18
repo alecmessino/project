@@ -3,7 +3,6 @@
 import pytest
 
 from drift.feed._retry import with_retries
-from drift.feed.coinbase import CoinbaseFeed
 from drift.feed.yahoo import YahooFeed
 
 
@@ -70,12 +69,11 @@ def test_yahoo_retries_then_succeeds():
     assert sess.calls == 3              # 2 failures + 1 success (host rotated each try)
 
 
-def test_coinbase_retries_then_succeeds():
-    rows = [[i, i, i + 2, i, i + 1, 10.0] for i in range(100, 103)]
-    sess = _FlakySession(rows, fail_n=1)
-    feed = CoinbaseFeed(instruments=["BTC-USD"], session=sess, retries=3, backoff=0)
-    bars = feed.fetch("BTC-USD")
-    assert len(bars) == 3
+def test_yahoo_retries_with_one_transient_failure():
+    sess = _FlakySession(_yahoo_payload(), fail_n=1)
+    feed = YahooFeed(instruments=["SPY"], session=sess, retries=3, backoff=0)
+    bars = feed.fetch("SPY")
+    assert len(bars) == 2
     assert sess.calls == 2
 
 

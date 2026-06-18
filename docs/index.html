@@ -43,7 +43,7 @@
 <div class="wrap">
   <header>
     <h1>Drift<span class="w">wood</span></h1>
-    <p class="tag">Time-series &amp; cross-sectional momentum research — equities, ETFs &amp; crypto.</p>
+    <p class="tag">Cross-sectional &amp; time-series momentum research — region &amp; factor equity ETFs.</p>
   </header>
 
   <p class="lede">
@@ -63,13 +63,13 @@
     Backtests are walk-forward and net of modeled transaction cost; the forward
     ledger is append-only and out-of-sample. The <code>continuation</code> parameter
     is an unvalidated default — figures are engineering validation, not expected returns.
-    Data: Yahoo Finance (equities) &amp; Coinbase (crypto), keyless.
+    Data: Yahoo Finance daily bars, keyless.
     <div id="gen" style="margin-top:6px"></div>
   </div>
 </div>
 
 <script>
-window.__STATE__ = {"header": {"generated": "2026-06-18 19:18:18 UTC"}, "headline": [{"label": "Forward ledger", "value": "-1.1%", "sub": "120 sessions \u00b7 since 2026-02-19", "tone": "neg"}, {"label": "Equities & ETFs \u00b7 max drawdown", "value": "26% vs 59%", "sub": "strategy vs buy & hold \u00b7 OOS Sharpe 0.76", "tone": "neutral"}, {"label": "Crypto \u00b7 max drawdown", "value": "62% vs 92%", "sub": "strategy vs buy & hold \u00b7 OOS Sharpe 0.07", "tone": "neutral"}], "exhibits": [{"title": "Thesis & findings", "href": "thesis.html", "desc": "The trend-following thesis, the research, the equities results \u2014 and the name.", "present": true}, {"title": "Live forward ledger", "href": "ledger.html", "desc": "Append-only, out-of-sample paper track record \u2014 marked and committed daily.", "present": true}, {"title": "Long-history tearsheet", "href": "tearsheet.html", "desc": "Decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample.", "present": true}, {"title": "Crypto dashboard", "href": "drift.html", "desc": "Live trend signals and per-name backtests across crypto majors (Coinbase).", "present": true}, {"title": "Equities dashboard", "href": "equities.html", "desc": "Live trend signals and per-name backtests across equities/ETFs (Yahoo).", "present": true}, {"title": "Crypto case studies", "href": "case_studies.html", "desc": "Five backtests: time-series, cross-sectional, lookback & cost sensitivity, and a control.", "present": true}, {"title": "Equities case studies", "href": "equities_case_studies.html", "desc": "The same five studies on equities and ETFs.", "present": true}]};
+window.__STATE__ = {"header": {"generated": "2026-06-18 19:39:40 UTC"}, "headline": [{"label": "Forward ledger", "value": "+5.2%", "sub": "120 sessions \u00b7 since 2025-12-26", "tone": "pos"}, {"label": "Equities & ETFs \u00b7 max drawdown", "value": "26% vs 59%", "sub": "strategy vs buy & hold \u00b7 OOS Sharpe 0.76", "tone": "neutral"}], "exhibits": [{"title": "Thesis & findings", "href": "thesis.html", "desc": "The trend-following thesis, the research, the results \u2014 and the name.", "present": true}, {"title": "Live forward ledger", "href": "ledger.html", "desc": "Append-only, out-of-sample paper track record \u2014 marked and committed daily.", "present": true}, {"title": "Long-history tearsheet", "href": "tearsheet.html", "desc": "Decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample.", "present": true}, {"title": "Dashboard", "href": "equities.html", "desc": "Live trend signals, the relative-strength ranking, and per-name backtests across the matrix.", "present": true}, {"title": "Case studies", "href": "equities_case_studies.html", "desc": "Five backtests: time-series, cross-sectional, lookback & cost sensitivity, and a control.", "present": true}]};
 
 function render(s){
   document.getElementById("headline").innerHTML = (s.headline||[]).map(m=>

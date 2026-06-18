@@ -1,7 +1,7 @@
 """Price feeds: interchangeable data sources behind the `PriceFeed` protocol.
 
 Offline: `ReplayFeed` (CSV / in-memory) and `SyntheticFeed` (seeded GBM).
-Live: `CoinbaseFeed` (crypto, no key) and `PolygonFeed` (equities, keyed).
+Live: `YahooFeed` (equities/ETFs, keyless) and `PolygonFeed` (equities, keyed).
 """
 
 from __future__ import annotations

@@ -54,9 +54,9 @@
   </header>
 
   <p class="lede">
-    Driftwood is a trend-following <b>signal</b> system for region- and factor-tilted equity ETFs
-    (with a crypto sibling). It flags and sizes trends — it does not place trades — and it reports
-    the result, including the unflattering parts, honestly.
+    Driftwood is a trend-following <b>signal</b> system for region- and factor-tilted equity ETFs.
+    It flags and sizes trends — it does not place trades — and it reports the result, including the
+    unflattering parts, honestly.
   </p>
 
   <div class="cards" id="cards"></div>
@@ -183,14 +183,14 @@
 </div>
 
 <script>
-window.__STATE__ = {"header": {"generated": "2026-06-18 19:18:18 UTC"}, "equities": {"name": "Equities & ETFs", "span": "2000\u20132026", "n_names": 18, "strat_maxdd": 0.26258584379877287, "bench_maxdd": 0.5875558489233411, "strat_sharpe": 0.686764791025066, "bench_sharpe": 0.48660144617506845, "strat_cagr": 0.07361091179179557, "bench_cagr": 0.08030058021145603, "oos_sharpe": 0.7575755614450136}, "crypto": {"name": "Crypto", "span": "2014\u20132026", "n_names": 4, "strat_maxdd": 0.6191060269424136, "bench_maxdd": 0.9178753081394819, "strat_sharpe": 0.411816977616533, "bench_sharpe": 0.7159428679464849, "strat_cagr": 0.08374860780837734, "bench_cagr": 0.29295942224864335, "oos_sharpe": 0.06631949868087705}, "ledger": {"total_return": -0.011345999999999967, "sessions": 120, "inception": "2026-02-19", "universe": 22}};
+window.__STATE__ = {"header": {"generated": "2026-06-18 19:39:39 UTC"}, "equities": {"name": "Equities & ETFs", "span": "2000\u20132026", "n_names": 18, "strat_maxdd": 0.2625855583748001, "bench_maxdd": 0.5875558732549705, "strat_sharpe": 0.6868575730887392, "bench_sharpe": 0.48664451081902416, "strat_cagr": 0.07362271161414902, "bench_cagr": 0.08030995598892399, "oos_sharpe": 0.7578218922756625}, "ledger": {"total_return": 0.05166699999999991, "sessions": 120, "inception": "2025-12-26", "universe": 18}};
 const pct=(x,d=1)=>x==null?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
 const apct=(x,d=0)=>x==null?"—":(x*100).toFixed(d)+"%";
 const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;};
 
 function render(s){
   set("gen","Generated "+(s.header?s.header.generated:"")+" · figures pulled live from the tearsheet & ledger.");
-  const e=s.equities, c=s.crypto, l=s.ledger;
+  const e=s.equities, l=s.ledger;
   const cards=[];
   if(e){
     cards.push(["max drawdown", apct(e.strat_maxdd)+" vs "+apct(e.bench_maxdd), "strategy vs buy &amp; hold · ETF book", "pos"]);
@@ -209,7 +209,6 @@ function render(s){
     set("eq-bcagr", pct(e.bench_cagr)); set("eq-scagr", pct(e.strat_cagr));
     set("eq-oos", e.oos_sharpe.toFixed(2));
   }
-  if(c){ set("cr-sdd", apct(c.strat_maxdd)); set("cr-bdd", apct(c.bench_maxdd)); }
   if(l){
     document.getElementById("ledger-line").textContent =
       `A live, append-only forward ledger has marked the equal-weight book daily since `+

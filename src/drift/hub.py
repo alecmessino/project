@@ -17,19 +17,15 @@ from typing import Optional
 # (title, file, blurb) — order is the order shown on the hub.
 EXHIBITS = [
     ("Thesis & findings", "thesis.html",
-     "The trend-following thesis, the research, the equities results — and the name."),
+     "The trend-following thesis, the research, the results — and the name."),
     ("Live forward ledger", "ledger.html",
      "Append-only, out-of-sample paper track record — marked and committed daily."),
     ("Long-history tearsheet", "tearsheet.html",
      "Decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample."),
-    ("Crypto dashboard", "drift.html",
-     "Live trend signals and per-name backtests across crypto majors (Coinbase)."),
-    ("Equities dashboard", "equities.html",
-     "Live trend signals and per-name backtests across equities/ETFs (Yahoo)."),
-    ("Crypto case studies", "case_studies.html",
+    ("Dashboard", "equities.html",
+     "Live trend signals, the relative-strength ranking, and per-name backtests across the matrix."),
+    ("Case studies", "equities_case_studies.html",
      "Five backtests: time-series, cross-sectional, lookback & cost sensitivity, and a control."),
-    ("Equities case studies", "equities_case_studies.html",
-     "The same five studies on equities and ETFs."),
 ]
 
 

@@ -64,10 +64,6 @@ def get_feed(name: str, **kwargs) -> PriceFeed:
         from .synthetic import SyntheticFeed
 
         return SyntheticFeed(**kwargs)
-    if name in ("coinbase", "crypto"):
-        from .coinbase import CoinbaseFeed
-
-        return CoinbaseFeed(**kwargs)
     if name in ("yahoo", "yf", "equity", "equities", "stocks"):
         from .yahoo import YahooFeed
 

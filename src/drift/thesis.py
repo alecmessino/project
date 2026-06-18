@@ -40,16 +40,13 @@ def build_thesis(docs_dir: str | Path = "docs") -> dict:
     docs = Path(docs_dir)
     state: dict = {
         "header": {"generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())},
-        "equities": None, "crypto": None, "ledger": None,
+        "equities": None, "ledger": None,
     }
     ts = _embedded_state(docs / "tearsheet.html")
     if ts:
         eq = _book(ts, "equit")
-        cr = _book(ts, "crypto")
         if eq:
             state["equities"] = _book_metrics(eq)
-        if cr:
-            state["crypto"] = _book_metrics(cr)
     led = docs / "ledger.json"
     if led.exists():
         try:

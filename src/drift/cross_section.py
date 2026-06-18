@@ -76,6 +76,9 @@ def rank_weights(
     When `cs.neutralize` is set and `groups` is supplied, trend scores are demeaned
     within each group first, so the long/short book is neutral to that grouping.
     """
+    # Breadth of POSITIVE absolute trend (pre-demean) drives the exposure throttle.
+    raw_valid = [s for s in scores.values() if s is not None]
+    breadth = (sum(1 for s in raw_valid if s > 0) / len(raw_valid)) if raw_valid else 0.0
     if cs.neutralize and cs.neutralize != "none" and groups:
         scores = _demean_within_groups(scores, groups)
     out = {k: 0.0 for k in scores}
@@ -109,6 +112,12 @@ def rank_weights(
             out[key] = cs.max_weight
         elif out[key] < -cs.max_weight:
             out[key] = -cs.max_weight
+
+    # Trend throttle: scale total exposure by positive-trend breadth (full in a broad
+    # uptrend, light in a broad bear) — the time-series overlay for drawdown control.
+    if cs.trend_throttle:
+        expo = max(cs.exposure_floor, min(1.0, breadth))
+        out = {key: w * expo for key, w in out.items()}
     return out
 
 
@@ -127,6 +136,53 @@ class RankRow:
     ann_vol: float
     weight: float
     leg: str  # "LONG" / "SHORT" / "—"
+
+
+def cross_book_streams(series: dict[str, list[Bar]], settings: Settings) -> list[tuple[str, float]]:
+    """Dated net returns of the cross-sectional rotation over the FULL history.
+
+    Unlike `cross_backtest` (which aligns to the shortest series), this handles
+    ragged histories — at each rebalance it ranks only the instruments that have
+    enough history by that date — so the book spans the whole period (incl. 2008)
+    rather than truncating to the youngest name. Long-only/L-S, rebalance cadence,
+    min_score gate, and neutralization all apply via `rank_weights`.
+    """
+    s = settings.signal
+    cs = settings.cross_section
+    cost = settings.sizing.cost_bps_per_side / 1e4
+    bpy = settings.engine.bars_per_year
+    rebalance = max(1, cs.rebalance_bars)
+    groups = _groups_for(cs)
+
+    price = {inst: {b.asof: b.close for b in bars} for inst, bars in series.items()}
+    seq = {inst: [b.close for b in bars] for inst, bars in series.items()}
+    pos = {inst: {b.asof: i for i, b in enumerate(bars)} for inst, bars in series.items()}
+    all_dates = sorted({b.asof for bars in series.values() for b in bars})
+
+    weights = {inst: 0.0 for inst in series}
+    prev = dict(weights)
+    out: list[tuple[str, float]] = []
+    for di in range(len(all_dates) - 1):
+        d, dn = all_dates[di], all_dates[di + 1]
+        if di % rebalance == 0:
+            scores: dict[str, float] = {}
+            vols: dict[str, float] = {}
+            for inst in series:
+                i = pos[inst].get(d)
+                if i is not None and i + 1 >= s.min_history:
+                    cl = seq[inst][: i + 1]
+                    scores[inst] = sig.momentum_score(cl, s.lookback, s.vol_window)
+                    vols[inst] = sizing.annualize_vol(sig.realized_vol(cl, s.vol_window), bpy)
+            weights = rank_weights(scores, vols, cs, groups) if scores else dict(weights)
+        port = dw_tot = 0.0
+        for inst in series:
+            w = weights.get(inst, 0.0)
+            pd, pn = price[inst].get(d), price[inst].get(dn)
+            port += w * ((pn / pd - 1.0) if (pd and pn) else 0.0)
+            dw_tot += abs(w - prev[inst])
+            prev[inst] = w
+        out.append((dn, port - cost * dw_tot))
+    return out
 
 
 def rank_snapshot(series: dict[str, list[Bar]], settings: Settings) -> list[RankRow]:

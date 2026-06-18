@@ -18,8 +18,10 @@ from __future__ import annotations
 import time
 from typing import Optional, Sequence
 
-from .backtest import current_weight
+from . import signal as sig
+from . import sizing
 from .config import Settings
+from .cross_section import _groups_for, rank_weights
 from .models import Bar
 
 
@@ -59,23 +61,35 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
     prev_w: dict[str, float] = prev["weights"] if prev else {}
     equity = prev["equity"] if prev else 1.0
 
-    # 1) Realize the previously-held book from the prior date to now.
+    # 1) Realize the previously-held cross-sectional book (weights sum to exposure,
+    #    so the portfolio return is the weighted sum — not an average).
     realized = 0.0
     if prev:
-        marks = []
         for i in insts:
             p_prev = _close_on_or_before(series[i], prev["date"])
             p_now = series[i][-1].close
             if p_prev and p_now:
-                marks.append(prev_w.get(i, 0.0) * (p_now / p_prev - 1.0))
-        realized = sum(marks) / len(marks) if marks else 0.0
+                realized += prev_w.get(i, 0.0) * (p_now / p_prev - 1.0)
 
-    # 2) Decide the new target book to carry forward.
-    new_w = {i: round(current_weight(i, series[i], prev_w.get(i, 0.0), settings), 4)
-             for i in insts}
+    # 2) New target = the trend-throttled cross-sectional rotation, re-ranked on the
+    #    rebalance cadence (held between rebalances so turnover stays low).
+    cs = settings.cross_section
+    n_prior = len(entries)
+    if prev and (n_prior % max(1, cs.rebalance_bars) != 0):
+        new_w = {i: round(prev_w.get(i, 0.0), 4) for i in insts}
+    else:
+        sg = settings.signal
+        scores, vols = {}, {}
+        for i in insts:
+            cl = [b.close for b in series[i]]
+            scores[i] = sig.momentum_score(cl, sg.lookback, sg.vol_window)
+            vols[i] = sizing.annualize_vol(sig.realized_vol(cl, sg.vol_window),
+                                           settings.engine.bars_per_year)
+        raw = rank_weights(scores, vols, cs, _groups_for(cs))
+        new_w = {i: round(raw.get(i, 0.0), 4) for i in insts}
 
-    # 3) Cost on the rebalance, equal-weight book accounting.
-    turnover = sum(abs(new_w[i] - prev_w.get(i, 0.0)) for i in insts) / len(insts)
+    # 3) Cost on rebalance turnover (weights are at portfolio scale).
+    turnover = sum(abs(new_w[i] - prev_w.get(i, 0.0)) for i in insts)
     net = realized - cost * turnover
     equity = round(equity * (1.0 + net), 6)
 

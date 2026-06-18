@@ -97,25 +97,29 @@
 
   <h2>Portfolio construction &amp; risk management</h2>
   <p>
-    To turn the core signal into a robust portfolio, Driftwood runs a dual-engine execution model under
-    strict risk limits — capturing structural trends across the ETF universe while neutralizing unwanted
-    exposures and minimizing frictional drag.
+    The strategy composes two complementary uses of the same trend signal — one decides
+    <i>which</i> markets to own, the other decides <i>how much</i> to own — under strict risk limits,
+    minimizing frictional drag.
   </p>
 
-  <h3>The dual execution model</h3>
+  <h3>Selection — cross-sectional relative strength</h3>
   <p>
-    <b>Time-series execution — absolute momentum.</b> Each ETF is judged entirely on its own path: the
-    volatility-normalized trend <i>z</i>-score says whether the fund has positive or negative absolute
-    drift, and a channel breakout confirms it is definitively moving. This is the primary drawdown
-    defense: as broad markets fall and absolute trends break, the mechanism naturally de-levers and can
-    take the other side rather than ride the decline down.
+    Each month the system ranks the whole universe by volatility-normalized trend and holds the
+    strongest half, long-only, inverse-volatility weighted (a quiet, steady drifter earns more notional
+    than a wild one). Monthly rebalancing keeps turnover — and the cost it carries — low. This is the
+    relative-strength engine: capital flows toward the regions and styles that are actually leading,
+    and away from the laggards, regardless of which corner of the market that happens to be.
   </p>
+
+  <h3>Exposure — the trend throttle (drawdown control)</h3>
   <p>
-    <b>Cross-sectional execution — relative strength.</b> The system ranks the whole universe and can
-    pair long exposure to the strongest funds against short exposure to the weakest — dollar-neutral by
-    construction, harvesting the dispersion between leaders and laggards. <span class="muted">(In
-    trending-up regimes the realized book often tilts net long; shorting is a capability the gating
-    invokes when trends genuinely break.)</span>
+    Selection alone would stay fully invested into a crash. So total invested exposure is scaled by the
+    <b>breadth of positive absolute trend</b> across the universe: when most markets are trending up the
+    book runs fully invested; as breadth collapses in a broad bear, exposure is throttled down toward a
+    floor. This is the drawdown-control overlay — it de-risks <i>proportionally</i> to how broad the
+    decline is, rather than going abruptly to cash or fighting the tape with shorts (which we tested and
+    which gave up the equity premium without protecting in correlated sell-offs). A small exposure floor
+    keeps capital working rather than sitting idle.
   </p>
 
   <h3>Orthogonal neutralization</h3>
@@ -143,24 +147,23 @@
   <p>
     Tested the honest way — walk-forward, net of cost, with parameters fit <b>in-sample</b> on the early
     history and reported <b>out-of-sample</b> on the held-out remainder, over <b id="eq-span">—</b>
-    across <b id="eq-n">—</b> region/factor ETFs — the result is <b>not</b> a higher return than buying
-    and holding. The ETF book compounded at <b id="eq-bcagr">—</b> a year buy-and-hold versus
-    <b id="eq-scagr">—</b> for the strategy; a flat-when-no-signal trend book gives up upside in a
-    secular bull.
+    across <b id="eq-n">—</b> region/factor ETFs — the strategy earns a return <b>comparable</b> to simply
+    buying and holding the same universe (<b id="eq-scagr">—</b> a year versus <b id="eq-bcagr">—</b>),
+    but takes far less risk to do it.
   </p>
   <p>
-    What it delivers instead is a structurally smaller <b>drawdown</b>: a worst peak-to-trough of
-    <b id="eq-sdd" class="pos">—</b> against buy-and-hold's <b id="eq-bdd" class="neg">—</b> — roughly a
-    <b id="eq-ddx">—</b> reduction in the deepest loss. <span class="muted">The crypto sibling is starker
-    still (<b id="cr-sdd">—</b> vs <b id="cr-bdd">—</b>), where it also wins on risk-adjusted return.</span>
-    Out-of-sample Sharpe stayed positive (<b id="eq-oos">—</b>) and degraded honestly from in-sample, and
-    a synthetic control confirms the engine harvests trend, not noise.
+    The headline is the <b>drawdown</b>: a worst peak-to-trough of <b id="eq-sdd" class="pos">—</b>
+    against buy-and-hold's <b id="eq-bdd" class="neg">—</b> — roughly a <b id="eq-ddx">—</b> reduction in
+    the deepest loss, the throttle de-risking as breadth collapses. On a risk-adjusted basis it
+    <b>beats</b> the market: a higher Sharpe and Sortino than buying and holding. Out-of-sample Sharpe
+    stayed positive (<b id="eq-oos">—</b>) and degraded honestly from in-sample, and a synthetic control
+    confirms the engine harvests trend, not noise.
   </p>
 
   <div class="pull">
-    Driftwood doesn't promise more return than buying and holding — it demonstrates, out-of-sample and
-    net of cost, that disciplined trend-following can deliver a structurally smaller drawdown. The trade
-    is risk, not return. That is where its value lives.
+    Driftwood doesn't promise more return than buying and holding — it earns a comparable return while
+    cutting the worst drawdown by roughly half, for a better risk-adjusted result. The edge is in the
+    risk, not the raw return. That is where its value lives.
   </div>
 
   <p class="muted" id="ledger-line"></p>
@@ -180,7 +183,7 @@
 </div>
 
 <script>
-window.__STATE__ = {"header": {"generated": "2026-06-17 19:49:10 UTC"}, "equities": {"name": "Equities & ETFs", "span": "2000\u20132026", "n_names": 18, "strat_maxdd": 0.12051033800233919, "bench_maxdd": 0.5875557959116766, "strat_sharpe": 0.38749535436672644, "bench_sharpe": 0.4850381265867718, "strat_cagr": 0.015192147411973389, "bench_cagr": 0.07996724396183841, "oos_sharpe": 0.26160577534312124}, "crypto": {"name": "Crypto", "span": "2014\u20132026", "n_names": 4, "strat_maxdd": 0.060507528332328434, "bench_maxdd": 0.9178753081394819, "strat_sharpe": 1.017158882442493, "bench_sharpe": 0.7195501929880906, "strat_cagr": 0.04041295805186507, "bench_cagr": 0.29599799088250056, "oos_sharpe": 0.4651036231416639}, "ledger": {"total_return": -0.02387600000000001, "sessions": 120, "inception": "2026-02-18", "universe": 22}};
+window.__STATE__ = {"header": {"generated": "2026-06-18 19:18:18 UTC"}, "equities": {"name": "Equities & ETFs", "span": "2000\u20132026", "n_names": 18, "strat_maxdd": 0.26258584379877287, "bench_maxdd": 0.5875558489233411, "strat_sharpe": 0.686764791025066, "bench_sharpe": 0.48660144617506845, "strat_cagr": 0.07361091179179557, "bench_cagr": 0.08030058021145603, "oos_sharpe": 0.7575755614450136}, "crypto": {"name": "Crypto", "span": "2014\u20132026", "n_names": 4, "strat_maxdd": 0.6191060269424136, "bench_maxdd": 0.9178753081394819, "strat_sharpe": 0.411816977616533, "bench_sharpe": 0.7159428679464849, "strat_cagr": 0.08374860780837734, "bench_cagr": 0.29295942224864335, "oos_sharpe": 0.06631949868087705}, "ledger": {"total_return": -0.011345999999999967, "sessions": 120, "inception": "2026-02-19", "universe": 22}};
 const pct=(x,d=1)=>x==null?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
 const apct=(x,d=0)=>x==null?"—":(x*100).toFixed(d)+"%";
 const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;};

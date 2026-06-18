@@ -68,12 +68,16 @@ cross_section:
   min_universe: 3
   # Per-name |weight| cap.
   max_weight: 0.50
-  # Turnover controls (keep it agile without churning):
-  #   rebalance_bars: re-rank only every N bars (cuts turnover ~Nx). 21 ~ monthly.
-  #   min_score: only hold a name whose trend z clears this; when nothing trends the
-  #   book lightens up rather than holding the least-bad — flexible vs a static index.
+  # Turnover control: re-rank only every N bars (cuts turnover ~Nx). 21 ~ monthly.
   rebalance_bars: 21
-  min_score: 0.0
+  # Per-name gate off (-99): selection is the pure top-half; the trend throttle below
+  # is the sole exposure control, so we don't double-de-risk.
+  min_score: -99.0
+  # Trend throttle: scale invested exposure by the breadth of POSITIVE absolute trend
+  # (full in a broad uptrend, light in a broad bear) — the drawdown-control overlay.
+  # floor 0.25 keeps it at least 25% invested (no full cash drag).
+  trend_throttle: true
+  exposure_floor: 0.25
   # Neutralize the ranking within a grouping: "none", "region", "size", or "style".
   # region-neutral -> isolates which size/style leads within each region;
   # size-neutral   -> isolates region/style within each size bucket;

@@ -76,6 +76,11 @@ class CrossSectionSettings(BaseModel):
     min_score: float = 0.0          # only hold a name whose (demeaned) trend z clears this —
                                     # when nothing is trending the book lightens up rather than
                                     # holding the "least-bad", i.e. flexible vs a static index
+    # Trend throttle: scale total invested exposure by the breadth of POSITIVE absolute
+    # trend across the universe (full in a broad uptrend, light in a broad bear). This is
+    # the time-series overlay that controls drawdown without going market-neutral.
+    trend_throttle: bool = False
+    exposure_floor: float = 0.0     # minimum exposure even in a broad bear (0 = fully defensive ok)
     # Neutralize the ranking within a grouping before ranking: "none", "region",
     # or "factor". Region-neutral isolates which STYLE is trending (controlling for
     # region); factor-neutral isolates which REGION is trending. Demeaning trend

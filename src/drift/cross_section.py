@@ -65,6 +65,7 @@ def rank_weights(
     vols: dict[str, float],
     cs: CrossSectionSettings,
     groups: Optional[dict[str, str]] = None,
+    tilt: Optional[dict[str, float]] = None,
 ) -> dict[str, float]:
     """Portfolio weights from a cross-sectional ranking of trend scores.
 
@@ -75,6 +76,10 @@ def rank_weights(
 
     When `cs.neutralize` is set and `groups` is supplied, trend scores are demeaned
     within each group first, so the long/short book is neutral to that grouping.
+
+    When `tilt` (a per-name multiplier) is supplied, the long leg's risk-balanced
+    weights are scaled by it and renormalized back to the long budget — a strategic
+    overweight of favored segments that keeps the book fully invested (no cash added).
     """
     # Breadth of POSITIVE absolute trend (pre-demean) drives the exposure throttle.
     raw_valid = [s for s in scores.values() if s is not None]
@@ -106,6 +111,18 @@ def rank_weights(
     for key, w in _leg_weights(shorts, short_budget, -1, vols, cs.weighting).items():
         out[key] = w
 
+    # Strategic forward tilt: redistribute the long leg toward favored segments
+    # (e.g. EM / international / value / small) by multiplying each long weight by
+    # its per-name factor, then renormalizing the leg back to its budget — so the
+    # book stays fully invested rather than parking the tilt difference in cash.
+    if tilt and long_budget > 0:
+        tilted = {key: out[key] * tilt.get(key, 1.0) for key in out if out[key] > 0}
+        tot = sum(tilted.values())
+        if tot > 0:
+            scale = long_budget / tot
+            for key, w in tilted.items():
+                out[key] = w * scale
+
     # Per-name cap (keeps a single low-vol name from dominating the book).
     for key in out:
         if out[key] > cs.max_weight:
@@ -127,6 +144,24 @@ def _groups_for(cs: CrossSectionSettings) -> Optional[dict[str, str]]:
         from .universes import group_map
         return group_map(cs.neutralize) or None
     return None
+
+
+def _tilt_for(cs: CrossSectionSettings) -> Optional[dict[str, float]]:
+    """Per-ticker strategic tilt multiplier = region × size × style factor.
+
+    Built from the configured `tilt_region`/`tilt_size`/`tilt_style` maps and the
+    universe's segment classification. Returns None when no tilt is configured (so
+    the book is plain inverse-vol). A name absent from the matrix gets factor 1.0.
+    """
+    if not (cs.tilt_region or cs.tilt_size or cs.tilt_style):
+        return None
+    from .universes import MATRIX
+    out: dict[str, float] = {}
+    for tkr, (region, size, style) in MATRIX.items():
+        out[tkr] = (cs.tilt_region.get(region, 1.0)
+                    * cs.tilt_size.get(size, 1.0)
+                    * cs.tilt_style.get(style, 1.0))
+    return out
 
 
 @dataclass
@@ -153,6 +188,7 @@ def cross_book_streams(series: dict[str, list[Bar]], settings: Settings) -> list
     bpy = settings.engine.bars_per_year
     rebalance = max(1, cs.rebalance_bars)
     groups = _groups_for(cs)
+    tilt = _tilt_for(cs)
 
     price = {inst: {b.asof: b.close for b in bars} for inst, bars in series.items()}
     seq = {inst: [b.close for b in bars] for inst, bars in series.items()}
@@ -173,7 +209,7 @@ def cross_book_streams(series: dict[str, list[Bar]], settings: Settings) -> list
                     cl = seq[inst][: i + 1]
                     scores[inst] = sig.momentum_score(cl, s.lookback, s.vol_window)
                     vols[inst] = sizing.annualize_vol(sig.realized_vol(cl, s.vol_window), bpy)
-            weights = rank_weights(scores, vols, cs, groups) if scores else dict(weights)
+            weights = rank_weights(scores, vols, cs, groups, tilt) if scores else dict(weights)
         port = dw_tot = 0.0
         for inst in series:
             w = weights.get(inst, 0.0)
@@ -198,7 +234,8 @@ def rank_snapshot(series: dict[str, list[Bar]], settings: Settings) -> list[Rank
         vols[inst] = sizing.annualize_vol(
             sig.realized_vol(closes, s.vol_window), settings.engine.bars_per_year
         )
-    weights = rank_weights(scores, vols, settings.cross_section, _groups_for(settings.cross_section))
+    weights = rank_weights(scores, vols, settings.cross_section,
+                           _groups_for(settings.cross_section), _tilt_for(settings.cross_section))
     rows = [
         RankRow(
             instrument=inst,
@@ -249,6 +286,7 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
     s = settings.signal
     cs = settings.cross_section
     groups = _groups_for(cs)
+    tilt = _tilt_for(cs)
     cost = settings.sizing.cost_bps_per_side / 1e4
     bpy = settings.engine.bars_per_year
     instruments = list(series)
@@ -278,7 +316,7 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
                 closes = [b.close for b in hist]
                 scores[inst] = sig.momentum_score(closes, s.lookback, s.vol_window)
                 vols[inst] = sizing.annualize_vol(sig.realized_vol(closes, s.vol_window), bpy)
-            weights = rank_weights(scores, vols, cs, groups) if scores else {inst: 0.0 for inst in instruments}
+            weights = rank_weights(scores, vols, cs, groups, tilt) if scores else {inst: 0.0 for inst in instruments}
 
         gross_pnl = net_pnl = 0.0
         held = 0

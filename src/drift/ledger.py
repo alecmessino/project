@@ -6,11 +6,13 @@ prices that actually printed, (b) advances a cumulative equity, and (c) records
 the new target positions to carry forward. It only ever appends — history is never
 recomputed — which is exactly what makes it credible.
 
-The book is the equal-weight combination of the per-instrument trend positions
-(the same construction the tearsheet benchmarks), marked daily. Weekends/holidays
-fall out naturally: an instrument is marked from its last close on-or-before the
-prior ledger date to its latest close, so a Friday→Monday move lands on the next
-run.
+The book is the long-only, fully-invested cross-sectional rotation — the trending
+top half of the region/size/style ETF matrix, inverse-volatility weighted and then
+tilted toward the segments judged more attractive going forward (emerging markets,
+international, and value/small) — marked daily. No cash and no leverage: the tilt
+redistributes a book that is always ~100% invested. Weekends/holidays fall out
+naturally: an instrument is marked from its last close on-or-before the prior
+ledger date to its latest close, so a Friday→Monday move lands on the next run.
 """
 
 from __future__ import annotations
@@ -22,7 +24,7 @@ from . import analytics
 from . import signal as sig
 from . import sizing
 from .config import Settings
-from .cross_section import _groups_for, rank_weights
+from .cross_section import _groups_for, _tilt_for, rank_weights
 from .models import Bar
 from .universes import BENCH_REGION, REGION_OF, STYLE_BOX
 
@@ -77,8 +79,9 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
             if p_prev and p_now:
                 realized += prev_w.get(i, 0.0) * (p_now / p_prev - 1.0)
 
-    # 2) New target = the trend-throttled cross-sectional rotation, re-ranked on the
-    #    rebalance cadence (held between rebalances so turnover stays low).
+    # 2) New target = the long-only, fully-invested cross-sectional rotation with a
+    #    strategic forward tilt (EM / intl / value / small), re-ranked on the rebalance
+    #    cadence (held between rebalances so turnover stays low).
     cs = settings.cross_section
     n_prior = len(entries)
     if prev and (n_prior % max(1, cs.rebalance_bars) != 0):
@@ -91,7 +94,7 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
             scores[i] = sig.momentum_score(cl, sg.lookback, sg.vol_window)
             vols[i] = sizing.annualize_vol(sig.realized_vol(cl, sg.vol_window),
                                            settings.engine.bars_per_year)
-        raw = rank_weights(scores, vols, cs, _groups_for(cs))
+        raw = rank_weights(scores, vols, cs, _groups_for(cs), _tilt_for(cs))
         new_w = {i: round(raw.get(i, 0.0), 4) for i in insts}
 
     # 3) Cost on rebalance turnover (weights are at portfolio scale).

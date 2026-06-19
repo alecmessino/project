@@ -70,14 +70,26 @@ cross_section:
   max_weight: 0.50
   # Turnover control: re-rank only every N bars (cuts turnover ~Nx). 21 ~ monthly.
   rebalance_bars: 21
-  # Per-name gate off (-99): selection is the pure top-half; the trend throttle below
-  # is the sole exposure control, so we don't double-de-risk.
+  # Per-name gate off (-99): selection is the pure top-half. The book is long-only and
+  # ALWAYS fully invested (no cash, no leverage) — exposure control comes from the broad,
+  # diversified composition and the segment tilt below, not from a cash overlay.
   min_score: -99.0
-  # Trend throttle: scale invested exposure by the breadth of POSITIVE absolute trend
-  # (full in a broad uptrend, light in a broad bear) — the drawdown-control overlay.
-  # floor 0.25 keeps it at least 25% invested (no full cash drag).
-  trend_throttle: true
-  exposure_floor: 0.25
+  # Trend throttle OFF: the headline book holds the trending top half at full gross every
+  # day rather than scaling toward cash in weak breadth. (The throttle remains available
+  # for research configs; here we stay invested and tilt instead.)
+  trend_throttle: false
+  exposure_floor: 0.0
+  # Strategic forward-looking tilt (long-only, fully invested). Each held name's
+  # risk-balanced weight is multiplied by region × size × style below, then the long leg
+  # is renormalized to full gross — redistributing capital toward the segments that look
+  # more attractive going forward (cheaper, more under-owned) WITHOUT adding cash or
+  # leverage. Anchored by momentum: only names in the trending top half are eligible.
+  #   - EM > international (developed ex-US) > US  (valuation + diversification view)
+  #   - small/mid over mega-cap                    (size premium, less concentration)
+  #   - value over growth                          (valuation spread is historically wide)
+  tilt_region: {US: 1.0, DEV: 1.30, EM: 1.55}
+  tilt_size:   {large: 1.0, largemid: 1.0, mid: 1.10, small: 1.30}
+  tilt_style:  {value: 1.30, blend: 1.0, growth: 0.80}
   # Neutralize the ranking within a grouping: "none", "region", "size", or "style".
   # region-neutral -> isolates which size/style leads within each region;
   # size-neutral   -> isolates region/style within each size bucket;

@@ -47,3 +47,14 @@ def test_every_ticker_has_a_label():
 def test_groups_cover_the_universe():
     grouped = [t for syms in u.GROUPS.values() for t in syms]
     assert sorted(grouped) == sorted(u.EQUITIES)
+
+
+def test_tlh_substitutes_are_distinct_and_cover_the_matrix():
+    for tkr in u.EQUITIES:
+        sub = u.tlh_substitute(tkr)
+        assert sub, f"{tkr} has no TLH substitute"
+        assert sub != tkr                       # a real alternative, not itself
+    # IVV's substitute must NOT be VOO (same S&P 500 index = substantially identical).
+    assert u.TLH_SUBSTITUTE["IVV"] not in ("VOO", "SPY", "IVV")
+    assert u.tlh_substitute("IWN") == "VBR"     # Russell 2000 Value -> CRSP small value
+    assert u.tlh_substitute("ZZZZ") is None     # unmapped ticker

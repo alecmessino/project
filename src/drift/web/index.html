@@ -56,8 +56,17 @@
     <div class="sub" id="sub"></div>
   </header>
 
+  <p style="color:var(--dim);font-size:13px;line-height:1.6;margin:10px 0 22px;
+            border-left:3px solid var(--line);padding-left:12px">
+    This is the <b>engine console</b> — the current signals, the live ranking, and per-name
+    backtests. The book here is <b>long-only</b>: it holds the trending top half and tilts it
+    (it does <b>not</b> short the laggards — it simply doesn't own them). For the audited,
+    append-only record of the actual strategy, see the
+    <a href="ledger.html" style="color:var(--slate)">live forward ledger</a>.
+  </p>
+
   <section class="block">
-    <h2 class="sec">Cross-sectional book — long strongest / short weakest</h2>
+    <h2 class="sec">Cross-sectional book — long-only trending top-half, tilted</h2>
     <div class="metrics" id="xstats"></div>
     <svg class="spark" id="xspark" preserveAspectRatio="none"></svg>
   </section>

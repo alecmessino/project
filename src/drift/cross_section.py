@@ -164,6 +164,44 @@ def _tilt_for(cs: CrossSectionSettings) -> Optional[dict[str, float]]:
     return out
 
 
+def _cheapness_dial(closes: dict[str, list[float]], cs: CrossSectionSettings) -> dict[str, float]:
+    """Per-name valuation dial from LONG-horizon relative reversal (a value proxy).
+
+    Each name's trailing `tilt_reversion_bars` return is z-scored across the cross
+    section. A laggard (z<0) reads as cheap → dial >1 (lean in); a strong multi-year
+    leader (z>0) reads as rich → dial <1 (fade toward market weight). Bounded to
+    [1/cap, cap] and scaled by `tilt_reversion_strength`. Empty until enough history.
+    """
+    H = max(2, cs.tilt_reversion_bars)
+    rets = {i: cl[-1] / cl[-H - 1] - 1.0
+            for i, cl in closes.items() if len(cl) > H and cl[-H - 1] > 0}
+    if len(rets) < cs.min_universe:
+        return {}
+    vals = list(rets.values())
+    mean = sum(vals) / len(vals)
+    std = (sum((r - mean) ** 2 for r in vals) / len(vals)) ** 0.5 or 1.0
+    cap = max(1.0, cs.tilt_dial_cap)
+    dial: dict[str, float] = {}
+    for i, r in rets.items():
+        z = max(-2.0, min(2.0, (r - mean) / std))
+        d = 1.0 - cs.tilt_reversion_strength * (z / 2.0)   # cheap -> >1, rich -> <1
+        dial[i] = max(1.0 / cap, min(cap, d))
+    return dial
+
+
+def _combined_tilt(closes: dict[str, list[float]], cs: CrossSectionSettings) -> Optional[dict[str, float]]:
+    """The tilt actually applied: the static anchor, optionally scaled by the dynamic
+    valuation dial. `closes` is each instrument's close series up to the rebalance date."""
+    anchor = _tilt_for(cs)
+    if not cs.tilt_dynamic:
+        return anchor
+    dial = _cheapness_dial(closes, cs)
+    if not dial:
+        return anchor
+    keys = set(anchor or {}) | set(dial)
+    return {k: (anchor.get(k, 1.0) if anchor else 1.0) * dial.get(k, 1.0) for k in keys}
+
+
 @dataclass
 class RankRow:
     instrument: str
@@ -188,7 +226,6 @@ def cross_book_streams(series: dict[str, list[Bar]], settings: Settings) -> list
     bpy = settings.engine.bars_per_year
     rebalance = max(1, cs.rebalance_bars)
     groups = _groups_for(cs)
-    tilt = _tilt_for(cs)
 
     price = {inst: {b.asof: b.close for b in bars} for inst, bars in series.items()}
     seq = {inst: [b.close for b in bars] for inst, bars in series.items()}
@@ -203,12 +240,15 @@ def cross_book_streams(series: dict[str, list[Bar]], settings: Settings) -> list
         if di % rebalance == 0:
             scores: dict[str, float] = {}
             vols: dict[str, float] = {}
+            closes_now: dict[str, list[float]] = {}
             for inst in series:
                 i = pos[inst].get(d)
                 if i is not None and i + 1 >= s.min_history:
                     cl = seq[inst][: i + 1]
+                    closes_now[inst] = cl
                     scores[inst] = sig.momentum_score(cl, s.lookback, s.vol_window)
                     vols[inst] = sizing.annualize_vol(sig.realized_vol(cl, s.vol_window), bpy)
+            tilt = _combined_tilt(closes_now, cs)
             weights = rank_weights(scores, vols, cs, groups, tilt) if scores else dict(weights)
         port = dw_tot = 0.0
         for inst in series:
@@ -226,16 +266,19 @@ def rank_snapshot(series: dict[str, list[Bar]], settings: Settings) -> list[Rank
     s = settings.signal
     scores: dict[str, float] = {}
     vols: dict[str, float] = {}
+    closes_now: dict[str, list[float]] = {}
     for inst, bars in series.items():
         if len(bars) < s.min_history:
             continue
         closes = [b.close for b in bars]
+        closes_now[inst] = closes
         scores[inst] = sig.momentum_score(closes, s.lookback, s.vol_window)
         vols[inst] = sizing.annualize_vol(
             sig.realized_vol(closes, s.vol_window), settings.engine.bars_per_year
         )
     weights = rank_weights(scores, vols, settings.cross_section,
-                           _groups_for(settings.cross_section), _tilt_for(settings.cross_section))
+                           _groups_for(settings.cross_section),
+                           _combined_tilt(closes_now, settings.cross_section))
     rows = [
         RankRow(
             instrument=inst,
@@ -286,7 +329,6 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
     s = settings.signal
     cs = settings.cross_section
     groups = _groups_for(cs)
-    tilt = _tilt_for(cs)
     cost = settings.sizing.cost_bps_per_side / 1e4
     bpy = settings.engine.bars_per_year
     instruments = list(series)
@@ -309,13 +351,16 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
         if i % rebalance == 0:
             scores: dict[str, float] = {}
             vols: dict[str, float] = {}
+            closes_now: dict[str, list[float]] = {}
             for inst in instruments:
                 hist = series[inst][: i + 1]
                 if len(hist) < s.min_history:
                     continue
                 closes = [b.close for b in hist]
+                closes_now[inst] = closes
                 scores[inst] = sig.momentum_score(closes, s.lookback, s.vol_window)
                 vols[inst] = sizing.annualize_vol(sig.realized_vol(closes, s.vol_window), bpy)
+            tilt = _combined_tilt(closes_now, cs)
             weights = rank_weights(scores, vols, cs, groups, tilt) if scores else {inst: 0.0 for inst in instruments}
 
         gross_pnl = net_pnl = 0.0

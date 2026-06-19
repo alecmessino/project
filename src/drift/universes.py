@@ -79,6 +79,47 @@ PROXY = {
     "VT":   "VFINX",  # Global ref        <- Vanguard 500 before VT's 2008 inception
 }
 
+# Tax-loss-harvesting substitutes. For each traded fund, a liquid alternative that
+# gives ~the same region/size/style exposure while tracking a DIFFERENT underlying
+# index/provider — so a position at a loss can be sold to realize the loss and the
+# proceeds immediately reinvested in the substitute, keeping market exposure without
+# triggering the wash-sale rule (which disallows repurchasing a "substantially
+# identical" security within 30 days). Funds on different indexes are generally
+# treated as not substantially identical, but this is an unsettled area — an advisor
+# should confirm for a client's facts. After ~31 days the book can rotate back.
+# Pairs deliberately cross index families (S&P<->Russell<->CRSP<->FTSE<->MSCI).
+TLH_SUBSTITUTE: dict[str, str] = {
+    # --- US large (IVx = S&P 500 cells) -> Russell/CRSP/Dow equivalents ---
+    "IVE": "VONV",   # S&P 500 Value   -> Russell 1000 Value
+    "IVV": "SCHX",   # S&P 500         -> Dow Jones US Large-Cap (NOT VOO: same index)
+    "IVW": "VONG",   # S&P 500 Growth  -> Russell 1000 Growth
+    # --- US mid (IWx = Russell Midcap) -> CRSP (Vanguard) ---
+    "IWS": "VOE",    # Russell Mid Val -> CRSP US Mid Cap Value
+    "IWR": "VO",     # Russell Midcap  -> CRSP US Mid Cap
+    "IWP": "VOT",    # Russell Mid Grw -> CRSP US Mid Cap Growth
+    # --- US small ---
+    "IWN": "VBR",    # Russell 2000 Val-> CRSP US Small Cap Value
+    "IJR": "VB",     # S&P SmallCap 600-> CRSP US Small Cap
+    "IWO": "VBK",    # Russell 2000 Grw-> CRSP US Small Cap Growth
+    # --- Developed international ---
+    "EFV": "FNDF",   # EAFE Value      -> Schwab Fundamental Intl Large
+    "EFA": "VEA",    # MSCI EAFE       -> FTSE Developed ex-US
+    "EFG": "IGRO",   # EAFE Growth     -> MSCI World ex-US Growth
+    "AVDV": "DLS",   # Avantis IntlSmVal-> WisdomTree Intl SmallCap Dividend
+    "SCZ": "VSS",    # MSCI EAFE Small -> FTSE All-World ex-US Small
+    # --- Emerging markets ---
+    "FNDE": "DEM",   # Fundamental EM  -> WisdomTree EM High Dividend (value-tilt)
+    "VWO": "IEMG",   # FTSE EM         -> MSCI Core EM
+    "AVEE": "DGS",   # Avantis EM SmVal-> WisdomTree EM SmallCap Dividend
+    "EWX": "EEMS",   # S&P EM SmallCap -> MSCI EM Small Cap
+}
+
+
+def tlh_substitute(ticker: str) -> str | None:
+    """Wash-sale-safe harvesting alternative for a held fund (or None if unmapped)."""
+    return TLH_SUBSTITUTE.get(ticker)
+
+
 # Region groupings, for display / documentation.
 GROUPS = {
     "United States": [t for t in EQUITIES if REGION_OF[t] == "US"],

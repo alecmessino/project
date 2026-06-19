@@ -44,15 +44,39 @@ STYLE_OF = {t: v[2] for t, v in MATRIX.items()}
 # Broad-market core-beta baselines (longest-history total-market references).
 BASELINES = ["VTI", "VEA", "VWO"]
 
-# Passive proxies for the young pure-factor funds, used ONLY to back-fill long
-# history before the fund's inception (return-splice). The proxy tracks the cell's
-# style closely, so the volatility-normalized z-score stays continuous across the
-# join. Live exhibits (2y) use the real fund and never touch these.
+# Passive proxies used ONLY to back-fill long history before a fund's inception
+# (return-splice). Each proxy is a style-faithful, long-running index fund so the
+# volatility-normalized z-score stays continuous across the join. The traded ETFs
+# in the matrix mostly launched 2000-2011; splicing them onto these legacy index
+# funds (Vanguard/DFA/WisdomTree, several with daily history back to 1986) is what
+# lets the long-history tearsheet span ~40 years instead of truncating at 2000 —
+# and avoids hammering Yahoo with deep queries on funds that simply lack the data.
+# Live exhibits (the 2y ledger) use the real fund and never touch these.
+# First-bar years (verified on Yahoo) are noted for each proxy.
 PROXY = {
-    "AVDV": "DLS",    # Intl small value  <- WisdomTree intl small-cap dividend (2006)
-    "AVEE": "EEMS",   # EM small value    <- iShares EM small-cap (2011)
-    "FNDE": "EEM",    # EM value          <- iShares EM core (2003)
-    "VT": "VTI",      # Global market ref <- US total market before VT's 2008 inception
+    # --- US large (iShares S&P 500 cells, 2000) <- Vanguard style index funds ---
+    "IVE":  "VIVAX",  # US large value    <- Vanguard Value Index (1992)
+    "IVV":  "VFINX",  # US large blend    <- Vanguard 500 Index (1986)
+    "IVW":  "VIGRX",  # US large growth   <- Vanguard Growth Index (1992)
+    # --- US mid (iShares Russell Midcap, 2001) ---
+    "IWR":  "VIMSX",  # US mid blend      <- Vanguard Mid-Cap Index (1998)
+    # mid value/growth have no faithful pre-2001 index fund, so they join at native
+    # inception (2001) — the ragged-history books handle the later start.
+    # --- US small (iShares, 2000) ---
+    "IWN":  "DFSVX",  # US small value    <- DFA US Small Cap Value (1993)
+    "IJR":  "NAESX",  # US small blend    <- Vanguard Small-Cap Index (1986)
+    "IWO":  "VISGX",  # US small growth   <- Vanguard Small Growth Index (1998)
+    # --- Developed international ---
+    "EFV":  "VTRIX",  # Intl value        <- Vanguard International Value (1986)
+    "EFA":  "VGTSX",  # Intl blend        <- Vanguard Total Intl Stock (1996)
+    "EFG":  "VWIGX",  # Intl growth       <- Vanguard International Growth (1986)
+    "AVDV": "DLS",    # Intl small value  <- WisdomTree Intl SmallCap Dividend (2006)
+    # --- Emerging markets ---
+    "FNDE": "VEIEX",  # EM value          <- Vanguard Emerging Markets (1994)
+    "VWO":  "VEIEX",  # EM blend          <- Vanguard Emerging Markets (1994)
+    "AVEE": "DGS",    # EM small value    <- WisdomTree EM SmallCap Dividend (2007)
+    # --- Global-market reference (tearsheet overlay) ---
+    "VT":   "VFINX",  # Global ref        <- Vanguard 500 before VT's 2008 inception
 }
 
 # Region groupings, for display / documentation.

@@ -28,11 +28,15 @@ def test_group_map_dimensions():
 
 
 def test_proxies_point_to_longer_history_funds():
-    # Every proxied fund is either a traded cell or the VT global-market reference.
-    for fund in u.PROXY:
+    # Every proxied fund is either a traded cell or the VT global-market reference,
+    # and every proxy is a non-empty, distinct legacy ticker (no self-proxy).
+    for fund, proxy in u.PROXY.items():
         assert fund in u.EQUITIES or fund == "VT"
-    assert u.PROXY["AVEE"] == "EEMS"
-    assert u.PROXY["VT"] == "VTI"
+        assert isinstance(proxy, str) and proxy and proxy != fund
+    # A few load-bearing legacy splices that give the tearsheet its deep history.
+    assert u.PROXY["IVV"] == "VFINX"     # US large blend  <- Vanguard 500 (1986)
+    assert u.PROXY["AVEE"] == "DGS"      # EM small value  <- WisdomTree EM small (2007)
+    assert u.PROXY["VT"] == "VFINX"      # global reference back to 1986
 
 
 def test_every_ticker_has_a_label():

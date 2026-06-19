@@ -73,6 +73,17 @@ def _pull(symbols: Sequence[str], years: float = 40.0, pause: float = 0.2,
         except Exception:
             return None
 
+    # Cache proxy pulls: several cells share a proxy (e.g. VWO and FNDE both use
+    # VEIEX), so fetch each legacy series once — fewer requests, gentler on Yahoo.
+    pcache: dict[str, Optional[list[Bar]]] = {}
+
+    def _fetch_proxy(psym: str) -> Optional[list[Bar]]:
+        if psym not in pcache:
+            if pause:
+                time.sleep(pause)
+            pcache[psym] = _fetch(psym)
+        return pcache[psym]
+
     series: dict[str, list[Bar]] = {}
     applied: dict[str, str] = {}
     for i, sym in enumerate(symbols):
@@ -82,7 +93,7 @@ def _pull(symbols: Sequence[str], years: float = 40.0, pause: float = 0.2,
         if bars is None:
             continue
         if proxies and sym in PROXY:
-            pbars = _fetch(PROXY[sym])
+            pbars = _fetch_proxy(PROXY[sym])
             if pbars and pbars[0].asof[:10] < bars[0].asof[:10]:
                 bars = _splice(bars, pbars)
                 applied[sym] = PROXY[sym]

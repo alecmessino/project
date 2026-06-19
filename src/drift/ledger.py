@@ -150,7 +150,7 @@ def seed_ledger(series: dict[str, list[Bar]], settings: Settings, sessions: int 
 
 
 _REGION_NAME = {"US": "United States", "DEV": "Developed intl", "EM": "Emerging mkts"}
-_BENCH_COLORS = {"VT": "#6f76a8", "VTI": "#b08968"}
+_BENCH_COLORS = {"VT": "#3257c4", "VTI": "#c2790f"}
 
 
 def _blend_style_box(weights: dict[str, float]) -> dict[str, float]:
@@ -244,7 +244,9 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0) -> dict:
     eq = [e["equity"] for e in entries]
     rets = [e["realized_return"] for e in entries]
     n = len(eq)
-    idx = list(range(0, n, max(1, n // 160)))
+    # Embed the full per-session series (small) so the page can re-slice by date
+    # period and recompute window stats exactly; downsample only if very long.
+    idx = list(range(n)) if n <= 900 else list(range(0, n, max(1, n // 800)))
     last = entries[-1]
     positions = sorted(
         ({"instrument": i, "weight": w,
@@ -264,6 +266,7 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0) -> dict:
             "sharpe": round(analytics.sharpe(rets, bars_per_year), 2),
             "max_drawdown": round(analytics.max_drawdown(eq), 4),
             "hit_rate": round(analytics.hit_rate(rets), 3),
+            "bars_per_year": bars_per_year,
             "cost_bps_per_side": cost_side,
             "cost_bps_roundtrip": (round(cost_side * 2, 1) if cost_side is not None else None),
             "rebalance_bars": ledger.get("rebalance_bars"),
@@ -275,6 +278,7 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0) -> dict:
         "benchmarks": _benchmarks_state(entries, eq, idx, bars_per_year),
         "dates": [entries[i]["date"] for i in idx],
         "split_frac": ((n - live) / n) if n else 0.0,
+        "split_idx": next((k for k, i in enumerate(idx) if i >= (n - live)), len(idx)),
         "positions": positions,
         "exposure": _exposure(last["weights"]),
         "recent": [{"date": e["date"], "realized_return": e["realized_return"],

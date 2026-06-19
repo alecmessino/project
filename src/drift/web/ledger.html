@@ -4,6 +4,16 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Driftwood — live forward ledger</title>
+<meta name="description" content="An append-only paper track record for a trend-throttled global ETF rotation — benchmarked against VT (global) and VTI (US) buy-and-hold, with risk stats, regional and style-box exposure, and costs shown. Research only, not investment advice." />
+<link rel="canonical" href="https://alecmessino.github.io/project/ledger.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="Driftwood — live forward ledger" />
+<meta property="og:description" content="An append-only paper track record for a trend-throttled global ETF rotation, benchmarked vs VT (global) and VTI (US) buy-and-hold — risk stats, regional + style-box exposure, and costs. Research only." />
+<meta property="og:url" content="https://alecmessino.github.io/project/ledger.html" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Driftwood — live forward ledger" />
+<meta name="twitter:description" content="Append-only paper track record for a trend-throttled global ETF rotation, benchmarked vs VT & VTI buy-and-hold. Research only, not advice." />
 <style>
   :root{
     --bg:#ffffff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#717179;
@@ -22,9 +32,16 @@
   .metric .v{font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
   .metric .l{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-top:1px}
   .pos{color:var(--pos)} .neg{color:var(--neg)}
-  svg.eq{display:block;width:100%;height:170px;margin:6px 0}
-  .legend{font-size:12px;color:var(--dim);margin-bottom:18px}
-  .legend i{display:inline-block;width:14px;height:2px;vertical-align:middle;margin-right:5px}
+  svg.eq{display:block;width:100%;height:216px;margin:4px 0}
+  .legend{font-size:12px;color:var(--dim);margin-bottom:8px}
+  .legend i{display:inline-block;width:16px;height:3px;vertical-align:middle;margin-right:5px;border-radius:2px}
+  .tools{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 4px}
+  .tools button{font:inherit;font-size:12px;color:var(--dim);background:var(--soft);
+    border:1px solid var(--line);border-radius:999px;padding:3px 12px;cursor:pointer;line-height:1.45}
+  .tools button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .note-box{background:var(--soft);border:1px solid var(--line);border-radius:8px;
+    padding:12px 15px;font-size:12.8px;color:var(--slate);margin:16px 0 2px;line-height:1.6}
+  .note-box b{color:var(--ink)}
   h2.sec{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);margin:26px 0 10px;font-weight:600}
   table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13.5px}
   th,td{padding:7px 11px;text-align:right;border-bottom:1px solid var(--line)}
@@ -44,21 +61,30 @@
   .bar .track{flex:1;background:var(--soft);border:1px solid var(--line);border-radius:4px;height:13px;overflow:hidden}
   .bar .fill{height:100%;background:var(--slate)}
   .bar .pct{width:38px;text-align:right;color:var(--dim);font-variant-numeric:tabular-nums}
-  .box{display:grid;grid-template-columns:46px 1fr 1fr 1fr;gap:3px;font-size:11px;max-width:330px}
-  .box .hd{color:var(--dim);text-align:center;padding:3px 0}
-  .box .rl{color:var(--dim);display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
-  .box .cell{height:40px;border:1px solid var(--line);border-radius:3px;display:flex;align-items:center;
-    justify-content:center;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
+  .box{display:grid;grid-template-columns:52px 1fr 1fr 1fr;gap:4px;font-size:11px;width:100%;max-width:340px}
+  .box .hd{color:var(--dim);text-align:center;padding:2px 0;font-weight:600;letter-spacing:.2px}
+  .box .rl{color:var(--dim);display:flex;align-items:center;justify-content:flex-end;padding-right:7px;font-weight:600}
+  .box .cell{aspect-ratio:1.9/1;min-height:34px;border:1px solid var(--line);border-radius:4px;display:flex;
+    align-items:center;justify-content:center;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
   .invested{font-size:12px;color:var(--dim);margin:14px 0 0}
   .boxes{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start;margin-top:4px}
+  .boxes .col{flex:1 1 220px;min-width:0}
   .boxes .col h3{font-size:12px;color:var(--dim);font-weight:600;margin:0 0 8px;letter-spacing:.3px}
-  .boxes .bcap{font-size:11.5px;color:var(--dim);margin:7px 0 0;max-width:300px;line-height:1.5}
-  .box.sm{grid-template-columns:40px 1fr 1fr 1fr;max-width:240px}
-  .box.sm .cell{height:30px;font-size:10px}
+  .boxes .bcap{font-size:11.5px;color:var(--dim);margin:7px 0 0;line-height:1.5}
+  .box.sm{grid-template-columns:46px 1fr 1fr 1fr;max-width:300px}
+  .box.sm .cell{min-height:28px}
   .cmp .ex{color:var(--dim);font-variant-numeric:tabular-nums}
   .cmp tr.me td{font-weight:600}
-  .costline{font-size:12px;color:var(--dim);margin:-8px 0 18px}
+  .cmp .dot{font-size:10px;vertical-align:middle;margin-right:3px}
+  .costline{font-size:12px;color:var(--dim);margin:-2px 0 16px}
   .costline b{color:var(--slate);font-weight:600}
+  @media(max-width:620px){
+    .box,.box.sm{max-width:none}
+    .bar .lbl{width:86px}
+    .metrics{gap:20px}
+    th,td{padding:7px 6px}
+    .wrap{padding:40px 18px 64px}
+  }
 </style>
 </head>
 <body>
@@ -81,6 +107,10 @@
 <script>
 window.__STATE__ = /*__STATE__*/null/*__END__*/;
 const BDESC={VT:"global market", VTI:"US total market"};
+const SCOLOR="#15806a";   // strategy line: strong teal, drawn thick on top
+const PERLABEL={ALL:"since inception",YTD:"year to date","1M":"last month","3M":"last 3 months",
+  "6M":"last 6 months","1Y":"last year"};
+let ST=null;
 function pct(x){ return (x>=0?"+":"")+(x*100).toFixed(2)+"%"; }
 function cls(x){ return x>0?"pos":x<0?"neg":""; }
 function fix(x){ return (x!=null)?x.toFixed(2):"—"; }
@@ -90,36 +120,98 @@ function regionLine(byRegion){
     .map(([k,v])=>`${short[k]||k} ${Math.round(v*100)}%`).join(" · ") || "—";
 }
 
-function eqchart(el, data, splitFrac, benches){
-  el.innerHTML=""; if(!data||data.length<2){ return; }
-  const w=el.clientWidth||800,h=el.clientHeight||170,pad=4;
-  let allv=data.slice();
-  (benches||[]).forEach(b=>{ if(b.equity&&b.equity.length) allv=allv.concat(b.equity); });
-  const lo=Math.min(...allv),hi=Math.max(...allv),rng=(hi-lo)||1;
-  const xs=i=>pad+(w-2*pad)*i/(data.length-1);
-  const ys=v=>h-pad-(h-2*pad)*(v-lo)/rng;
-  const ns="http://www.w3.org/2000/svg";
-  const base=document.createElementNS(ns,"line");
-  base.setAttribute("x1",pad);base.setAttribute("x2",w-pad);
-  base.setAttribute("y1",ys(data[0]).toFixed(1));base.setAttribute("y2",ys(data[0]).toFixed(1));
-  base.setAttribute("stroke","#dcdce0");base.setAttribute("stroke-dasharray","2 3");el.appendChild(base);
-  if(splitFrac>0 && splitFrac<1){
-    const sx=pad+(w-2*pad)*splitFrac;
-    const sep=document.createElementNS(ns,"line");
-    sep.setAttribute("x1",sx);sep.setAttribute("x2",sx);sep.setAttribute("y1",pad);sep.setAttribute("y2",h-pad);
-    sep.setAttribute("stroke","#cfcfd4");sep.setAttribute("stroke-dasharray","3 3");el.appendChild(sep);
+// Window stats from an equity slice (mirrors analytics.py: total return, Sharpe, max DD).
+function winStats(eq, bpy){
+  if(!eq||eq.length<2) return {tr:0, sh:0, mdd:0};
+  const tr=eq[eq.length-1]/eq[0]-1;
+  const r=[]; for(let i=1;i<eq.length;i++) r.push(eq[i]/eq[i-1]-1);
+  const m=r.reduce((a,b)=>a+b,0)/r.length;
+  const v=r.reduce((a,b)=>a+(b-m)*(b-m),0)/r.length, sd=Math.sqrt(v);
+  const sh=sd>0?m/sd*Math.sqrt(bpy):0;
+  let peak=-Infinity,mdd=0; eq.forEach(x=>{peak=Math.max(peak,x); if(peak>0) mdd=Math.max(mdd,(peak-x)/peak);});
+  return {tr, sh, mdd};
+}
+function niceStep(span, n){
+  const raw=(span||1)/n, mag=Math.pow(10,Math.floor(Math.log10(raw)));
+  const u=raw/mag, step=u<1.5?1:u<3?2:u<7?5:10;
+  return step*mag;
+}
+function fmtMonth(d){
+  const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const p=(d||"").split("-"); return p.length>1?M[(+p[1])-1]+" ’"+p[0].slice(2):(d||"");
+}
+
+// Rebased % chart: dated x-axis, % y-axis (gridlines), thick labeled strategy line.
+function drawChart(el, dates, lines, splitIdx){
+  if(!el) return;
+  if(!lines.length||!lines[0].values||lines[0].values.length<2){ el.innerHTML=""; return; }
+  const n=lines[0].values.length;
+  const w=el.clientWidth||820, h=el.clientHeight||216;
+  const ml=42, mr=62, mt=10, mb=22;
+  const L=lines.map(s=>({...s, p:s.values.map(v=>v/s.values[0]-1)}));
+  let lo=Infinity, hi=-Infinity;
+  L.forEach(s=>s.p.forEach(v=>{lo=Math.min(lo,v);hi=Math.max(hi,v);}));
+  lo=Math.min(lo,0); hi=Math.max(hi,0);
+  if(hi-lo<1e-6){ hi+=0.01; lo-=0.01; }
+  const padr=(hi-lo)*0.10; lo-=padr; hi+=padr;
+  const X=i=>ml+(w-ml-mr)*(n<2?0:i/(n-1));
+  const Y=v=>mt+(h-mt-mb)*(1-(v-lo)/(hi-lo));
+  let g="";
+  const step=niceStep(hi-lo,4);
+  for(let v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step){
+    const y=Y(v).toFixed(1), zero=Math.abs(v)<1e-9;
+    g+=`<line x1="${ml}" x2="${w-mr}" y1="${y}" y2="${y}" stroke="${zero?'#c4c4ca':'#eeeef1'}" stroke-width="1"/>`;
+    g+=`<text x="${ml-7}" y="${(+y+3).toFixed(1)}" text-anchor="end" font-size="10" fill="#9a9aa2">${(v>=0?'+':'')+Math.round(v*100)}%</text>`;
   }
-  (benches||[]).forEach(b=>{
-    if(!b.equity||!b.equity.length) return;
-    const pb=document.createElementNS(ns,"polyline");
-    pb.setAttribute("points",b.equity.map((v,i)=>xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" "));
-    pb.setAttribute("fill","none");pb.setAttribute("stroke",b.color||"#9aa0c0");pb.setAttribute("stroke-width",1.3);
-    pb.setAttribute("stroke-dasharray","3 2");el.appendChild(pb);
+  const ticks=[...new Set(n<=2?[0,n-1]:[0,Math.round((n-1)/3),Math.round(2*(n-1)/3),n-1])];
+  ticks.forEach(i=>{ g+=`<text x="${X(i).toFixed(1)}" y="${h-6}" text-anchor="middle" font-size="10" fill="#9a9aa2">${fmtMonth(dates[i])}</text>`; });
+  if(splitIdx>0 && splitIdx<n-1){
+    const x=X(splitIdx).toFixed(1);
+    g+=`<line x1="${x}" x2="${x}" y1="${mt}" y2="${h-mb}" stroke="#cfcfd4" stroke-dasharray="3 3" stroke-width="1"/>`;
+  }
+  L.forEach(s=>{
+    const pts=s.p.map((v,i)=>X(i).toFixed(1)+","+Y(v).toFixed(1)).join(" ");
+    g+=`<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="${s.width}" stroke-linejoin="round" stroke-linecap="round"/>`;
+    g+=`<circle cx="${X(n-1).toFixed(1)}" cy="${Y(s.p[n-1]).toFixed(1)}" r="2.6" fill="${s.color}"/>`;
   });
-  const p=document.createElementNS(ns,"polyline");
-  p.setAttribute("points",data.map((v,i)=>xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" "));
-  p.setAttribute("fill","none");p.setAttribute("stroke","#4a4f57");p.setAttribute("stroke-width",1.7);
-  el.appendChild(p);
+  const ends=L.map(s=>({label:s.label,color:s.color,y:Y(s.p[n-1])})).sort((a,b)=>a.y-b.y);
+  for(let i=1;i<ends.length;i++){ if(ends[i].y-ends[i-1].y<12) ends[i].y=ends[i-1].y+12; }
+  ends.forEach(e=>{ g+=`<text x="${(w-mr+7).toFixed(1)}" y="${(e.y+3).toFixed(1)}" font-size="10.5" font-weight="600" fill="${e.color}">${e.label}</text>`; });
+  el.innerHTML=g;
+}
+
+function periodStartIdx(dates, key){
+  if(key==="ALL"||!dates.length) return 0;
+  const last=dates[dates.length-1];
+  let thr;
+  if(key==="YTD"){ thr=last.slice(0,4)+"-01-01"; }
+  else { const m={"1M":1,"3M":3,"6M":6,"1Y":12}[key]||0;
+    const d=new Date(last+"T00:00:00Z"); d.setUTCMonth(d.getUTCMonth()-m); thr=d.toISOString().slice(0,10); }
+  const i=dates.findIndex(x=>x>=thr); return i<0?0:i;
+}
+
+let CURK="ALL";
+function applyPeriod(key){
+  CURK=key;
+  const s=ST, h=s.header, bpy=h.bars_per_year||252;
+  const start=periodStartIdx(s.dates, key);
+  const dts=s.dates.slice(start);
+  const stratEq=s.equity.slice(start);
+  const lines=[{label:"Strategy", color:SCOLOR, values:stratEq, width:2.4}];
+  (s.benchmarks||[]).forEach(b=> lines.push({label:b.label, color:b.color, values:b.equity.slice(start), width:1.8}));
+  drawChart(document.getElementById("eq"), dts, lines, Math.max(0,(s.split_idx||0)-start));
+  const st=winStats(stratEq, bpy);
+  let rows=`<tr class="me"><td>Strategy</td><td class="${cls(st.tr)}">${pct(st.tr)}</td>
+    <td>${st.sh.toFixed(2)}</td><td>${pct(-st.mdd)}</td><td class="ex">—</td></tr>`;
+  (s.benchmarks||[]).forEach(b=>{
+    const ws=winStats(b.equity.slice(start), bpy), edge=st.tr-ws.tr;
+    rows+=`<tr><td><span class="dot" style="color:${b.color}">●</span>${b.label} · ${BDESC[b.label]||""}</td>
+      <td class="${cls(ws.tr)}">${pct(ws.tr)}</td><td>${ws.sh.toFixed(2)}</td>
+      <td>${pct(-ws.mdd)}</td><td class="ex ${cls(edge)}">${pct(edge)}</td></tr>`;
+  });
+  const tb=document.getElementById("cmpbody"); if(tb) tb.innerHTML=rows;
+  const pl=document.getElementById("perlabel"); if(pl) pl.textContent=PERLABEL[key]||key;
+  document.querySelectorAll(".tools button").forEach(btn=>btn.classList.toggle("on", btn.dataset.k===key));
 }
 
 function bars(obj){
@@ -131,19 +223,20 @@ function bars(obj){
 }
 function stylebox(box, sm){
   const sizes=["large","mid","small"], styles=["value","blend","growth"];
-  const vals=Object.values(box); const max=Math.max(0.0001,...vals);
+  const max=Math.max(0.0001,...Object.values(box));
   let html=`<div class="box${sm?' sm':''}"><div></div><div class="hd">Value</div><div class="hd">Blend</div><div class="hd">Growth</div>`;
   for(const sz of sizes){
     html+=`<div class="rl">${sz[0].toUpperCase()+sz.slice(1)}</div>`;
     for(const st of styles){
       const v=box[sz+"|"+st]||0, a=(v/max*0.55).toFixed(2);
-      html+=`<div class="cell" style="background:rgba(74,79,87,${a})">${v>0.005?Math.round(v*100)+"%":""}</div>`;
+      html+=`<div class="cell" style="background:rgba(21,128,106,${a})">${v>0.005?Math.round(v*100)+"%":""}</div>`;
     }
   }
   return html+`</div>`;
 }
 
 function render(s){
+  ST=s;
   const h=s.header;
   document.getElementById("sub").innerHTML =
     `inception <b>${h.inception||"—"}</b> · <b>${h.universe.length}</b> instruments`;
@@ -163,17 +256,18 @@ function render(s){
   const costHTML = (h.cost_bps_per_side!=null) ? `<div class="costline">Marked net of
     <b>${h.cost_bps_per_side} bps/side</b> (≈ ${h.cost_bps_roundtrip} bps round-trip on rebalance
     turnover)${h.rebalance_bars?` · rebalanced every <b>${h.rebalance_bars}</b> sessions`:''}.</div>` : "";
+  const periods=["1M","3M","6M","YTD","1Y","ALL"].filter(k=> k==="ALL" || periodStartIdx(s.dates,k)>0 );
+  const toolsHTML=`<div class="tools">${periods.map(k=>`<button data-k="${k}">${k==="ALL"?"All":k}</button>`).join("")}</div>`;
   const perfHTML = benches.length ? `
-    <h2 class="sec">Performance vs buy-and-hold (total return)</h2>
-    <table class="cmp"><thead><tr><th>Track</th><th>Total return</th><th>Sharpe</th>
-      <th>Max DD</th><th>Strategy edge</th></tr></thead><tbody>
-      <tr class="me"><td>Strategy</td><td class="${cls(h.total_return)}">${pct(h.total_return)}</td>
-        <td>${fix(h.sharpe)}</td><td>${pct(-(h.max_drawdown||0))}</td><td class="ex">—</td></tr>
-      ${benches.map(b=>`<tr><td>${b.label} · ${BDESC[b.label]||""}</td>
-        <td class="${cls(b.total_return)}">${pct(b.total_return)}</td>
-        <td>${fix(b.sharpe)}</td><td>${pct(-(b.max_drawdown||0))}</td>
-        <td class="ex ${cls(b.excess)}">${pct(b.excess)}</td></tr>`).join("")}
-    </tbody></table>` : "";
+    <h2 class="sec">Performance vs buy-and-hold · <span id="perlabel" style="text-transform:none;letter-spacing:0">since inception</span></h2>
+    <table class="cmp"><thead><tr><th>Track</th><th>Return</th><th>Sharpe</th>
+      <th>Max DD</th><th>Edge</th></tr></thead><tbody id="cmpbody"></tbody></table>
+    <div class="note-box"><b>Why it can trail a rising market.</b> The rotation holds only the
+      strongest half of the universe and throttles exposure toward a cash floor when trend breadth is
+      weak — it's built to lose less in broad drawdowns, not to out-run a fully-invested index in a broad
+      melt-up. With a value/blend tilt and stretches partly in cash, it gives up upside when mega-cap growth
+      leads; its edge is meant to surface in dispersion and drawdowns. Use the buttons above to see windows
+      where it led versus lagged.</div>` : "";
   const positions = s.positions.map(p=>`<tr><td>${p.instrument}</td>
     <td><span class="tag ${p.leg==='—'?'--':p.leg}">${p.leg}</span></td>
     <td>${p.weight>=0?"+":""}${p.weight.toFixed(2)}</td></tr>`).join("");
@@ -188,27 +282,32 @@ function render(s){
     <div class="expo">
       <div><h3>By region</h3>${bars(x.by_region)}
         <p class="invested">Net invested: <b>${(x.gross*100).toFixed(0)}%</b> (rest in cash via the trend throttle)</p></div>
-      <div><h3>Style box — book footprint</h3>${stylebox(x.style_box)}</div>
+      <div><h3>Size &amp; style map</h3>${stylebox(x.style_box)}</div>
     </div>
-    ${benches.length?`<h2 class="sec">Benchmark style boxes</h2><div class="boxes">${benchBoxes}</div>`:""}
-    <p class="bcap" style="margin-top:13px">Style-box weights are representative Morningstar-style
+    ${benches.length?`<h2 class="sec">Benchmark size &amp; style</h2><div class="boxes">${benchBoxes}</div>`:""}
+    <p class="bcap" style="margin-top:13px">Size/style weights are representative Morningstar-style
       classifications per fund (e.g. IVE ≈ 33% large-value / 27% large-blend / 17% mid-blend / 13% mid-value …),
       blended by current book weight — approximate, for exposure shape rather than precision.</p>` : "";
   document.getElementById("body").innerHTML = `
     <div class="metrics">${stats}</div>
     ${costHTML}
-    <div class="legend"><span><i style="background:#4a4f57"></i>strategy</span>
-      ${benches.map(b=>`<span><i style="background:${b.color}"></i>${b.label} (buy &amp; hold)</span>`).join("")}
+    <div class="legend"><span><i style="background:${SCOLOR}"></i>strategy</span>
+      ${benches.map(b=>`<span><i style="background:${b.color}"></i>${b.label} · ${BDESC[b.label]||""}</span>`).join("")}
       ${h.seeded_days?'<span><i style="background:#cfcfd4"></i>seed / live divider</span>':''}</div>
-    <svg class="eq" id="eq" preserveAspectRatio="none"></svg>
+    ${toolsHTML}
+    <svg class="eq" id="eq"></svg>
     ${perfHTML}
     ${exposureHTML}
     <h2 class="sec">Current book</h2>
     <table><thead><tr><th>Instrument</th><th>Leg</th><th>Weight</th></tr></thead><tbody>${positions}</tbody></table>
     <h2 class="sec">Recent sessions</h2>
     <table><thead><tr><th>Date</th><th>Realized</th><th>Equity</th></tr></thead><tbody>${recent}</tbody></table>`;
-  requestAnimationFrame(()=>eqchart(document.getElementById("eq"), s.equity, s.split_frac, benches));
+  document.querySelectorAll(".tools button").forEach(btn=>btn.addEventListener("click",()=>applyPeriod(btn.dataset.k)));
+  requestAnimationFrame(()=>applyPeriod("ALL"));
 }
+
+let _rz;
+window.addEventListener("resize",()=>{ if(!ST) return; clearTimeout(_rz); _rz=setTimeout(()=>applyPeriod(CURK),150); });
 
 async function load(){
   let s=window.__STATE__;

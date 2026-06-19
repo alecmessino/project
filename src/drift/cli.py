@@ -269,7 +269,7 @@ def ledger(
     equities: str = typer.Option(_universes.csv(_universes.EQUITIES), "--equities"),
     state: str = typer.Option("docs/ledger.json", "--state", help="append-only ledger JSON"),
     out: str = typer.Option("docs/ledger.html", "--out", help="ledger exhibit HTML"),
-    seed_sessions: int = typer.Option(120, "--seed-sessions", help="walk-forward seed length on first run"),
+    seed_sessions: int = typer.Option(504, "--seed-sessions", help="walk-forward seed length on first run (~2y of sessions)"),
     config: Optional[str] = typer.Option(None, "--config"),
 ):
     """Advance the forward paper-trade ledger by one session and render it.

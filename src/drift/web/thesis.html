@@ -45,9 +45,11 @@
   a.back{color:var(--slate);text-decoration:none;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
   a.back:hover{text-decoration:underline}
   .hero{margin:24px 0 6px;border-radius:12px;overflow:hidden;border:1px solid var(--line);
-    background:var(--soft);line-height:0}
-  .hero img{width:100%;height:210px;object-fit:cover;display:block;
-    filter:saturate(.9) contrast(1.02);opacity:.97}
+    background:#fff;line-height:0}
+  .hero img{width:100%;height:262px;object-fit:contain;display:block}
+  .figdiv{margin:34px 0 2px;border-radius:12px;overflow:hidden;border:1px solid var(--line);
+    background:#fff;line-height:0}
+  .figdiv img{width:100%;height:230px;object-fit:contain;display:block}
   .credit{font-size:11px;color:var(--dim);margin:6px 2px 0;
     font-family:ui-sans-serif,system-ui,sans-serif}
   .refs{margin:14px 0 0;padding:0;list-style:none}
@@ -65,11 +67,10 @@
   </header>
 
   <figure class="hero" style="margin-bottom:4px">
-    <img src="https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1280&amp;q=72&amp;auto=format&amp;fit=crop"
-         alt="A weathered wooden dock reaching into a still northern lake at dawn, forest reflected on glassy water"
-         loading="lazy" onerror="this.closest('.hero').style.display='none'" />
+    <img src="assets/sextant.png" loading="lazy"
+         alt="Hand-drawn sextant — the instrument of precise measurement, pinning down the drift signal against the noise" />
   </figure>
-  <div class="credit">Still water, weathered wood — the picture the name reaches for. Photo via Unsplash.</div>
+  <div class="credit">The sextant — taking the angle of the drift, the way the signal measures trend against the noise that could have produced it.</div>
 
   <p class="lede">
     Driftwood is a trend-following <b>signal</b> system for region- and factor-tilted equity ETFs.

@@ -44,6 +44,19 @@
     font-size:13px;line-height:1.6;font-family:ui-sans-serif,system-ui,sans-serif}
   a.back{color:var(--slate);text-decoration:none;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
   a.back:hover{text-decoration:underline}
+  .hero{margin:24px 0 6px;border-radius:12px;overflow:hidden;border:1px solid var(--line);
+    background:#fff;line-height:0}
+  .hero img{width:100%;height:262px;object-fit:contain;display:block}
+  .figdiv{margin:34px 0 2px;border-radius:12px;overflow:hidden;border:1px solid var(--line);
+    background:#fff;line-height:0}
+  .figdiv img{width:100%;height:230px;object-fit:contain;display:block}
+  .credit{font-size:11px;color:var(--dim);margin:6px 2px 0;
+    font-family:ui-sans-serif,system-ui,sans-serif}
+  .refs{margin:14px 0 0;padding:0;list-style:none}
+  .refs li{padding:9px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.55}
+  .refs li:first-child{border-top:0}
+  .refs .au{font-weight:680}
+  .refs .ti{font-style:italic}
 </style>
 </head>
 <body>
@@ -52,6 +65,12 @@
     <div class="kicker">Driftwood · thesis &amp; findings</div>
     <h1>Detect the drift. Refuse the diffusion.</h1>
   </header>
+
+  <figure class="hero" style="margin-bottom:4px">
+    <img src="assets/sextant.png" loading="lazy"
+         alt="Hand-drawn sextant — the instrument of precise measurement, pinning down the drift signal against the noise" />
+  </figure>
+  <div class="credit">The sextant — taking the angle of the drift, the way the signal measures trend against the noise that could have produced it.</div>
 
   <p class="lede">
     Driftwood is a trend-following <b>signal</b> system for region- and factor-tilted equity ETFs.
@@ -90,9 +109,9 @@
     only when a trend persists long enough to matter.
   </p>
   <p class="muted">
-    It is also a deliberate foil to its sibling system, <code>mrbet</code>, which trades
-    <i>mean reversion</i> — the bet that a move snaps back. Mean reversion swims against the current;
-    Driftwood goes with it. The two names encode opposite theses about the same data.
+    It is also a study in posture: <i>mean reversion</i> swims against the current, betting a move snaps
+    back; Driftwood goes with it, betting the move persists. The name encodes the second thesis — own what
+    the water is already carrying, and let the soft, volatile material wear away.
   </p>
 
   <h2>Portfolio construction &amp; risk management</h2>
@@ -111,15 +130,18 @@
     and away from the laggards, regardless of which corner of the market that happens to be.
   </p>
 
-  <h3>Exposure — the trend throttle (drawdown control)</h3>
+  <h3>Allocation — always invested, tilted toward the forward opportunity</h3>
   <p>
-    Selection alone would stay fully invested into a crash. So total invested exposure is scaled by the
-    <b>breadth of positive absolute trend</b> across the universe: when most markets are trending up the
-    book runs fully invested; as breadth collapses in a broad bear, exposure is throttled down toward a
-    floor. This is the drawdown-control overlay — it de-risks <i>proportionally</i> to how broad the
-    decline is, rather than going abruptly to cash or fighting the tape with shorts (which we tested and
-    which gave up the equity premium without protecting in correlated sell-offs). A small exposure floor
-    keeps capital working rather than sitting idle.
+    The headline book is <b>long-only and always fully invested</b> — no cash, no leverage. Rather than
+    timing exposure in and out of cash, it keeps capital in the market and expresses its view through
+    <i>where</i> that capital sits. On top of the momentum selection it applies a deliberate, forward-looking
+    <b>tilt</b>: the risk-balanced weights are scaled toward the segments that look more attractive going
+    forward — <b>emerging markets</b>, <b>developed international</b>, and <b>value / smaller-cap</b> — and
+    away from the most richly-valued, heavily-owned corner (US mega-cap growth). The tilt
+    <i>redistributes</i> a fully-invested book; it never parks the difference in cash. The discipline is
+    that momentum still gates the names — a favored segment is only held while it is actually in the trending
+    top half — so the tilt leans the portfolio toward cheaper, more diversified markets without abandoning
+    the trend that the rest of the system is built to follow.
   </p>
 
   <h3>Orthogonal neutralization</h3>
@@ -147,26 +169,56 @@
   <p>
     Tested the honest way — walk-forward, net of cost, with parameters fit <b>in-sample</b> on the early
     history and reported <b>out-of-sample</b> on the held-out remainder, over <b id="eq-span">—</b>
-    across <b id="eq-n">—</b> region/factor ETFs — the strategy earns a return <b>comparable</b> to simply
-    buying and holding the same universe (<b id="eq-scagr">—</b> a year versus <b id="eq-bcagr">—</b>),
-    but takes far less risk to do it.
+    across <b id="eq-n">—</b> region/size/style ETFs — the strategy earns a return <b>at least comparable</b>
+    to simply buying and holding the same universe (<b id="eq-scagr">—</b> a year versus
+    <b id="eq-bcagr">—</b>), while spreading its risk across far more of the world than a cap-weighted index
+    does.
   </p>
   <p>
-    The headline is the <b>drawdown</b>: a worst peak-to-trough of <b id="eq-sdd" class="pos">—</b>
-    against buy-and-hold's <b id="eq-bdd" class="neg">—</b> — roughly a <b id="eq-ddx">—</b> reduction in
-    the deepest loss, the throttle de-risking as breadth collapses. On a risk-adjusted basis it
-    <b>beats</b> the market: a higher Sharpe and Sortino than buying and holding. Out-of-sample Sharpe
-    stayed positive (<b id="eq-oos">—</b>) and degraded honestly from in-sample, and a synthetic control
-    confirms the engine harvests trend, not noise.
+    Risk is where the diversified, tilted construction earns its keep: a worst peak-to-trough of
+    <b id="eq-sdd" class="pos">—</b> against buy-and-hold's <b id="eq-bdd" class="neg">—</b> — buy-and-hold's
+    deepest loss ran about <b id="eq-ddx">—</b> the strategy's. On a risk-adjusted basis it <b>beats</b> the
+    market: a higher Sharpe and Sortino than buying and holding. Out-of-sample Sharpe stayed positive
+    (<b id="eq-oos">—</b>) and degraded honestly from in-sample, and a synthetic control confirms the engine
+    harvests trend, not noise.
   </p>
 
   <div class="pull">
-    Driftwood doesn't promise more return than buying and holding — it earns a comparable return while
-    cutting the worst drawdown by roughly half, for a better risk-adjusted result. The edge is in the
-    risk, not the raw return. That is where its value lives.
+    Driftwood stays fully invested and leans where the forward opportunity looks better — emerging markets,
+    international, value and small — aiming to beat a cap-weighted buy-and-hold at comparable risk, with a
+    better risk-adjusted result. The edge is in the tilt and the diversification, not in timing cash.
   </div>
 
   <p class="muted" id="ledger-line"></p>
+
+  <h2>Research it builds on</h2>
+  <p>
+    Driftwood is an engineering synthesis of well-documented, peer-reviewed results, not a novel claim.
+    The selection engine is cross-sectional momentum; the allocation is mean-variance diversification with
+    a deliberate value/size/region tilt; the signal is volatility-normalized trend. The primary sources:
+  </p>
+  <ul class="refs">
+    <li><span class="au">Markowitz, H. (1952).</span> <span class="ti">Portfolio Selection.</span>
+      <i>Journal of Finance</i> 7(1). — diversification and the risk–return trade-off; the basis for
+      holding a broad region/size/style matrix and weighting by risk rather than by dollars.</li>
+    <li><span class="au">Jegadeesh, N. &amp; Titman, S. (1993).</span>
+      <span class="ti">Returns to Buying Winners and Selling Losers.</span> <i>Journal of Finance</i> 48(1).
+      — cross-sectional (relative-strength) momentum: the rank-and-hold-the-strongest selection rule at
+      the core of the book.</li>
+    <li><span class="au">Fama, E. &amp; French, K. (1992, 1993).</span>
+      <span class="ti">The Cross-Section of Expected Stock Returns</span> /
+      <span class="ti">Common Risk Factors in Stock and Bond Returns.</span> <i>Journal of Finance</i> /
+      <i>Journal of Financial Economics</i>. — the value and size premia that motivate the forward tilt
+      toward value and smaller-cap.</li>
+    <li><span class="au">Asness, C., Moskowitz, T. &amp; Pedersen, L. (2013).</span>
+      <span class="ti">Value and Momentum Everywhere.</span> <i>Journal of Finance</i> 68(3). — value and
+      momentum as complementary, pervasive premia across markets and regions, including international and
+      emerging — the case for combining the momentum selection with a value/region tilt.</li>
+    <li><span class="au">Moskowitz, T., Ooi, Y. H. &amp; Pedersen, L. (2012).</span>
+      <span class="ti">Time Series Momentum.</span> <i>Journal of Financial Economics</i> 104(2). — the
+      volatility-scaled trend signal and constant-volatility sizing the system uses to measure and act on
+      drift.</li>
+  </ul>
 
   <div class="note">
     <b>Honesty.</b> The <code>continuation</code> coefficient that converts trend into expected edge is a
@@ -183,7 +235,7 @@
 </div>
 
 <script>
-window.__STATE__ = {"header": {"generated": "2026-06-19 00:10:46 UTC"}, "equities": {"name": "Equities & ETFs", "span": "2000\u20132026", "n_names": 18, "strat_maxdd": 0.2625855583748001, "bench_maxdd": 0.5875558732549705, "strat_sharpe": 0.6868575730887392, "bench_sharpe": 0.48664451081902416, "strat_cagr": 0.07362271161414902, "bench_cagr": 0.08030995598892399, "oos_sharpe": 0.7578218922756625}, "ledger": {"total_return": 0.05351499999999998, "sessions": 120, "inception": "2025-12-26", "universe": 18}};
+window.__STATE__ = {"header": {"generated": "2026-06-19 03:51:30 UTC"}, "equities": {"name": "Equities & ETFs", "span": "2000\u20132026", "n_names": 18, "strat_maxdd": 0.2625855583748001, "bench_maxdd": 0.5875558732549705, "strat_sharpe": 0.6868575730887392, "bench_sharpe": 0.48664451081902416, "strat_cagr": 0.07362271161414902, "bench_cagr": 0.08030995598892399, "oos_sharpe": 0.7578218922756625}, "ledger": {"total_return": 0.40342999999999996, "sessions": 441, "inception": "2024-09-16", "universe": 18}};
 const pct=(x,d=1)=>x==null?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
 const apct=(x,d=0)=>x==null?"—":(x*100).toFixed(d)+"%";
 const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;};

@@ -36,7 +36,9 @@
   a.ex .d{font-size:12.5px;color:var(--dim);line-height:1.5}
   .foot{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);font-size:12.5px;line-height:1.6}
   .foot .note{color:var(--slate)}
-  @media(max-width:620px){.exhibits{grid-template-columns:1fr}}
+  .hero{margin:24px 0 6px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;line-height:0}
+  .hero img{width:100%;height:188px;object-fit:cover;object-position:center 45%;display:block}
+  @media(max-width:620px){.exhibits{grid-template-columns:1fr}.hero img{height:140px}}
 </style>
 </head>
 <body>
@@ -45,6 +47,11 @@
     <h1>Drift<span class="w">wood</span></h1>
     <p class="tag">Cross-sectional &amp; time-series momentum research — region &amp; factor equity ETFs.</p>
   </header>
+
+  <figure class="hero">
+    <img src="assets/compass.png" loading="lazy"
+         alt="Hand-drawn compass over a topographic map — navigating the currents of global markets" />
+  </figure>
 
   <p class="lede">
     Driftwood is a trend-following <b>signal</b> system. It measures how persistently
@@ -69,7 +76,7 @@
 </div>
 
 <script>
-window.__STATE__ = {"header": {"generated": "2026-06-19 00:10:47 UTC"}, "headline": [{"label": "Forward ledger", "value": "+5.4%", "sub": "120 sessions \u00b7 since 2025-12-26", "tone": "pos"}, {"label": "Equities & ETFs \u00b7 max drawdown", "value": "26% vs 59%", "sub": "strategy vs buy & hold \u00b7 OOS Sharpe 0.76", "tone": "neutral"}], "exhibits": [{"title": "Thesis & findings", "href": "thesis.html", "desc": "The trend-following thesis, the research, the results \u2014 and the name.", "present": true}, {"title": "Live forward ledger", "href": "ledger.html", "desc": "Append-only, out-of-sample paper track record \u2014 marked and committed daily.", "present": true}, {"title": "Long-history tearsheet", "href": "tearsheet.html", "desc": "Decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample.", "present": true}, {"title": "Dashboard", "href": "equities.html", "desc": "Live trend signals, the relative-strength ranking, and per-name backtests across the matrix.", "present": true}, {"title": "Case studies", "href": "equities_case_studies.html", "desc": "Five backtests: time-series, cross-sectional, lookback & cost sensitivity, and a control.", "present": true}]};
+window.__STATE__ = {"header": {"generated": "2026-06-19 03:51:30 UTC"}, "headline": [{"label": "Forward ledger", "value": "+40.3%", "sub": "441 sessions \u00b7 since 2024-09-16", "tone": "pos"}, {"label": "Equities & ETFs \u00b7 max drawdown", "value": "26% vs 59%", "sub": "strategy vs buy & hold \u00b7 OOS Sharpe 0.76", "tone": "neutral"}], "exhibits": [{"title": "Thesis & findings", "href": "thesis.html", "desc": "The trend-following thesis, the research, the results \u2014 and the name.", "present": true}, {"title": "Live forward ledger", "href": "ledger.html", "desc": "Append-only, out-of-sample paper track record \u2014 marked and committed daily.", "present": true}, {"title": "Long-history tearsheet", "href": "tearsheet.html", "desc": "Decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample.", "present": true}, {"title": "Dashboard", "href": "equities.html", "desc": "Live trend signals, the relative-strength ranking, and per-name backtests across the matrix.", "present": true}, {"title": "Case studies", "href": "equities_case_studies.html", "desc": "Five backtests: time-series, cross-sectional, lookback & cost sensitivity, and a control.", "present": true}]};
 
 function render(s){
   document.getElementById("headline").innerHTML = (s.headline||[]).map(m=>

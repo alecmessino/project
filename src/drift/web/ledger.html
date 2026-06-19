@@ -4,16 +4,16 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Driftwood — live forward ledger</title>
-<meta name="description" content="An append-only paper track record for a trend-throttled global ETF rotation — benchmarked against VT (global) and VTI (US) buy-and-hold, with risk stats, regional and style-box exposure, and costs shown. Research only, not investment advice." />
+<meta name="description" content="An append-only paper track record for a long-only, fully-invested global ETF rotation tilted toward emerging markets, international and value/small — benchmarked against VT (global) and VTI (US) buy-and-hold, with risk stats, regional and style-box exposure, and costs shown. Research only, not investment advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/ledger.html" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
 <meta property="og:title" content="Driftwood — live forward ledger" />
-<meta property="og:description" content="An append-only paper track record for a trend-throttled global ETF rotation, benchmarked vs VT (global) and VTI (US) buy-and-hold — risk stats, regional + style-box exposure, and costs. Research only." />
+<meta property="og:description" content="An append-only paper track record for a long-only, fully-invested global ETF rotation tilted toward EM, international and value/small, benchmarked vs VT (global) and VTI (US) buy-and-hold — risk stats, regional + style-box exposure, and costs. Research only." />
 <meta property="og:url" content="https://alecmessino.github.io/project/ledger.html" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Driftwood — live forward ledger" />
-<meta name="twitter:description" content="Append-only paper track record for a trend-throttled global ETF rotation, benchmarked vs VT & VTI buy-and-hold. Research only, not advice." />
+<meta name="twitter:description" content="Append-only paper track record for a long-only, fully-invested global ETF rotation tilted toward EM, international & value/small, benchmarked vs VT & VTI buy-and-hold. Research only, not advice." />
 <style>
   :root{
     --bg:#ffffff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#717179;
@@ -78,7 +78,11 @@
   .cmp .dot{font-size:10px;vertical-align:middle;margin-right:3px}
   .costline{font-size:12px;color:var(--dim);margin:-2px 0 16px}
   .costline b{color:var(--slate);font-weight:600}
+  .figband{margin:34px 0 6px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;line-height:0}
+  .figband img{width:100%;height:204px;object-fit:contain;display:block}
+  .figcap{font-size:11.5px;color:var(--dim);margin:6px 2px 0;line-height:1.5}
   @media(max-width:620px){
+    .figband img{height:150px}
     .box,.box.sm{max-width:none}
     .bar .lbl{width:86px}
     .metrics{gap:20px}
@@ -96,7 +100,8 @@
   <div id="body"></div>
   <div class="foot">
     <span class="note">Paper track record — research only, not investment advice.</span>
-    The trend-throttled cross-sectional rotation, marked daily net of cost, vs
+    The long-only, fully-invested cross-sectional rotation — tilted toward EM,
+    international and value/small — marked daily net of cost, vs
     buy-and-hold VT (global) and VTI (US) on the same total-return basis. Append-only:
     history is never recomputed. Pre-inception points are a walk-forward replay
     (no lookahead); everything after is recorded live.
@@ -262,12 +267,15 @@ function render(s){
     <h2 class="sec">Performance vs buy-and-hold · <span id="perlabel" style="text-transform:none;letter-spacing:0">since inception</span></h2>
     <table class="cmp"><thead><tr><th>Track</th><th>Return</th><th>Sharpe</th>
       <th>Max DD</th><th>Edge</th></tr></thead><tbody id="cmpbody"></tbody></table>
-    <div class="note-box"><b>Why it can trail a rising market.</b> The rotation holds only the
-      strongest half of the universe and throttles exposure toward a cash floor when trend breadth is
-      weak — it's built to lose less in broad drawdowns, not to out-run a fully-invested index in a broad
-      melt-up. With a value/blend tilt and stretches partly in cash, it gives up upside when mega-cap growth
-      leads; its edge is meant to surface in dispersion and drawdowns. Use the buttons above to see windows
-      where it led versus lagged.</div>` : "";
+    <div class="note-box"><b>How the book is built.</b> Long-only and <b>always fully invested</b> —
+      no cash, no leverage. Each month it ranks the global region/size/style ETF matrix by
+      volatility-normalized momentum, holds the trending top half (inverse-volatility weighted), then
+      <b>tilts toward the segments that look more attractive going forward</b> — emerging markets,
+      international, and value/small — which have wider valuation spreads and are more under-owned than
+      US mega-cap growth. The tilt redistributes a fully-invested book rather than adding cash, so the
+      strategy stays in the market while leaning where the forward opportunity looks better. It can still
+      lag in a narrow mega-cap-growth melt-up; use the buttons above to see windows where it led versus
+      lagged.</div>` : "";
   const positions = s.positions.map(p=>`<tr><td>${p.instrument}</td>
     <td><span class="tag ${p.leg==='—'?'--':p.leg}">${p.leg}</span></td>
     <td>${p.weight>=0?"+":""}${p.weight.toFixed(2)}</td></tr>`).join("");
@@ -278,10 +286,13 @@ function render(s){
   const benchBoxes = benches.map(b=>`<div class="col"><h3>${b.label} · ${BDESC[b.label]||""}</h3>
     ${stylebox(b.exposure.style_box,true)}<p class="bcap">${regionLine(b.exposure.by_region)}</p></div>`).join("");
   const exposureHTML = x ? `
+    <figure class="figband"><img src="assets/orrery.png" loading="lazy"
+      alt="Hand-drawn orrery — interlocking gears turning the size by style by region matrix"></figure>
+    <p class="figcap">The book as an orrery: region × size × style as interlocking wheels, each name turning at its own momentum within the whole.</p>
     <h2 class="sec">Current exposure</h2>
     <div class="expo">
       <div><h3>By region</h3>${bars(x.by_region)}
-        <p class="invested">Net invested: <b>${(x.gross*100).toFixed(0)}%</b> (rest in cash via the trend throttle)</p></div>
+        <p class="invested">Net invested: <b>${(x.gross*100).toFixed(0)}%</b> — long-only, no cash, no leverage</p></div>
       <div><h3>Size &amp; style map</h3>${stylebox(x.style_box)}</div>
     </div>
     ${benches.length?`<h2 class="sec">Benchmark size &amp; style</h2><div class="boxes">${benchBoxes}</div>`:""}

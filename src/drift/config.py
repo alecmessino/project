@@ -78,9 +78,20 @@ class CrossSectionSettings(BaseModel):
                                     # holding the "least-bad", i.e. flexible vs a static index
     # Trend throttle: scale total invested exposure by the breadth of POSITIVE absolute
     # trend across the universe (full in a broad uptrend, light in a broad bear). This is
-    # the time-series overlay that controls drawdown without going market-neutral.
+    # the time-series overlay that controls drawdown without going market-neutral. Off in
+    # the headline book, which stays long-only and fully invested (no cash, no leverage).
     trend_throttle: bool = False
     exposure_floor: float = 0.0     # minimum exposure even in a broad bear (0 = fully defensive ok)
+    # Strategic forward-looking tilt (applied to the long book, fully invested): each
+    # held name's risk-balanced weight is multiplied by the PRODUCT of its region/size/
+    # style factors below, then the long leg is renormalized back to full gross — so the
+    # tilt redistributes capital toward favored segments without adding cash or leverage.
+    # Empty dicts (or a missing segment key) = neutral (factor 1.0). Tilting toward EM /
+    # international / value / small expresses a forward valuation view, anchored by the
+    # cross-sectional momentum selection (only the trending top half is eligible to hold).
+    tilt_region: dict[str, float] = Field(default_factory=dict)  # US / DEV / EM
+    tilt_size: dict[str, float] = Field(default_factory=dict)    # large / mid / small / largemid
+    tilt_style: dict[str, float] = Field(default_factory=dict)   # value / blend / growth
     # Neutralize the ranking within a grouping before ranking: "none", "region",
     # or "factor". Region-neutral isolates which STYLE is trending (controlling for
     # region); factor-neutral isolates which REGION is trending. Demeaning trend

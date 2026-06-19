@@ -90,6 +90,20 @@ cross_section:
   tilt_region: {US: 1.0, DEV: 1.30, EM: 1.55}
   tilt_size:   {large: 1.0, largemid: 1.0, mid: 1.10, small: 1.30}
   tilt_style:  {value: 1.30, blend: 1.0, growth: 0.80}
+  # Dynamic valuation dial: make the tilt above TIME-VARYING rather than a permanent
+  # overweight — scaling each segment's anchor by how cheap it looks now (proxied by
+  # ~3y relative reversal: lean into beaten-down segments, fade multi-year leaders back
+  # toward market weight). It's implemented and unit-tested, but kept OFF by default:
+  # on the 40-year walk-forward backtest this PRICE proxy for "cheapness" slightly
+  # LAGS the static anchor (Sharpe 0.645 vs 0.664; ~-7% total) across every horizon and
+  # strength tried — the long-term reversal mostly fights the momentum selection. A
+  # genuine valuation dial wants FUNDAMENTALS (earnings-yield / book-to-price spreads
+  # per segment) from a real data feed, not price reversal. Turn on to research, or
+  # wire in fundamentals; raise strength toward 0.5 to lean harder.
+  tilt_dynamic: false
+  tilt_reversion_bars: 756        # ~3 years
+  tilt_reversion_strength: 0.5
+  tilt_dial_cap: 1.8
   # Neutralize the ranking within a grouping: "none", "region", "size", or "style".
   # region-neutral -> isolates which size/style leads within each region;
   # size-neutral   -> isolates region/style within each size bucket;

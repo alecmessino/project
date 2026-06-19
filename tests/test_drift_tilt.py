@@ -1,7 +1,7 @@
 """Strategic forward tilt: long-only, fully invested, overweight favored segments."""
 
 from drift.config import CrossSectionSettings
-from drift.cross_section import _tilt_for, rank_weights
+from drift.cross_section import _cheapness_dial, _combined_tilt, _tilt_for, rank_weights
 
 
 def _cs(**kw):
@@ -43,3 +43,35 @@ def test_tilt_keeps_book_fully_invested_and_overweights_favored():
     # is underweighted — the forward tilt redistributes, it does not add cash.
     assert tilted["AVEE"] > plain["AVEE"]
     assert tilted["IVW"] < plain["IVW"]
+
+
+def test_cheapness_dial_leans_into_laggards_and_fades_leaders():
+    # Two names: A compounded up over the window (multi-year leader), B lagged.
+    cs = _cs(tilt_dynamic=True, tilt_reversion_bars=50,
+             tilt_reversion_strength=0.5, tilt_dial_cap=1.8)
+    A = [100.0 * (1.02 ** k) for k in range(60)]   # strong long-run leader
+    B = [100.0 * (0.99 ** k) for k in range(60)]   # long-run laggard (cheap proxy)
+    C = [100.0 for _ in range(60)]                  # flat (mid)
+    dial = _cheapness_dial({"A": A, "B": B, "C": C}, cs)
+    assert dial["B"] > dial["C"] > dial["A"]        # cheap > neutral > rich
+    assert dial["A"] < 1.0 < dial["B"]              # straddle market weight
+
+
+def test_dynamic_off_returns_plain_static_anchor():
+    cs = _cs(tilt_region={"EM": 1.5}, tilt_dynamic=False)
+    closes = {"AVEE": [1.0, 2.0, 3.0]}
+    assert _combined_tilt(closes, cs) == _tilt_for(cs)
+
+
+def test_combined_tilt_is_anchor_times_dial():
+    cs = _cs(tilt_region={"US": 1.0, "EM": 1.5}, tilt_dynamic=True,
+             tilt_reversion_bars=50, tilt_reversion_strength=0.5)
+    # IVV (US) is a long-run leader; AVEE (EM) lagged -> AVEE keeps its EM overweight
+    # AND gets a cheapness boost; IVV's neutral anchor is faded below 1.0. (Need at
+    # least min_universe names for the cross-sectional dial to engage.)
+    closes = {"IVV": [100.0 * (1.02 ** k) for k in range(60)],
+              "AVEE": [100.0 * (0.99 ** k) for k in range(60)],
+              "EWX": [100.0 for _ in range(60)]}
+    ct = _combined_tilt(closes, cs)
+    assert ct["AVEE"] > 1.5      # EM anchor (1.5) lifted further by cheapness
+    assert ct["IVV"] < 1.0       # US neutral anchor (1.0) faded by richness

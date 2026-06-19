@@ -23,8 +23,8 @@ from typing import Optional, Sequence
 from . import analytics
 from . import signal as sig
 from . import sizing
-from .config import Settings
-from .cross_section import _groups_for, _tilt_for, rank_weights
+from .config import Settings, TaxSettings
+from .cross_section import _combined_tilt, _groups_for, rank_weights
 from .models import Bar
 from .universes import BENCH_REGION, REGION_OF, STYLE_BOX
 
@@ -88,13 +88,14 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
         new_w = {i: round(prev_w.get(i, 0.0), 4) for i in insts}
     else:
         sg = settings.signal
-        scores, vols = {}, {}
+        scores, vols, closes_now = {}, {}, {}
         for i in insts:
             cl = [b.close for b in series[i]]
+            closes_now[i] = cl
             scores[i] = sig.momentum_score(cl, sg.lookback, sg.vol_window)
             vols[i] = sizing.annualize_vol(sig.realized_vol(cl, sg.vol_window),
                                            settings.engine.bars_per_year)
-        raw = rank_weights(scores, vols, cs, _groups_for(cs), _tilt_for(cs))
+        raw = rank_weights(scores, vols, cs, _groups_for(cs), _combined_tilt(closes_now, cs))
         new_w = {i: round(raw.get(i, 0.0), 4) for i in insts}
 
     # 3) Cost on rebalance turnover (weights are at portfolio scale).
@@ -236,7 +237,53 @@ def _benchmarks_state(entries: list[dict], eq: list[float], idx: list[int],
     return out
 
 
-def build_ledger_state(ledger: dict, bars_per_year: float = 252.0) -> dict:
+def _turnover_per_session(entries: list[dict]) -> list[float]:
+    """Two-sided turnover (sum |Δweight|) booked at each session vs the prior book."""
+    prev: dict[str, float] = {}
+    out: list[float] = []
+    for e in entries:
+        w = e.get("weights", {})
+        out.append(sum(abs(w.get(k, 0.0) - prev.get(k, 0.0)) for k in set(w) | set(prev)))
+        prev = w
+    return out
+
+
+def _after_tax(entries: list[dict], tax: TaxSettings, bars_per_year: float):
+    """Illustrative after-tax equity curve (unit-level, tax-managed simulation).
+
+    Not lot accounting: the book is modeled as a single position with a running cost
+    basis. Each rebalance realizes a share of the book's accumulated gain proportional
+    to its sell-side turnover and pays tax on it from the portfolio (long-term rate if
+    the turnover-implied average holding period clears `lt_holding_bars`, else short).
+    Conservative — gains are taxed; it does not assume speculative loss-harvest credits
+    (the TLH substitute map quantifies that upside separately). Distributions/dividends
+    are inside the total-return marks and not taxed separately here.
+    """
+    turns = _turnover_per_session(entries)
+    n = len(entries)
+    one_sided = sum(turns) / 2.0
+    years = (n / bars_per_year) if bars_per_year else 0.0
+    ann_turnover = (one_sided / years) if years > 0 else 0.0
+    avg_hold = (bars_per_year / ann_turnover) if ann_turnover > 0 else float("inf")
+    rate = tax.rate_lt if avg_hold >= tax.lt_holding_bars else tax.rate_st
+    value = basis = 1.0
+    tax_paid = 0.0
+    curve: list[float] = []
+    for e, t in zip(entries, turns):
+        value *= (1.0 + e.get("realized_return", 0.0))
+        sell = t / 2.0
+        if sell > 0 and value > basis:                 # realize gain on the sold slice
+            realized = (value - basis) * sell
+            paid = realized * rate
+            value -= paid
+            tax_paid += paid
+            basis += realized                           # rebought slice steps up basis
+        curve.append(round(value, 6))
+    return curve, tax_paid, ann_turnover, avg_hold, rate
+
+
+def build_ledger_state(ledger: dict, bars_per_year: float = 252.0,
+                       tax: Optional[TaxSettings] = None) -> dict:
     """Shape the ledger into the dashboard/exhibit state."""
     entries = ledger.get("entries", [])
     if not entries:
@@ -258,6 +305,9 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0) -> dict:
         key=lambda r: -r["weight"])
     live = sum(1 for e in entries if not e.get("seed"))
     cost_side = ledger.get("cost_bps_per_side")
+    tax = tax or TaxSettings()
+    at_curve, tax_paid, ann_turnover, avg_hold, eff_rate = _after_tax(entries, tax, bars_per_year)
+    on = tax.enabled
     return {
         "header": {
             "days": n,
@@ -276,7 +326,15 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0) -> dict:
             "universe": ledger.get("universe", []),
             "n_long": last["n_long"],
             "n_short": last["n_short"],
+            # Illustrative after-tax modeling (see _after_tax / config.TaxSettings).
+            "annual_turnover": round(ann_turnover, 3),
+            "after_tax_total_return": (round(at_curve[-1] - 1.0, 6) if on else None),
+            "tax_drag": (round((eq[-1] - 1.0) - (at_curve[-1] - 1.0), 6) if on else None),
+            "tax_rate_applied": (round(eff_rate, 3) if on else None),
+            "tax_term": ("long-term" if eff_rate == tax.rate_lt else "short-term") if on else None,
+            "avg_holding_days": (round(avg_hold) if (on and avg_hold != float("inf")) else None),
         },
+        "after_tax": ([round(at_curve[i], 5) for i in idx] if on else None),
         "equity": [round(eq[i], 5) for i in idx],
         "benchmarks": _benchmarks_state(entries, eq, idx, bars_per_year),
         "dates": [entries[i]["date"] for i in idx],

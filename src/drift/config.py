@@ -92,6 +92,20 @@ class CrossSectionSettings(BaseModel):
     tilt_region: dict[str, float] = Field(default_factory=dict)  # US / DEV / EM
     tilt_size: dict[str, float] = Field(default_factory=dict)    # large / mid / small / largemid
     tilt_style: dict[str, float] = Field(default_factory=dict)   # value / blend / growth
+    # Dynamic valuation dial. The static tilt above is the long-run ANCHOR (the value/
+    # size/region premia that persist across decades and regions). This dial makes the
+    # tilt TIME-VARYING: it scales each name's anchor by how cheap the segment looks
+    # right now — proxied by long-horizon relative reversal (a segment that has LAGGED
+    # the cross-section over `tilt_reversion_bars` reads as cheap and is leaned into;
+    # one that has LED strongly is faded back toward market weight). So the book tilts
+    # hard when a favored segment is beaten down and drifts to neutral as the spread
+    # compresses — and if the richly-priced corner gets cheap, its underweight eases
+    # toward market weight too. 0 strength = pure static anchor; the dial is bounded to
+    # [1/cap, cap] so it leans, never lurches. (Value × momentum, cf. AMP 2013.)
+    tilt_dynamic: bool = False            # off by default; the headline YAML book turns it on
+    tilt_reversion_bars: int = 756        # ~3y lookback for the cheapness (long-term reversal) dial
+    tilt_reversion_strength: float = 0.5  # how hard the dial leans on cheapness (0 = anchor only)
+    tilt_dial_cap: float = 1.8            # bound the per-name dial multiplier to [1/cap, cap]
     # Neutralize the ranking within a grouping before ranking: "none", "region",
     # or "factor". Region-neutral isolates which STYLE is trending (controlling for
     # region); factor-neutral isolates which REGION is trending. Demeaning trend
@@ -99,9 +113,24 @@ class CrossSectionSettings(BaseModel):
     neutralize: str = "none"
 
 
+class TaxSettings(BaseModel):
+    """Illustrative after-tax modeling for the ledger — a unit-level tax-managed
+    simulation, NOT lot-level tax accounting (that needs the custodian's cost basis).
+
+    Defaults are top-bracket federal assumptions for a high-net-worth taxable account;
+    set them to a client's actual marginal rates (and add state tax) before quoting.
+    """
+
+    enabled: bool = True
+    rate_lt: float = 0.238   # long-term cap gains: 20% + 3.8% NIIT
+    rate_st: float = 0.408   # short-term cap gains: 37% ordinary + 3.8% NIIT
+    lt_holding_bars: int = 252  # trading days a lot must be held to qualify as long-term
+
+
 class Settings(BaseModel):
     signal: SignalSettings = Field(default_factory=SignalSettings)
     triggers: TriggerSettings = Field(default_factory=TriggerSettings)
+    tax: TaxSettings = Field(default_factory=TaxSettings)
     sizing: SizingSettings = Field(default_factory=SizingSettings)
     engine: EngineSettings = Field(default_factory=EngineSettings)
     cross_section: CrossSectionSettings = Field(default_factory=CrossSectionSettings)

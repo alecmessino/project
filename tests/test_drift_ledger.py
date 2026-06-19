@@ -116,3 +116,25 @@ def test_cost_assumptions_surface_in_header():
     st = L.build_ledger_state(led)
     assert st["header"]["cost_bps_per_side"] == s.sizing.cost_bps_per_side
     assert st["header"]["cost_bps_roundtrip"] == round(s.sizing.cost_bps_per_side * 2, 1)
+
+
+def test_after_tax_track_is_a_drag_on_positive_gains():
+    from drift.config import TaxSettings
+    led = L.seed_ledger(_series(), _settings(), sessions=80)
+    st = L.build_ledger_state(led, tax=TaxSettings(enabled=True))
+    h = st["header"]
+    assert h["annual_turnover"] >= 0
+    if h["total_return"] > 0:
+        assert h["after_tax_total_return"] <= h["total_return"]   # tax only subtracts
+        assert h["tax_drag"] >= 0
+    assert st["after_tax"] and len(st["after_tax"]) == len(st["equity"])
+    assert h["tax_term"] in ("long-term", "short-term")
+
+
+def test_after_tax_can_be_disabled():
+    from drift.config import TaxSettings
+    led = L.seed_ledger(_series(), _settings(), sessions=40)
+    st = L.build_ledger_state(led, tax=TaxSettings(enabled=False))
+    assert st["after_tax"] is None
+    assert st["header"]["after_tax_total_return"] is None
+    json.dumps(st)

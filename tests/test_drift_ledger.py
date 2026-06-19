@@ -78,4 +78,41 @@ def test_empty_ledger_state_is_safe():
     st = L.build_ledger_state(L.new_ledger())
     assert st["header"]["days"] == 0
     assert st["equity"] == []
+    assert st["benchmarks"] == []
     json.dumps(st)
+
+
+def test_blended_style_box_spreads_across_cells_and_sums_to_one():
+    # A pure-IVE book must spread across multiple boxes (not one), per the
+    # fund's underlying Morningstar-style composition, and normalize to 1.
+    box = L._blend_style_box({"IVE": 1.0})
+    assert box["large|value"] > box["mid|blend"] > 0      # IVE's dominant cells
+    assert len([v for v in box.values() if v > 0]) >= 4   # genuinely spread
+    assert abs(sum(box.values()) - 1.0) < 1e-6
+
+
+def test_benchmarks_carry_risk_stats_and_style_box():
+    s = _settings()
+    series = _series(n=260)
+    # Two buy-and-hold benchmarks marked in parallel over the same window
+    # (reuse synthetic series as stand-in price histories for VT / VTI).
+    names = list(series)
+    bench = {"VT": series[names[0]], "VTI": series[names[1]]}
+    led = L.seed_ledger(series, s, sessions=40, benchmarks=bench)
+    assert all(isinstance(e["bench_equity"], dict) for e in led["entries"][1:])
+    st = L.build_ledger_state(led)
+    labels = [b["label"] for b in st["benchmarks"]]
+    assert labels == ["VT", "VTI"]
+    for b in st["benchmarks"]:
+        assert "sharpe" in b and "max_drawdown" in b and "excess" in b
+        assert b["exposure"]["style_box"]            # benchmark has its own box
+        assert b["exposure"]["by_region"]            # and its own region split
+    json.dumps(st)
+
+
+def test_cost_assumptions_surface_in_header():
+    s = _settings()
+    led = L.seed_ledger(_series(), s, sessions=20)
+    st = L.build_ledger_state(led)
+    assert st["header"]["cost_bps_per_side"] == s.sizing.cost_bps_per_side
+    assert st["header"]["cost_bps_roundtrip"] == round(s.sizing.cost_bps_per_side * 2, 1)

@@ -50,6 +50,15 @@
   .box .cell{height:40px;border:1px solid var(--line);border-radius:3px;display:flex;align-items:center;
     justify-content:center;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
   .invested{font-size:12px;color:var(--dim);margin:14px 0 0}
+  .boxes{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start;margin-top:4px}
+  .boxes .col h3{font-size:12px;color:var(--dim);font-weight:600;margin:0 0 8px;letter-spacing:.3px}
+  .boxes .bcap{font-size:11.5px;color:var(--dim);margin:7px 0 0;max-width:300px;line-height:1.5}
+  .box.sm{grid-template-columns:40px 1fr 1fr 1fr;max-width:240px}
+  .box.sm .cell{height:30px;font-size:10px}
+  .cmp .ex{color:var(--dim);font-variant-numeric:tabular-nums}
+  .cmp tr.me td{font-weight:600}
+  .costline{font-size:12px;color:var(--dim);margin:-8px 0 18px}
+  .costline b{color:var(--slate);font-weight:600}
 </style>
 </head>
 <body>
@@ -61,22 +70,31 @@
   <div id="body"></div>
   <div class="foot">
     <span class="note">Paper track record — research only, not investment advice.</span>
-    The trend-throttled cross-sectional rotation, marked daily net of cost, vs a
-    buy-and-hold benchmark. Append-only: history is never recomputed. Pre-inception
-    points are a walk-forward replay (no lookahead); everything after is recorded live.
+    The trend-throttled cross-sectional rotation, marked daily net of cost, vs
+    buy-and-hold VT (global) and VTI (US) on the same total-return basis. Append-only:
+    history is never recomputed. Pre-inception points are a walk-forward replay
+    (no lookahead); everything after is recorded live.
     <div id="gen" style="margin-top:6px"></div>
   </div>
 </div>
 
 <script>
 window.__STATE__ = /*__STATE__*/null/*__END__*/;
+const BDESC={VT:"global market", VTI:"US total market"};
 function pct(x){ return (x>=0?"+":"")+(x*100).toFixed(2)+"%"; }
 function cls(x){ return x>0?"pos":x<0?"neg":""; }
+function fix(x){ return (x!=null)?x.toFixed(2):"—"; }
+function regionLine(byRegion){
+  const short={"United States":"US","Developed intl":"Dev intl","Emerging mkts":"EM"};
+  return Object.entries(byRegion||{}).sort((a,b)=>b[1]-a[1])
+    .map(([k,v])=>`${short[k]||k} ${Math.round(v*100)}%`).join(" · ") || "—";
+}
 
-function eqchart(el, data, splitFrac, bench){
+function eqchart(el, data, splitFrac, benches){
   el.innerHTML=""; if(!data||data.length<2){ return; }
   const w=el.clientWidth||800,h=el.clientHeight||170,pad=4;
-  let allv=data.slice(); if(bench&&bench.length) allv=allv.concat(bench);
+  let allv=data.slice();
+  (benches||[]).forEach(b=>{ if(b.equity&&b.equity.length) allv=allv.concat(b.equity); });
   const lo=Math.min(...allv),hi=Math.max(...allv),rng=(hi-lo)||1;
   const xs=i=>pad+(w-2*pad)*i/(data.length-1);
   const ys=v=>h-pad-(h-2*pad)*(v-lo)/rng;
@@ -91,12 +109,13 @@ function eqchart(el, data, splitFrac, bench){
     sep.setAttribute("x1",sx);sep.setAttribute("x2",sx);sep.setAttribute("y1",pad);sep.setAttribute("y2",h-pad);
     sep.setAttribute("stroke","#cfcfd4");sep.setAttribute("stroke-dasharray","3 3");el.appendChild(sep);
   }
-  if(bench&&bench.length){
+  (benches||[]).forEach(b=>{
+    if(!b.equity||!b.equity.length) return;
     const pb=document.createElementNS(ns,"polyline");
-    pb.setAttribute("points",bench.map((v,i)=>xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" "));
-    pb.setAttribute("fill","none");pb.setAttribute("stroke","#9aa0c0");pb.setAttribute("stroke-width",1.2);
+    pb.setAttribute("points",b.equity.map((v,i)=>xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" "));
+    pb.setAttribute("fill","none");pb.setAttribute("stroke",b.color||"#9aa0c0");pb.setAttribute("stroke-width",1.3);
     pb.setAttribute("stroke-dasharray","3 2");el.appendChild(pb);
-  }
+  });
   const p=document.createElementNS(ns,"polyline");
   p.setAttribute("points",data.map((v,i)=>xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" "));
   p.setAttribute("fill","none");p.setAttribute("stroke","#4a4f57");p.setAttribute("stroke-width",1.7);
@@ -110,10 +129,10 @@ function bars(obj){
     <span class="track"><span class="fill" style="width:${(v*100).toFixed(0)}%"></span></span>
     <span class="pct">${(v*100).toFixed(0)}%</span></div>`).join("");
 }
-function stylebox(box){
+function stylebox(box, sm){
   const sizes=["large","mid","small"], styles=["value","blend","growth"];
   const vals=Object.values(box); const max=Math.max(0.0001,...vals);
-  let html=`<div class="box"><div></div><div class="hd">Value</div><div class="hd">Blend</div><div class="hd">Growth</div>`;
+  let html=`<div class="box${sm?' sm':''}"><div></div><div class="hd">Value</div><div class="hd">Blend</div><div class="hd">Growth</div>`;
   for(const sz of sizes){
     html+=`<div class="rl">${sz[0].toUpperCase()+sz.slice(1)}</div>`;
     for(const st of styles){
@@ -133,15 +152,28 @@ function render(s){
     document.getElementById("body").innerHTML='<p class="empty">No entries yet — the ledger begins on the next run.</p>';
     return;
   }
-  const excess = (h.bench_return!=null) ? (h.total_return - h.bench_return) : null;
+  const benches = s.benchmarks||[];
   const stats=[
     ["Total return", pct(h.total_return), cls(h.total_return)],
-    (excess!=null ? [`vs ${h.bench_label||"mkt"}`, pct(excess), cls(excess)] : null),
-    ["Sharpe", (h.sharpe!=null?h.sharpe.toFixed(2):"—"), cls(h.sharpe||0)],
+    ["Sharpe", fix(h.sharpe), cls(h.sharpe||0)],
     ["Max DD", pct(-(h.max_drawdown||0)), "neg"],
     ["Sessions", String(h.days), ""],
     ["Long / short", `${h.n_long} / ${h.n_short}`, ""],
-  ].filter(Boolean).map(([k,v,c])=>`<div class="metric"><div class="v ${c}">${v}</div><div class="l">${k}</div></div>`).join("");
+  ].map(([k,v,c])=>`<div class="metric"><div class="v ${c}">${v}</div><div class="l">${k}</div></div>`).join("");
+  const costHTML = (h.cost_bps_per_side!=null) ? `<div class="costline">Marked net of
+    <b>${h.cost_bps_per_side} bps/side</b> (≈ ${h.cost_bps_roundtrip} bps round-trip on rebalance
+    turnover)${h.rebalance_bars?` · rebalanced every <b>${h.rebalance_bars}</b> sessions`:''}.</div>` : "";
+  const perfHTML = benches.length ? `
+    <h2 class="sec">Performance vs buy-and-hold (total return)</h2>
+    <table class="cmp"><thead><tr><th>Track</th><th>Total return</th><th>Sharpe</th>
+      <th>Max DD</th><th>Strategy edge</th></tr></thead><tbody>
+      <tr class="me"><td>Strategy</td><td class="${cls(h.total_return)}">${pct(h.total_return)}</td>
+        <td>${fix(h.sharpe)}</td><td>${pct(-(h.max_drawdown||0))}</td><td class="ex">—</td></tr>
+      ${benches.map(b=>`<tr><td>${b.label} · ${BDESC[b.label]||""}</td>
+        <td class="${cls(b.total_return)}">${pct(b.total_return)}</td>
+        <td>${fix(b.sharpe)}</td><td>${pct(-(b.max_drawdown||0))}</td>
+        <td class="ex ${cls(b.excess)}">${pct(b.excess)}</td></tr>`).join("")}
+    </tbody></table>` : "";
   const positions = s.positions.map(p=>`<tr><td>${p.instrument}</td>
     <td><span class="tag ${p.leg==='—'?'--':p.leg}">${p.leg}</span></td>
     <td>${p.weight>=0?"+":""}${p.weight.toFixed(2)}</td></tr>`).join("");
@@ -149,25 +181,33 @@ function render(s){
     <td class="${cls(r.realized_return)}">${pct(r.realized_return)}</td>
     <td>${r.equity.toFixed(4)}</td></tr>`).join("");
   const x=s.exposure;
+  const benchBoxes = benches.map(b=>`<div class="col"><h3>${b.label} · ${BDESC[b.label]||""}</h3>
+    ${stylebox(b.exposure.style_box,true)}<p class="bcap">${regionLine(b.exposure.by_region)}</p></div>`).join("");
   const exposureHTML = x ? `
     <h2 class="sec">Current exposure</h2>
     <div class="expo">
       <div><h3>By region</h3>${bars(x.by_region)}
         <p class="invested">Net invested: <b>${(x.gross*100).toFixed(0)}%</b> (rest in cash via the trend throttle)</p></div>
-      <div><h3>Style box (size × style)</h3>${stylebox(x.style_box)}</div>
-    </div>` : "";
+      <div><h3>Style box — book footprint</h3>${stylebox(x.style_box)}</div>
+    </div>
+    ${benches.length?`<h2 class="sec">Benchmark style boxes</h2><div class="boxes">${benchBoxes}</div>`:""}
+    <p class="bcap" style="margin-top:13px">Style-box weights are representative Morningstar-style
+      classifications per fund (e.g. IVE ≈ 33% large-value / 27% large-blend / 17% mid-blend / 13% mid-value …),
+      blended by current book weight — approximate, for exposure shape rather than precision.</p>` : "";
   document.getElementById("body").innerHTML = `
     <div class="metrics">${stats}</div>
+    ${costHTML}
     <div class="legend"><span><i style="background:#4a4f57"></i>strategy</span>
-      ${h.bench_label?`<span><i style="background:#9aa0c0"></i>${h.bench_label} (buy &amp; hold)</span>`:''}
+      ${benches.map(b=>`<span><i style="background:${b.color}"></i>${b.label} (buy &amp; hold)</span>`).join("")}
       ${h.seeded_days?'<span><i style="background:#cfcfd4"></i>seed / live divider</span>':''}</div>
     <svg class="eq" id="eq" preserveAspectRatio="none"></svg>
+    ${perfHTML}
     ${exposureHTML}
     <h2 class="sec">Current book</h2>
     <table><thead><tr><th>Instrument</th><th>Leg</th><th>Weight</th></tr></thead><tbody>${positions}</tbody></table>
     <h2 class="sec">Recent sessions</h2>
     <table><thead><tr><th>Date</th><th>Realized</th><th>Equity</th></tr></thead><tbody>${recent}</tbody></table>`;
-  requestAnimationFrame(()=>eqchart(document.getElementById("eq"), s.equity, s.split_frac, s.bench));
+  requestAnimationFrame(()=>eqchart(document.getElementById("eq"), s.equity, s.split_frac, benches));
 }
 
 async function load(){

@@ -24,7 +24,7 @@ from . import sizing
 from .config import Settings
 from .cross_section import _groups_for, rank_weights
 from .models import Bar
-from .universes import REGION_OF, SIZE_OF, STYLE_OF
+from .universes import BENCH_REGION, REGION_OF, STYLE_BOX
 
 
 def _latest_date(series: dict[str, list[Bar]]) -> str:
@@ -47,10 +47,12 @@ def new_ledger() -> dict:
 
 
 def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings,
-                  seed: bool = False, benchmark_bars: Optional[list[Bar]] = None) -> dict:
+                  seed: bool = False,
+                  benchmarks: Optional[dict[str, list[Bar]]] = None) -> dict:
     """Append one session to the ledger for the latest date. Idempotent: a date
-    already recorded (or no fresh bar) is a no-op. `benchmark_bars` (e.g. VT) is
-    marked buy-and-hold alongside the book for an apples-to-apples comparison."""
+    already recorded (or no fresh bar) is a no-op. `benchmarks` maps a label (e.g.
+    "VT", "VTI") to its bars; each is marked buy-and-hold alongside the book for an
+    apples-to-apples, total-return comparison."""
     cost = settings.sizing.cost_bps_per_side / 1e4
     insts = sorted(i for i, b in series.items() if len(b) >= settings.signal.min_history)
     if not insts:
@@ -63,7 +65,7 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
     prev = entries[-1] if entries else None
     prev_w: dict[str, float] = prev["weights"] if prev else {}
     equity = prev["equity"] if prev else 1.0
-    bench_equity = (prev.get("bench_equity") if prev else 1.0) or 1.0
+    prev_bench: dict[str, float] = (prev.get("bench_equity") if prev else None) or {}
 
     # 1) Realize the previously-held cross-sectional book (weights sum to exposure,
     #    so the portfolio return is the weighted sum — not an average).
@@ -97,33 +99,40 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
     net = realized - cost * turnover
     equity = round(equity * (1.0 + net), 6)
 
-    # 4) Mark the buy-and-hold benchmark over the same span (if provided).
-    bench_ret = 0.0
-    if prev and benchmark_bars:
-        bp = _close_on_or_before(benchmark_bars, prev["date"])
-        bn = _close_on_or_before(benchmark_bars, latest[:10])
-        if bp and bn:
-            bench_ret = bn / bp - 1.0
-    bench_equity = round(bench_equity * (1.0 + bench_ret), 6)
+    # 4) Mark each buy-and-hold benchmark over the same span (if provided).
+    bench_equity: Optional[dict[str, float]] = None
+    if benchmarks:
+        bench_equity = {}
+        for label, bars in benchmarks.items():
+            be = prev_bench.get(label, 1.0) or 1.0
+            bench_ret = 0.0
+            if prev and bars:
+                bp = _close_on_or_before(bars, prev["date"])
+                bn = _close_on_or_before(bars, latest[:10])
+                if bp and bn:
+                    bench_ret = bn / bp - 1.0
+            bench_equity[label] = round(be * (1.0 + bench_ret), 6)
 
     entries.append({
         "date": latest[:10],
         "weights": new_w,
         "realized_return": round(net, 6),
         "equity": equity,
-        "bench_equity": bench_equity if benchmark_bars else None,
+        "bench_equity": bench_equity,
         "n_long": sum(1 for v in new_w.values() if v > 0),
         "n_short": sum(1 for v in new_w.values() if v < 0),
         "seed": bool(seed),
     })
     ledger["universe"] = insts
     ledger["inception"] = ledger.get("inception") or entries[0]["date"]
+    ledger["cost_bps_per_side"] = settings.sizing.cost_bps_per_side
+    ledger["rebalance_bars"] = settings.cross_section.rebalance_bars
     ledger["updated"] = time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())
     return ledger
 
 
 def seed_ledger(series: dict[str, list[Bar]], settings: Settings, sessions: int = 120,
-                benchmark_bars: Optional[list[Bar]] = None) -> dict:
+                benchmarks: Optional[dict[str, list[Bar]]] = None) -> dict:
     """Bootstrap a ledger by replaying the last `sessions` trading days walk-forward.
 
     This is a faithful out-of-sample replay (each step sees only data up to that
@@ -134,34 +143,94 @@ def seed_ledger(series: dict[str, list[Bar]], settings: Settings, sessions: int 
     all_dates = sorted({b.asof[:10] for bars in series.values() for b in bars})
     for d in all_dates[-sessions:]:
         sub = {i: [b for b in bars if b.asof[:10] <= d] for i, bars in series.items()}
-        bench = [b for b in benchmark_bars if b.asof[:10] <= d] if benchmark_bars else None
-        update_ledger(ledger, sub, settings, seed=True, benchmark_bars=bench)
+        bench = ({label: [b for b in bars if b.asof[:10] <= d]
+                  for label, bars in benchmarks.items()} if benchmarks else None)
+        update_ledger(ledger, sub, settings, seed=True, benchmarks=bench)
     return ledger
 
 
 _REGION_NAME = {"US": "United States", "DEV": "Developed intl", "EM": "Emerging mkts"}
+_BENCH_COLORS = {"VT": "#6f76a8", "VTI": "#b08968"}
+
+
+def _blend_style_box(weights: dict[str, float]) -> dict[str, float]:
+    """Blend each holding's underlying 9-cell style-box composition by its weight,
+    so the result is the book's true Morningstar-style footprint (not one box per
+    fund). Normalized to shares of the classified gross."""
+    box: dict[str, float] = {}
+    for inst, w in weights.items():
+        if w <= 0:
+            continue
+        comp = STYLE_BOX.get(inst)
+        if not comp:
+            continue
+        csum = sum(comp.values()) or 1.0
+        for cell, share in comp.items():
+            if share:
+                box[cell] = box.get(cell, 0.0) + w * share / csum
+    total = sum(box.values()) or 1.0
+    return {k: round(v / total, 4) for k, v in box.items()}
+
+
+def _by_style(style_box: dict[str, float]) -> dict[str, float]:
+    out: dict[str, float] = {}
+    for cell, v in style_box.items():
+        st = cell.split("|")[1]
+        out[st] = round(out.get(st, 0.0) + v, 4)
+    return out
 
 
 def _exposure(weights: dict[str, float]) -> dict:
-    """Region / size / style breakdown + 3x3 style box of the current long book,
-    as shares of invested gross. For the box, intl/EM 'large/mid' maps to Large."""
+    """Region breakdown + blended 3x3 style box of the current long book, as shares
+    of invested gross. Region is one-per-fund (REGION_OF); the style box uses each
+    fund's underlying composition (STYLE_BOX), blended by weight."""
     pos = {i: w for i, w in weights.items() if w > 0}
     total = sum(pos.values()) or 1.0
     region: dict[str, float] = {}
-    style: dict[str, float] = {}
-    box: dict[str, float] = {}
     for i, w in pos.items():
-        r, sz, st = REGION_OF.get(i, "?"), SIZE_OF.get(i, "?"), STYLE_OF.get(i, "?")
+        r = REGION_OF.get(i, "?")
         region[r] = region.get(r, 0.0) + w
-        style[st] = style.get(st, 0.0) + w
-        bsz = "large" if sz == "largemid" else sz
-        box[f"{bsz}|{st}"] = box.get(f"{bsz}|{st}", 0.0) + w
+    style_box = _blend_style_box(pos)
     return {
         "gross": round(total, 4),
         "by_region": {_REGION_NAME.get(k, k): round(v / total, 4) for k, v in region.items()},
-        "by_style": {k: round(v / total, 4) for k, v in style.items()},
-        "style_box": {k: round(v / total, 4) for k, v in box.items()},
+        "by_style": _by_style(style_box),
+        "style_box": style_box,
     }
+
+
+def _bench_exposure(label: str) -> dict:
+    """Region split + blended style box for a buy-and-hold benchmark."""
+    region = BENCH_REGION.get(label, {})
+    style_box = _blend_style_box({label: 1.0})
+    return {
+        "gross": 1.0,
+        "by_region": {_REGION_NAME.get(k, k): round(v, 4) for k, v in region.items()},
+        "by_style": _by_style(style_box),
+        "style_box": style_box,
+    }
+
+
+def _benchmarks_state(entries: list[dict], eq: list[float], idx: list[int],
+                      bars_per_year: float) -> list[dict]:
+    """Per-benchmark equity curve, total/excess return, and risk stats."""
+    labels = list((entries[-1].get("bench_equity") or {}).keys())
+    out = []
+    for label in labels:
+        beq = [(e.get("bench_equity") or {}).get(label, 1.0) or 1.0 for e in entries]
+        brets = [(beq[i] / beq[i - 1] - 1.0) if beq[i - 1] else 0.0
+                 for i in range(1, len(beq))]
+        out.append({
+            "label": label,
+            "color": _BENCH_COLORS.get(label, "#9aa0c0"),
+            "total_return": round(beq[-1] - 1.0, 6),
+            "excess": round((eq[-1] - 1.0) - (beq[-1] - 1.0), 6),
+            "sharpe": round(analytics.sharpe(brets, bars_per_year), 2),
+            "max_drawdown": round(analytics.max_drawdown(beq), 4),
+            "equity": [round(beq[i], 5) for i in idx],
+            "exposure": _bench_exposure(label),
+        })
+    return out
 
 
 def build_ledger_state(ledger: dict, bars_per_year: float = 252.0) -> dict:
@@ -170,12 +239,10 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0) -> dict:
     if not entries:
         return {"header": {"days": 0, "inception": "", "total_return": 0.0,
                            "universe": ledger.get("universe", [])},
-                "equity": [], "bench": [], "dates": [], "positions": [], "recent": [],
-                "exposure": None}
+                "equity": [], "benchmarks": [], "dates": [], "positions": [],
+                "recent": [], "exposure": None}
     eq = [e["equity"] for e in entries]
     rets = [e["realized_return"] for e in entries]
-    has_bench = entries[-1].get("bench_equity") is not None
-    beq = [e.get("bench_equity") or 1.0 for e in entries] if has_bench else []
     n = len(eq)
     idx = list(range(0, n, max(1, n // 160)))
     last = entries[-1]
@@ -185,6 +252,7 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0) -> dict:
          for i, w in last["weights"].items()),
         key=lambda r: -r["weight"])
     live = sum(1 for e in entries if not e.get("seed"))
+    cost_side = ledger.get("cost_bps_per_side")
     return {
         "header": {
             "days": n,
@@ -193,17 +261,18 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0) -> dict:
             "inception": ledger.get("inception", entries[0]["date"]),
             "updated": ledger.get("updated", ""),
             "total_return": round(eq[-1] - 1.0, 6),
-            "bench_label": ledger.get("benchmark"),
-            "bench_return": round(beq[-1] - 1.0, 6) if has_bench else None,
             "sharpe": round(analytics.sharpe(rets, bars_per_year), 2),
             "max_drawdown": round(analytics.max_drawdown(eq), 4),
             "hit_rate": round(analytics.hit_rate(rets), 3),
+            "cost_bps_per_side": cost_side,
+            "cost_bps_roundtrip": (round(cost_side * 2, 1) if cost_side is not None else None),
+            "rebalance_bars": ledger.get("rebalance_bars"),
             "universe": ledger.get("universe", []),
             "n_long": last["n_long"],
             "n_short": last["n_short"],
         },
         "equity": [round(eq[i], 5) for i in idx],
-        "bench": [round(beq[i], 5) for i in idx] if has_bench else [],
+        "benchmarks": _benchmarks_state(entries, eq, idx, bars_per_year),
         "dates": [entries[i]["date"] for i in idx],
         "split_frac": ((n - live) / n) if n else 0.0,
         "positions": positions,

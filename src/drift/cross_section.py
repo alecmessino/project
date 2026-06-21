@@ -202,6 +202,36 @@ def _combined_tilt(closes: dict[str, list[float]], cs: CrossSectionSettings) -> 
     return {k: (anchor.get(k, 1.0) if anchor else 1.0) * dial.get(k, 1.0) for k in keys}
 
 
+def _tax_aware_weights(target: dict[str, float], prev: dict[str, float],
+                       cs: CrossSectionSettings) -> dict[str, float]:
+    """No-trade band for taxable accounts: hold the previous weight on a name whose
+    target barely moved, so small rebalancing trades don't churn gains into short-term
+    realizations. A name that leaves the held set (target 0) is still exited in full,
+    and a genuinely new/large target is taken. The kept book is renormalized back to the
+    same gross. No-op when `tax_aware` is off (returns the target unchanged)."""
+    if not cs.tax_aware or not prev:
+        return target
+    band = cs.no_trade_band
+    kept: dict[str, float] = {}      # continuing names whose target barely moved -> no trade
+    traded: dict[str, float] = {}    # names entering/exiting or moving beyond the band
+    for k in set(target) | set(prev):
+        t = target.get(k, 0.0)
+        p = prev.get(k, 0.0)
+        if t > 0 and p > 0 and abs(t - p) <= band:
+            kept[k] = p
+        else:
+            traded[k] = t
+    # Hold the kept names exactly (zero turnover); fill the remaining gross budget with
+    # the traded names, rescaled — so only names that actually move incur a trade.
+    resid = cs.gross_exposure - sum(kept.values())
+    traded_sum = sum(v for v in traded.values() if v > 0)
+    out = dict(kept)
+    scale = (resid / traded_sum) if (traded_sum > 0 and resid > 0) else 1.0
+    for k, v in traded.items():
+        out[k] = v * scale if v > 0 else 0.0
+    return out
+
+
 @dataclass
 class RankRow:
     instrument: str
@@ -249,7 +279,8 @@ def cross_book_streams(series: dict[str, list[Bar]], settings: Settings) -> list
                     scores[inst] = sig.momentum_score(cl, s.lookback, s.vol_window)
                     vols[inst] = sizing.annualize_vol(sig.realized_vol(cl, s.vol_window), bpy)
             tilt = _combined_tilt(closes_now, cs)
-            weights = rank_weights(scores, vols, cs, groups, tilt) if scores else dict(weights)
+            target = rank_weights(scores, vols, cs, groups, tilt) if scores else dict(weights)
+            weights = _tax_aware_weights(target, weights, cs)
         port = dw_tot = 0.0
         for inst in series:
             w = weights.get(inst, 0.0)
@@ -259,6 +290,64 @@ def cross_book_streams(series: dict[str, list[Bar]], settings: Settings) -> list
             prev[inst] = w
         out.append((dn, port - cost * dw_tot))
     return out
+
+
+def cross_book_entries(series: dict[str, list[Bar]], settings: Settings) -> list[dict]:
+    """Like `cross_book_streams`, but records the full per-session book (date, weights,
+    per-name prices, net return, equity) over the whole ragged history — the same shape
+    the forward ledger stores, so `drift.tax.after_tax_track` can run an after-tax
+    simulation over decades. Efficient single pass (no O(n^2) sub-slicing)."""
+    s = settings.signal
+    cs = settings.cross_section
+    cost = settings.sizing.cost_bps_per_side / 1e4
+    bpy = settings.engine.bars_per_year
+    rebalance = max(1, cs.rebalance_bars)
+    groups = _groups_for(cs)
+
+    price = {inst: {b.asof: b.close for b in bars} for inst, bars in series.items()}
+    seq = {inst: [b.close for b in bars] for inst, bars in series.items()}
+    pos = {inst: {b.asof: i for i, b in enumerate(bars)} for inst, bars in series.items()}
+    all_dates = sorted({b.asof for bars in series.values() for b in bars})
+
+    weights = {inst: 0.0 for inst in series}
+    prev = dict(weights)
+    equity = 1.0
+    entries: list[dict] = []
+    for di in range(len(all_dates) - 1):
+        d, dn = all_dates[di], all_dates[di + 1]
+        if di % rebalance == 0:
+            scores, vols, closes_now = {}, {}, {}
+            for inst in series:
+                i = pos[inst].get(d)
+                if i is not None and i + 1 >= s.min_history:
+                    cl = seq[inst][: i + 1]
+                    closes_now[inst] = cl
+                    scores[inst] = sig.momentum_score(cl, s.lookback, s.vol_window)
+                    vols[inst] = sizing.annualize_vol(sig.realized_vol(cl, s.vol_window), bpy)
+            tilt = _combined_tilt(closes_now, cs)
+            target = rank_weights(scores, vols, cs, groups, tilt) if scores else dict(weights)
+            weights = _tax_aware_weights(target, weights, cs)
+        port = dw_tot = 0.0
+        prices_now: dict[str, float] = {}
+        for inst in series:
+            w = weights.get(inst, 0.0)
+            pd, pn = price[inst].get(d), price[inst].get(dn)
+            if pd:
+                prices_now[inst] = pd
+            port += w * ((pn / pd - 1.0) if (pd and pn) else 0.0)
+            dw_tot += abs(w - prev[inst])
+            prev[inst] = w
+        net = port - cost * dw_tot
+        equity = round(equity * (1.0 + net), 6)
+        entries.append({
+            "date": dn[:10],
+            "weights": {i: round(w, 4) for i, w in weights.items() if w != 0.0},
+            "prices": {i: round(p, 6) for i, p in prices_now.items()},
+            "realized_return": round(net, 6),
+            "equity": equity,
+            "seed": True,
+        })
+    return entries
 
 
 def rank_snapshot(series: dict[str, list[Bar]], settings: Settings) -> list[RankRow]:
@@ -361,7 +450,8 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
                 scores[inst] = sig.momentum_score(closes, s.lookback, s.vol_window)
                 vols[inst] = sizing.annualize_vol(sig.realized_vol(closes, s.vol_window), bpy)
             tilt = _combined_tilt(closes_now, cs)
-            weights = rank_weights(scores, vols, cs, groups, tilt) if scores else {inst: 0.0 for inst in instruments}
+            target = rank_weights(scores, vols, cs, groups, tilt) if scores else {inst: 0.0 for inst in instruments}
+            weights = _tax_aware_weights(target, weights, cs)
 
         gross_pnl = net_pnl = 0.0
         held = 0

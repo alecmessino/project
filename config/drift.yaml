@@ -104,6 +104,15 @@ cross_section:
   tilt_reversion_bars: 756        # ~3 years
   tilt_reversion_strength: 0.5
   tilt_dial_cap: 1.8
+  # Tax-aware rebalancing (taxable sleeves). OFF, and deliberately so: the 40-year
+  # after-tax backtest shows that SLOWING this momentum book to harvest long-term
+  # treatment LOWERS after-tax return (monthly +948% vs annual +808% after-tax) —
+  # the cadence-sensitive momentum alpha you give up exceeds the tax you save, and a
+  # no-trade band barely dents turnover (entries/exits dominate). The real tax levers
+  # for a high-turnover sleeve are ASSET LOCATION (hold it tax-advantaged) and TLH,
+  # not slowing it down. The band remains available for research.
+  tax_aware: false
+  no_trade_band: 0.03
   # Neutralize the ranking within a grouping: "none", "region", "size", or "style".
   # region-neutral -> isolates which size/style leads within each region;
   # size-neutral   -> isolates region/style within each size bucket;

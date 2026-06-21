@@ -314,7 +314,7 @@ def ledger(
         console.print(f"seeded {len(led['entries'])} sessions (walk-forward)")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(_json.dumps(led, indent=0))
-    st = build_ledger_state(led, bars_per_year=settings.engine.bars_per_year)
+    st = build_ledger_state(led, bars_per_year=settings.engine.bars_per_year, tax=settings.tax)
     export_ledger(st, out)
     h = st["header"]
     console.print(f"[bold]ledger[/] {h['days']} sessions ({h['live_days']} live), "

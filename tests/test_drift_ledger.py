@@ -121,14 +121,17 @@ def test_cost_assumptions_surface_in_header():
 def test_after_tax_track_is_a_drag_on_positive_gains():
     from drift.config import TaxSettings
     led = L.seed_ledger(_series(), _settings(), sessions=80)
+    assert "prices" in led["entries"][-1]                        # lot basis is recorded
     st = L.build_ledger_state(led, tax=TaxSettings(enabled=True))
-    h = st["header"]
+    h, t = st["header"], st["tax"]
     assert h["annual_turnover"] >= 0
     if h["total_return"] > 0:
         assert h["after_tax_total_return"] <= h["total_return"]   # tax only subtracts
         assert h["tax_drag"] >= 0
     assert st["after_tax"] and len(st["after_tax"]) == len(st["equity"])
-    assert h["tax_term"] in ("long-term", "short-term")
+    assert 0.0 <= h["short_term_share"] <= 1.0
+    assert t and t["rate_st"] >= t["rate_lt"]                    # short-term taxed harder
+    assert t["after_tax_liquidated"] <= t["after_tax_return"]    # liquidation costs more tax
 
 
 def test_after_tax_can_be_disabled():

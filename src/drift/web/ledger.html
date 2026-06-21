@@ -276,15 +276,18 @@ function render(s){
       strategy stays in the market while leaning where the forward opportunity looks better. It can still
       lag in a narrow mega-cap-growth melt-up; use the buttons above to see windows where it led versus
       lagged.</div>
-    ${h.after_tax_total_return!=null ? `<div class="note-box"><b>Tax efficiency (illustrative).</b>
-      In a taxable account this book is <b>not</b> tax-efficient as-is: monthly momentum rotation runs
-      ~<b>${(h.annual_turnover*100).toFixed(0)}%</b> annual turnover (avg holding ~${h.avg_holding_days} trading
-      days), so realized gains are mostly <b>${h.tax_term}</b>. Modeled at a ${(h.tax_rate_applied*100).toFixed(1)}%
-      rate, that trims <b>${pct(h.total_return)}</b> pre-tax to <b>${pct(h.after_tax_total_return)}</b> after-tax
-      — a <b>${(h.tax_drag*100).toFixed(1)}%</b> drag. Levers to recover it: longer holds (slower rebalance to
-      push gains long-term), tax-loss harvesting via wash-sale-safe substitutes (e.g. IVV→SCHX, IWN→VBR), and
-      deferring short-term gains. <span class="note">Unit-level model, not lot accounting; assumes top-bracket
-      rates — set to a client's actual rates. Not tax advice.</span></div>` : ""}` : "";
+    ${h.after_tax_total_return!=null ? `<div class="note-box"><b>Tax efficiency (illustrative${s.tax&&s.tax.state&&s.tax.state!=="—"?", "+s.tax.state:""}).</b>
+      In a taxable account this book is <b>not</b> tax-efficient: monthly momentum runs
+      ~<b>${(h.annual_turnover*100).toFixed(0)}%</b> annual turnover (avg holding ~${h.avg_holding_days} trading days),
+      so <b>${(h.short_term_share*100).toFixed(0)}%</b> of realized gains are <b>short-term</b> (taxed at
+      ${s.tax?(s.tax.rate_st*100).toFixed(1):"—"}% vs ${s.tax?(s.tax.rate_lt*100).toFixed(1):"—"}% long-term). A lot-level
+      model trims <b>${pct(h.total_return)}</b> pre-tax to <b>${pct(h.after_tax_total_return)}</b> after-tax — a
+      <b>${(h.tax_drag*100).toFixed(1)}%</b> drag — with another ${s.tax?pct(s.tax.liquidation_tax*-1):""} owed if liquidated today.
+      <b>The fix is not to slow the strategy down</b> — the 40-yr backtest shows that <i>lowers</i> after-tax return
+      (the momentum alpha is too cadence-sensitive). The levers are <b>asset location</b> (hold this sleeve in a
+      tax-advantaged account) and <b>tax-loss harvesting</b> via wash-sale-safe substitutes (IVV→SCHX, IWN→VBR…).
+      <span class="note">Lot-level model on the book's own marks, not custodian accounting; top-bracket federal,
+      no state unless shown — set a client's actual rates. Not tax advice.</span></div>` : ""}` : "";
   const positions = s.positions.map(p=>`<tr><td>${p.instrument}</td>
     <td><span class="tag ${p.leg==='—'?'--':p.leg}">${p.leg}</span></td>
     <td>${p.weight>=0?"+":""}${p.weight.toFixed(2)}</td></tr>`).join("");

@@ -22,6 +22,8 @@ EXHIBITS = [
      "Append-only, out-of-sample paper track record — marked and committed daily."),
     ("Long-history tearsheet", "tearsheet.html",
      "Decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample."),
+    ("Tax Lab", "taxlab.html",
+     "After-tax return, tax-loss-harvesting value, and the asset-location benefit — by bracket and state."),
     ("Dashboard", "equities.html",
      "Live trend signals, the relative-strength ranking, and per-name backtests across the matrix."),
     ("Case studies", "equities_case_studies.html",

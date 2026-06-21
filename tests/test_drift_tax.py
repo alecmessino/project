@@ -64,3 +64,41 @@ def test_band_is_noop_when_disabled():
     target = {"A": 0.52, "B": 0.48}
     prev = {"A": 0.5, "B": 0.5}
     assert _tax_aware_weights(target, prev, _cs(tax_aware=False)) == target
+
+
+def test_gain_profile_decomposes_and_is_rate_independent():
+    from drift.tax import gain_profile
+    px = [{"A": 1.0 + 0.002 * i, "B": 1.0} for i in range(40)]
+    w = [{"A": 1.0}] * 6 + [{"B": 1.0}] * 6      # sell appreciated A early -> short-term gain
+    eq = 1.0
+    ents = []
+    for i, (wi, pxi) in enumerate(zip(w, px)):
+        eq = round(eq * 1.0, 6)
+        ents.append({"date": f"2020-01-{i+1:02d}", "weights": wi, "prices": pxi,
+                     "realized_return": 0.0, "equity": eq, "seed": True})
+    gp = gain_profile(ents, lt_holding_bars=252)
+    assert gp is not None
+    assert gp.st_realized > 0 and gp.lt_realized == 0      # quick sell -> all short-term
+    assert 0.0 <= gp.short_term_share <= 1.0
+
+
+def test_build_taxlab_embeds_profile_and_states(tmp_path):
+    import json
+    from drift import ledger as L
+    from drift.config import Settings
+    from drift.taxlab import build_taxlab
+    from drift.feed.synthetic import SyntheticFeed
+    from dataclasses import replace
+    from datetime import date, timedelta
+    s = Settings(signal={"lookback": 20, "vol_window": 10, "breakout_channel": 15})
+    start = date(2020, 1, 1)
+    series = {}
+    for i, d in enumerate((0.5, -0.3, 0.2, 0.4)):
+        bars = SyntheticFeed(instruments=(f"S{i}",), n_bars=300, regimes=[(300, d)], seed=5 + i).series(f"S{i}")
+        series[f"S{i}"] = [replace(b, asof=(start + timedelta(days=k)).isoformat()) for k, b in enumerate(bars)]
+    led = L.seed_ledger(series, s, sessions=120)
+    (tmp_path / "ledger.json").write_text(json.dumps(led))
+    st = build_taxlab(tmp_path)
+    assert st["profile"] and "st_realized" in st["profile"]
+    assert "CA" in st["states"] and st["brackets"]
+    json.dumps(st)                                          # must be embeddable

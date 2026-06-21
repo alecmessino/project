@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Driftwood — Tax Lab</title>
+<link rel="canonical" href="https://alecmessino.github.io/project/taxlab.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Driftwood — Tax Lab" />
+<meta property="og:description" content="After-tax return, tax-loss-harvesting value, and the asset-location benefit for the live momentum sleeve — personalized by federal bracket and state. Research only, not tax advice." />
+<meta name="twitter:card" content="summary" />
+<style>
+  :root{--bg:#fff;--soft:#fafafa;--line:#e8e8ea;--ink:#1b1b1f;--dim:#5f5f68;
+    --pos:#2f6f5b;--neg:#9b4439;--slate:#4a4f57;--rule:#222226;--accent:#15806a}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.6 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:820px;margin:0 auto;padding:56px 26px 90px}
+  header{border-top:3px solid var(--rule);padding-top:20px}
+  h1{font-size:27px;margin:0 0 6px;font-weight:680;letter-spacing:-.3px}
+  h1 .w{color:var(--slate)}
+  .lede{color:var(--dim);font-size:14.5px;max-width:65ch;margin:8px 0 0;line-height:1.65}
+  .controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:26px 0 6px}
+  .ctl label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);margin-bottom:5px;font-weight:600}
+  .ctl select{width:100%;font:inherit;font-size:13.5px;padding:8px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:22px 0}
+  .card{background:#fff;padding:15px 16px}
+  .card .v{font-size:22px;font-weight:680;font-variant-numeric:tabular-nums;letter-spacing:-.4px}
+  .card .l{font-size:11.5px;color:var(--dim);margin-top:3px;line-height:1.35}
+  .pos{color:var(--pos)} .neg{color:var(--neg)} .accent{color:var(--accent)}
+  h2{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);margin:38px 0 12px;font-weight:700}
+  .wf{display:flex;flex-direction:column;gap:7px;margin:6px 0}
+  .wf .row{display:flex;align-items:center;gap:10px;font-size:13px}
+  .wf .lbl{width:210px;color:var(--ink)}
+  .wf .bar{flex:1;height:16px;background:var(--soft);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  .wf .fill{height:100%}
+  .wf .amt{width:74px;text-align:right;font-variant-numeric:tabular-nums;color:var(--dim)}
+  .loc{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:var(--soft);margin-top:6px}
+  .loc .big{font-size:24px;font-weight:680;color:var(--accent);font-variant-numeric:tabular-nums}
+  .loc p{margin:8px 0 0;font-size:13.5px;color:var(--ink);line-height:1.6}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13px;margin-top:4px}
+  th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  thead th{color:var(--dim);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  .note{background:var(--soft);border:1px solid var(--line);border-radius:9px;padding:13px 16px;font-size:12.5px;color:var(--slate);line-height:1.6;margin-top:26px}
+  .foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);color:var(--dim);font-size:12.5px}
+  a.back{color:var(--slate);text-decoration:none}a.back:hover{text-decoration:underline}
+  @media(max-width:620px){.controls{grid-template-columns:1fr}.wf .lbl{width:130px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Drift<span class="w">wood</span> · Tax Lab</h1>
+    <p class="lede">What a taxable investor actually <i>keeps</i> from the live momentum sleeve — after federal
+      and state tax — and the two levers that move it: <b>tax-loss harvesting</b> and <b>asset location</b>.
+      Pick a bracket and state; everything recomputes in the browser from the book's real realized-gain profile.</p>
+  </header>
+
+  <div class="controls" id="controls">
+    <div class="ctl"><label>Federal bracket</label><select id="bracket"></select></div>
+    <div class="ctl"><label>State of residence</label><select id="state"></select></div>
+    <div class="ctl"><label>Account</label><select id="account">
+      <option value="taxable">Taxable (brokerage)</option>
+      <option value="advantaged">Tax-advantaged (IRA / Roth)</option>
+    </select></div>
+  </div>
+  <div id="periodnote" class="lede" style="margin:0 0 4px"></div>
+
+  <div class="cards" id="cards"></div>
+
+  <h2>Where the tax goes (over the track)</h2>
+  <div class="wf" id="waterfall"></div>
+
+  <h2>Asset location — the biggest lever</h2>
+  <div class="loc" id="location"></div>
+
+  <h2>Tax-loss-harvesting value by state <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· at the selected bracket</span></h2>
+  <table id="tlhtable"><thead><tr><th>State</th><th>LT rate</th><th>ST rate</th><th>TLH value (total)</th><th>per year</th></tr></thead><tbody></tbody></table>
+
+  <div class="note" id="note"></div>
+  <div class="foot"><a class="back" href="index.html">← back to Driftwood</a><div id="gen" style="margin-top:8px"></div></div>
+</div>
+
+<script>
+window.__STATE__ = {"header": {"generated": "2026-06-21 21:52:19 UTC", "inception": "2024-09-16", "updated": "2026-06-21 21:36:18 UTC", "sessions": 441, "years": 1.75, "pretax_return": 0.403428, "annual_turnover": 4.009, "short_term_share": 0.9515, "avg_holding_days": 63}, "profile": {"pretax_return": 0.403428, "st_realized": 0.360318, "lt_realized": 0.018373, "harvested_st": 0.067173, "harvested_lt": 0.0, "embedded_st": 0.099371, "embedded_lt": 0.0, "years": 1.75}, "states": {"\u2014": [0.0, 0.0], "CA": [0.133, 0.133], "NY": [0.109, 0.109], "NJ": [0.1075, 0.1075], "OR": [0.099, 0.099], "MN": [0.0985, 0.0985], "MA": [0.05, 0.05], "CO": [0.044, 0.044], "WA": [0.07, 0.0], "TX": [0.0, 0.0], "FL": [0.0, 0.0], "TN": [0.0, 0.0], "NH": [0.0, 0.0]}, "brackets": [{"label": "22% ordinary \u00b7 15% LT", "ord": 0.22, "lt": 0.15, "niit": 0.0}, {"label": "24% ordinary \u00b7 15% LT", "ord": 0.24, "lt": 0.15, "niit": 0.0}, {"label": "32% ordinary \u00b7 15% LT \u00b7 NIIT", "ord": 0.32, "lt": 0.15, "niit": 0.038}, {"label": "35% ordinary \u00b7 20% LT \u00b7 NIIT", "ord": 0.35, "lt": 0.2, "niit": 0.038}, {"label": "37% ordinary \u00b7 20% LT \u00b7 NIIT (top)", "ord": 0.37, "lt": 0.2, "niit": 0.038}]};
+const pct=(x,d=1)=>x==null?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
+const apct=(x,d=1)=>x==null?"—":(x*100).toFixed(d)+"%";
+const $=id=>document.getElementById(id);
+
+let S=null;
+function rates(){
+  const b=S.brackets[+$("bracket").value];
+  const st=$("state").value, [slt,sst]=S.states[st];
+  return {r_lt:b.lt+b.niit+slt, r_st:b.ord+b.niit+sst, r_ord:b.ord+b.niit+sst, state:st, blabel:b.label, slt, sst, b};
+}
+function calc(r){
+  const p=S.profile;
+  const net_st=Math.max(0,p.st_realized-p.harvested_st);
+  const net_lt=Math.max(0,p.lt_realized-p.harvested_lt);
+  const tax_st=net_st*r.r_st, tax_lt=net_lt*r.r_lt;
+  const tlh=p.harvested_st*r.r_st+p.harvested_lt*r.r_lt;     // tax saved by harvesting
+  const drag=tax_st+tax_lt;
+  const after_tax=p.pretax_return-drag;
+  const liq=p.embedded_st*r.r_st+p.embedded_lt*r.r_lt;
+  return {net_st,net_lt,tax_st,tax_lt,tlh,drag,after_tax,liq,after_tax_liq:after_tax-liq,pretax:p.pretax_return};
+}
+function render(){
+  const r=rates(), c=calc(r), p=S.profile, yrs=p.years||1;
+  const adv=$("account").value==="advantaged";
+  const af = adv ? p.pretax_return : c.after_tax;
+  $("periodnote").textContent = `Track: ${S.header.sessions} sessions (~${yrs}y) · ${apct(S.header.annual_turnover)} annual turnover · `+
+    `${apct(S.header.short_term_share)} of gains short-term (~${S.header.avg_holding_days}-day holds) · rates: ${apct(r.r_st)} ST / ${apct(r.r_lt)} LT.`;
+  const cards=[
+    ["Pre-tax return", pct(p.pretax_return), "what the sleeve earned", ""],
+    [adv?"After-tax (tax-advantaged)":"After-tax (this account)", pct(af), adv?"no annual tax drag":"net of "+r.blabel, af>=0?"pos":"neg"],
+    ["Tax drag", adv?"0.0%":apct(-c.drag,1), adv?"sheltered":apct(c.drag/p.pretax_return)+" of the gain", adv?"pos":"neg"],
+    ["If liquidated today", adv?pct(p.pretax_return):pct(c.after_tax_liq), adv?"tax-free":"after embedded-gain tax", ""],
+  ];
+  $("cards").innerHTML=cards.map(([l,v,s,t])=>`<div class="card"><div class="v ${t}">${v}</div><div class="l"><b>${l}</b><br>${s}</div></div>`).join("");
+
+  // waterfall (taxable view always, to show what location/​harvesting save)
+  const rows=[
+    ["Short-term gains tax", c.tax_st, "var(--neg)"],
+    ["Long-term gains tax", c.tax_lt, "var(--neg)"],
+    ["Tax-loss harvesting (saved)", -c.tlh, "var(--pos)"],
+    ["Embedded gain — tax if sold", c.liq, "var(--neg)"],
+  ];
+  const mx=Math.max(...rows.map(x=>Math.abs(x[1])),1e-9);
+  $("waterfall").innerHTML=rows.map(([l,v,col])=>`<div class="row"><span class="lbl">${l}</span>
+    <span class="bar"><span class="fill" style="width:${Math.abs(v)/mx*100}%;background:${col}"></span></span>
+    <span class="amt">${v>=0?"−":"+"}${apct(Math.abs(v))}</span></div>`).join("");
+
+  // asset location
+  const alpha=c.drag;                  // recovered by holding the sleeve tax-advantaged
+  $("location").innerHTML=`<div class="big">${apct(alpha)} recovered</div>
+    <p>Holding this <b>high-turnover</b> sleeve in a <b>tax-advantaged</b> account (IRA/Roth) instead of a taxable
+    one recovers the entire <b>${apct(c.drag)}</b> drag over the track (~<b>${apct(c.drag/yrs)}/yr</b>) — plus the
+    <b>${apct(c.liq)}</b> embedded-gain tax you'd otherwise owe eventually. Because ${apct(S.header.short_term_share)}
+    of its gains are short-term (taxed at ${apct(r.r_st)}), this sleeve is the textbook candidate for the
+    <b>tax-advantaged</b> bucket; park low-turnover, qualified-dividend holdings in taxable instead. This dominates
+    any attempt to tax-manage the sleeve by trading it less.</p>`;
+
+  // TLH value by state
+  const order=Object.keys(S.states);
+  $("tlhtable").querySelector("tbody").innerHTML=order.map(st=>{
+    const [slt,sst]=S.states[st];
+    const rr={r_lt:r.b.lt+r.b.niit+slt, r_st:r.b.ord+r.b.niit+sst};
+    const tlh=p.harvested_st*rr.r_st+p.harvested_lt*rr.r_lt;
+    const hl = st===r.state ? ' style="font-weight:680;background:var(--soft)"':'';
+    return `<tr${hl}><td>${st==="—"?"No state tax":st}</td><td>${apct(rr.r_lt)}</td><td>${apct(rr.r_st)}</td>
+      <td>${apct(tlh)}</td><td>${apct(tlh/yrs)}</td></tr>`;}).join("");
+
+  $("note").innerHTML=`<b>Method &amp; caveats.</b> After-tax is a lot-level model run on the book's own daily
+    marks (FIFO lots, short vs long-term by holding period, harvested losses offsetting same-character gains
+    first) — illustrative, <b>not</b> a substitute for the custodian's cost basis or for tax advice. The
+    interactive figures apply your selected rates to the book's realized-gain decomposition and ignore the
+    second-order compounding of taxes paid, so they're close to but not identical to the ledger's paid-as-you-go
+    curve. State rates are representative top-of-bracket values; confirm a client's actual situation.`;
+  $("gen").textContent="Generated "+(S.header.generated||"")+" · figures from the live ledger.";
+}
+function init(){
+  S=window.__STATE__;
+  if(!S||!S.profile){document.querySelector(".wrap").insertAdjacentHTML("beforeend","<p class='lede'>No ledger data yet.</p>");return;}
+  $("bracket").innerHTML=S.brackets.map((b,i)=>`<option value="${i}"${i===S.brackets.length-1?" selected":""}>${b.label}</option>`).join("");
+  $("state").innerHTML=Object.keys(S.states).map(s=>`<option value="${s}">${s==="—"?"No state tax":s}</option>`).join("");
+  ["bracket","state","account"].forEach(id=>$(id).addEventListener("change",render));
+  render();
+}
+init();
+</script>
+</body>
+</html>

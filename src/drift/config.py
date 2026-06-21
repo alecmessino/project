@@ -114,6 +114,17 @@ class CrossSectionSettings(BaseModel):
     # band trims the residual churn on top. Off by default — turn on for a taxable sleeve.
     tax_aware: bool = False
     no_trade_band: float = 0.03           # min target-weight change to act on a held name
+    # "Meaningful turnover" — conviction (rank-hysteresis) selection. A held name is KEPT
+    # while it stays within the top (quantile + buffer); a new name ENTERS only if it clears
+    # the stricter top (quantile - buffer), so the book reacts to a real signal but ignores
+    # boundary noise. It works as intended (turnover 349%->187%, holds 72->135 days,
+    # short-term share 96%->63%) but, like a slower cadence, it LOWERS after-tax return on
+    # the 40-yr backtest (vanilla +947% vs +843-889% after-tax) — this momentum signal's
+    # alpha is inseparable from its turnover, so trading less can't help after-tax in ANY
+    # form. Kept OFF. The after-tax levers are asset location + TLH; native tax-efficiency
+    # would need a slower / longer-half-life base SIGNAL, not a rebalance gate.
+    conviction: bool = False
+    conviction_buffer: float = 0.15       # rank hysteresis as a fraction of the universe
     # Neutralize the ranking within a grouping before ranking: "none", "region",
     # or "factor". Region-neutral isolates which STYLE is trending (controlling for
     # region); factor-neutral isolates which REGION is trending. Demeaning trend

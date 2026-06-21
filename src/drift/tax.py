@@ -24,25 +24,40 @@ from typing import Optional
 
 from .config import TaxSettings
 
-# Representative state long-/short-term capital-gains rates (top marginal, cap gains
-# generally taxed as ordinary income at the state level). Illustrative — an advisor
-# should confirm a client's actual rates, brackets, and special regimes. WA has no
-# income tax but a 7% excise on long-term gains above a threshold (modeled as 7% LT,
-# 0% ST). Mirrors TaxAlphaInsider's point that TLH value is state-dependent.
+# State long-/short-term capital-gains rates for all 50 states + DC (top marginal).
+# Most states tax capital gains as ordinary income (state_lt == state_st), but several
+# are special and encoded here: the no-income-tax states (0%), Washington's 7% excise on
+# LONG-term gains only, Massachusetts' higher SHORT-term rate (8.5%), and the long-term
+# exclusion states (AR/HI/MT/ND/NM/SC/VT/WI) where state_lt < state_st. These are
+# representative top-of-bracket figures and shift with legislation — illustrative, an
+# advisor confirms a client's actual situation. Mirrors TaxAlphaInsider's core point
+# that the value of tax-loss harvesting is state-dependent.
 STATE_RATES: dict[str, tuple[float, float]] = {  # state -> (state_lt, state_st)
     "—": (0.0, 0.0),       # no state tax assumed
-    "CA": (0.133, 0.133),  # highest-bracket income state
-    "NY": (0.109, 0.109),
-    "NJ": (0.1075, 0.1075),
-    "OR": (0.099, 0.099),
-    "MN": (0.0985, 0.0985),
-    "MA": (0.05, 0.05),    # flat
-    "CO": (0.044, 0.044),  # flat, lower
-    "WA": (0.07, 0.0),     # cap-gains excise on LT only; no tax on ST/ordinary
-    "TX": (0.0, 0.0),      # no income tax
-    "FL": (0.0, 0.0),
-    "TN": (0.0, 0.0),
-    "NH": (0.0, 0.0),
+    # No-income-tax states (no tax on capital gains).
+    "AK": (0.0, 0.0), "FL": (0.0, 0.0), "NV": (0.0, 0.0), "NH": (0.0, 0.0),
+    "SD": (0.0, 0.0), "TN": (0.0, 0.0), "TX": (0.0, 0.0), "WY": (0.0, 0.0),
+    "WA": (0.07, 0.0),     # no income tax, but a 7% excise on LONG-term gains only
+    # Flat-rate states (capital gains taxed as ordinary income; MA taxes ST higher).
+    "AZ": (0.025, 0.025), "CO": (0.044, 0.044), "GA": (0.0539, 0.0539),
+    "ID": (0.058, 0.058), "IL": (0.0495, 0.0495), "IN": (0.0305, 0.0305),
+    "IA": (0.057, 0.057), "KY": (0.04, 0.04), "MA": (0.05, 0.085),  # MA taxes ST at 8.5%
+    "MI": (0.0425, 0.0425), "MS": (0.047, 0.047), "NC": (0.045, 0.045),
+    "PA": (0.0307, 0.0307), "UT": (0.0455, 0.0455),
+    # Graduated states — top marginal rate; several give a long-term exclusion/lower LT rate.
+    "AL": (0.05, 0.05), "AR": (0.0195, 0.039),   # AR ~50% LT exclusion
+    "CA": (0.133, 0.133), "CT": (0.0699, 0.0699), "DE": (0.066, 0.066),
+    "DC": (0.1075, 0.1075), "HI": (0.0725, 0.11),  # HI caps LT at 7.25%
+    "KS": (0.057, 0.057), "LA": (0.0425, 0.0425), "ME": (0.0715, 0.0715),
+    "MD": (0.0575, 0.0575), "MN": (0.0985, 0.0985), "MO": (0.048, 0.048),
+    "MT": (0.041, 0.059),   # MT lower LT rate
+    "NE": (0.0584, 0.0584), "NJ": (0.1075, 0.1075),
+    "NM": (0.0354, 0.059),  # NM 40% LT deduction
+    "NY": (0.109, 0.109), "ND": (0.015, 0.025),  # ND 40% LT exclusion
+    "OH": (0.035, 0.035), "OK": (0.0475, 0.0475), "OR": (0.099, 0.099),
+    "RI": (0.0599, 0.0599), "SC": (0.0347, 0.062),  # SC 44% LT exclusion
+    "VT": (0.0525, 0.0875), "VA": (0.0575, 0.0575),  # VT 40% LT exclusion
+    "WV": (0.0512, 0.0512), "WI": (0.0536, 0.0765),  # WI 30% LT exclusion
 }
 
 

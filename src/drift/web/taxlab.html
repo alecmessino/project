@@ -141,8 +141,10 @@ function render(){
     <b>tax-advantaged</b> bucket; park low-turnover, qualified-dividend holdings in taxable instead. This dominates
     any attempt to tax-manage the sleeve by trading it less.</p>`;
 
-  // TLH value by state
-  const order=Object.keys(S.states);
+  // TLH value by state — a representative spread (all 50+DC are in the dropdown),
+  // always including the currently selected state so its row is visible.
+  const order=["—","TX","WA","PA","CO","IL","MA","MN","NJ","NY","CA"].filter(s=>s in S.states);
+  if(!order.includes(r.state)) order.push(r.state);
   $("tlhtable").querySelector("tbody").innerHTML=order.map(st=>{
     const [slt,sst]=S.states[st];
     const rr={r_lt:r.b.lt+r.b.niit+slt, r_st:r.b.ord+r.b.niit+sst};

@@ -250,6 +250,23 @@ def thesis(
 
 
 @app.command()
+def taxlab(
+    docs: str = typer.Option("docs", "--docs", help="directory holding the exhibits"),
+    out: str = typer.Option("docs/taxlab.html", "--out", help="Tax Lab page"),
+):
+    """Build the interactive Tax Lab (after-tax / TLH / asset location) from the ledger."""
+    from .taxlab import build_taxlab
+    from .exhibit import export_taxlab
+    state = build_taxlab(docs)
+    path = export_taxlab(state, out)
+    p = state.get("profile")
+    if p:
+        console.print(f"taxlab: pretax {p['pretax_return']*100:+.1f}%  "
+                      f"ST realized {p['st_realized']*100:.1f}%  harvested {p['harvested_st']*100:.1f}%")
+    console.print(f"[green]wrote[/] {path}")
+
+
+@app.command()
 def hub(
     docs: str = typer.Option("docs", "--docs", help="directory holding the exhibits"),
     out: str = typer.Option("docs/index.html", "--out", help="hub landing page"),

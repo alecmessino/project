@@ -198,3 +198,98 @@ def after_tax_track(entries: list[dict], tax: TaxSettings,
         rate_lt=round(rate_lt, 4),
         rate_st=round(rate_st, 4),
     )
+
+
+@dataclass
+class GainProfile:
+    """Rate-INDEPENDENT decomposition of the book's gains on its pre-tax path, so a
+    client-side Tax Lab can recompute after-tax / TLH / location alpha for any bracket
+    and state. All amounts are per $1 invested at inception."""
+    pretax_return: float
+    st_realized: float          # gross short-term realized gains
+    lt_realized: float          # gross long-term realized gains
+    harvested_st: float         # short-term realized losses (harvest material)
+    harvested_lt: float         # long-term realized losses
+    embedded_st: float          # unrealized gains in lots still < 1y old
+    embedded_lt: float          # unrealized gains in lots >= 1y old
+    annual_turnover: float
+    avg_holding_days: Optional[float]
+    short_term_share: float
+
+
+def gain_profile(entries: list[dict], lt_holding_bars: int = 252,
+                 bars_per_year: float = 252.0) -> Optional[GainProfile]:
+    """FIFO dollar-lot walk on the PRE-TAX path (no tax deducted), returning the gross
+    realized/embedded gains split short- vs long-term. Rate-independent — apply any
+    rates downstream. None if the entries carry no per-name prices."""
+    if not entries or "prices" not in entries[-1] or not entries[-1].get("prices"):
+        return None
+    value = 1.0
+    lots: dict[str, list[list]] = {}
+    st_real = lt_real = harv_st = harv_lt = 0.0
+    prev_w: dict[str, float] = {}
+    prev_px: dict[str, float] = {}
+    for idx, e in enumerate(entries):
+        w = e.get("weights", {})
+        px = e.get("prices", {}) or prev_px
+        value *= (1.0 + e.get("realized_return", 0.0))
+        rebalanced = idx == 0 or any(
+            abs(w.get(k, 0.0) - prev_w.get(k, 0.0)) > 1e-9 for k in set(w) | set(prev_w))
+        if rebalanced:
+            for i in set(w) | set(lots):
+                price = px.get(i) or prev_px.get(i)
+                if not price:
+                    continue
+                cur_val = sum(d * price / pb for d, pb, _ in lots.get(i, []))
+                tgt = w.get(i, 0.0) * value
+                if tgt < cur_val - 1e-12:
+                    to_sell = cur_val - tgt
+                    q = lots.get(i, [])
+                    while to_sell > 1e-12 and q:
+                        d, pb, bi = q[0]
+                        lot_val = d * price / pb
+                        take = min(lot_val, to_sell)
+                        frac = (take / lot_val) if lot_val else 0.0
+                        gain = take - d * frac
+                        is_lt = (idx - bi) >= lt_holding_bars
+                        if gain >= 0:
+                            if is_lt: lt_real += gain
+                            else: st_real += gain
+                        else:
+                            if is_lt: harv_lt += -gain
+                            else: harv_st += -gain
+                        if take >= lot_val - 1e-12:
+                            q.pop(0)
+                        else:
+                            q[0][0] = d * (1.0 - frac)
+                        to_sell -= take
+                elif tgt > cur_val + 1e-12:
+                    lots.setdefault(i, []).append([tgt - cur_val, price, idx])
+            prev_w = w
+        prev_px = px
+
+    last_px = entries[-1].get("prices", {})
+    n = len(entries)
+    emb_st = emb_lt = 0.0
+    for i, q in lots.items():
+        price = last_px.get(i)
+        if not price:
+            continue
+        for d, pb, bi in q:
+            gain = d * price / pb - d
+            if gain > 0:
+                if (n - 1 - bi) >= lt_holding_bars:
+                    emb_lt += gain
+                else:
+                    emb_st += gain
+    ann, avg_hold = _annual_turnover(entries, bars_per_year)
+    realized = st_real + lt_real
+    return GainProfile(
+        pretax_return=round(entries[-1]["equity"] - 1.0, 6),
+        st_realized=round(st_real, 6), lt_realized=round(lt_real, 6),
+        harvested_st=round(harv_st, 6), harvested_lt=round(harv_lt, 6),
+        embedded_st=round(emb_st, 6), embedded_lt=round(emb_lt, 6),
+        annual_turnover=round(ann, 3),
+        avg_holding_days=(round(avg_hold) if avg_hold else None),
+        short_term_share=round(st_real / realized, 4) if realized else 0.0,
+    )

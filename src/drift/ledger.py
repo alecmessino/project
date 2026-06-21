@@ -24,7 +24,8 @@ from . import analytics
 from . import signal as sig
 from . import sizing
 from .config import Settings, TaxSettings
-from .cross_section import _combined_tilt, _groups_for, rank_weights
+from .tax import after_tax_track
+from .cross_section import _combined_tilt, _groups_for, _tax_aware_weights, rank_weights
 from .models import Bar
 from .universes import BENCH_REGION, REGION_OF, STYLE_BOX
 
@@ -96,6 +97,7 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
             vols[i] = sizing.annualize_vol(sig.realized_vol(cl, sg.vol_window),
                                            settings.engine.bars_per_year)
         raw = rank_weights(scores, vols, cs, _groups_for(cs), _combined_tilt(closes_now, cs))
+        raw = _tax_aware_weights(raw, prev_w, cs)   # no-trade band (taxable sleeve); no-op when off
         new_w = {i: round(raw.get(i, 0.0), 4) for i in insts}
 
     # 3) Cost on rebalance turnover (weights are at portfolio scale).
@@ -120,6 +122,8 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
     entries.append({
         "date": latest[:10],
         "weights": new_w,
+        # Per-name close used to mark this session — the lot basis for after-tax modeling.
+        "prices": {i: round(series[i][-1].close, 6) for i in insts},
         "realized_return": round(net, 6),
         "equity": equity,
         "bench_equity": bench_equity,
@@ -306,8 +310,20 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0,
     live = sum(1 for e in entries if not e.get("seed"))
     cost_side = ledger.get("cost_bps_per_side")
     tax = tax or TaxSettings()
-    at_curve, tax_paid, ann_turnover, avg_hold, eff_rate = _after_tax(entries, tax, bars_per_year)
-    on = tax.enabled
+    # Lot-aware after-tax needs per-name prices on the entries (current ledgers have them;
+    # a pre-`prices` ledger simply shows no after-tax until its next re-seed).
+    at = after_tax_track(entries, tax, bars_per_year) if tax.enabled else None
+    tax_block = None
+    if at is not None:
+        tax_block = {
+            "state": tax.state, "rate_lt": at.rate_lt, "rate_st": at.rate_st,
+            "after_tax_return": at.after_tax_return, "tax_drag": at.tax_drag,
+            "tax_paid": at.tax_paid, "annual_turnover": at.annual_turnover,
+            "avg_holding_days": at.avg_holding_days, "short_term_share": at.short_term_share,
+            "st_realized": at.st_realized, "lt_realized": at.lt_realized,
+            "harvested_losses": at.harvested_losses, "embedded_gain": at.embedded_gain,
+            "liquidation_tax": at.liquidation_tax, "after_tax_liquidated": at.after_tax_liquidated,
+        }
     return {
         "header": {
             "days": n,
@@ -326,15 +342,16 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0,
             "universe": ledger.get("universe", []),
             "n_long": last["n_long"],
             "n_short": last["n_short"],
-            # Illustrative after-tax modeling (see _after_tax / config.TaxSettings).
-            "annual_turnover": round(ann_turnover, 3),
-            "after_tax_total_return": (round(at_curve[-1] - 1.0, 6) if on else None),
-            "tax_drag": (round((eq[-1] - 1.0) - (at_curve[-1] - 1.0), 6) if on else None),
-            "tax_rate_applied": (round(eff_rate, 3) if on else None),
-            "tax_term": ("long-term" if eff_rate == tax.rate_lt else "short-term") if on else None,
-            "avg_holding_days": (round(avg_hold) if (on and avg_hold != float("inf")) else None),
+            # Lot-aware after-tax summary (see drift.tax / config.TaxSettings); None if disabled.
+            "annual_turnover": (at.annual_turnover if at else None),
+            "after_tax_total_return": (at.after_tax_return if at else None),
+            "tax_drag": (at.tax_drag if at else None),
+            "avg_holding_days": (at.avg_holding_days if at else None),
+            "short_term_share": (at.short_term_share if at else None),
+            "tax_state": (tax.state if at else None),
         },
-        "after_tax": ([round(at_curve[i], 5) for i in idx] if on else None),
+        "tax": tax_block,
+        "after_tax": ([round(at.curve[i], 5) for i in idx] if at else None),
         "equity": [round(eq[i], 5) for i in idx],
         "benchmarks": _benchmarks_state(entries, eq, idx, bars_per_year),
         "dates": [entries[i]["date"] for i in idx],

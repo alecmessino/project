@@ -106,6 +106,14 @@ class CrossSectionSettings(BaseModel):
     tilt_reversion_bars: int = 756        # ~3y lookback for the cheapness (long-term reversal) dial
     tilt_reversion_strength: float = 0.5  # how hard the dial leans on cheapness (0 = anchor only)
     tilt_dial_cap: float = 1.8            # bound the per-name dial multiplier to [1/cap, cap]
+    # Tax-aware rebalancing (taxable accounts). The plain book chases the momentum target
+    # every rebalance, which churns hard (short-term gains). When `tax_aware`, a no-trade
+    # band suppresses small target changes (only act when a name's target moves more than
+    # `no_trade_band`, or it leaves the held set entirely), cutting turnover so more gains
+    # age into long-term treatment. The bigger lever is a slower `rebalance_bars`; this
+    # band trims the residual churn on top. Off by default — turn on for a taxable sleeve.
+    tax_aware: bool = False
+    no_trade_band: float = 0.03           # min target-weight change to act on a held name
     # Neutralize the ranking within a grouping before ranking: "none", "region",
     # or "factor". Region-neutral isolates which STYLE is trending (controlling for
     # region); factor-neutral isolates which REGION is trending. Demeaning trend
@@ -114,17 +122,32 @@ class CrossSectionSettings(BaseModel):
 
 
 class TaxSettings(BaseModel):
-    """Illustrative after-tax modeling for the ledger — a unit-level tax-managed
-    simulation, NOT lot-level tax accounting (that needs the custodian's cost basis).
+    """Client tax profile driving the after-tax modeling on the ledger.
 
-    Defaults are top-bracket federal assumptions for a high-net-worth taxable account;
-    set them to a client's actual marginal rates (and add state tax) before quoting.
+    Rates are decomposed into federal + NIIT + state so the Tax Lab can personalize by
+    bracket and state of residence. The effective `rate_lt`/`rate_st` are derived. This
+    is illustrative modeling (lot-level on the book's own marks), NOT a substitute for
+    the custodian's cost basis or tax advice. Defaults are top-bracket federal, no state.
     """
 
     enabled: bool = True
-    rate_lt: float = 0.238   # long-term cap gains: 20% + 3.8% NIIT
-    rate_st: float = 0.408   # short-term cap gains: 37% ordinary + 3.8% NIIT
+    fed_lt: float = 0.20        # federal long-term cap-gains top bracket
+    fed_st: float = 0.37        # federal short-term = ordinary income top bracket
+    niit: float = 0.038         # net investment income tax (applies to both)
+    state_lt: float = 0.0       # state rate on long-term gains (often = ordinary)
+    state_st: float = 0.0       # state rate on short-term gains
+    state: str = "—"            # label only (e.g. "CA", "TX"); rates are the source of truth
     lt_holding_bars: int = 252  # trading days a lot must be held to qualify as long-term
+
+    @property
+    def rate_lt(self) -> float:
+        """Effective long-term rate: federal LT + NIIT + state."""
+        return self.fed_lt + self.niit + self.state_lt
+
+    @property
+    def rate_st(self) -> float:
+        """Effective short-term rate: federal ordinary + NIIT + state."""
+        return self.fed_st + self.niit + self.state_st
 
 
 class Settings(BaseModel):

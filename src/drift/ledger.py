@@ -96,7 +96,8 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
             scores[i] = sig.momentum_score(cl, sg.lookback, sg.vol_window)
             vols[i] = sizing.annualize_vol(sig.realized_vol(cl, sg.vol_window),
                                            settings.engine.bars_per_year)
-        raw = rank_weights(scores, vols, cs, _groups_for(cs), _combined_tilt(closes_now, cs))
+        held = {i for i, w in prev_w.items() if w > 0}
+        raw = rank_weights(scores, vols, cs, _groups_for(cs), _combined_tilt(closes_now, cs), held)
         raw = _tax_aware_weights(raw, prev_w, cs)   # no-trade band (taxable sleeve); no-op when off
         new_w = {i: round(raw.get(i, 0.0), 4) for i in insts}
 

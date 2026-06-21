@@ -102,3 +102,13 @@ def test_build_taxlab_embeds_profile_and_states(tmp_path):
     assert st["profile"] and "st_realized" in st["profile"]
     assert "CA" in st["states"] and st["brackets"]
     json.dumps(st)                                          # must be embeddable
+
+
+def test_state_table_is_complete_with_special_cases():
+    from drift.tax import STATE_RATES
+    assert len(STATE_RATES) >= 52                          # 50 states + DC + the "—" default
+    assert "IL" in STATE_RATES and STATE_RATES["IL"][0] > 0
+    assert STATE_RATES["TX"] == (0.0, 0.0)                 # no income tax
+    assert STATE_RATES["MA"][1] > STATE_RATES["MA"][0]     # MA taxes short-term higher
+    assert STATE_RATES["WA"][0] > 0 and STATE_RATES["WA"][1] == 0   # WA LT-only excise
+    assert STATE_RATES["SC"][0] < STATE_RATES["SC"][1]     # SC long-term exclusion

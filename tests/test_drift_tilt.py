@@ -75,3 +75,15 @@ def test_combined_tilt_is_anchor_times_dial():
     ct = _combined_tilt(closes, cs)
     assert ct["AVEE"] > 1.5      # EM anchor (1.5) lifted further by cheapness
     assert ct["IVV"] < 1.0       # US neutral anchor (1.0) faded by richness
+
+
+def test_conviction_hysteresis_keeps_held_boundary_names():
+    cs = CrossSectionSettings(quantile=0.5, min_score=-99, conviction=True, conviction_buffer=0.15)
+    scores = {c: float(10 - i) for i, c in enumerate("abcdefghij")}   # a best .. j worst
+    vols = {c: 0.2 for c in scores}
+    # 'f' (rank 6) sits outside the strict enter band but inside the exit band: kept only
+    # if already held, dropped if fresh — that's the hysteresis that suppresses churn.
+    held = rank_weights(scores, vols, cs, held={"f"})
+    fresh = rank_weights(scores, vols, cs, held=set())
+    assert held["f"] > 0
+    assert fresh["f"] == 0.0

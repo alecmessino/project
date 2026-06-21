@@ -66,6 +66,7 @@ def rank_weights(
     cs: CrossSectionSettings,
     groups: Optional[dict[str, str]] = None,
     tilt: Optional[dict[str, float]] = None,
+    held: Optional[set[str]] = None,
 ) -> dict[str, float]:
     """Portfolio weights from a cross-sectional ranking of trend scores.
 
@@ -100,7 +101,16 @@ def rank_weights(
     k = max(1, min(round(n * cs.quantile), cap_k))
     # A name is only held if its (demeaned) trend clears min_score — so when nothing
     # is trending the book lightens up rather than holding the least-bad name.
-    longs = [(key, s) for key, s in ranked[:k] if s >= cs.min_score]
+    if cs.conviction and held:
+        # Rank hysteresis: enter only in the stricter top (q - buffer); keep a held name
+        # while it stays within the looser top (q + buffer) — suppresses boundary churn.
+        buf = cs.conviction_buffer
+        enter_k = max(1, min(round(n * (cs.quantile - buf)), cap_k))
+        exit_k = max(k, min(round(n * (cs.quantile + buf)), cap_k))
+        longs = [(key, s) for rank_i, (key, s) in enumerate(ranked[:exit_k])
+                 if s >= cs.min_score and (rank_i < enter_k or key in held)]
+    else:
+        longs = [(key, s) for key, s in ranked[:k] if s >= cs.min_score]
     shorts = [(key, s) for key, s in ranked[-k:] if s <= -cs.min_score] if cs.long_short else []
 
     long_budget = cs.gross_exposure / 2 if cs.long_short else cs.gross_exposure
@@ -279,7 +289,8 @@ def cross_book_streams(series: dict[str, list[Bar]], settings: Settings) -> list
                     scores[inst] = sig.momentum_score(cl, s.lookback, s.vol_window)
                     vols[inst] = sizing.annualize_vol(sig.realized_vol(cl, s.vol_window), bpy)
             tilt = _combined_tilt(closes_now, cs)
-            target = rank_weights(scores, vols, cs, groups, tilt) if scores else dict(weights)
+            held = {i for i, w in weights.items() if w > 0}
+            target = rank_weights(scores, vols, cs, groups, tilt, held) if scores else dict(weights)
             weights = _tax_aware_weights(target, weights, cs)
         port = dw_tot = 0.0
         for inst in series:
@@ -325,7 +336,8 @@ def cross_book_entries(series: dict[str, list[Bar]], settings: Settings) -> list
                     scores[inst] = sig.momentum_score(cl, s.lookback, s.vol_window)
                     vols[inst] = sizing.annualize_vol(sig.realized_vol(cl, s.vol_window), bpy)
             tilt = _combined_tilt(closes_now, cs)
-            target = rank_weights(scores, vols, cs, groups, tilt) if scores else dict(weights)
+            held = {i for i, w in weights.items() if w > 0}
+            target = rank_weights(scores, vols, cs, groups, tilt, held) if scores else dict(weights)
             weights = _tax_aware_weights(target, weights, cs)
         port = dw_tot = 0.0
         prices_now: dict[str, float] = {}
@@ -450,7 +462,8 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
                 scores[inst] = sig.momentum_score(closes, s.lookback, s.vol_window)
                 vols[inst] = sizing.annualize_vol(sig.realized_vol(closes, s.vol_window), bpy)
             tilt = _combined_tilt(closes_now, cs)
-            target = rank_weights(scores, vols, cs, groups, tilt) if scores else {inst: 0.0 for inst in instruments}
+            held = {i for i, w in weights.items() if w > 0}
+            target = rank_weights(scores, vols, cs, groups, tilt, held) if scores else {inst: 0.0 for inst in instruments}
             weights = _tax_aware_weights(target, weights, cs)
 
         gross_pnl = net_pnl = 0.0

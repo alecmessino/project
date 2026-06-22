@@ -43,7 +43,19 @@ ASSUMPTIONS = {
     "frontier_turnover": 3.0,          # default client annual-turnover slider (300%)
     "alpha_max": 0.15,                 # alpha slider ceiling (15%)
     "turnover_max": 5.0,               # turnover slider ceiling (500%)
+    # All-in annual cost layer (Tier 1: after-tax is reported BEFORE fees). Advisory fee +
+    # blended fund expense ratio, in basis points; tunable in the page.
+    "advisory_fee_bps": 100,
+    "expense_ratio_bps": 30,
+    "fee_max_bps": 300,
 }
+
+
+def after_fee(after_tax_return: float, annual_fee_rate: float, years: float) -> float:
+    """Reduce an after-tax total return by an all-in annual fee (advisory + expense ratio)
+    applied over the track. First-order: fee_rate · years on the base — illustrative, like
+    the page's other linear approximations. Mirrors the JS on the Tax Lab page."""
+    return after_tax_return - annual_fee_rate * max(0.0, years)
 
 
 def breakeven_alpha(turnover: float, r_st: float, gain_per_turn: float) -> float:

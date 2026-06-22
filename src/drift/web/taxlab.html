@@ -88,6 +88,15 @@
   .opt-result .mini div{font-size:11px;color:var(--dim)}
   .opt-result .mini b{display:block;font-size:17px;color:var(--ink);font-variant-numeric:tabular-nums;font-weight:680;margin-top:3px}
   .dix{font-size:12.3px;color:var(--slate);line-height:1.62;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+  /* Tier 1: all-in fee row + plain-English tooltips */
+  .feerow{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:12px 0 2px}
+  .feerow .slider{margin:0}
+  .term{position:relative;border-bottom:1px dotted var(--dim);cursor:help}
+  .term .tip{position:absolute;left:0;bottom:140%;width:220px;background:var(--ink);color:#fff;font-size:11.5px;
+    line-height:1.5;letter-spacing:0;text-transform:none;font-weight:400;padding:9px 11px;border-radius:7px;
+    opacity:0;visibility:hidden;transition:opacity .12s ease;z-index:6;box-shadow:0 4px 16px rgba(0,0,0,.17);pointer-events:none}
+  .term .tip::after{content:"";position:absolute;left:15px;top:100%;border:5px solid transparent;border-top-color:var(--ink)}
+  .term:hover .tip,.term:focus .tip,.term:focus-within .tip{opacity:1;visibility:visible}
   /* --- Layer 3: alpha-turnover frontier --- */
   .frontgrid{display:grid;grid-template-columns:1.55fr 1fr;gap:22px;align-items:stretch;margin-top:12px}
   #ftchart{width:100%;height:auto;display:block}
@@ -101,7 +110,7 @@
   @keyframes alertflash{0%,50%{background:#f4d6cb}100%{background:#fbeee6}}
   #frontieralert.flash{animation:alertflash .9s ease-out}
   .ftcap{font-size:11.5px;color:var(--dim);line-height:1.5;margin:14px 0 0}
-  @media(max-width:620px){.controls{grid-template-columns:1fr}.wf .lbl{width:130px}.geo{grid-template-columns:1fr}.optgrid,.frontgrid{grid-template-columns:1fr}}
+  @media(max-width:620px){.controls{grid-template-columns:1fr}.wf .lbl{width:130px}.geo{grid-template-columns:1fr}.optgrid,.frontgrid,.feerow{grid-template-columns:1fr}}
   /* --- Phase 5: client proposal PDF (print) --- */
   .toolbar{display:flex;justify-content:flex-end;margin:2px 0 0}
   .pdfbtn{font:inherit;font-size:12.5px;font-weight:600;color:#fff;background:var(--accent);border:none;
@@ -147,6 +156,12 @@
       <option value="taxable">Taxable (brokerage)</option>
       <option value="advantaged">Tax-advantaged (IRA / Roth)</option>
     </select></div>
+  </div>
+  <div class="feerow" id="feerow">
+    <div class="slider"><div class="top"><label>Advisory fee</label><output id="advfeev"></output></div>
+      <input type="range" id="advfee" aria-label="Advisory fee, basis points per year" /></div>
+    <div class="slider"><div class="top"><label>Fund expense ratio</label><output id="erfeev"></output></div>
+      <input type="range" id="erfee" aria-label="Blended fund expense ratio, basis points per year" /></div>
   </div>
   <div class="toolbar"><button id="genpdf" type="button" class="pdfbtn">Generate Client Proposal PDF →</button></div>
   <div id="periodnote" class="lede" style="margin:8px 0 4px"></div>
@@ -220,6 +235,22 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
 const pct=(x,d=1)=>x==null?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
 const apct=(x,d=1)=>x==null?"—":(x*100).toFixed(d)+"%";
 const $=id=>document.getElementById(id);
+// Tier 1: plain-English tooltips on the summary cards.
+const TIPS={
+ "Pre-tax return":"What the sleeve earned before any tax — the headline backtest/track number.",
+ "After-tax (this account)":"What a taxable investor keeps after capital-gains tax on realized gains.",
+ "After-tax (tax-advantaged)":"In an IRA/Roth, gains aren't taxed as they're realized, so after-tax equals pre-tax.",
+ "Tax drag":"Pre-tax return minus after-tax — the slice handed to taxes, before fees.",
+ "After tax & fees":"After-tax return minus an all-in annual fee (advisory + fund expense ratio) over the track — the most honest take-home figure.",
+ "If liquidated today":"After-tax return if you sold everything now, paying tax on the embedded unrealized gain too.",
+};
+function term(label){
+  const t=TIPS[label];
+  return t ? `<span class="term" tabindex="0">${label}<span class="tip">${t}</span></span>` : label;
+}
+// Tier 1: all-in annual fee (advisory + expense ratio), bps -> fraction. Mirror of drift.taxlab.after_fee.
+function feeRate(){ return ((+$("advfee").value||0)+(+$("erfee").value||0))/1e4; }
+function afterFee(afterTax, yrs){ return afterTax - feeRate()*Math.max(0,yrs); }
 
 // --- Layer 2: state heat map (tile-grid cartogram) -------------------------
 // A minimalist tile grid in the canonical US arrangement (AK top-left, ME top-right,
@@ -343,7 +374,7 @@ function renderLocation(){
      <div class="mini">
        <div>Location alpha<b class="accent">${apct(la.rate)}/yr</b></div>
        <div>Terminal boost · ${A.horizon_years}y<b class="accent">${apct(boost)}</b></div>
-       <div>Passive drag · taxable<b>${apct(pdr)}/yr</b></div>
+       <div>All-in fees · ${fmt$(W)}<b class="neg">${fmt$(feeRate()*W)}/yr</b></div>
      </div>`;
   $("dixnote").innerHTML=`<b>Going deeper — direct indexing.</b> Holding the taxable core as a <b>direct-indexed SMA</b>
     (the index replicated as individual securities) rather than one ETF lets you harvest losses at the <b>security</b>
@@ -362,7 +393,8 @@ function renderLocation(){
     <b>${fmt$(la.annual)}/yr</b> — boosting projected terminal wealth by <b>${apct(boost)}</b> over ${A.horizon_years}
     years versus a naive proportional split. At ~${Math.round((S.header.annual_turnover||4)*100)}% turnover the sleeve
     realizes ${apct(S.header.short_term_share||0.95,0)} of its gains short-term, so the case for sheltering it is
-    structural. Illustrative only — not tax advice.</p>`;
+    structural. An all-in <b>${Math.round(feeRate()*1e4)} bps</b> advisory + fund fee runs about <b>${fmt$(feeRate()*W)}/yr</b>
+    on this portfolio, applied on top of tax. Illustrative only — not tax advice.</p>`;
 }
 
 // --- Layer 3: alpha-turnover frontier -------------------------------------
@@ -441,15 +473,18 @@ function render(){
   const r=rates(), c=calc(r), p=S.profile, yrs=p.years||1;
   const adv=$("account").value==="advantaged";
   const af = adv ? p.pretax_return : c.after_tax;
+  const feeBps=Math.round(feeRate()*1e4), afFee=afterFee(af, yrs);
+  $("advfeev").textContent=(+$("advfee").value||0)+" bps"; $("erfeev").textContent=(+$("erfee").value||0)+" bps";
   $("periodnote").textContent = `Track: ${S.header.sessions} sessions (~${yrs}y) · ${apct(S.header.annual_turnover)} annual turnover · `+
     `${apct(S.header.short_term_share)} of gains short-term (~${S.header.avg_holding_days}-day holds) · rates: ${apct(r.r_st)} ST / ${apct(r.r_lt)} LT.`;
   const cards=[
     ["Pre-tax return", pct(p.pretax_return), "what the sleeve earned", ""],
     [adv?"After-tax (tax-advantaged)":"After-tax (this account)", pct(af), adv?"no annual tax drag":"net of "+r.blabel, af>=0?"pos":"neg"],
     ["Tax drag", adv?"0.0%":apct(-c.drag,1), adv?"sheltered":apct(c.drag/p.pretax_return)+" of the gain", adv?"pos":"neg"],
+    ["After tax & fees", pct(afFee), `net of ${feeBps} bps/yr fees`, afFee>=0?"pos":"neg"],
     ["If liquidated today", adv?pct(p.pretax_return):pct(c.after_tax_liq), adv?"tax-free":"after embedded-gain tax", ""],
   ];
-  $("cards").innerHTML=cards.map(([l,v,s,t])=>`<div class="card"><div class="v ${t}">${v}</div><div class="l"><b>${l}</b><br>${s}</div></div>`).join("");
+  $("cards").innerHTML=cards.map(([l,v,s,t])=>`<div class="card"><div class="v ${t}">${v}</div><div class="l"><b>${term(l)}</b><br>${s}</div></div>`).join("");
 
   // waterfall (taxable view always, to show what location/​harvesting save)
   const rows=[
@@ -509,6 +544,10 @@ function init(){
     $("falpha").min=0; $("falpha").max=A.alpha_max; $("falpha").step=0.005; $("falpha").value=A.frontier_alpha;
     $("fturn").min=0; $("fturn").max=A.turnover_max; $("fturn").step=0.1; $("fturn").value=A.frontier_turnover;
     ["falpha","fturn"].forEach(id=>$(id).addEventListener("input",plotClient));
+    // Tier 1: all-in fee sliders (advisory + expense ratio, bps); a change refreshes the whole page.
+    $("advfee").min=0; $("advfee").max=A.fee_max_bps; $("advfee").step=5; $("advfee").value=A.advisory_fee_bps;
+    $("erfee").min=0; $("erfee").max=A.fee_max_bps; $("erfee").step=5; $("erfee").value=A.expense_ratio_bps;
+    ["advfee","erfee"].forEach(id=>$(id).addEventListener("input",render));
   }
   buildMap();
   render();

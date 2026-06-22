@@ -78,6 +78,25 @@
   .cmp .dot{font-size:10px;vertical-align:middle;margin-right:3px}
   .costline{font-size:12px;color:var(--dim);margin:-2px 0 16px}
   .costline b{color:var(--slate);font-weight:600}
+  /* Tier 1: plain-English tooltips + glossary */
+  .term{position:relative;border-bottom:1px dotted var(--dim);cursor:help}
+  .term .tip{position:absolute;left:0;bottom:142%;width:232px;background:var(--ink);color:#fff;
+    font-size:11.5px;line-height:1.5;letter-spacing:0;text-transform:none;font-weight:400;
+    padding:9px 11px;border-radius:7px;opacity:0;visibility:hidden;transition:opacity .12s ease;
+    z-index:6;box-shadow:0 4px 16px rgba(0,0,0,.17);pointer-events:none}
+  .term .tip::after{content:"";position:absolute;left:15px;top:100%;border:5px solid transparent;border-top-color:var(--ink)}
+  .term:hover .tip,.term:focus .tip,.term:focus-within .tip{opacity:1;visibility:visible}
+  .glossary{margin:30px 0 0;border:1px solid var(--line);border-radius:9px;background:var(--soft);padding:4px 16px}
+  .glossary summary{cursor:pointer;font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);font-weight:600;padding:10px 0}
+  .glossary dl{margin:4px 0 12px;font-size:13px}
+  .glossary dt{font-weight:600;color:var(--ink);margin-top:10px}
+  .glossary dd{margin:2px 0 0;color:var(--slate);line-height:1.55}
+  .fits{border:1px solid var(--line);border-left:3px solid var(--slate);border-radius:8px;
+    background:#fff;padding:14px 17px;margin:18px 0 2px;font-size:13px;line-height:1.6}
+  .fits h3{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);margin:0 0 8px;font-weight:600}
+  .fits ul{margin:0;padding-left:18px} .fits li{margin:4px 0}
+  .fits b{color:var(--ink)}
+  .fits a{color:var(--slate)}
   .figband{margin:34px 0 6px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;line-height:0}
   .figband img{width:100%;height:204px;object-fit:contain;display:block}
   .figcap{font-size:11.5px;color:var(--dim);margin:6px 2px 0;line-height:1.5}
@@ -116,6 +135,20 @@ const SCOLOR="#15806a";   // strategy line: strong teal, drawn thick on top
 const PERLABEL={ALL:"since inception",YTD:"year to date","1M":"last month","3M":"last 3 months",
   "6M":"last 6 months","1Y":"last year"};
 let ST=null;
+// Tier 1: plain-English definitions surfaced as hover/focus tooltips on metric labels.
+const TIPS={
+ "Total return":"Cumulative gain since inception, net of trading cost — not annualized.",
+ "Sharpe":"Return earned per unit of volatility — higher means a smoother ride. It uses a 0% cash baseline here, so read it against the benchmark's Sharpe, not on its own.",
+ "Max DD":"Maximum drawdown: the worst peak-to-trough drop along the way — the loss you'd have had to sit through.",
+ "Sessions":"Number of trading days recorded in this paper track record.",
+ "Long / short":"Positions held long vs short. This book is long-only, so the short count is always 0.",
+ "After-tax return":"What a taxable investor keeps after capital-gains tax on realized gains.",
+ "Tax drag":"Pre-tax return minus after-tax return — the slice handed to taxes each year.",
+};
+function term(label){
+  const t=TIPS[label];
+  return t ? `<span class="term" tabindex="0">${label}<span class="tip">${t}</span></span>` : label;
+}
 function pct(x){ return (x>=0?"+":"")+(x*100).toFixed(2)+"%"; }
 function cls(x){ return x>0?"pos":x<0?"neg":""; }
 function fix(x){ return (x!=null)?x.toFixed(2):"—"; }
@@ -257,7 +290,7 @@ function render(s){
     ["Max DD", pct(-(h.max_drawdown||0)), "neg"],
     ["Sessions", String(h.days), ""],
     ["Long / short", `${h.n_long} / ${h.n_short}`, ""],
-  ].map(([k,v,c])=>`<div class="metric"><div class="v ${c}">${v}</div><div class="l">${k}</div></div>`).join("");
+  ].map(([k,v,c])=>`<div class="metric"><div class="v ${c}">${v}</div><div class="l">${term(k)}</div></div>`).join("");
   const costHTML = (h.cost_bps_per_side!=null) ? `<div class="costline">Marked net of
     <b>${h.cost_bps_per_side} bps/side</b> (≈ ${h.cost_bps_roundtrip} bps round-trip on rebalance
     turnover)${h.rebalance_bars?` · rebalanced every <b>${h.rebalance_bars}</b> sessions`:''}.</div>` : "";
@@ -311,6 +344,48 @@ function render(s){
     <p class="bcap" style="margin-top:13px">Size/style weights are representative Morningstar-style
       classifications per fund (e.g. IVE ≈ 33% large-value / 27% large-blend / 17% mid-blend / 13% mid-value …),
       blended by current book weight — approximate, for exposure shape rather than precision.</p>` : "";
+  // Tier 1 · after-tax vs benchmarks (since inception): the pre-tax edge inverts after tax.
+  let atCmp = "";
+  if (h.after_tax_total_return != null && benches.some(b=>b.after_tax_return!=null)) {
+    let rows=`<tr class="me"><td>Strategy</td><td class="${cls(h.total_return)}">${pct(h.total_return)}</td>
+      <td class="${cls(h.after_tax_total_return)}">${pct(h.after_tax_total_return)}</td>
+      <td class="neg">${pct(-(h.total_return-h.after_tax_total_return))}</td></tr>`;
+    benches.forEach(b=>{ if(b.after_tax_return==null) return;
+      rows+=`<tr><td><span class="dot" style="color:${b.color}">●</span>${b.label} · ${BDESC[b.label]||""}</td>
+        <td class="${cls(b.total_return)}">${pct(b.total_return)}</td>
+        <td class="${cls(b.after_tax_return)}">${pct(b.after_tax_return)}</td>
+        <td class="neg">${pct(-(b.total_return-b.after_tax_return))}</td></tr>`; });
+    atCmp=`<h2 class="sec">After-tax, in a taxable account · <span style="text-transform:none;letter-spacing:0">since inception</span></h2>
+      <table class="cmp"><thead><tr><th>Track</th><th>Pre-tax</th><th>${term("After-tax return")}</th><th>${term("Tax drag")}</th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="bcap" style="margin-top:8px">Same paper track, after capital-gains tax. The strategy's small pre-tax edge
+      <b>inverts</b> after tax in a taxable account — a buy-and-hold index realizes almost nothing until it's sold, while this
+      book turns over ~<b>${(h.annual_turnover*100).toFixed(0)}%</b> a year. That gap is the case for <b>asset location</b>:
+      hold this sleeve tax-advantaged and the drag goes away. Size the dollar benefit in the <a href="taxlab.html" style="color:var(--slate)">Tax&nbsp;Lab</a>.
+      Benchmarks modeled with dividend drag only — illustrative, not tax advice.</p>`;
+  }
+  // Tier 1 · suitability ("where this fits") — turns the track record into honest guidance.
+  const ddPct=(Math.abs(h.max_drawdown||0.18)*100).toFixed(0);
+  const fitsHTML=`<div class="fits"><h3>Where this fits</h3><ul>
+    <li><b>Horizon —</b> a 10-year-plus holding. Momentum is volatile and rotates; it needs time to compound through drawdowns.</li>
+    <li><b>Role &amp; size —</b> a satellite growth sleeve (think ~10–30% of an equity allocation), not a whole portfolio. It stays <b>fully invested</b> — there is no de-risking glide path.</li>
+    <li><b>Best account —</b> tax-advantaged (IRA / Roth), where its short-term gains are sheltered; model the dollar benefit in the <a href="taxlab.html">Tax&nbsp;Lab</a>.</li>
+    <li><b>Minimum size —</b> below roughly $50–100k, fixed trading and rebalancing friction erode the edge.</li>
+    <li><b>Not for —</b> money needed within ~5 years, or anyone who couldn't sit through a ~${ddPct}%-type drawdown.</li>
+  </ul></div>`;
+  // Tier 1 · plain-English glossary (collapsible).
+  const GLOSS=[
+    ["Cross-sectional momentum","Rank a universe by recent trend strength and hold the leaders — the bet is relative: the strongest names beat the weakest."],
+    ["Inverse-volatility weighting","Give quieter holdings more weight so each position contributes a similar amount of risk."],
+    ["Turnover","How much of the book is traded per year. High turnover means more short-term taxable gains."],
+    ["Short-term share","The fraction of realized gains held under a year, taxed at the higher ordinary-income rate."],
+    ["After-tax return","What you keep after capital-gains tax on realized gains — the number that matters in a taxable account."],
+    ["Tax drag","Pre-tax return minus after-tax return: the slice handed to taxes."],
+    ["Asset location","Placing tax-inefficient strategies in tax-advantaged accounts and tax-efficient ones in taxable."],
+    ["Tax-loss harvesting","Selling a loser to bank a loss that offsets gains, swapping into a near-identical fund to stay invested."],
+    ["Sharpe ratio","Return per unit of volatility — higher means a smoother ride."],
+    ["Drawdown","A peak-to-trough loss; max drawdown is the worst such drop in the record."],
+  ];
+  const glossHTML=`<details class="glossary"><summary>Glossary — plain English</summary><dl>${GLOSS.map(([t,d])=>`<dt>${t}</dt><dd>${d}</dd>`).join("")}</dl></details>`;
   document.getElementById("body").innerHTML = `
     <div class="metrics">${stats}</div>
     ${costHTML}
@@ -320,11 +395,14 @@ function render(s){
     ${toolsHTML}
     <svg class="eq" id="eq"></svg>
     ${perfHTML}
+    ${atCmp}
+    ${fitsHTML}
     ${exposureHTML}
     <h2 class="sec">Current book</h2>
     <table><thead><tr><th>Instrument</th><th>Leg</th><th>Weight</th></tr></thead><tbody>${positions}</tbody></table>
     <h2 class="sec">Recent sessions</h2>
-    <table><thead><tr><th>Date</th><th>Realized</th><th>Equity</th></tr></thead><tbody>${recent}</tbody></table>`;
+    <table><thead><tr><th>Date</th><th>Realized</th><th>Equity</th></tr></thead><tbody>${recent}</tbody></table>
+    ${glossHTML}`;
   document.querySelectorAll(".tools button").forEach(btn=>btn.addEventListener("click",()=>applyPeriod(btn.dataset.k)));
   requestAnimationFrame(()=>applyPeriod("ALL"));
 }

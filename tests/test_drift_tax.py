@@ -270,6 +270,27 @@ def test_wa_excise_is_long_term_only():
     assert abs(lt - 0.07) < 1e-9 and st == 0.0          # 7% LT cap-gains excise, no income/ST tax
 
 
+def test_after_fee_subtracts_annual_cost_over_the_track():
+    from drift.taxlab import after_fee
+    # 26.56% after-tax, 130 bps all-in fee, 1.75y -> 26.56 - 1.30*1.75 = 24.28%
+    assert abs(after_fee(0.2656, 0.013, 1.75) - 0.24285) < 1e-9
+    assert after_fee(0.10, 0.0, 5) == 0.10          # zero fee is a no-op
+    assert after_fee(0.10, 0.01, 0) == 0.10         # zero horizon is a no-op
+
+
+def test_benchmark_after_tax_is_only_dividend_drag():
+    from drift.ledger import _bench_after_tax
+    brets = [0.001] * 252                            # ~+28.6% over a year, buy-and-hold
+    pretax = 1.0
+    for r in brets:
+        pretax *= (1.0 + r)
+    pretax -= 1.0
+    at = _bench_after_tax(brets, r_lt=0.238, bars_per_year=252)
+    assert at < pretax                               # dividends are taxed
+    assert pretax - at < 0.01                        # ...but only lightly (no realized gains)
+    assert abs(_bench_after_tax(brets, r_lt=0.0, bars_per_year=252) - pretax) < 1e-9  # no LT tax -> no drag
+
+
 def test_state_table_is_complete_with_special_cases():
     from drift.tax import STATE_RATES
     assert len(STATE_RATES) >= 52                          # 50 states + DC + the "—" default

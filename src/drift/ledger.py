@@ -160,6 +160,23 @@ def seed_ledger(series: dict[str, list[Bar]], settings: Settings, sessions: int 
 
 _REGION_NAME = {"US": "United States", "DEV": "Developed intl", "EM": "Emerging mkts"}
 _BENCH_COLORS = {"VT": "#3257c4", "VTI": "#c2790f"}
+_BENCH_DIV_YIELD = 0.018   # ~qualified-dividend yield of a broad market index (for after-tax)
+
+
+def _bench_after_tax(brets: list[float], r_lt: float, bars_per_year: float,
+                     div_yield: float = _BENCH_DIV_YIELD) -> float:
+    """After-tax total return of a buy-and-hold benchmark, paid-as-you-go.
+
+    A buy-and-hold index realizes no capital gains until it is sold, so its only annual
+    drag is tax on qualified dividends at the long-term rate. Apply that as a small per-bar
+    reduction and compound; the liquidation tax on the embedded gain is excluded, to match
+    the strategy's paid-as-you-go after-tax basis (an apples-to-apples taxable comparison).
+    Illustrative."""
+    d = div_yield * max(0.0, r_lt) / (bars_per_year or 252.0)
+    v = 1.0
+    for r in brets:
+        v *= (1.0 + r - d)
+    return v - 1.0
 
 
 def _blend_style_box(weights: dict[str, float]) -> dict[str, float]:
@@ -221,15 +238,16 @@ def _bench_exposure(label: str) -> dict:
 
 
 def _benchmarks_state(entries: list[dict], eq: list[float], idx: list[int],
-                      bars_per_year: float) -> list[dict]:
-    """Per-benchmark equity curve, total/excess return, and risk stats."""
+                      bars_per_year: float, tax: Optional[TaxSettings] = None) -> list[dict]:
+    """Per-benchmark equity curve, total/excess return, and risk stats — plus an
+    after-tax total return (dividend drag only, buy-and-hold) when a tax profile is given."""
     labels = list((entries[-1].get("bench_equity") or {}).keys())
     out = []
     for label in labels:
         beq = [(e.get("bench_equity") or {}).get(label, 1.0) or 1.0 for e in entries]
         brets = [(beq[i] / beq[i - 1] - 1.0) if beq[i - 1] else 0.0
                  for i in range(1, len(beq))]
-        out.append({
+        b = {
             "label": label,
             "color": _BENCH_COLORS.get(label, "#9aa0c0"),
             "total_return": round(beq[-1] - 1.0, 6),
@@ -238,7 +256,10 @@ def _benchmarks_state(entries: list[dict], eq: list[float], idx: list[int],
             "max_drawdown": round(analytics.max_drawdown(beq), 4),
             "equity": [round(beq[i], 5) for i in idx],
             "exposure": _bench_exposure(label),
-        })
+        }
+        if tax is not None and tax.enabled:
+            b["after_tax_return"] = round(_bench_after_tax(brets, tax.rate_lt, bars_per_year), 6)
+        out.append(b)
     return out
 
 
@@ -354,7 +375,7 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0,
         "tax": tax_block,
         "after_tax": ([round(at.curve[i], 5) for i in idx] if at else None),
         "equity": [round(eq[i], 5) for i in idx],
-        "benchmarks": _benchmarks_state(entries, eq, idx, bars_per_year),
+        "benchmarks": _benchmarks_state(entries, eq, idx, bars_per_year, tax),
         "dates": [entries[i]["date"] for i in idx],
         "split_frac": ((n - live) / n) if n else 0.0,
         "split_idx": next((k for k, i in enumerate(idx) if i >= (n - live)), len(idx)),

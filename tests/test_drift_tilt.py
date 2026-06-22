@@ -87,3 +87,20 @@ def test_conviction_hysteresis_keeps_held_boundary_names():
     fresh = rank_weights(scores, vols, cs, held=set())
     assert held["f"] > 0
     assert fresh["f"] == 0.0
+
+
+def test_slow_sleeve_asymmetric_hysteresis_keeps_held_boundary_names():
+    # The slow sleeve enters only in the top buy_quantile (40%) but holds a name until it
+    # leaves the top hold_quantile (60%). 'f' (rank 5 of 10) sits in that 40-60% band: kept
+    # if it was in last period's book (current_weights), dropped if fresh.
+    cs = CrossSectionSettings(slow_sleeve_mode=True, min_score=-99,
+                              buy_quantile=0.40, hold_quantile=0.60)
+    scores = {c: float(10 - i) for i, c in enumerate("abcdefghij")}   # a best .. j worst
+    vols = {c: 0.2 for c in scores}
+    held = rank_weights(scores, vols, cs, current_weights={"f": 0.2})
+    fresh = rank_weights(scores, vols, cs, current_weights={})
+    assert held["f"] > 0
+    assert fresh["f"] == 0.0
+    # Top-40% names are always held regardless of the prior book; bottom names never are.
+    assert held["a"] > 0 and fresh["a"] > 0
+    assert held["j"] == 0.0 and fresh["j"] == 0.0

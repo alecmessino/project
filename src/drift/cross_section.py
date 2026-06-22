@@ -67,6 +67,7 @@ def rank_weights(
     groups: Optional[dict[str, str]] = None,
     tilt: Optional[dict[str, float]] = None,
     held: Optional[set[str]] = None,
+    current_weights: Optional[dict[str, float]] = None,
 ) -> dict[str, float]:
     """Portfolio weights from a cross-sectional ranking of trend scores.
 
@@ -101,7 +102,17 @@ def rank_weights(
     k = max(1, min(round(n * cs.quantile), cap_k))
     # A name is only held if its (demeaned) trend clears min_score — so when nothing
     # is trending the book lightens up rather than holding the least-bad name.
-    if cs.conviction and held:
+    if cs.slow_sleeve_mode:
+        # Asymmetric rank hysteresis (the slow sleeve): a name ENTERS only in the top
+        # `buy_quantile`, but a HELD name is kept until it leaves the top `hold_quantile`
+        # — so boundary names never churn the book by construction. The held set is the
+        # last period's positions (`current_weights`), unioned with any explicit `held`.
+        held_set = {k for k, w in (current_weights or {}).items() if w > 0} | (held or set())
+        enter_k = max(1, min(round(n * cs.buy_quantile), cap_k))
+        exit_k = max(enter_k, min(round(n * cs.hold_quantile), cap_k))
+        longs = [(key, s) for rank_i, (key, s) in enumerate(ranked[:exit_k])
+                 if s >= cs.min_score and (rank_i < enter_k or key in held_set)]
+    elif cs.conviction and held:
         # Rank hysteresis: enter only in the stricter top (q - buffer); keep a held name
         # while it stays within the looser top (q + buffer) — suppresses boundary churn.
         buf = cs.conviction_buffer
@@ -212,6 +223,58 @@ def _combined_tilt(closes: dict[str, list[float]], cs: CrossSectionSettings) -> 
     return {k: (anchor.get(k, 1.0) if anchor else 1.0) * dial.get(k, 1.0) for k in keys}
 
 
+def _slow_signal(cs: CrossSectionSettings, s) -> tuple[int, int]:
+    """(lookback, min_history) for the active sleeve. The slow sleeve measures trend over
+    a longer 12-month `slow_lookback`, which also lengthens the warmup gate (a name isn't
+    rankable until it has `slow_lookback + 1` bars). The fast book is unchanged."""
+    if cs.slow_sleeve_mode:
+        lb = cs.slow_lookback
+        return lb, max(s.min_history, lb + 1)
+    return s.lookback, s.min_history
+
+
+def _lot_protected_weights(target: dict[str, float], prev: dict[str, float],
+                           scores: dict[str, float], held_bars: dict[str, int],
+                           cs: CrossSectionSettings, lt_bars: int) -> dict[str, float]:
+    """Tax-lot capital-gains protection (execution layer, slow sleeve only).
+
+    A name the ranking wants to LIQUIDATE/REDUCE is held back when its lot is within
+    `lt_protection_window_bars` of the 365-day long-term threshold — letting the gain age
+    into long-term treatment — UNLESS its rank has broken down catastrophically (it has
+    fallen into the bottom `catastrophic_quantile` of the cross-section), in which case it
+    is sold regardless. Frozen names keep their prior weight; the rest of the long book is
+    renormalized to fill the residual gross budget so the book stays fully invested (mirrors
+    the residual logic in `_tax_aware_weights`). No-op unless `slow_sleeve_mode` and `prev`."""
+    if not cs.slow_sleeve_mode or not prev:
+        return target
+    ranked = sorted((k for k, v in scores.items() if v is not None),
+                    key=lambda k: scores[k], reverse=True)
+    n = len(ranked)
+    if n == 0:
+        return target
+    rank_of = {k: i for i, k in enumerate(ranked)}
+    cutoff = n * (1.0 - cs.catastrophic_quantile)   # ranks at/after this are the bottom decile
+    lo = lt_bars - cs.lt_protection_window_bars
+    frozen: dict[str, float] = {}
+    for k, p in prev.items():
+        if p <= 0 or target.get(k, 0.0) >= p:        # only protect names being cut
+            continue
+        near_lt = lo <= held_bars.get(k, 0) < lt_bars
+        catastrophic = rank_of.get(k, n) >= cutoff
+        if near_lt and not catastrophic:
+            frozen[k] = p
+    if not frozen:
+        return target
+    resid = cs.gross_exposure - sum(frozen.values())
+    others = {k: v for k, v in target.items() if v > 0 and k not in frozen}
+    tot = sum(others.values())
+    scale = (resid / tot) if (tot > 0 and resid > 0) else (1.0 if tot > 0 else 0.0)
+    out = dict(frozen)
+    for k, v in others.items():
+        out[k] = v * scale
+    return out
+
+
 def _tax_aware_weights(target: dict[str, float], prev: dict[str, float],
                        cs: CrossSectionSettings) -> dict[str, float]:
     """No-trade band for taxable accounts: hold the previous weight on a name whose
@@ -272,8 +335,11 @@ def cross_book_streams(series: dict[str, list[Bar]], settings: Settings) -> list
     pos = {inst: {b.asof: i for i, b in enumerate(bars)} for inst, bars in series.items()}
     all_dates = sorted({b.asof for bars in series.values() for b in bars})
 
+    lb, min_hist = _slow_signal(cs, s)
+    lt_bars = settings.tax.lt_holding_bars
     weights = {inst: 0.0 for inst in series}
     prev = dict(weights)
+    entry_idx: dict[str, int] = {}          # bar index a held name was entered (for lot aging)
     out: list[tuple[str, float]] = []
     for di in range(len(all_dates) - 1):
         d, dn = all_dates[di], all_dates[di + 1]
@@ -283,15 +349,22 @@ def cross_book_streams(series: dict[str, list[Bar]], settings: Settings) -> list
             closes_now: dict[str, list[float]] = {}
             for inst in series:
                 i = pos[inst].get(d)
-                if i is not None and i + 1 >= s.min_history:
+                if i is not None and i + 1 >= min_hist:
                     cl = seq[inst][: i + 1]
                     closes_now[inst] = cl
-                    scores[inst] = sig.momentum_score(cl, s.lookback, s.vol_window)
+                    scores[inst] = sig.momentum_score(cl, lb, s.vol_window)
                     vols[inst] = sizing.annualize_vol(sig.realized_vol(cl, s.vol_window), bpy)
             tilt = _combined_tilt(closes_now, cs)
             held = {i for i, w in weights.items() if w > 0}
-            target = rank_weights(scores, vols, cs, groups, tilt, held) if scores else dict(weights)
+            held_bars = {k: di - e for k, e in entry_idx.items()}
+            target = rank_weights(scores, vols, cs, groups, tilt, held, weights) if scores else dict(weights)
+            target = _lot_protected_weights(target, weights, scores, held_bars, cs, lt_bars)
             weights = _tax_aware_weights(target, weights, cs)
+            for inst in series:
+                if weights.get(inst, 0.0) > 0 and inst not in entry_idx:
+                    entry_idx[inst] = di
+                elif weights.get(inst, 0.0) <= 0:
+                    entry_idx.pop(inst, None)
         port = dw_tot = 0.0
         for inst in series:
             w = weights.get(inst, 0.0)
@@ -320,8 +393,11 @@ def cross_book_entries(series: dict[str, list[Bar]], settings: Settings) -> list
     pos = {inst: {b.asof: i for i, b in enumerate(bars)} for inst, bars in series.items()}
     all_dates = sorted({b.asof for bars in series.values() for b in bars})
 
+    lb, min_hist = _slow_signal(cs, s)
+    lt_bars = settings.tax.lt_holding_bars
     weights = {inst: 0.0 for inst in series}
     prev = dict(weights)
+    entry_idx: dict[str, int] = {}          # bar index a held name was entered (for lot aging)
     equity = 1.0
     entries: list[dict] = []
     for di in range(len(all_dates) - 1):
@@ -330,15 +406,22 @@ def cross_book_entries(series: dict[str, list[Bar]], settings: Settings) -> list
             scores, vols, closes_now = {}, {}, {}
             for inst in series:
                 i = pos[inst].get(d)
-                if i is not None and i + 1 >= s.min_history:
+                if i is not None and i + 1 >= min_hist:
                     cl = seq[inst][: i + 1]
                     closes_now[inst] = cl
-                    scores[inst] = sig.momentum_score(cl, s.lookback, s.vol_window)
+                    scores[inst] = sig.momentum_score(cl, lb, s.vol_window)
                     vols[inst] = sizing.annualize_vol(sig.realized_vol(cl, s.vol_window), bpy)
             tilt = _combined_tilt(closes_now, cs)
             held = {i for i, w in weights.items() if w > 0}
-            target = rank_weights(scores, vols, cs, groups, tilt, held) if scores else dict(weights)
+            held_bars = {k: di - e for k, e in entry_idx.items()}
+            target = rank_weights(scores, vols, cs, groups, tilt, held, weights) if scores else dict(weights)
+            target = _lot_protected_weights(target, weights, scores, held_bars, cs, lt_bars)
             weights = _tax_aware_weights(target, weights, cs)
+            for inst in series:
+                if weights.get(inst, 0.0) > 0 and inst not in entry_idx:
+                    entry_idx[inst] = di
+                elif weights.get(inst, 0.0) <= 0:
+                    entry_idx.pop(inst, None)
         port = dw_tot = 0.0
         prices_now: dict[str, float] = {}
         for inst in series:
@@ -365,15 +448,16 @@ def cross_book_entries(series: dict[str, list[Bar]], settings: Settings) -> list
 def rank_snapshot(series: dict[str, list[Bar]], settings: Settings) -> list[RankRow]:
     """Current cross-sectional ranking from the latest bar of each series."""
     s = settings.signal
+    lb, min_hist = _slow_signal(settings.cross_section, s)
     scores: dict[str, float] = {}
     vols: dict[str, float] = {}
     closes_now: dict[str, list[float]] = {}
     for inst, bars in series.items():
-        if len(bars) < s.min_history:
+        if len(bars) < min_hist:
             continue
         closes = [b.close for b in bars]
         closes_now[inst] = closes
-        scores[inst] = sig.momentum_score(closes, s.lookback, s.vol_window)
+        scores[inst] = sig.momentum_score(closes, lb, s.vol_window)
         vols[inst] = sizing.annualize_vol(
             sig.realized_vol(closes, s.vol_window), settings.engine.bars_per_year
         )
@@ -438,8 +522,11 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
 
     length = min(len(bars) for bars in series.values())
     rebalance = max(1, cs.rebalance_bars)
+    lb, min_hist = _slow_signal(cs, s)
+    lt_bars = settings.tax.lt_holding_bars
     prev: dict[str, float] = {inst: 0.0 for inst in instruments}
     weights: dict[str, float] = {inst: 0.0 for inst in instruments}
+    entry_idx: dict[str, int] = {}          # bar index a held name was entered (for lot aging)
     gross_eq = net_eq = 1.0
     net_curve: list[float] = []
     net_rets: list[float] = []
@@ -455,16 +542,23 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
             closes_now: dict[str, list[float]] = {}
             for inst in instruments:
                 hist = series[inst][: i + 1]
-                if len(hist) < s.min_history:
+                if len(hist) < min_hist:
                     continue
                 closes = [b.close for b in hist]
                 closes_now[inst] = closes
-                scores[inst] = sig.momentum_score(closes, s.lookback, s.vol_window)
+                scores[inst] = sig.momentum_score(closes, lb, s.vol_window)
                 vols[inst] = sizing.annualize_vol(sig.realized_vol(closes, s.vol_window), bpy)
             tilt = _combined_tilt(closes_now, cs)
-            held = {i for i, w in weights.items() if w > 0}
-            target = rank_weights(scores, vols, cs, groups, tilt, held) if scores else {inst: 0.0 for inst in instruments}
+            held = {k for k, w in weights.items() if w > 0}
+            held_bars = {k: i - e for k, e in entry_idx.items()}
+            target = rank_weights(scores, vols, cs, groups, tilt, held, weights) if scores else {inst: 0.0 for inst in instruments}
+            target = _lot_protected_weights(target, weights, scores, held_bars, cs, lt_bars)
             weights = _tax_aware_weights(target, weights, cs)
+            for inst in instruments:
+                if weights.get(inst, 0.0) > 0 and inst not in entry_idx:
+                    entry_idx[inst] = i
+                elif weights.get(inst, 0.0) <= 0:
+                    entry_idx.pop(inst, None)
 
         gross_pnl = net_pnl = 0.0
         held = 0

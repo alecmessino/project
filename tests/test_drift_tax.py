@@ -104,6 +104,78 @@ def test_build_taxlab_embeds_profile_and_states(tmp_path):
     json.dumps(st)                                          # must be embeddable
 
 
+def _cs_slow(**kw):
+    base = dict(slow_sleeve_mode=True, gross_exposure=1.0,
+                lt_protection_window_bars=30, catastrophic_quantile=0.10)
+    base.update(kw)
+    return CrossSectionSettings(**base)
+
+
+def test_lot_protection_delays_near_lt_sale():
+    from drift.cross_section import _lot_protected_weights
+    cs = _cs_slow()
+    names = list("ABCDEFGHIJ")
+    scores = {n: float(10 - i) for i, n in enumerate(names)}   # A best (rank 0) .. J worst
+    prev = {"A": 0.5, "B": 0.5}
+    target = {"A": 1.0, "B": 0.0}                              # ranking liquidates B
+    # B (rank 1, not catastrophic) held 240 bars -> within 30 of the 252 LT mark -> frozen.
+    out = _lot_protected_weights(target, prev, scores, {"A": 300, "B": 240}, cs, lt_bars=252)
+    assert out["B"] == 0.5                                     # sale delayed
+    assert abs(sum(out.values()) - 1.0) < 1e-9                # book stays fully invested
+
+
+def test_lot_protection_sells_catastrophic_breakdown():
+    from drift.cross_section import _lot_protected_weights
+    cs = _cs_slow()
+    names = ["A", "C", "D", "E", "F", "G", "H", "I", "J", "B"]  # B is now the worst (rank 9/10)
+    scores = {n: float(10 - i) for i, n in enumerate(names)}
+    prev = {"A": 0.5, "B": 0.5}
+    target = {"A": 1.0, "B": 0.0}
+    # Even within the LT cushion, a bottom-10% breakdown is sold rather than nursed.
+    out = _lot_protected_weights(target, prev, scores, {"A": 300, "B": 240}, cs, lt_bars=252)
+    assert out.get("B", 0.0) == 0.0
+
+
+def test_lot_protection_noop_when_not_near_lt():
+    from drift.cross_section import _lot_protected_weights
+    cs = _cs_slow()
+    names = list("ABCDEFGHIJ")
+    scores = {n: float(10 - i) for i, n in enumerate(names)}
+    prev = {"A": 0.5, "B": 0.5}
+    target = {"A": 1.0, "B": 0.0}
+    # B held only 100 bars -> nowhere near the LT threshold -> the sale proceeds untouched.
+    out = _lot_protected_weights(target, prev, scores, {"A": 300, "B": 100}, cs, lt_bars=252)
+    assert out == target
+
+
+def test_lot_protection_is_noop_when_slow_mode_off():
+    from drift.cross_section import _lot_protected_weights
+    cs = CrossSectionSettings(slow_sleeve_mode=False, gross_exposure=1.0)
+    target = {"A": 1.0, "B": 0.0}
+    out = _lot_protected_weights(target, {"A": 0.5, "B": 0.5},
+                                 {"A": 3.0, "B": 1.0}, {"B": 240}, cs, lt_bars=252)
+    assert out == target
+
+
+def test_slow_sleeve_config_defaults():
+    cs = CrossSectionSettings()
+    assert cs.slow_sleeve_mode is False
+    assert cs.buy_quantile == 0.40 and cs.hold_quantile == 0.60
+    assert cs.slow_lookback == 252
+    assert cs.lt_protection_window_bars == 30 and cs.catastrophic_quantile == 0.10
+
+
+def test_slow_yaml_loads_the_sleeve_preset():
+    from pathlib import Path
+    from drift.config import Settings
+    root = Path(__file__).resolve().parents[1]
+    s = Settings.load(root / "config" / "slow.yaml")
+    cs = s.cross_section
+    assert cs.slow_sleeve_mode is True
+    assert cs.buy_quantile == 0.40 and cs.hold_quantile == 0.60
+    assert cs.slow_lookback == 252 and cs.tax_aware is True
+
+
 def test_state_table_is_complete_with_special_cases():
     from drift.tax import STATE_RATES
     assert len(STATE_RATES) >= 52                          # 50 states + DC + the "—" default

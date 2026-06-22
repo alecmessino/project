@@ -1,0 +1,82 @@
+# Driftwood — SLOW / multi-factor tax-efficient sleeve (taxable accounts).
+#
+# This is the companion to the headline fast book (config/drift.yaml). It is NOT the fast
+# book slowed down with a gate — we proved that gating a fast momentum signal LOWERS
+# after-tax return. This sleeve uses a different, natively-slow BASE signal: a 12-month
+# drift horizon, asymmetric rank hysteresis (enter top 40%, hold until out of top 60%), and
+# a tax-lot holding-period cushion that pushes near-1-year winners into long-term treatment.
+# The intent: locate THIS sleeve in the taxable account and the fast book in the
+# tax-advantaged account (asset location), so each engine sits where it is most efficient.
+#
+# All windows are in BARS; re-tune with engine.bars_per_year if you change bar frequency.
+
+signal:
+  # The fast-book trend windows still seed the warmup/vol estimate; the slow sleeve
+  # overrides the trend LOOKBACK to 12 months via cross_section.slow_lookback below.
+  lookback: 60
+  vol_window: 30
+  breakout_channel: 40
+  continuation: 0.10
+
+triggers:
+  score_threshold: 1.0
+  require_breakout: true
+  min_edge_after_cost: 0.0
+  strong_score_threshold: 2.0
+  min_weight: 0.05
+  exit_score_threshold: 0.25
+
+sizing:
+  target_vol: 0.15
+  max_leverage: 2.0
+  kelly_fraction: 0.50
+  cost_bps_per_side: 5.0
+  hold_bars: 10
+
+engine:
+  instruments: []
+  bars_per_year: 252.0
+
+# Top-bracket federal, no state, NIIT on — the conservative default for a taxable sleeve.
+# Personalize per client (state/bracket) in the Tax Lab.
+tax:
+  enabled: true
+  fed_lt: 0.20
+  fed_st: 0.37
+  niit: 0.038
+  state_lt: 0.0
+  state_st: 0.0
+  state: "—"
+  lt_holding_bars: 252
+
+cross_section:
+  # Long-only, fully invested — same shape as the fast book.
+  quantile: 0.50
+  long_short: false
+  gross_exposure: 1.0
+  weighting: inv_vol
+  min_universe: 3
+  max_weight: 0.50
+  rebalance_bars: 21              # monthly cadence; the SLOWNESS comes from the signal, not here
+  min_score: -99.0
+  trend_throttle: false
+  exposure_floor: 0.0
+  # Same structural forward tilt as the fast book (EM > intl > US; small/mid > mega; value > growth).
+  tilt_region: {US: 1.0, DEV: 1.30, EM: 1.55}
+  tilt_size:   {large: 1.0, largemid: 1.0, mid: 1.10, small: 1.30}
+  tilt_style:  {value: 1.30, blend: 1.0, growth: 0.80}
+  tilt_dynamic: false
+  tilt_reversion_bars: 756
+  tilt_reversion_strength: 0.5
+  tilt_dial_cap: 1.8
+  # --- The slow / tax-efficient sleeve ---
+  slow_sleeve_mode: true         # 12-month drift + asymmetric hysteresis + lot protection
+  buy_quantile: 0.40             # ENTER only in the top 40%
+  hold_quantile: 0.60            # HOLD a held name until it leaves the top 60%
+  slow_lookback: 252             # 12-month trend horizon (vs the fast book's 60-bar)
+  lt_protection_window_bars: 30  # delay a sale within 30 bars of the 365-day LT threshold
+  catastrophic_quantile: 0.10    # ...unless the name has broken into the bottom 10% (sell it)
+  # No-trade band on top, to trim residual churn into long-term treatment.
+  tax_aware: true
+  no_trade_band: 0.03
+  neutralize: none

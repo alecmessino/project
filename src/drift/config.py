@@ -125,6 +125,24 @@ class CrossSectionSettings(BaseModel):
     # would need a slower / longer-half-life base SIGNAL, not a rebalance gate.
     conviction: bool = False
     conviction_buffer: float = 0.15       # rank hysteresis as a fraction of the universe
+    # Slow / multi-factor tax-efficient sleeve (taxable accounts). This is NOT a gate bolted
+    # onto the fast book — it is a different, natively-slow base signal. When `slow_sleeve_mode`
+    # is on: (1) the trend score is measured over a longer `slow_lookback` (12-month drift)
+    # instead of `signal.lookback`, blended natively with the same region/size/style tilt so the
+    # cross-sectional ranking is stable and turns over slowly by construction; (2) selection uses
+    # ASYMMETRIC rank hysteresis — a name ENTERS only in the top `buy_quantile` (top 40%) but a
+    # HELD name is kept until it falls out of the top `hold_quantile` (top 60%), so boundary noise
+    # never churns the book; (3) a tax-lot holding-period cushion (the execution layer below)
+    # delays liquidating a winner that is within `lt_protection_window_bars` of the 365-day
+    # long-term mark, unless its rank breaks down catastrophically (bottom `catastrophic_quantile`),
+    # pushing the realized gain into long-term treatment. Off by default — the headline fast book
+    # is unaffected.
+    slow_sleeve_mode: bool = False
+    buy_quantile: float = 0.40            # enter only if ranked in the top this fraction
+    hold_quantile: float = 0.60           # hold a held name until it leaves the top this fraction
+    slow_lookback: int = 252              # 12-month drift horizon for the slow-sleeve trend score
+    lt_protection_window_bars: int = 30   # delay a sale within this many bars of the LT threshold
+    catastrophic_quantile: float = 0.10   # a held name in the bottom this fraction is sold anyway
     # Neutralize the ranking within a grouping before ranking: "none", "region",
     # or "factor". Region-neutral isolates which STYLE is trending (controlling for
     # region); factor-neutral isolates which REGION is trending. Demeaning trend

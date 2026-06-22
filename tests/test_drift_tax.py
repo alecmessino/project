@@ -176,6 +176,51 @@ def test_slow_yaml_loads_the_sleeve_preset():
     assert cs.slow_lookback == 252 and cs.tax_aware is True
 
 
+def test_location_alpha_peaks_at_equal_balance_and_zeroes_at_extremes():
+    from drift.taxlab import location_alpha
+    mdr, pdr = 0.08, 0.004                       # momentum vs passive annual drag rates
+    equal = location_alpha(1_000_000, 1_000_000, mdr, pdr)
+    skew = location_alpha(1_900_000, 100_000, mdr, pdr)
+    # Nothing to shelter / nothing misplaced -> no location alpha at the extremes.
+    assert location_alpha(0, 1_000_000, mdr, pdr)["annual_dollars"] == 0.0
+    assert location_alpha(1_000_000, 0, mdr, pdr)["annual_dollars"] == 0.0
+    # Overlap (A·T/(A+T)) is maximized at an equal split.
+    assert equal["annual_dollars"] > skew["annual_dollars"]
+    # (1e6·1e6/2e6)·(0.08−0.004) = 5e5·0.076 = 38_000.
+    assert abs(equal["annual_dollars"] - 38_000) < 1e-6
+    assert abs(equal["annual_rate"] - 38_000 / 2_000_000) < 1e-9
+
+
+def test_location_alpha_never_negative_when_passive_cheaper():
+    from drift.taxlab import location_alpha
+    # Even if a degenerate input flips the spread, alpha is floored at zero (no penalty
+    # for locating — the optimizer only ever helps or no-ops).
+    assert location_alpha(1_000_000, 1_000_000, 0.002, 0.05)["annual_dollars"] == 0.0
+
+
+def test_build_taxlab_embeds_assumptions(tmp_path):
+    import json
+    from drift import ledger as L
+    from drift.config import Settings
+    from drift.taxlab import build_taxlab
+    from drift.feed.synthetic import SyntheticFeed
+    from dataclasses import replace
+    from datetime import date, timedelta
+    s = Settings(signal={"lookback": 20, "vol_window": 10, "breakout_channel": 15})
+    start = date(2020, 1, 1)
+    series = {}
+    for i, d in enumerate((0.5, -0.3, 0.2, 0.4)):
+        bars = SyntheticFeed(instruments=(f"S{i}",), n_bars=300, regimes=[(300, d)], seed=5 + i).series(f"S{i}")
+        series[f"S{i}"] = [replace(b, asof=(start + timedelta(days=k)).isoformat()) for k, b in enumerate(bars)]
+    led = L.seed_ledger(series, s, sessions=120)
+    (tmp_path / "ledger.json").write_text(json.dumps(led))
+    st = build_taxlab(tmp_path)
+    a = st["assumptions"]
+    assert a["passive_div_yield"] > 0 and a["horizon_years"] > 0
+    assert a["default_taxable"] > 0 and a["default_advantaged"] > 0 and a["wealth_max"] >= a["default_taxable"]
+    json.dumps(st)                                          # still fully embeddable
+
+
 def test_state_table_is_complete_with_special_cases():
     from drift.tax import STATE_RATES
     assert len(STATE_RATES) >= 52                          # 50 states + DC + the "—" default

@@ -67,7 +67,28 @@
   .disc .adv{margin:14px 0 0;font-size:12.8px;line-height:1.62;color:var(--ink)}
   @keyframes discflash{0%,55%{background:#fbeee6;border-color:var(--neg)}100%{background:var(--soft);border-color:var(--line)}}
   .disc.flash{animation:discflash .95s ease-out}
-  @media(max-width:620px){.controls{grid-template-columns:1fr}.wf .lbl{width:130px}.geo{grid-template-columns:1fr}}
+  /* --- Layer 1: asset-location optimizer --- */
+  .optgrid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch;margin-top:12px}
+  .opt-card{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+  .opt-card.res{background:var(--soft);display:flex;flex-direction:column;justify-content:center}
+  .slider{margin:0 0 17px}
+  .slider .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+  .slider .top label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);font-weight:600}
+  .slider output{font-size:16px;font-weight:680;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:3px;background:var(--line);outline:none;margin:0}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid #fff}
+  .place{margin-top:18px}
+  .place .plab{font-size:11px;color:var(--dim);margin:11px 0 5px;display:flex;justify-content:space-between;gap:8px}
+  .place .bar{display:flex;height:20px;border-radius:4px;overflow:hidden;border:1px solid var(--line)}
+  .place .seg{height:100%;font-size:10px;color:#fff;display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden;letter-spacing:.3px}
+  .opt-result .big{font-size:30px;font-weight:680;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-.5px;line-height:1.1}
+  .opt-result .sub{font-size:13px;color:var(--ink);margin-top:6px;line-height:1.55}
+  .opt-result .mini{display:flex;gap:22px;margin-top:16px}
+  .opt-result .mini div{font-size:11px;color:var(--dim)}
+  .opt-result .mini b{display:block;font-size:17px;color:var(--ink);font-variant-numeric:tabular-nums;font-weight:680;margin-top:3px}
+  .dix{font-size:12.3px;color:var(--slate);line-height:1.62;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+  @media(max-width:620px){.controls{grid-template-columns:1fr}.wf .lbl{width:130px}.geo{grid-template-columns:1fr}.optgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -101,13 +122,29 @@
     </aside>
   </div>
 
+  <section id="optim">
+    <h2>Asset Location Optimizer <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· where each sleeve should live</span></h2>
+    <div class="optgrid">
+      <div class="opt-card">
+        <div class="slider">
+          <div class="top"><label>Taxable brokerage</label><output id="taxbalv"></output></div>
+          <input type="range" id="taxbal" min="0" step="50000" aria-label="Taxable brokerage balance" />
+        </div>
+        <div class="slider">
+          <div class="top"><label>Tax-advantaged · IRA / Roth</label><output id="advbalv"></output></div>
+          <input type="range" id="advbal" min="0" step="50000" aria-label="Tax-advantaged balance" />
+        </div>
+        <div class="place" id="placement"></div>
+      </div>
+      <div class="opt-card res" id="locresult"></div>
+    </div>
+    <p class="dix" id="dixnote"></p>
+  </section>
+
   <div class="cards" id="cards"></div>
 
   <h2>Where the tax goes (over the track)</h2>
   <div class="wf" id="waterfall"></div>
-
-  <h2>Asset location — the biggest lever</h2>
-  <div class="loc" id="location"></div>
 
   <h2>Tax-loss-harvesting value by state <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· at the selected bracket</span></h2>
   <table id="tlhtable"><thead><tr><th>State</th><th>LT rate</th><th>ST rate</th><th>TLH value (total)</th><th>per year</th></tr></thead><tbody></tbody></table>
@@ -201,6 +238,55 @@ function renderDisc(r){
 }
 function flashDisc(){ const d=$("disc"); d.classList.remove("flash"); void d.offsetWidth; d.classList.add("flash"); }
 
+// --- Layer 1: asset-location optimizer ------------------------------------
+function fmt$(x){
+  x=Math.round(x);
+  if(Math.abs(x)>=1e6) return "$"+(x/1e6).toFixed(Math.abs(x)>=1e7?1:2)+"M";
+  if(Math.abs(x)>=1e3) return "$"+Math.round(x/1e3)+"k";
+  return "$"+x;
+}
+// Mirror of drift.taxlab.location_alpha (kept in sync; that one is unit-tested).
+function locAlpha(taxable,advantaged,mdr,pdr){
+  const w=taxable+advantaged;
+  if(w<=0) return {annual:0,rate:0,overlap:0};
+  const overlap=advantaged*taxable/w;
+  const annual=overlap*Math.max(0,mdr-pdr);
+  return {annual,rate:annual/w,overlap};
+}
+function renderLocation(){
+  if(!S.assumptions) return;
+  const r=rates(), c=calc(r), p=S.profile, yrs=p.years||1, A=S.assumptions;
+  const T=+$("taxbal").value, Adv=+$("advbal").value, W=(T+Adv)||1;
+  $("taxbalv").textContent=fmt$(T); $("advbalv").textContent=fmt$(Adv);
+  // Momentum sleeve sized to the tax-advantaged capacity (the textbook rule); the taxable
+  // account holds a low-turnover, qualified-dividend passive core. Drag rates are annual.
+  const mdr=c.drag/yrs, pdr=A.passive_div_yield*r.r_lt;
+  const la=locAlpha(T,Adv,mdr,pdr);
+  const boost=Math.pow(1+la.rate,A.horizon_years)-1;
+  const shelteredNaive=Adv/W*100;                 // naive: A/W of the sleeve sheltered, T/W taxed
+  const stname = r.state==="—" ? "a no-tax state" : (NAMES[r.state]||r.state);
+  $("placement").innerHTML=
+    `<div class="plab"><span>Optimized — sleeve stacked in tax-advantaged</span><span>${fmt$(Adv)} sheltered</span></div>
+     <div class="bar"><span class="seg" style="width:${Adv>0?100:0}%;background:var(--pos)">sheltered</span></div>
+     <div class="plab"><span>Naive — sleeve spread across both accounts</span><span class="neg">${fmt$(la.overlap)} taxed</span></div>
+     <div class="bar"><span class="seg" style="width:${shelteredNaive}%;background:var(--pos)">sheltered</span><span class="seg" style="width:${100-shelteredNaive}%;background:var(--neg)">taxed</span></div>`;
+  $("locresult").innerHTML=
+    `<div class="big">${fmt$(la.annual)}/yr</div>
+     <div class="sub">recovered for a <b>${stname}</b> resident by locating the sleeve — the naive split leaks
+       <b>${fmt$(la.overlap)}</b> of momentum into taxable at a <b>${apct(mdr)}</b> annual drag.</div>
+     <div class="mini">
+       <div>Location alpha<b class="accent">${apct(la.rate)}/yr</b></div>
+       <div>Terminal boost · ${A.horizon_years}y<b class="accent">${apct(boost)}</b></div>
+       <div>Passive drag · taxable<b>${apct(pdr)}/yr</b></div>
+     </div>`;
+  $("dixnote").innerHTML=`<b>Going deeper — direct indexing.</b> Holding the taxable core as a <b>direct-indexed SMA</b>
+    (the index replicated as individual securities) rather than one ETF lets you harvest losses at the <b>security</b>
+    level: in most years dozens of individual names fall even when the index rises, so the wrapper banks structural
+    losses an ETF simply can't — a fund only throws off a harvestable loss when the <i>whole</i> index is down. Those
+    banked losses offset the momentum sleeve's short-term gains at up to <b>${apct(r.r_st)}</b>, compounding the
+    location benefit above.`;
+}
+
 let S=null;
 function rates(){
   const b=S.brackets[+$("bracket").value];
@@ -244,16 +330,6 @@ function render(){
     <span class="bar"><span class="fill" style="width:${Math.abs(v)/mx*100}%;background:${col}"></span></span>
     <span class="amt">${v>=0?"−":"+"}${apct(Math.abs(v))}</span></div>`).join("");
 
-  // asset location
-  const alpha=c.drag;                  // recovered by holding the sleeve tax-advantaged
-  $("location").innerHTML=`<div class="big">${apct(alpha)} recovered</div>
-    <p>Holding this <b>high-turnover</b> sleeve in a <b>tax-advantaged</b> account (IRA/Roth) instead of a taxable
-    one recovers the entire <b>${apct(c.drag)}</b> drag over the track (~<b>${apct(c.drag/yrs)}/yr</b>) — plus the
-    <b>${apct(c.liq)}</b> embedded-gain tax you'd otherwise owe eventually. Because ${apct(S.header.short_term_share)}
-    of its gains are short-term (taxed at ${apct(r.r_st)}), this sleeve is the textbook candidate for the
-    <b>tax-advantaged</b> bucket; park low-turnover, qualified-dividend holdings in taxable instead. This dominates
-    any attempt to tax-manage the sleeve by trading it less.</p>`;
-
   // TLH value by state — a representative spread (all 50+DC are in the dropdown),
   // always including the currently selected state so its row is visible.
   const order=["—","TX","WA","PA","CO","IL","MA","MN","NJ","NY","CA"].filter(s=>s in S.states);
@@ -277,6 +353,8 @@ function render(){
   // Layer 2: keep the disclosure ledger and the map's selected-state outline in sync.
   renderDisc(r);
   paintSel(r.state);
+  // Layer 1: refresh the asset-location optimizer for the new bracket/state.
+  renderLocation();
 }
 function init(){
   S=window.__STATE__;
@@ -284,6 +362,13 @@ function init(){
   $("bracket").innerHTML=S.brackets.map((b,i)=>`<option value="${i}"${i===S.brackets.length-1?" selected":""}>${b.label}</option>`).join("");
   $("state").innerHTML=Object.keys(S.states).map(s=>`<option value="${s}">${s==="—"?"No state tax":s}</option>`).join("");
   ["bracket","state","account"].forEach(id=>$(id).addEventListener("change",render));
+  if(S.assumptions){
+    const A=S.assumptions;
+    for(const id of ["taxbal","advbal"]){ $(id).max=A.wealth_max; $(id).step=A.wealth_step; }
+    $("taxbal").value=A.default_taxable; $("advbal").value=A.default_advantaged;
+    // Slider drags only touch the optimizer, not the whole page (streamlined interaction path).
+    ["taxbal","advbal"].forEach(id=>$(id).addEventListener("input",renderLocation));
+  }
   buildMap();
   render();
 }

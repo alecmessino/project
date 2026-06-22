@@ -24,12 +24,50 @@ FED_BRACKETS = [
     {"label": "37% ordinary · 20% LT · NIIT (top)", "ord": 0.37, "lt": 0.20, "niit": 0.038},
 ]
 
+# Illustrative assumptions for the asset-location simulator (Layer 1), embedded in the page
+# so the client-side math is tunable rather than hardcoded. The passive sleeve that occupies
+# the taxable account is a low-turnover, qualified-dividend index core: its only material
+# annual drag is tax on qualified dividends at the long-term rate (near-zero realized gains).
+ASSUMPTIONS = {
+    "passive_div_yield": 0.018,        # qualified-dividend yield of the taxable passive core
+    "horizon_years": 30,               # projection horizon for the terminal-wealth boost
+    "default_taxable": 1_500_000,      # starting slider value — taxable brokerage balance
+    "default_advantaged": 1_000_000,   # starting slider value — tax-advantaged (IRA/Roth) balance
+    "wealth_max": 10_000_000,          # slider ceiling
+    "wealth_step": 50_000,
+}
+
+
+def location_alpha(taxable: float, advantaged: float,
+                   mom_drag_rate: float, passive_drag_rate: float) -> dict:
+    """Annual asset-location alpha in dollars: the household tax saved by stacking the
+    high-turnover momentum sleeve into the tax-advantaged account (sized to its capacity)
+    and leaving a low-turnover, qualified-dividend passive core in the taxable account,
+    versus spreading the sleeve proportionally across both accounts.
+
+        alpha$ = (A·T / (A+T)) · (mom_drag_rate − passive_drag_rate)
+
+    The (A·T/(A+T)) term is the momentum dollars that land in taxable under the naive
+    (proportional) split — maximized at an equal balance, zero when either account is empty.
+    The rate spread is the drag that misplacement incurs. This mirrors the JS on the Tax Lab
+    page; it lives here so the headline math has automated test coverage.
+    """
+    w = taxable + advantaged
+    if w <= 0:
+        return {"annual_dollars": 0.0, "annual_rate": 0.0, "overlap": 0.0,
+                "mom_drag_rate": mom_drag_rate, "passive_drag_rate": passive_drag_rate}
+    overlap = advantaged * taxable / w
+    annual = overlap * max(0.0, mom_drag_rate - passive_drag_rate)
+    return {"annual_dollars": annual, "annual_rate": annual / w, "overlap": overlap,
+            "mom_drag_rate": mom_drag_rate, "passive_drag_rate": passive_drag_rate}
+
 
 def build_taxlab(docs_dir: str | Path = "docs") -> dict:
     docs = Path(docs_dir)
     state: dict = {
         "header": {"generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())},
         "profile": None, "states": STATE_RATES, "brackets": FED_BRACKETS,
+        "assumptions": ASSUMPTIONS,
     }
     led_path = docs / "ledger.json"
     if not led_path.exists():

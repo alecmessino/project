@@ -24,11 +24,12 @@ from typing import Optional
 
 from .config import TaxSettings
 
-# State long-/short-term capital-gains rates for all 50 states + DC (top marginal).
-# Most states tax capital gains as ordinary income (state_lt == state_st), but several
-# are special and encoded here: the no-income-tax states (0%), Washington's 7% excise on
-# LONG-term gains only, Massachusetts' higher SHORT-term rate (8.5%), and the long-term
-# exclusion states (AR/HI/MT/ND/NM/SC/VT/WI) where state_lt < state_st. These are
+# State long-/short-term capital-gains rates for all 50 states + DC (top marginal), plus a
+# "NYC" sub-state entry for the New York City local overlay. Most states tax capital gains as
+# ordinary income (state_lt == state_st), but several are special and encoded here: the
+# no-income-tax states (0%), Washington's 7% excise on LONG-term gains only, Massachusetts'
+# higher SHORT-term rate (8.5%), the long-term exclusion states (AR/HI/MT/ND/NM/SC/VT/WI)
+# where state_lt < state_st, and NYC's ~3.88% local tax stacked on NY (14.78% combined). These are
 # representative top-of-bracket figures and shift with legislation — illustrative, an
 # advisor confirms a client's actual situation. Mirrors TaxAlphaInsider's core point
 # that the value of tax-loss harvesting is state-dependent.
@@ -54,6 +55,10 @@ STATE_RATES: dict[str, tuple[float, float]] = {  # state -> (state_lt, state_st)
     "NE": (0.0584, 0.0584), "NJ": (0.1075, 0.1075),
     "NM": (0.0354, 0.059),  # NM 40% LT deduction
     "NY": (0.109, 0.109), "ND": (0.015, 0.025),  # ND 40% LT exclusion
+    # New York City residents add a ~3.88% local income tax on top of NY's 10.9% top rate —
+    # a combined 14.78% marginal rate on capital gains (the steepest in the nation). Modeled
+    # as a sub-state selection so the local overlay cascades through every downstream figure.
+    "NYC": (0.1478, 0.1478),
     "OH": (0.035, 0.035), "OK": (0.0475, 0.0475), "OR": (0.099, 0.099),
     "RI": (0.0599, 0.0599), "SC": (0.0347, 0.062),  # SC 44% LT exclusion
     "VT": (0.0525, 0.0875), "VA": (0.0575, 0.0575),  # VT 40% LT exclusion

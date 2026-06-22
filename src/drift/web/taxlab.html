@@ -102,6 +102,27 @@
   #frontieralert.flash{animation:alertflash .9s ease-out}
   .ftcap{font-size:11.5px;color:var(--dim);line-height:1.5;margin:14px 0 0}
   @media(max-width:620px){.controls{grid-template-columns:1fr}.wf .lbl{width:130px}.geo{grid-template-columns:1fr}.optgrid,.frontgrid{grid-template-columns:1fr}}
+  /* --- Phase 5: client proposal PDF (print) --- */
+  .toolbar{display:flex;justify-content:flex-end;margin:2px 0 0}
+  .pdfbtn{font:inherit;font-size:12.5px;font-weight:600;color:#fff;background:var(--accent);border:none;
+    border-radius:8px;padding:8px 14px;cursor:pointer;letter-spacing:.2px}
+  .pdfbtn:hover{background:#0f6f5b}
+  #printhead,#execsummary{display:none}
+  #printhead .ph-title{font-size:20px;font-weight:700;letter-spacing:-.3px}
+  #printhead .ph-sub{font-size:11px;color:var(--dim);margin-top:3px}
+  #execsummary{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--soft);margin:14px 0}
+  #execsummary .es-h{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);font-weight:700;margin-bottom:6px}
+  #execsummary p{margin:0;font-size:12.8px;line-height:1.6;color:var(--ink)}
+  @media print{
+    @page{margin:14mm}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{font-size:11px}
+    .wrap{max-width:none;margin:0;padding:0}
+    header,.controls,.toolbar,.foot a.back,.map-wrap h3 .hint,input[type=range]{display:none!important}
+    #printhead,#execsummary{display:block}
+    h2{margin-top:20px}
+    section,.geo,.cards,.wf,.optgrid,.frontgrid,table,#execsummary{break-inside:avoid}
+  }
 </style>
 </head>
 <body>
@@ -113,6 +134,12 @@
       Pick a bracket and state; everything recomputes in the browser from the book's real realized-gain profile.</p>
   </header>
 
+  <div id="printhead">
+    <div class="ph-title">Asset Location &amp; Tax-Efficiency Analysis</div>
+    <div class="ph-sub" id="phsub"></div>
+  </div>
+  <div id="execsummary"></div>
+
   <div class="controls" id="controls">
     <div class="ctl"><label>Federal bracket</label><select id="bracket"></select></div>
     <div class="ctl"><label>State of residence</label><select id="state"></select></div>
@@ -121,7 +148,8 @@
       <option value="advantaged">Tax-advantaged (IRA / Roth)</option>
     </select></div>
   </div>
-  <div id="periodnote" class="lede" style="margin:0 0 4px"></div>
+  <div class="toolbar"><button id="genpdf" type="button" class="pdfbtn">Generate Client Proposal PDF →</button></div>
+  <div id="periodnote" class="lede" style="margin:8px 0 4px"></div>
 
   <div class="geo">
     <div class="map-wrap">
@@ -319,6 +347,18 @@ function renderLocation(){
     losses an ETF simply can't — a fund only throws off a harvestable loss when the <i>whole</i> index is down. Those
     banked losses offset the momentum sleeve's short-term gains at up to <b>${apct(r.r_st)}</b>, compounding the
     location benefit above.`;
+
+  // Phase 5: auto-generated executive summary for the client proposal PDF.
+  const stName = r.state==="—" ? "a no-income-tax state" : (NAMES[r.state]||r.state);
+  const bword = (+$("bracket").value===S.brackets.length-1) ? "top-bracket" : (r.blabel.split("·")[0].trim()+" federal");
+  $("execsummary").innerHTML=`<div class="es-h">Executive summary</div>
+    <p>For a <b>${bword}</b> resident of <b>${stName}</b>, locating the high-turnover momentum sleeve in the
+    tax-advantaged account (${fmt$(Adv)} of a ${fmt$(W)} portfolio) and holding a low-turnover, qualified-dividend
+    core in the ${fmt$(T)} taxable account recovers up to <b>${apct(la.rate)}</b> in annual tax drag — about
+    <b>${fmt$(la.annual)}/yr</b> — boosting projected terminal wealth by <b>${apct(boost)}</b> over ${A.horizon_years}
+    years versus a naive proportional split. At ~${Math.round((S.header.annual_turnover||4)*100)}% turnover the sleeve
+    realizes ${apct(S.header.short_term_share||0.95,0)} of its gains short-term, so the case for sheltering it is
+    structural. Illustrative only — not tax advice.</p>`;
 }
 
 // --- Layer 3: alpha-turnover frontier -------------------------------------
@@ -438,6 +478,7 @@ function render(){
     second-order compounding of taxes paid, so they're close to but not identical to the ledger's paid-as-you-go
     curve. State rates are representative top-of-bracket values; confirm a client's actual situation.`;
   $("gen").textContent="Generated "+(S.header.generated||"")+" · figures from the live ledger.";
+  $("phsub").textContent="Prepared "+(S.header.generated||"")+" · "+S.header.sessions+" live sessions · illustrative, not tax advice";
 
   // Layer 2: keep the disclosure ledger and the map's selected-state outline in sync.
   renderDisc(r);
@@ -453,6 +494,7 @@ function init(){
   $("bracket").innerHTML=S.brackets.map((b,i)=>`<option value="${i}"${i===S.brackets.length-1?" selected":""}>${b.label}</option>`).join("");
   $("state").innerHTML=Object.keys(S.states).map(s=>`<option value="${s}">${s==="—"?"No state tax":s}</option>`).join("");
   ["bracket","state","account"].forEach(id=>$(id).addEventListener("change",render));
+  $("genpdf").addEventListener("click",()=>window.print());   // Phase 5: print -> Save as PDF
   if(S.assumptions){
     const A=S.assumptions;
     for(const id of ["taxbal","advbal"]){ $(id).max=A.wealth_max; $(id).step=A.wealth_step; }

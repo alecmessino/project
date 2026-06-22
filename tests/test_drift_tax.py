@@ -198,6 +198,36 @@ def test_location_alpha_never_negative_when_passive_cheaper():
     assert location_alpha(1_000_000, 1_000_000, 0.002, 0.05)["annual_dollars"] == 0.0
 
 
+def test_breakeven_alpha_rises_with_turnover_and_rate():
+    from drift.taxlab import breakeven_alpha
+    assert breakeven_alpha(0.0, 0.5, 0.03) == 0.0
+    lo = breakeven_alpha(3.0, 0.408, 0.03)          # federal-only top ST rate
+    hi = breakeven_alpha(3.0, 0.541, 0.03)          # + CA state -> steeper line
+    assert hi > lo > 0
+    assert breakeven_alpha(5.0, 0.408, 0.03) > lo   # more turnover -> higher breakeven
+    assert abs(breakeven_alpha(3.0, 0.5, 0.03) - 0.045) < 1e-12
+
+
+def test_build_taxlab_calibrates_gain_per_turn(tmp_path):
+    import json
+    from drift import ledger as L
+    from drift.config import Settings
+    from drift.taxlab import build_taxlab
+    from drift.feed.synthetic import SyntheticFeed
+    from dataclasses import replace
+    from datetime import date, timedelta
+    s = Settings(signal={"lookback": 20, "vol_window": 10, "breakout_channel": 15})
+    start = date(2020, 1, 1)
+    series = {}
+    for i, d in enumerate((0.5, -0.3, 0.2, 0.4)):
+        bars = SyntheticFeed(instruments=(f"S{i}",), n_bars=300, regimes=[(300, d)], seed=5 + i).series(f"S{i}")
+        series[f"S{i}"] = [replace(b, asof=(start + timedelta(days=k)).isoformat()) for k, b in enumerate(bars)]
+    led = L.seed_ledger(series, s, sessions=120)
+    (tmp_path / "ledger.json").write_text(json.dumps(led))
+    st = build_taxlab(tmp_path)
+    assert st["header"]["gain_per_turn"] > 0          # calibrated from the live book
+
+
 def test_build_taxlab_embeds_assumptions(tmp_path):
     import json
     from drift import ledger as L

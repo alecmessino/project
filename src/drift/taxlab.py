@@ -35,7 +35,28 @@ ASSUMPTIONS = {
     "default_advantaged": 1_000_000,   # starting slider value — tax-advantaged (IRA/Roth) balance
     "wealth_max": 10_000_000,          # slider ceiling
     "wealth_step": 50_000,
+    # Alpha-Turnover Frontier (Layer 3): the breakeven slope is gain_per_turn · r_st, where
+    # gain_per_turn is the NAV fraction realized as short-term gain per 1.0 of annual turnover.
+    # Calibrated from the live book in build_taxlab when a ledger exists; this is the fallback.
+    "gain_per_turn": 0.03,
+    "frontier_alpha": 0.05,            # default client strategy-alpha slider (5%)
+    "frontier_turnover": 3.0,          # default client annual-turnover slider (300%)
+    "alpha_max": 0.15,                 # alpha slider ceiling (15%)
+    "turnover_max": 5.0,               # turnover slider ceiling (500%)
 }
+
+
+def breakeven_alpha(turnover: float, r_st: float, gain_per_turn: float) -> float:
+    """Pre-tax alpha at which a strategy's short-term tax drag exactly cancels it:
+
+        alpha* = turnover · gain_per_turn · r_st
+
+    `turnover` is annual (1.0 = 100%), `r_st` the effective short-term rate, `gain_per_turn`
+    the NAV fraction realized short-term per unit of turnover. A point (alpha, turnover)
+    below this line — more turnover, less alpha — has net-negative after-tax alpha. Mirrors
+    the JS on the Tax Lab page; kept here for automated coverage.
+    """
+    return turnover * gain_per_turn * max(0.0, r_st)
 
 
 def location_alpha(taxable: float, advantaged: float,
@@ -81,6 +102,10 @@ def build_taxlab(docs_dir: str | Path = "docs") -> dict:
     if gp is None:
         return state
     years = max(1e-9, len(entries) / 252.0)
+    # Calibrate the frontier's breakeven slope from the live book: short-term gain realized
+    # per year, per unit of annual turnover. Falls back to the assumption when turnover is 0.
+    annual_st = (gp.st_realized / years) if years else 0.0
+    gpt = (annual_st / gp.annual_turnover) if gp.annual_turnover else ASSUMPTIONS["gain_per_turn"]
     state["header"].update({
         "inception": led.get("inception", entries[0]["date"] if entries else ""),
         "updated": led.get("updated", ""),
@@ -90,6 +115,7 @@ def build_taxlab(docs_dir: str | Path = "docs") -> dict:
         "annual_turnover": gp.annual_turnover,
         "short_term_share": gp.short_term_share,
         "avg_holding_days": gp.avg_holding_days,
+        "gain_per_turn": round(gpt, 4),
     })
     state["profile"] = {
         "pretax_return": gp.pretax_return,

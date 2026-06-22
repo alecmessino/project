@@ -242,7 +242,9 @@ const NAMES={AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California"
  NC:"North Carolina",ND:"North Dakota",OH:"Ohio",OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",
  RI:"Rhode Island",SC:"South Carolina",SD:"South Dakota",TN:"Tennessee",TX:"Texas",UT:"Utah",
  VT:"Vermont",VA:"Virginia",WA:"Washington",WV:"West Virginia",WI:"Wisconsin",WY:"Wyoming",
- DC:"District of Columbia"};
+ DC:"District of Columbia",NYC:"New York City"};
+// Friendlier dropdown labels for the non-state / sub-state entries.
+const SLABEL={"—":"No state tax","NYC":"New York · NYC resident","DC":"Washington, D.C."};
 // Five severity buckets ramped from the alpha green to the tax-drag rust, anchored on the
 // brand tokens: No tax = soft green (--pos), Moderate/flat = slate (--slate), Aggressive = rust (--neg).
 const BUCKETS=[
@@ -262,7 +264,8 @@ function bucketOf(slt,sst){
 function advisory(code,slt,sst,bi){
   if(code==="—") return "No state-level tax is modeled — federal and NIIT only. The cleanest jurisdiction for a taxable sleeve, and the baseline every other state is measured against.";
   const nm=NAMES[code]||code;
-  if(code==="WA") return `${nm} levies no income tax, but a <b>7% excise</b> hits long-term gains above an annual threshold while short-term gains stay untaxed by the state — an unusual profile that happens to favor a high-turnover book over buy-and-hold.`;
+  if(code==="NYC") return `New York City residents stack a <b>~3.88% local income tax</b> on New York State's 10.9% — a combined <b>14.78%</b> top marginal rate on capital gains, the steepest in the nation. Asset location and tax-loss harvesting deliver their largest dollar value here; a high-turnover sleeve held in a taxable NYC account is the textbook case for moving into a shelter.`;
+  if(code==="WA") return `${nm} is a <b>zero-income-tax</b> state, but levies a <b>7% excise on realized long-term capital gains</b> above a ~$270k annual statutory threshold; short-term gains and dividends stay untaxed by the state. So high-velocity rebalancing escapes state tax, but <b>long-term liquidations</b> of an appreciated passive core do not — an unusual split that favors the high-turnover sleeve over a buy-and-hold one in taxable.`;
   if(sst<=0) return `${nm} levies no income tax, so capital gains escape state tax entirely. A harvested loss here is worth only the federal rate — tax-loss harvesting delivers its <b>least</b> value in a no-tax state.`;
   if(code==="MA") return `${nm} taxes <b>short-term</b> gains at 8.5%, far above its 5% long-term rate. Aging a lot past one year is unusually valuable here — exactly what the slow sleeve does by construction.`;
   if(slt<sst) return `${nm} taxes long-term gains <b>below</b> short-term (a partial long-term exclusion), so every lot that crosses the one-year line banks the spread — the slow sleeve's structural edge.`;
@@ -285,7 +288,8 @@ function buildMap(){
   $("legend").innerHTML=BUCKETS.map(b=>`<span><i style="background:${b.fill}"></i>${b.lab}</span>`).join("");
 }
 function paintSel(code){
-  $("usmap").querySelectorAll("rect.st").forEach(r=>r.classList.toggle("sel", r.dataset.st===code));
+  const tile = code==="NYC" ? "NY" : code;     // NYC has no tile of its own — light up NY
+  $("usmap").querySelectorAll("rect.st").forEach(r=>r.classList.toggle("sel", r.dataset.st===tile));
 }
 function renderDisc(r){
   const [slt,sst]=S.states[r.state], bi=bucketOf(slt,sst), b=BUCKETS[bi];
@@ -492,7 +496,7 @@ function init(){
   S=window.__STATE__;
   if(!S||!S.profile){document.querySelector(".wrap").insertAdjacentHTML("beforeend","<p class='lede'>No ledger data yet.</p>");return;}
   $("bracket").innerHTML=S.brackets.map((b,i)=>`<option value="${i}"${i===S.brackets.length-1?" selected":""}>${b.label}</option>`).join("");
-  $("state").innerHTML=Object.keys(S.states).map(s=>`<option value="${s}">${s==="—"?"No state tax":s}</option>`).join("");
+  $("state").innerHTML=Object.keys(S.states).map(s=>`<option value="${s}">${SLABEL[s]||s}</option>`).join("");
   ["bracket","state","account"].forEach(id=>$(id).addEventListener("change",render));
   $("genpdf").addEventListener("click",()=>window.print());   // Phase 5: print -> Save as PDF
   if(S.assumptions){

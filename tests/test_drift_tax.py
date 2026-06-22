@@ -251,6 +251,25 @@ def test_build_taxlab_embeds_assumptions(tmp_path):
     json.dumps(st)                                          # still fully embeddable
 
 
+def test_nyc_overlay_stacks_local_tax_on_new_york():
+    from drift.tax import STATE_RATES, profile_for_state
+    from drift.config import TaxSettings
+    assert "NYC" in STATE_RATES
+    ny_lt, ny_st = STATE_RATES["NY"]
+    nyc_lt, nyc_st = STATE_RATES["NYC"]
+    assert nyc_lt > ny_lt and nyc_st > ny_st            # ~3.88% local stacks on NY's 10.9%
+    assert abs(nyc_lt - 0.1478) < 1e-6                  # combined 14.78% top marginal
+    base = TaxSettings()
+    pny, pnyc = profile_for_state(base, "NY"), profile_for_state(base, "NYC")
+    assert pnyc.rate_lt > pny.rate_lt and pnyc.rate_st > pny.rate_st   # cascades into effective rates
+
+
+def test_wa_excise_is_long_term_only():
+    from drift.tax import STATE_RATES
+    lt, st = STATE_RATES["WA"]
+    assert abs(lt - 0.07) < 1e-9 and st == 0.0          # 7% LT cap-gains excise, no income/ST tax
+
+
 def test_state_table_is_complete_with_special_cases():
     from drift.tax import STATE_RATES
     assert len(STATE_RATES) >= 52                          # 50 states + DC + the "—" default

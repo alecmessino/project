@@ -152,17 +152,39 @@ def _sb(lv=0, lb=0, lg=0, mv=0, mb=0, mg=0, sv=0, sb=0, sg=0) -> dict[str, float
             "small|value": sv, "small|blend": sb, "small|growth": sg}
 
 
+# EXACT Morningstar style vectors for the live-traded sleeve funds — verified against
+# each fund's published style box (not the representative approximations above). These
+# are the SOURCE OF TRUTH for the live book's blended exposure grid: _blend_style_box
+# takes the weight-weighted dot product of these against the active book. Order is
+# [Large Value, Large Blend, Large Growth, Mid Value, Mid Blend, Mid Growth,
+#  Small Value, Small Blend, Small Growth].
+STYLE_VECTORS: dict[str, list[float]] = {
+    "IVE": [0.33, 0.27, 0.05, 0.13, 0.17, 0.03, 0.01, 0.01, 0.00],   # S&P 500 Value
+    "IWS": [0.01, 0.05, 0.05, 0.23, 0.30, 0.13, 0.09, 0.12, 0.02],   # Russell Midcap Value
+    "EWX": [0.01, 0.01, 0.02, 0.10, 0.15, 0.16, 0.20, 0.22, 0.14],   # EM small blend
+    "IWN": [0.00, 0.00, 0.00, 0.02, 0.01, 0.03, 0.47, 0.35, 0.13],   # Russell 2000 Value
+    "IVV": [0.22, 0.36, 0.22, 0.06, 0.09, 0.03, 0.00, 0.01, 0.00],   # S&P 500
+    "IWR": [0.01, 0.04, 0.06, 0.18, 0.29, 0.19, 0.08, 0.11, 0.03],   # Russell Midcap
+    "IJR": [0.00, 0.00, 0.00, 0.00, 0.01, 0.00, 0.35, 0.40, 0.25],   # S&P SmallCap 600
+    "IVW": [0.12, 0.44, 0.38, 0.00, 0.02, 0.04, 0.00, 0.00, 0.00],   # S&P 500 Growth
+    "IWO": [0.00, 0.00, 0.00, 0.00, 0.01, 0.16, 0.11, 0.32, 0.40],   # Russell 2000 Growth
+}
+
+_STYLE_CELLS = ("large|value", "large|blend", "large|growth",
+                "mid|value", "mid|blend", "mid|growth",
+                "small|value", "small|blend", "small|growth")
+
+
+def _vec(v: list[float]) -> dict[str, float]:
+    """9-vector [LV,LB,LG,MV,MB,MG,SV,SB,SG] -> cell-keyed style box (zero cells dropped)."""
+    return {cell: share for cell, share in zip(_STYLE_CELLS, v) if share}
+
+
 STYLE_BOX: dict[str, dict[str, float]] = {
-    # --- US ---
-    "IVE": _sb(lv=33, lb=27, lg=4, mv=13, mb=17, mg=3, sv=1, sb=1, sg=1),   # S&P 500 Value
-    "IVV": _sb(lv=24, lb=31, lg=33, mv=3, mb=5, mg=3, sb=1),                # S&P 500
-    "IVW": _sb(lv=2, lb=15, lg=60, mb=7, mg=13, sb=1, sg=2),                # S&P 500 Growth
-    "IWS": _sb(lv=4, lg=2, mv=42, mb=25, mg=3, sv=12, sb=6, sg=2, lb=4),    # Russell Midcap Value
-    "IWR": _sb(lv=5, lb=5, lg=5, mv=18, mb=30, mg=22, sv=4, sb=4, sg=7),    # Russell Midcap
+    # Live-traded sleeve funds: EXACT vectors (STYLE_VECTORS is the source of truth).
+    **{tkr: _vec(v) for tkr, v in STYLE_VECTORS.items()},
+    # Other matrix funds + benchmarks: representative classifications (shape, not precision).
     "IWP": _sb(lb=3, lg=8, mv=2, mb=20, mg=50, sv=2, sb=5, sg=10),          # Russell Midcap Growth
-    "IWN": _sb(lv=1, mv=15, mb=5, mg=1, sv=50, sb=25, sg=3),                # Russell 2000 Value
-    "IJR": _sb(mv=3, mb=3, mg=1, sv=30, sb=38, sg=25),                      # S&P SmallCap 600
-    "IWO": _sb(mv=1, mb=4, mg=12, sv=3, sb=25, sg=55),                      # Russell 2000 Growth
     # --- Developed international ---
     "EFV": _sb(lv=45, lb=15, lg=2, mv=25, mb=10, mg=2, sv=1),               # EAFE Value
     "EFA": _sb(lv=25, lb=35, lg=20, mv=7, mb=8, mg=3, sb=2),                # EAFE
@@ -173,7 +195,6 @@ STYLE_BOX: dict[str, dict[str, float]] = {
     "FNDE": _sb(lv=45, lb=15, lg=3, mv=22, mb=10, mg=3, sv=2),              # EM value (fundamental)
     "VWO": _sb(lv=22, lb=33, lg=22, mv=8, mb=8, mg=4, sb=2, sg=1),          # EM core
     "AVEE": _sb(mv=18, mb=8, sv=48, sb=22, sg=2, mg=2),                     # EM small value
-    "EWX": _sb(mv=7, mb=6, mg=2, sv=30, sb=40, sg=15),                      # EM small blend
     # --- Buy-and-hold benchmarks (cap-weighted total markets) ---
     "VTI": _sb(lv=24, lb=25, lg=24, mv=7, mb=7, mg=6, sv=2, sb=3, sg=2),    # US total market
     "VT": _sb(lv=23, lb=25, lg=24, mv=7, mb=7, mg=6, sv=3, sb=3, sg=2),     # Global total market

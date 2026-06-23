@@ -270,6 +270,26 @@ def test_wa_excise_is_long_term_only():
     assert abs(lt - 0.07) < 1e-9 and st == 0.0          # 7% LT cap-gains excise, no income/ST tax
 
 
+def test_location_alpha3_three_buckets():
+    from drift.taxlab import location_alpha3
+    mdr, pdr, g, H = 0.08, 0.004, 0.07, 30
+    # Roth and Traditional are interchangeable for the annual alpha (both shelter the drag):
+    a = location_alpha3(1_000_000, 1_000_000, 0, mdr, pdr, g, H)
+    b = location_alpha3(1_000_000, 0, 1_000_000, mdr, pdr, g, H)
+    assert abs(a["annual_saved"] - b["annual_saved"]) < 1e-6
+    # Equal taxable vs sheltered maximizes the overlap; both extremes zero it out.
+    assert location_alpha3(0, 500_000, 500_000, mdr, pdr, g, H)["annual_saved"] == 0.0   # nothing in taxable
+    assert location_alpha3(1_000_000, 0, 0, mdr, pdr, g, H)["annual_saved"] == 0.0        # nothing sheltered
+    eq = location_alpha3(1_000_000, 500_000, 500_000, mdr, pdr, g, H)
+    # annual = (T·A/W)·(mdr−pdr) = (1e6·1e6/2e6)·0.076 = 38_000
+    assert abs(eq["annual_saved"] - 38_000) < 1e-6
+    # terminal alpha = annual · future-value-of-annuity factor (compounding the saved tax)
+    fv = ((1 + g) ** H - 1) / g
+    assert abs(eq["terminal_alpha"] - 38_000 * fv) < 1e-3
+    assert eq["terminal_alpha"] > eq["annual_saved"]      # compounding lifts it well above one year
+    assert eq["sleeve"] == 1_000_000                      # momentum sleeve = Traditional + Roth
+
+
 def test_after_fee_subtracts_annual_cost_over_the_track():
     from drift.taxlab import after_fee
     # 26.56% after-tax, 130 bps all-in fee, 1.75y -> 26.56 - 1.30*1.75 = 24.28%

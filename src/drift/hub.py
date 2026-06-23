@@ -23,7 +23,8 @@ EXHIBITS = [
     ("Long-history tearsheet", "tearsheet.html",
      "Decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample."),
     ("Tax Lab", "taxlab.html",
-     "After-tax return, tax-loss-harvesting value, and the asset-location benefit — by bracket and state."),
+     "Holistic asset-location engine: after-tax return, three-account placement (taxable / Traditional / "
+     "Roth), estate step-up, and tax-loss harvesting — personalized by bracket and state."),
     ("Dashboard", "equities.html",
      "Live trend signals, the relative-strength ranking, and per-name backtests across the matrix."),
     ("Case studies", "equities_case_studies.html",

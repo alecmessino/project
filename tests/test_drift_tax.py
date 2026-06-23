@@ -289,6 +289,15 @@ def test_il_estate_tax_cliff_and_hb2601_toggle():
     assert il_estate_tax(8_000_000, 4_000_000) > 0.0      # ...vs a real bill under current law
 
 
+def test_il_estate_tax_scales_above_10m_at_top_rate():
+    from drift.taxlab import il_estate_tax
+    # A $14M estate scales smoothly through the 16% top — not capped near ~$1.01M.
+    assert abs(il_estate_tax(14_000_000, 4_000_000) - 1_620_000) < 1_000
+    # the top slice is taxed at exactly 16%.
+    step = il_estate_tax(20_000_000, 4_000_000) - il_estate_tax(19_000_000, 4_000_000)
+    assert abs(step - 160_000) < 1
+
+
 def test_il_estate_tax_monotonic_and_exclusion_layer():
     from drift.taxlab import il_estate_tax
     prev = -1.0
@@ -319,6 +328,50 @@ def test_estate_assumptions_embedded(tmp_path):
     e = build_taxlab(tmp_path)["assumptions"]["estate"]
     assert e["il_exclusion"] == 4_000_000 and e["il_hb2601_exclusion"] == 8_000_000
     assert e["fed_exemption_indiv"] == 15_000_000 and e["il_top_rate"] == 0.16
+
+
+def test_compounded_fee_drag_401k():
+    from drift.taxlab import compounded_fee_drag
+    assert compounded_fee_drag(0, 0.005, 0.07, 10) == 0.0
+    assert compounded_fee_drag(500_000, 0.0, 0.07, 10) == 0.0          # no fee -> no drag
+    d = compounded_fee_drag(500_000, 0.005, 0.07, 10)
+    assert d > 0                                                       # a real 10-yr fee drag
+    # a bigger fee or balance always drags more
+    assert compounded_fee_drag(500_000, 0.010, 0.07, 10) > d
+    assert compounded_fee_drag(1_000_000, 0.005, 0.07, 10) > d
+
+
+def test_roth_conversion_illinois_arbitrage():
+    from drift.taxlab import roth_conversion
+    # Taxed state: federal + state both apply.
+    taxed = roth_conversion(100_000, 0.37, 0.0495, False)
+    assert abs(taxed["federal"] - 37_000) < 1 and abs(taxed["state"] - 4_950) < 1
+    assert abs(taxed["total"] - 41_950) < 1 and taxed["state_saved"] == 0.0
+    # Illinois (exempts retirement income): federal only, the state tax is saved.
+    il = roth_conversion(100_000, 0.37, 0.0495, True)
+    assert abs(il["federal"] - 37_000) < 1 and il["state"] == 0.0
+    assert abs(il["state_saved"] - 4_950) < 1 and il["total"] < taxed["total"]
+
+
+def test_strategy_assumptions_embedded(tmp_path):
+    import json
+    from drift import ledger as L
+    from drift.config import Settings
+    from drift.taxlab import build_taxlab
+    from drift.feed.synthetic import SyntheticFeed
+    from dataclasses import replace
+    from datetime import date, timedelta
+    s = Settings(signal={"lookback": 20, "vol_window": 10, "breakout_channel": 15})
+    start = date(2020, 1, 1)
+    series = {}
+    for i, d in enumerate((0.5, -0.3, 0.2, 0.4)):
+        bars = SyntheticFeed(instruments=(f"S{i}",), n_bars=300, regimes=[(300, d)], seed=5 + i).series(f"S{i}")
+        series[f"S{i}"] = [replace(b, asof=(start + timedelta(days=k)).isoformat()) for k, b in enumerate(bars)]
+    led = L.seed_ledger(series, s, sessions=120)
+    (tmp_path / "ledger.json").write_text(json.dumps(led))
+    st = build_taxlab(tmp_path)["assumptions"]["strategy"]
+    assert st["k401_fee_bps"] == 50 and st["rollover_years"] == 10
+    assert "IL" in st["states_exempt_retirement"]
 
 
 def test_location_alpha3_three_buckets():

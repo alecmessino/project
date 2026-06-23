@@ -311,7 +311,7 @@ def ledger(
             continue
         if len(bars) >= settings.signal.min_history:
             series[s] = bars
-    # Buy-and-hold benchmarks, total return: VT (global, ~65/25/10 US/dev/EM) and
+    # Buy-and-hold benchmarks, total return: VT (global, ~62/28/10 US/dev/EM — US ~61.97% as of mid-2026) and
     # VTI (US total market). Both fetched on the same adjusted-close basis as the book.
     benchmarks: dict = {}
     for label in ("VT", "VTI"):

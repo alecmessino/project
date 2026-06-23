@@ -67,7 +67,41 @@ ASSUMPTIONS = {
         "estate_step": 100_000,
         "trust_compression_top_threshold": 15_650,  # 2026 trust income hits the 37% bracket here
     },
+    # Optimal Strategy & Rollover Engine (?view=strategy).
+    "strategy": {
+        "default_401k": 500_000,
+        "k401_fee_bps": 50,          # legacy plan / target-date embedded fee (default)
+        "k401_fee_max_bps": 150,
+        "rollover_years": 10,
+        "default_trad_ira": 800_000,
+        "default_conversion": 100_000,
+        "conversion_max": 500_000,
+        # States that broadly exempt IRA/pension distributions from state income tax — so a Roth
+        # conversion there incurs federal tax only (the "conversion arbitrage", led by Illinois).
+        "states_exempt_retirement": ["IL", "PA", "MS"],
+    },
 }
+
+
+def compounded_fee_drag(balance: float, fee_rate: float, growth_rate: float, years: float) -> float:
+    """Terminal dollars lost to an annual fee over `years`: the gap between compounding at the
+    gross growth rate versus net of the fee. Used by the 401(k) rollover escape-hatch comparison."""
+    if balance <= 0:
+        return 0.0
+    return balance * ((1 + growth_rate) ** years - (1 + max(0.0, growth_rate - fee_rate)) ** years)
+
+
+def roth_conversion(conversion: float, fed_ord_rate: float, state_rate: float,
+                    state_exempts_retirement: bool) -> dict:
+    """Tax on a Roth conversion: federal ordinary income on the converted amount, plus state
+    ordinary tax UNLESS the state exempts retirement distributions (e.g. Illinois) — in which case
+    only federal applies and `state_saved` is the state tax avoided (the conversion arbitrage)."""
+    conv = max(0.0, conversion)
+    fed = conv * max(0.0, fed_ord_rate)
+    would_owe_state = conv * max(0.0, state_rate)
+    state = 0.0 if state_exempts_retirement else would_owe_state
+    return {"federal": fed, "state": state, "total": fed + state,
+            "state_saved": would_owe_state if state_exempts_retirement else 0.0}
 
 # Calibrated to the Illinois Attorney General estate-tax calculator (single estate), expressed
 # as the tax on the amount ABOVE the exclusion so the HB2601 toggle just shifts the baseline:
@@ -78,7 +112,8 @@ _IL_AG_CURVE = [
     (0, 0, 0.285),                 # 0 -> $1M excess: ~28.5% effective (the steep cliff zone)
     (1_000_000, 285_000, 0.135),   # $1M -> $4M excess
     (4_000_000, 690_000, 0.145),   # $4M -> $6M excess
-    (6_000_000, 980_000, 0.160),   # above $6M excess: 16% statutory top
+    (6_000_000, 980_000, 0.160),   # $6M -> $10M excess: 16% statutory top
+    (10_000_000, 1_620_000, 0.160),# upper anchor ($14M estate) — keeps scaling at 16% above this
 ]
 
 

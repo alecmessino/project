@@ -270,6 +270,55 @@ def test_wa_excise_is_long_term_only():
     assert abs(lt - 0.07) < 1e-9 and st == 0.0          # 7% LT cap-gains excise, no income/ST tax
 
 
+def test_il_estate_tax_cliff_and_hb2601_toggle():
+    from drift.taxlab import il_estate_tax
+    # At or below the $4M exclusion: no Illinois estate tax (the cliff into taxability).
+    assert il_estate_tax(3_000_000, 4_000_000) == 0.0
+    assert il_estate_tax(4_000_000, 4_000_000) == 0.0
+    # Above it: a positive, graduated liability that grows with the estate.
+    t5 = il_estate_tax(5_000_000, 4_000_000)
+    t8 = il_estate_tax(8_000_000, 4_000_000)
+    assert t5 > 0 and t8 > t5
+    # Top marginal rate caps at 16% (a $1M slice up at the top adds <= $160k).
+    hi = il_estate_tax(12_000_000, 4_000_000) - il_estate_tax(11_000_000, 4_000_000)
+    assert hi <= 160_000 + 1e-6
+    # HB2601 doubles the exclusion to $8M -> an $8M estate owes nothing, eliminating the liability.
+    assert il_estate_tax(8_000_000, 8_000_000) == 0.0
+    assert il_estate_tax(8_000_000, 4_000_000) > 0.0      # ...vs a real bill under current law
+
+
+def test_il_estate_tax_monotonic_and_exclusion_layer():
+    from drift.taxlab import il_estate_tax
+    prev = -1.0
+    for e in range(4_000_000, 12_000_001, 500_000):
+        t = il_estate_tax(e, 4_000_000)
+        assert t >= prev                                  # non-decreasing in estate size
+        prev = t
+    # A higher exclusion never increases the tax (HB2601 only ever helps).
+    assert il_estate_tax(7_000_000, 8_000_000) <= il_estate_tax(7_000_000, 4_000_000)
+
+
+def test_estate_assumptions_embedded(tmp_path):
+    import json
+    from drift import ledger as L
+    from drift.config import Settings
+    from drift.taxlab import build_taxlab
+    from drift.feed.synthetic import SyntheticFeed
+    from dataclasses import replace
+    from datetime import date, timedelta
+    s = Settings(signal={"lookback": 20, "vol_window": 10, "breakout_channel": 15})
+    start = date(2020, 1, 1)
+    series = {}
+    for i, d in enumerate((0.5, -0.3, 0.2, 0.4)):
+        bars = SyntheticFeed(instruments=(f"S{i}",), n_bars=300, regimes=[(300, d)], seed=5 + i).series(f"S{i}")
+        series[f"S{i}"] = [replace(b, asof=(start + timedelta(days=k)).isoformat()) for k, b in enumerate(bars)]
+    led = L.seed_ledger(series, s, sessions=120)
+    (tmp_path / "ledger.json").write_text(json.dumps(led))
+    e = build_taxlab(tmp_path)["assumptions"]["estate"]
+    assert e["il_exclusion"] == 4_000_000 and e["il_hb2601_exclusion"] == 8_000_000
+    assert e["fed_exemption_indiv"] == 15_000_000 and e["il_top_rate"] == 0.16
+
+
 def test_location_alpha3_three_buckets():
     from drift.taxlab import location_alpha3
     mdr, pdr, g, H = 0.08, 0.004, 0.07, 30

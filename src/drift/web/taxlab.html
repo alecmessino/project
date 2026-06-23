@@ -164,10 +164,13 @@
   .modetog button{font:inherit;font-size:12px;font-weight:600;color:var(--dim);background:#fff;border:none;
     padding:6px 15px;cursor:pointer;letter-spacing:.2px}
   .modetog button.on{background:var(--ink);color:#fff}
-  body.lead .advisor-only{display:none!important}
-  .lead-only{display:none}
+  /* three views: advisor (default) / estate / prospect. */
+  body.lead .advisor-only, body.estate .advisor-only{display:none!important}
+  body.lead .no-lead{display:none!important}            /* controls/state map: advisor + estate, not lead */
+  .lead-only,.estate-only{display:none}
   body.lead .lead-only{display:block}
-  body.lead .geo{grid-template-columns:1fr}
+  body.estate .estate-only{display:block}
+  body.lead .geo,body.estate .geo{grid-template-columns:1fr}
   /* Phase B fix: center the prospect funnel under the map */
   #leadgen{margin:24px auto 0;max-width:600px;text-align:center}
   .lead-port{margin:0 auto 18px;max-width:360px}
@@ -194,7 +197,32 @@
   .lead-success p{font-size:13.5px;color:var(--ink);margin:7px 0 0;line-height:1.55}
   #calendly-slot{margin-top:14px;min-height:60px;border:1px dashed var(--line);border-radius:10px;
     display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12.5px;text-align:center;padding:14px}
-  @media(max-width:620px){.controls{grid-template-columns:1fr}.wf .lbl{width:130px}.geo{grid-template-columns:1fr}.optgrid,.frontgrid,.feerow{grid-template-columns:1fr}}
+  /* --- Estate Planning View --- */
+  .est-params{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:14px 0 4px}
+  .est-params .p{background:#fff;padding:13px 15px}
+  .est-params .p .k{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);font-weight:600}
+  .est-params .p .v{font-size:15px;font-weight:680;color:var(--ink);margin-top:3px}
+  .est-params .p .s{font-size:11.5px;color:var(--dim);margin-top:2px}
+  .estgrid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;margin-top:14px}
+  .entity .hb{display:flex;align-items:center;gap:9px;margin:0 0 14px;font-size:12.5px;color:var(--ink)}
+  .toggle{position:relative;width:40px;height:22px;flex:none;border-radius:999px;background:var(--line);cursor:pointer;transition:background .15s}
+  .toggle.on{background:var(--accent)}
+  .toggle .knob{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .toggle.on .knob{left:20px}
+  .est-cliff{border:1px solid var(--neg);border-left:4px solid var(--neg);background:#fbeee6;border-radius:10px;padding:16px 18px}
+  .est-cliff.safe{border-color:#cfe6db;border-left-color:var(--pos);background:#f3f8f5}
+  .est-cliff .big{font-size:30px;font-weight:720;letter-spacing:-.5px;font-variant-numeric:tabular-nums;color:var(--neg);line-height:1.05}
+  .est-cliff.safe .big{color:var(--pos)}
+  .est-cliff .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);font-weight:700}
+  .est-cliff p{margin:9px 0 0;font-size:12.6px;line-height:1.55;color:var(--ink)}
+  .est-prevented{margin-top:13px;background:#eef5f1;border:1px solid #cfe6db;border-radius:8px;padding:10px 13px;
+    display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px}
+  .est-prevented b{font-size:19px;color:var(--pos);font-weight:720;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+  .est-warn{margin-top:12px;border:1px solid #e6cf8f;background:#fbf4e2;border-radius:8px;padding:10px 13px;font-size:12px;color:var(--slate);line-height:1.5}
+  .est-warn b{color:#8a6a1a}
+  .est-fed{font-size:12.5px;color:var(--dim);margin-top:12px;line-height:1.5}
+  .est-fed b{color:var(--ink)}
+  @media(max-width:620px){.controls{grid-template-columns:1fr}.wf .lbl{width:130px}.geo{grid-template-columns:1fr}.optgrid,.frontgrid,.feerow,.estgrid,.est-params{grid-template-columns:1fr}}
   /* --- Phase 5: client proposal PDF (print) --- */
   .toolbar{display:flex;justify-content:flex-end;margin:2px 0 0}
   .pdfbtn{font:inherit;font-size:12.5px;font-weight:600;color:#fff;background:var(--accent);border:none;
@@ -234,6 +262,7 @@
     <p class="lede" id="lede"></p>
     <div class="modetog" id="modetog">
       <button type="button" data-mode="advisor">Advisor view</button>
+      <button type="button" data-mode="estate">Estate planning</button>
       <button type="button" data-mode="lead">Prospect view</button>
     </div>
   </header>
@@ -245,7 +274,7 @@
   <div id="execsummary"></div>
   <div id="cpabrief"></div>
 
-  <div class="controls advisor-only" id="controls">
+  <div class="controls no-lead" id="controls">
     <div class="ctl"><label>Federal bracket</label><select id="bracket"></select></div>
     <div class="ctl"><label>State of residence</label><select id="state"></select></div>
     <div class="ctl"><label>Account</label><select id="account">
@@ -274,6 +303,27 @@
     </div>
     <div class="lead-hero" id="leadhero"></div>
     <div class="lead-cta" id="leadcta"></div>
+  </section>
+
+  <section id="estate" class="estate-only">
+    <h2>Estate Planning · Entity-Level Architecture <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· 2026 tax-law reference</span></h2>
+    <div class="est-params" id="estparams"></div>
+    <div class="estgrid">
+      <div class="opt-card entity">
+        <div class="hb"><span class="toggle" id="hb2601" role="switch" tabindex="0" aria-label="Model proposed HB2601"><span class="knob"></span></span>
+          <span>Model proposed <b>HB2601</b> — double the IL exemption to $8M</span></div>
+        <div class="slider"><div class="top"><label>Individual</label><output id="estindv"></output></div>
+          <input type="range" id="estind" aria-label="Assets owned individually" /></div>
+        <div class="slider"><div class="top"><label>Joint (spouses)</label><output id="estjointv"></output></div>
+          <input type="range" id="estjoint" aria-label="Assets owned jointly" /></div>
+        <div class="slider"><div class="top"><label>Credit Shelter / Bypass Trust</label><output id="esttrustv"></output></div>
+          <input type="range" id="esttrust" aria-label="Assets in a credit shelter / bypass trust" /></div>
+        <div class="est-warn" id="esttrustwarn" style="display:none"></div>
+      </div>
+      <div class="opt-card" id="estresult"></div>
+    </div>
+    <p class="est-fed" id="estfed"></p>
+    <div class="note" id="estnote" style="margin-top:16px"></div>
   </section>
 
   <section id="optim" class="advisor-only">
@@ -357,7 +407,7 @@ const CONFIG={
   calendlyUrl:"",                        // e.g. "https://calendly.com/you/intro" — empty => placeholder slot
   leadPortfolio:1000000,                 // the headline portfolio size used in the lead-gen hook
 };
-let MODE = (new URLSearchParams(location.search).get("view")==="lead") ? "lead" : "advisor";
+let MODE = (v=>v==="lead"||v==="estate"?v:"advisor")(new URLSearchParams(location.search).get("view"));
 const pct=(x,d=1)=>x==null?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
 const apct=(x,d=1)=>x==null?"—":(x*100).toFixed(d)+"%";
 const $=id=>document.getElementById(id);
@@ -657,18 +707,77 @@ function ctaSuccess(){
         usually relocating your most tax-inefficient sleeves.</p>
       <div id="calendly-slot">${cal}</div></div>`;
 }
+// --- Estate Planning View (entity-level architecture + IL cliff + HB2601) ---
+const IL_2011=[[0,0,0],[40000,0,0.008],[90000,400,0.016],[140000,1200,0.024],[240000,3600,0.032],
+ [440000,10000,0.040],[640000,18000,0.048],[840000,27600,0.056],[1040000,38800,0.064],[1540000,70800,0.072],
+ [2040000,106800,0.080],[2540000,146800,0.088],[3040000,190800,0.096],[3540000,238800,0.104],[4040000,290800,0.112],
+ [5040000,402800,0.120],[6040000,522800,0.128],[7040000,650800,0.136],[8040000,786800,0.144],[9040000,930800,0.152],[10040000,1082800,0.160]];
+function ilTableTax(x){ if(x<=0)return 0; let o=0,b=0,r=0; for(const row of IL_2011){ if(x>=row[0]){o=row[0];b=row[1];r=row[2];} else break; } return b+r*(x-o); }
+function ilEstateTax(estate,exclusion){ return estate<=exclusion?0:Math.max(0,ilTableTax(estate)-ilTableTax(exclusion)); }
+function hbOn(){ return $("hb2601").classList.contains("on"); }
+function renderEstate(){
+  if(!S.assumptions||!S.assumptions.estate) return;
+  const E=S.assumptions.estate, hb=hbOn(), excl=hb?E.il_hb2601_exclusion:E.il_exclusion;
+  const ind=+$("estind").value||0, joint=+$("estjoint").value||0, trust=+$("esttrust").value||0, total=ind+joint+trust;
+  $("estindv").textContent=fmt$(ind); $("estjointv").textContent=fmt$(joint); $("esttrustv").textContent=fmt$(trust);
+  const st=$("state").value, isIL=(st==="IL");
+  const sheltered=Math.min(trust,excl), taxable=total-sheltered;
+  const ilNoTrust=isIL?ilEstateTax(total,excl):0, ilWithTrust=isIL?ilEstateTax(taxable,excl):0, prevented=ilNoTrust-ilWithTrust;
+  const fedExempt=joint>0?E.fed_exemption_couple:E.fed_exemption_indiv;
+  const fedTax=Math.max(0,total-fedExempt)*E.fed_rate;
+  $("estparams").innerHTML=
+    `<div class="p"><div class="k">Federal exemption</div><div class="v">${fmt$big(fedExempt)}</div><div class="s">${joint>0?"couple (portable)":"individual"} · 40% top · permanent</div></div>
+     <div class="p"><div class="k">Illinois exclusion</div><div class="v">${fmt$big(excl)}${hb?" · HB2601":""}</div><div class="s">16% top · no portability${hb?" · proposed":""}</div></div>`;
+  let card;
+  if(!isIL){
+    card=`<div class="est-cliff safe"><div class="lbl">Illinois estate cliff</div><div class="big">${fmt$(fedTax)}</div>
+      <p>Federal estate tax only — the Illinois cliff is modeled for <b>Illinois</b> residents. Switch the state to
+      <b>Illinois</b> above to see the ${fmt$big(E.il_exclusion)} state exposure. (State estate taxes vary; your attorney
+      covers ${st==="—"?"your state":(NAMES[st]||st)}.)</p></div>`;
+  } else if(total<=excl){
+    card=`<div class="est-cliff safe"><div class="lbl">Illinois estate · under the exclusion</div><div class="big">$0</div>
+      <p>A ${fmt$big(total)} estate sits under Illinois' ${fmt$big(excl)} exclusion${hb?" (HB2601)":""} — no Illinois estate tax.
+      ${hb?"":`Cross ${fmt$big(excl)} and Illinois' graduated tax begins, reaching a 16% top rate.`}</p></div>`;
+  } else {
+    card=`<div class="est-cliff"><div class="lbl">⚠ Illinois Estate Tax Cliff</div><div class="big">${fmt$(ilWithTrust)}</div>
+      <p>A ${fmt$big(total)} estate is <b>${fmt$big(total-excl)} over</b> Illinois' ${fmt$big(excl)} exclusion${hb?" (HB2601)":""},
+      a projected <b>${fmt$(ilWithTrust)}</b> Illinois estate tax — while federal is ${fmt$(fedTax)} (exemption ${fmt$big(fedExempt)}).
+      Illinois, not the IRS, is the binding constraint.</p>
+      ${prevented>0?`<div class="est-prevented"><span>Tax prevented via Credit Shelter Trust</span><b>−${fmt$(prevented)}</b></div>`:""}</div>`;
+  }
+  $("estresult").innerHTML=card;
+  if(trust>0){
+    $("esttrustwarn").style.display="block";
+    $("esttrustwarn").innerHTML=`<b>⚠ Trust tax-compression flag (for the CPA).</b> Non-grantor trusts reach the top 37%
+      bracket at only ~${fmt$(E.trust_compression_top_threshold)} of retained income — so a <b>high-turnover sleeve</b> in
+      this trust realizes its ~${apct(S.header.short_term_share||0.95,0)} short-term gains at the compressed trust rates.
+      Locate the high-turnover Driftwood sleeve in <b>individual / grantor</b> structures; keep low-turnover, step-up-eligible assets in the trust.`;
+  } else $("esttrustwarn").style.display="none";
+  $("estfed").innerHTML=`Federal estate tax: <b>${fmt$(fedTax)}</b> (exemption ${fmt$big(fedExempt)}, ${apct(E.fed_rate,0)} top) — far above
+    most Illinois estates, which is why the ${fmt$big(E.il_exclusion)} Illinois exclusion usually bites first.`;
+  $("estnote").innerHTML=`<b>Method &amp; caveats.</b> Illinois estate tax is estimated from the §2011 graduated schedule
+    (0.8%–16%) on the amount above the exclusion — <b>illustrative only</b>. Illinois' actual computation (Illinois QTIP
+    elections, the Attorney General's calculator, deductions) can differ materially; the estate attorney produces the
+    filing figure. Not tax or legal advice.`;
+}
 function applyMode(m){
-  MODE=(m==="lead")?"lead":"advisor";
+  MODE=(m==="lead")?"lead":(m==="estate")?"estate":"advisor";
   document.body.classList.toggle("lead", MODE==="lead");
+  document.body.classList.toggle("estate", MODE==="estate");
   try{ const u=new URL(location.href); u.searchParams.set("view",MODE); history.replaceState(null,"",u); }catch(e){}
   $("modetog").querySelectorAll("button").forEach(btn=>btn.classList.toggle("on", btn.dataset.mode===MODE));
   $("lede").innerHTML = MODE==="lead"
     ? `See exactly how much of your wealth a high-turnover strategy hands to taxes in <b>your</b> state — and how much is recoverable. Click your state to begin.`
+    : MODE==="estate"
+    ? `<b>Entity-Level Asset Architecture</b> — model the Illinois estate cliff, the credit-shelter-trust shelter, and the proposed HB2601 exemption against the 2026 tax-law reference. Illustrative; coordinate the filing figure with your estate attorney.`
     : `A <b>Holistic Asset Location Engine</b> — quantitative wealth architecture that coordinates federal and state tax, account structure (taxable / Traditional / Roth), estate step-up, and tax-loss harvesting into one after-tax plan. Pick a bracket and state; everything recomputes from the book's real realized-gain profile.`;
   $("maphdr").innerHTML = MODE==="lead"
     ? `Click your state <span class="hint">· see your dollar tax bleed</span>`
+    : MODE==="estate"
+    ? `Set the state <span class="hint">· Illinois triggers the estate cliff</span>`
     : `Tax severity by state <span class="hint">· click a state to localize the model</span>`;
   if(MODE==="lead") renderLead();
+  if(MODE==="estate") renderEstate();
 }
 
 // --- Layer 3: alpha-turnover frontier -------------------------------------
@@ -811,6 +920,8 @@ function render(){
   drawFrontier();
   // Phase B: in prospect mode, refresh the dollar-bleed hook on every state change.
   if(MODE==="lead") renderLead();
+  // Estate view: the IL cliff depends on the selected state — refresh on state change.
+  if(MODE==="estate") renderEstate();
 }
 function init(){
   S=window.__STATE__;
@@ -843,6 +954,16 @@ function init(){
     $("advfee").min=0; $("advfee").max=A.fee_max_bps; $("advfee").step=5; $("advfee").value=A.advisory_fee_bps;
     $("erfee").min=0; $("erfee").max=A.fee_max_bps; $("erfee").step=5; $("erfee").value=A.expense_ratio_bps;
     ["advfee","erfee"].forEach(id=>$(id).addEventListener("input",render));
+    // Estate view: entity-assignment sliders + the HB2601 legislative-sandbox toggle.
+    if(A.estate){
+      const E=A.estate;
+      for(const id of ["estind","estjoint","esttrust"]){ $(id).max=E.estate_max; $(id).step=E.estate_step; }
+      $("estind").value=E.default_individual; $("estjoint").value=E.default_joint; $("esttrust").value=E.default_trust;
+      ["estind","estjoint","esttrust"].forEach(id=>$(id).addEventListener("input",renderEstate));
+      const tog=()=>{ $("hb2601").classList.toggle("on"); renderEstate(); };
+      $("hb2601").addEventListener("click",tog);
+      $("hb2601").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); tog(); } });
+    }
   }
   buildMap();
   render();

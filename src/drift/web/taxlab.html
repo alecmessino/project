@@ -173,13 +173,23 @@
   .modetog button{font:inherit;font-size:12px;font-weight:600;color:var(--dim);background:#fff;border:none;
     padding:6px 15px;cursor:pointer;letter-spacing:.2px}
   .modetog button.on{background:var(--ink);color:#fff}
-  /* three views: advisor (default) / estate / prospect. */
-  body.lead .advisor-only, body.estate .advisor-only{display:none!important}
-  body.lead .no-lead{display:none!important}            /* controls/state map: advisor + estate, not lead */
-  .lead-only,.estate-only{display:none}
+  /* four views: advisor (default) / estate / strategy / prospect. */
+  body.lead .advisor-only, body.estate .advisor-only, body.strategy .advisor-only{display:none!important}
+  body.lead .no-lead{display:none!important}            /* controls/state map: advisor + estate + strategy, not lead */
+  .lead-only,.estate-only,.strategy-only{display:none}
   body.lead .lead-only{display:block}
   body.estate .estate-only{display:block}
-  body.lead .geo,body.estate .geo{grid-template-columns:1fr}
+  body.strategy .strategy-only{display:block}
+  body.lead .geo,body.estate .geo,body.strategy .geo{grid-template-columns:1fr}
+  /* --- Strategy view: rollover / Roth / blueprint --- */
+  .strat-h{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);font-weight:700;margin:26px 0 4px}
+  .blueprint{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:8px}
+  .bp{border:1px solid var(--line);border-radius:10px;padding:15px 16px;background:#fff}
+  .bp .bt{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff;display:inline-block;margin-bottom:9px}
+  .bp .bt.tax{background:var(--slate)} .bp .bt.trad{background:#7d564a} .bp .bt.roth{background:var(--accent)}
+  .bp .bh{font-size:13px;font-weight:700;color:var(--ink)}
+  .bp p{margin:6px 0 0;font-size:11.8px;color:var(--slate);line-height:1.5}
+  .bp b{color:var(--ink)}
   /* Phase B fix: center the prospect funnel under the map */
   #leadgen{margin:24px auto 0;max-width:600px;text-align:center}
   .lead-port{margin:0 auto 18px;max-width:360px}
@@ -233,7 +243,7 @@
   .est-fed b{color:var(--ink)}
   @media(max-width:620px){
     .controls{grid-template-columns:1fr}.wf .lbl{width:130px}.geo{grid-template-columns:1fr}
-    .optgrid,.frontgrid,.feerow,.estgrid,.est-params{grid-template-columns:1fr}
+    .optgrid,.frontgrid,.feerow,.estgrid,.est-params,.blueprint{grid-template-columns:1fr}
     .modetog{flex-wrap:wrap;border-radius:10px}                 /* 3 view buttons wrap cleanly */
     .modetog button{flex:1 1 auto;padding:9px 10px;font-size:12px}  /* >=44px tap targets */
     .lead-form input,.lead-form button{padding:15px 16px}        /* comfortable tap targets */
@@ -279,6 +289,7 @@
     <div class="modetog" id="modetog">
       <button type="button" data-mode="advisor">Advisor view</button>
       <button type="button" data-mode="estate">Estate planning</button>
+      <button type="button" data-mode="strategy">Strategy</button>
       <button type="button" data-mode="lead">Prospect view</button>
     </div>
   </header>
@@ -340,6 +351,36 @@
     </div>
     <p class="est-fed" id="estfed"></p>
     <div class="note" id="estnote" style="margin-top:16px"></div>
+  </section>
+
+  <section id="strategy" class="strategy-only">
+    <h2>Optimal Strategy &amp; Rollover Engine <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· move scattered accounts into the framework</span></h2>
+
+    <h3 class="strat-h">1 · The 401(k) rollover escape hatch</h3>
+    <div class="optgrid">
+      <div class="opt-card">
+        <div class="slider"><div class="top"><label>Legacy 401(k) / 403(b) balance</label><output id="k401balv"></output></div>
+          <input type="range" id="k401bal" aria-label="Legacy 401k balance" /></div>
+        <div class="slider"><div class="top"><label>Embedded plan / target-date fee</label><output id="k401feev"></output></div>
+          <input type="range" id="k401fee" aria-label="Embedded plan fee, basis points" /></div>
+      </div>
+      <div class="opt-card res" id="rolloverres"></div>
+    </div>
+
+    <h3 class="strat-h">2 · 2026 Roth conversion optimizer</h3>
+    <div class="optgrid">
+      <div class="opt-card">
+        <div class="slider"><div class="top"><label>Traditional IRA balance</label><output id="rothtradv"></output></div>
+          <input type="range" id="rothtrad" aria-label="Traditional IRA balance" /></div>
+        <div class="slider"><div class="top"><label>Target annual conversion</label><output id="rothconvv"></output></div>
+          <input type="range" id="rothconv" aria-label="Target annual Roth conversion" /></div>
+      </div>
+      <div class="opt-card res" id="rothres"></div>
+    </div>
+    <div class="est-cliff" id="ilarb" style="display:none"></div>
+
+    <h3 class="strat-h">3 · Your asset-location blueprint</h3>
+    <div class="blueprint" id="blueprint"></div>
   </section>
 
   <section id="optim" class="advisor-only">
@@ -450,7 +491,7 @@ function track(name, props){
     else if(window.fathom && window.fathom.trackEvent) window.fathom.trackEvent(name);
   }catch(e){}
 }
-let MODE = (v=>v==="lead"||v==="estate"?v:"advisor")(new URLSearchParams(location.search).get("view"));
+let MODE = (v=>(v==="lead"||v==="estate"||v==="strategy")?v:"advisor")(new URLSearchParams(location.search).get("view"));
 const pct=(x,d=1)=>x==null?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
 const apct=(x,d=1)=>x==null?"—":(x*100).toFixed(d)+"%";
 const $=id=>document.getElementById(id);
@@ -703,10 +744,11 @@ function renderLead(){
   const st=$("state").value, b=stateBleed(), name=(st==="—")?null:(NAMES[st]||st);
   if(name && b.stateAnnual>1){
     $("leadhero").innerHTML=`${name} residents with a ${fmt$big(b.P)} taxable portfolio in a high-turnover
-      strategy give up <span class="num">${fmt$big(b.totalTotal)}</span> to capital-gains tax over ${b.horizon} years.
-      <span class="small">${fmt$big(b.fedTotal)} federal + ${fmt$big(b.stateTotal)} to ${name} (about ${fmt$(b.totalAnnual)}/yr).
-      The federal base is the same in every state — ${name} just stacks its layer on top. Most of it is recoverable
-      with the right account structure.</span>`;
+      strategy give up <span class="num">${fmt$big(b.totalTotal)}</span> to capital-gains tax over ${b.horizon} years
+      (${fmt$big(b.fedTotal)} federal + ${fmt$big(b.stateTotal)} to ${name}), averaging a massive
+      ${fmt$(b.totalAnnual)}/year in total wealth destruction.
+      <span class="small">The federal base is the same in every state — ${name} just stacks its layer on top.
+      Most of it is recoverable with the right account structure.</span>`;
   } else {
     $("leadhero").innerHTML=`A ${fmt$big(b.P)} taxable portfolio in a high-turnover strategy gives up
       <span class="num">${fmt$big(b.totalTotal)}</span> to <b>federal</b> capital-gains tax over ${b.horizon} years.
@@ -755,7 +797,7 @@ function ctaSuccess(){
 // Calibrated to the Illinois AG estate-tax calculator (mirror of drift.taxlab.il_estate_tax):
 // the tax on the amount OVER the exclusion, so HB2601 just shifts the baseline. Anchors at the
 // $4M exclusion: $5M->~$285k, $8M->~$690k, $10M->~$980k. (excess_breakpoint, tax, marginal_rate).
-const IL_AG=[[0,0,0.285],[1000000,285000,0.135],[4000000,690000,0.145],[6000000,980000,0.160]];
+const IL_AG=[[0,0,0.285],[1000000,285000,0.135],[4000000,690000,0.145],[6000000,980000,0.160],[10000000,1620000,0.160]];
 function ilAgTax(excess){ if(excess<=0)return 0; let bp=0,base=0,r=0; for(const row of IL_AG){ if(excess>=row[0]){bp=row[0];base=row[1];r=row[2];} else break; } return base+r*(excess-bp); }
 function ilEstateTax(estate,exclusion){ return ilAgTax(Math.max(0,estate-exclusion)); }
 function hbOn(){ return $("hb2601").classList.contains("on"); }
@@ -804,24 +846,84 @@ function renderEstate(){
     elections, the Attorney General's calculator, deductions) can differ materially; the estate attorney produces the
     filing figure. Not tax or legal advice.`;
 }
+
+// --- Strategy view: 401(k) rollover + Roth conversion + asset-location blueprint ---
+function renderStrategy(){
+  if(!S.assumptions||!S.assumptions.strategy) return;
+  const ST=S.assumptions.strategy, r=rates(), g=S.assumptions.growth_rate, p=S.profile, yrs=p.years||1, Y=ST.rollover_years;
+  // 1) 401(k) rollover escape hatch
+  const k401=+$("k401bal").value||0, k401fee=(+$("k401fee").value||0)/1e4;
+  $("k401balv").textContent=fmt$(k401); $("k401feev").textContent=(+$("k401fee").value||0)+" bps";
+  const feeDrag=k401*(Math.pow(1+g,Y)-Math.pow(1+Math.max(0,g-k401fee),Y));   // mirror compounded_fee_drag
+  const mdr=calc(r).drag/yrs, annuity=g>0?((Math.pow(1+g,Y)-1)/g):Y;
+  const locGain=k401*mdr*annuity;                                            // shelter the high-turnover sleeve, 10y
+  const mx1=Math.max(feeDrag,locGain,1);
+  $("rolloverres").innerHTML=
+    `<div class="recovered">+${fmt$big(locGain)}</div>
+     <div class="recsub">10-year <b>location alpha</b> from rolling this ${fmt$big(k401)} into the Driftwood IRA and
+       sheltering the high-turnover sleeve — versus <b>${fmt$big(feeDrag)}</b> bled to the ${(k401fee*1e4).toFixed(0)} bps
+       target-date fee by leaving it in the old plan.</div>
+     <div class="savings">
+       <div class="srow"><div class="sl"><span class="rl">Location alpha · roll over</span><span class="amt save">${fmt$(locGain)}</span></div>
+         <div class="sbar"><span class="bfill save" style="width:${locGain/mx1*100}%"></span></div></div>
+       <div class="srow"><div class="sl"><span class="rl">Fee drag · stay put</span><span class="amt fee">${fmt$(feeDrag)}</span></div>
+         <div class="sbar"><span class="bfill fee" style="width:${feeDrag/mx1*100}%"></span></div></div>
+       <div class="net"><span>Edge from rolling over (10y)</span><b>+${fmt$(locGain+feeDrag)}</b></div>
+     </div>`;
+  // 2) Roth conversion optimizer (+ Illinois arbitrage)
+  const trad=+$("rothtrad").value||0, convReq=+$("rothconv").value||0, conv=Math.min(convReq,trad);
+  $("rothtradv").textContent=fmt$(trad); $("rothconvv").textContent=fmt$(convReq);
+  const exempt=(ST.states_exempt_retirement||[]).includes(r.state);
+  const fedOrd=r.b.ord, stateOrd=r.sst;   // conversion = ordinary income (no NIIT); state ordinary ~ flat-state rate
+  const fed=conv*fedOrd, wouldState=conv*stateOrd, stateT=exempt?0:wouldState;
+  const years=conv>0?Math.ceil(trad/conv):0;
+  $("rothres").innerHTML=
+    `<div class="recsub" style="margin-top:0"><b>Converting ${fmt$(conv)}/yr</b> of a ${fmt$(trad)} Traditional IRA${years?` — ~${years} years to convert it all`:""}.</div>
+     <div class="savings">
+       <div class="srow"><div class="sl"><span class="rl">Federal tax / yr</span><span class="amt fee">${fmt$(fed)}</span></div></div>
+       <div class="srow"><div class="sl"><span class="rl">${r.state==="—"?"State":(NAMES[r.state]||r.state)} tax / yr</span><span class="amt ${exempt?'save':'fee'}">${exempt?"$0":fmt$(stateT)}</span></div></div>
+       <div class="net"><span>Total conversion tax / yr</span><b style="color:var(--ink)">${fmt$(fed+stateT)}</b></div>
+     </div>`;
+  if(exempt && conv>0){
+    $("ilarb").style.display="block"; $("ilarb").className="est-cliff safe";
+    $("ilarb").innerHTML=`<div class="lbl">${NAMES[r.state]||r.state} conversion arbitrage</div><div class="big">$0 state tax</div>
+      <p>${NAMES[r.state]||r.state} <b>exempts retirement distributions</b> from state income tax, so a Roth conversion pays
+      <b>federal only</b>. Converting ${fmt$(conv)}/yr saves <b>${fmt$(wouldState)}/yr</b> in state tax — about
+      <b>${fmt$big(trad*stateOrd)}</b> over the full ${fmt$(trad)} balance — versus a state that taxes it. Convert aggressively while resident.</p>`;
+  } else $("ilarb").style.display="none";
+  // 3) asset-location blueprint
+  $("blueprint").innerHTML=
+    `<div class="bp"><span class="bt tax">Taxable brokerage</span><div class="bh">Low-yield, step-up assets</div>
+       <p>A buy-and-hold index core (qualified dividends), held for the <b>step-up in basis at death</b>, with tax-loss-harvesting pairs (VT↔VTI/VXUS).</p></div>
+     <div class="bp"><span class="bt trad">Traditional IRA</span><div class="bh">Moderate-turnover &amp; fixed income</div>
+       <p>Tax-deferred sleeves and bond/fixed-income exposure — interest and moderate turnover are sheltered now; withdrawals taxed as ordinary income later.</p></div>
+     <div class="bp"><span class="bt roth">Roth IRA / Roth 401(k)</span><div class="bh">High-turnover Driftwood momentum</div>
+       <p>The explosive, high-turnover momentum sleeve — <b>100% of the growth walled off from taxes forever</b>, with no RMDs for heirs.</p></div>`;
+}
 function applyMode(m){
-  MODE=(m==="lead")?"lead":(m==="estate")?"estate":"advisor";
+  MODE=(m==="lead"||m==="estate"||m==="strategy")?m:"advisor";
   document.body.classList.toggle("lead", MODE==="lead");
   document.body.classList.toggle("estate", MODE==="estate");
+  document.body.classList.toggle("strategy", MODE==="strategy");
   try{ const u=new URL(location.href); u.searchParams.set("view",MODE); history.replaceState(null,"",u); }catch(e){}
   $("modetog").querySelectorAll("button").forEach(btn=>btn.classList.toggle("on", btn.dataset.mode===MODE));
   $("lede").innerHTML = MODE==="lead"
     ? `See exactly how much of your wealth a high-turnover strategy hands to taxes in <b>your</b> state — and how much is recoverable. Click your state to begin.`
     : MODE==="estate"
     ? `<b>Entity-Level Asset Architecture</b> — model the Illinois estate cliff, the credit-shelter-trust shelter, and the proposed HB2601 exemption against the 2026 tax-law reference. Illustrative; coordinate the filing figure with your estate attorney.`
+    : MODE==="strategy"
+    ? `<b>Optimal Strategy &amp; Rollover Engine</b> — a roadmap moving scattered 401(k)/IRA balances into the optimized framework: the rollover escape hatch, the 2026 Roth-conversion arbitrage, and a personalized asset-location blueprint.`
     : `A <b>Holistic Asset Location Engine</b> — quantitative wealth architecture that coordinates federal and state tax, account structure (taxable / Traditional / Roth), estate step-up, and tax-loss harvesting into one after-tax plan. Pick a bracket and state; everything recomputes from the book's real realized-gain profile.`;
   $("maphdr").innerHTML = MODE==="lead"
     ? `Click your state <span class="hint">· see your dollar tax bleed</span>`
     : MODE==="estate"
     ? `Set the state <span class="hint">· Illinois triggers the estate cliff</span>`
+    : MODE==="strategy"
+    ? `Set the state <span class="hint">· Illinois unlocks the Roth-conversion arbitrage</span>`
     : `Tax severity by state <span class="hint">· click a state to localize the model</span>`;
   if(MODE==="lead") renderLead();
   if(MODE==="estate") renderEstate();
+  if(MODE==="strategy") renderStrategy();
   track("mode_view",{view:MODE});
 }
 
@@ -981,6 +1083,8 @@ function render(){
   if(MODE==="lead") renderLead();
   // Estate view: the IL cliff depends on the selected state — refresh on state change.
   if(MODE==="estate") renderEstate();
+  // Strategy view: the Roth-conversion arbitrage depends on the selected state.
+  if(MODE==="strategy") renderStrategy();
 }
 function init(){
   S=window.__STATE__;
@@ -1022,6 +1126,15 @@ function init(){
       const tog=()=>{ $("hb2601").classList.toggle("on"); renderEstate(); };
       $("hb2601").addEventListener("click",tog);
       $("hb2601").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); tog(); } });
+    }
+    // Strategy view: 401(k) rollover sliders + Roth conversion optimizer sliders.
+    if(A.strategy){
+      const ST=A.strategy;
+      $("k401bal").max=A.wealth_max; $("k401bal").step=A.wealth_step; $("k401bal").value=ST.default_401k;
+      $("k401fee").min=0; $("k401fee").max=ST.k401_fee_max_bps; $("k401fee").step=5; $("k401fee").value=ST.k401_fee_bps;
+      $("rothtrad").max=A.wealth_max; $("rothtrad").step=A.wealth_step; $("rothtrad").value=ST.default_trad_ira;
+      $("rothconv").min=0; $("rothconv").max=ST.conversion_max; $("rothconv").step=A.wealth_step; $("rothconv").value=ST.default_conversion;
+      ["k401bal","k401fee","rothtrad","rothconv"].forEach(id=>$(id).addEventListener("input",renderStrategy));
     }
   }
   // --- Personalized deep-links: a cold-outreach URL pre-loads a tailored scenario ---

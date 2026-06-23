@@ -203,7 +203,7 @@ STYLE_BOX: dict[str, dict[str, float]] = {
 # Region split for the buy-and-hold benchmarks (the strategy book uses REGION_OF,
 # one region per fund). VT is the global market cap split; VTI is all-US.
 BENCH_REGION: dict[str, dict[str, float]] = {
-    "VT": {"US": 0.65, "DEV": 0.25, "EM": 0.10},
+    "VT": {"US": 0.62, "DEV": 0.28, "EM": 0.10},   # mid-2026: VT is ~61.97% US (heavy concentration)
     "VTI": {"US": 1.0},
 }
 

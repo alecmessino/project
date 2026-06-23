@@ -306,9 +306,11 @@ function render(s){
       <b>tilts toward the segments that look more attractive going forward</b> — emerging markets,
       international, and value/small — which have wider valuation spreads and are more under-owned than
       US mega-cap growth. The tilt redistributes a fully-invested book rather than adding cash, so the
-      strategy stays in the market while leaning where the forward opportunity looks better. It can still
-      lag in a narrow mega-cap-growth melt-up; use the buttons above to see windows where it led versus
-      lagged.</div>
+      strategy stays in the market while leaning where the forward opportunity looks better. <b>Note the
+      concentration risk in a passive index today:</b> as of mid-2026 the cap-weighted global market (VT)
+      is ~<b>61.97% US</b> — a "global" index that is really a bet on US mega-cap; this book deliberately
+      spreads risk across far more of the world. It can still lag in a narrow mega-cap-growth melt-up; use
+      the buttons above to see windows where it led versus lagged.</div>
     ${h.after_tax_total_return!=null ? `<div class="note-box"><b>Tax efficiency (illustrative${s.tax&&s.tax.state&&s.tax.state!=="—"?", "+s.tax.state:""}).</b>
       In a taxable account this book is <b>not</b> tax-efficient: monthly momentum runs
       ~<b>${(h.annual_turnover*100).toFixed(0)}%</b> annual turnover (avg holding ~${h.avg_holding_days} trading days),

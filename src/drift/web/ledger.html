@@ -58,8 +58,8 @@
   .expo h3{font-size:12px;color:var(--dim);font-weight:600;margin:0 0 10px;letter-spacing:.3px}
   .bar{display:flex;align-items:center;gap:9px;margin:6px 0;font-size:12.5px}
   .bar .lbl{width:118px;color:var(--ink)}
-  .bar .track{flex:1;background:var(--soft);border:1px solid var(--line);border-radius:4px;height:13px;overflow:hidden}
-  .bar .fill{height:100%;background:var(--slate)}
+  .bar .barwrap{flex:1;height:9px}                                  /* transparent track — no grey box */
+  .bar .fill{display:block;height:100%;background:var(--slate);border-radius:5px}
   .bar .pct{width:38px;text-align:right;color:var(--dim);font-variant-numeric:tabular-nums}
   .box{display:grid;grid-template-columns:52px 1fr 1fr 1fr;gap:4px;font-size:11px;width:100%;max-width:340px}
   .box .hd{color:var(--dim);text-align:center;padding:2px 0;font-weight:600;letter-spacing:.2px}
@@ -256,7 +256,7 @@ function bars(obj){
   const items=Object.entries(obj).sort((a,b)=>b[1]-a[1]);
   if(!items.length) return '<div class="bar"><span class="lbl">—</span></div>';
   return items.map(([k,v])=>`<div class="bar"><span class="lbl">${k}</span>
-    <span class="track"><span class="fill" style="width:${(v*100).toFixed(0)}%"></span></span>
+    <span class="barwrap"><span class="fill" style="width:${(v*100).toFixed(0)}%"></span></span>
     <span class="pct">${(v*100).toFixed(0)}%</span></div>`).join("");
 }
 function stylebox(box, sm){

@@ -53,6 +53,35 @@ def test_update_appends_when_a_new_bar_arrives():
     assert led["entries"][-1]["seed"] is False  # live, not seeded
 
 
+def test_update_appends_cleanly_across_a_holiday_gap():
+    # Friday is a market holiday: Thursday's bar, then Monday's, with the day between missing.
+    # The pipeline must mark Thursday -> Monday and append once, not skip or fault.
+    full = _series(n=300)
+    s = _settings()
+    seeded = {i: bars[:-2] for i, bars in full.items()}            # seed through "Thursday"
+    gapped = {i: bars[:-2] + [bars[-1]] for i, bars in full.items()}  # drop bar[-2] (the "holiday")
+    led = L.seed_ledger(seeded, s, sessions=30)
+    last_seed = led["entries"][-1]["date"]
+    n = len(led["entries"])
+    monday = full[next(iter(full))][-1].asof[:10]
+    L.update_ledger(led, gapped, s)
+    assert len(led["entries"]) == n + 1                            # appended across the gap
+    assert led["entries"][-1]["date"] == monday and monday > last_seed
+    assert led["entries"][-1]["seed"] is False
+    L.update_ledger(led, gapped, s)                                # idempotent on re-run
+    assert len(led["entries"]) == n + 1
+
+
+def test_zero_weight_positions_are_filtered_from_the_book():
+    led = L.seed_ledger(_series(), _settings(), sessions=40)
+    led["entries"][-1]["weights"]["AVDV"] = 0.0                     # a dropped institutional ticker
+    led["entries"][-1]["weights"]["AVEE"] = 0.0
+    st = L.build_ledger_state(led)
+    names = [p["instrument"] for p in st["positions"]]
+    assert "AVDV" not in names and "AVEE" not in names
+    assert all(abs(p["weight"]) > 0 for p in st["positions"])      # only active allocations shown
+
+
 def test_realized_return_marks_prior_weights():
     # Two bars only after warmup: hand-check that realized return uses prev weights.
     s = _settings()

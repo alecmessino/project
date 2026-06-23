@@ -59,5 +59,11 @@ jobs:
           git add docs/index.html docs/thesis.html docs/taxlab.html \
             docs/equities.html docs/equities_case_studies.html docs/tearsheet.html \
             docs/ledger.html docs/ledger.json
-          git diff --cached --quiet && echo "no change" || \
-            git commit -m "chore: refresh Driftwood exhibits [skip ci]" && git push
+          # Use an explicit if/else: the old `A && B || C && D` one-liner pushed even on a
+          # no-change run (operator precedence), and a holiday no-op should commit nothing.
+          if git diff --cached --quiet; then
+            echo "no change — nothing to commit"
+          else
+            git commit -m "chore: refresh Driftwood exhibits [skip ci]"
+            git push
+          fi

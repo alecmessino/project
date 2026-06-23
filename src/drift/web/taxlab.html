@@ -491,7 +491,10 @@ function renderLocation(){
   $("advfeev").textContent=(+$("advfee").value||0)+" bps"; $("erfeev").textContent=(+$("erfee").value||0)+" bps";
   const mdr=c.drag/yrs, pdr=A.passive_div_yield*r.r_lt, g=A.growth_rate, H=A.horizon_years;
   const la=locAlpha3(T,Tr,Ro,mdr,pdr,g,H);
-  const feeAnnual=feeRate()*W, netAnnual=la.annual-feeAnnual;
+  // Round Tax saved / My fee to the displayed $1k granularity and derive Net from those exact
+  // rounded numbers, so "Tax saved − My fee = Net value" always reconciles on screen.
+  const savedR=Math.round(la.annual/1000)*1000, feeR=Math.round(feeRate()*W/1000)*1000, netR=savedR-feeR;
+  const feeAnnual=feeRate()*W;
   const stname=r.state==="—"?"a no-tax state":(NAMES[r.state]||r.state);
 
   // Phase C — optimized three-account placement. The high-turnover Driftwood sleeve fills the Roth
@@ -520,21 +523,21 @@ function renderLocation(){
   const tlhHigh = (p.harvested_st*(r.b.ord+r.b.niit+maxSst) + p.harvested_lt*(r.b.lt+r.b.niit+maxSlt))/yrs;
   const tlhNow  = (p.harvested_st*r.r_st + p.harvested_lt*r.r_lt)/yrs;        // at the selected state
   const neutralizes = tlhNow >= feeRate();
-  const mx=Math.max(la.annual,feeAnnual,1);
+  const mx=Math.max(savedR,feeR,1);
   $("locresult").innerHTML=
     `<div class="recovered">+${fmt$big(la.terminal)}</div>
      <div class="recsub"><b>Location Alpha</b> — the after-tax wealth optimized placement keeps versus a naive equal
        split across all three accounts, over ${H} years (the tax saved, reinvested at ${apct(g,0)}). About
-       <b>${fmt$(la.annual)}/yr</b> for a ${stname} resident.</div>
+       <b>${fmt$(savedR)}/yr</b> for a ${stname} resident.</div>
      <div class="savings">
        <div class="srow">
-         <div class="sl"><span class="rl">Tax saved</span><span class="amt save">${fmt$(la.annual)}/yr</span></div>
-         <div class="sbar"><span class="bfill save" style="width:${la.annual/mx*100}%"></span></div></div>
+         <div class="sl"><span class="rl">Tax saved</span><span class="amt save">${fmt$(savedR)}/yr</span></div>
+         <div class="sbar"><span class="bfill save" style="width:${savedR/mx*100}%"></span></div></div>
        <div class="srow">
-         <div class="sl"><span class="rl">My fee</span><span class="amt fee">${fmt$(feeAnnual)}/yr</span></div>
-         <div class="sbar"><span class="bfill fee" style="width:${feeAnnual/mx*100}%"></span></div></div>
+         <div class="sl"><span class="rl">My fee</span><span class="amt fee">${fmt$(feeR)}/yr</span></div>
+         <div class="sbar"><span class="bfill fee" style="width:${feeR/mx*100}%"></span></div></div>
        <div class="net"><span>Net value to you, every year</span>
-         <b style="color:${netAnnual>=0?'var(--pos)':'var(--neg)'}">${netAnnual>=0?"+":"−"}${fmt$(Math.abs(netAnnual))}/yr</b></div>
+         <b style="color:${netR>=0?'var(--pos)':'var(--neg)'}">${netR>=0?"+":"−"}${fmt$(Math.abs(netR))}/yr</b></div>
        <div class="tlh"><span class="ico">✓</span><b>Tax-loss harvesting adds an estimated ${apct(tlhLow,1)}–${apct(tlhHigh,1)}/yr</b>
          in structural alpha (from the track's harvested losses, no-tax to high-tax state) — ${neutralizes
            ? `<b>completely neutralizing</b> the ${Math.round(feeRate()*1e4)} bps advisory fee`
@@ -561,10 +564,10 @@ function renderLocation(){
   $("execsummary").innerHTML=`<div class="es-h">Executive summary</div>
     <p>For a <b>${bword}</b> resident of <b>${stName}</b>, locating the high-turnover momentum sleeve into the
     tax-advantaged accounts — <b>${fmt$(inRoth)}</b> in the Roth and <b>${fmt$(inTrad)}</b> in the Traditional IRA —
-    and isolating a low-turnover ${fmt$(T)} VT core in taxable recovers about <b>${fmt$(la.annual)}/yr</b> in
+    and isolating a low-turnover ${fmt$(T)} VT core in taxable recovers about <b>${fmt$(savedR)}/yr</b> in
     capital-gains tax versus a naive equal split, a <b>${fmt$big(la.terminal)}</b> Location Alpha over ${H} years.
-    A <b>${Math.round(feeRate()*1e4)} bps</b> all-in fee (about <b>${fmt$(feeAnnual)}/yr</b>) ${la.annual>feeAnnual
-      ? `is a fraction of that — net value to the client is about <b>${fmt$(netAnnual)}/yr</b>`
+    A <b>${Math.round(feeRate()*1e4)} bps</b> all-in fee (about <b>${fmt$(feeR)}/yr</b>) ${savedR>feeR
+      ? `is a fraction of that — net value to the client is about <b>${fmt$(netR)}/yr</b>`
       : `is comparable at this size; the case strengthens with a larger sleeve or a higher-tax state`}. The taxable
     core is positioned for a step-up in basis at death; the Roth sleeve compounds tax-free with no RMDs for heirs.
     Illustrative only — not tax advice.</p>`;
@@ -595,9 +598,11 @@ function stateBleed(){
   const r=rates(), yrs=(S.profile.years||1), P=leadPortfolio(), H=S.assumptions.horizon_years;
   const cThis=calc(r);
   const rNo={...r, r_st:r.b.ord+r.b.niit, r_lt:r.b.lt+r.b.niit};   // strip state tax
-  const stateAnnual=Math.max(0,(cThis.drag-calc(rNo).drag)/yrs)*P;
-  const totalAnnual=(cThis.drag/yrs)*P;
-  return {P, horizon:H, stateAnnual, totalAnnual, stateTotal:stateAnnual*H, totalTotal:totalAnnual*H};
+  const fedAnnual=(calc(rNo).drag/yrs)*P;                          // pure federal — identical for a P, any state
+  const totalAnnual=(cThis.drag/yrs)*P;                           // = fedAnnual + stateAnnual, by construction
+  const stateAnnual=Math.max(0,totalAnnual-fedAnnual);
+  return {P, horizon:H, fedAnnual, stateAnnual, totalAnnual,
+          fedTotal:fedAnnual*H, stateTotal:stateAnnual*H, totalTotal:totalAnnual*H};
 }
 function renderLead(){
   if(!S.profile) return;
@@ -605,13 +610,14 @@ function renderLead(){
   const st=$("state").value, b=stateBleed(), name=(st==="—")?null:(NAMES[st]||st);
   if(name && b.stateAnnual>1){
     $("leadhero").innerHTML=`${name} residents with a ${fmt$big(b.P)} taxable portfolio in a high-turnover
-      strategy give up <span class="num">${fmt$big(b.stateTotal)}</span> to ${name} capital-gains tax over ${b.horizon} years.
-      <span class="small">About ${fmt$(b.stateAnnual)}/yr to the state alone — on top of ${fmt$big(b.totalTotal)}
-      in total capital-gains tax. Most of it is recoverable with the right account structure.</span>`;
+      strategy give up <span class="num">${fmt$big(b.totalTotal)}</span> to capital-gains tax over ${b.horizon} years.
+      <span class="small">${fmt$big(b.fedTotal)} federal + ${fmt$big(b.stateTotal)} to ${name} (about ${fmt$(b.totalAnnual)}/yr).
+      The federal base is the same in every state — ${name} just stacks its layer on top. Most of it is recoverable
+      with the right account structure.</span>`;
   } else {
     $("leadhero").innerHTML=`A ${fmt$big(b.P)} taxable portfolio in a high-turnover strategy gives up
-      <span class="num">${fmt$big(b.totalTotal)}</span> to capital-gains tax over ${b.horizon} years.
-      <span class="small">${st==="—"?"Click your state on the map above to see your local damage — then":"About "+fmt$(b.totalAnnual)+"/yr."} See how much of it we can recover.</span>`;
+      <span class="num">${fmt$big(b.totalTotal)}</span> to <b>federal</b> capital-gains tax over ${b.horizon} years.
+      <span class="small">${st==="—"?"Click your state on the map above to add your local layer — then":"About "+fmt$(b.totalAnnual)+"/yr."} see how much of it we can recover.</span>`;
   }
 }
 function ctaInitial(){

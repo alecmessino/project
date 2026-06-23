@@ -327,7 +327,7 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0,
     positions = sorted(
         ({"instrument": i, "weight": w,
           "leg": "LONG" if w > 0 else "SHORT" if w < 0 else "—"}
-         for i, w in last["weights"].items()),
+         for i, w in last["weights"].items() if abs(w) > 1e-9),   # only active, non-zero allocations
         key=lambda r: -r["weight"])
     live = sum(1 for e in entries if not e.get("seed"))
     cost_side = ledger.get("cost_bps_per_side")

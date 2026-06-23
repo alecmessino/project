@@ -241,7 +241,7 @@
   .est-warn b{color:#8a6a1a}
   .est-fed{font-size:12.5px;color:var(--dim);margin-top:12px;line-height:1.5}
   .est-fed b{color:var(--ink)}
-  @media(max-width:620px){
+  @media screen and (max-width:620px){    /* screen-only: print must never inherit the single-column mobile grid */
     .controls{grid-template-columns:1fr}.wf .lbl{width:130px}.geo{grid-template-columns:1fr}
     .optgrid,.frontgrid,.feerow,.estgrid,.est-params,.blueprint{grid-template-columns:1fr}
     .modetog{flex-wrap:wrap;border-radius:10px}                 /* 3 view buttons wrap cleanly */
@@ -277,7 +277,13 @@
     body.brief #cpabrief{display:block}
     body.brief #optim,body.brief #frontier,body.brief .cards,body.brief .wf,body.brief #tlhtable{display:none!important}
     h2{margin-top:20px}
-    section,.geo,.cards,.wf,.optgrid,.frontgrid,table,#execsummary,#cpabrief{break-inside:avoid}
+    h2,h3,.strat-h{break-after:avoid}                /* never strand a heading at the foot of a page */
+    /* Protect atomic cards (not whole sections — strategy/estate now exceed one page) so the
+       401(k) rollover cards, Roth optimizer, blueprint tiles and the estate-cliff visualizer
+       each stay intact across the page break. */
+    .geo,.cards,.wf,.optgrid,.frontgrid,.estgrid,.est-params,.opt-card,.est-cliff,
+      .blueprint,.bp,.savings .srow,table,#execsummary,#cpabrief{break-inside:avoid}
+    .blueprint{display:grid!important;grid-template-columns:1fr 1fr 1fr}   /* force 3-up even if paper box is narrow */
   }
 </style>
 </head>

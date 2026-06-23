@@ -32,9 +32,12 @@ ASSUMPTIONS = {
     "passive_div_yield": 0.018,        # qualified-dividend yield of the taxable passive core
     "horizon_years": 30,               # projection horizon for the terminal-wealth boost
     "default_taxable": 1_500_000,      # starting slider value — taxable brokerage balance
-    "default_advantaged": 1_000_000,   # starting slider value — tax-advantaged (IRA/Roth) balance
+    "default_advantaged": 1_000_000,   # (legacy two-bucket default; superseded by the three below)
+    "default_traditional": 600_000,    # starting slider value — Traditional IRA / pre-tax 401(k)
+    "default_roth": 400_000,           # starting slider value — Roth IRA / tax-free
     "wealth_max": 10_000_000,          # slider ceiling
     "wealth_step": 50_000,
+    "growth_rate": 0.07,               # illustrative reinvestment rate for the terminal location alpha
     # Alpha-Turnover Frontier (Layer 3): the breakeven slope is gain_per_turn · r_st, where
     # gain_per_turn is the NAV fraction realized as short-term gain per 1.0 of annual turnover.
     # Calibrated from the live book in build_taxlab when a ledger exists; this is the fallback.
@@ -49,6 +52,30 @@ ASSUMPTIONS = {
     "expense_ratio_bps": 30,
     "fee_max_bps": 300,
 }
+
+
+def location_alpha3(taxable: float, traditional: float, roth: float,
+                    mom_drag_rate: float, passive_drag_rate: float,
+                    growth_rate: float, years: float) -> dict:
+    """Three-account asset-location alpha (taxable / Traditional pre-tax / Roth tax-free).
+
+    Optimized placement stacks the high-turnover momentum sleeve into the tax-advantaged
+    accounts (Roth first for tax-free compounding, then Traditional) and isolates the
+    low-drag buy-and-hold benchmark in the taxable account. The Roth and Traditional balances
+    grow identically whichever asset sits in them (both shelter the annual drag), so the alpha
+    lives entirely in the taxable account: the annual tax saved versus a naive proportional
+    spread is (T·A/W)·(mdr − pdr), with A = traditional + roth and W = T + A. Reinvested at
+    `growth_rate`, the future value of that annual saving over the horizon is the terminal
+    location alpha. Mirrors the JS on the Tax Lab page; kept here for automated coverage.
+    """
+    w = taxable + traditional + roth
+    a = traditional + roth
+    if w <= 0:
+        return {"annual_saved": 0.0, "terminal_alpha": 0.0, "overlap": 0.0, "sleeve": a}
+    overlap = taxable * a / w
+    annual = overlap * max(0.0, mom_drag_rate - passive_drag_rate)
+    fv = (((1 + growth_rate) ** years - 1) / growth_rate) if growth_rate > 0 else years
+    return {"annual_saved": annual, "terminal_alpha": annual * fv, "overlap": overlap, "sleeve": a}
 
 
 def after_fee(after_tax_return: float, annual_fee_rate: float, years: float) -> float:

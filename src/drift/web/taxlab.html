@@ -114,18 +114,23 @@
   .opt-result .recovered{font-size:34px;font-weight:720;color:var(--pos);letter-spacing:-.6px;line-height:1.05;font-variant-numeric:tabular-nums}
   .opt-result .recsub{font-size:12.5px;color:var(--ink);margin-top:5px;line-height:1.5}
   .savings{margin-top:17px;border-top:1px solid var(--line);padding-top:15px}
-  .savings .row{display:grid;grid-template-columns:96px 1fr auto;align-items:center;gap:10px;margin:9px 0}
+  .savings .srow{margin:0 0 13px}
+  .savings .sl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
   .savings .rl{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);font-weight:600}
-  .savings .track{height:22px;background:var(--soft);border:1px solid var(--line);border-radius:5px;overflow:hidden}
-  .savings .fill{height:100%;border-radius:0}
-  .savings .fill.save{background:var(--pos)}
-  .savings .fill.fee{background:#c9a59d}
   .savings .amt{font-variant-numeric:tabular-nums;font-weight:680;white-space:nowrap}
-  .savings .amt.save{font-size:19px;color:var(--pos)}
-  .savings .amt.fee{font-size:13px;color:var(--slate)}
-  .savings .net{margin-top:12px;background:#eef5f1;border:1px solid #cfe6db;border-radius:8px;padding:10px 13px;
+  .savings .amt.save{font-size:20px;color:var(--pos);letter-spacing:-.3px}
+  .savings .amt.fee{font-size:14px;color:var(--slate)}
+  .savings .sbar{height:8px;border-radius:5px;overflow:hidden}      /* bare bar — no empty grey track */
+  .savings .bfill{display:block;height:100%;border-radius:5px}
+  .savings .bfill.save{background:var(--pos)}
+  .savings .bfill.fee{background:#c9a59d}
+  .savings .net{margin-top:2px;background:#eef5f1;border:1px solid #cfe6db;border-radius:8px;padding:10px 13px;
     font-size:13px;color:var(--ink);display:flex;justify-content:space-between;align-items:baseline}
   .savings .net b{font-size:20px;color:var(--pos);font-weight:720;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+  .savings .tlh{margin-top:11px;font-size:12px;color:var(--slate);line-height:1.5;background:#f3f8f5;
+    border:1px solid #d7e8df;border-radius:8px;padding:9px 12px}
+  .savings .tlh .ico{color:var(--pos);font-weight:700;margin-right:5px}
+  .savings .tlh b{color:var(--ink)}
   /* --- Phase A: floating "receipt" action button --- */
   .fab{position:fixed;right:22px;bottom:22px;z-index:30;font:inherit;font-size:13.5px;font-weight:680;color:#fff;
     background:var(--accent);border:none;border-radius:999px;padding:13px 20px;cursor:pointer;letter-spacing:.2px;
@@ -163,19 +168,28 @@
   .lead-only{display:none}
   body.lead .lead-only{display:block}
   body.lead .geo{grid-template-columns:1fr}
-  #leadgen{margin-top:22px}
-  .lead-hero{font-size:26px;font-weight:680;letter-spacing:-.5px;line-height:1.28;color:var(--ink);max-width:24ch}
+  /* Phase B fix: center the prospect funnel under the map */
+  #leadgen{margin:24px auto 0;max-width:600px;text-align:center}
+  .lead-port{margin:0 auto 18px;max-width:360px}
+  .lead-port .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+  .lead-port label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);font-weight:600}
+  .lead-port output{font-size:16px;font-weight:680;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .lead-hero{font-size:26px;font-weight:680;letter-spacing:-.5px;line-height:1.28;color:var(--ink);max-width:18ch;margin:0 auto}
   .lead-hero .num{color:var(--neg)}
-  .lead-hero .small{display:block;font-size:14px;font-weight:400;color:var(--dim);letter-spacing:0;margin-top:10px;max-width:52ch;line-height:1.6}
-  .lead-cta{margin-top:22px;max-width:440px}
+  .lead-hero .small{display:block;font-size:14px;font-weight:400;color:var(--dim);letter-spacing:0;margin:12px auto 0;max-width:48ch;line-height:1.6}
+  .lead-cta{margin:24px auto 0;max-width:440px}
   .lead-btn{font:inherit;font-size:15px;font-weight:680;color:#fff;background:var(--accent);border:none;
-    border-radius:10px;padding:14px 22px;cursor:pointer;letter-spacing:.2px;width:100%;box-shadow:0 5px 18px rgba(21,128,106,.28)}
+    border-radius:11px;padding:15px 22px;cursor:pointer;letter-spacing:.2px;width:100%;box-shadow:0 5px 18px rgba(21,128,106,.28)}
   .lead-btn:hover{background:#0f6f5b}
-  .lead-form{display:flex;gap:8px;margin-top:4px}
-  .lead-form input{flex:1;font:inherit;font-size:15px;padding:13px 14px;border:1px solid var(--line);border-radius:10px}
-  .lead-form button{font:inherit;font-size:15px;font-weight:680;color:#fff;background:var(--accent);border:none;border-radius:10px;padding:0 20px;cursor:pointer}
-  .lead-note{font-size:11.5px;color:var(--dim);margin-top:9px;line-height:1.5}
-  .lead-success{border:1px solid #cfe6db;background:#eef5f1;border-radius:10px;padding:17px 19px}
+  /* Phase B fix: unified email+button container with an emerald focus glow (no default blue ring) */
+  .lead-form{display:flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:#fff;
+    transition:box-shadow .15s ease,border-color .15s ease}
+  .lead-form:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(21,128,106,.20)}
+  .lead-form input{flex:1;border:none;outline:none;font:inherit;font-size:15px;padding:14px 15px;background:transparent;color:var(--ink)}
+  .lead-form button{border:none;font:inherit;font-size:15px;font-weight:680;color:#fff;background:var(--accent);padding:0 22px;cursor:pointer}
+  .lead-form button:hover{background:#0f6f5b}
+  .lead-note{font-size:11.5px;color:var(--dim);margin-top:10px;line-height:1.5}
+  .lead-success{border:1px solid #cfe6db;background:#eef5f1;border-radius:10px;padding:17px 19px;text-align:left}
   .lead-success .h{font-size:17px;font-weight:680;color:var(--ink);letter-spacing:-.2px}
   .lead-success p{font-size:13.5px;color:var(--ink);margin:7px 0 0;line-height:1.55}
   #calendly-slot{margin-top:14px;min-height:60px;border:1px dashed var(--line);border-radius:10px;
@@ -254,6 +268,10 @@
   </div>
 
   <section id="leadgen" class="lead-only">
+    <div class="lead-port">
+      <div class="top"><label>Your portfolio</label><output id="leadportv"></output></div>
+      <input type="range" id="leadport" min="100000" step="50000" aria-label="Your portfolio size" />
+    </div>
     <div class="lead-hero" id="leadhero"></div>
     <div class="lead-cta" id="leadcta"></div>
   </section>
@@ -494,6 +512,14 @@ function renderLocation(){
       `<span class="estate"><span class="ico">✓</span><b>Optimized for step-up in basis at death</b> — heirs inherit the low-turnover index with the embedded gain wiped clean.</span>`)
     + (la.sleeve<=0 ? `<div class="acct"><span class="estate">Add a Traditional or Roth balance to shelter the high-turnover sleeve.</span></div>` : "");
 
+  // Tax-loss-harvesting structural alpha per year — computed dynamically from the track's harvested
+  // losses, ranged from a no-income-tax state (low) to the highest-tax state in the table (high).
+  let maxSlt=0, maxSst=0;
+  for(const k in S.states){ const [l,sst]=S.states[k]; if(l>maxSlt)maxSlt=l; if(sst>maxSst)maxSst=sst; }
+  const tlhLow  = (p.harvested_st*(r.b.ord+r.b.niit) + p.harvested_lt*(r.b.lt+r.b.niit))/yrs;
+  const tlhHigh = (p.harvested_st*(r.b.ord+r.b.niit+maxSst) + p.harvested_lt*(r.b.lt+r.b.niit+maxSlt))/yrs;
+  const tlhNow  = (p.harvested_st*r.r_st + p.harvested_lt*r.r_lt)/yrs;        // at the selected state
+  const neutralizes = tlhNow >= feeRate();
   const mx=Math.max(la.annual,feeAnnual,1);
   $("locresult").innerHTML=
     `<div class="recovered">+${fmt$big(la.terminal)}</div>
@@ -501,14 +527,18 @@ function renderLocation(){
        split across all three accounts, over ${H} years (the tax saved, reinvested at ${apct(g,0)}). About
        <b>${fmt$(la.annual)}/yr</b> for a ${stname} resident.</div>
      <div class="savings">
-       <div class="row"><span class="rl">Tax saved</span>
-         <span class="track"><span class="fill save" style="width:${la.annual/mx*100}%"></span></span>
-         <span class="amt save">${fmt$(la.annual)}/yr</span></div>
-       <div class="row"><span class="rl">My fee</span>
-         <span class="track"><span class="fill fee" style="width:${feeAnnual/mx*100}%"></span></span>
-         <span class="amt fee">${fmt$(feeAnnual)}/yr</span></div>
+       <div class="srow">
+         <div class="sl"><span class="rl">Tax saved</span><span class="amt save">${fmt$(la.annual)}/yr</span></div>
+         <div class="sbar"><span class="bfill save" style="width:${la.annual/mx*100}%"></span></div></div>
+       <div class="srow">
+         <div class="sl"><span class="rl">My fee</span><span class="amt fee">${fmt$(feeAnnual)}/yr</span></div>
+         <div class="sbar"><span class="bfill fee" style="width:${feeAnnual/mx*100}%"></span></div></div>
        <div class="net"><span>Net value to you, every year</span>
          <b style="color:${netAnnual>=0?'var(--pos)':'var(--neg)'}">${netAnnual>=0?"+":"−"}${fmt$(Math.abs(netAnnual))}/yr</b></div>
+       <div class="tlh"><span class="ico">✓</span><b>Tax-loss harvesting adds an estimated ${apct(tlhLow,1)}–${apct(tlhHigh,1)}/yr</b>
+         in structural alpha (from the track's harvested losses, no-tax to high-tax state) — ${neutralizes
+           ? `<b>completely neutralizing</b> the ${Math.round(feeRate()*1e4)} bps advisory fee`
+           : `offsetting much of the ${Math.round(feeRate()*1e4)} bps advisory fee`}.</div>
      </div>`;
 
   // Phase C — the retirement-income flexibility / drawdown talking point (advisor mode).
@@ -557,10 +587,12 @@ function renderLocation(){
 }
 
 // --- Phase B: lead-gen funnel (the hook -> capture -> booking flow) --------
+function leadPortfolio(){ return (+$("leadport").value) || CONFIG.leadPortfolio; }
 function stateBleed(){
-  // The dollar tax a CONFIG.leadPortfolio taxable account bleeds in the selected state, at the top
-  // bracket — split into the state increment and the full (fed+state) total. The lead-gen hook.
-  const r=rates(), yrs=(S.profile.years||1), P=CONFIG.leadPortfolio, H=S.assumptions.horizon_years;
+  // The dollar tax the PROSPECT'S OWN portfolio (the lead-port slider) bleeds in the selected state,
+  // at the top bracket — split into the state increment and the full (fed+state) total. Strictly
+  // driven by the prospect-view inputs; the advisor optimizer's numbers come from its own sliders.
+  const r=rates(), yrs=(S.profile.years||1), P=leadPortfolio(), H=S.assumptions.horizon_years;
   const cThis=calc(r);
   const rNo={...r, r_st:r.b.ord+r.b.niit, r_lt:r.b.lt+r.b.niit};   // strip state tax
   const stateAnnual=Math.max(0,(cThis.drag-calc(rNo).drag)/yrs)*P;
@@ -569,6 +601,7 @@ function stateBleed(){
 }
 function renderLead(){
   if(!S.profile) return;
+  $("leadportv").textContent=fmt$(leadPortfolio());
   const st=$("state").value, b=stateBleed(), name=(st==="—")?null:(NAMES[st]||st);
   if(name && b.stateAnnual>1){
     $("leadhero").innerHTML=`${name} residents with a ${fmt$big(b.P)} taxable portfolio in a high-turnover
@@ -644,7 +677,7 @@ function beEnd(rate,g){                          // where breakeven line alpha=g
 let _fNeg=false;
 function drawFrontier(){
   const r=rates(),g=frontierG(),A=S.assumptions,TMAX=A.turnover_max,AMAX=A.alpha_max;
-  const rNo=r.b.ord+r.b.niit, rCA=r.b.ord+r.b.niit+S.states["CA"][1], rSel=r.r_st;
+  const rNo=r.b.ord+r.b.niit, rSel=r.r_st;        // federal-only baseline + the selected state
   let s="";
   for(let a=0;a<=AMAX+1e-9;a+=0.05){const y=fy(a);
     s+=`<line class="grid" x1="${FX0}" y1="${y}" x2="${FX1}" y2="${y}"/><text class="tick" x="${FX0-4}" y="${y+2.5}" text-anchor="end">${Math.round(a*100)}%</text>`;}
@@ -658,8 +691,17 @@ function drawFrontier(){
   s+=`<polygon points="${poly}" fill="var(--neg)" opacity="0.10"/>`;
   const line=(rate,cls,col)=>{const [t,a]=beEnd(rate,g);return `<line class="be ${cls}" x1="${fx(0)}" y1="${fy(0)}" x2="${fx(t)}" y2="${fy(a)}" stroke="${col}"/>`;};
   const lab=(rate,txt,col,dy)=>{const [t,a]=beEnd(rate,g);return `<text class="belab" x="${fx(t)-2}" y="${fy(a)+dy}" text-anchor="end" fill="${col}">${txt}</text>`;};
-  s+=line(rNo,"dim","var(--slate)")+line(rCA,"dim","var(--neg)")+line(rSel,"","var(--accent)");
-  s+=lab(rNo,"no-tax","var(--slate)",-2.5)+lab(rCA,"CA top","var(--neg)",9);
+  // Dynamic annotations: the federal-only baseline plus the SELECTED state's line, labelled by its
+  // code ("CA top", "NY top") — or just "Federal only" when the state levies no income tax.
+  s+=line(rNo,"dim","var(--slate)");
+  const hasState = rSel > rNo + 1e-9;
+  if(hasState){
+    s+=line(rSel,"","var(--accent)");
+    s+=lab(rSel, (r.state==="—"?"":r.state)+" top", "var(--accent)", -2.5);
+    s+=lab(rNo, "Federal only", "var(--slate)", 9);
+  } else {
+    s+=lab(rNo, "Federal only", "var(--slate)", -2.5);
+  }
   s+=`<text class="belab" x="${fx(TMAX)-4}" y="${fy(0)-6}" text-anchor="end" fill="var(--neg)" opacity="0.85">Net-negative drag zone</text>`;
   s+=`<text class="cap" x="${(FX0+FX1)/2}" y="${FY1+22}" text-anchor="middle">Annual turnover →</text>`;
   s+=`<text class="cap" transform="translate(10,${(FY0+FY1)/2}) rotate(-90)" text-anchor="middle">Strategy alpha →</text>`;
@@ -784,6 +826,9 @@ function init(){
     $("taxbal").value=A.default_taxable; $("tradbal").value=A.default_traditional; $("rothbal").value=A.default_roth;
     // Slider drags only touch the optimizer, not the whole page (streamlined interaction path).
     ["taxbal","tradbal","rothbal"].forEach(id=>$(id).addEventListener("input",renderLocation));
+    // Prospect-view portfolio slider — drives the lead-gen bleed off the prospect's OWN number.
+    $("leadport").max=A.wealth_max; $("leadport").step=A.wealth_step; $("leadport").value=CONFIG.leadPortfolio;
+    $("leadport").addEventListener("input",renderLead);
     // Frontier sliders: alpha (0–alpha_max) and turnover (0–turnover_max); drags repaint only the point/alert.
     $("falpha").min=0; $("falpha").max=A.alpha_max; $("falpha").step=0.005; $("falpha").value=A.frontier_alpha;
     $("fturn").min=0; $("fturn").max=A.turnover_max; $("fturn").step=0.1; $("fturn").value=A.frontier_turnover;

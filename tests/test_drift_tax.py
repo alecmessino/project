@@ -275,15 +275,17 @@ def test_il_estate_tax_cliff_and_hb2601_toggle():
     # At or below the $4M exclusion: no Illinois estate tax (the cliff into taxability).
     assert il_estate_tax(3_000_000, 4_000_000) == 0.0
     assert il_estate_tax(4_000_000, 4_000_000) == 0.0
-    # Above it: a positive, graduated liability that grows with the estate.
-    t5 = il_estate_tax(5_000_000, 4_000_000)
-    t8 = il_estate_tax(8_000_000, 4_000_000)
-    assert t5 > 0 and t8 > t5
+    # Calibrated to the Illinois AG calculator anchor points (single estate, $4M exclusion).
+    assert abs(il_estate_tax(5_000_000, 4_000_000) - 285_000) < 1_000
+    assert abs(il_estate_tax(8_000_000, 4_000_000) - 690_000) < 1_000
+    assert abs(il_estate_tax(10_000_000, 4_000_000) - 980_000) < 1_000
     # Top marginal rate caps at 16% (a $1M slice up at the top adds <= $160k).
     hi = il_estate_tax(12_000_000, 4_000_000) - il_estate_tax(11_000_000, 4_000_000)
     assert hi <= 160_000 + 1e-6
-    # HB2601 doubles the exclusion to $8M -> an $8M estate owes nothing, eliminating the liability.
+    # HB2601 doubles the exclusion to $8M -> shifts the baseline: $0 at/below $8M, and the
+    # calibrated curve resumes above (a $9M estate matches the $5M-at-$4M figure, ~$285k).
     assert il_estate_tax(8_000_000, 8_000_000) == 0.0
+    assert abs(il_estate_tax(9_000_000, 8_000_000) - 285_000) < 1_000
     assert il_estate_tax(8_000_000, 4_000_000) > 0.0      # ...vs a real bill under current law
 
 

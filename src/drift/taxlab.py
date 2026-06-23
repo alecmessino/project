@@ -51,7 +51,59 @@ ASSUMPTIONS = {
     "advisory_fee_bps": 100,
     "expense_ratio_bps": 30,
     "fee_max_bps": 300,
+    # Estate Planning View (2026 tax-law reference). Federal exemption is large and most
+    # Illinois HNW estates fall under it; Illinois' $4M exclusion is the binding constraint.
+    "estate": {
+        "fed_exemption_indiv": 15_000_000,   # 2026 permanent federal exemption (individual)
+        "fed_exemption_couple": 30_000_000,  # couple (portable)
+        "fed_rate": 0.40,                    # federal top rate
+        "il_exclusion": 4_000_000,           # Illinois exclusion (no portability)
+        "il_hb2601_exclusion": 8_000_000,    # proposed HB2601 — double the exclusion
+        "il_top_rate": 0.16,                 # Illinois top marginal rate
+        "default_individual": 3_000_000,
+        "default_joint": 2_000_000,
+        "default_trust": 1_000_000,
+        "estate_max": 30_000_000,
+        "estate_step": 100_000,
+        "trust_compression_top_threshold": 15_650,  # 2026 trust income hits the 37% bracket here
+    },
 }
+
+# Pre-2001 IRC §2011 "state death tax credit" graduated schedule — the legal basis for the
+# Illinois estate tax rate structure (0.8% → 16% top). Rows: (over, base_tax, marginal_rate).
+_IL_2011_TABLE = [
+    (0, 0, 0.0), (40_000, 0, 0.008), (90_000, 400, 0.016), (140_000, 1_200, 0.024),
+    (240_000, 3_600, 0.032), (440_000, 10_000, 0.040), (640_000, 18_000, 0.048),
+    (840_000, 27_600, 0.056), (1_040_000, 38_800, 0.064), (1_540_000, 70_800, 0.072),
+    (2_040_000, 106_800, 0.080), (2_540_000, 146_800, 0.088), (3_040_000, 190_800, 0.096),
+    (3_540_000, 238_800, 0.104), (4_040_000, 290_800, 0.112), (5_040_000, 402_800, 0.120),
+    (6_040_000, 522_800, 0.128), (7_040_000, 650_800, 0.136), (8_040_000, 786_800, 0.144),
+    (9_040_000, 930_800, 0.152), (10_040_000, 1_082_800, 0.160),
+]
+
+
+def _il_table_tax(x: float) -> float:
+    """§2011 graduated tax on `x` (the schedule Illinois' estate tax is built on)."""
+    if x <= 0:
+        return 0.0
+    over, base, rate = _IL_2011_TABLE[0]
+    for o, b, r in _IL_2011_TABLE:
+        if x >= o:
+            over, base, rate = o, b, r
+        else:
+            break
+    return base + rate * (x - over)
+
+
+def il_estate_tax(estate: float, exclusion: float) -> float:
+    """Illustrative Illinois estate tax: $0 at or below the exclusion (the cliff into
+    taxability), otherwise the §2011 graduated schedule applied to the amount above the
+    exclusion (top rate 16%). Illustrative only — Illinois' actual computation involves QTIP
+    elections and the AG calculator and can differ; the estate attorney produces the filing
+    figure. Mirrors the JS on the Tax Lab page."""
+    if estate <= exclusion:
+        return 0.0
+    return max(0.0, _il_table_tax(estate) - _il_table_tax(exclusion))
 
 
 def location_alpha3(taxable: float, traditional: float, roth: float,

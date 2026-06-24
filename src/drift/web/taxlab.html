@@ -208,6 +208,13 @@
     transition:box-shadow .15s ease,border-color .15s ease}
   .lead-form:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(21,128,106,.20)}
   .lead-form input{flex:1;border:none;outline:none;font:inherit;font-size:15px;padding:14px 15px;background:transparent;color:var(--ink)}
+  /* Accessibility helpers: visually-hidden label/honeypot, link-style button, and a visible keyboard focus ring
+     (sliders strip their native outline above, so they need a focus-visible replacement). */
+  .vh{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .linklike{background:none;border:0;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  #usmap rect.st:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
   .lead-form button{border:none;font:inherit;font-size:15px;font-weight:680;color:#fff;background:var(--accent);padding:0 22px;cursor:pointer}
   .lead-form button:hover{background:#0f6f5b}
   .lead-note{font-size:11.5px;color:var(--dim);margin-top:10px;line-height:1.5}
@@ -320,7 +327,7 @@
   <div class="geo">
     <div class="map-wrap">
       <h3 id="maphdr">Tax severity by state <span class="hint">· click a state to localize the model</span></h3>
-      <svg id="usmap" viewBox="0 0 110 80" role="img" aria-label="US state capital-gains tax severity heat map"></svg>
+      <svg id="usmap" viewBox="0 0 110 80" role="group" aria-label="US state capital-gains tax severity — select your state"></svg>
       <div class="legend" id="legend"></div>
     </div>
     <aside class="disc advisor-only" id="disc">
@@ -343,7 +350,7 @@
     <div class="est-params" id="estparams"></div>
     <div class="estgrid">
       <div class="opt-card entity">
-        <div class="hb"><span class="toggle" id="hb2601" role="switch" tabindex="0" aria-label="Model proposed HB2601"><span class="knob"></span></span>
+        <div class="hb"><span class="toggle" id="hb2601" role="switch" tabindex="0" aria-checked="false" aria-label="Model proposed HB2601"><span class="knob"></span></span>
           <span>Model proposed <b>HB2601</b> — double the IL exemption to $8M</span></div>
         <div class="slider"><div class="top"><label>Individual</label><output id="estindv"></output></div>
           <input type="range" id="estind" aria-label="Assets owned individually" /></div>
@@ -482,24 +489,36 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
 //    which states and portfolio slices convert. No PII beyond what the prospect submits.
 // ===========================================================================================
 const CONFIG={
-  formEndpoint:"",                       // e.g. "https://formspree.io/f/abcmyform" — empty => mailto fallback
-  contactEmail:"hello@yourfirm.com",     // mailto fallback target when no formEndpoint
+  // Lead capture — pick ONE backend, no other code changes needed:
+  //   Web3Forms (recommended, free/effectively-unlimited): formEndpoint="https://api.web3forms.com/submit",
+  //     formAccessKey="<your public key>", formHoneypot="botcheck".
+  //   Formspree:                                          formEndpoint="https://formspree.io/f/abcmyform",
+  //     formAccessKey="",                                  formHoneypot="_gotcha".
+  //   Empty formEndpoint => mailto: fallback to contactEmail.
+  formEndpoint:"",
+  formAccessKey:"",                      // Web3Forms public access key (safe in client code); "" for Formspree/none
+  formHoneypot:"_gotcha",                // spam honeypot field name: Formspree "_gotcha", Web3Forms "botcheck"
+  contactEmail:"alec.messino@cwsplanning.com",  // mailto fallback + error-recovery address
   calendlyUrl:"",                        // e.g. "https://calendly.com/you/intro" — empty => placeholder slot
   leadPortfolio:1000000,                 // default headline portfolio for the lead-gen hook (overridable via ?port=)
-  analytics:{ provider:"", domain:"" },  // "plausible" | "fathom" (load its script in <head>); "" => no-op
-  formCrsUrl:"#",                        // institutional disclosures (placeholder hooks)
+  analytics:{ provider:"", domain:"" },  // "plausible" | "umami" | "fathom" (load its script in <head>); "" => no-op
+  formCrsUrl:"#",                        // institutional disclosures (placeholder hooks; dead "#" links are hidden)
   formAdvUrl:"#",
 };
-// Privacy-first analytics: no-op until a provider script is present. Routes to Plausible or Fathom.
+// Privacy-first analytics: no-op until a provider script is present. Routes to Plausible, Umami, or Fathom.
 function track(name, props){
   try{
-    if(window.plausible) window.plausible(name, props?{props}:undefined);
-    else if(window.fathom && window.fathom.trackEvent) window.fathom.trackEvent(name);
+    if(window.plausible) window.plausible(name, props?{props}:undefined);          // zero-config drop-in
+    else if(window.umami) window.umami.track(name, props);                         // free tier; preserves props
+    else if(window.fathom && window.fathom.trackEvent) window.fathom.trackEvent(name);  // name only (Fathom drops props)
   }catch(e){}
 }
 let MODE = (v=>(v==="lead"||v==="estate"||v==="strategy")?v:"advisor")(new URLSearchParams(location.search).get("view"));
-const pct=(x,d=1)=>x==null?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
-const apct=(x,d=1)=>x==null?"—":(x*100).toFixed(d)+"%";
+const pct=(x,d=1)=>(x==null||!Number.isFinite(x))?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
+const apct=(x,d=1)=>(x==null||!Number.isFinite(x))?"—":(x*100).toFixed(d)+"%";
+// a11y: mirror each slider's friendly <output> (id = sliderId+"v") into aria-valuetext, so a screen reader
+// announces "$2 Million" / "4.5%" instead of the raw number. Runs after the render handlers set the output.
+function syncValueText(){ document.querySelectorAll('input[type=range]').forEach(el=>{ const o=document.getElementById(el.id+"v"); if(o&&o.textContent) el.setAttribute("aria-valuetext", o.textContent); }); }
 const $=id=>document.getElementById(id);
 // Phase A: punchy dollar formatter with words ("$1.52 Million", "$640k", "$8,200").
 function fmt$big(x){
@@ -582,12 +601,14 @@ function buildMap(){
     if(!(code in S.states)) continue;
     const [c,row]=TILES[code], [slt,sst]=S.states[code], b=BUCKETS[bucketOf(slt,sst)];
     const x=c*10, y=row*10;
-    parts+=`<rect class="st" data-st="${code}" x="${x}" y="${y}" width="9" height="9" rx="1.3" fill="${b.fill}" vector-effect="non-scaling-stroke"><title>${code} · ${b.lab}</title></rect>`+
-      `<text class="lab" x="${x+4.5}" y="${y+4.6}" text-anchor="middle">${code}</text>`;
+    parts+=`<rect class="st" role="button" tabindex="0" data-st="${code}" aria-label="${(NAMES[code]||code)} — ${b.lab} tax severity" x="${x}" y="${y}" width="9" height="9" rx="1.3" fill="${b.fill}" vector-effect="non-scaling-stroke"><title>${code} · ${b.lab}</title></rect>`+
+      `<text class="lab" x="${x+4.5}" y="${y+4.6}" text-anchor="middle" aria-hidden="true">${code}</text>`;
   }
   $("usmap").innerHTML=parts;
   $("usmap").querySelectorAll("rect.st").forEach(r=>{
-    r.addEventListener("click",()=>{ $("state").value=r.dataset.st; render(); flashDisc(); track("state_selected",{state:r.dataset.st,view:MODE}); });
+    const pick=()=>{ $("state").value=r.dataset.st; render(); flashDisc(); track("state_selected",{state:r.dataset.st,view:MODE}); };
+    r.addEventListener("click",pick);
+    r.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });   // keyboard-operable tiles
   });
   $("legend").innerHTML=BUCKETS.map(b=>`<span><i style="background:${b.fill}"></i>${b.lab}</span>`).join("");
 }
@@ -767,37 +788,74 @@ function ctaInitial(){
 }
 function ctaForm(){
   $("leadcta").innerHTML=`<form class="lead-form" onsubmit="return submitLead(event)">
-      <input type="email" id="leademail" placeholder="you@email.com" required autocomplete="email" />
-      <button type="submit">Send →</button></form>
+      <label for="leademail" class="vh">Your email address</label>
+      <input type="email" id="leademail" placeholder="you@email.com" required autocomplete="email" aria-label="Your email address" />
+      <input type="text" id="leadhp" name="${CONFIG.formHoneypot}" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <button type="submit" id="leadsend">Send →</button></form>
     <div class="lead-note">We'll email your custom tax-recovery plan. We never share your address.</div>`;
   const el=$("leademail"); if(el) el.focus();
 }
+let _leadBusy=false, _leadEmail="";   // double-submit guard + captured email for the Calendly prefill
 function submitLead(ev){
   ev.preventDefault();
-  const email=($("leademail")&&$("leademail").value)||"", st=$("state").value, b=stateBleed();
+  if(_leadBusy) return false;                                            // ignore double-click / double-Enter
+  const email=(($("leademail")&&$("leademail").value)||"").trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){                         // JS-side guard (don't capture uncontactable leads)
+    const el=$("leademail"); if(el){ el.focus(); if(el.reportValidity) el.reportValidity(); } return false;
+  }
+  const st=$("state").value, b=stateBleed();
   const where=(st==="—"||!NAMES[st])?"my state":(NAMES[st]||st);
-  track("lead_submitted",{state:st, portfolio:b.P});   // funnel conversion event (no PII beyond submitted email)
+  _leadEmail=email;
   if(CONFIG.formEndpoint){
+    _leadBusy=true;
+    const btn=$("leadsend"); if(btn){ btn.disabled=true; btn.textContent="Sending…"; }
+    const payload={email, state:st, portfolio:b.P, state_tax_30y:Math.round(b.stateTotal), total_tax_30y:Math.round(b.totalTotal),
+      _subject:`New Tax Lab lead — ${where}`};
+    payload[CONFIG.formHoneypot]=($("leadhp")&&$("leadhp").value)||"";   // Formspree _gotcha / Web3Forms botcheck
+    if(CONFIG.formAccessKey) payload.access_key=CONFIG.formAccessKey;    // Web3Forms public key (ignored by Formspree)
     fetch(CONFIG.formEndpoint,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
-      body:JSON.stringify({email, state:st, portfolio:b.P, state_tax_30y:Math.round(b.stateTotal), total_tax_30y:Math.round(b.totalTotal)})})
-      .then(ctaSuccess).catch(ctaSuccess);
+      body:JSON.stringify(payload)})
+      .then(res=>{ if(!res.ok) throw new Error("HTTP "+res.status); ctaSuccess(); })   // only a real 2xx is success
+      .catch(ctaError);
   } else {
     const subj=encodeURIComponent("My custom tax recovery plan");
     const body=encodeURIComponent(`I'd like my tax recovery plan.\n\nEmail: ${email}\nState: ${where}\nPortfolio: ${fmt$big(b.P)}\nProjected ${b.horizon}-yr capital-gains tax: ${fmt$big(b.totalTotal)}`);
     window.location.href=`mailto:${CONFIG.contactEmail}?subject=${subj}&body=${body}`;
-    ctaSuccess();
+    ctaMailto();                                                        // mailto only *opens* a draft — say so honestly
   }
   return false;
 }
+function ctaError(){
+  _leadBusy=false;
+  track("lead_error",{state:$("state").value});                         // surface backend failures in the funnel
+  const mail=`mailto:${CONFIG.contactEmail}?subject=${encodeURIComponent("My custom tax recovery plan")}`;
+  $("leadcta").innerHTML=`<div class="lead-note" role="alert" style="color:var(--neg);text-align:left">
+      We couldn't send that just now. Email us directly at <a href="${mail}">${CONFIG.contactEmail}</a>,
+      or <button type="button" class="linklike" onclick="ctaForm()">try again</button>.</div>`;
+}
 function ctaSuccess(){
-  const cal = CONFIG.calendlyUrl
-    ? `<iframe src="${CONFIG.calendlyUrl}" width="100%" height="640" frameborder="0" title="Book an intro call"></iframe>`
-    : `Booking calendar goes here — drop your Calendly URL into CONFIG.calendlyUrl and it embeds automatically.`;
-  $("leadcta").innerHTML=`<div class="lead-success">
-      <div class="h">Your quantitative report is on its way. ✓</div>
+  _leadBusy=false;
+  track("lead_submitted",{state:$("state").value, portfolio:stateBleed().P});   // count verified conversions only
+  let url=CONFIG.calendlyUrl;
+  if(url && _leadEmail) url+=(url.indexOf("?")<0?"?":"&")+"email="+encodeURIComponent(_leadEmail);  // prefill the booking form
+  const cal = url
+    ? `<iframe src="${url}" width="100%" height="640" frameborder="0" title="Book an intro call"></iframe>`
+    : `<span style="color:var(--dim)">We'll email you a link to book your intro call.</span>`;
+  $("leadcta").innerHTML=`<div class="lead-success" role="status" aria-live="polite">
+      <div class="h" tabindex="-1">Your quantitative report is on its way. ✓</div>
       <p>Ready to see how this fits into your current portfolio? Grab a time below — the highest-value first move is
         usually relocating your most tax-inefficient sleeves.</p>
       <div id="calendly-slot">${cal}</div></div>`;
+  const h=$("leadcta").querySelector(".lead-success .h"); if(h) h.focus();
+}
+function ctaMailto(){
+  _leadBusy=false;
+  track("lead_submitted",{state:$("state").value, portfolio:stateBleed().P});
+  $("leadcta").innerHTML=`<div class="lead-success" role="status" aria-live="polite">
+      <div class="h" tabindex="-1">Your email app should open — hit Send. ✓</div>
+      <p>Once you send that message we'll follow up with your custom tax-recovery plan. If nothing opened, email us at
+        <a href="mailto:${CONFIG.contactEmail}">${CONFIG.contactEmail}</a>.</p></div>`;
+  const h=$("leadcta").querySelector(".lead-success .h"); if(h) h.focus();
 }
 // --- Estate Planning View (entity-level architecture + IL cliff + HB2601) ---
 // Calibrated to the Illinois AG estate-tax calculator (mirror of drift.taxlab.il_estate_tax):
@@ -850,7 +908,8 @@ function renderEstate(){
   $("estnote").innerHTML=`<b>Method &amp; caveats.</b> Illinois estate tax is estimated from the §2011 graduated schedule
     (0.8%–16%) on the amount above the exclusion — <b>illustrative only</b>. Illinois' actual computation (Illinois QTIP
     elections, the Attorney General's calculator, deductions) can differ materially; the estate attorney produces the
-    filing figure. Not tax or legal advice.`;
+    filing figure. <b>HB2601 is proposed legislation, not enacted</b> — figures with the sandbox on assume it passes as
+    drafted and may not reflect final law. Not tax or legal advice.`;
 }
 
 // --- Strategy view: 401(k) rollover + Roth conversion + asset-location blueprint ---
@@ -895,7 +954,9 @@ function renderStrategy(){
     $("ilarb").innerHTML=`<div class="lbl">${NAMES[r.state]||r.state} conversion arbitrage</div><div class="big">$0 state tax</div>
       <p>${NAMES[r.state]||r.state} <b>exempts retirement distributions</b> from state income tax, so a Roth conversion pays
       <b>federal only</b>. Converting ${fmt$(conv)}/yr saves <b>${fmt$(wouldState)}/yr</b> in state tax — about
-      <b>${fmt$big(trad*stateOrd)}</b> over the full ${fmt$(trad)} balance — versus a state that taxes it. Convert aggressively while resident.</p>`;
+      <b>${fmt$big(trad*stateOrd)}</b> over the full ${fmt$(trad)} balance — versus a state that taxes it.
+      Conversions are taxable events; whether and how much to convert depends on your bracket, IRMAA, the 5-year rules, residency, and timing.
+      <b>Illustrative, not tax advice — confirm with your CPA.</b></p>`;
   } else $("ilarb").style.display="none";
   // 3) asset-location blueprint
   $("blueprint").innerHTML=
@@ -912,7 +973,7 @@ function applyMode(m){
   document.body.classList.toggle("estate", MODE==="estate");
   document.body.classList.toggle("strategy", MODE==="strategy");
   try{ const u=new URL(location.href); u.searchParams.set("view",MODE); history.replaceState(null,"",u); }catch(e){}
-  $("modetog").querySelectorAll("button").forEach(btn=>btn.classList.toggle("on", btn.dataset.mode===MODE));
+  $("modetog").querySelectorAll("button").forEach(btn=>{ const on=btn.dataset.mode===MODE; btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", on?"true":"false"); });
   $("lede").innerHTML = MODE==="lead"
     ? `See exactly how much of your wealth a high-turnover strategy hands to taxes in <b>your</b> state — and how much is recoverable. Click your state to begin.`
     : MODE==="estate"
@@ -1074,9 +1135,13 @@ function render(){
     <dt>Illinois estate tax</dt><dd>Calibrated to the Illinois AG calculator (single estate) on the amount over the exclusion; the HB2601 sandbox shifts the baseline to $8M. Illustrative — QTIP elections/deductions are the attorney's to file.</dd>
     <dt>Simplifications</dt><dd>After-tax applies the selected rates to the book's realized-gain decomposition and ignores second-order tax-on-tax compounding; estate/fee/growth figures are illustrative projections, not guarantees.</dd>
   </dl>`;
-  $("compliance").innerHTML=`<b>Illustrative only. Not explicit tax or legal advice. Coordinate all final estate filings with a qualified attorney.</b>
-    Past performance and projections do not guarantee future results. ·
-    <a href="${CONFIG.formCrsUrl}">Form CRS</a> · <a href="${CONFIG.formAdvUrl}">Form ADV</a>`;
+  const discLinks=[
+    (CONFIG.formCrsUrl&&CONFIG.formCrsUrl!=="#")?`<a href="${CONFIG.formCrsUrl}">Form CRS</a>`:"",
+    (CONFIG.formAdvUrl&&CONFIG.formAdvUrl!=="#")?`<a href="${CONFIG.formAdvUrl}">Form ADV</a>`:"",
+  ].filter(Boolean).join(" · ");   // never surface a dead "#" disclosure link
+  $("compliance").innerHTML=`<b>Illustrative and educational only — not investment, tax, or legal advice, and not an offer or
+    solicitation. Using this tool does not create an advisory relationship. Coordinate all final estate filings with a qualified attorney.</b>
+    Past performance and projections do not guarantee future results.${discLinks?" · "+discLinks:""}`;
 
   // Layer 2: keep the disclosure ledger and the map's selected-state outline in sync.
   renderDisc(r);
@@ -1129,7 +1194,7 @@ function init(){
       for(const id of ["estind","estjoint","esttrust"]){ $(id).max=E.estate_max; $(id).step=E.estate_step; }
       $("estind").value=E.default_individual; $("estjoint").value=E.default_joint; $("esttrust").value=E.default_trust;
       ["estind","estjoint","esttrust"].forEach(id=>$(id).addEventListener("input",renderEstate));
-      const tog=()=>{ $("hb2601").classList.toggle("on"); renderEstate(); };
+      const tog=()=>{ const on=$("hb2601").classList.toggle("on"); $("hb2601").setAttribute("aria-checked", on?"true":"false"); renderEstate(); };
       $("hb2601").addEventListener("click",tog);
       $("hb2601").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); tog(); } });
     }
@@ -1149,9 +1214,12 @@ function init(){
   const qState=qp.get("state"), qPort=parseFloat(qp.get("port"));
   if(qState && S.states && (qState in S.states)) $("state").value=qState;
   if(qPort>0){
-    $("leadport").value=qPort;                                       // prospect dollar-bleed hook
-    $("taxbal").value=qPort;                                         // advisor optimizer (taxable seed)
-    if($("estind")){ $("estind").value=qPort; $("estjoint").value=0; $("esttrust").value=0; }  // estate cliff (unmitigated)
+    // Clamp into each slider's own [min,max] so one ?port= localizes every view consistently
+    // (a raw value below a slider's min is silently clamped by the browser, desyncing the views).
+    const setClamped=(id,v)=>{ const el=$(id); if(!el) return; const mn=parseFloat(el.min)||0, mx=parseFloat(el.max)||v; el.value=Math.min(Math.max(v,mn),mx); };
+    setClamped("leadport",qPort);                                    // prospect dollar-bleed hook
+    setClamped("taxbal",qPort);                                      // advisor optimizer (taxable seed)
+    if($("estind")){ setClamped("estind",qPort); $("estjoint").value=0; $("esttrust").value=0; }  // estate cliff (unmitigated)
   }
   buildMap();
   render();
@@ -1159,6 +1227,9 @@ function init(){
   ctaInitial();
   $("modetog").querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>applyMode(btn.dataset.mode)));
   applyMode(MODE);
+  // a11y: keep aria-valuetext in sync on every slider drag (runs after each render handler sets the output).
+  document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener("input",syncValueText));
+  syncValueText();
 }
 init();
 </script>

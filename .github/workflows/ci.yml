@@ -26,3 +26,29 @@ jobs:
         with:
           node-version: '22'
       - run: node tests/web/run.js     # reads the src template; exits non-zero on any failed flow
+
+  # Visual artifacts: render every page (desktop + mobile) to PNGs and upload them, so each PR's
+  # actual layout is reviewable at a glance. Offline (rebuilds taxlab/thesis/hub from committed
+  # docs JSON; never fetches market data); not a hard gate on pixels.
+  shots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -e ".[dev]" playwright
+      - run: python -m playwright install --with-deps chromium
+      - name: Rebuild offline pages (no network)
+        run: |
+          drift taxlab --docs docs --out docs/taxlab.html
+          drift thesis --docs docs --out docs/thesis.html
+          drift hub    --docs docs --out docs/index.html
+      - name: Render screenshots
+        run: python scripts/shots.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-screenshots
+          path: artifacts/shots/
+          retention-days: 14
+

@@ -218,7 +218,8 @@ def studies(
     from .exhibit import export_report
     settings = _load_settings(config)
     instruments = [s.strip() for s in instrument.split(",") if s.strip()]
-    console.print(f"[dim]pulling {len(instruments)} {source} symbols …[/]")
+    _src = "source chain (tiingo→stooq→yahoo)" if source in ("yahoo", "yf", "equity", "equities", "stocks") else source
+    console.print(f"[dim]pulling {len(instruments)} symbols via {_src} …[/]")
     series = _universe(source, instruments, None, pause=pause)
     if not series and source != "synthetic":
         console.print("[yellow]no data pulled (rate-limited?) — keeping existing report.[/]")

@@ -1,0 +1,25 @@
+name: Validate methodology (real data)
+
+# On-demand: run the slow-sleeve sweep + tilt attribution on REAL ~40y proxy-spliced history
+# (via the Tiingo source chain) so the fast-vs-slow after-tax and tilt-ON-vs-OFF questions are
+# answered on actual markets, not the proof-of-mechanism synthetic universe. Read-only; prints
+# the tables to the run log.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    env:
+      TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
+      SLOW_SWEEP_REAL: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -e ".[dev]"
+      - run: python scripts/slow_sweep.py

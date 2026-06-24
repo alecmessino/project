@@ -1,0 +1,26 @@
+/* Driftwood shared design system — self-hosted institutional type (Newsreader display serif +
+   IBM Plex Sans text). Linked LAST in each <head> to unify tokens/fonts across all pages. */
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/ibmplexsans-400.woff2") format("woff2")}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/ibmplexsans-500.woff2") format("woff2")}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/ibmplexsans-600.woff2") format("woff2")}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/ibmplexsans-700.woff2") format("woff2")}
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/newsreader-400.woff2") format("woff2")}
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/newsreader-500.woff2") format("woff2")}
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/newsreader-600.woff2") format("woff2")}
+
+:root{
+  --bg:#fff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#5f5f68;
+  --pos:#2f6f5b; --neg:#9b4439; --slate:#4a4f57; --rule:#222226; --accent:#15806a; --bench:#b8bcc2;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:22px; --s6:30px;
+  --r1:7px; --r2:9px; --r3:10px; --r4:12px; --rfull:999px;
+  --sh1:0 1px 3px rgba(20,20,26,.06); --sh2:0 8px 30px rgba(20,20,26,.12);
+  --t-fast:.12s ease; --t-mid:.2s ease;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+body{ font-family:var(--sans); -webkit-font-smoothing:antialiased; letter-spacing:-.004em; }
+h1,h2,h3,.ph-title,.es-h{ font-family:var(--serif); letter-spacing:-.01em; }
+h1{ font-weight:600; } h2,h3{ font-weight:500; }
+.num,.v,.big,output,.amt,.recovered{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
+a{ color:var(--accent); }
+::selection{ background:rgba(21,128,106,.16); }

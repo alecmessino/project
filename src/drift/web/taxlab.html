@@ -705,7 +705,7 @@ function renderLocation(){
          <b style="color:${netR>=0?'var(--pos)':'var(--neg)'}">${netR>=0?"+":"−"}${fmt$(Math.abs(netR))}/yr</b></div>
        <div class="tlh"><span class="ico">✓</span><b>Tax-loss harvesting adds an estimated ${apct(tlhLow,1)}–${apct(tlhHigh,1)}/yr</b>
          in structural alpha (from the track's harvested losses, no-tax to high-tax state) — ${neutralizes
-           ? `<b>completely neutralizing</b> the ${Math.round(feeRate()*1e4)} bps advisory fee`
+           ? `<b>designed to offset</b> the effective cost of advisory services through tax-efficient positioning`
            : `offsetting much of the ${Math.round(feeRate()*1e4)} bps advisory fee`}.</div>
      </div>`;
 
@@ -799,7 +799,8 @@ function ctaForm(){
     <div class="lead-note">We'll email your custom tax-recovery plan. We never share your address.</div>`;
   const el=$("leademail"); if(el) el.focus();
 }
-let _leadBusy=false, _leadEmail="";   // double-submit guard + captured email for the Calendly prefill
+let _leadBusy=false, _leadEmail="", LEAD_UTM={};   // double-submit guard, captured email, UTM campaign attribution
+function leadProps(){ return Object.assign({state:$("state").value, portfolio:stateBleed().P}, LEAD_UTM); }
 function submitLead(ev){
   ev.preventDefault();
   if(_leadBusy) return false;                                            // ignore double-click / double-Enter
@@ -815,6 +816,7 @@ function submitLead(ev){
     const btn=$("leadsend"); if(btn){ btn.disabled=true; btn.textContent="Sending…"; }
     const payload={email, state:st, portfolio:b.P, state_tax_30y:Math.round(b.stateTotal), total_tax_30y:Math.round(b.totalTotal),
       _subject:`New Tax Lab lead — ${where}`};
+    Object.assign(payload, LEAD_UTM);                                   // campaign attribution (utm_*) into the lead email
     if(CONFIG.firmName) payload.from_name=CONFIG.firmName;               // tags the inbound notification (Web3Forms)
     payload[CONFIG.formHoneypot]=($("leadhp")&&$("leadhp").value)||"";   // Formspree _gotcha / Web3Forms botcheck
     if(CONFIG.formAccessKey) payload.access_key=CONFIG.formAccessKey;    // Web3Forms public key (ignored by Formspree)
@@ -824,7 +826,8 @@ function submitLead(ev){
       .catch(ctaError);
   } else {
     const subj=encodeURIComponent("My custom tax recovery plan");
-    const body=encodeURIComponent(`I'd like my tax recovery plan.\n\nEmail: ${email}\nState: ${where}\nPortfolio: ${fmt$big(b.P)}\nProjected ${b.horizon}-yr capital-gains tax: ${fmt$big(b.totalTotal)}`);
+    const usrc=LEAD_UTM.utm_source?`\nCampaign: ${[LEAD_UTM.utm_campaign,LEAD_UTM.utm_source,LEAD_UTM.utm_medium].filter(Boolean).join(" / ")}`:"";
+    const body=encodeURIComponent(`I'd like my tax recovery plan.\n\nEmail: ${email}\nState: ${where}\nPortfolio: ${fmt$big(b.P)}\nProjected ${b.horizon}-yr capital-gains tax: ${fmt$big(b.totalTotal)}${usrc}`);
     window.location.href=`mailto:${CONFIG.contactEmail}?subject=${subj}&body=${body}`;
     ctaMailto();                                                        // mailto only *opens* a draft — say so honestly
   }
@@ -840,7 +843,7 @@ function ctaError(){
 }
 function ctaSuccess(){
   _leadBusy=false;
-  track("lead_submitted",{state:$("state").value, portfolio:stateBleed().P});   // count verified conversions only
+  track("lead_submitted", leadProps());   // count verified conversions only (carries utm_* attribution)
   let url=CONFIG.calendlyUrl;
   if(url && _leadEmail) url+=(url.indexOf("?")<0?"?":"&")+"email="+encodeURIComponent(_leadEmail);  // prefill the booking form
   const cal = url
@@ -855,7 +858,7 @@ function ctaSuccess(){
 }
 function ctaMailto(){
   _leadBusy=false;
-  track("lead_submitted",{state:$("state").value, portfolio:stateBleed().P});
+  track("lead_submitted", leadProps());
   $("leadcta").innerHTML=`<div class="lead-success" role="status" aria-live="polite">
       <div class="h" tabindex="-1">Your email app should open — hit Send. ✓</div>
       <p>Once you send that message we'll follow up with your custom tax-recovery plan. If nothing opened, email us at
@@ -970,7 +973,7 @@ function renderStrategy(){
      <div class="bp"><span class="bt trad">Traditional IRA</span><div class="bh">Moderate-turnover &amp; fixed income</div>
        <p>Tax-deferred sleeves and bond/fixed-income exposure — interest and moderate turnover are sheltered now; withdrawals taxed as ordinary income later.</p></div>
      <div class="bp"><span class="bt roth">Roth IRA / Roth 401(k)</span><div class="bh">High-turnover Driftwood momentum</div>
-       <p>The explosive, high-turnover momentum sleeve — <b>100% of the growth walled off from taxes forever</b>, with no RMDs for heirs.</p></div>`;
+       <p>The high-turnover momentum sleeve — <b>designed to grow free of annual capital-gains tax under current law</b>, with no RMDs for heirs.</p></div>`;
 }
 function applyMode(m){
   MODE=(m==="lead"||m==="estate"||m==="strategy")?m:"advisor";
@@ -1216,6 +1219,9 @@ function init(){
   // --- Personalized deep-links: a cold-outreach URL pre-loads a tailored scenario ---
   //   ?view=lead&state=IL&port=2000000   |   ?view=estate&state=IL&port=6000000
   const qp=new URLSearchParams(location.search);
+  // Cold-outreach attribution: capture utm_* so they ride along on the lead email + conversion event.
+  // (Plausible also reads these natively for its traffic/acquisition reports — no code needed there.)
+  ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(k=>{ const v=qp.get(k); if(v) LEAD_UTM[k]=v; });
   const qState=qp.get("state"), qPort=parseFloat(qp.get("port"));
   if(qState && S.states && (qState in S.states)) $("state").value=qState;
   if(qPort>0){

@@ -20,6 +20,7 @@ import sys
 from dataclasses import replace
 from datetime import date, timedelta
 
+from drift import analytics
 from drift.config import Settings
 from drift.cross_section import cross_book_entries
 from drift.feed.synthetic import SyntheticFeed
@@ -96,6 +97,40 @@ def row(name: str, settings: Settings, series: dict) -> dict:
     }
 
 
+def _curve_stats(entries) -> tuple[float, float, float, float]:
+    eq = [e["equity"] for e in entries]
+    rets = [e["realized_return"] for e in entries]
+    prev: dict = {}
+    tot = 0.0
+    for e in entries:
+        w = e["weights"]
+        tot += sum(abs(w.get(k, 0.0) - prev.get(k, 0.0)) for k in set(w) | set(prev))
+        prev = w
+    yrs = len(entries) / BPY
+    return eq[-1] - 1.0, analytics.sharpe(rets, BPY), analytics.max_drawdown(eq), (tot / yrs if yrs else 0.0)
+
+
+def tilt_attribution(series: dict) -> None:
+    """Does the hardcoded EM/value/small overweight earn RISK-ADJUSTED return, or just add beta?
+    Runs the fast book tilt-ON (as shipped) vs tilt-OFF (all multipliers neutralized to 1.0) on
+    the identical series — the only difference is the tilt."""
+    fast = Settings.load("config/drift.yaml")
+    cs = fast.cross_section
+    neutral = cs.model_copy(update={
+        "tilt_region": {k: 1.0 for k in cs.tilt_region},
+        "tilt_size": {k: 1.0 for k in cs.tilt_size},
+        "tilt_style": {k: 1.0 for k in cs.tilt_style},
+    })
+    off = fast.model_copy(update={"cross_section": neutral})
+    print("Tilt attribution — does the EM/value/small overweight add risk-adjusted return?")
+    hdr = f"{'variant':<22}{'pre-tax':>10}{'sharpe':>8}{'maxDD':>8}{'turnov':>9}"
+    print(hdr); print("-" * len(hdr))
+    for name, s in [("tilt ON (as shipped)", fast), ("tilt OFF (neutral)", off)]:
+        r, sh, dd, tv = _curve_stats(cross_book_entries(series, s))
+        print(f"{name:<22}{r*100:>9.1f}%{sh:>8.2f}{dd*100:>7.1f}%{tv*100:>8.0f}%")
+    print()
+
+
 def main() -> int:
     use_real = os.environ.get("SLOW_SWEEP_REAL") == "1"
     src = "real (Yahoo, proxy-spliced)"
@@ -135,6 +170,7 @@ def main() -> int:
               f"{r['st_share']*100:>6.0f}%"
               f"{r['hold_days']:>9.0f}")
     print()
+    tilt_attribution(series)
     return 0
 
 

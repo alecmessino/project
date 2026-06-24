@@ -16,14 +16,8 @@
   plausible.init()
 </script>
 <style>
-  :root{--bg:#fff;--soft:#fafafa;--line:#e8e8ea;--ink:#1b1b1f;--dim:#5f5f68;
-    --pos:#2f6f5b;--neg:#9b4439;--slate:#4a4f57;--rule:#222226;--accent:#15806a}
-  :root{ /* elite-UI token layer: spacing / radius / shadow / motion / type scale */
-    --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:22px;--s6:26px;
-    --r1:7px;--r2:9px;--r3:10px;--r4:11px;--rfull:999px;
-    --sh1:0 1px 3px rgba(0,0,0,.08);--sh2:0 6px 22px rgba(0,0,0,.14);
-    --t-fast:.12s ease;--t-mid:.2s ease;
-    --fz-xs:11px;--fz-sm:12.5px;--fz-md:15px;--fz-lg:18px;--fz-hero:30px}
+  /* Palette + spacing/radius/shadow/motion/type tokens come from the shared driftwood.css
+     (linked last in <head>) — defined once for the whole site. */
   /* Mobile-first state picker: a large native select replaces the ~28px map tiles in lead view on phones. */
   .leadstate{display:none;width:100%;max-width:360px;margin:0 auto var(--s4);padding:var(--s3) var(--s4);
     font:inherit;font-size:var(--fz-md);border:1px solid var(--line);border-radius:var(--r3);background:#fff;color:var(--ink)}
@@ -41,16 +35,16 @@
   h1{font-size:27px;margin:0 0 6px;font-weight:680;letter-spacing:-.3px}
   h1 .w{color:var(--slate)}
   .lede{color:var(--dim);font-size:14.5px;max-width:65ch;margin:8px 0 0;line-height:1.65}
-  .controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:26px 0 6px}
+  .controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--s3);margin:var(--s6) 0 var(--s2)}
   .ctl label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);margin-bottom:5px;font-weight:600}
   .ctl select{width:100%;font:inherit;font-size:13.5px;padding:8px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:22px 0}
-  .card{background:#fff;padding:15px 16px}
+  .card{background:#fff;padding:var(--s4)}
   .card .v{font-size:22px;font-weight:680;font-variant-numeric:tabular-nums;letter-spacing:-.4px}
   .card .l{font-size:11.5px;color:var(--dim);margin-top:3px;line-height:1.35}
   .pos{color:var(--pos)} .neg{color:var(--neg)} .accent{color:var(--accent)}
-  h2{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);margin:38px 0 12px;font-weight:700}
-  .wf{display:flex;flex-direction:column;gap:7px;margin:6px 0}
+  h2{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);margin:var(--s6) 0 var(--s4);font-weight:700}
+  .wf{display:flex;flex-direction:column;gap:var(--s2);margin:var(--s2) 0}
   .wf .row{display:flex;align-items:center;gap:10px;font-size:13px}
   .wf .lbl{width:210px;color:var(--ink)}
   .wf .bar{flex:1;height:16px;background:var(--soft);border:1px solid var(--line);border-radius:4px;overflow:hidden}
@@ -60,7 +54,7 @@
   .loc .big{font-size:24px;font-weight:680;color:var(--accent);font-variant-numeric:tabular-nums}
   .loc p{margin:8px 0 0;font-size:13.5px;color:var(--ink);line-height:1.6}
   table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13px;margin-top:4px}
-  th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line)}
+  th,td{padding:var(--s3) var(--s4);text-align:right;border-bottom:1px solid var(--line)}
   th:first-child,td:first-child{text-align:left}
   thead th{color:var(--dim);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
   .note{background:var(--soft);border:1px solid var(--line);border-radius:9px;padding:13px 16px;font-size:12.5px;color:var(--slate);line-height:1.6;margin-top:26px}
@@ -70,6 +64,11 @@
   .methods summary{cursor:pointer;font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);font-weight:600;padding:12px 0}
   .methods #methodsbody{font-size:12.5px;color:var(--slate);line-height:1.6;padding:0 0 14px}
   .methods dl{margin:2px 0 0} .methods dt{font-weight:600;color:var(--ink);margin-top:9px} .methods dd{margin:2px 0 0}
+  /* Collapsible section (calms the dense advisor view): same affordance as .methods. */
+  .fold{margin:var(--s6) 0 0;border:1px solid var(--line);border-radius:var(--r2);background:var(--soft);padding:2px var(--s4)}
+  .fold>summary{cursor:pointer;font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);font-weight:600;padding:var(--s3) 0}
+  .fold>summary .sub{text-transform:none;letter-spacing:0;font-weight:400}
+  .fold>*:not(summary){margin-top:var(--s4)}
   .compliance{margin-top:12px;font-size:11.5px;color:var(--dim);line-height:1.55}
   .compliance a{color:var(--slate)} .compliance b{color:var(--slate)}
   /* --- Layer 2: state tax-severity heat map + Local Disclosure Ledger --- */
@@ -96,7 +95,7 @@
   .disc.flash{animation:discflash .95s ease-out}
   /* --- Layer 1: asset-location optimizer --- */
   .optgrid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch;margin-top:12px}
-  .opt-card{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+  .opt-card{border:1px solid var(--line);border-radius:var(--r3);padding:var(--s4);background:#fff}
   .opt-card.res{background:var(--soft);display:flex;flex-direction:column;justify-content:center}
   .slider{margin:0 0 17px}
   .slider .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
@@ -302,7 +301,8 @@
     #execsummary{display:block}
     body.brief #execsummary{display:none}            /* CPA/attorney brief replaces the client exec summary */
     body.brief #cpabrief{display:block}
-    body.brief #optim,body.brief #frontier,body.brief .cards,body.brief .wf,body.brief #tlhtable{display:none!important}
+    body.brief #optim,body.brief #frontier,body.brief .cards,body.brief .wf,body.brief #tlhtable-wrap{display:none!important}
+    details.fold[open]>summary{margin-bottom:var(--s2)} details.fold{break-inside:avoid}
     h2{margin-top:20px}
     h2,h3,.strat-h{break-after:avoid}                /* never strand a heading at the foot of a page */
     /* Protect atomic cards (not whole sections — strategy/estate now exceed one page) so the
@@ -450,8 +450,8 @@
     <p class="dix" id="dixnote"></p>
   </section>
 
-  <section id="frontier" class="advisor-only">
-    <h2>Alpha-Turnover Frontier <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· when turnover eats the alpha</span></h2>
+  <details id="frontier" class="fold advisor-only">
+    <summary>Alpha-Turnover Frontier <span class="sub">· when turnover eats the alpha</span></summary>
     <div class="frontgrid">
       <div class="opt-card">
         <svg id="ftchart" viewBox="0 0 360 214" role="img" aria-label="Alpha vs turnover breakeven frontier"></svg>
@@ -469,15 +469,15 @@
         <p class="ftcap" id="ftcap"></p>
       </div>
     </div>
-  </section>
+  </details>
 
   <div class="cards advisor-only" id="cards"></div>
 
   <h2 class="advisor-only">Where the tax goes (over the track)</h2>
   <div class="wf advisor-only" id="waterfall"></div>
 
-  <h2 class="advisor-only">Tax-loss-harvesting value by state <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· at the selected bracket</span></h2>
-  <table id="tlhtable" class="advisor-only"><thead><tr><th>State</th><th>LT rate</th><th>ST rate</th><th>TLH value (total)</th><th>per year</th></tr></thead><tbody></tbody></table>
+  <details id="tlhtable-wrap" class="fold advisor-only"><summary>Tax-loss-harvesting value by state <span class="sub">· at the selected bracket</span></summary>
+  <table id="tlhtable"><thead><tr><th>State</th><th>LT rate</th><th>ST rate</th><th>TLH value (total)</th><th>per year</th></tr></thead><tbody></tbody></table></details>
 
   <div class="note" id="note"></div>
 

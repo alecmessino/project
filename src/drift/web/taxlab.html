@@ -9,9 +9,12 @@
 <meta property="og:title" content="Driftwood — Tax Lab" />
 <meta property="og:description" content="After-tax return, tax-loss-harvesting value, and the asset-location benefit for the live momentum sleeve — personalized by federal bracket and state. Research only, not tax advice." />
 <meta name="twitter:card" content="summary" />
-<!-- Privacy-first analytics hook — drop ONE in (then set CONFIG.analytics.provider). Examples:
-     <script defer data-domain="yourfirm.com" src="https://plausible.io/js/script.js"></script>
-     <script src="https://cdn.usefathom.com/script.js" data-site="ABCDEFGH" defer></script>     -->
+<!-- Privacy-first analytics (Plausible) — pageviews + the custom funnel events fired via track(). -->
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
 <style>
   :root{--bg:#fff;--soft:#fafafa;--line:#e8e8ea;--ink:#1b1b1f;--dim:#5f5f68;
     --pos:#2f6f5b;--neg:#9b4439;--slate:#4a4f57;--rule:#222226;--accent:#15806a}
@@ -495,13 +498,14 @@ const CONFIG={
   //   Formspree:                                          formEndpoint="https://formspree.io/f/abcmyform",
   //     formAccessKey="",                                  formHoneypot="_gotcha".
   //   Empty formEndpoint => mailto: fallback to contactEmail.
-  formEndpoint:"",
-  formAccessKey:"",                      // Web3Forms public access key (safe in client code); "" for Formspree/none
-  formHoneypot:"_gotcha",                // spam honeypot field name: Formspree "_gotcha", Web3Forms "botcheck"
+  formEndpoint:"https://api.web3forms.com/submit",
+  formAccessKey:"cf6b1c2d-9971-4256-9ff9-72d6918c84e6",  // Web3Forms public access key (safe in client code)
+  formHoneypot:"botcheck",               // spam honeypot field name (Web3Forms uses "botcheck")
   contactEmail:"alec.messino@cwsplanning.com",  // mailto fallback + error-recovery address
-  calendlyUrl:"",                        // e.g. "https://calendly.com/you/intro" — empty => placeholder slot
+  firmName:"CWS Planning",               // operating firm — tags inbound lead emails (page brand stays "Driftwood")
+  calendlyUrl:"https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting",  // booking embed on success
   leadPortfolio:1000000,                 // default headline portfolio for the lead-gen hook (overridable via ?port=)
-  analytics:{ provider:"", domain:"" },  // "plausible" | "umami" | "fathom" (load its script in <head>); "" => no-op
+  analytics:{ provider:"plausible", domain:"cwsplanning.com" },  // Plausible script is loaded in <head>
   formCrsUrl:"#",                        // institutional disclosures (placeholder hooks; dead "#" links are hidden)
   formAdvUrl:"#",
 };
@@ -771,15 +775,15 @@ function renderLead(){
   const st=$("state").value, b=stateBleed(), name=(st==="—")?null:(NAMES[st]||st);
   if(name && b.stateAnnual>1){
     $("leadhero").innerHTML=`${name} residents with a ${fmt$big(b.P)} taxable portfolio in a high-turnover
-      strategy give up <span class="num">${fmt$big(b.totalTotal)}</span> to capital-gains tax over ${b.horizon} years
-      (${fmt$big(b.fedTotal)} federal + ${fmt$big(b.stateTotal)} to ${name}), averaging a massive
-      ${fmt$(b.totalAnnual)}/year in total wealth destruction.
+      strategy pay an estimated <span class="num">${fmt$big(b.totalTotal)}</span> in capital-gains tax over ${b.horizon} years
+      (${fmt$big(b.fedTotal)} federal + ${fmt$big(b.stateTotal)} to ${name}) — about
+      ${fmt$(b.totalAnnual)}/year in estimated capital-gains tax.
       <span class="small">The federal base is the same in every state — ${name} just stacks its layer on top.
-      Most of it is recoverable with the right account structure.</span>`;
+      A portion may be reduced with the right account structure.</span>`;
   } else {
-    $("leadhero").innerHTML=`A ${fmt$big(b.P)} taxable portfolio in a high-turnover strategy gives up
-      <span class="num">${fmt$big(b.totalTotal)}</span> to <b>federal</b> capital-gains tax over ${b.horizon} years.
-      <span class="small">${st==="—"?"Click your state on the map above to add your local layer — then":"About "+fmt$(b.totalAnnual)+"/yr."} see how much of it we can recover.</span>`;
+    $("leadhero").innerHTML=`A ${fmt$big(b.P)} taxable portfolio in a high-turnover strategy pays an estimated
+      <span class="num">${fmt$big(b.totalTotal)}</span> in <b>federal</b> capital-gains tax over ${b.horizon} years.
+      <span class="small">${st==="—"?"Click your state on the map above to add your local layer — then":"About "+fmt$(b.totalAnnual)+"/yr."} see how much may be reducible.</span>`;
   }
 }
 function ctaInitial(){
@@ -811,6 +815,7 @@ function submitLead(ev){
     const btn=$("leadsend"); if(btn){ btn.disabled=true; btn.textContent="Sending…"; }
     const payload={email, state:st, portfolio:b.P, state_tax_30y:Math.round(b.stateTotal), total_tax_30y:Math.round(b.totalTotal),
       _subject:`New Tax Lab lead — ${where}`};
+    if(CONFIG.firmName) payload.from_name=CONFIG.firmName;               // tags the inbound notification (Web3Forms)
     payload[CONFIG.formHoneypot]=($("leadhp")&&$("leadhp").value)||"";   // Formspree _gotcha / Web3Forms botcheck
     if(CONFIG.formAccessKey) payload.access_key=CONFIG.formAccessKey;    // Web3Forms public key (ignored by Formspree)
     fetch(CONFIG.formEndpoint,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
@@ -926,7 +931,7 @@ function renderStrategy(){
   $("rolloverres").innerHTML=
     `<div class="recovered">+${fmt$big(locGain)}</div>
      <div class="recsub">10-year <b>location alpha</b> from rolling this ${fmt$big(k401)} into the Driftwood IRA and
-       sheltering the high-turnover sleeve — versus <b>${fmt$big(feeDrag)}</b> bled to the ${(k401fee*1e4).toFixed(0)} bps
+       sheltering the high-turnover sleeve — versus <b>${fmt$big(feeDrag)}</b> lost to the ${(k401fee*1e4).toFixed(0)} bps
        target-date fee by leaving it in the old plan.</div>
      <div class="savings">
        <div class="srow"><div class="sl"><span class="rl">Location alpha · roll over</span><span class="amt save">${fmt$(locGain)}</span></div>
@@ -975,14 +980,14 @@ function applyMode(m){
   try{ const u=new URL(location.href); u.searchParams.set("view",MODE); history.replaceState(null,"",u); }catch(e){}
   $("modetog").querySelectorAll("button").forEach(btn=>{ const on=btn.dataset.mode===MODE; btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", on?"true":"false"); });
   $("lede").innerHTML = MODE==="lead"
-    ? `See exactly how much of your wealth a high-turnover strategy hands to taxes in <b>your</b> state — and how much is recoverable. Click your state to begin.`
+    ? `See the estimated capital-gains tax a high-turnover strategy generates in <b>your</b> state — and how much may be reducible through asset location. Click your state to begin.`
     : MODE==="estate"
     ? `<b>Entity-Level Asset Architecture</b> — model the Illinois estate cliff, the credit-shelter-trust shelter, and the proposed HB2601 exemption against the 2026 tax-law reference. Illustrative; coordinate the filing figure with your estate attorney.`
     : MODE==="strategy"
     ? `<b>Optimal Strategy &amp; Rollover Engine</b> — a roadmap moving scattered 401(k)/IRA balances into the optimized framework: the rollover escape hatch, the 2026 Roth-conversion arbitrage, and a personalized asset-location blueprint.`
     : `A <b>Holistic Asset Location Engine</b> — quantitative wealth architecture that coordinates federal and state tax, account structure (taxable / Traditional / Roth), estate step-up, and tax-loss harvesting into one after-tax plan. Pick a bracket and state; everything recomputes from the book's real realized-gain profile.`;
   $("maphdr").innerHTML = MODE==="lead"
-    ? `Click your state <span class="hint">· see your dollar tax bleed</span>`
+    ? `Click your state <span class="hint">· see your estimated capital-gains tax</span>`
     : MODE==="estate"
     ? `Set the state <span class="hint">· Illinois triggers the estate cliff</span>`
     : MODE==="strategy"

@@ -511,3 +511,14 @@ def test_state_estate_embedded(tmp_path):
     assert "IL" not in e["state_estate"]
     assert e["default_joint"] == 0
     json.dumps(st)
+
+
+def test_methodology_dual_engine_and_honest():
+    """Methodology copy describes the dual-engine architecture and NEVER claims the live track
+    includes the offline-validated Slow Book (honesty guard)."""
+    from pathlib import Path
+    import drift.taxlab as T
+    led = " ".join((Path(T.__file__).with_name("web") / "ledger.html").read_text().split())  # collapse HTML line-wrap
+    assert "Fast Book" in led and "Slow Book" in led
+    assert "asset location" in led.lower()
+    assert "not part of the live track" in led   # the Slow Book is NOT in the live curve

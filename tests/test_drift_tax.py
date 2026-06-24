@@ -423,3 +423,64 @@ def test_state_table_is_complete_with_special_cases():
     assert STATE_RATES["MA"][1] > STATE_RATES["MA"][0]     # MA taxes short-term higher
     assert STATE_RATES["WA"][0] > 0 and STATE_RATES["WA"][1] == 0   # WA LT-only excise
     assert STATE_RATES["SC"][0] < STATE_RATES["SC"][1]     # SC long-term exclusion
+
+
+def test_build_taxlab_degraded_without_ledger(tmp_path):
+    """Fresh-checkout path the daily Action hits before any ledger exists: the page state must
+    still be complete (states/brackets/assumptions, incl. estate+strategy) and JSON-serializable,
+    with profile=None — never a crash or a half-built payload shipped to Pages."""
+    import json
+    from drift.taxlab import build_taxlab
+    # (a) no ledger.json at all
+    st = build_taxlab(tmp_path)
+    assert st["profile"] is None
+    for key in ("states", "brackets", "assumptions"):
+        assert key in st and st[key]
+    assert "estate" in st["assumptions"] and "strategy" in st["assumptions"]
+    json.dumps(st)
+    # (b) corrupt ledger.json -> same graceful fallback
+    (tmp_path / "ledger.json").write_text("{not valid json")
+    st2 = build_taxlab(tmp_path)
+    assert st2["profile"] is None and st2["assumptions"]
+    json.dumps(st2)
+    # (c) ledger present but too short for a gain profile
+    (tmp_path / "ledger.json").write_text(json.dumps({"entries": []}))
+    st3 = build_taxlab(tmp_path)
+    assert st3["profile"] is None and "strategy" in st3["assumptions"]
+    json.dumps(st3)
+
+
+def test_taxlab_js_mirrors_python_il_estate_curve():
+    """The Tax Lab page JS hand-duplicates the Python IL estate curve as a literal IL_AG array.
+    Guard them from silently drifting apart when _IL_AG_CURVE is tuned (the documented workflow)."""
+    import ast
+    import re
+    from pathlib import Path
+    import drift.taxlab as T
+    html = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    m = re.search(r"const IL_AG=(\[\[.*?\]\]);", html)
+    assert m, "IL_AG array not found in taxlab.html"
+    js_rows = ast.literal_eval(m.group(1))
+    py_rows = [[bp, tax, rate] for (bp, tax, rate) in T._IL_AG_CURVE]
+    assert js_rows == py_rows, f"JS IL_AG {js_rows} != Python _IL_AG_CURVE {py_rows}"
+
+
+def test_pure_tax_fns_handle_edge_inputs():
+    """Slider extremes / misconfigured assumptions must not yield NaN/Inf or negative dollars."""
+    from drift.taxlab import roth_conversion, location_alpha3, compounded_fee_drag, after_fee
+    # roth: zero conversion -> all-zero; negative clamps to zero
+    z = roth_conversion(0.0, 0.37, 0.05, False)
+    assert z["federal"] == 0.0 and z["state"] == 0.0 and z["total"] == 0.0 and z["state_saved"] == 0.0
+    assert roth_conversion(-100_000.0, 0.37, 0.05, False)["total"] == 0.0
+    # exempt state: federal only; state_saved is the avoided state tax
+    ex = roth_conversion(100_000.0, 0.24, 0.0495, True)
+    assert ex["state"] == 0.0 and abs(ex["state_saved"] - 4950.0) < 1e-6 and abs(ex["federal"] - 24000.0) < 1e-6
+    # location alpha with zero growth -> terminal == annual_saved * years (annuity fv falls back to years)
+    la = location_alpha3(1_000_000, 500_000, 500_000, 0.02, 0.005, 0.0, 30)
+    assert abs(la["terminal_alpha"] - la["annual_saved"] * 30) < 1e-6
+    # fee drag: negative balance -> 0; fee>growth stays finite & non-negative (net rate floored at 0)
+    assert compounded_fee_drag(-1.0, 0.005, 0.07, 10) == 0.0
+    d = compounded_fee_drag(1_000_000, 0.10, 0.07, 10)     # fee 10% exceeds 7% growth
+    assert d > 0 and d == d and d != float("inf")
+    # after_fee: negative horizon clamps to a no-op (max(0, years))
+    assert after_fee(0.10, 0.01, -5) == 0.10

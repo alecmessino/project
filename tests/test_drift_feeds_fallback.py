@@ -106,3 +106,45 @@ def test_ledger_falls_back_to_stooq_when_yahoo_blocked(tmp_path, monkeypatch):
                             "--equities", ",".join(SYMS), "--pause", "0", "--config", CONFIG])
     assert r.exit_code == 0, r.output
     assert len(json.loads(p.read_text())["entries"]) == n + 1   # Stooq fallback advanced the ledger
+
+
+def _Y_raises():
+    class Y:
+        def __init__(self, **k): pass
+        def fetch(self, s): raise ConnectionError("429 rate limited")
+    return Y()
+
+
+def test_equity_feeds_long_history_requests_deep():
+    from drift.feed.resolve import equity_feeds
+    chain = equity_feeds(long_history=True, env={})              # no key -> stooq, yahoo
+    assert [n for n, _ in chain] == ["stooq", "yahoo"]
+    yahoo = dict(chain)["yahoo"]
+    assert yahoo.period1 is not None and yahoo.period2 is not None   # explicit ~40y epoch bounds
+    chain2 = equity_feeds(long_history=True, env={"TIINGO_API_KEY": "tok"})
+    assert chain2[0][0] == "tiingo" and dict(chain2)["tiingo"].lookback_days > 10000
+    assert dict(equity_feeds(env={}))["yahoo"].period1 is None       # short path uses range, not bounds
+
+
+def test_equity_universe_falls_back_to_stooq():
+    from drift.case_studies import equity_universe
+    syms = ["A", "B", "C"]
+    data = {s: _bars(s, seed=i) for i, s in enumerate(syms)}
+
+    class S:
+        def __init__(self, **k): pass
+        def fetch(self, s): return data[s]
+    out = equity_universe(syms, feeds=[("yahoo", _Y_raises()), ("stooq", S())])
+    assert set(out) == set(syms) and len(out["A"]) >= 60             # Yahoo blocked -> Stooq served
+
+
+def test_tearsheet_pull_falls_back_to_stooq():
+    from drift.tearsheet import _pull
+    syms = ["VTI", "VEA"]
+    data = {s: _bars(s, n=400, seed=i) for i, s in enumerate(syms)}
+
+    class S:
+        def __init__(self, **k): pass
+        def fetch(self, s): return data[s]
+    series, applied = _pull(syms, feeds=[("yahoo", _Y_raises()), ("stooq", S())], proxies=False, pause=0)
+    assert set(series) == set(syms)                                  # 40y path also survives a Yahoo ban

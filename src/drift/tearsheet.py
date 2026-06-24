@@ -54,24 +54,23 @@ def _splice(fund: list[Bar], proxy: list[Bar]) -> list[Bar]:
 
 
 def _pull(symbols: Sequence[str], years: float = 40.0, pause: float = 0.2,
-          proxies: bool = True) -> tuple[dict[str, list[Bar]], dict[str, str]]:
-    """Pull TRUE daily history from Yahoo (keyless), skipping any symbol that fails.
+          proxies: bool = True, feeds=None) -> tuple[dict[str, list[Bar]], dict[str, str]]:
+    """Pull TRUE long daily history through the shared source chain, skipping any symbol that fails.
 
-    Uses explicit epoch bounds (not `range=max`, which Yahoo coarsens to monthly)
-    so daily annualization (252 bars/yr) is correct. Young pure-factor funds are
-    back-filled before inception with their passive proxy (see `universes.PROXY`);
-    returns the spliced series plus a map of {fund: proxy} actually applied.
+    Uses the long-history chain (`feed.resolve.equity_feeds(long_history=True)`: Tiingo deep
+    lookback -> Stooq full history -> Yahoo explicit epoch bounds, not `range=max` which Yahoo
+    coarsens to monthly) so daily annualization (252 bars/yr) is correct and it stays live where
+    Yahoo IP-bans CI. Young pure-factor funds are back-filled before inception with their passive
+    proxy (`universes.PROXY`); returns the spliced series plus a map of {fund: proxy} applied.
+    `feeds` overrides the chain (used in tests).
     """
-    from .feed.yahoo import YahooFeed
+    from .feed.resolve import equity_feeds, pull_symbol
     from .universes import PROXY
-    now = int(time.time())
-    feed = YahooFeed(interval="1d", period1=now - int(years * 31_557_600), period2=now)
+    if feeds is None:
+        feeds = equity_feeds(long_history=True)
 
     def _fetch(sym):
-        try:
-            return feed.fetch(sym)
-        except Exception:
-            return None
+        return pull_symbol(sym, feeds, min_bars=1)   # accept any history; the >=252 gate is below
 
     # Cache proxy pulls: several cells share a proxy (e.g. VWO and FNDE both use
     # VEIEX), so fetch each legacy series once — fewer requests, gentler on Yahoo.

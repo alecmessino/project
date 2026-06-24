@@ -242,6 +242,8 @@
   .est-cliff.safe{border-color:#cfe6db;border-left-color:var(--pos);background:#f3f8f5}
   .est-cliff .big{font-size:30px;font-weight:720;letter-spacing:-.5px;font-variant-numeric:tabular-nums;color:var(--neg);line-height:1.05}
   .est-cliff.safe .big{color:var(--pos)}
+  .est-cliff.neutral{border-color:var(--line);border-left-color:var(--slate);background:var(--soft)}
+  .est-cliff.neutral .big{color:var(--slate)}
   .est-cliff .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);font-weight:700}
   .est-cliff p{margin:9px 0 0;font-size:12.6px;line-height:1.55;color:var(--ink)}
   .est-prevented{margin-top:13px;background:#eef5f1;border:1px solid #cfe6db;border-radius:8px;padding:10px 13px;
@@ -873,12 +875,14 @@ const IL_AG=[[0,0,0.285],[1000000,285000,0.135],[4000000,690000,0.145],[6000000,
 function ilAgTax(excess){ if(excess<=0)return 0; let bp=0,base=0,r=0; for(const row of IL_AG){ if(excess>=row[0]){bp=row[0];base=row[1];r=row[2];} else break; } return base+r*(excess-bp); }
 function ilEstateTax(estate,exclusion){ return ilAgTax(Math.max(0,estate-exclusion)); }
 function hbOn(){ return $("hb2601").classList.contains("on"); }
+function estateKind(st){ if(st==="IL") return {kind:"illinois"}; const m=(S.assumptions.estate.state_estate)||{}, t=m[st]; return t?{kind:"levy",type:t}:{kind:"none"}; }
 function renderEstate(){
   if(!S.assumptions||!S.assumptions.estate) return;
   const E=S.assumptions.estate, hb=hbOn(), excl=hb?E.il_hb2601_exclusion:E.il_exclusion;
   const ind=+$("estind").value||0, joint=+$("estjoint").value||0, trust=+$("esttrust").value||0, total=ind+joint+trust;
   $("estindv").textContent=fmt$(ind); $("estjointv").textContent=fmt$(joint); $("esttrustv").textContent=fmt$(trust);
-  const st=$("state").value, isIL=(st==="IL");
+  const st=$("state").value, cls=estateKind(st), isIL=(cls.kind==="illinois");
+  const sname=(st==="—"||!NAMES[st])?"Your state":(NAMES[st]||st);
   const sheltered=Math.min(trust,excl), taxable=total-sheltered;
   const ilNoTrust=isIL?ilEstateTax(total,excl):0, ilWithTrust=isIL?ilEstateTax(taxable,excl):0, prevented=ilNoTrust-ilWithTrust;
   const fedExempt=joint>0?E.fed_exemption_couple:E.fed_exemption_indiv;
@@ -887,11 +891,13 @@ function renderEstate(){
     `<div class="p"><div class="k">Federal exemption</div><div class="v">${fmt$big(fedExempt)}</div><div class="s">${joint>0?"couple (portable)":"individual"} · 40% top · permanent</div></div>
      <div class="p"><div class="k">Illinois exclusion</div><div class="v">${fmt$big(excl)}${hb?" · HB2601":""}</div><div class="s">16% top · no portability${hb?" · proposed":""}</div></div>`;
   let card;
-  if(!isIL){
-    card=`<div class="est-cliff safe"><div class="lbl">Illinois estate cliff</div><div class="big">${fmt$(fedTax)}</div>
-      <p>Federal estate tax only — the Illinois cliff is modeled for <b>Illinois</b> residents. Switch the state to
-      <b>Illinois</b> above to see the ${fmt$big(E.il_exclusion)} state exposure. (State estate taxes vary; your attorney
-      covers ${st==="—"?"your state":(NAMES[st]||st)}.)</p></div>`;
+  if(cls.kind==="none"){
+    card=`<div class="est-cliff safe"><div class="lbl">${sname}: No State Estate Tax</div><div class="big">${fmt$(fedTax)}</div>
+      <p>${sname} levies <b>no state estate or inheritance tax</b> — only the federal estate tax applies, and only on the amount above the ${fmt$big(fedExempt)} federal exemption.</p></div>`;
+  } else if(cls.kind==="levy"){
+    const envt=cls.type==="inheritance"?"an inheritance tax (paid by heirs)":(cls.type==="both"?"both a state estate tax and an inheritance tax":"a state estate tax");
+    card=`<div class="est-cliff neutral"><div class="lbl">${sname}: State-Level Death Tax</div><div class="big">${fmt$(fedTax)}</div>
+      <p>${sname} levies <b>${envt}</b>. The precise exposure follows ${sname}'s own schedule and exemption — your estate attorney files the exact figure. The figure shown is the <b>federal</b> estate tax only.</p></div>`;
   } else if(total<=excl){
     card=`<div class="est-cliff safe"><div class="lbl">Illinois estate · under the exclusion</div><div class="big">$0</div>
       <p>A ${fmt$big(total)} estate sits under Illinois' ${fmt$big(excl)} exclusion${hb?" (HB2601)":""} — no Illinois estate tax.
@@ -911,13 +917,12 @@ function renderEstate(){
       this trust realizes its ~${apct(S.header.short_term_share||0.95,0)} short-term gains at the compressed trust rates.
       Locate the high-turnover Driftwood sleeve in <b>individual / grantor</b> structures; keep low-turnover, step-up-eligible assets in the trust.`;
   } else $("esttrustwarn").style.display="none";
-  $("estfed").innerHTML=`Federal estate tax: <b>${fmt$(fedTax)}</b> (exemption ${fmt$big(fedExempt)}, ${apct(E.fed_rate,0)} top) — far above
-    most Illinois estates, which is why the ${fmt$big(E.il_exclusion)} Illinois exclusion usually bites first.`;
-  $("estnote").innerHTML=`<b>Method &amp; caveats.</b> Illinois estate tax is estimated from the §2011 graduated schedule
+  $("estfed").innerHTML=`Federal estate tax: <b>${fmt$(fedTax)}</b> (exemption ${fmt$big(fedExempt)}, ${apct(E.fed_rate,0)} top).${isIL?` Federal sits far above most Illinois estates, so the ${fmt$big(E.il_exclusion)} Illinois exclusion usually bites first.`:""}`;
+  $("estnote").innerHTML=isIL?`<b>Method &amp; caveats.</b> Illinois estate tax is estimated from the §2011 graduated schedule
     (0.8%–16%) on the amount above the exclusion — <b>illustrative only</b>. Illinois' actual computation (Illinois QTIP
     elections, the Attorney General's calculator, deductions) can differ materially; the estate attorney produces the
     filing figure. <b>HB2601 is proposed legislation, not enacted</b> — figures with the sandbox on assume it passes as
-    drafted and may not reflect final law. Not tax or legal advice.`;
+    drafted and may not reflect final law. Not tax or legal advice.`:`<b>Illustrative only.</b> State death-tax treatment varies by jurisdiction and these figures are not a filing computation; your estate attorney produces the exact number. Not tax or legal advice.`;
 }
 
 // --- Strategy view: 401(k) rollover + Roth conversion + asset-location blueprint ---

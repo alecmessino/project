@@ -484,3 +484,30 @@ def test_pure_tax_fns_handle_edge_inputs():
     assert d > 0 and d == d and d != float("inf")
     # after_fee: negative horizon clamps to a no-op (max(0, years))
     assert after_fee(0.10, 0.01, -5) == 0.10
+
+
+def test_estate_classification():
+    """Option 1: Illinois precise, the ~12 estate/inheritance states neutral, everything else none."""
+    from drift.taxlab import estate_classification, ASSUMPTIONS
+    assert estate_classification("TX")["kind"] == "none"
+    assert estate_classification("FL")["kind"] == "none"
+    assert estate_classification("CA")["kind"] == "none"
+    assert estate_classification("IL")["kind"] == "illinois"
+    ny = estate_classification("NY"); assert ny["kind"] == "levy" and ny["type"] == "estate"
+    assert estate_classification("WA")["kind"] == "levy"
+    md = estate_classification("MD"); assert md["kind"] == "levy" and md["type"] == "both"
+    pa = estate_classification("PA"); assert pa["kind"] == "levy" and pa["type"] == "inheritance"
+    assert "IL" not in ASSUMPTIONS["estate"]["state_estate"]   # IL is the precise engine, not the map
+    assert ASSUMPTIONS["estate"]["default_joint"] == 0          # individual-first default (T3)
+
+
+def test_state_estate_embedded(tmp_path):
+    """The state_estate map + individual-first default reach the page state and are serializable."""
+    import json
+    from drift.taxlab import build_taxlab
+    st = build_taxlab(tmp_path)   # no ledger -> degraded, but assumptions must be present
+    e = st["assumptions"]["estate"]
+    assert e["state_estate"].get("NY") == "estate" and e["state_estate"].get("PA") == "inheritance"
+    assert "IL" not in e["state_estate"]
+    assert e["default_joint"] == 0
+    json.dumps(st)

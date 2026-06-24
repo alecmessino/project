@@ -61,11 +61,20 @@ ASSUMPTIONS = {
         "il_hb2601_exclusion": 8_000_000,    # proposed HB2601 — double the exclusion
         "il_top_rate": 0.16,                 # Illinois top marginal rate
         "default_individual": 3_000_000,
-        "default_joint": 2_000_000,
+        "default_joint": 0,                  # individual-first; joint>0 unlocks the $30M portable exemption
         "default_trust": 1_000_000,
         "estate_max": 30_000_000,
         "estate_step": 100_000,
         "trust_compression_top_threshold": 15_650,  # 2026 trust income hits the 37% bracket here
+        # Death-tax environment by state (Option 1): IL is modeled precisely (il_estate_tax); the
+        # states below get a neutral, non-fabricated card naming their environment and deferring the
+        # exact figure to the attorney; every other state has no state death tax ("none").
+        "state_estate": {
+            "WA": "estate", "OR": "estate", "MN": "estate", "MD": "both", "MA": "estate",
+            "NY": "estate", "NYC": "estate", "CT": "estate", "RI": "estate", "VT": "estate",
+            "ME": "estate", "HI": "estate", "DC": "estate",
+            "PA": "inheritance", "NJ": "inheritance", "KY": "inheritance", "NE": "inheritance",
+        },
     },
     # Optimal Strategy & Rollover Engine (?view=strategy).
     "strategy": {
@@ -81,6 +90,16 @@ ASSUMPTIONS = {
         "states_exempt_retirement": ["IL", "PA", "MS"],
     },
 }
+
+
+def estate_classification(state: str) -> dict:
+    """Death-tax environment for the estate view (Option 1: Illinois precise, others neutral).
+    Returns {"kind": "illinois"|"levy"|"none", "type": "estate"|"inheritance"|"both"|None}. Pure;
+    the page JS mirrors this by reading the same `state_estate` map off the embedded state."""
+    if state == "IL":
+        return {"kind": "illinois", "type": "estate"}
+    t = ASSUMPTIONS["estate"]["state_estate"].get(state)
+    return {"kind": "levy", "type": t} if t else {"kind": "none", "type": None}
 
 
 def compounded_fee_drag(balance: float, fee_rate: float, growth_rate: float, years: float) -> float:

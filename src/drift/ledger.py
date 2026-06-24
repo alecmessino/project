@@ -8,10 +8,10 @@ recomputed — which is exactly what makes it credible.
 
 The live book is the **Fast Book**: the long-only, fully-invested cross-sectional
 momentum rotation — the trending top half of the region/size/style ETF matrix,
-inverse-volatility weighted and then tilted toward the segments judged more attractive
-going forward (emerging markets, international, and value/small) — marked daily. No cash
-and no leverage: the tilt redistributes a book that is always ~100% invested. Its high
-turnover suits tax-advantaged accounts; a separate, offline-validated **Slow Book**
+inverse-volatility weighted, with NO discretionary factor tilt (a 40-year test of an
+EM/value/small overweight showed it added risk, not risk-adjusted return) — marked daily.
+No cash and no leverage: always ~100% invested. Its high turnover suits tax-advantaged
+accounts; a separate, offline-validated **Slow Book**
 (12-month drift, asymmetric rank hysteresis, and tax-lot aging — config/slow.yaml) is the
 taxable-located companion and is **not** part of this live track. Weekends/holidays fall
 out naturally: an instrument is marked from its last close on-or-before the prior ledger
@@ -83,9 +83,9 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
             if p_prev and p_now:
                 realized += prev_w.get(i, 0.0) * (p_now / p_prev - 1.0)
 
-    # 2) New target = the long-only, fully-invested cross-sectional rotation with a
-    #    strategic forward tilt (EM / intl / value / small), re-ranked on the rebalance
-    #    cadence (held between rebalances so turnover stays low).
+    # 2) New target = the long-only, fully-invested cross-sectional momentum rotation
+    #    (unbiased — tilt multipliers ship neutral), re-ranked on the rebalance cadence
+    #    (held between rebalances so turnover stays low).
     cs = settings.cross_section
     n_prior = len(entries)
     if prev and (n_prior % max(1, cs.rebalance_bars) != 0):

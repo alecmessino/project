@@ -80,7 +80,7 @@
   <div class="credit">The sextant — taking the angle of the drift, the way the signal measures trend against the noise that could have produced it.</div>
 
   <p class="lede">
-    Driftwood is a trend-following <b>signal</b> system for region- and factor-tilted equity ETFs,
+    Driftwood is a trend-following <b>signal</b> system for a diversified universe of region/size/style equity ETFs,
     run as two engines unified by <b>asset location</b>: a high-turnover <b>Fast Book</b> (the live
     track) for tax-advantaged accounts, and an offline-validated, tax-efficient <b>Slow Book</b> for
     taxable accounts. It flags and sizes trends — it does not place trades — and it reports the
@@ -106,7 +106,7 @@
     Picture wood that the lake's relentless currents have tumbled and weathered until the soft, volatile
     material is worn away, leaving a denser, harder core. Whether or not that wood ever made a better
     fire, it is the right picture for what the mathematics does: by applying a volatility-normalized
-    trend <i>z</i>-score across a universe of region- and factor-tilted equity ETFs, the strategy wears
+    trend <i>z</i>-score across a diversified universe of region/size/style equity ETFs, the strategy wears
     away the volatile <i>sap</i> of market noise and exposes the seasoned core of macro drift.
   </p>
   <p>
@@ -139,18 +139,17 @@
     and away from the laggards, regardless of which corner of the market that happens to be.
   </p>
 
-  <h3>Allocation — always invested, tilted toward the forward opportunity</h3>
+  <h3>Allocation — always invested, diversified by construction</h3>
   <p>
     The headline book is <b>long-only and always fully invested</b> — no cash, no leverage. Rather than
-    timing exposure in and out of cash, it keeps capital in the market and expresses its view through
-    <i>where</i> that capital sits. On top of the momentum selection it applies a deliberate, forward-looking
-    <b>tilt</b>: the risk-balanced weights are scaled toward the segments that look more attractive going
-    forward — <b>emerging markets</b>, <b>developed international</b>, and <b>value / smaller-cap</b> — and
-    away from the most richly-valued, heavily-owned corner (US mega-cap growth). The tilt
-    <i>redistributes</i> a fully-invested book; it never parks the difference in cash. The discipline is
-    that momentum still gates the names — a favored segment is only held while it is actually in the trending
-    top half — so the tilt leans the portfolio toward cheaper, more diversified markets without abandoning
-    the trend that the rest of the system is built to follow.
+    timing exposure in and out of cash, it keeps capital in the market across the full global
+    region × size × style matrix, risk-balanced by inverse volatility. There is <b>no discretionary factor
+    tilt</b>: an EM / value / small overweight was tested over 40 years of history and moved Sharpe by ~0.01
+    and total return by ~0.5% — it added risk (concentration), not risk-adjusted return — so the book makes
+    no ex-ante bet on which segment will win. It simply holds the trending top half of a deliberately
+    diversified universe, which is far less US-mega-cap-concentrated than a cap-weighted "global" index by
+    construction rather than by a tactical call. Momentum gates the names; diversification and the after-tax
+    structure (below) do the rest.
   </p>
 
   <h3>Orthogonal neutralization</h3>
@@ -184,7 +183,7 @@
     does.
   </p>
   <p>
-    Risk is where the diversified, tilted construction earns its keep: a worst peak-to-trough of
+    Risk is where the diversified construction earns its keep: a worst peak-to-trough of
     <b id="eq-sdd" class="pos">—</b> against buy-and-hold's <b id="eq-bdd" class="neg">—</b> — buy-and-hold's
     deepest loss ran about <b id="eq-ddx">—</b> the strategy's. On a risk-adjusted basis it <b>beats</b> the
     market: a higher Sharpe and Sortino than buying and holding. Out-of-sample Sharpe stayed positive
@@ -193,9 +192,9 @@
   </p>
 
   <div class="pull">
-    Driftwood stays fully invested and leans where the forward opportunity looks better — emerging markets,
-    international, value and small — aiming to beat a cap-weighted buy-and-hold at comparable risk, with a
-    better risk-adjusted result. The edge is in the tilt and the diversification, not in timing cash.
+    Driftwood stays fully invested across a diversified global matrix rather than timing cash — holding
+    the trending top half of a broad region/size/style universe — aiming to beat a cap-weighted buy-and-hold at comparable risk, with a
+    better risk-adjusted result. The edge is in the momentum selection and the diversification — and, for taxable capital, in the tax-aware, asset-located implementation (a 40-year after-tax sweep shows the slow sleeve keeps ~2× the after-tax fraction of the fast book).
   </div>
 
   <p class="muted" id="ledger-line"></p>
@@ -204,7 +203,7 @@
   <p>
     Driftwood is an engineering synthesis of well-documented, peer-reviewed results, not a novel claim.
     The selection engine is cross-sectional momentum; the allocation is mean-variance diversification with
-    a deliberate value/size/region tilt; the signal is volatility-normalized trend. The primary sources:
+    volatility-normalized cross-sectional trend over a diversified universe (no factor tilt). The primary sources:
   </p>
   <ul class="refs">
     <li><span class="au">Markowitz, H. (1952).</span> <span class="ti">Portfolio Selection.</span>
@@ -217,12 +216,12 @@
     <li><span class="au">Fama, E. &amp; French, K. (1992, 1993).</span>
       <span class="ti">The Cross-Section of Expected Stock Returns</span> /
       <span class="ti">Common Risk Factors in Stock and Bond Returns.</span> <i>Journal of Finance</i> /
-      <i>Journal of Financial Economics</i>. — the value and size premia that motivate the forward tilt
+      <i>Journal of Financial Economics</i>. — the value and size premia we tested as an overweight and found added no risk-adjusted value here
       toward value and smaller-cap.</li>
     <li><span class="au">Asness, C., Moskowitz, T. &amp; Pedersen, L. (2013).</span>
       <span class="ti">Value and Momentum Everywhere.</span> <i>Journal of Finance</i> 68(3). — value and
       momentum as complementary, pervasive premia across markets and regions, including international and
-      emerging — the case for combining the momentum selection with a value/region tilt.</li>
+      emerging — context for the factors the universe spans, which we evaluated as a tilt and did not adopt.</li>
     <li><span class="au">Moskowitz, T., Ooi, Y. H. &amp; Pedersen, L. (2012).</span>
       <span class="ti">Time Series Momentum.</span> <i>Journal of Financial Economics</i> 104(2). — the
       volatility-scaled trend signal and constant-volatility sizing the system uses to measure and act on
@@ -244,7 +243,7 @@
 </div>
 
 <script>
-window.__STATE__ = {"header": {"generated": "2026-06-24 13:03:36 UTC"}, "equities": {"name": "Equities & ETFs", "span": "1986\u20132026", "n_names": 15, "strat_maxdd": 0.5866261316124489, "bench_maxdd": 0.5862408869474607, "strat_sharpe": 0.6374127856062992, "bench_sharpe": 0.5860072211405738, "strat_cagr": 0.0994047499346351, "bench_cagr": 0.09006456939754837, "oos_sharpe": 0.652994698240201}, "ledger": {"total_return": 0.3932, "sessions": 443, "inception": "2024-09-16", "universe": 18}};
+window.__STATE__ = {"header": {"generated": "2026-06-24 17:38:26 UTC"}, "equities": {"name": "Equities & ETFs", "span": "1986\u20132026", "n_names": 15, "strat_maxdd": 0.5866261316124489, "bench_maxdd": 0.5862408869474607, "strat_sharpe": 0.6374127856062992, "bench_sharpe": 0.5860072211405738, "strat_cagr": 0.0994047499346351, "bench_cagr": 0.09006456939754837, "oos_sharpe": 0.652994698240201}, "ledger": {"total_return": 0.3932, "sessions": 443, "inception": "2024-09-16", "universe": 18}};
 const pct=(x,d=1)=>x==null?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
 const apct=(x,d=0)=>x==null?"—":(x*100).toFixed(d)+"%";
 const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;};

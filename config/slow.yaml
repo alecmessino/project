@@ -61,10 +61,11 @@ cross_section:
   min_score: -99.0
   trend_throttle: false
   exposure_floor: 0.0
-  # Same structural forward tilt as the fast book (EM > intl > US; small/mid > mega; value > growth).
-  tilt_region: {US: 1.0, DEV: 1.30, EM: 1.55}
-  tilt_size:   {large: 1.0, largemid: 1.0, mid: 1.10, small: 1.30}
-  tilt_style:  {value: 1.30, blend: 1.0, growth: 0.80}
+  # Neutral tilt, same as the fast book: the EM/value/small overweight added no risk-adjusted
+  # value over 40y (scripts/slow_sweep.py), so the slow sleeve is also unbiased cross-sectional momentum.
+  tilt_region: {US: 1.0, DEV: 1.0, EM: 1.0}
+  tilt_size:   {large: 1.0, largemid: 1.0, mid: 1.0, small: 1.0}
+  tilt_style:  {value: 1.0, blend: 1.0, growth: 1.0}
   tilt_dynamic: false
   tilt_reversion_bars: 756
   tilt_reversion_strength: 0.5

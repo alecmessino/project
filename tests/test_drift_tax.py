@@ -522,3 +522,14 @@ def test_methodology_dual_engine_and_honest():
     assert "Fast Book" in led and "Slow Book" in led
     assert "asset location" in led.lower()
     assert "not part of the live track" in led   # the Slow Book is NOT in the live curve
+
+
+def test_shipped_configs_ship_neutral_tilt():
+    """Methodology guard: the EM/value/small overweight added no risk-adjusted value over 40y of
+    real data (scripts/slow_sweep.py tilt_attribution), so the shipped books carry NO factor tilt
+    (all multipliers 1.0). Re-introducing a tilt without re-validation must break this."""
+    from drift.config import Settings
+    for cfg in ("config/drift.yaml", "config/slow.yaml"):
+        cs = Settings.load(cfg).cross_section
+        for name, d in (("region", cs.tilt_region), ("size", cs.tilt_size), ("style", cs.tilt_style)):
+            assert all(v == 1.0 for v in d.values()), f"{cfg} ships a non-neutral {name} tilt: {d}"

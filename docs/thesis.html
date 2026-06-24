@@ -81,8 +81,8 @@
 
   <p class="lede">
     Driftwood is a trend-following <b>signal</b> system for a diversified universe of region/size/style equity ETFs,
-    run as two engines unified by <b>asset location</b>: a high-turnover <b>Fast Book</b> (the live
-    track) for tax-advantaged accounts, and an offline-validated, tax-efficient <b>Slow Book</b> for
+    run as two engines unified by <b>asset location</b>: a high-turnover <b>Fast Book</b> (the modeled
+    portfolio) for tax-advantaged accounts, and an offline-validated, tax-efficient <b>Slow Book</b> for
     taxable accounts. It flags and sizes trends — it does not place trades — and it reports the
     result, including the unflattering parts, honestly.
   </p>
@@ -257,7 +257,7 @@ function render(s){
     cards.push(["out-of-sample Sharpe", e.oos_sharpe.toFixed(2), "held-out, net of cost", e.oos_sharpe>0?"pos":"neg"]);
   }
   if(l){
-    cards.push(["forward ledger", pct(l.total_return), l.sessions+" sessions · live, append-only", l.total_return>=0?"pos":"neg"]);
+    cards.push(["model portfolio", pct(l.total_return), l.sessions+" sessions · hypothetical backtest", l.total_return>=0?"pos":"neg"]);
   }
   document.getElementById("cards").innerHTML = cards.map(([lab,v,sub,t])=>
     `<div class="card"><div class="v ${t||''}">${v}</div><div class="l"><b>${lab}</b><br>${sub}</div></div>`).join("");
@@ -271,8 +271,9 @@ function render(s){
   }
   if(l){
     document.getElementById("ledger-line").textContent =
-      `A live, append-only forward ledger has marked the equal-weight book daily since `+
-      `${l.inception} (${l.sessions} sessions, ${l.universe} instruments) — the one record that can't be overfit.`;
+      `A hypothetical Model Portfolio backtest marks the book daily across `+
+      `${l.sessions} sessions and ${l.universe} instruments, modeled from ${l.inception} — the strategy applied `+
+      `retroactively to historical data, not actual trading or any client account.`;
   }
 }
 async function load(){

@@ -19,7 +19,7 @@ def test_build_hub_reads_ledger_headline(tmp_path):
     }))
     (tmp_path / "ledger.html").write_text("<html></html>")
     state = build_hub(tmp_path)
-    led = [h for h in state["headline"] if h["label"] == "Forward ledger"]
+    led = [h for h in state["headline"] if h["label"] == "Model Portfolio (hypothetical)"]
     assert led and led[0]["value"] == "+8.5%"
     assert led[0]["tone"] == "pos"
     # the present file is marked linkable

@@ -9,7 +9,7 @@
   window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
   plausible.init()
 </script>
-<title>Driftwood — long-history tearsheet</title>
+<title>Driftwood — Hypothetical Strategy Backtest</title>
 <style>
   :root{
     --bg:#ffffff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#717179;
@@ -57,15 +57,30 @@
   .foot{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--dim);font-size:12.5px}
   .foot .note{color:var(--slate)}
   details{margin-top:10px} summary{cursor:pointer;color:var(--slate);font-size:12.5px}
+  /* SEC-grade hypothetical-performance disclosure */
+  .disclaimer{border:1px solid var(--neg);border-left:4px solid var(--neg);border-radius:8px;
+    background:#fdf6f4;padding:13px 16px;margin:18px 0 4px;font-size:12px;line-height:1.6;color:#5c352e}
+  .disclaimer b{color:var(--neg);text-transform:uppercase;letter-spacing:.4px;font-size:11.5px}
+  .disclaimer .body{color:var(--slate);margin-top:5px}
 </style>
 <link rel="stylesheet" href="driftwood.css">
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Drift<span class="w">wood</span> · long-history tearsheet</h1>
+    <h1>Drift<span class="w">wood</span> · Hypothetical Strategy Backtest</h1>
     <p class="method" id="method"></p>
   </header>
+  <div class="disclaimer">
+    <b>Hypothetical / backtested performance — not a real track record.</b>
+    <div class="body">Every figure below reflects the <b>retroactive application</b> of a quantitative model to
+    long-run historical data (price history partly proxy-spliced). It is <b>hypothetical</b>: it does <b>not</b>
+    represent actual trading, any actual client account, or actual client capital; <b>no client capital was invested</b>.
+    Results were prepared with the benefit of hindsight and do not reflect the impact material market
+    factors might have had on live decision-making.
+    <b>Past performance — whether hypothetical or actual — does not guarantee future results.</b>
+    Net of modeled transaction cost; benchmarks are buy-and-hold. Research and
+    illustration only; not investment, tax, or legal advice.</div></div>
   <div id="books"></div>
   <div class="foot">
     <span class="note">Signal system — research only, not investment advice.</span>

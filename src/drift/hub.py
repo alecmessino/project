@@ -18,8 +18,8 @@ from typing import Optional
 EXHIBITS = [
     ("Thesis & findings", "thesis.html",
      "The trend-following thesis, the research, the results — and the name."),
-    ("Live forward ledger", "ledger.html",
-     "Append-only, out-of-sample paper track record — marked and committed daily."),
+    ("Model Portfolio (hypothetical)", "ledger.html",
+     "Hypothetical, append-only backtest of the strategy — marked daily, with alpha/beta attribution. Not actual trading or any client account."),
     ("Long-history tearsheet", "tearsheet.html",
      "Decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample."),
     ("Tax Lab", "taxlab.html",
@@ -60,9 +60,9 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
             if entries:
                 tr = entries[-1]["equity"] - 1.0
                 headline.append({
-                    "label": "Forward ledger",
+                    "label": "Model Portfolio (hypothetical)",
                     "value": f"{tr*100:+.1f}%",
-                    "sub": f"{len(entries)} sessions · since {j.get('inception', '')}",
+                    "sub": f"{len(entries)} sessions · backtest from {j.get('inception', '')}",
                     "tone": "pos" if tr > 0 else "neg" if tr < 0 else "neutral",
                 })
         except Exception:

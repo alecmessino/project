@@ -170,3 +170,41 @@ def test_after_tax_can_be_disabled():
     assert st["after_tax"] is None
     assert st["header"]["after_tax_total_return"] is None
     json.dumps(st)
+
+
+def test_attribution_recovers_known_beta_and_alpha():
+    # If the strategy is exactly beta*benchmark + alpha (no noise), the OLS
+    # decomposition must recover them: perfect R², and alpha annualized by bpy.
+    bench = [0.01, -0.02, 0.03, -0.01, 0.02, -0.015, 0.025, -0.005, 0.012, -0.018]
+    beta_true, alpha_true, bpy = 1.5, 0.001, 252
+    strat = [beta_true * b + alpha_true for b in bench]
+    a = L._attribution(strat, bench, bpy)
+    assert a is not None
+    assert abs(a["beta"] - beta_true) < 1e-2
+    assert abs(a["alpha_annual"] - alpha_true * bpy) < 1e-2
+    assert abs(a["r2"] - 1.0) < 1e-3            # a perfect linear fit
+
+
+def test_attribution_returns_none_on_too_few_or_flat_benchmark():
+    assert L._attribution([0.01] * 4, [0.01] * 4, 252) is None          # n < 8
+    assert L._attribution([0.01] * 10, [0.0] * 10, 252) is None         # zero benchmark variance
+
+
+def test_build_state_populates_attribution_vs_primary_benchmark():
+    s = _settings()
+    series = _series(n=260)
+    names = list(series)
+    bench = {"VT": series[names[0]], "VTI": series[names[1]]}
+    led = L.seed_ledger(series, s, sessions=40, benchmarks=bench)
+    st = L.build_ledger_state(led)
+    a = st["attribution"]
+    assert a is not None
+    assert a["benchmark"] == "VT"                # primary benchmark preferred
+    assert set(a) >= {"beta", "alpha_annual", "r2", "info_ratio", "excess_annual"}
+    json.dumps(st)                               # stays JSON-serializable
+
+
+def test_attribution_absent_without_benchmarks():
+    led = L.seed_ledger(_series(), _settings(), sessions=40)
+    st = L.build_ledger_state(led)
+    assert st["attribution"] is None             # nothing to regress against

@@ -521,7 +521,7 @@ def test_methodology_dual_engine_and_honest():
     led = " ".join((Path(T.__file__).with_name("web") / "ledger.html").read_text().split())  # collapse HTML line-wrap
     assert "Fast Book" in led and "Slow Book" in led
     assert "asset location" in led.lower()
-    assert "not part of the live track" in led   # the Slow Book is NOT in the live curve
+    assert "not part of the model above" in led   # the Slow Book is NOT in the model curve
 
 
 def test_shipped_configs_ship_neutral_tilt():

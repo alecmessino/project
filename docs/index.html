@@ -75,16 +75,18 @@
 
   <div class="foot">
     <span class="note">Research only — not investment advice.</span>
-    Backtests are walk-forward and net of modeled transaction cost; the forward
-    ledger is append-only and out-of-sample. The <code>continuation</code> parameter
+    Backtests are walk-forward and net of modeled transaction cost; the Model Portfolio is a
+    hypothetical, append-only backtest — the retroactive application of the model to historical
+    data, not actual trading or any client account. The <code>continuation</code> parameter
     is an unvalidated default — figures are engineering validation, not expected returns.
+    Past performance — hypothetical or actual — does not guarantee future results.
     Data: Yahoo Finance daily bars, keyless.
     <div id="gen" style="margin-top:6px"></div>
   </div>
 </div>
 
 <script>
-window.__STATE__ = {"header": {"generated": "2026-06-24 17:38:27 UTC"}, "headline": [{"label": "Forward ledger", "value": "+39.3%", "sub": "443 sessions \u00b7 since 2024-09-16", "tone": "pos"}, {"label": "Equities & ETFs \u00b7 max drawdown", "value": "59% vs 59%", "sub": "strategy vs buy & hold \u00b7 OOS Sharpe 0.65", "tone": "neutral"}], "exhibits": [{"title": "Thesis & findings", "href": "thesis.html", "desc": "The trend-following thesis, the research, the results \u2014 and the name.", "present": true}, {"title": "Live forward ledger", "href": "ledger.html", "desc": "Append-only, out-of-sample paper track record \u2014 marked and committed daily.", "present": true}, {"title": "Long-history tearsheet", "href": "tearsheet.html", "desc": "Decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample.", "present": true}, {"title": "Tax Lab", "href": "taxlab.html", "desc": "Holistic asset-location engine: after-tax return, three-account placement (taxable / Traditional / Roth), estate step-up, and tax-loss harvesting \u2014 personalized by bracket and state.", "present": true}, {"title": "Dashboard", "href": "equities.html", "desc": "Live trend signals, the relative-strength ranking, and per-name backtests across the matrix.", "present": true}, {"title": "Case studies", "href": "equities_case_studies.html", "desc": "Five backtests: time-series, cross-sectional, lookback & cost sensitivity, and a control.", "present": true}]};
+window.__STATE__ = {"header": {"generated": "2026-06-24 18:47:58 UTC"}, "headline": [{"label": "Model Portfolio (hypothetical)", "value": "+39.3%", "sub": "443 sessions \u00b7 backtest from 2024-09-16", "tone": "pos"}, {"label": "Equities & ETFs \u00b7 max drawdown", "value": "59% vs 59%", "sub": "strategy vs buy & hold \u00b7 OOS Sharpe 0.65", "tone": "neutral"}], "exhibits": [{"title": "Thesis & findings", "href": "thesis.html", "desc": "The trend-following thesis, the research, the results \u2014 and the name.", "present": true}, {"title": "Model Portfolio (hypothetical)", "href": "ledger.html", "desc": "Hypothetical, append-only backtest of the strategy \u2014 marked daily, with alpha/beta attribution. Not actual trading or any client account.", "present": true}, {"title": "Long-history tearsheet", "href": "tearsheet.html", "desc": "Decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample.", "present": true}, {"title": "Tax Lab", "href": "taxlab.html", "desc": "Holistic asset-location engine: after-tax return, three-account placement (taxable / Traditional / Roth), estate step-up, and tax-loss harvesting \u2014 personalized by bracket and state.", "present": true}, {"title": "Dashboard", "href": "equities.html", "desc": "Live trend signals, the relative-strength ranking, and per-name backtests across the matrix.", "present": true}, {"title": "Case studies", "href": "equities_case_studies.html", "desc": "Five backtests: time-series, cross-sectional, lookback & cost sensitivity, and a control.", "present": true}]};
 
 function render(s){
   document.getElementById("headline").innerHTML = (s.headline||[]).map(m=>

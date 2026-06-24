@@ -771,7 +771,7 @@ function renderLocation(){
       <li><b>Drawdown coordination:</b> blend taxable, Traditional, and Roth withdrawals to manage bracket, IRMAA, and
         RMDs; fund Roth conversions in low-income years.</li>
     </ul>
-    <p style="color:var(--dim)">Illustrative coordination brief generated from the live book's realized-gain profile — confirm with the client's actual cost basis, plan documents, and current law.</p>`;
+    <p style="color:var(--dim)">Illustrative coordination brief generated from the model portfolio's realized-gain profile — confirm with the client's actual cost basis, plan documents, and current law.</p>`;
 }
 
 // --- Phase B: lead-gen funnel (the hook -> capture -> booking flow) --------
@@ -1085,7 +1085,7 @@ function plotClient(){
   } else { al.style.display="none"; al.classList.remove("flash"); }
   _fNeg=neg;
   $("ftcap").innerHTML=`Breakeven alpha here: <b>${apct(be)}</b> at ${Math.round(t*100)}% turnover — the line steepens with
-    state tax. The live book runs near <b>${Math.round((S.header.annual_turnover||4)*100)}%</b> turnover,
+    state tax. The model portfolio runs near <b>${Math.round((S.header.annual_turnover||4)*100)}%</b> turnover,
     <b>${apct(S.header.short_term_share||0.95,0)}</b> short-term — which is why it belongs in a shelter, not a taxable account.`;
 }
 
@@ -1160,7 +1160,7 @@ function render(){
   const gpt=(S.header&&S.header.gain_per_turn)||(S.assumptions&&S.assumptions.gain_per_turn);
   $("methodsbody").innerHTML=`<dl>
     <dt>Asset growth / reinvestment</dt><dd>${apct(S.assumptions.growth_rate,0)}/yr assumed reinvestment rate when compounding recovered tax into the terminal Location Alpha.</dd>
-    <dt>Gain-per-turn (calibrated)</dt><dd>~${apct(gpt,1)} of NAV realized as short-term gain per 1.0× of annual turnover — calibrated from the live book, not assumed.</dd>
+    <dt>Gain-per-turn (calibrated)</dt><dd>~${apct(gpt,1)} of NAV realized as short-term gain per 1.0× of annual turnover — calibrated from the model portfolio, not assumed.</dd>
     <dt>Tax rates (top-bracket)</dt><dd>At the selected bracket/state: <b>${apct(r.r_st)}</b> short-term / ordinary and <b>${apct(r.r_lt)}</b> long-term (federal + NIIT + state).</dd>
     <dt>Real realized-gain profile</dt><dd>From the live ledger: ${pct(p.pretax_return)} pre-tax over ~${p.years}y, ${apct(S.header.annual_turnover)} annual turnover, ${apct(S.header.short_term_share)} short-term (~${S.header.avg_holding_days}-day holds), ${apct(p.harvested_st+p.harvested_lt)} of NAV harvested as losses.</dd>
     <dt>Illinois estate tax</dt><dd>Calibrated to the Illinois AG calculator (single estate) on the amount over the exclusion; the HB2601 sandbox shifts the baseline to $8M. Illustrative — QTIP elections/deductions are the attorney's to file.</dd>

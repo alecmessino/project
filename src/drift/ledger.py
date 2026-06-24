@@ -1,10 +1,10 @@
-"""Forward paper-trade ledger: an append-only, out-of-sample track record.
+"""Model-portfolio ledger: an append-only HYPOTHETICAL backtest of the strategy.
 
-A backtest can always be overfit; a forward record cannot. Each session the
-ledger (a) marks the positions it held from the prior session to now against the
-prices that actually printed, (b) advances a cumulative equity, and (c) records
-the new target positions to carry forward. It only ever appends — history is never
-recomputed — which is exactly what makes it credible.
+This is the retroactive application of a quantitative model to historical data — a
+hypothetical Model Portfolio, NOT actual trading and NOT any client account. Each
+session it (a) marks the positions held from the prior session against the prices that
+printed, (b) advances a cumulative equity, and (c) records the next target positions.
+It only ever appends — history is never recomputed.
 
 The live book is the **Fast Book**: the long-only, fully-invested cross-sectional
 momentum rotation — the trending top half of the region/size/style ETF matrix,
@@ -266,6 +266,35 @@ def _benchmarks_state(entries: list[dict], eq: list[float], idx: list[int],
     return out
 
 
+def _attribution(rets: list[float], brets: list[float], bpy: float) -> Optional[dict]:
+    """Decompose the model's return vs a passive benchmark (rf=0 OLS): market beta, annualized
+    alpha (the part NOT explained by beta — the strategy's selection/structure edge), R², and the
+    information ratio of the active return. Aligns the two series on their last min(len) points."""
+    n = min(len(rets), len(brets))
+    if n < 8:
+        return None
+    s, b = rets[-n:], brets[-n:]
+    mb, ms = sum(b) / n, sum(s) / n
+    var_b = sum((x - mb) ** 2 for x in b) / n
+    var_s = sum((x - ms) ** 2 for x in s) / n
+    if var_b <= 0:
+        return None
+    cov = sum((s[i] - ms) * (b[i] - mb) for i in range(n)) / n
+    beta = cov / var_b
+    alpha = ms - beta * mb                                  # per-bar alpha
+    active = [s[i] - b[i] for i in range(n)]
+    ma = sum(active) / n
+    sd = (sum((x - ma) ** 2 for x in active) / n) ** 0.5
+    return {
+        "benchmark": None,                                 # filled by the caller
+        "beta": round(beta, 3),
+        "alpha_annual": round(alpha * bpy, 4),             # additive annualized alpha
+        "r2": round((cov * cov) / (var_b * var_s), 3) if var_s > 0 else 0.0,
+        "info_ratio": round((ma / sd) * (bpy ** 0.5), 2) if sd > 0 else 0.0,
+        "excess_annual": round((ms - mb) * bpy, 4),
+    }
+
+
 def _turnover_per_session(entries: list[dict]) -> list[float]:
     """Two-sided turnover (sum |Δweight|) booked at each session vs the prior book."""
     prev: dict[str, float] = {}
@@ -349,6 +378,16 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0,
             "harvested_losses": at.harvested_losses, "embedded_gain": at.embedded_gain,
             "liquidation_tax": at.liquidation_tax, "after_tax_liquidated": at.after_tax_liquidated,
         }
+    # Return attribution vs the primary passive benchmark (VT if present): beta / alpha / R² / IR.
+    _bl = list((entries[-1].get("bench_equity") or {}).keys())
+    _prim = "VT" if "VT" in _bl else (_bl[0] if _bl else None)
+    attribution = None
+    if _prim:
+        _beq = [(e.get("bench_equity") or {}).get(_prim, 1.0) or 1.0 for e in entries]
+        _brets = [(_beq[i] / _beq[i - 1] - 1.0) if _beq[i - 1] else 0.0 for i in range(1, len(_beq))]
+        attribution = _attribution(rets[1:], _brets, bars_per_year)
+        if attribution:
+            attribution["benchmark"] = _prim
     return {
         "header": {
             "days": n,
@@ -380,6 +419,7 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0,
         "equity": [round(eq[i], 5) for i in idx],
         "benchmarks": _benchmarks_state(entries, eq, idx, bars_per_year, tax),
         "dates": [entries[i]["date"] for i in idx],
+        "attribution": attribution,
         "split_frac": ((n - live) / n) if n else 0.0,
         "split_idx": next((k for k, i in enumerate(idx) if i >= (n - live)), len(idx)),
         "positions": positions,

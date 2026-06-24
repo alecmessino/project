@@ -18,6 +18,21 @@
 <style>
   :root{--bg:#fff;--soft:#fafafa;--line:#e8e8ea;--ink:#1b1b1f;--dim:#5f5f68;
     --pos:#2f6f5b;--neg:#9b4439;--slate:#4a4f57;--rule:#222226;--accent:#15806a}
+  :root{ /* elite-UI token layer: spacing / radius / shadow / motion / type scale */
+    --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:22px;--s6:26px;
+    --r1:7px;--r2:9px;--r3:10px;--r4:11px;--rfull:999px;
+    --sh1:0 1px 3px rgba(0,0,0,.08);--sh2:0 6px 22px rgba(0,0,0,.14);
+    --t-fast:.12s ease;--t-mid:.2s ease;
+    --fz-xs:11px;--fz-sm:12.5px;--fz-md:15px;--fz-lg:18px;--fz-hero:30px}
+  /* Mobile-first state picker: a large native select replaces the ~28px map tiles in lead view on phones. */
+  .leadstate{display:none;width:100%;max-width:360px;margin:0 auto var(--s4);padding:var(--s3) var(--s4);
+    font:inherit;font-size:var(--fz-md);border:1px solid var(--line);border-radius:var(--r3);background:#fff;color:var(--ink)}
+  @media screen and (max-width:620px){ body.lead .leadstate{display:block} }
+  /* Motion: fade the lead success block in; reduced-motion users get no animation. */
+  @media (prefers-reduced-motion: no-preference){
+    @keyframes leadIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    .lead-success{animation:leadIn .35s ease}
+  }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
     font:15px/1.6 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
@@ -346,6 +361,7 @@
       <div class="top"><label>Your portfolio</label><output id="leadportv"></output></div>
       <input type="range" id="leadport" min="100000" step="50000" aria-label="Your portfolio size" />
     </div>
+    <select id="leadstate" class="leadstate" aria-label="Select your state"></select>
     <div class="lead-hero" id="leadhero"></div>
     <div class="lead-cta" id="leadcta"></div>
   </section>
@@ -601,6 +617,7 @@ function advisory(code,slt,sst,bi){
   if(bi>=4) return `${nm} taxes capital gains as ordinary income at up to <b>${apct(slt)}</b> — among the steepest in the nation. Asset location (hold the fast book tax-advantaged) and harvesting deliver their largest dollar value in high-rate states like this one.`;
   return `${nm} taxes capital gains at <b>${apct(slt)}</b> (as ordinary income). A harvested loss here is worth that rate on every dollar of gain it offsets, stacked on top of the federal rate.`;
 }
+function selectState(code){ $("state").value=code; const ls=$("leadstate"); if(ls) ls.value=code; render(); flashDisc(); track("state_selected",{state:code,view:MODE}); }
 function buildMap(){
   let parts="";
   for(const code in TILES){
@@ -612,7 +629,7 @@ function buildMap(){
   }
   $("usmap").innerHTML=parts;
   $("usmap").querySelectorAll("rect.st").forEach(r=>{
-    const pick=()=>{ $("state").value=r.dataset.st; render(); flashDisc(); track("state_selected",{state:r.dataset.st,view:MODE}); };
+    const pick=()=>selectState(r.dataset.st);
     r.addEventListener("click",pick);
     r.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });   // keyboard-operable tiles
   });
@@ -1175,6 +1192,7 @@ function init(){
   if(!S||!S.profile){document.querySelector(".wrap").insertAdjacentHTML("beforeend","<p class='lede'>No ledger data yet.</p>");return;}
   $("bracket").innerHTML=S.brackets.map((b,i)=>`<option value="${i}"${i===S.brackets.length-1?" selected":""}>${b.label}</option>`).join("");
   $("state").innerHTML=Object.keys(S.states).map(s=>`<option value="${s}">${SLABEL[s]||s}</option>`).join("");
+  if($("leadstate")){ $("leadstate").innerHTML=$("state").innerHTML; $("leadstate").addEventListener("change",e=>selectState(e.target.value)); }
   ["bracket","state","account"].forEach(id=>$(id).addEventListener("change",render));
   // Phase 5/C: print -> Save as PDF. Two outputs off one print stylesheet: the client proposal,
   // and the CPA/attorney execution brief (body.brief swaps which print block is shown).
@@ -1229,6 +1247,7 @@ function init(){
   ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(k=>{ const v=qp.get(k); if(v) LEAD_UTM[k]=v; });
   const qState=qp.get("state"), qPort=parseFloat(qp.get("port"));
   if(qState && S.states && (qState in S.states)) $("state").value=qState;
+  if($("leadstate")) $("leadstate").value=$("state").value;   // keep the mobile picker in sync with the initial state
   if(qPort>0){
     // Clamp into each slider's own [min,max] so one ?port= localizes every view consistently
     // (a raw value below a slider's min is silently clamped by the browser, desyncing the views).

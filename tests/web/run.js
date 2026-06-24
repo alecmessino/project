@@ -78,7 +78,18 @@ globalThis.__run = async () => {
   return out;
 };`;
 
-// ---- Flow: a11y + honesty static guards (must not regress) ----
+// ---- Flow: mobile state picker (T6) — selectState mirrors map <-> native select ----
+const mobileDriver = `
+globalThis.__run = async () => {
+  const out = {}; S = FIXTURE; render = () => {}; flashDisc = () => {};
+  selectState('TX');
+  out.ss_sets_state     = document.getElementById('state').value === 'TX';
+  out.ss_sets_leadstate = document.getElementById('leadstate').value === 'TX';   // map/select stay in sync
+  out.ss_fires_event    = ENV.events.some(e => e[0] === 'state_selected' && e[1] && e[1].state === 'TX');
+  return out;
+};`;
+
+// ---- Flow: a11y + honesty + UI-token static guards (must not regress) ----
 function staticFlow() {
   const t = shim.templateText();
   return {
@@ -88,6 +99,11 @@ function staticFlow() {
     vh_class: t.includes('.vh{'),
     aria_valuetext: t.includes('aria-valuetext'),
     state_estate_js: t.includes('S.assumptions.estate.state_estate'),
+    leadstate_markup: t.includes('id="leadstate"'),
+    leadstate_wired: t.includes('leadstate").innerHTML=$("state").innerHTML'),
+    leadstate_mobile_css: t.includes('body.lead .leadstate'),
+    ui_tokens: t.includes('--s4:16px') && t.includes('--t-mid'),
+    reduced_motion: t.includes('prefers-reduced-motion'),
   };
 }
 
@@ -97,6 +113,7 @@ async function main() {
   flows.push(['estate', await drive('', estateDriver)]);
   // For the lead flow we need ENV visible to the driver; re-run drive with ENV alias.
   flows.push(['lead', await driveWithEnv(leadDriver)]);
+  flows.push(['mobile', await driveWithEnv(mobileDriver)]);
   flows.push(['static-a11y', staticFlow()]);
 
   let failed = 0, total = 0;

@@ -303,45 +303,15 @@ def ledger(
     settings = _load_settings(config)
     syms = [s.strip() for s in equities.split(",") if s.strip()]
     console.print(f"[dim]pulling daily history for {len(syms)} instruments + VT/VTI benchmarks …[/]")
-    import os
-    import time as _time
-    from random import uniform as _uniform
-    from .feed.yahoo import YahooFeed
-    # Source chain (Yahoo's chart API IP-bans GitHub Actions, which silently froze this ledger):
-    # Tiingo (keyed, reliable from CI) -> Stooq (keyless CSV) -> Yahoo. First source returning
-    # enough history for a symbol wins; the coverage gate below makes a total miss fail loudly.
-    feeds = []
-    tok = os.environ.get("TIINGO_API_KEY")
-    if tok:
-        from .feed.tiingo import TiingoFeed
-        feeds.append(("tiingo", TiingoFeed(tok)))
-    from .feed.stooq import StooqFeed
-    feeds.append(("stooq", StooqFeed()))
-    feeds.append(("yahoo", YahooFeed(range="2y", interval="1d")))
+    from .feed.resolve import equity_feeds, pull_universe, pull_symbol
+    feeds = equity_feeds()
     console.print(f"[dim]source chain: {', '.join(n for n, _ in feeds)}[/]")
-
-    def _pull(sym):
-        for _name, fd in feeds:
-            try:
-                bars = fd.fetch(sym)
-                if len(bars) >= settings.signal.min_history:
-                    return bars
-            except Exception:
-                continue
-        return None
-
-    series = {}
-    for s in syms:
-        bars = _pull(s)
-        if bars is not None:
-            series[s] = bars
-        if pause:
-            _time.sleep(_uniform(pause, pause * 1.5))   # jittered spacing to dodge 429 choking
+    series = pull_universe(syms, feeds, min_bars=settings.signal.min_history, pause=pause)
     # Buy-and-hold benchmarks, total return: VT (global, ~62/28/10 US/dev/EM — US ~61.97% as of mid-2026) and
     # VTI (US total market). Both fetched on the same adjusted-close basis as the book.
     benchmarks: dict = {}
     for label in ("VT", "VTI"):
-        b = _pull(label)
+        b = pull_symbol(label, feeds, settings.signal.min_history)
         if b is not None:
             benchmarks[label] = b
     benchmarks = benchmarks or None

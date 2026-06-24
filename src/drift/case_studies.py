@@ -29,32 +29,21 @@ from .models import Bar
 
 
 def equity_universe(symbols: Sequence[str], source: str = "yahoo",
-                    pause: float = 0.0) -> dict[str, list[Bar]]:
+                    pause: float = 0.0, feeds=None) -> dict[str, list[Bar]]:
     """Pull an equities universe, skipping any symbol that fails.
 
-    `source="yahoo"` (default) is keyless and comprehensive; `source="polygon"`
-    uses Polygon (needs POLYGON_API_KEY) — with no key its fetches raise and are
-    skipped, so the report degrades gracefully to the synthetic control only.
-    `pause` seconds between fetches is light insurance against burst rate-limiting.
+    `source="yahoo"` (default) pulls through the shared Tiingo->Stooq->Yahoo chain
+    (`feed.resolve.equity_feeds`) so it stays live where Yahoo IP-bans CI; `source="polygon"`
+    uses Polygon (needs POLYGON_API_KEY). `feeds` overrides the chain (used in tests).
     """
-    import time
-    if source == "polygon":
-        from .feed.polygon import PolygonFeed
-        feed = PolygonFeed()
-    else:
-        from .feed.yahoo import YahooFeed
-        feed = YahooFeed()
-    series: dict[str, list[Bar]] = {}
-    for i, sym in enumerate(symbols):
-        if pause and i:
-            time.sleep(pause)
-        try:
-            bars = feed.fetch(sym)
-        except Exception:
-            continue
-        if len(bars) >= 60:
-            series[sym] = bars
-    return series
+    from .feed.resolve import equity_feeds, pull_universe
+    if feeds is None:
+        if source == "polygon":
+            from .feed.polygon import PolygonFeed
+            feeds = [("polygon", PolygonFeed())]
+        else:
+            feeds = equity_feeds()
+    return pull_universe(symbols, feeds, min_bars=60, pause=pause)
 
 
 def _clone(settings: Settings, *, lookback: Optional[int] = None,

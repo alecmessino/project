@@ -26,7 +26,12 @@ jobs:
           python-version: '3.11'
       - run: pip install -e ".[dev]"
 
-      # Equity-only product — all exhibits keyless via Yahoo Finance (no secret).
+      # Data fetched through the shared Tiingo->Stooq->Yahoo chain (feed.resolve). The LIVE ledger
+      # runs FIRST so it gets a fresh Tiingo budget — the heavy 40y tearsheet pull runs last so its
+      # retry storm can't starve the ledger/equities (the regression that froze the ledger RED).
+      - name: Advance forward ledger (docs/ledger.*)
+        run: drift ledger --config config/drift.yaml
+
       # Universe is the curated region × factor matrix (single source: drift.universes).
       - name: Build equity exhibits (docs/equities*.html)
         run: |
@@ -37,12 +42,9 @@ jobs:
           drift export --source yahoo --instrument "$EQUITIES" \
             --config config/drift.yaml --out docs/equities.html
 
+      # Heaviest pull last (40y deep history); degrades gracefully (keeps prior tearsheet) if thin.
       - name: Build long-history tearsheet (docs/tearsheet.html)
         run: drift tearsheet --config config/drift.yaml --out docs/tearsheet.html
-
-      # Append one session to the append-only forward paper-trade ledger.
-      - name: Advance forward ledger (docs/ledger.*)
-        run: drift ledger --config config/drift.yaml
 
       # Tax Lab reads the fresh ledger's realized-gain profile (after the ledger step).
       - name: Build Tax Lab (docs/taxlab.html)

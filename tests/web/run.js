@@ -102,7 +102,7 @@ function staticFlow() {
     leadstate_markup: t.includes('id="leadstate"'),
     leadstate_wired: t.includes('leadstate").innerHTML=$("state").innerHTML'),
     leadstate_mobile_css: t.includes('body.lead .leadstate'),
-    ui_tokens: t.includes('--s4:16px') && t.includes('--t-mid'),
+    ui_tokens: shim.cssText().includes('--s4:16px') && shim.cssText().includes('--t-mid'),   // tokens now live in driftwood.css
     reduced_motion: t.includes('prefers-reduced-motion'),
   };
 }

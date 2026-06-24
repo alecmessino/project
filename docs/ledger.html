@@ -10,16 +10,16 @@
   plausible.init()
 </script>
 <title>Driftwood — live forward ledger</title>
-<meta name="description" content="An append-only paper track record for the Fast Book — a long-only, fully-invested global ETF momentum rotation tilted toward emerging markets, international and value/small (its tax-efficient Slow Book companion is offline-validated) — benchmarked against VT (global) and VTI (US) buy-and-hold, with risk stats, regional and style-box exposure, and costs shown. Research only, not investment advice." />
+<meta name="description" content="An append-only paper track record for the Fast Book — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; its tax-efficient Slow Book companion is offline-validated) — benchmarked against VT (global) and VTI (US) buy-and-hold, with risk stats, regional and style-box exposure, and costs shown. Research only, not investment advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/ledger.html" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
 <meta property="og:title" content="Driftwood — live forward ledger" />
-<meta property="og:description" content="An append-only paper track record for the Fast Book — a long-only, fully-invested global ETF momentum rotation tilted toward EM, international and value/small (offline Slow Book companion for taxable accounts), benchmarked vs VT (global) and VTI (US) buy-and-hold — risk stats, regional + style-box exposure, and costs. Research only." />
+<meta property="og:description" content="An append-only paper track record for the Fast Book — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Slow Book companion for taxable accounts), benchmarked vs VT (global) and VTI (US) buy-and-hold — risk stats, regional + style-box exposure, and costs. Research only." />
 <meta property="og:url" content="https://alecmessino.github.io/project/ledger.html" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Driftwood — live forward ledger" />
-<meta name="twitter:description" content="Append-only paper track record for the Fast Book — a long-only, fully-invested global ETF momentum rotation tilted toward EM, international & value/small (offline Slow Book for taxable accounts), benchmarked vs VT & VTI buy-and-hold. Research only, not advice." />
+<meta name="twitter:description" content="Append-only paper track record for the Fast Book — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Slow Book for taxable accounts), benchmarked vs VT & VTI buy-and-hold. Research only, not advice." />
 <style>
   :root{
     --bg:#ffffff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#717179;
@@ -127,8 +127,8 @@
   <div class="foot">
     <span class="note">Paper track record — research only, not investment advice.</span>
     The live track is the <b>Fast Book</b> — a long-only, fully-invested cross-sectional momentum
-    rotation tilted toward EM, international and value/small (a tax-efficient Slow Book is the
-    offline-validated taxable companion) — marked daily net of cost, vs
+    rotation (unbiased, no factor tilt; a tax-efficient Slow Book is the offline-validated taxable
+    companion) — marked daily net of cost, vs
     buy-and-hold VT (global) and VTI (US) on the same total-return basis. Append-only:
     history is never recomputed. Pre-inception points are a walk-forward replay
     (no lookahead); everything after is recorded live.
@@ -310,19 +310,20 @@ function render(s){
       <th>Max DD</th><th>Edge</th></tr></thead><tbody id="cmpbody"></tbody></table>
     <div class="note-box"><b>How the book is built — a dual-engine system.</b> The live track above is the
       <b>Fast Book</b>: long-only and <b>always fully invested</b> (no cash, no leverage). Each month it ranks
-      the global region/size/style ETF matrix by volatility-normalized momentum (~60-bar lookback), holds the
-      trending top half (inverse-volatility weighted), then <b>tilts toward the segments more attractive going
-      forward</b> — emerging markets, international, and value/small, which carry wider valuation spreads and
-      are more under-owned than US mega-cap growth. Its turnover is high, so it belongs in <b>tax-advantaged</b>
-      space (IRA/Roth). A separate, natively-slow companion — the <b>Slow Book</b> — is built for <b>taxable</b>
+      the global region/size/style ETF matrix by volatility-normalized momentum (~60-bar lookback) and holds the
+      trending top half, inverse-volatility weighted — <b>unbiased cross-sectional momentum with no discretionary
+      factor bet</b> (a 40-year test of an EM/value/small overweight showed it added risk, not risk-adjusted
+      return, so the book carries none). Its turnover is high, so it belongs in <b>tax-advantaged</b> space
+      (IRA/Roth). A separate, natively-slow companion — the <b>Slow Book</b> — is built for <b>taxable</b>
       accounts: a 12-month (252-bar) drift signal, asymmetric rank hysteresis (enter the top 40%, hold until a
-      name leaves the top 60%) that resists boundary churn, and a tax-lot holding-period cushion that ages
-      near-one-year winners into long-term treatment. The Slow Book is <b>offline-validated and is not part of
-      the live track above</b>; the two engines are unified by <b>asset location</b> — fast where gains are
-      sheltered, slow where they are taxed. <b>Concentration note:</b> as of mid-2026 the cap-weighted global
-      market (VT) is ~<b>61.97% US</b> — a "global" index that is really a bet on US mega-cap; this book
-      deliberately spreads risk across far more of the world. It can still lag in a narrow mega-cap-growth
-      melt-up; use the buttons above to see windows where it led versus lagged.</div>
+      name leaves the top 60%), and a tax-lot holding-period cushion that ages near-one-year winners into
+      long-term treatment. In a 40-year after-tax sweep the Slow Book <b>retained roughly twice the after-tax
+      fraction of the Fast Book</b> (≈39% vs ≈20%) — the empirical case for unifying the two engines by
+      <b>asset location</b>: fast where gains are sheltered, slow where they are taxed. (The Slow Book is
+      offline-validated on proxy-spliced history and is not part of the live track above.) <b>Diversification
+      note:</b> the book holds the full global region×size×style matrix, so by construction it is far less
+      US-mega-cap-concentrated than VT (~<b>61.97% US</b> as of mid-2026) — diversification, not a tactical bet.
+      It can still lag in a narrow mega-cap-growth melt-up; use the buttons above to see led-versus-lagged windows.</div>
     ${h.after_tax_total_return!=null ? `<div class="note-box"><b>Tax efficiency (illustrative${s.tax&&s.tax.state&&s.tax.state!=="—"?", "+s.tax.state:""}).</b>
       In a taxable account this book is <b>not</b> tax-efficient: monthly momentum runs
       ~<b>${(h.annual_turnover*100).toFixed(0)}%</b> annual turnover (avg holding ~${h.avg_holding_days} trading days),

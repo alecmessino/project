@@ -79,17 +79,17 @@ cross_section:
   # for research configs; here we stay invested and tilt instead.)
   trend_throttle: false
   exposure_floor: 0.0
-  # Strategic forward-looking tilt (long-only, fully invested). Each held name's
-  # risk-balanced weight is multiplied by region × size × style below, then the long leg
-  # is renormalized to full gross — redistributing capital toward the segments that look
-  # more attractive going forward (cheaper, more under-owned) WITHOUT adding cash or
-  # leverage. Anchored by momentum: only names in the trending top half are eligible.
-  #   - EM > international (developed ex-US) > US  (valuation + diversification view)
-  #   - small/mid over mega-cap                    (size premium, less concentration)
-  #   - value over growth                          (valuation spread is historically wide)
-  tilt_region: {US: 1.0, DEV: 1.30, EM: 1.55}
-  tilt_size:   {large: 1.0, largemid: 1.0, mid: 1.10, small: 1.30}
-  tilt_style:  {value: 1.30, blend: 1.0, growth: 0.80}
+  # Segment tilt (region × size × style multipliers on each held name's risk-balanced weight,
+  # long leg renormalized to full gross). SHIPPED NEUTRAL (all 1.0). A 40-year real-data
+  # attribution (scripts/slow_sweep.py tilt_attribution) showed the prior EM/value/small
+  # overweight moved Sharpe by ~0.01 and total return by ~0.5% over four decades — it added
+  # risk (concentration/beta), not risk-adjusted value — so the book ships as unbiased
+  # cross-sectional momentum: diversified across the full region×size×style matrix and
+  # inverse-vol weighted, with no discretionary factor bet. The mechanism remains (set a
+  # multiplier > 1.0 to research a tilt), but the default makes no ex-ante factor claim.
+  tilt_region: {US: 1.0, DEV: 1.0, EM: 1.0}
+  tilt_size:   {large: 1.0, largemid: 1.0, mid: 1.0, small: 1.0}
+  tilt_style:  {value: 1.0, blend: 1.0, growth: 1.0}
   # Dynamic valuation dial: make the tilt above TIME-VARYING rather than a permanent
   # overweight — scaling each segment's anchor by how cheap it looks now (proxied by
   # ~3y relative reversal: lean into beaten-down segments, fade multi-year leaders back
@@ -104,13 +104,13 @@ cross_section:
   tilt_reversion_bars: 756        # ~3 years
   tilt_reversion_strength: 0.5
   tilt_dial_cap: 1.8
-  # Tax-aware rebalancing (taxable sleeves). OFF, and deliberately so: the 40-year
-  # after-tax backtest shows that SLOWING this momentum book to harvest long-term
-  # treatment LOWERS after-tax return (monthly +948% vs annual +808% after-tax) —
-  # the cadence-sensitive momentum alpha you give up exceeds the tax you save, and a
-  # no-trade band barely dents turnover (entries/exits dominate). The real tax levers
-  # for a high-turnover sleeve are ASSET LOCATION (hold it tax-advantaged) and TLH,
-  # not slowing it down. The band remains available for research.
+  # Tax-aware rebalancing (no-trade band / gating THIS fast signal). OFF here on purpose:
+  # the fast book is built for TAX-ADVANTAGED accounts, where turnover carries no tax cost,
+  # so there's no reason to sacrifice momentum alpha to gate it. For TAXABLE money the lever
+  # is NOT gating this signal but running the natively-slow sleeve (config/slow.yaml): a
+  # 40-year after-tax sweep (scripts/slow_sweep.py, real proxy-spliced history) shows the
+  # slow sleeve retains ~2x the after-tax fraction of the fast book (≈39% vs ≈20%). Asset
+  # location + TLH are the complementary levers. The band remains available for research.
   tax_aware: false
   no_trade_band: 0.03
   # Neutralize the ranking within a grouping: "none", "region", "size", or "style".

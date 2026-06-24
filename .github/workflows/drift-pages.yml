@@ -69,5 +69,13 @@ jobs:
             echo "no change — nothing to commit"
           else
             git commit -m "chore: refresh Driftwood exhibits [skip ci]"
-            git push
+            # Robust against a concurrent push (Pages deploy / a merge landing mid-run):
+            # rebase onto the latest master and retry; fail loudly if it still can't push.
+            pushed=0
+            for attempt in 1 2 3; do
+              if git push; then pushed=1; break; fi
+              echo "push rejected — rebasing on origin/master (attempt $attempt)"
+              git pull --rebase --autostash origin master || break
+            done
+            [ "$pushed" = 1 ] || { echo "::error::could not push refreshed exhibits after retries"; exit 1; }
           fi

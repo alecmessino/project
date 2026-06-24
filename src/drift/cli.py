@@ -288,6 +288,8 @@ def ledger(
     out: str = typer.Option("docs/ledger.html", "--out", help="ledger exhibit HTML"),
     seed_sessions: int = typer.Option(504, "--seed-sessions", help="walk-forward seed length on first run (~2y of sessions)"),
     config: Optional[str] = typer.Option(None, "--config"),
+    min_coverage: float = typer.Option(0.6, "--min-coverage", help="abort (exit 1) if fewer than this fraction of symbols fetch — a rate-limit/outage guard"),
+    pause: float = typer.Option(0.25, "--pause", help="jittered seconds between per-symbol fetches to dodge 429 choking (0 disables)"),
 ):
     """Advance the forward paper-trade ledger by one session and render it.
 
@@ -303,14 +305,18 @@ def ledger(
     console.print(f"[dim]pulling daily history for {len(syms)} instruments + VT/VTI benchmarks …[/]")
     from .feed.yahoo import YahooFeed
     feed = YahooFeed(range="2y", interval="1d")
+    import time as _time
+    from random import uniform as _uniform
     series = {}
     for s in syms:
         try:
             bars = feed.fetch(s)
+            if len(bars) >= settings.signal.min_history:
+                series[s] = bars
         except Exception:
-            continue
-        if len(bars) >= settings.signal.min_history:
-            series[s] = bars
+            pass
+        if pause:
+            _time.sleep(_uniform(pause, pause * 1.5))   # jittered spacing to dodge 429 choking
     # Buy-and-hold benchmarks, total return: VT (global, ~62/28/10 US/dev/EM — US ~61.97% as of mid-2026) and
     # VTI (US total market). Both fetched on the same adjusted-close basis as the book.
     benchmarks: dict = {}
@@ -321,11 +327,24 @@ def ledger(
             pass
     benchmarks = benchmarks or None
 
+    # Loud-failure gate: a rate-limited/outage run must NOT silently rewrite the ledger as a
+    # "success". Abort with a non-zero exit when symbol coverage is too thin to trust.
+    coverage = (len(series) / len(syms)) if syms else 0.0
+    if coverage < min_coverage:
+        console.print(f"[red]ledger: only {len(series)}/{len(syms)} symbols fetched "
+                      f"({coverage:.0%} < {min_coverage:.0%} required) — likely rate-limited or an outage. "
+                      f"Aborting WITHOUT writing.[/]")
+        raise typer.Exit(code=1)
+
     path = Path(state)
     if path.exists() and _json.loads(path.read_text() or "{}").get("entries"):
         led = _json.loads(path.read_text())
+        n_before = len(led.get("entries", []))
         update_ledger(led, series, settings, benchmarks=benchmarks)
-        console.print("appended one session")
+        if len(led["entries"]) > n_before:
+            console.print(f"appended one session ({len(led['entries'])} total)")
+        else:
+            console.print("no new session — healthy fetch, latest close already recorded (clean no-op)")
     else:
         led = seed_ledger(series, settings, sessions=seed_sessions, benchmarks=benchmarks)
         console.print(f"seeded {len(led['entries'])} sessions (walk-forward)")

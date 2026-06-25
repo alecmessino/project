@@ -258,7 +258,7 @@ def build_tearsheet(settings: Settings, equities: Sequence[str] = EQUITY_UNIVERS
                                     market=market, mode="cross"))
     return {
         "header": {
-            "title": "Driftwood — long-history tearsheet",
+            "title": "Driftwood — Model Portfolio (Hypothetical)",
             "generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
             "method": f"params fit on first {int(train_frac*100)}% (in-sample), "
                       f"reported on the held-out remainder (out-of-sample); benchmark "

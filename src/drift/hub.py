@@ -20,8 +20,8 @@ EXHIBITS = [
      "The trend-following thesis, the research, the results — and the name."),
     ("Model Portfolio (hypothetical)", "ledger.html",
      "Hypothetical, append-only backtest of the strategy — marked daily, with alpha/beta attribution. Not actual trading or any client account."),
-    ("Long-history tearsheet", "tearsheet.html",
-     "Decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample."),
+    ("Model Portfolio · long history", "tearsheet.html",
+     "The Model Portfolio across decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample."),
     ("Tax Lab", "taxlab.html",
      "Holistic asset-location engine: after-tax return, three-account placement (taxable / Traditional / "
      "Roth), estate step-up, and tax-loss harvesting — personalized by bracket and state."),

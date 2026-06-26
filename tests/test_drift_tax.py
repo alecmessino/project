@@ -551,6 +551,31 @@ def test_lead_funnel_is_competence_framed_with_instant_recap():
     assert "intro call covers" in tx                          # branded pre-call context (C3)
 
 
+def test_estate_view_includes_illiquid_true_net_worth_inputs():
+    # F1: real estate, business equity, and life insurance (with the §2042 ownership toggle) must
+    # feed the Gross Estate — illiquid assets are what trigger the cliff for HNW clients.
+    from pathlib import Path
+    import drift.taxlab as T
+    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    for el in ('id="estre"', 'id="estbiz"', 'id="estli"', 'id="estliown"'):
+        assert el in tx, f"estate input missing: {el}"
+    assert "liInEstate" in tx and "§2042" in tx          # life insurance counted only when owned
+    assert "ind+joint+trust+re+biz+liCount" in tx        # all summed into the gross estate
+    assert T.ASSUMPTIONS["estate"]["default_real_estate"] >= 0
+    assert "default_life_insurance" in T.ASSUMPTIONS["estate"]
+
+
+def test_personalized_outreach_url_params_supported():
+    # F3: cold-outreach links pre-load bracket / portfolio / home / li / biz and the prospect view.
+    from pathlib import Path
+    import drift.taxlab as T
+    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    assert 'qp.get("portfolio")' in tx and 'qp.get("home")' in tx
+    assert 'qp.get("li")' in tx and 'qp.get("biz")' in tx
+    assert 'qp.get("bracket")' in tx
+    assert 'v==="prospect"' in tx                          # ?view=prospect → lead view
+
+
 def test_shipped_configs_ship_neutral_tilt():
     """Methodology guard: the EM/value/small overweight added no risk-adjusted value over 40y of
     real data (scripts/slow_sweep.py tilt_attribution), so the shipped books carry NO factor tilt

@@ -63,6 +63,10 @@ ASSUMPTIONS = {
         "default_individual": 3_000_000,
         "default_joint": 0,                  # individual-first; joint>0 unlocks the $30M portable exemption
         "default_trust": 1_000_000,
+        # "True Net Worth" illiquid assets — these, not the liquid book, often trigger the state cliff.
+        "default_real_estate": 1_500_000,    # primary residence + real estate
+        "default_business": 0,               # closely-held business equity (full value; discounts apply)
+        "default_life_insurance": 0,         # death benefit; in-estate only if owned by the insured (§2042)
         "estate_max": 30_000_000,
         "estate_step": 100_000,
         "trust_compression_top_threshold": 15_650,  # 2026 trust income hits the 37% bracket here

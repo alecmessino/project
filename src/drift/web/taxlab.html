@@ -395,6 +395,14 @@
           <input type="range" id="estjoint" aria-label="Assets owned jointly" /></div>
         <div class="slider"><div class="top"><label>Credit Shelter / Bypass Trust</label><output id="esttrustv"></output></div>
           <input type="range" id="esttrust" aria-label="Assets in a credit shelter / bypass trust" /></div>
+        <div class="slider"><div class="top"><label>Real estate / primary residence</label><output id="estrev"></output></div>
+          <input type="range" id="estre" aria-label="Real estate and primary residence value" /></div>
+        <div class="slider"><div class="top"><label>Business equity</label><output id="estbizv"></output></div>
+          <input type="range" id="estbiz" aria-label="Business equity value" /></div>
+        <div class="slider"><div class="top"><label>Life insurance death benefit</label><output id="estliv"></output></div>
+          <input type="range" id="estli" aria-label="Life insurance death benefit" />
+          <label style="display:flex;gap:7px;align-items:center;font-size:12px;color:var(--dim);margin-top:7px">
+            <input type="checkbox" id="estliown" checked style="width:auto" /> Owned by the insured — counts in the taxable estate (§2042)</label></div>
         <div class="est-warn" id="esttrustwarn" style="display:none"></div>
       </div>
       <div class="opt-card" id="estresult"></div>
@@ -551,7 +559,7 @@ function track(name, props){
     else if(window.fathom && window.fathom.trackEvent) window.fathom.trackEvent(name);  // name only (Fathom drops props)
   }catch(e){}
 }
-let MODE = (v=>(v==="lead"||v==="estate"||v==="strategy")?v:"advisor")(new URLSearchParams(location.search).get("view"));
+let MODE = (v=>(v==="prospect"||v==="lead")?"lead":(v==="estate"||v==="strategy")?v:"advisor")(new URLSearchParams(location.search).get("view"));
 const pct=(x,d=1)=>(x==null||!Number.isFinite(x))?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
 const apct=(x,d=1)=>(x==null||!Number.isFinite(x))?"—":(x*100).toFixed(d)+"%";
 // a11y: mirror each slider's friendly <output> (id = sliderId+"v") into aria-valuetext, so a screen reader
@@ -945,8 +953,12 @@ function estateKind(st){ if(st==="IL") return {kind:"illinois"}; const m=(S.assu
 function renderEstate(){
   if(!S.assumptions||!S.assumptions.estate) return;
   const E=S.assumptions.estate, hb=hbOn(), excl=hb?E.il_hb2601_exclusion:E.il_exclusion;
-  const ind=+$("estind").value||0, joint=+$("estjoint").value||0, trust=+$("esttrust").value||0, total=ind+joint+trust;
+  const ind=+$("estind").value||0, joint=+$("estjoint").value||0, trust=+$("esttrust").value||0;
+  const re=+$("estre").value||0, biz=+$("estbiz").value||0, li=+$("estli").value||0;
+  const liInEstate=$("estliown")?$("estliown").checked:true, liCount=liInEstate?li:0;   // §2042: in-estate only if owned
+  const total=ind+joint+trust+re+biz+liCount;   // True Net Worth gross estate — illiquid assets often trigger the cliff
   $("estindv").textContent=fmt$(ind); $("estjointv").textContent=fmt$(joint); $("esttrustv").textContent=fmt$(trust);
+  $("estrev").textContent=fmt$(re); $("estbizv").textContent=fmt$(biz); $("estliv").textContent=fmt$(li);
   const st=$("state").value, cls=estateKind(st), isIL=(cls.kind==="illinois");
   const sname=(st==="—"||!NAMES[st])?"Your state":(NAMES[st]||st);
   const sheltered=Math.min(trust,excl), taxable=total-sheltered;
@@ -989,6 +1001,11 @@ function renderEstate(){
     elections, the Attorney General's calculator, deductions) can differ materially; the estate attorney produces the
     filing figure. <b>HB2601 is proposed legislation, not enacted</b> — figures with the sandbox on assume it passes as
     drafted and may not reflect final law. Not tax or legal advice.`:`<b>Illustrative only.</b> State death-tax treatment varies by jurisdiction and these figures are not a filing computation; your estate attorney produces the exact number. Not tax or legal advice.`;
+  const liNote = li>0 ? (liInEstate
+    ? ` <b>Life insurance</b> (${fmt$(li)}) is included in the gross estate because the insured owns the policy (§2042); moving it to an <b>ILIT</b> removes it from the estate.`
+    : ` <b>Life insurance</b> (${fmt$(li)}) is <b>excluded</b> — assumed held in an ILIT outside the estate (§2042).`) : "";
+  const bizNote = biz>0 ? ` <b>Business equity</b> is shown at full value; valuation discounts (lack of marketability / minority interest) and §6166 deferral may lower the actual estate figure — your attorney and appraiser size these.` : "";
+  if(liNote||bizNote) $("estnote").innerHTML += `<br>${liNote}${bizNote}`;
 }
 
 // --- Strategy view: 401(k) rollover + Roth conversion + asset-location blueprint ---
@@ -1273,9 +1290,11 @@ function init(){
     // Estate view: entity-assignment sliders + the HB2601 legislative-sandbox toggle.
     if(A.estate){
       const E=A.estate;
-      for(const id of ["estind","estjoint","esttrust"]){ $(id).max=E.estate_max; $(id).step=E.estate_step; }
+      for(const id of ["estind","estjoint","esttrust","estre","estbiz","estli"]){ $(id).max=E.estate_max; $(id).step=E.estate_step; }
       $("estind").value=E.default_individual; $("estjoint").value=E.default_joint; $("esttrust").value=E.default_trust;
-      ["estind","estjoint","esttrust"].forEach(id=>$(id).addEventListener("input",renderEstate));
+      $("estre").value=E.default_real_estate||0; $("estbiz").value=E.default_business||0; $("estli").value=E.default_life_insurance||0;
+      ["estind","estjoint","esttrust","estre","estbiz","estli"].forEach(id=>$(id).addEventListener("input",renderEstate));
+      $("estliown").addEventListener("change",renderEstate);
       const tog=()=>{ const on=$("hb2601").classList.toggle("on"); $("hb2601").setAttribute("aria-checked", on?"true":"false"); renderEstate(); };
       $("hb2601").addEventListener("click",tog);
       $("hb2601").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); tog(); } });
@@ -1296,17 +1315,26 @@ function init(){
   // Cold-outreach attribution: capture utm_* so they ride along on the lead email + conversion event.
   // (Plausible also reads these natively for its traffic/acquisition reports — no code needed there.)
   ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(k=>{ const v=qp.get(k); if(v) LEAD_UTM[k]=v; });
-  const qState=qp.get("state"), qPort=parseFloat(qp.get("port"));
+  // Clamp into each slider's own [min,max] so one URL localizes every view consistently
+  // (a raw value below a slider's min is silently clamped by the browser, desyncing the views).
+  const setClamped=(id,v)=>{ const el=$(id); if(!el||!(v>0)) return; const mn=parseFloat(el.min)||0, mx=parseFloat(el.max)||v; el.value=Math.min(Math.max(v,mn),mx); };
+  const qState=qp.get("state");
+  const qPort=parseFloat(qp.get("portfolio")||qp.get("port"));       // ?portfolio= (alias of legacy ?port=)
+  const qHome=parseFloat(qp.get("home")), qLi=parseFloat(qp.get("li")), qBiz=parseFloat(qp.get("biz"));
+  const qBracket=parseInt(qp.get("bracket"),10);                     // plain federal ordinary-rate %, e.g. 37
   if(qState && S.states && (qState in S.states)) $("state").value=qState;
   paintLeadSel($("state").value);   // keep the mobile chip grid in sync with the initial state
+  if(Number.isFinite(qBracket) && S.brackets){                       // map "37" → the matching bracket index
+    const bi=S.brackets.findIndex(b=>Math.round(b.ord*100)===qBracket);
+    if(bi>=0) $("bracket").value=bi;
+  }
   if(qPort>0){
-    // Clamp into each slider's own [min,max] so one ?port= localizes every view consistently
-    // (a raw value below a slider's min is silently clamped by the browser, desyncing the views).
-    const setClamped=(id,v)=>{ const el=$(id); if(!el) return; const mn=parseFloat(el.min)||0, mx=parseFloat(el.max)||v; el.value=Math.min(Math.max(v,mn),mx); };
     setClamped("leadport",qPort);                                    // prospect dollar-bleed hook
     setClamped("taxbal",qPort);                                      // advisor optimizer (taxable seed)
     if($("estind")){ setClamped("estind",qPort); $("estjoint").value=0; $("esttrust").value=0; }  // estate cliff (unmitigated)
   }
+  // Illiquid / true-net-worth params feed the estate cliff directly (home equity, policies, business).
+  setClamped("estre",qHome); setClamped("estli",qLi); setClamped("estbiz",qBiz);
   buildMap();
   render();
   // Phase B: dual-mode — wire the toggle, seed the lead funnel, apply the current view.

@@ -621,6 +621,23 @@ def test_decision_tree_visualizes_placement_and_gates_trust_on_estate():
     assert "§1014 step-up" in tx
 
 
+def test_pdf_proposal_print_template_and_disclosures():
+    # F5: the print template lives in the shared stylesheet, and every generated proposal (an
+    # advertisement) carries the formal disclosures + a running firm footer.
+    from pathlib import Path
+    import drift.taxlab as T
+    web = Path(T.__file__).with_name("web")
+    css = (web / "driftwood.css").read_text()
+    tx = (web / "taxlab.html").read_text()
+    assert "@media print" in css and "@page" in css
+    assert "#printfoot" in css and "position:fixed" in css     # running footer on every page
+    assert 'id="printdisc"' in tx and 'id="printproposal"' in tx
+    assert "registered investment adviser" in tx and "adviserinfo.sec.gov" in tx
+    assert "not a performance forecast" in tx
+    assert "does not guarantee future\n      results" in tx or "does not guarantee future results" in tx
+    assert "Recommended structure" in tx
+
+
 def test_shipped_configs_ship_neutral_tilt():
     """Methodology guard: the EM/value/small overweight added no risk-adjusted value over 40y of
     real data (scripts/slow_sweep.py tilt_attribution), so the shipped books carry NO factor tilt

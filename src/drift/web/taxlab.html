@@ -565,12 +565,27 @@
     <div id="methodsbody"></div>
   </details>
 
+  <!-- Print-only proposal appendix: the selected model + Structural Alpha (filled by renderTransition). -->
+  <div id="printproposal"></div>
+  <!-- Print-only formal disclosures — a generated proposal/brief is an advertisement (SEC Rule 204-2: retain copies). -->
+  <div id="printdisc">
+    <div class="es-h">Important disclosures</div>
+    <p><b>Driftwood is a research brand of CWS Planning, a registered investment adviser.</b> Form ADV and Form CRS are
+      available at adviserinfo.sec.gov. This proposal is for discussion only — it is not investment, tax, or legal advice,
+      and not an offer or solicitation, and it does not create an advisory relationship.</p>
+    <p><b>Estimated Structural Alpha is illustrative tax &amp; fee modeling</b> on the inputs shown — it is not a performance
+      forecast and not a representation that any allocation or fund will out-perform. Hypothetical model results do not reflect
+      actual trading or any client account, and <b>past performance — hypothetical or actual — does not guarantee future
+      results.</b> Tax and estate figures are illustrative, not a filing computation; coordinate with your CPA and estate attorney.</p>
+  </div>
+
   <div class="foot">
     <a class="back" href="index.html">← back to Driftwood</a>
     <div class="compliance" id="compliance"></div>
     <div id="gen" style="margin-top:8px"></div>
   </div>
 </div>
+<div id="printfoot">CWS Planning · a registered investment adviser · adviserinfo.sec.gov — Illustrative; not investment, tax, or legal advice</div>
 <div class="fabwrap advisor-only">
   <button id="genbrief" type="button" class="fab brief" title="Generate a CPA / attorney execution brief">
     <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 2h6l3 3v9H4z M10 2v3h3" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>Generate CPA / Attorney Brief</button>
@@ -803,6 +818,11 @@ function renderTransition(){
     low-cost strategic allocation, <b>distinct from</b> the hypothetical Driftwood momentum backtest${m.structure?`, which enters only as the ${Math.round(m.structure.satellite*100)}% self-directed satellite sleeve`:""}.
     Estimated Structural Alpha is illustrative tax + fee modeling on the inputs shown; actual results depend on account structure,
     rates, and execution. Not investment, tax, or legal advice.`;
+  // Feed the print-only proposal appendix so the generated PDF names the recommended structure.
+  if($("printproposal")) $("printproposal").innerHTML=`<div class="es-h">Recommended structure</div>
+    <p><b>${m.name}</b> — ${m.tagline} Blended fund cost ${(m.blended_er*1e4).toFixed(0)} bps. Estimated Structural Alpha
+      (Tax + Fee Optimization): <b>+${fmt$(structural)}/yr</b> on a ${fmt$big(W)} household — illustrative tax + fee
+      modeling, not a performance forecast.</p>`;
 }
 // --- Feature 2: wealth-architecture decision tree (visualizes the existing placement + estate gate) ---
 function grossEstate(){

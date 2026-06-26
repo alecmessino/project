@@ -609,6 +609,18 @@ def test_transition_ui_labels_structural_alpha_and_keeps_models_distinct():
     assert "distinct from</b> the hypothetical Driftwood" in tx    # institutional model kept separate
 
 
+def test_decision_tree_visualizes_placement_and_gates_trust_on_estate():
+    # F2: the capital-flow map visualizes the placement and surfaces CST/SLAT only as education
+    # gated on the gross estate — never an auto-recommendation (UPL guardrail).
+    from pathlib import Path
+    import drift.taxlab as T
+    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    assert 'id="decisiontree"' in tx and "renderDecisionTree(" in tx and "grossEstate(" in tx
+    assert "Credit Shelter" in tx and "SLAT" in tx
+    assert "your attorney determines suitability" in tx   # education, not advice
+    assert "§1014 step-up" in tx
+
+
 def test_shipped_configs_ship_neutral_tilt():
     """Methodology guard: the EM/value/small overweight added no risk-adjusted value over 40y of
     real data (scripts/slow_sweep.py tilt_attribution), so the shipped books carry NO factor tilt

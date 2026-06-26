@@ -275,6 +275,23 @@
   .struct-alpha .big{font-size:26px;font-weight:680;color:var(--pos);letter-spacing:-.4px}
   .struct-alpha .lbl{font-size:13px;font-weight:600;color:var(--ink);margin-top:2px}
   .struct-alpha .brk{font-size:12px;color:var(--slate);margin-top:8px;line-height:1.6}
+  /* F2: wealth-architecture decision tree (shown in advisor + estate views) */
+  .adv-est{display:block}
+  body.lead .adv-est, body.strategy .adv-est{display:none!important}
+  .dtree{margin:14px 0 2px}
+  .dtree .root{display:inline-block;background:var(--ink);color:#fff;border-radius:8px;padding:9px 16px;font-weight:600;font-size:13px}
+  .dtree .flow{font-size:11px;color:var(--dim);margin:8px 0 4px}
+  .dtree .row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+  @media(max-width:680px){.dtree .row{grid-template-columns:1fr}}
+  .dnode{border:1px solid var(--line);border-top:3px solid var(--slate);border-radius:9px;padding:12px 14px;background:#fff}
+  .dnode.roth{border-top-color:#2f6f5b} .dnode.trad{border-top-color:#4a4f57} .dnode.tax{border-top-color:#c2790f}
+  .dnode h5{margin:0 0 2px;font-size:12.5px;display:flex;justify-content:space-between;gap:8px}
+  .dnode h5 .amt{font-variant-numeric:tabular-nums;color:var(--slate)}
+  .dnode p{margin:6px 0 0;font-size:12px;color:var(--ink);line-height:1.45}
+  .dnode .why{font-size:11px;color:var(--dim);margin-top:5px;line-height:1.45}
+  .dtree .estate-node{margin-top:14px;border:1px solid var(--neg);border-left:4px solid var(--neg);border-radius:9px;
+    padding:12px 15px;background:#fdf6f4;font-size:12.5px;line-height:1.55;color:#5c352e}
+  .dtree .estate-node.clear{border-color:var(--line);border-left-color:#2f6f5b;background:var(--soft);color:var(--slate)}
   #calendly-slot{margin-top:14px;min-height:60px;border:1px dashed var(--line);border-radius:10px;
     display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12.5px;text-align:center;padding:14px}
   /* --- Estate Planning View --- */
@@ -431,6 +448,11 @@
     </div>
     <p class="est-fed" id="estfed"></p>
     <div class="note" id="estnote" style="margin-top:16px"></div>
+  </section>
+
+  <section id="decisiontree" class="adv-est">
+    <h2>Wealth Architecture · capital-flow map <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· where each dollar is located, and why</span></h2>
+    <div id="dtreebody"></div>
   </section>
 
   <section id="strategy" class="strategy-only">
@@ -782,6 +804,44 @@ function renderTransition(){
     Estimated Structural Alpha is illustrative tax + fee modeling on the inputs shown; actual results depend on account structure,
     rates, and execution. Not investment, tax, or legal advice.`;
 }
+// --- Feature 2: wealth-architecture decision tree (visualizes the existing placement + estate gate) ---
+function grossEstate(){
+  const li=+$("estli").value||0, own=$("estliown")?$("estliown").checked:true;
+  return (+$("estind").value||0)+(+$("estjoint").value||0)+(+$("esttrust").value||0)
+        +(+$("estre").value||0)+(+$("estbiz").value||0)+(own?li:0);
+}
+function renderDecisionTree(){
+  if(!S.assumptions||!$("dtreebody")) return;
+  const r=rates(), A=S.assumptions, E=A.estate, p=S.profile, yrs=p.years||1;
+  const T=+$("taxbal").value, Tr=+$("tradbal").value, Ro=+$("rothbal").value, W=(T+Tr+Ro)||0;
+  // Mirror the optimizer's placement (no new math): momentum → Roth then Traditional; core → taxable.
+  const c=calc(r), mdr=c.drag/yrs, pdr=A.passive_div_yield*r.r_lt;
+  const la=locAlpha3(T,Tr,Ro,mdr,pdr,A.growth_rate,A.horizon_years);
+  let momLeft=la.sleeve; const inRoth=Math.min(Ro,momLeft); momLeft-=inRoth; const inTrad=Math.min(Tr,momLeft);
+  // Estate gate: which exclusion binds, and is the gross estate over it?
+  const ge=grossEstate(), joint=+$("estjoint").value||0;
+  const fed=joint>0?E.fed_exemption_couple:E.fed_exemption_indiv;
+  const cls=estateKind(r.state), stExcl=cls.kind==="illinois"?(hbOn()?E.il_hb2601_exclusion:E.il_exclusion):Infinity;
+  const binding=Math.min(fed,stExcl), over=ge>binding;
+  const estateHTML = over
+    ? `<div class="estate-node"><b>⚠ Gross estate ${fmt$big(ge)} exceeds the ${fmt$big(binding)} ${stExcl<fed?"state":"federal"} exclusion.</b>
+        Structures your estate attorney may discuss: a <b>Credit Shelter / Bypass Trust</b> (preserves both spouses' exclusions) or a
+        <b>SLAT</b> (moves appreciating assets out of the estate while a spouse retains access). The Roth-located sleeve already passes to
+        heirs tax-free; the taxable core gets a §1014 step-up at death. <b>Educational only — your attorney determines suitability and drafts the documents.</b></div>`
+    : `<div class="estate-node clear">Gross estate ${fmt$big(ge)} is within the ${fmt$big(binding)} exclusion — no trust is indicated today. Revisit as assets grow.</div>`;
+  $("dtreebody").innerHTML=`<div class="dtree">
+    <span class="root">Household capital · ${fmt$big(W)}</span>
+    <div class="flow">↓ located by tax treatment ↓</div>
+    <div class="row">
+      <div class="dnode roth"><h5>Roth IRA <span class="amt">${fmt$(inRoth)}</span></h5>
+        <p>Driftwood momentum sleeve.</p><div class="why">Tax-free compounding of its short-term gains; passes to heirs as a tax-free residuary, no RMDs.</div></div>
+      <div class="dnode trad"><h5>Traditional IRA <span class="amt">${fmt$(inTrad)}</span></h5>
+        <p>Momentum overflow.</p><div class="why">Shelters short-term gains now; withdrawals taxed as ordinary income later.</div></div>
+      <div class="dnode tax"><h5>Taxable <span class="amt">${fmt$(T)}</span></h5>
+        <p>Low-turnover index core.</p><div class="why">Held for the §1014 step-up in basis at death — heirs inherit the embedded gain wiped clean.</div></div>
+    </div>
+    ${estateHTML}</div>`;
+}
 function renderLocation(){
   if(!S.assumptions) return;
   const r=rates(), c=calc(r), p=S.profile, yrs=p.years||1, A=S.assumptions;
@@ -1077,6 +1137,7 @@ function renderEstate(){
     : ` <b>Life insurance</b> (${fmt$(li)}) is <b>excluded</b> — assumed held in an ILIT outside the estate (§2042).`) : "";
   const bizNote = biz>0 ? ` <b>Business equity</b> is shown at full value; valuation discounts (lack of marketability / minority interest) and §6166 deferral may lower the actual estate figure — your attorney and appraiser size these.` : "";
   if(liNote||bizNote) $("estnote").innerHTML += `<br>${liNote}${bizNote}`;
+  renderDecisionTree();   // keep the capital-flow map + CST/SLAT gate synced with the estate inputs
 }
 
 // --- Strategy view: 401(k) rollover + Roth conversion + asset-location blueprint ---
@@ -1319,6 +1380,8 @@ function render(){
   renderLocation();
   // Feature 4: refresh the current-vs-proposed portfolio transition + Structural Alpha.
   renderTransition();
+  // Feature 2: refresh the capital-flow decision tree (placement + estate gate).
+  renderDecisionTree();
   // Layer 3: redraw the frontier (breakeven lines depend on the selected rates).
   drawFrontier();
   // Phase B: in prospect mode, refresh the dollar-bleed hook on every state change.

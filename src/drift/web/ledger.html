@@ -103,6 +103,13 @@
   .fits ul{margin:0;padding-left:18px} .fits li{margin:4px 0}
   .fits b{color:var(--ink)}
   .fits a{color:var(--slate)}
+  /* F2: top-of-page "what this is / who it's for / the trade-off" summary, above the quant */
+  .summary{border:1px solid var(--line);border-left:3px solid var(--slate);border-radius:8px;
+    background:var(--soft);padding:15px 18px;margin:0 0 20px;font-size:13.8px;line-height:1.6}
+  .summary h3{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);margin:0 0 9px;font-weight:600}
+  .summary ul{margin:9px 0 6px;padding-left:18px} .summary li{margin:4px 0}
+  .summary b{color:var(--ink)}
+  .summary .muted{color:var(--dim);font-size:12px;margin:8px 0 0}
   .figband{margin:34px 0 6px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;line-height:0}
   .figband img{width:100%;height:204px;object-fit:contain;display:block}
   .figcap{font-size:11.5px;color:var(--dim);margin:6px 2px 0;line-height:1.5}
@@ -434,6 +441,20 @@ function render(s){
     had on decision-making in a live account, and the model itself may be revised. <b>Past performance — whether
     hypothetical or actual — does not guarantee future results.</b> Marked net of modeled trading cost; benchmarks
     are buy-and-hold. For research and illustration only; not investment, tax, or legal advice.</div></div>`;
+  // F2 · plain-English TL;DR card — answers "what is this / who is it for / the trade-off" up front,
+  // so a prospect isn't forced through beta/R²/style-box before learning if it even suits them.
+  const summaryHTML=`<div class="summary">
+    <h3>What this is — the short version</h3>
+    <p><b>A hypothetical Model Portfolio</b> of a long-only, fully-invested global region/size/style ETF
+      momentum rotation (the Fast Book). Across the backtest it returned <b>${pct(h.total_return)}</b> with a
+      worst peak-to-trough drawdown near <b>~${ddPct}%</b> — more volatile than buy-and-hold, in exchange for
+      the trend premium.</p>
+    <ul>
+      <li><b>Who it's for —</b> a satellite growth sleeve (~10–30% of an equity allocation), a 10-year-plus
+        horizon, ideally in a tax-advantaged account.</li>
+      <li><b>Not for —</b> money needed within ~5 years, or anyone who couldn't sit through a ~${ddPct}%-type drawdown.</li>
+    </ul>
+    <p class="muted">Hypothetical backtest — not advice. The full method, attribution, after-tax, and exposure are below.</p></div>`;
   // Alpha/beta attribution — splits the model's return into market drift (beta) vs the strategy's own
   // estimated edge (alpha), with a significance test and an out-of-sample-only readout (honest framing).
   const a=s.attribution, ao=s.attribution_oos;
@@ -461,6 +482,7 @@ function render(s){
     return is idiosyncratic to the strategy rather than the market. ${sigNote}${oosNote} Hypothetical; see disclosure above.</p></div>` : "";
   document.getElementById("body").innerHTML = `
     ${disclaimerHTML}
+    ${summaryHTML}
     <div class="metrics">${stats}</div>
     ${costHTML}
     <div class="legend"><span><i style="background:${SCOLOR}"></i>strategy</span>

@@ -18,9 +18,16 @@
 <style>
   /* Palette + spacing/radius/shadow/motion/type tokens come from the shared driftwood.css
      (linked last in <head>) — defined once for the whole site. */
-  /* Mobile-first state picker: a large native select replaces the ~28px map tiles in lead view on phones. */
-  .leadstate{display:none;width:100%;max-width:360px;margin:0 auto var(--s4);padding:var(--s3) var(--s4);
-    font:inherit;font-size:var(--fz-md);border:1px solid var(--line);border-radius:var(--r3);background:#fff;color:var(--ink)}
+  /* Mobile state picker (F1): a tappable, tax-severity-coloured chip grid — the same heat-map
+     language as the desktop map — replaces the bare native select, so the high-intent mobile
+     prospect gets the premium control, not a 50-row dropdown. One source of truth via selectState. */
+  .leadstate{display:none;margin:0 auto var(--s4);max-width:520px}
+  .leadstate .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px}
+  .leadstate button{font:inherit;font-size:13px;font-weight:600;color:#fff;border:1px solid rgba(0,0,0,.08);
+    border-radius:var(--r3);padding:10px 4px;cursor:pointer;line-height:1.15;text-shadow:0 1px 1px rgba(0,0,0,.2)}
+  .leadstate button.sel{outline:2.5px solid var(--ink);outline-offset:1px}
+  .leadstate .lgd{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:11.5px;color:var(--dim);margin:11px 2px 0}
+  .leadstate .lgd i{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:4px}
   @media screen and (max-width:620px){ body.lead .leadstate{display:block} }
   /* Motion: fade the lead success block in; reduced-motion users get no animation. */
   @media (prefers-reduced-motion: no-preference){
@@ -362,7 +369,7 @@
       <div class="top"><label>Your portfolio</label><output id="leadportv"></output></div>
       <input type="range" id="leadport" min="100000" step="50000" aria-label="Your portfolio size" />
     </div>
-    <select id="leadstate" class="leadstate" aria-label="Select your state"></select>
+    <div id="leadstate" class="leadstate" role="group" aria-label="Select your state"></div>
     <div class="lead-hero" id="leadhero"></div>
     <div class="lead-cta" id="leadcta"></div>
   </section>
@@ -618,7 +625,27 @@ function advisory(code,slt,sst,bi){
   if(bi>=4) return `${nm} taxes capital gains as ordinary income at up to <b>${apct(slt)}</b> — among the steepest in the nation. Asset location (hold the fast book tax-advantaged) and harvesting deliver their largest dollar value in high-rate states like this one.`;
   return `${nm} taxes capital gains at <b>${apct(slt)}</b> (as ordinary income). A harvested loss here is worth that rate on every dollar of gain it offsets, stacked on top of the federal rate.`;
 }
-function selectState(code){ $("state").value=code; const ls=$("leadstate"); if(ls) ls.value=code; render(); flashDisc(); track("state_selected",{state:code,view:MODE}); }
+function selectState(code){ $("state").value=code; paintLeadSel(code); render(); flashDisc(); track("state_selected",{state:code,view:MODE}); }
+// F1 · mobile state picker: a tappable severity-coloured chip grid, built from the same BUCKETS /
+// bucketOf heat-map the desktop map uses, wired to the one selectState handler (no desync path).
+function buildLeadStates(){
+  const host=$("leadstate"); if(!host||!S||!S.states) return;
+  const chips=Object.keys(S.states).map(code=>{
+    const [slt,sst]=S.states[code], b=BUCKETS[bucketOf(slt,sst)];
+    const lbl=(code==="—")?"None":code;                           // NYC/DC keep their codes
+    const nm=SLABEL[code]||NAMES[code]||code;
+    return `<button type="button" data-st="${code}" style="background:${b.fill}" title="${nm} · ${b.lab}"`+
+      ` aria-label="${nm} — ${b.lab} tax severity">${lbl}</button>`;
+  }).join("");
+  host.innerHTML=`<div class="grid">${chips}</div>`+
+    `<div class="lgd">${BUCKETS.map(b=>`<span><i style="background:${b.fill}"></i>${b.lab}</span>`).join("")}</div>`;
+  host.querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>selectState(btn.dataset.st)));
+  paintLeadSel($("state").value);
+}
+function paintLeadSel(code){
+  const host=$("leadstate"); if(!host) return;
+  host.querySelectorAll("button").forEach(b=>b.classList.toggle("sel", b.dataset.st===code));
+}
 function buildMap(){
   let parts="";
   for(const code in TILES){
@@ -1196,7 +1223,7 @@ function init(){
   if(!S||!S.profile){document.querySelector(".wrap").insertAdjacentHTML("beforeend","<p class='lede'>No ledger data yet.</p>");return;}
   $("bracket").innerHTML=S.brackets.map((b,i)=>`<option value="${i}"${i===S.brackets.length-1?" selected":""}>${b.label}</option>`).join("");
   $("state").innerHTML=Object.keys(S.states).map(s=>`<option value="${s}">${SLABEL[s]||s}</option>`).join("");
-  if($("leadstate")){ $("leadstate").innerHTML=$("state").innerHTML; $("leadstate").addEventListener("change",e=>selectState(e.target.value)); }
+  buildLeadStates();   // F1: the mobile severity chip grid (reads the same S.states the map does)
   ["bracket","state","account"].forEach(id=>$(id).addEventListener("change",render));
   // Phase 5/C: print -> Save as PDF. Two outputs off one print stylesheet: the client proposal,
   // and the CPA/attorney execution brief (body.brief swaps which print block is shown).
@@ -1251,7 +1278,7 @@ function init(){
   ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(k=>{ const v=qp.get(k); if(v) LEAD_UTM[k]=v; });
   const qState=qp.get("state"), qPort=parseFloat(qp.get("port"));
   if(qState && S.states && (qState in S.states)) $("state").value=qState;
-  if($("leadstate")) $("leadstate").value=$("state").value;   // keep the mobile picker in sync with the initial state
+  paintLeadSel($("state").value);   // keep the mobile chip grid in sync with the initial state
   if(qPort>0){
     // Clamp into each slider's own [min,max] so one ?port= localizes every view consistently
     // (a raw value below a slider's min is silently clamped by the browser, desyncing the views).

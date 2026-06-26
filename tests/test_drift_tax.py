@@ -526,6 +526,19 @@ def test_methodology_dual_engine_and_honest():
     assert "illustrative" in led.lower() and "scripts/slow_sweep.py" in led
 
 
+def test_mobile_state_picker_is_a_severity_chip_grid_not_a_bare_select():
+    # F1: the mobile lead picker must be the tappable severity chip grid (same heat-map language as
+    # the desktop map), not a bare native <select>, and must route through the shared selectState
+    # handler with no separate sync path that can desync.
+    from pathlib import Path
+    import drift.taxlab as T
+    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    assert '<select id="leadstate"' not in tx                 # the bare dropdown is gone
+    assert 'id="leadstate"' in tx and "buildLeadStates(" in tx
+    assert "paintLeadSel(" in tx                              # selection mirrored, no desync
+    assert "$(\"leadstate\").value=" not in tx                # the old select-value sync is gone
+
+
 def test_shipped_configs_ship_neutral_tilt():
     """Methodology guard: the EM/value/small overweight added no risk-adjusted value over 40y of
     real data (scripts/slow_sweep.py tilt_attribution), so the shipped books carry NO factor tilt

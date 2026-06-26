@@ -816,7 +816,7 @@ function ctaForm(){
       <input type="email" id="leademail" placeholder="you@email.com" required autocomplete="email" aria-label="Your email address" />
       <input type="text" id="leadhp" name="${CONFIG.formHoneypot}" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
       <button type="submit" id="leadsend">Send →</button></form>
-    <div class="lead-note">We'll email your custom tax-recovery plan. We never share your address.</div>`;
+    <div class="lead-note">We'll follow up by email with your personalized analysis. We never share your address.</div>`;
   const el=$("leademail"); if(el) el.focus();
 }
 let _leadBusy=false, _leadEmail="", LEAD_UTM={};   // double-submit guard, captured email, UTM campaign attribution
@@ -870,9 +870,10 @@ function ctaSuccess(){
     ? `<iframe src="${url}" width="100%" height="640" frameborder="0" title="Book an intro call"></iframe>`
     : `<span style="color:var(--dim)">We'll email you a link to book your intro call.</span>`;
   $("leadcta").innerHTML=`<div class="lead-success" role="status" aria-live="polite">
-      <div class="h" tabindex="-1">Your quantitative report is on its way. ✓</div>
-      <p>Ready to see how this fits into your current portfolio? Grab a time below — the highest-value first move is
-        usually relocating your most tax-inefficient sleeves.</p>
+      <div class="h" tabindex="-1">Request received. ✓</div>
+      <p>Your projected figures are summarized above; we'll follow up by email with a personalized written
+        analysis. Want to review it together? Grab a time below — for most taxable investors the highest-value
+        first move is relocating the most tax-inefficient sleeves.</p>
       <div id="calendly-slot">${cal}</div></div>`;
   const h=$("leadcta").querySelector(".lead-success .h"); if(h) h.focus();
 }
@@ -881,7 +882,7 @@ function ctaMailto(){
   track("lead_submitted", leadProps());
   $("leadcta").innerHTML=`<div class="lead-success" role="status" aria-live="polite">
       <div class="h" tabindex="-1">Your email app should open — hit Send. ✓</div>
-      <p>Once you send that message we'll follow up with your custom tax-recovery plan. If nothing opened, email us at
+      <p>Once you send that message we'll follow up by email with your personalized analysis. If nothing opened, email us at
         <a href="mailto:${CONFIG.contactEmail}">${CONFIG.contactEmail}</a>.</p></div>`;
   const h=$("leadcta").querySelector(".lead-success .h"); if(h) h.focus();
 }

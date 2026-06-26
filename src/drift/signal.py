@@ -81,6 +81,36 @@ def drift_per_bar(closes: Sequence[float], lookback: int) -> float:
     return trailing_log_return(closes, lookback) / lookback
 
 
+def information_discreteness(closes: Sequence[float], lookback: int) -> float:
+    """Frog-in-the-Pan information discreteness over the formation window
+    (Da, Gurun & Warachka, *Review of Financial Studies*, 2014).
+
+        ID = sign(PRET) * (%neg - %pos)
+
+    where PRET is the formation-period return and %pos / %neg are the fractions of up /
+    down bars within it. A *low* (negative) ID means the move arrived **continuously** —
+    many small same-direction bars — which the paper finds produces momentum that is
+    stronger and does not reverse; a *high* (positive) ID means a few large **discrete**
+    jumps. Returns 0.0 on insufficient history.
+
+    RESEARCH ONLY — intentionally NOT wired into the live signal. The effect is documented
+    on individual stocks, where investor inattention to gradual firm-level news drives it;
+    its transfer to a cross-sectional ETF book (which averages away idiosyncratic
+    information paths) is UNVALIDATED. See scripts/id_sweep.py for the validation harness.
+    """
+    if lookback <= 0 or len(closes) <= lookback:
+        return 0.0
+    rets = log_returns(closes[-lookback - 1:])      # the `lookback` bar-to-bar returns in the window
+    n = len(rets)
+    if n == 0:
+        return 0.0
+    pos = sum(1 for r in rets if r > 0) / n
+    neg = sum(1 for r in rets if r < 0) / n
+    pret = trailing_log_return(closes, lookback)
+    sign = 1.0 if pret > 0 else (-1.0 if pret < 0 else 0.0)
+    return sign * (neg - pos)
+
+
 def donchian_breakout(
     highs: Sequence[float],
     lows: Sequence[float],

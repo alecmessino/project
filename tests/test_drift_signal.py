@@ -52,6 +52,20 @@ def test_breakout_zero_inside_channel():
     assert sig.donchian_breakout(closes, closes, closes, channel=40) == 0
 
 
+def test_information_discreteness_separates_continuous_from_discrete():
+    # A smoothly rising path (every bar up) is maximally CONTINUOUS -> ID = +1 * (0 - 1) = -1.
+    smooth = [100.0 * (1.01 ** i) for i in range(30)]
+    id_smooth = sig.information_discreteness(smooth, lookback=20)
+    assert id_smooth == pytest.approx(-1.0, abs=1e-9)
+    # Same net rise but driven by one big jump then many small down bars is DISCRETE -> ID > 0.
+    jumpy = [100.0] * 15 + [130.0] + [130.0 * (0.999 ** i) for i in range(1, 15)]
+    id_jumpy = sig.information_discreteness(jumpy, lookback=20)
+    assert id_jumpy > 0.0
+    assert id_jumpy > id_smooth                       # discrete scores strictly higher than continuous
+    # Insufficient history -> 0.0 (never manufactures a value).
+    assert sig.information_discreteness([1.0, 2.0, 3.0], lookback=20) == 0.0
+
+
 def test_trend_agrees_requires_same_sign_and_real_breakout():
     assert sig.trend_agrees(1.5, 1) is True
     assert sig.trend_agrees(-1.5, -1) is True

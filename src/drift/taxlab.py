@@ -13,6 +13,7 @@ import json
 import time
 from pathlib import Path
 
+from .firm_models import models_state
 from .tax import STATE_RATES, gain_profile
 
 # A few representative federal points (ordinary rate / LT cap-gains rate / NIIT).
@@ -51,6 +52,10 @@ ASSUMPTIONS = {
     "advisory_fee_bps": 100,
     "expense_ratio_bps": 30,
     "fee_max_bps": 300,
+    # Portfolio-transition (Feature 4): the prospect's assumed legacy all-in cost, the lever the
+    # before/after compares the low-cost institutional model against. Editable on the page.
+    "legacy_fee_bps": 130,
+    "legacy_fee_max_bps": 250,
     # Estate Planning View (2026 tax-law reference). Federal exemption is large and most
     # Illinois HNW estates fall under it; Illinois' $4M exclusion is the binding constraint.
     "estate": {
@@ -63,6 +68,10 @@ ASSUMPTIONS = {
         "default_individual": 3_000_000,
         "default_joint": 0,                  # individual-first; joint>0 unlocks the $30M portable exemption
         "default_trust": 1_000_000,
+        # "True Net Worth" illiquid assets — these, not the liquid book, often trigger the state cliff.
+        "default_real_estate": 1_500_000,    # primary residence + real estate
+        "default_business": 0,               # closely-held business equity (full value; discounts apply)
+        "default_life_insurance": 0,         # death benefit; in-estate only if owned by the insured (§2042)
         "estate_max": 30_000_000,
         "estate_step": 100_000,
         "trust_compression_top_threshold": 15_650,  # 2026 trust income hits the 37% bracket here
@@ -231,7 +240,7 @@ def build_taxlab(docs_dir: str | Path = "docs") -> dict:
     state: dict = {
         "header": {"generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())},
         "profile": None, "states": STATE_RATES, "brackets": FED_BRACKETS,
-        "assumptions": ASSUMPTIONS,
+        "assumptions": ASSUMPTIONS, "models": models_state(),
     }
     led_path = docs / "ledger.json"
     if not led_path.exists():

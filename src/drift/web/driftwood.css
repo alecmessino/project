@@ -25,3 +25,30 @@ h1{ font-weight:600; } h2,h3{ font-weight:500; }
 .num,.v,.big,output,.amt,.recovered{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
 a{ color:var(--accent); }
 ::selection{ background:rgba(21,128,106,.16); }
+
+/* ── One-click PDF proposal / CPA brief (window.print → Save as PDF) ─────────────────────────
+   A clean, multi-page print template: strip the app chrome and interactive controls, keep the
+   rendered analysis (placement, transition before/after, decision tree), and append formal
+   disclosures with a running firm footer on every page. */
+#printproposal,#printdisc,#printfoot{ display:none; }
+@media print{
+  @page{ margin:16mm 14mm 20mm; }
+  *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ font-size:10.5px; color:var(--ink); }
+  /* strip all interactive chrome, the prospect funnel, and raw sliders (their values print in the cards) */
+  header,.modetog,.fab,.fabwrap,.controls,.toolbar,.trans-models,.tools,#transmodels,
+    input[type=range],.slider,#leadgen,.lead-cta,.foot a.back,.map-wrap h3 .hint,.methods>summary{ display:none!important; }
+  /* surface the proposal blocks */
+  #printproposal,#printdisc{ display:block!important; break-inside:avoid;
+    border:1px solid var(--line); border-radius:8px; padding:12px 15px; margin:14px 0; }
+  #printdisc{ border-color:var(--slate); }
+  #printproposal p,#printdisc p{ font-size:10px; line-height:1.5; margin:0 0 6px; }
+  .es-h{ font-family:var(--serif); font-size:12px; font-weight:600; margin-bottom:5px; }
+  /* keep visual atoms intact across page breaks */
+  .alloc-card,.dnode,.struct-alpha,.transgrid,.dtree .row,.holdings,.estate-node,
+    .opt-card,.est-cliff,table,#execsummary,#cpabrief{ break-inside:avoid; }
+  h2,h3,.es-h{ break-after:avoid; }
+  /* running firm footer, repeated on every printed page */
+  #printfoot{ display:block!important; position:fixed; bottom:0; left:0; right:0;
+    font-size:8px; color:var(--slate); text-align:center; padding-top:4px; border-top:.5px solid var(--line); }
+}

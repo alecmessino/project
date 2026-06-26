@@ -308,7 +308,7 @@ def ledger(
     feeds = equity_feeds()
     console.print(f"[dim]source chain: {', '.join(n for n, _ in feeds)}[/]")
     series = pull_universe(syms, feeds, min_bars=settings.signal.min_history, pause=pause)
-    # Buy-and-hold benchmarks, total return: VT (global, ~62/28/10 US/dev/EM — US ~61.97% as of mid-2026) and
+    # Buy-and-hold benchmarks, total return: VT (global, ~62/28/10 US/dev/EM — US ~62% as of mid-2026) and
     # VTI (US total market). Both fetched on the same adjusted-close basis as the book.
     benchmarks: dict = {}
     for label in ("VT", "VTI"):

@@ -52,6 +52,17 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
     docs = Path(docs_dir)
     headline: list[dict] = []
 
+    # Read the long-history tearsheet first so the Model Portfolio headline can carry its own
+    # risk (max drawdown) alongside the return — a return shown without its drawdown is exactly the
+    # imbalanced framing the Marketing Rule's fair-and-balanced standard targets.
+    ts = _embedded_state(docs / "tearsheet.html")
+    strat_dd = None
+    if ts:
+        for bk in ts.get("books", []):
+            if bk.get("strategy", {}).get("max_drawdown") is not None:
+                strat_dd = bk["strategy"]["max_drawdown"]
+                break
+
     led = docs / "ledger.json"
     if led.exists():
         try:
@@ -59,16 +70,19 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
             entries = j.get("entries", [])
             if entries:
                 tr = entries[-1]["equity"] - 1.0
+                sub = f"{len(entries)} sessions · hypothetical backtest from {j.get('inception', '')}"
+                if strat_dd is not None:
+                    sub += f" · −{strat_dd*100:.0f}% max drawdown"
                 headline.append({
                     "label": "Model Portfolio (hypothetical)",
                     "value": f"{tr*100:+.1f}%",
-                    "sub": f"{len(entries)} sessions · backtest from {j.get('inception', '')}",
-                    "tone": "pos" if tr > 0 else "neg" if tr < 0 else "neutral",
+                    # Deliberately neutral: a hypothetical return is not a win to colour green.
+                    "sub": sub,
+                    "tone": "neutral",
                 })
         except Exception:
             pass
 
-    ts = _embedded_state(docs / "tearsheet.html")
     if ts:
         for bk in ts.get("books", []):
             s, b, o = bk["strategy"], bk["benchmark"], bk["oos"]["test"]

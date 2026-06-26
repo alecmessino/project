@@ -12,6 +12,7 @@ from drift.exhibit import (
     TEARSHEET_TEMPLATE,
     HUB_TEMPLATE,
     THESIS_TEMPLATE,
+    TAXLAB_TEMPLATE,
     TEMPLATE,  # index.html / dashboard
 )
 
@@ -65,3 +66,42 @@ def test_cross_pages_drop_the_live_track_framing():
     for tmpl in (HUB_TEMPLATE, THESIS_TEMPLATE, TEMPLATE):
         t = _read(tmpl)
         assert "live forward ledger" not in t, f"{tmpl.name} still says 'live forward ledger'"
+
+
+# Every client-facing surface must identify the registered adviser and surface where Form ADV /
+# Form CRS can be retrieved — a prospect should never reach the funnel without that (P0-1 / F3).
+def test_every_exhibit_carries_the_ria_identity_and_form_links():
+    for tmpl in (LEDGER_TEMPLATE, TEARSHEET_TEMPLATE, HUB_TEMPLATE, THESIS_TEMPLATE,
+                 TEMPLATE, TAXLAB_TEMPLATE):
+        t = _read(tmpl)
+        assert "registered investment adviser" in t, f"{tmpl.name}: no RIA identity disclosure"
+        assert "adviserinfo.sec.gov" in t, f"{tmpl.name}: no public adviser-lookup link"
+        assert "Form ADV" in t and "Form CRS" in t, f"{tmpl.name}: Form ADV/CRS not referenced"
+
+
+def test_hypothetical_exhibits_carry_an_audience_statement():
+    # P0-2: hypothetical performance shown publicly must state its intended audience and relevance
+    # limits (subtle but always rendered). Guards the audience line against removal.
+    for tmpl in (LEDGER_TEMPLATE, TEARSHEET_TEMPLATE):
+        t = _read(tmpl)
+        assert "Intended for sophisticated investors" in t, f"{tmpl.name}: no audience statement"
+        assert "may not be relevant to your situation" in t
+
+
+def test_funnel_does_not_over_promise_an_automated_report():
+    # P0-5: the success state must not claim a report "is on its way" when the backend only
+    # notifies the firm of a lead — that was a misleading representation to a prospect.
+    t = _read(TAXLAB_TEMPLATE)
+    assert "report is on its way" not in t
+    assert "custom tax-recovery plan" not in t          # implied instant deliverable
+    assert "follow up by email" in t                    # honest manual-follow-up framing
+
+
+def test_ledger_attribution_states_alpha_significance_and_out_of_sample():
+    # Alpha must be shown with a significance test and an out-of-sample readout, not as a bare
+    # "edge" (M1 / M2) — guards against the over-confident framing creeping back.
+    t = _read(LEDGER_TEMPLATE)
+    assert "t-stat" in t
+    assert "alpha_significant" in t and "alpha_t" in t
+    assert "Out-of-sample only" in t
+    assert "attribution_oos" in t

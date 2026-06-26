@@ -190,6 +190,58 @@ def test_attribution_returns_none_on_too_few_or_flat_benchmark():
     assert L._attribution([0.01] * 10, [0.0] * 10, 252) is None         # zero benchmark variance
 
 
+def test_attribution_reports_alpha_significance_with_noise():
+    # With genuine noise around the line, the t-stat must be finite and the significance
+    # flag a real boolean — the honest read a skeptical panel needs (M1).
+    bench = [0.01, -0.02, 0.03, -0.01, 0.02, -0.015, 0.025, -0.005, 0.012, -0.018, 0.007, -0.009]
+    noise = [0.004, -0.003, 0.002, 0.006, -0.005, 0.001, -0.004, 0.003, -0.002, 0.005, -0.006, 0.0]
+    strat = [1.2 * b + 0.0005 + e for b, e in zip(bench, noise)]
+    a = L._attribution(strat, bench, 252)
+    assert a is not None
+    assert a["alpha_t"] is not None and isinstance(a["alpha_significant"], bool)
+    assert a["n_obs"] == len(bench)
+    # A tiny alpha buried in noise over 12 points is not significant.
+    assert a["alpha_significant"] is False
+
+
+def test_build_state_attribution_oos_is_none_when_fully_seeded():
+    # No live sessions -> nothing to attribute out-of-sample (honest None), but the key exists.
+    s = _settings()
+    series = _series(n=260)
+    names = list(series)
+    bench = {"VT": series[names[0]], "VTI": series[names[1]]}
+    led = L.seed_ledger(series, s, sessions=40, benchmarks=bench)
+    assert all(e["seed"] for e in led["entries"])
+    st = L.build_ledger_state(led)
+    assert "attribution_oos" in st
+    assert st["attribution_oos"] is None
+
+
+def test_build_state_computes_oos_attribution_over_the_live_tail():
+    # Hand-built ledger: 10 seeded + 12 live entries, each with a VT benchmark mark. The OOS
+    # attribution must regress only the live tail (M2) and stay JSON-serializable.
+    from drift.config import TaxSettings
+    entries = []
+    eq = beq = 1.0
+    for k in range(22):
+        eq *= 1.0 + (0.004 if k % 2 else -0.002)
+        beq *= 1.0 + (0.003 if k % 2 else -0.001)
+        entries.append({
+            "date": (date(2024, 1, 1) + timedelta(days=k)).isoformat(),
+            "weights": {"IVV": 1.0}, "prices": {"IVV": round(100 * eq, 4)},
+            "realized_return": round((0.004 if k % 2 else -0.002), 6),
+            "equity": round(eq, 6), "bench_equity": {"VT": round(beq, 6)},
+            "n_long": 1, "n_short": 0, "seed": k < 10,
+        })
+    led = {"entries": entries, "universe": ["IVV"], "inception": entries[0]["date"]}
+    st = L.build_ledger_state(led, tax=TaxSettings(enabled=False))
+    ao = st["attribution_oos"]
+    assert ao is not None and ao["benchmark"] == "VT"
+    assert ao["n_obs"] == 12                      # only the live tail was regressed
+    assert set(ao) >= {"beta", "alpha_annual", "alpha_t", "n_obs"}
+    json.dumps(st)
+
+
 def test_build_state_populates_attribution_vs_primary_benchmark():
     s = _settings()
     series = _series(n=260)

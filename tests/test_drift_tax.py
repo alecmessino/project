@@ -638,6 +638,30 @@ def test_pdf_proposal_print_template_and_disclosures():
     assert "Recommended structure" in tx
 
 
+def test_location_alpha3_range_brackets_the_base():
+    # M3: the sensitivity range must straddle the point estimate and be a genuine interval.
+    from drift.taxlab import location_alpha3, location_alpha3_range
+    base = location_alpha3(1_500_000, 600_000, 400_000, 0.02, 0.003, 0.07, 30)
+    rng = location_alpha3_range(1_500_000, 600_000, 400_000, 0.02, 0.003, 0.07, 30, drag_band=0.25)
+    assert rng["base"] == base["annual_saved"]
+    assert rng["annual_low"] < rng["base"] < rng["annual_high"]        # a real interval around the base
+    assert rng["terminal_low"] <= rng["terminal_base"] <= rng["terminal_high"]
+    # degenerate: no advantaged accounts -> no overlap -> zero saving, zero-width range
+    z = location_alpha3_range(1_000_000, 0, 0, 0.02, 0.003, 0.07, 30)
+    assert z["annual_low"] == 0.0 and z["annual_high"] == 0.0
+
+
+def test_structural_alpha_shows_a_sensitivity_range_with_tooltip():
+    # M3: the headline carries a defensible visible range AND a hover tooltip naming the drivers.
+    from pathlib import Path
+    import drift.taxlab as T
+    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    assert "Sensitivity range" in tx and "DRAG_BAND" in tx
+    assert "saLo" in tx and "saHi" in tx
+    assert "effective tax rate, turnover, and market return" in tx      # the band's drivers, in the tip
+    assert 'class="term"' in tx                                          # rendered via the tooltip component
+
+
 def test_shipped_configs_ship_neutral_tilt():
     """Methodology guard: the EM/value/small overweight added no risk-adjusted value over 40y of
     real data (scripts/slow_sweep.py tilt_attribution), so the shipped books carry NO factor tilt

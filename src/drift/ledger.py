@@ -285,10 +285,24 @@ def _attribution(rets: list[float], brets: list[float], bpy: float) -> Optional[
     active = [s[i] - b[i] for i in range(n)]
     ma = sum(active) / n
     sd = (sum((x - ma) ** 2 for x in active) / n) ** 0.5
+    # Statistical significance of alpha (OLS, rf=0): residual standard error -> t-stat.
+    # se(alpha) = s_resid * sqrt(1/n + mean_b^2 / Sxx), with Sxx = sum((b-mb)^2) = n*var_b.
+    # A short backtest rarely clears |t|>=1.96, which is exactly what an honest panel needs to see.
+    resid = [s[i] - (alpha + beta * b[i]) for i in range(n)]
+    dof = n - 2
+    alpha_t: Optional[float] = None
+    if dof > 0:
+        s2 = sum(e * e for e in resid) / dof
+        se_alpha = (s2 * (1.0 / n + (mb * mb) / (n * var_b))) ** 0.5
+        if se_alpha > 0:
+            alpha_t = alpha / se_alpha
     return {
         "benchmark": None,                                 # filled by the caller
         "beta": round(beta, 3),
         "alpha_annual": round(alpha * bpy, 4),             # additive annualized alpha
+        "alpha_t": (round(alpha_t, 2) if alpha_t is not None else None),
+        "alpha_significant": (bool(abs(alpha_t) >= 1.96) if alpha_t is not None else None),
+        "n_obs": n,                                        # sample size behind the estimate
         "r2": round((cov * cov) / (var_b * var_s), 3) if var_s > 0 else 0.0,
         "info_ratio": round((ma / sd) * (bpy ** 0.5), 2) if sd > 0 else 0.0,
         "excess_annual": round((ms - mb) * bpy, 4),
@@ -382,12 +396,21 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0,
     _bl = list((entries[-1].get("bench_equity") or {}).keys())
     _prim = "VT" if "VT" in _bl else (_bl[0] if _bl else None)
     attribution = None
+    attribution_oos = None
     if _prim:
         _beq = [(e.get("bench_equity") or {}).get(_prim, 1.0) or 1.0 for e in entries]
         _brets = [(_beq[i] / _beq[i - 1] - 1.0) if _beq[i - 1] else 0.0 for i in range(1, len(_beq))]
         attribution = _attribution(rets[1:], _brets, bars_per_year)
         if attribution:
             attribution["benchmark"] = _prim
+        # Out-of-sample only: the live (non-seeded) tail, where the model ran forward with no
+        # hindsight. rets[j] aligns with _brets[j-1]; _attribution itself enforces the n>=8 floor,
+        # so a short live window simply yields None (an honest "not yet attributable").
+        j = n - live
+        if 0 < j < n:
+            attribution_oos = _attribution(rets[j:], _brets[j - 1:], bars_per_year)
+            if attribution_oos:
+                attribution_oos["benchmark"] = _prim
     return {
         "header": {
             "days": n,
@@ -420,6 +443,7 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0,
         "benchmarks": _benchmarks_state(entries, eq, idx, bars_per_year, tax),
         "dates": [entries[i]["date"] for i in idx],
         "attribution": attribution,
+        "attribution_oos": attribution_oos,
         "split_frac": ((n - live) / n) if n else 0.0,
         "split_idx": next((k for k, i in enumerate(idx) if i >= (n - live)), len(idx)),
         "positions": positions,

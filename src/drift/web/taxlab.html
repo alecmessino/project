@@ -1172,7 +1172,9 @@ function render(){
   ].filter(Boolean).join(" · ");   // never surface a dead "#" disclosure link
   $("compliance").innerHTML=`<b>Illustrative and educational only — not investment, tax, or legal advice, and not an offer or
     solicitation. Using this tool does not create an advisory relationship. Coordinate all final estate filings with a qualified attorney.</b>
-    Past performance and projections do not guarantee future results.${discLinks?" · "+discLinks:""}`;
+    Past performance and projections do not guarantee future results.
+    Driftwood is a research brand of <b>CWS Planning</b>, a registered investment adviser; Form ADV and Form CRS are available at
+    <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>${discLinks?" · "+discLinks:""}.`;
 
   // Layer 2: keep the disclosure ledger and the map's selected-state outline in sync.
   renderDisc(r);

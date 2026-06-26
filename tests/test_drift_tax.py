@@ -539,6 +539,18 @@ def test_mobile_state_picker_is_a_severity_chip_grid_not_a_bare_select():
     assert "$(\"leadstate\").value=" not in tx                # the old select-value sync is gone
 
 
+def test_lead_funnel_is_competence_framed_with_instant_recap():
+    # C1/C2/C3: the funnel leads with the analysis (not a fear-framed "recovery plan" grab),
+    # delivers the prospect's own computed figures instantly, and brands the booking step.
+    from pathlib import Path
+    import drift.taxlab as T
+    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    assert "Send Me My Custom Tax Recovery Plan" not in tx     # the direct-response grab is gone (C1)
+    assert "See my personalized analysis" in tx               # competence-led CTA (C1)
+    assert "lead-recap" in tx                                  # instant figures delivered on submit (C2)
+    assert "intro call covers" in tx                          # branded pre-call context (C3)
+
+
 def test_shipped_configs_ship_neutral_tilt():
     """Methodology guard: the EM/value/small overweight added no risk-adjusted value over 40y of
     real data (scripts/slow_sweep.py tilt_attribution), so the shipped books carry NO factor tilt

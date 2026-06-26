@@ -245,6 +245,14 @@
   .lead-success{border:1px solid #cfe6db;background:#eef5f1;border-radius:10px;padding:17px 19px;text-align:left}
   .lead-success .h{font-size:17px;font-weight:680;color:var(--ink);letter-spacing:-.2px}
   .lead-success p{font-size:13.5px;color:var(--ink);margin:7px 0 0;line-height:1.55}
+  /* C2: instant analysis recap (the prospect's own computed numbers, delivered immediately) */
+  .lead-recap{border:1px solid var(--line);border-radius:10px;background:#fff;padding:6px 14px;margin:12px 0 2px}
+  .lead-recap .r{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:8px 0;font-size:13.5px}
+  .lead-recap .r + .r{border-top:1px solid var(--line)}
+  .lead-recap .r span{color:var(--dim)} .lead-recap .r b{font-variant-numeric:tabular-nums;color:var(--ink)}
+  /* C3: branded pre-call context, so the booking reads as advisory onboarding (not a bare scheduler) */
+  .precall{margin:14px 0 4px} .precall .pc-h{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);font-weight:600}
+  .precall ul{margin:7px 0 0;padding-left:18px;font-size:13px;color:var(--ink);line-height:1.5} .precall li{margin:3px 0}
   #calendly-slot{margin-top:14px;min-height:60px;border:1px dashed var(--line);border-radius:10px;
     display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12.5px;text-align:center;padding:14px}
   /* --- Estate Planning View --- */
@@ -826,16 +834,16 @@ function renderLead(){
       (${fmt$big(b.fedTotal)} federal + ${fmt$big(b.stateTotal)} to ${name}) — about
       ${fmt$(b.totalAnnual)}/year in estimated capital-gains tax.
       <span class="small">The federal base is the same in every state — ${name} just stacks its layer on top.
-      A portion may be reduced with the right account structure.</span>`;
+      Most of it is addressable: asset location and tax-loss harvesting are the two levers — we'll quantify exactly how much.</span>`;
   } else {
     $("leadhero").innerHTML=`A ${fmt$big(b.P)} taxable portfolio in a high-turnover strategy pays an estimated
       <span class="num">${fmt$big(b.totalTotal)}</span> in <b>federal</b> capital-gains tax over ${b.horizon} years.
-      <span class="small">${st==="—"?"Click your state on the map above to add your local layer — then":"About "+fmt$(b.totalAnnual)+"/yr."} see how much may be reducible.</span>`;
+      <span class="small">${st==="—"?"Tap your state above to add your local layer — then":"About "+fmt$(b.totalAnnual)+"/yr."} we'll quantify how much is recoverable through asset location and harvesting.</span>`;
   }
 }
 function ctaInitial(){
-  $("leadcta").innerHTML=`<button type="button" class="lead-btn" onclick="ctaForm()">Send Me My Custom Tax Recovery Plan →</button>
-    <div class="lead-note">A free, personalized analysis of how much of this tax you can keep — no obligation.</div>`;
+  $("leadcta").innerHTML=`<button type="button" class="lead-btn" onclick="ctaForm()">See my personalized analysis →</button>
+    <div class="lead-note">A free, no-obligation breakdown of how much of this tax is recoverable — and the two levers that do it.</div>`;
 }
 function ctaForm(){
   $("leadcta").innerHTML=`<form class="lead-form" onsubmit="return submitLead(event)">
@@ -891,16 +899,28 @@ function ctaError(){
 function ctaSuccess(){
   _leadBusy=false;
   track("lead_submitted", leadProps());   // count verified conversions only (carries utm_* attribution)
+  // C2 · deliver the analysis instantly — the prospect's own computed figures, not a black-box wait.
+  const b=stateBleed(), st=$("state").value, name=(st==="—"||!NAMES[st])?null:(NAMES[st]||st);
+  const recap=`<div class="lead-recap">
+      <div class="r"><span>Projected ${b.horizon}-yr capital-gains tax</span><b>${fmt$big(b.totalTotal)}</b></div>
+      ${name&&b.stateTotal>1?`<div class="r"><span>…of which ${name} adds</span><b>${fmt$big(b.stateTotal)}</b></div>`:""}
+      <div class="r"><span>Drag, per year</span><b>${fmt$(b.totalAnnual)}</b></div></div>`;
   let url=CONFIG.calendlyUrl;
   if(url && _leadEmail) url+=(url.indexOf("?")<0?"?":"&")+"email="+encodeURIComponent(_leadEmail);  // prefill the booking form
+  // C3 · brand the booking as an advisory step, with pre-call context, rather than a bare scheduler.
+  const precall=`<div class="precall"><div class="pc-h">Your 15-minute intro call covers</div>
+      <ul><li>Which of your sleeves to relocate first, and to which account</li>
+          <li>Whether tax-loss harvesting fits your lots this year</li>
+          <li>How the model would map onto your actual portfolio</li></ul></div>`;
   const cal = url
-    ? `<iframe src="${url}" width="100%" height="640" frameborder="0" title="Book an intro call"></iframe>`
-    : `<span style="color:var(--dim)">We'll email you a link to book your intro call.</span>`;
+    ? `${precall}<iframe src="${url}" width="100%" height="640" frameborder="0" title="Book your intro call"></iframe>`
+    : `${precall}<span style="color:var(--dim)">We'll email you a link to book your intro call.</span>`;
   $("leadcta").innerHTML=`<div class="lead-success" role="status" aria-live="polite">
-      <div class="h" tabindex="-1">Request received. ✓</div>
-      <p>Your projected figures are summarized above; we'll follow up by email with a personalized written
-        analysis. Want to review it together? Grab a time below — for most taxable investors the highest-value
-        first move is relocating the most tax-inefficient sleeves.</p>
+      <div class="h" tabindex="-1">Your analysis ✓</div>
+      ${recap}
+      <p>That's the drag a high-turnover strategy throws off in a taxable account — and most of it is addressable
+        through <b>asset location</b> and <b>tax-loss harvesting</b>. We'll email a personalized written plan; to
+        walk through it together, grab a time below.</p>
       <div id="calendly-slot">${cal}</div></div>`;
   const h=$("leadcta").querySelector(".lead-success .h"); if(h) h.focus();
 }

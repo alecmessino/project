@@ -576,6 +576,39 @@ def test_personalized_outreach_url_params_supported():
     assert 'v==="prospect"' in tx                          # ?view=prospect → lead view
 
 
+def test_firm_models_are_well_formed_and_distinct_from_engine():
+    # F4: the 3 IPS models must be internally consistent and keep the Driftwood sleeve as a small
+    # satellite — never presented as the whole book or conflated with the backtest.
+    from drift.firm_models import MODELS, models_state
+    assert len(MODELS) == 3
+    for m in MODELS:
+        w = sum(h["weight"] for h in m["holdings"])
+        assert abs(w - 1.0) < 1e-6, f"{m['id']} weights sum to {w}"
+        assert 0 < m["blended_er"] < 0.01                 # plausible blended ER (< 100 bps)
+        assert abs(sum(m["asset_mix"].values()) - 1.0) < 1e-6
+        assert "confirm against the firm" in m["note"].lower()
+    cs = next(m for m in MODELS if m["id"] == "core_satellite")
+    drift = next(h for h in cs["holdings"] if h["ticker"] == "DRIFT")
+    assert drift["weight"] <= 0.10                          # satellite, not the core
+    assert models_state() is MODELS
+
+
+def test_build_taxlab_embeds_firm_models(tmp_path):
+    from drift.taxlab import build_taxlab
+    st = build_taxlab(tmp_path)                            # empty docs -> no ledger, still carries models
+    assert st["models"] and len(st["models"]) == 3
+
+
+def test_transition_ui_labels_structural_alpha_and_keeps_models_distinct():
+    from pathlib import Path
+    import drift.taxlab as T
+    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    assert 'id="transition"' in tx and "renderTransition(" in tx
+    assert "Estimated Structural Alpha (Tax + Fee Optimization)" in tx
+    assert "not a forecast that these funds out-perform" in tx     # honest savings framing
+    assert "distinct from</b> the hypothetical Driftwood" in tx    # institutional model kept separate
+
+
 def test_shipped_configs_ship_neutral_tilt():
     """Methodology guard: the EM/value/small overweight added no risk-adjusted value over 40y of
     real data (scripts/slow_sweep.py tilt_attribution), so the shipped books carry NO factor tilt

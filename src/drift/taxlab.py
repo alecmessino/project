@@ -13,6 +13,7 @@ import json
 import time
 from pathlib import Path
 
+from .firm_models import models_state
 from .tax import STATE_RATES, gain_profile
 
 # A few representative federal points (ordinary rate / LT cap-gains rate / NIIT).
@@ -51,6 +52,10 @@ ASSUMPTIONS = {
     "advisory_fee_bps": 100,
     "expense_ratio_bps": 30,
     "fee_max_bps": 300,
+    # Portfolio-transition (Feature 4): the prospect's assumed legacy all-in cost, the lever the
+    # before/after compares the low-cost institutional model against. Editable on the page.
+    "legacy_fee_bps": 130,
+    "legacy_fee_max_bps": 250,
     # Estate Planning View (2026 tax-law reference). Federal exemption is large and most
     # Illinois HNW estates fall under it; Illinois' $4M exclusion is the binding constraint.
     "estate": {
@@ -235,7 +240,7 @@ def build_taxlab(docs_dir: str | Path = "docs") -> dict:
     state: dict = {
         "header": {"generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())},
         "profile": None, "states": STATE_RATES, "brackets": FED_BRACKETS,
-        "assumptions": ASSUMPTIONS,
+        "assumptions": ASSUMPTIONS, "models": models_state(),
     }
     led_path = docs / "ledger.json"
     if not led_path.exists():

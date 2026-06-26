@@ -253,6 +253,28 @@
   /* C3: branded pre-call context, so the booking reads as advisory onboarding (not a bare scheduler) */
   .precall{margin:14px 0 4px} .precall .pc-h{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);font-weight:600}
   .precall ul{margin:7px 0 0;padding-left:18px;font-size:13px;color:var(--ink);line-height:1.5} .precall li{margin:3px 0}
+  /* F4: portfolio transition — current legacy vs proposed institutional model */
+  .trans-models{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
+  .trans-models button{font:inherit;font-size:13px;font-weight:600;color:var(--ink);background:#fff;
+    border:1px solid var(--line);border-radius:999px;padding:7px 15px;cursor:pointer}
+  .trans-models button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .transgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+  @media(max-width:680px){.transgrid{grid-template-columns:1fr}}
+  .alloc-card{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff}
+  .alloc-card h4{margin:0 0 4px;font-size:13px} .alloc-card .sub{font-size:11.5px;color:var(--dim);margin-bottom:10px}
+  .alloc-bar{display:flex;height:14px;border-radius:4px;overflow:hidden;margin:8px 0;background:var(--line)}
+  .alloc-bar span{display:block;height:100%}
+  .a-eq{background:#2f6f5b} .a-fi{background:#4a4f57} .a-cash{background:#c2a35a}
+  .alloc-legend{font-size:11.5px;color:var(--dim);display:flex;gap:12px;flex-wrap:wrap;margin-top:2px}
+  .alloc-legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px}
+  .holdings{list-style:none;margin:10px 0 0;padding:0;font-size:12.5px}
+  .holdings li{display:flex;justify-content:space-between;padding:3px 0;border-top:1px solid var(--line)}
+  .holdings .tk{font-weight:600} .holdings .nm{color:var(--dim);font-weight:400;font-size:11.5px}
+  .struct-alpha{border:1px solid var(--accent);border-left:4px solid var(--accent);border-radius:10px;
+    background:#f0f7f4;padding:15px 18px;margin:16px 0 2px}
+  .struct-alpha .big{font-size:26px;font-weight:680;color:var(--pos);letter-spacing:-.4px}
+  .struct-alpha .lbl{font-size:13px;font-weight:600;color:var(--ink);margin-top:2px}
+  .struct-alpha .brk{font-size:12px;color:var(--slate);margin-top:8px;line-height:1.6}
   #calendly-slot{margin-top:14px;min-height:60px;border:1px dashed var(--line);border-radius:10px;
     display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12.5px;text-align:center;padding:14px}
   /* --- Estate Planning View --- */
@@ -471,6 +493,18 @@
     </div>
     <div class="flexcard" id="flexcard"></div>
     <p class="dix" id="dixnote"></p>
+  </section>
+
+  <section id="transition" class="advisor-only">
+    <h2>Portfolio Transition <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· current legacy → CWS Planning institutional model</span></h2>
+    <div class="trans-models" id="transmodels" role="tablist" aria-label="Institutional model"></div>
+    <div class="slider" style="max-width:420px;margin:6px 0 4px">
+      <div class="top"><label>Current legacy all-in cost</label><output id="legfeev"></output></div>
+      <input type="range" id="legfee" aria-label="Legacy all-in fee, basis points per year" />
+    </div>
+    <div class="transgrid" id="transgrid"></div>
+    <div class="struct-alpha" id="structalpha"></div>
+    <p class="note" id="transnote" style="margin-top:14px"></p>
   </section>
 
   <details id="frontier" class="fold advisor-only">
@@ -710,6 +744,43 @@ function locAlpha3(taxable,traditional,roth,mdr,pdr,g,H){
   const overlap=taxable*a/w, annual=overlap*Math.max(0,mdr-pdr);
   const fv=g>0?((Math.pow(1+g,H)-1)/g):H;
   return {annual,terminal:annual*fv,overlap,sleeve:a};
+}
+// --- Feature 4: portfolio transition — current legacy vs proposed institutional model ----------
+let TMODEL=0;
+function allocBar(mix){
+  const eq=(mix.equity||0)*100, fi=(mix.fixed_income||0)*100, cash=(mix.cash||0)*100;
+  return `<div class="alloc-bar"><span class="a-eq" style="width:${eq}%"></span><span class="a-fi" style="width:${fi}%"></span><span class="a-cash" style="width:${cash}%"></span></div>
+    <div class="alloc-legend"><span><i class="a-eq"></i>Equity ${Math.round(eq)}%</span><span><i class="a-fi"></i>Fixed income ${Math.round(fi)}%</span><span><i class="a-cash"></i>Cash ${Math.round(cash)}%</span></div>`;
+}
+function renderTransition(){
+  if(!S.models||!S.models.length||!S.assumptions) return;
+  const models=S.models, m=models[TMODEL]||models[0];
+  const A=S.assumptions, r=rates(), p=S.profile, yrs=p.years||1;
+  const T=+$("taxbal").value, Tr=+$("tradbal").value, Ro=+$("rothbal").value, W=(T+Tr+Ro)||0;
+  $("transmodels").innerHTML=models.map((mm,i)=>`<button type="button" role="tab" aria-selected="${i===TMODEL}" class="${i===TMODEL?"on":""}" data-i="${i}">${mm.name}</button>`).join("");
+  $("transmodels").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ TMODEL=+b.dataset.i; renderTransition(); }));
+  const legBps=+$("legfee").value||A.legacy_fee_bps; $("legfeev").textContent=legBps+" bps";
+  // Proposed all-in = the firm's advisory fee + the model's low blended fund ER (vs the legacy all-in).
+  const legRate=legBps/1e4, propRate=(+$("advfee").value||0)/1e4 + m.blended_er, feeSaved=Math.max(0,(legRate-propRate))*W;
+  // Tax / asset-location saving — same basis as the optimizer (location_alpha3).
+  const c=calc(r), mdr=c.drag/yrs, pdr=A.passive_div_yield*r.r_lt;
+  const taxSaved=locAlpha3(T,Tr,Ro,mdr,pdr,A.growth_rate,A.horizon_years).annual;
+  const structural=feeSaved+taxSaved;
+  const legMix={equity:0.55,fixed_income:0.25,cash:0.20};   // representative legacy mix (editable assumption)
+  const holdings=m.holdings.map(h=>`<li><span><span class="tk">${h.ticker}</span> <span class="nm">${h.name}</span></span><span>${Math.round(h.weight*100)}%</span></li>`).join("");
+  $("transgrid").innerHTML=
+    `<div class="alloc-card"><h4>Current Legacy Allocation</h4><div class="sub">Assumed ${legBps} bps all-in · legacy-typical mix</div>${allocBar(legMix)}</div>
+     <div class="alloc-card"><h4>Proposed · ${m.name}</h4><div class="sub">CWS Planning institutional model · blended ER ${(m.blended_er*1e4).toFixed(0)} bps · ${m.tagline}</div>${allocBar(m.asset_mix)}<ul class="holdings">${holdings}</ul></div>`;
+  $("structalpha").innerHTML=
+    `<div class="big">+${fmt$(structural)}/yr</div>
+     <div class="lbl">Estimated Structural Alpha (Tax + Fee Optimization)</div>
+     <div class="brk">≈ ${fmt$(taxSaved)}/yr from asset-location placement + ${fmt$(feeSaved)}/yr from a lower all-in cost
+       (legacy ${legBps} bps → ${(propRate*1e4).toFixed(0)} bps), on a ${fmt$big(W)} household.
+       <b>This is structural tax &amp; fee optimization — not a forecast that these funds out-perform.</b></div>`;
+  $("transnote").innerHTML=`<b>${m.note}</b> The Proposed Allocation is a CWS Planning institutional model — a diversified,
+    low-cost strategic allocation, <b>distinct from</b> the hypothetical Driftwood momentum backtest${m.structure?`, which enters only as the ${Math.round(m.structure.satellite*100)}% self-directed satellite sleeve`:""}.
+    Estimated Structural Alpha is illustrative tax + fee modeling on the inputs shown; actual results depend on account structure,
+    rates, and execution. Not investment, tax, or legal advice.`;
 }
 function renderLocation(){
   if(!S.assumptions) return;
@@ -1246,6 +1317,8 @@ function render(){
   paintSel(r.state);
   // Layer 1: refresh the asset-location optimizer for the new bracket/state.
   renderLocation();
+  // Feature 4: refresh the current-vs-proposed portfolio transition + Structural Alpha.
+  renderTransition();
   // Layer 3: redraw the frontier (breakeven lines depend on the selected rates).
   drawFrontier();
   // Phase B: in prospect mode, refresh the dollar-bleed hook on every state change.
@@ -1287,6 +1360,9 @@ function init(){
     $("advfee").min=0; $("advfee").max=A.fee_max_bps; $("advfee").step=5; $("advfee").value=A.advisory_fee_bps;
     $("erfee").min=0; $("erfee").max=A.fee_max_bps; $("erfee").step=5; $("erfee").value=A.expense_ratio_bps;
     ["advfee","erfee"].forEach(id=>$(id).addEventListener("input",render));
+    // Feature 4: legacy all-in cost slider (drives the transition's fee-savings comparison).
+    $("legfee").min=0; $("legfee").max=A.legacy_fee_max_bps; $("legfee").step=5; $("legfee").value=A.legacy_fee_bps;
+    $("legfee").addEventListener("input",renderTransition);
     // Estate view: entity-assignment sliders + the HB2601 legislative-sandbox toggle.
     if(A.estate){
       const E=A.estate;

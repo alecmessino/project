@@ -803,15 +803,23 @@ function renderTransition(){
   const c=calc(r), mdr=c.drag/yrs, pdr=A.passive_div_yield*r.r_lt;
   const taxSaved=locAlpha3(T,Tr,Ro,mdr,pdr,A.growth_rate,A.horizon_years).annual;
   const structural=feeSaved+taxSaved;
+  // M3: sensitivity band — flex the sleeve's drag (effective tax rate × turnover × gain rate) ±25%
+  // to bound the tax component; the fee component is contractual. A defensible interval, not a point.
+  const DRAG_BAND=0.25;
+  const taxLo=locAlpha3(T,Tr,Ro,mdr*(1-DRAG_BAND),pdr,A.growth_rate,A.horizon_years).annual;
+  const taxHi=locAlpha3(T,Tr,Ro,mdr*(1+DRAG_BAND),pdr,A.growth_rate,A.horizon_years).annual;
+  const saLo=feeSaved+taxLo, saHi=feeSaved+taxHi;
   const legMix={equity:0.55,fixed_income:0.25,cash:0.20};   // representative legacy mix (editable assumption)
   const holdings=m.holdings.map(h=>`<li><span><span class="tk">${h.ticker}</span> <span class="nm">${h.name}</span></span><span>${Math.round(h.weight*100)}%</span></li>`).join("");
   $("transgrid").innerHTML=
     `<div class="alloc-card"><h4>Current Legacy Allocation</h4><div class="sub">Assumed ${legBps} bps all-in · legacy-typical mix</div>${allocBar(legMix)}</div>
      <div class="alloc-card"><h4>Proposed · ${m.name}</h4><div class="sub">CWS Planning institutional model · blended ER ${(m.blended_er*1e4).toFixed(0)} bps · ${m.tagline}</div>${allocBar(m.asset_mix)}<ul class="holdings">${holdings}</ul></div>`;
   $("structalpha").innerHTML=
-    `<div class="big">+${fmt$(structural)}/yr</div>
-     <div class="lbl">Estimated Structural Alpha (Tax + Fee Optimization)</div>
-     <div class="brk">≈ ${fmt$(taxSaved)}/yr from asset-location placement + ${fmt$(feeSaved)}/yr from a lower all-in cost
+    `<div class="big" title="Range ${fmt$(saLo)} – ${fmt$(saHi)}/yr across the assumption band">+${fmt$(structural)}/yr</div>
+     <div class="lbl"><span class="term" tabindex="0">Estimated Structural Alpha (Tax + Fee Optimization)<span class="tip">Sensitivity range
+       <b>${fmt$(saLo)} – ${fmt$(saHi)}/yr</b>, flexing the effective tax rate, turnover, and market return ±. Illustrative — not a forecast.</span></span></div>
+     <div class="brk">Range <b>${fmt$(saLo)} – ${fmt$(saHi)}/yr</b> across the assumption band (effective tax rate · turnover · market return).
+       Base ≈ ${fmt$(taxSaved)}/yr from asset-location placement + ${fmt$(feeSaved)}/yr from a lower all-in cost
        (legacy ${legBps} bps → ${(propRate*1e4).toFixed(0)} bps), on a ${fmt$big(W)} household.
        <b>This is structural tax &amp; fee optimization — not a forecast that these funds out-perform.</b></div>`;
   $("transnote").innerHTML=`<b>${m.note}</b> The Proposed Allocation is a CWS Planning institutional model — a diversified,
@@ -821,8 +829,8 @@ function renderTransition(){
   // Feed the print-only proposal appendix so the generated PDF names the recommended structure.
   if($("printproposal")) $("printproposal").innerHTML=`<div class="es-h">Recommended structure</div>
     <p><b>${m.name}</b> — ${m.tagline} Blended fund cost ${(m.blended_er*1e4).toFixed(0)} bps. Estimated Structural Alpha
-      (Tax + Fee Optimization): <b>+${fmt$(structural)}/yr</b> on a ${fmt$big(W)} household — illustrative tax + fee
-      modeling, not a performance forecast.</p>`;
+      (Tax + Fee Optimization): <b>+${fmt$(structural)}/yr</b> (range ${fmt$(saLo)} – ${fmt$(saHi)}/yr across the tax-rate /
+      turnover / market-return band) on a ${fmt$big(W)} household — illustrative tax + fee modeling, not a performance forecast.</p>`;
 }
 // --- Feature 2: wealth-architecture decision tree (visualizes the existing placement + estate gate) ---
 function grossEstate(){

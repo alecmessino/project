@@ -191,6 +191,31 @@ def location_alpha3(taxable: float, traditional: float, roth: float,
     return {"annual_saved": annual, "terminal_alpha": annual * fv, "overlap": overlap, "sleeve": a}
 
 
+def location_alpha3_range(taxable: float, traditional: float, roth: float,
+                          mom_drag_rate: float, passive_drag_rate: float,
+                          growth_rate: float, years: float,
+                          drag_band: float = 0.25, growth_band: float = 0.02) -> dict:
+    """A defensible sensitivity interval around location_alpha3 (M3).
+
+    The annual tax saved scales with the momentum sleeve's drag — itself the product of the
+    effective tax rate, turnover, and realized-gain rate — so we flex that drag by ±`drag_band`
+    (relative) to bound the annual figure. The terminal value also rides the reinvestment / market
+    return, flexed by ±`growth_band` (absolute). Returns base / low / high for both the annual saving
+    and the terminal location alpha — a range a CPA or examiner can interrogate, not a point claim.
+    Illustrative; mirrors the JS on the Tax Lab page.
+    """
+    base = location_alpha3(taxable, traditional, roth, mom_drag_rate, passive_drag_rate, growth_rate, years)
+    lo = location_alpha3(taxable, traditional, roth, max(0.0, mom_drag_rate * (1 - drag_band)),
+                         passive_drag_rate, max(0.0, growth_rate - growth_band), years)
+    hi = location_alpha3(taxable, traditional, roth, mom_drag_rate * (1 + drag_band),
+                         passive_drag_rate, growth_rate + growth_band, years)
+    return {
+        "base": base["annual_saved"], "annual_low": lo["annual_saved"], "annual_high": hi["annual_saved"],
+        "terminal_base": base["terminal_alpha"], "terminal_low": lo["terminal_alpha"],
+        "terminal_high": hi["terminal_alpha"],
+    }
+
+
 def after_fee(after_tax_return: float, annual_fee_rate: float, years: float) -> float:
     """Reduce an after-tax total return by an all-in annual fee (advisory + expense ratio)
     applied over the track. First-order: fee_rate · years on the base — illustrative, like

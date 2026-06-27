@@ -98,6 +98,25 @@ def rank_weights(
     if n < cs.min_universe:
         return out
 
+    # Continuous tilt overlay (offline research): hold the whole universe, weight = base·(1 + k·z),
+    # floored long-only, capped, renormalized to gross. No top-quantile selection — a different book
+    # entirely. Returns early so none of the selection logic below runs.
+    if cs.tilt_overlay:
+        mu = sum(s for _, s in ranked) / n
+        sd = (sum((s - mu) ** 2 for _, s in ranked) / n) ** 0.5 or 1.0
+        base = cs.gross_exposure / n
+        raw = {key: max(0.0, base * (1.0 + cs.tilt_strength * (s - mu) / sd)) for key, s in ranked}
+        tot = sum(raw.values())
+        if tot <= 0:
+            return out
+        for key, w in raw.items():
+            out[key] = min(cs.max_weight, w * cs.gross_exposure / tot)
+        tot2 = sum(out.values())                     # one renormalize pass after the cap
+        if tot2 > 0:
+            for key in out:
+                out[key] *= cs.gross_exposure / tot2
+        return out
+
     cap_k = n // 2 if cs.long_short else n
     k = max(1, min(round(n * cs.quantile), cap_k))
     # A name is only held if its (demeaned) trend clears min_score — so when nothing

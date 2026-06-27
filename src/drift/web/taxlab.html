@@ -15,9 +15,28 @@
   window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
   plausible.init()
 </script>
+<link rel="stylesheet" href="driftwood.css">
 <style>
-  /* Palette + spacing/radius/shadow/motion/type tokens come from the shared driftwood.css
-     (linked last in <head>) — defined once for the whole site. */
+  /* Spacing/radius/shadow/motion/type tokens come from the shared driftwood.css (linked FIRST in
+     <head> now, so the local :root below can re-point the palette). */
+  /* ── Institutional Editorial house style: cream paper, brass, teal ink. Re-pointing the shared
+     tokens here cascades the warm palette through every token-driven component below; the framed
+     browser-chrome card matches the other Driftwood surfaces. */
+  :root{
+    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --ink:#1d242d; --dim:#76747e; --slate:#3a414b;
+    --rule:#1d242d; --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --navy:#1a2330; --chrome:#ece6da;
+  }
+  .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;margin-top:6px;
+    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
+  .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #ddd5c6}
+  .chrome i{width:9px;height:9px;border-radius:999px;background:#cfc6b4;display:inline-block}
+  .chrome .url{margin-left:auto;font-size:11.5px;letter-spacing:.04em;color:var(--dim);font-family:ui-monospace,monospace}
+  .fbody{padding:34px 38px 30px}
+  .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:13px}
+  .masthead{display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+  .hyp-pill{font-size:11px;color:#7a6f5a;border:1px solid #ddd0b6;background:#f4ecda;padding:5px 11px;
+    border-radius:999px;letter-spacing:.02em;white-space:nowrap}
+  @media screen and (max-width:620px){ .fbody{padding:22px 16px 24px} }
   /* Mobile state picker (F1): a tappable, tax-severity-coloured chip grid — the same heat-map
      language as the desktop map — replaces the bare native select, so the high-intent mobile
      prospect gets the premium control, not a 50-row dropdown. One source of truth via selectState. */
@@ -37,11 +56,12 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
     font:15px/1.6 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:820px;margin:0 auto;padding:56px 26px 90px}
-  header{border-top:3px solid var(--rule);padding-top:20px}
-  h1{font-size:27px;margin:0 0 6px;font-weight:680;letter-spacing:-.3px}
-  h1 .w{color:var(--slate)}
-  .lede{color:var(--dim);font-size:14.5px;max-width:65ch;margin:8px 0 0;line-height:1.65}
+  .wrap{max-width:900px;margin:0 auto;padding:40px 20px 80px}
+  header{border-top:none;padding-top:0}
+  h1{font-family:var(--serif);font-size:33px;margin:0;font-weight:500;letter-spacing:-.02em;line-height:1.05;color:var(--ink)}
+  h1 .w{color:var(--brass)}
+  h1 .sep{color:var(--gold)} h1 .sub{color:var(--slate);font-weight:500}
+  .lede{color:var(--slate);font-size:14.5px;max-width:65ch;margin:14px 0 0;line-height:1.65}
   .controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--s3);margin:var(--s6) 0 var(--s2)}
   .ctl label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);margin-bottom:5px;font-weight:600}
   .ctl select{width:100%;font:inherit;font-size:13.5px;padding:8px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
@@ -193,10 +213,10 @@
   .fab.brief:hover{box-shadow:0 9px 26px rgba(74,79,87,.4)}
   #cpabrief{display:none}
   /* --- Phase B: mode toggle + lead-gen funnel --- */
-  .modetog{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-top:14px}
+  .modetog{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-top:18px;background:#fff}
   .modetog button{font:inherit;font-size:12px;font-weight:600;color:var(--dim);background:#fff;border:none;
     padding:6px 15px;cursor:pointer;letter-spacing:.2px}
-  .modetog button.on{background:var(--ink);color:#fff}
+  .modetog button.on{background:var(--teal);color:#f1ede3}
   /* four views: advisor (default) / estate / strategy / prospect. */
   body.lead .advisor-only, body.estate .advisor-only, body.strategy .advisor-only{display:none!important}
   body.lead .no-lead{display:none!important}            /* controls/state map: advisor + estate + strategy, not lead */
@@ -350,7 +370,9 @@
     *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     body{font-size:11px}
     .wrap{max-width:none;margin:0;padding:0}
-    header,.controls,.toolbar,.fab,.fabwrap,.modetog,.foot a.back,.map-wrap h3 .hint,input[type=range]{display:none!important}
+    .frame{border:none!important;box-shadow:none!important;border-radius:0!important;margin:0!important}
+    .fbody{padding:0!important}
+    header,.chrome,.controls,.toolbar,.fab,.fabwrap,.modetog,.foot a.back,.map-wrap h3 .hint,input[type=range]{display:none!important}
     #printhead{display:block}
     #execsummary{display:block}
     body.brief #execsummary{display:none}            /* CPA/attorney brief replaces the client exec summary */
@@ -367,12 +389,18 @@
     .blueprint{display:grid!important;grid-template-columns:1fr 1fr 1fr}   /* force 3-up even if paper box is narrow */
   }
 </style>
-<link rel="stylesheet" href="driftwood.css">
 </head>
 <body>
 <div class="wrap">
+  <div class="frame">
+    <div class="chrome"><i></i><i></i><i></i><span class="url">driftwood — tax lab</span></div>
+    <div class="fbody">
   <header>
-    <h1>Drift<span class="w">wood</span> · Tax Lab</h1>
+    <div class="eyebrow">Private wealth architecture</div>
+    <div class="masthead">
+      <h1>Drift<span class="w">wood</span> <span class="sep">·</span> <span class="sub">Tax Lab</span></h1>
+      <span class="hyp-pill">Illustrative modeling</span>
+    </div>
     <p class="lede" id="lede"></p>
     <div class="modetog" id="modetog">
       <button type="button" data-mode="advisor">Advisor view</button>
@@ -584,6 +612,8 @@
     <div class="compliance" id="compliance"></div>
     <div id="gen" style="margin-top:8px"></div>
   </div>
+    </div><!-- .fbody -->
+  </div><!-- .frame -->
 </div>
 <div id="printfoot">CWS Planning · a registered investment adviser · adviserinfo.sec.gov — Illustrative; not investment, tax, or legal advice</div>
 <div class="fabwrap advisor-only">

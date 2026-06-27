@@ -58,6 +58,17 @@
   .ocard .row .l{font-size:11.5px;color:#8b94a0;margin-top:2px}
   .onote{font-size:11px;color:#949ba6;margin-top:10px;line-height:1.45}
   .pos{color:#9fd9c4} .neg{color:#e0a59b}
+  .vsec{padding:8px 44px 30px}
+  .vsec .h{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .vadds{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:820px){.vadds{grid-template-columns:1fr}}
+  .vcard{border:1px solid var(--line);border-radius:10px;padding:20px;background:#fff;display:flex;flex-direction:column}
+  .vcard .tag{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);font-weight:600;margin-bottom:10px}
+  .vcard .vt{font-family:"Newsreader",Georgia,serif;font-size:18px;color:var(--ink);line-height:1.2;margin-bottom:14px}
+  .vcard .stat{font-variant-numeric:tabular-nums;font-size:30px;font-weight:700;color:var(--teal);letter-spacing:-.02em;line-height:1}
+  .vcard .sl{font-size:12px;color:var(--dim);margin:6px 0 12px}
+  .vcard .vn{font-size:12px;color:var(--body);line-height:1.5;border-top:1px solid var(--line2);padding-top:10px;margin-top:auto}
+  .vsec .cap{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.5}
   .path{padding:8px 44px 36px}
   .path .h{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
   .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
@@ -120,6 +131,13 @@
       </div>
     </div>
 
+    <div class="vsec" id="vsec" style="display:none">
+      <div class="h">Why investors choose Driftwood</div>
+      <div class="vadds" id="vadds"></div>
+      <div class="cap">Hypothetical / illustrative model results — not a forecast and not advice. Each figure is drawn
+        from the exhibits below and shown with its own risk; see full disclosures.</div>
+    </div>
+
     <div class="path">
       <div class="h">Your path · five steps, in order</div>
       <div class="steps">
@@ -155,15 +173,24 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
 function render(s){
   const head = s.headline || [];
   // Outcome card — the REAL hypothetical Model Portfolio headline (not a fabricated dollar figure).
+  // The drawdown shown is THIS track's own (mp.dd), never the multi-decade backtest's — pairing the
+  // 445-session return with the deep-history drawdown would be apples-to-oranges.
   const mp = head.find(m => /Model Portfolio/i.test(m.label)) || head[0];
-  const dd = head.find(m => /drawdown/i.test(m.label));
   if(mp){
     document.getElementById("ocard").innerHTML =
       `<div class="k">The hypothetical Model Portfolio</div>`+
       `<div class="sub">${mp.sub||""}</div>`+
       `<div class="big">${mp.value}</div>`+
       `<div class="cap">illustrative model return, net of cost</div>`+
-      (dd ? `<div class="row"><div><div class="v">${dd.value}</div><div class="l">${dd.label.replace(/.*·\s*/,'')}</div></div></div>` : "");
+      (mp.dd ? `<div class="row"><div><div class="v">${mp.dd}</div><div class="l">${mp.dd_label||"max drawdown"}</div></div></div>` : "");
+  }
+  const va = s.value_adds || [];
+  if(va.length){
+    document.getElementById("vsec").style.display = "";
+    document.getElementById("vadds").innerHTML = va.map(v =>
+      `<div class="vcard"><div class="tag">${v.tag}</div><div class="vt">${v.title}</div>`+
+      `<div class="stat">${v.stat}</div><div class="sl">${v.stat_label}</div>`+
+      `<div class="vn">${v.note}</div></div>`).join("");
   }
   document.getElementById("exhibits").innerHTML = (s.exhibits||[]).map(e=>
     `<a class="ex ${e.present?'':'absent'}" href="${e.href}">

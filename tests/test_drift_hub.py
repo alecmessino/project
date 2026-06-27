@@ -28,11 +28,13 @@ def test_build_hub_reads_ledger_headline(tmp_path):
     assert any(e["href"] == "ledger.html" and e["present"] for e in state["exhibits"])
 
 
-def test_model_portfolio_headline_carries_its_drawdown_when_tearsheet_present(tmp_path):
-    # P0-3: a return shown without its drawdown is imbalanced — the MP card must carry both.
+def test_model_portfolio_headline_carries_ITS_OWN_drawdown_not_the_long_backtests(tmp_path):
+    # Corrected P0-3: the 445-session track's return must be paired with the 445-session track's
+    # OWN drawdown — never the multi-decade backtest's. A peak-to-trough dip mid-series proves the
+    # headline drawdown is computed from this ledger's equity, not borrowed from the tearsheet.
     (tmp_path / "ledger.json").write_text(json.dumps({
         "inception": "2024-09-16",
-        "entries": [{"equity": 1.0}, {"equity": 1.406}],
+        "entries": [{"equity": 1.0}, {"equity": 1.20}, {"equity": 1.02}, {"equity": 1.406}],
     }))
     ts_state = {"books": [{
         "name": "Equities & ETFs",
@@ -46,7 +48,42 @@ def test_model_portfolio_headline_carries_its_drawdown_when_tearsheet_present(tm
     led = [h for h in state["headline"] if h["label"] == "Model Portfolio (hypothetical)"][0]
     assert led["value"] == "+40.6%"
     assert led["tone"] == "neutral"
-    assert "max drawdown" in led["sub"] and "59%" in led["sub"]   # risk shown beside return
+    # Its own drawdown: 1.20 -> 1.02 is a 15% peak-to-trough dip, NOT the backtest's 59%.
+    assert led["dd"] == "−15%"
+    assert "59%" not in led["sub"]                 # the long-backtest DD is never stapled to this return
+    assert "59%" not in led.get("dd", "")
+    # The multi-decade drawdown still appears — explicitly attributed to the long backtest.
+    dd = [h for h in state["headline"] if "max drawdown" in h["label"]][0]
+    assert dd["value"] == "59% vs 58%" and "multi-decade" in dd["sub"]
+
+
+def test_value_adds_sourced_and_fair_and_balanced(tmp_path):
+    # The three investor value-adds are built from real exhibit state, each paired with its risk.
+    (tmp_path / "ledger.json").write_text(json.dumps({
+        "inception": "2024-09-16",
+        "entries": [{"equity": 1.0}, {"equity": 1.20}, {"equity": 1.02}, {"equity": 1.406}],
+    }))
+    led_state = {"header": {"total_return": 0.406, "after_tax_total_return": 0.267,
+                            "tax_drag": 0.139, "sharpe": 1.35},
+                 "benchmarks": [{"label": "VT", "sharpe": 1.21, "max_drawdown": 0.165},
+                                {"label": "VTI", "sharpe": 1.05, "max_drawdown": 0.193}]}
+    (tmp_path / "ledger.html").write_text(
+        "x window.__STATE__ = " + json.dumps(led_state) + ";\n y")
+    ts_state = {"books": [{"name": "Equities & ETFs", "strategy": {"max_drawdown": 0.59},
+                           "benchmark": {"max_drawdown": 0.58}, "oos": {"test": {"sharpe": 0.77}}}]}
+    (tmp_path / "tearsheet.html").write_text(
+        "x window.__STATE__ = " + json.dumps(ts_state) + ";\n y")
+    va = build_hub(tmp_path)["value_adds"]
+    tags = [v["tag"] for v in va]
+    assert any("Tax" in t for t in tags)            # 1 · tax + fee optimization
+    assert any("Risk" in t for t in tags)           # 2 · risk-managed, paired with its drawdown
+    assert any("decades" in t for t in tags)        # 3 · out-of-sample honesty
+    tax = next(v for v in va if "Tax" in v["tag"])
+    assert tax["stat"] == "−14%"                    # the tax drag itself, not a promised return
+    risk = next(v for v in va if "Risk" in v["tag"])
+    assert "−15%" in risk["note"]                   # this track's own drawdown, shown beside Sharpe
+    oos = next(v for v in va if "decades" in v["tag"])
+    assert "59%" in oos["note"]                     # the long-backtest worst loss, disclosed
 
 
 def test_build_hub_reads_tearsheet_drawdown_headline(tmp_path):

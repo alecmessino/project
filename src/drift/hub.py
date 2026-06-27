@@ -47,22 +47,32 @@ def _embedded_state(path: Path) -> Optional[dict]:
         return None
 
 
+def _max_drawdown(equity: list[float]) -> float:
+    """Worst peak-to-trough decline of a cumulative equity series (0..1)."""
+    peak, mdd = float("-inf"), 0.0
+    for v in equity:
+        if v > peak:
+            peak = v
+        if peak > 0:
+            mdd = max(mdd, 1.0 - v / peak)
+    return mdd
+
+
 def build_hub(docs_dir: str | Path = "docs") -> dict:
-    """Assemble the hub state: live headline metrics + the exhibit index."""
+    """Assemble the hub state: live headline metrics, value-adds, and the exhibit index."""
     docs = Path(docs_dir)
     headline: list[dict] = []
+    value_adds: list[dict] = []
 
-    # Read the long-history tearsheet first so the Model Portfolio headline can carry its own
-    # risk (max drawdown) alongside the return — a return shown without its drawdown is exactly the
-    # imbalanced framing the Marketing Rule's fair-and-balanced standard targets.
+    # Long-history tearsheet (the multi-decade backtest) and the live 445-session ledger are two
+    # DISTINCT tracks. Keep their risk figures attributed to their own track — pairing one's return
+    # with the other's drawdown is exactly the imbalanced framing the Marketing Rule targets.
     ts = _embedded_state(docs / "tearsheet.html")
-    strat_dd = None
-    if ts:
-        for bk in ts.get("books", []):
-            if bk.get("strategy", {}).get("max_drawdown") is not None:
-                strat_dd = bk["strategy"]["max_drawdown"]
-                break
+    led_state = _embedded_state(docs / "ledger.html")
 
+    # This track's OWN max drawdown, computed from its own equity curve — never borrowed from the
+    # multi-decade backtest. Shared by the headline card and the risk value-add.
+    own_dd = None
     led = docs / "ledger.json"
     if led.exists():
         try:
@@ -70,14 +80,14 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
             entries = j.get("entries", [])
             if entries:
                 tr = entries[-1]["equity"] - 1.0
-                sub = f"{len(entries)} sessions · hypothetical backtest from {j.get('inception', '')}"
-                if strat_dd is not None:
-                    sub += f" · −{strat_dd*100:.0f}% max drawdown"
+                own_dd = _max_drawdown([e["equity"] for e in entries if "equity" in e])
                 headline.append({
                     "label": "Model Portfolio (hypothetical)",
                     "value": f"{tr*100:+.1f}%",
+                    "sub": f"{len(entries)} sessions · hypothetical backtest from {j.get('inception', '')}",
+                    "dd": f"−{own_dd*100:.0f}%",
+                    "dd_label": "max drawdown · this track",
                     # Deliberately neutral: a hypothetical return is not a win to colour green.
-                    "sub": sub,
                     "tone": "neutral",
                 })
         except Exception:
@@ -89,9 +99,54 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
             headline.append({
                 "label": f"{bk['name']} · max drawdown",
                 "value": f"{s['max_drawdown']*100:.0f}% vs {b['max_drawdown']*100:.0f}%",
-                "sub": f"strategy vs buy & hold · OOS Sharpe {o['sharpe']:.2f}",
+                "sub": f"multi-decade backtest, strategy vs buy & hold · OOS Sharpe {o['sharpe']:.2f}",
                 "tone": "neutral",
             })
+
+    # ── Value-adds: the few things an investor actually weighs, each sourced from real exhibit
+    # state and kept fair-and-balanced (every performance figure carries its risk and a hypothetical
+    # label). Cards degrade gracefully — absent when their source exhibit isn't built yet.
+    hdr = (led_state or {}).get("header", {})
+    benches = (led_state or {}).get("benchmarks", [])
+    # 1 · Tax + fee optimization — the firm's actual, deterministic edge (not product outperformance).
+    if hdr.get("tax_drag") is not None and hdr.get("after_tax_total_return") is not None:
+        value_adds.append({
+            "tag": "Tax + fee optimization",
+            "title": "We target the tax drag — not just the return.",
+            "stat": f"−{hdr['tax_drag']*100:.0f}%",
+            "stat_label": f"the model's own {hdr.get('total_return', 0)*100:.0f}% pre-tax → "
+                          f"{hdr['after_tax_total_return']*100:.0f}% after tax",
+            "note": "Asset location across taxable / Traditional / Roth plus tax-loss harvesting is built "
+                    "to recover a share of exactly this drag. Illustrative — your figures depend on your situation.",
+        })
+    # 2 · Risk-managed — from the live track, paired with its drawdown (fair-and-balanced by construction).
+    if hdr.get("sharpe") is not None and benches and own_dd is not None:
+        bench_sh = " / ".join(f"{b.get('sharpe', 0):.2f}" for b in benches[:2])
+        bench_lbl = " / ".join(b.get("label", "") for b in benches[:2])
+        dd_self = own_dd
+        bench_dd = " / ".join(f"−{b.get('max_drawdown', 0)*100:.0f}%" for b in benches[:2])
+        value_adds.append({
+            "tag": "Risk-managed, not return-chasing",
+            "title": "Kept pace with equities — at a shallower drawdown.",
+            "stat": f"{hdr['sharpe']:.2f}",
+            "stat_label": f"Sharpe vs {bench_sh} for {bench_lbl} buy-and-hold",
+            "note": f"Worst drawdown −{dd_self*100:.0f}% vs {bench_dd} over the same window. "
+                    "Hypothetical model track, not a client account.",
+        })
+    # 3 · Out-of-sample honesty — from the multi-decade backtest; the trust signal is reporting the
+    # number after the fit, with its full drawdown disclosed.
+    if ts and ts.get("books"):
+        bk = ts["books"][0]
+        s, b, o = bk["strategy"], bk["benchmark"], bk["oos"]["test"]
+        value_adds.append({
+            "tag": "Stress-tested across decades",
+            "title": "We report the out-of-sample number.",
+            "stat": f"{o['sharpe']:.2f}",
+            "stat_label": "out-of-sample Sharpe · multi-decade backtest, after the fit",
+            "note": f"Through a worst-case −{s['max_drawdown']*100:.0f}% drawdown "
+                    f"(vs −{b['max_drawdown']*100:.0f}% buy-and-hold). We show the figure after the fit, "
+                    "including the worst loss — not just the in-sample curve.",
+        })
 
     exhibits = [{"title": t, "href": h, "desc": d, "present": (docs / h).exists()}
                 for t, h, d in EXHIBITS]
@@ -100,5 +155,6 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
             "generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
         },
         "headline": headline,
+        "value_adds": value_adds,
         "exhibits": exhibits,
     }

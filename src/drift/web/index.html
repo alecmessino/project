@@ -47,6 +47,22 @@
   .rowhdr{display:flex;justify-content:space-between;align-items:baseline;margin:30px 0 12px}
   .sec{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
   .hint{font-size:12px;color:var(--muted)}
+  .blotter{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);
+    border-radius:12px;overflow:hidden}
+  @media(max-width:720px){.blotter{grid-template-columns:1fr}}
+  .trade{display:grid;grid-template-columns:auto 1fr auto auto;align-items:baseline;gap:10px;
+    background:var(--card);padding:11px 16px;font-size:13.5px;border-left:3px solid var(--line)}
+  .trade.new{border-left-color:var(--teal2)} .trade.add{border-left-color:var(--teal)}
+  .trade.trim{border-left-color:var(--brass)} .trade.exit{border-left-color:var(--neg)}
+  .trade .act{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+  .trade .act i{font-style:normal;margin-right:5px}
+  .trade.new .act{color:var(--teal2)} .trade.add .act{color:var(--teal)}
+  .trade.trim .act{color:var(--brass)} .trade.exit .act{color:var(--neg)}
+  .trade .tk{font-family:ui-monospace,monospace;font-weight:600;color:var(--ink);letter-spacing:-.01em}
+  .trade .tk .nm{font-family:var(--sans,inherit);font-weight:400;color:var(--dim);font-size:11.5px;margin-left:4px}
+  .trade .mv{font-variant-numeric:tabular-nums;color:var(--body);white-space:nowrap}
+  .trade .dl{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px;text-align:right;white-space:nowrap}
+  .blotnote{font-size:11.5px;color:var(--muted);margin:10px 2px 0;line-height:1.5}
   table.rank{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
     border-radius:12px;overflow:hidden;font-variant-numeric:tabular-nums}
   table.rank th{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;
@@ -97,6 +113,16 @@
     <div class="statstrip" id="statstrip"></div>
     <svg class="spark" id="xspark" preserveAspectRatio="none" style="margin-top:18px"></svg>
     <div class="sparkcap">Cross-sectional book equity — walk-forward, net of modeled cost. Hypothetical engineering validation, not a track record.</div>
+  </div>
+
+  <div class="pad" id="blotwrap" style="display:none">
+    <div class="rowhdr">
+      <div class="sec">Latest rebalance · the trades the book just made</div>
+      <div class="hint" id="blothint"></div>
+    </div>
+    <div class="blotter" id="blotter"></div>
+    <div class="blotnote">What changed at the most recent monthly turn — names entered, exited, and weights raised or trimmed — and the
+      book's return since. Hypothetical engine output for research; it is not advice and not an executed order.</div>
   </div>
 
   <div class="pad">
@@ -188,6 +214,26 @@ function render(s){
     ["Names held", held+" / "+total, "neutral"],
   ].map(([l,v,c])=>`<div class="cell"><div class="v ${c}">${v}</div><div class="l">${l}</div></div>`).join("");
   requestAnimationFrame(()=>spark(document.getElementById("xspark"), x.equity));
+
+  // Latest-rebalance blotter — what the book actually did at its last turn (entries / exits / weight moves).
+  const bl = s.blotter, bw = document.getElementById("blotwrap");
+  if(bl && bl.trades && bl.trades.length){
+    bw.style.display = "";
+    document.getElementById("blothint").innerHTML =
+      `${bl.date} · ${bl.n_held} held · <b class="${cls(bl.since_return)}">${pct(bl.since_return)}</b> since`;
+    const ICON = {NEW:"＋", ADD:"▲", TRIM:"▼", EXIT:"✕"}, VERB = {NEW:"Entered", ADD:"Added", TRIM:"Trimmed", EXIT:"Exited"};
+    document.getElementById("blotter").innerHTML = bl.trades.map(t=>{
+      const wcur = t.weight>0 ? (t.weight*100).toFixed(0)+"%" : "—";
+      const wprev = t.prev_weight>0 ? (t.prev_weight*100).toFixed(0)+"%" : "—";
+      const d = (t.delta>=0?"+":"")+(t.delta*100).toFixed(1)+" pts";
+      return `<div class="trade ${t.action.toLowerCase()}">
+        <span class="act"><i>${ICON[t.action]}</i>${VERB[t.action]}</span>
+        <span class="tk">${t.instrument} <span class="nm">${nameOf(t.instrument)}</span></span>
+        <span class="mv">${wprev} → ${wcur}</span>
+        <span class="dl">${d}</span>
+      </div>`;
+    }).join("");
+  }
 
   document.getElementById("rankbody").innerHTML = s.rankings.map(r=>{
     const isHeld = r.weight>0, dot = isHeld?"#15806a":"#d8cfbd", muted = isHeld?"":"color:#9a98a0";

@@ -16,7 +16,7 @@ from typing import Sequence
 
 from .backtest import backtest
 from .config import Settings
-from .cross_section import cross_backtest, rank_snapshot
+from .cross_section import cross_backtest, cross_book_entries, rank_snapshot
 from .models import Bar
 from .triggers import evaluate, to_signal
 
@@ -35,6 +35,61 @@ def _spark(curve: Sequence[float], n: int = 90) -> list[float]:
         return list(curve)
     step = len(curve) / n
     return [curve[min(len(curve) - 1, int(i * step))] for i in range(n)]
+
+
+def latest_rebalance_blotter(series: dict[str, list[Bar]], settings: Settings) -> dict | None:
+    """The most recent rebalance as a trade blotter: what the book actually did at its last
+    turn — names entered, exited, and weights raised/trimmed — plus the P&L since.
+
+    Built by diffing the per-session weight book (`cross_book_entries`) at its last change, so it
+    answers the dashboard's missing question ("what changed, and what to do now") straight from the
+    engine. Pure and self-contained; returns None when there isn't a prior book to diff against.
+    """
+    try:
+        entries = cross_book_entries(series, settings)
+    except Exception:
+        return None
+    if len(entries) < 2:
+        return None
+    cur = entries[-1]["weights"]
+    # Walk back to the last session whose weights differ from the one before it — that's the rebalance.
+    reb = None
+    for i in range(len(entries) - 1, 0, -1):
+        if entries[i]["weights"] != entries[i - 1]["weights"]:
+            reb = i
+            break
+    if reb is None:                                   # weights never changed (degenerate)
+        return None
+    before = entries[reb - 1]["weights"]
+    after = entries[reb]["weights"]
+    eps = 5e-4
+    trades: list[dict] = []
+    for inst in sorted(set(before) | set(after)):
+        p, c = before.get(inst, 0.0), after.get(inst, 0.0)
+        if p <= 0 < c:
+            action = "NEW"
+        elif c <= 0 < p:
+            action = "EXIT"
+        elif c - p > eps:
+            action = "ADD"
+        elif p - c > eps:
+            action = "TRIM"
+        else:
+            continue                                  # held, immaterial change
+        trades.append({"instrument": inst, "action": action,
+                       "prev_weight": round(p, 4), "weight": round(c, 4), "delta": round(c - p, 4)})
+    order = {"NEW": 0, "ADD": 1, "TRIM": 2, "EXIT": 3}
+    trades.sort(key=lambda t: (order[t["action"]], -t["weight"], -abs(t["delta"])))
+    eq_now, eq_at_reb = entries[-1]["equity"], entries[reb - 1]["equity"]
+    since = (eq_now / eq_at_reb - 1.0) if eq_at_reb else 0.0
+    return {
+        "date": entries[reb]["date"],
+        "prev_date": entries[reb - 1]["date"],
+        "since_return": round(since, 4),
+        "sessions_since": len(entries) - reb,
+        "n_held": sum(1 for w in cur.values() if w > 0),
+        "trades": trades,
+    }
 
 
 def build_state(series: dict[str, list[Bar]], settings: Settings, source: str = "—") -> dict:
@@ -69,9 +124,11 @@ def build_state(series: dict[str, list[Bar]], settings: Settings, source: str = 
 
     rankings = [vars(r) for r in rank_snapshot(series, settings)]
     xbt = cross_backtest(series, settings)
+    blotter = latest_rebalance_blotter(series, settings)
     n_bars = max((len(b) for b in series.values()), default=0)
 
     return {
+        "blotter": blotter,
         "header": {
             "source": source,
             "n_instruments": len(series),

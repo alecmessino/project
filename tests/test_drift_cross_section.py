@@ -87,3 +87,24 @@ def test_collect_series_uniform_across_feeds():
     series = collect_series(feed)
     assert set(series) == {"X", "Y"}
     assert all(len(v) == 40 for v in series.values())
+
+
+def test_tilt_overlay_holds_whole_universe_long_only_summing_to_gross():
+    # Offline tilt overlay: every ranked name is held (long-only), weights tilt by signal and sum to
+    # the gross budget — a different book from top-quantile selection.
+    scores = {"A": 2.0, "B": 1.0, "C": 0.0, "D": -1.0, "E": -2.0}
+    vols = {k: 0.2 for k in scores}
+    w = rank_weights(scores, vols, _cs(tilt_overlay=True, tilt_strength=0.5,
+                                       gross_exposure=1.0, max_weight=0.5))
+    assert all(v >= 0 for v in w.values())                 # long-only
+    assert abs(sum(w.values()) - 1.0) < 1e-9               # fully invested to gross
+    assert w["A"] > w["C"] > w["E"] > 0                     # tilted by signal, whole universe held
+    assert all(v <= 0.5 + 1e-9 for v in w.values())        # per-name cap respected
+
+
+def test_tilt_overlay_off_by_default_and_in_shipped_configs():
+    # The live signal must never silently become the research tilt: off in the default and in every
+    # committed config.
+    assert CrossSectionSettings().tilt_overlay is False
+    for cfg in ("config/drift.yaml", "config/slow.yaml"):
+        assert Settings.load(cfg).cross_section.tilt_overlay is False, f"{cfg} ships tilt_overlay ON"

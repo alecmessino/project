@@ -143,6 +143,14 @@ class CrossSectionSettings(BaseModel):
     slow_lookback: int = 252              # 12-month drift horizon for the slow-sleeve trend score
     lt_protection_window_bars: int = 30   # delay a sale within this many bars of the LT threshold
     catastrophic_quantile: float = 0.10   # a held name in the bottom this fraction is sold anyway
+    # Continuous TILT OVERLAY (OFFLINE RESEARCH — off by default; the live/slow books are unaffected).
+    # Instead of selecting the top quantile, hold the WHOLE universe at weight = base·(1 + k·z), where
+    # base = gross/N and z is the cross-sectional z-score of the trend score; floor at 0 (long-only),
+    # cap at `max_weight`, renormalize to the gross budget. Far lower turnover and more tax-efficient
+    # than concentrated selection, at the cost of a diluted signal — quantified by scripts/tilt_sweep.py
+    # and NEVER wired into the shipped configs.
+    tilt_overlay: bool = False
+    tilt_strength: float = 0.5            # k: how hard the signal pushes weights off the equal-weight base
     # Neutralize the ranking within a grouping before ranking: "none", "region",
     # or "factor". Region-neutral isolates which STYLE is trending (controlling for
     # region); factor-neutral isolates which REGION is trending. Demeaning trend

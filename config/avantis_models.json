@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "description": "Reference: Avantis Investors' packaged allocation ETFs (the firm's published 'model' allocations), used as institutional-grade baseline weights to reconcile the CWS Planning IPS models in src/drift/firm_models.py against. This is a REFERENCE, not investment advice.",
+    "retrieved": "2026-06-27",
+    "disclaimer": "Avantis discloses top-level asset splits, benchmarks, and expense ratios on its fund pages; precise underlying fund-level weights live in the fact sheets / prospectuses and drift over time. Confirm every figure against the current Avantis fact sheet before any client use. Fields marked \"_unverified\" were not disclosed on the sourced pages and must not be presented as Avantis-published.",
+    "sources": [
+      "https://www.avantisinvestors.com/avantis-investments/avantis-moderate-allocation-etf/",
+      "https://www.avantisinvestors.com/avantis-investments/avantis-all-equity-markets-etf/",
+      "https://www.optimizedportfolio.com/avma/"
+    ]
+  },
+  "models": [
+    {
+      "id": "avantis_all_equity",
+      "name": "Avantis All Equity (AVGE)",
+      "all_in_one_etf": "AVGE",
+      "risk_profile": "aggressive",
+      "asset_split": { "equity": 1.00, "fixed_income": 0.00 },
+      "benchmark": "MSCI ACWI IMI (all-cap, 23 developed + 24 emerging markets)",
+      "factor_tilts": "Actively tilts toward value, higher profitability, and smaller-cap within each region via Avantis's daily valuation screens.",
+      "expense_ratio": 0.0023,
+      "expense_ratio_as_of": "2026-01-01",
+      "source": "https://www.avantisinvestors.com/avantis-investments/avantis-all-equity-markets-etf/"
+    },
+    {
+      "id": "avantis_moderate",
+      "name": "Avantis Moderate Allocation (AVMA)",
+      "all_in_one_etf": "AVMA",
+      "risk_profile": "moderate",
+      "asset_split": { "equity": 0.65, "fixed_income": 0.35 },
+      "benchmark": "65% MSCI ACWI IMI / 35% Bloomberg Aggregate Gov/Credit 1-5 Year",
+      "equity_regional_breakdown": {
+        "us": 0.47,
+        "intl_developed": 0.12,
+        "emerging": 0.06,
+        "reit": 0.02,
+        "_source": "third-party review (optimizedportfolio.com/avma) — NOT an Avantis-published breakdown; confirm against the AVMA fact sheet"
+      },
+      "factor_tilts": "Value / profitability / size tilts via the underlying Avantis funds.",
+      "expense_ratio": 0.0021,
+      "expense_ratio_as_of": "2026-01-01",
+      "source": "https://www.avantisinvestors.com/avantis-investments/avantis-moderate-allocation-etf/"
+    }
+  ],
+  "other_packaged_options": [
+    { "etf": "AVTM", "name": "Avantis Total Equity Markets", "note": "all-equity global; verify split + ER on the Avantis fund page" },
+    { "etf": "AVGV", "name": "Avantis Global Equity Value", "note": "all-equity, value tilt; verify split + ER" },
+    { "etf": "AVNM", "name": "Avantis broad International Equity", "note": "ex-US equity; verify split + ER" },
+    { "etf": "AVNV", "name": "Avantis International Equity Value", "note": "ex-US value; verify split + ER" }
+  ],
+  "_reconciliation_note": "These Avantis packaged allocations are the institutional baseline for the CWS Planning IPS models in src/drift/firm_models.py. AVGE ~ the all-equity 'Aggressive Growth' sleeve; AVMA (65/35) ~ a 'Growth'/'Moderate' target. Reconcile firm_models weights and the individual-fund picks (AVUS/AVUV/AVDE/AVES/AVIG/BIL) against these before deployment; nothing here is a recommendation."
+}

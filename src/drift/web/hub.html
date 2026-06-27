@@ -9,82 +9,143 @@
   window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
   plausible.init()
 </script>
-<title>Driftwood — trend-following research</title>
+<title>Driftwood — private wealth architecture</title>
 <style>
+  /* Institutional Editorial — paper, ink, brass. The front door: outcome-led, one guided path. */
   :root{
-    --bg:#ffffff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#717179;
-    --pos:#2f6f5b; --neg:#9b4439; --slate:#4a4f57; --rule:#222226;
+    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
+    --ink:#1d242d; --body:#3a414b; --dim:#76747e; --muted:#8a8276;
+    --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);
-    font:15px/1.65 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased}
-  .wrap{max-width:900px;margin:0 auto;padding:64px 28px 90px}
-  header{border-top:3px solid var(--rule);padding-top:22px}
-  h1{font-size:30px;margin:0 0 8px;font-weight:680;letter-spacing:-.4px}
-  h1 .w{color:var(--slate)}
-  .tag{color:var(--dim);font-size:14px;margin:0}
-  .lede{color:var(--ink);font-size:15.5px;max-width:64ch;margin:22px 0 8px;line-height:1.7}
-  .lede .muted{color:var(--dim)}
-  .headline{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:30px 0 10px}
-  .card{border:1px solid var(--line);border-radius:10px;padding:16px 18px;background:var(--soft)}
-  .card .v{font-size:21px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
-  .card .l{font-size:12px;color:var(--ink);margin-top:3px;font-weight:600}
-  .card .s{font-size:11.5px;color:var(--dim);margin-top:2px}
-  .pos{color:var(--pos)} .neg{color:var(--neg)}
-  h2.sec{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);margin:40px 0 14px;font-weight:600}
+  body{margin:0;background:var(--bg);color:var(--body);
+    font:15px/1.65 "IBM Plex Sans",ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1180px;margin:40px auto;padding:0 20px 60px}
+  .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
+  .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #ddd5c6}
+  .chrome i{width:9px;height:9px;border-radius:999px;background:#cfc6b4;display:inline-block}
+  .chrome .url{margin-left:auto;font-size:11.5px;letter-spacing:.04em;color:var(--muted);font-family:ui-monospace,monospace}
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:18px 44px;border-bottom:1px solid var(--line);background:var(--soft)}
+  .brand{font-family:"Newsreader",Georgia,serif;font-size:23px;font-weight:600;color:var(--ink);letter-spacing:-.01em}
+  .brand .w{color:var(--brass)}
+  .nav .links{display:flex;gap:20px;align-items:center}
+  .nav .links a{font-size:13px;color:var(--dim);text-decoration:none}
+  .nav .pill{font-size:11px;color:#7a6f5a;border:1px solid #ddd0b6;background:#f4ecda;padding:5px 11px;border-radius:999px;letter-spacing:.02em}
+  .hero{display:grid;grid-template-columns:1.08fr .92fr;gap:44px;padding:52px 44px 40px}
+  @media(max-width:820px){.hero{grid-template-columns:1fr;gap:30px}}
+  .eyebrow{font-weight:600;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:18px}
+  h1{font-family:"Newsreader",Georgia,"Times New Roman",serif;font-weight:500;font-size:53px;line-height:1.0;
+    letter-spacing:-.02em;color:var(--ink);margin:0 0 20px}
+  @media(max-width:820px){h1{font-size:40px}}
+  .lede{font-size:16px;line-height:1.6;color:#54545c;margin:0 0 30px;max-width:42ch}
+  .ctas{display:flex;gap:12px;margin-bottom:30px;flex-wrap:wrap}
+  .ctas a{text-decoration:none;border-radius:8px;font-size:14.5px;font-weight:600;white-space:nowrap}
+  .ctas .primary{background:var(--teal);color:#f1ede3;padding:14px 24px}
+  .ctas .ghost{border:1px solid #cdc4b2;color:var(--ink);padding:14px 22px;font-weight:500}
+  .trust{display:flex;gap:22px;border-top:1px solid var(--line);padding-top:18px;flex-wrap:wrap}
+  .trust span{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--dim)}
+  .trust b{color:var(--teal2);font-weight:700}
+  .ocard{background:var(--navy);border-radius:14px;padding:30px 32px;box-shadow:0 20px 50px -28px rgba(8,12,10,.7)}
+  .ocard .k{font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .ocard .sub{font-size:12.5px;color:#8b94a0;margin-bottom:18px}
+  .ocard .big{font-family:"IBM Plex Sans";font-variant-numeric:tabular-nums;font-size:58px;line-height:.92;color:#f1ede3;font-weight:700;letter-spacing:-.03em}
+  .ocard .cap{font-size:13.5px;color:var(--gold);font-weight:600;margin-top:8px}
+  .ocard .row{display:flex;gap:24px;border-top:1px solid #2c3848;margin-top:22px;padding-top:18px}
+  .ocard .row .v{font-weight:600;font-size:18px;color:#f1ede3;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+  .ocard .row .l{font-size:11.5px;color:#8b94a0;margin-top:2px}
+  .onote{font-size:11px;color:#949ba6;margin-top:10px;line-height:1.45}
+  .pos{color:#9fd9c4} .neg{color:#e0a59b}
+  .path{padding:8px 44px 36px}
+  .path .h{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  @media(max-width:820px){.steps{grid-template-columns:repeat(2,1fr)}}
+  a.step{display:block;text-decoration:none;border-radius:10px;padding:18px 18px 20px;border:1px solid var(--line);background:#fff;color:inherit;transition:background .12s}
+  a.step:hover{background:var(--soft)}
+  a.step.lead{background:var(--teal);border-color:var(--teal);color:#eef3ef}
+  a.step .n{font-family:"Newsreader",serif;font-size:18px;margin-bottom:10px}
+  a.step.lead .n{color:var(--gold)} a.step .n{color:var(--brass)}
+  a.step .t{font-weight:600;font-size:14.5px;margin-bottom:4px;color:var(--ink)}
+  a.step.lead .t{color:#fff}
+  a.step .d{font-size:12px;line-height:1.4;color:var(--dim)}
+  a.step.lead .d{color:#b6c5bd}
+  .exsec{padding:4px 44px 30px}
+  .exsec .h{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
   .exhibits{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-  a.ex{display:block;background:#fff;padding:18px 20px;text-decoration:none;color:inherit;transition:background .12s}
+  a.ex{display:block;background:#fff;padding:16px 20px;text-decoration:none;color:inherit;transition:background .12s}
   a.ex:hover{background:var(--soft)}
   a.ex.absent{opacity:.5;pointer-events:none}
-  a.ex .t{font-weight:650;font-size:15px;margin-bottom:3px}
-  a.ex .t .arrow{color:var(--slate);font-weight:400}
+  a.ex .t{font-weight:600;font-size:14.5px;margin-bottom:3px;color:var(--ink)}
+  a.ex .t .arrow{color:var(--brass);font-weight:400}
   a.ex .d{font-size:12.5px;color:var(--dim);line-height:1.5}
-  .foot{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);font-size:12.5px;line-height:1.6}
-  .foot .note{color:var(--slate)}
-  .hero{margin:24px 0 6px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;line-height:0}
-  .hero img{width:100%;height:188px;object-fit:cover;object-position:center 45%;display:block}
-  @media(max-width:620px){.exhibits{grid-template-columns:1fr}.hero img{height:140px}}
+  @media(max-width:620px){.exhibits{grid-template-columns:1fr}.nav{padding:14px 20px}.hero,.path,.exsec{padding-left:20px;padding-right:20px}}
+  .foot{padding:18px 44px 36px;border-top:1px solid var(--line);background:var(--soft);color:var(--muted);font-size:12.5px;line-height:1.6}
+  .foot .note{color:#5a5a62;font-weight:600}
 </style>
 <link rel="stylesheet" href="driftwood.css">
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <h1>Drift<span class="w">wood</span></h1>
-    <p class="tag">Cross-sectional &amp; time-series momentum research — region &amp; factor equity ETFs.</p>
-  </header>
+  <div class="frame">
+    <div class="chrome"><i></i><i></i><i></i><span class="url">driftwood — welcome</span></div>
+    <div class="nav">
+      <div class="brand">Drift<span class="w">wood</span></div>
+      <div class="links">
+        <a href="thesis.html">Approach</a>
+        <a href="thesis.html">Methodology</a>
+        <span class="pill">Illustrative modeling</span>
+      </div>
+    </div>
 
-  <figure class="hero">
-    <img src="assets/compass.png" loading="lazy"
-         alt="Hand-drawn compass over a topographic map — navigating the currents of global markets" />
-  </figure>
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Private wealth architecture</div>
+        <h1>Keep more of<br />what you've earned.</h1>
+        <p class="lede">We coordinate your investments, taxes, and estate into one after-tax plan —
+          and show you the dollars before you commit a thing.</p>
+        <div class="ctas">
+          <a class="primary" href="taxlab.html?view=prospect">See what we'd save you →</a>
+          <a class="ghost" href="ledger.html">View the track record</a>
+        </div>
+        <div class="trust">
+          <span><b>✓</b> Fiduciary, fee-only</span>
+          <span><b>✓</b> Coordinated with your CPA &amp; attorney</span>
+        </div>
+      </div>
+      <div>
+        <div class="ocard" id="ocard"></div>
+        <div class="onote">Hypothetical, backtested model results for the strategy — not a forecast and not a client
+          account. Your own after-tax figures depend on your situation; compute them in the Tax&nbsp;Lab.</div>
+      </div>
+    </div>
 
-  <p class="lede">
-    Driftwood is a <b>quantitative wealth-architecture</b> platform — a systematic global-equity
-    engine wrapped in a holistic, after-tax <b>asset-location</b> framework. It measures how persistently
-    an instrument has drifted relative to its own volatility, then coordinates account structure
-    (taxable / Traditional / Roth), state and federal tax, estate step-up, and tax-loss harvesting into
-    one after-tax plan. <span class="muted">Research and illustrative modeling; it flags and sizes trends, it does not place trades.</span>
-  </p>
+    <div class="path">
+      <div class="h">Your path · five steps, in order</div>
+      <div class="steps">
+        <a class="step lead" href="taxlab.html?view=prospect"><div class="n">1</div><div class="t">Your situation</div><div class="d">Bracket, state, portfolio.</div></a>
+        <a class="step" href="taxlab.html?view=prospect"><div class="n">2</div><div class="t">The problem</div><div class="d">What tax &amp; fees cost now.</div></a>
+        <a class="step" href="taxlab.html"><div class="n">3</div><div class="t">The fix</div><div class="d">Asset location + harvesting.</div></a>
+        <a class="step" href="ledger.html"><div class="n">4</div><div class="t">The proof</div><div class="d">The model portfolio.</div></a>
+        <a class="step" href="taxlab.html"><div class="n">5</div><div class="t">Your proposal</div><div class="d">Brief + client PDF.</div></a>
+      </div>
+    </div>
 
-  <div class="headline" id="headline"></div>
+    <div class="exsec">
+      <div class="h">Explore the exhibits</div>
+      <div class="exhibits" id="exhibits"></div>
+    </div>
 
-  <h2 class="sec">Exhibits</h2>
-  <div class="exhibits" id="exhibits"></div>
-
-  <div class="foot">
-    <span class="note">Research only — not investment advice.</span>
-    Backtests are walk-forward and net of modeled transaction cost; the Model Portfolio is a
-    hypothetical, append-only backtest — the retroactive application of the model to historical
-    data, not actual trading or any client account. The <code>continuation</code> parameter
-    is an unvalidated default — figures are engineering validation, not expected returns.
-    Past performance — hypothetical or actual — does not guarantee future results.
-    Data: Yahoo Finance daily bars, keyless.
-    <div style="margin-top:8px">Driftwood is a research brand of <b>CWS&nbsp;Planning</b>, a
-    <b>registered investment adviser</b>; Form ADV and Form CRS are available at
-    <a href="https://adviserinfo.sec.gov/" style="color:var(--slate)">adviserinfo.sec.gov</a>.</div>
-    <div id="gen" style="margin-top:6px"></div>
+    <div class="foot">
+      <span class="note">Research &amp; illustrative modeling — not investment, tax, or legal advice.</span>
+      The Model Portfolio is a hypothetical, append-only backtest — the retroactive application of the model to
+      historical data, not actual trading or any client account. Past performance — hypothetical or actual —
+      does not guarantee future results. Data: Yahoo Finance daily bars, keyless.
+      <div style="margin-top:8px">Driftwood is a research brand of <b>CWS&nbsp;Planning</b>, a
+      <b>registered investment adviser</b>; Form ADV and Form CRS are available at
+      <a href="https://adviserinfo.sec.gov/" style="color:var(--teal)">adviserinfo.sec.gov</a>.</div>
+      <div id="gen" style="margin-top:6px"></div>
+    </div>
   </div>
 </div>
 
@@ -92,9 +153,18 @@
 window.__STATE__ = /*__STATE__*/null/*__END__*/;
 
 function render(s){
-  document.getElementById("headline").innerHTML = (s.headline||[]).map(m=>
-    `<div class="card"><div class="v ${m.tone||''}">${m.value}</div>
-      <div class="l">${m.label}</div><div class="s">${m.sub||""}</div></div>`).join("");
+  const head = s.headline || [];
+  // Outcome card — the REAL hypothetical Model Portfolio headline (not a fabricated dollar figure).
+  const mp = head.find(m => /Model Portfolio/i.test(m.label)) || head[0];
+  const dd = head.find(m => /drawdown/i.test(m.label));
+  if(mp){
+    document.getElementById("ocard").innerHTML =
+      `<div class="k">The hypothetical Model Portfolio</div>`+
+      `<div class="sub">${mp.sub||""}</div>`+
+      `<div class="big">${mp.value}</div>`+
+      `<div class="cap">illustrative model return, net of cost</div>`+
+      (dd ? `<div class="row"><div><div class="v">${dd.value}</div><div class="l">${dd.label.replace(/.*·\s*/,'')}</div></div></div>` : "");
+  }
   document.getElementById("exhibits").innerHTML = (s.exhibits||[]).map(e=>
     `<a class="ex ${e.present?'':'absent'}" href="${e.href}">
       <div class="t">${e.title} <span class="arrow">→</span></div>

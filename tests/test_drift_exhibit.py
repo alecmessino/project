@@ -20,11 +20,43 @@ def _settings():
 
 def test_build_state_shape():
     state = build_state(_universe(), _settings(), source="synthetic")
-    assert set(state) == {"header", "instruments", "rankings", "cross_backtest"}
+    assert set(state) == {"blotter", "header", "instruments", "rankings", "cross_backtest"}
     assert state["header"]["n_instruments"] == 3
     assert len(state["instruments"]) == 3
     assert len(state["rankings"]) == 3
     assert state["cross_backtest"]["equity"]  # populated
+
+
+def test_latest_rebalance_blotter_diffs_a_rotation():
+    from dataclasses import replace
+    from datetime import date, timedelta
+    from drift.exhibit import latest_rebalance_blotter
+    # Six names (> min_universe; quantile 0.5 -> top 3 held). Three lead then fade, three lag then
+    # surge, so the held set rotates at a rebalance: the surging names enter, the fading ones exit —
+    # exactly what the blotter must surface. (Real ISO dates so the date-ordered walk isn't scrambled.)
+    start = date(2020, 1, 1)
+    series = {}
+    plan = [(f"LEAD{i}", [(130, 0.7), (130, -0.7)], 20 + i) for i in range(3)] + \
+           [(f"LAG{i}", [(130, -0.7), (130, 0.7)], 30 + i) for i in range(3)]
+    for name, regs, seed in plan:
+        bars = SyntheticFeed(instruments=(name,), n_bars=260, regimes=regs, seed=seed).series(name)
+        series[name] = [replace(b, asof=(start + timedelta(days=k)).isoformat()) for k, b in enumerate(bars)]
+    bl = latest_rebalance_blotter(series, _settings())
+    assert bl is not None and bl["trades"]
+    assert {"date", "prev_date", "since_return", "n_held", "trades"} <= set(bl)
+    for t in bl["trades"]:
+        assert t["action"] in {"NEW", "ADD", "TRIM", "EXIT"}
+        assert set(t) == {"instrument", "action", "prev_weight", "weight", "delta"}
+    # an entry/exit pair has a real weight move (not an immaterial wiggle)
+    assert any(t["action"] in {"NEW", "EXIT"} for t in bl["trades"])
+    assert all(abs(t["delta"]) > 0 for t in bl["trades"])
+
+
+def test_blotter_is_none_for_too_short_history():
+    from drift.exhibit import latest_rebalance_blotter
+    series = {f"S{i}": SyntheticFeed(instruments=(f"S{i}",), n_bars=1, regimes=[(1, 0.0)],
+                                     seed=i).series(f"S{i}") for i in range(3)}
+    assert latest_rebalance_blotter(series, _settings()) is None
 
 
 def test_build_state_is_json_serializable():

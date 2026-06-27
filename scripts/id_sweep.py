@@ -91,12 +91,18 @@ def fip_test(series: dict[str, list[float]], settings: Settings) -> dict:
 
     def stat(xs: list[float]) -> dict:
         if not xs:
-            return {"mean": 0.0, "ir": 0.0, "n": 0}
+            return {"mean": 0.0, "std": 0.0, "ir": 0.0, "n": 0}
         m = st.fmean(xs)
         s = st.pstdev(xs) if len(xs) > 1 else 0.0
-        return {"mean": m, "ir": (m / s if s else 0.0), "n": len(xs)}
+        return {"mean": m, "std": s, "ir": (m / s if s else 0.0), "n": len(xs)}
 
-    return {"continuous": stat(cont), "discrete": stat(disc), "all_longs": stat(base), "H": H}
+    c, d = stat(cont), stat(disc)
+    # Welch two-sample t on the continuous − discrete spread. NOTE: forward returns share market
+    # moves cross-sectionally, so this t OVERSTATES significance — read it as a generous upper bound.
+    se = ((c["std"] ** 2 / c["n"]) + (d["std"] ** 2 / d["n"])) ** 0.5 if c["n"] and d["n"] else 0.0
+    t_stat = ((c["mean"] - d["mean"]) / se) if se > 0 else 0.0
+    return {"continuous": c, "discrete": d, "all_longs": stat(base), "H": H,
+            "spread": c["mean"] - d["mean"], "t_stat": t_stat}
 
 
 def main() -> int:
@@ -129,9 +135,12 @@ def main() -> int:
     print(hdr); print("-" * len(hdr))
     for name, s in (("Continuous (low ID)", c), ("Discrete (high ID)", d), ("All longs (baseline)", a)):
         print(f"{name:<26}{s['mean']*100:>13.3f}%{s['ir']:>12.3f}{s['n']:>7}")
-    spread = (c["mean"] - d["mean"]) * 100
+    spread = res["spread"] * 100
     print(f"\nContinuous − Discrete forward-return spread: {spread:+.3f}% per {res['H']}-bar hold "
           f"(FIP predicts this is positive).")
+    sig = "significant at ~95%" if abs(res["t_stat"]) >= 1.96 else "NOT significant at 95%"
+    print(f"Welch t-statistic on the spread: {res['t_stat']:+.2f}  ({sig}).")
+    print("  Caveat: cross-sectional return correlation inflates this t — treat it as an upper bound.")
     if not use_real:
         print("\nSYNTHETIC RUN — proves the harness discriminates; NOT evidence the edge exists on real ETFs.")
     print("Research only — not wired into the live signal. Do not present to clients until the real run "

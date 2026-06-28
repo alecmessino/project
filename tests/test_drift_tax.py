@@ -537,13 +537,13 @@ def test_state_estate_embedded(tmp_path):
 
 def test_methodology_dual_engine_and_honest():
     """Methodology copy describes the dual-engine architecture and NEVER claims the live track
-    includes the offline-validated Slow Book (honesty guard)."""
+    includes the offline-validated Tax-Managed Core Strategy (honesty guard)."""
     from pathlib import Path
     import drift.taxlab as T
     led = " ".join((Path(T.__file__).with_name("web") / "ledger.html").read_text().split())  # collapse HTML line-wrap
-    assert "Fast Book" in led and "Slow Book" in led
+    assert "Unconstrained Core Alpha" in led and "Tax-Managed Core" in led   # institutional nomenclature
     assert "asset location" in led.lower()
-    assert "not part of the Model Portfolio above" in led   # the Slow Book is NOT in the model curve
+    assert "not part of the Model Portfolio above" in led   # the Tax-Managed Core is NOT in the model curve
     # Its comparative claim must be framed as a hypothetical/illustrative validation run, not a track record.
     assert "illustrative" in led.lower() and "scripts/slow_sweep.py" in led
 

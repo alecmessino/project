@@ -8,6 +8,13 @@ committed config and not wired into the live signal**; this is research only. Th
 is cached at `tests/data/matrix_history.json` so `TILT_SWEEP_REAL=1 python scripts/tilt_sweep.py`
 reproduces it offline.
 
+> **Narrative status (2026-06-28): this is exploratory research, not the value prop.** These runs are
+> what led us to retire "Signal Alpha" (momentum/timing) as a claim — the tilt added ~0.01 Sharpe and
+> ~0.5% return, i.e. no risk-adjusted edge. The firm now stands on **Structural Alpha** (engineered
+> factor *exposure* + mechanical tax management). See `docs/Structural_Alpha_Methodology.md` for the
+> canonical framing and the substantiation boundary; the figures below are the proof-of-work behind
+> that decision, not a momentum-timing pitch.
+
 ---
 
 ## The four books

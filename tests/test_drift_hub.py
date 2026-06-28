@@ -105,3 +105,30 @@ def test_render_hub_embeds_state(tmp_path):
     assert "/*__STATE__*/null/*__END__*/" not in html
     assert html.lstrip().startswith("<!DOCTYPE html>")
     assert "Driftwood" in html or "Drift" in html
+
+
+def test_hub_funnel_leads_with_structural_alpha_and_demotes_momentum_to_appendix(tmp_path):
+    # Structural Alpha pivot: the primary funnel leads with the structural narrative (Thesis, Tax Lab);
+    # the momentum exhibits (ledger, tearsheet, dashboard, case studies) are relegated to an honestly
+    # labeled "Exploratory research" appendix — proof of work, not the deployed strategy.
+    state = build_hub(tmp_path)
+    by_href = {e["href"]: e for e in state["exhibits"]}
+    # primary funnel — NOT appendix
+    assert by_href["thesis.html"]["appendix"] is False
+    assert by_href["taxlab.html"]["appendix"] is False
+    # exploratory research — appendix
+    for h in ("ledger.html", "tearsheet.html", "equities.html", "equities_case_studies.html"):
+        assert by_href[h]["appendix"] is True, f"{h} should be in the exploratory-research appendix"
+    # the momentum exhibits are described as exploratory research, not the deployed book
+    assert "Exploratory research" in by_href["ledger.html"]["desc"]
+    assert "Exploratory research" in by_href["equities.html"]["desc"]
+
+
+def test_hub_template_renders_an_exploratory_research_appendix_and_does_not_lead_with_the_ledger():
+    from drift.exhibit import HUB_TEMPLATE
+    t = HUB_TEMPLATE.read_text()
+    # a distinct, labeled appendix section exists, separate from the primary exhibit grid
+    assert "exhibits-appendix" in t and "Exploratory research" in t
+    assert "Structural Alpha" in t
+    # the hero no longer leads with the momentum "track record"
+    assert "View the track record" not in t

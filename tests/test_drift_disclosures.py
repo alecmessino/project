@@ -111,3 +111,33 @@ def test_ledger_attribution_states_alpha_significance_and_out_of_sample():
     assert "alpha_significant" in t and "alpha_t" in t
     assert "Out-of-sample only" in t
     assert "attribution_oos" in t
+
+
+# ── Structural Alpha pivot ────────────────────────────────────────────────────────────────────
+# The value proposition is "Structural Alpha" — deterministic tax+fee engineering plus deliberate
+# factor EXPOSURE ("engineered beta"), explicitly NOT a forecast that the funds out-perform, and NOT
+# momentum/market-timing. The momentum work is demoted to an honestly-labeled research satellite.
+
+def test_thesis_leads_with_structural_alpha_not_market_timing():
+    t = _read(THESIS_TEMPLATE)
+    # leads with the structural value prop
+    assert "Structural Alpha" in t
+    assert "engineered beta" in t.lower()
+    # factor tilt framed as EXPOSURE, never as an outperformance forecast (Marketing-Rule guard)
+    assert "not a forecast that these funds out-perform" in t
+    # the page explicitly says it is engineered beta, not market timing
+    assert "not market timing" in t.lower()
+    # the momentum work is present but demoted to an exploratory research section
+    assert "Exploratory research" in t
+
+
+def test_momentum_exhibits_carry_the_exploratory_research_banner():
+    # The momentum dashboard, ledger, and long-history tearsheet are relegated to proof-of-work and
+    # must each carry the honest banner: exploratory research, the shipped engine is Structural Alpha,
+    # and this signal ships neutral in production.
+    for tmpl in (LEDGER_TEMPLATE, TEARSHEET_TEMPLATE, TEMPLATE):
+        t = _read(tmpl)
+        assert "research-banner" in t, f"{tmpl.name}: missing the exploratory-research banner"
+        assert "Exploratory research" in t, f"{tmpl.name}: banner not labeled exploratory research"
+        assert "Structural Alpha" in t, f"{tmpl.name}: banner does not name the shipped strategy"
+        assert "neutral" in t, f"{tmpl.name}: banner must state the signal ships neutral"

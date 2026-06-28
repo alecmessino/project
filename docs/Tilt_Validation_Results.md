@@ -1,80 +1,80 @@
 # Tilt + Lot-Protection Hybrid vs Concentrated Selection — Validation Results
 
-**Status: MECHANISM CHECK ONLY — the real-data run is pending a reachable feed.**
-This records whether holding the **whole ETF matrix and tilting weights by signal strength** — and
-then wrapping it in the Tax-Managed Core's tax discipline — is a better book than concentrating in
-the trending top half. The numbers below come from the **synthetic** harness only; they prove the
-mechanism discriminates but are **not evidence** about real ETFs. The tilt overlay
-(`cross_section.tilt_overlay`) and lot-protection hybrid flag (`cross_section.lot_protect`) are
-**OFF in every committed config and not wired into the live signal.**
+**Status: REAL-DATA RUN COMPLETE (40y proxy-spliced, via Tiingo from CI).**
+Whether holding the **whole ETF matrix and tilting weights by signal strength** — wrapped in the
+Tax-Managed Core's tax discipline (no-trade band + lot protection) — is a better book than
+concentrating in the trending top half. The `tilt_overlay` / `lot_protect` flags are **OFF in every
+committed config and not wired into the live signal**; this is research only. The real 40-year matrix
+is cached at `tests/data/matrix_history.json` so `TILT_SWEEP_REAL=1 python scripts/tilt_sweep.py`
+reproduces it offline.
 
 ---
 
-## The question
-The **Unconstrained Core Alpha Strategy** (the live book, `config/drift.yaml`) is long-only
-cross-sectional momentum on the top half of the 18-ETF matrix: high signal capture, but ~13×/yr
-turnover and ~95% short-term gains on the forward ledger — the least tax-efficient structure for a
-taxable client. The **Tax-Managed Core Strategy** (the slow 40/60 sleeve, `config/slow.yaml`) trades
-that down with asymmetric hysteresis + lot protection + a tax-aware no-trade band.
+## The four books
+- **Unconstrained Core Alpha Strategy** (live, `config/drift.yaml`): long-only momentum on the top half
+  — high signal capture, high turnover, ~94% short-term gains.
+- **Tax-Managed Core Strategy** (slow 40/60, `config/slow.yaml`): hysteresis + lot protection + the
+  tax-aware band.
+- **Continuous tilt** (`weight = base·(1 + k·z)` across the whole universe).
+- **Hybrid** = the tilt + BOTH Tax-Managed Core tax levers (band + lot protection).
 
-The earlier sweep showed a broad continuous tilt earns the best Sharpe and shallowest drawdown but
-was *not* the most tax-efficient. The **hybrid** tested here keeps the tilt weighting
-(`weight = base·(1 + k·z)` across the whole universe) and layers on **both** Tax-Managed Core tax
-levers — the tax-aware no-trade band and lot protection (delay a near-1-year sale unless the signal
-collapses) — to convert the tilt's short-term churn into long-term gains.
-
-## What was run
-```
-python scripts/tilt_sweep.py                       # synthetic fallback (mechanism check)
-TILT_SWEEP_REAL=1 python scripts/tilt_sweep.py     # real 40y proxy-spliced matrix (PENDING a feed)
-```
-**Real-data status:** the keyless chain is currently unusable from this environment — **Stooq** serves
-a JavaScript anti-bot interstitial (no CSV) and **Yahoo** returns HTTP 429 (cloud-IP rate limit); no
-`TIINGO_API_KEY` is set. The real run is paused pending a Tiingo key (or another reachable source);
-when available, the committed cache makes it reproducible offline thereafter.
-
-## Synthetic result (mechanism check — NOT evidence)
+## REAL DATA — full sample (40.1y, proxy-spliced; the canonical run)
 
 | variant | pre-tax | after-tax | retain | Sharpe | maxDD | turnover | ST% | names |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Unconstrained Core (live)         | 1195% | 400% | 33.5% | 1.14 | 11.5% | 376% | 81% | 8.9 |
-| Tax-Managed Core (slow 40/60)     | 1077% | 498% | 46.2% | 1.08 | 11.6% | 123% | 35% | 8.8 |
-| Tilt k=0.5                        |  946% | 376% | 39.7% | 1.32 | 8.6% | 186% | 57% | 17.5 |
-| Tilt k=0.5 +band                  |  990% | 457% | 46.2% | 1.34 | 8.8% | 111% | 33% | 17.5 |
-| **Tilt k=0.5 +band+lots (HYBRID)** | 1060% | **493%** | **46.5%** | **1.37** | **8.9%** | **109%** | **29%** | 17.5 |
-| Tilt k=1.0 +band+lots             | 1679% | 531% | 31.6% | 1.42 | 8.8% | 239% | 73% | 15.0 |
+| Unconstrained Core (live)         | 4367% | 901% | 20.6% | **0.64** | 56.7% | 344% | 94% | 6.6 |
+| **Tax-Managed Core (slow)**       | 3299% | **1188%** | **36.0%** | 0.59 | 62.3% | 156% | 44% | 6.6 |
+| Tilt k=0.5                        | 3467% | 858% | 24.7% | 0.60 | 57.4% | 195% | 87% | 13.1 |
+| Tilt k=0.5 +band                  | 3402% | 1079% | 31.7% | 0.60 | 57.6% | 142% | 54% | 13.1 |
+| **Hybrid (k=0.5 +band+lots)**     | 3353% | 1078% | 32.2% | 0.60 | 58.0% | 141% | 50% | 13.1 |
+| Tilt k=1.0 +band+lots             | 4164% | 902% | 21.7% | 0.62 | 56.3% | 274% | 91% | 11.0 |
 
-*retain = after-tax / pre-tax (higher = more tax-efficient). +band isolates the no-trade band; +lots
-adds lot protection.*
+## REAL DATA — by decade (sub-period robustness)
 
-## What the mechanism check shows
-**The hybrid bridges the risk-vs-tax gap on this data:**
-- **Best Sharpe (1.37)** of every tax-managed option — above the slow book's 1.08 and the bare tilt's
-  1.32 — and it keeps the tilt's **shallow drawdown (8.9% vs 11.6% slow / 11.5% concentrated)**,
-  holding ~17 names vs ~9.
-- **Tax efficiency now matches/beats the slow book**: retention 46.5% (vs 46.2%), short-term share
-  **29% (vs 35%)**, turnover **109% (lowest)** — the lot protection pushed the tilt's 57% ST down to
-  29%, and after-tax return (493%) essentially ties the slow book (498%) at a higher Sharpe.
-- **Lever attribution**: the no-trade **band** does most of the tax work (ST 57%→33%, retention
-  39.7%→46.2%); **lot protection** adds the final increment (ST 33%→29%) and a small Sharpe lift.
-- **k=0.5 is the sweet spot**: k=1.0 chases pre-tax return (and Sharpe 1.42) but goes tax-hostile
-  (73% ST, 31.6% retention).
+| decade (tickers) | metric | Unconstr. | Slow | Hybrid (+band+lots) |
+|---|---|---:|---:|---:|
+| 1986–1996 (9)  | after-tax / retain / Sharpe | 83% / 51.5% / 0.79 | 92% / **68.3%** / 0.69 | 85% / 58.7% / **0.79** |
+| 1996–2006 (14) | after-tax / retain / Sharpe | 95% / 45.4% / **0.82** | 89% / **63.3%** / 0.67 | 108% / 58.9% / 0.77 |
+| 2006–2016 (18) | after-tax / retain / Sharpe | 41% / 47.4% / 0.39 | 33% / **75.9%** / 0.27 | **52%** / 63.3% / 0.38 |
+| 2016–2026 (18) | after-tax / retain / Sharpe | 86% / 50.7% / 0.66 | 94% / 65.8% / 0.61 | **114% / 61.9% / 0.69** |
 
-## Honest caveats
-- **Synthetic, not real.** Smooth rotating-sinusoid regimes; a harness check, not a backtest. The real
-  proxy-spliced run is the only thing that could support a deployment decision, and it is pending a
-  reachable feed.
-- **Lot-protection approximation.** Protection keys on the position's first-entry age, while the FIFO
-  tax engine dates each lot — newer mid-position adds can still be short-term if sold (the same
-  approximation the slow sleeve already ships). Directionally sound; the exact ST→LT split on real
-  data may differ.
-- **Single path, no transaction-cost realism beyond modeled per-side bps**, no capacity/spread, no
-  sub-period or seed robustness yet.
-- **Not wired live.** `tilt_overlay` and `lot_protect` default `False`; both shipped configs keep them
-  off (guarded).
+## Synthetic vs real — what changed (the honest reconciliation)
+
+| claim (synthetic) | synthetic | **real (full sample)** | verdict |
+|---|---|---|---|
+| Tilt/hybrid has the best Sharpe | 1.37 vs 1.14 | **0.60 vs 0.64** | ❌ does not replicate — the edge inverts slightly |
+| Tilt/hybrid has the shallowest drawdown | 8.9% vs 11.5% | **58% vs 57%** | ❌ no edge — real DDs are uniformly deep (incl. 2008) |
+| Hybrid beats the slow book on tax | 46.5% vs 46.2% retain | **32.2% vs 36.0% retain** | ❌ slow book is still the tax champion (full sample) |
+| The tax levers cut ST churn | 57%→29% ST | **87%→50% ST, 195%→141% turnover** | ✅ confirmed — they work as designed |
+| The tilt is far more diversified | ~17 vs ~9 names | **13 vs 7 names** | ✅ confirmed |
+
+**What this means.** The synthetic harness *overstated* the tilt's risk-adjusted edge: its smooth
+rotating regimes manufactured a Sharpe/drawdown advantage that real markets do not pay. On the full
+40-year sample the **Tax-Managed Core (slow) remains the most tax-efficient and highest after-tax book
+(1188%, 36% retention)**; the hybrid lands *between* the bare tilt and the slow book — its tax
+machinery genuinely works (ST 87%→50%), but it does not dominate.
+
+**The real signal is in the sub-periods.** The full-sample number is dragged down by the early decades,
+when only 9–14 of the 18 ETFs existed (the rest are proxy back-fill), muting the tilt's breadth. In
+the **full-universe era (2006–2026)** the hybrid is the best after-tax book in *both* decades, and in
+**2016–2026 it leads on after-tax (114%) AND Sharpe (0.69)** — diversification + tax efficiency pay
+once the universe is actually broad. So the hybrid's edge is real but *regime- and breadth-dependent*,
+not a free lunch.
+
+## Caveats
+- **Proxy splice**: 14 of 18 tickers are back-filled before inception with style-faithful Vanguard /
+  DFA / WisdomTree proxies; pre-2006 history is approximate.
+- **Lot-protection approximation**: protection keys on the position's first-entry age, while the FIFO
+  tax engine dates each lot — newer adds can still be short-term if sold.
+- **Determinism**: the `+band+lots` rows carry ~1–2% run-to-run variation from set-iteration order in
+  the lot-protection redistribution (hash-seed dependent); it does not change any conclusion. Set
+  `PYTHONHASHSEED=0` for bit-exact reproduction.
+- **Single path, modeled per-side cost only** — no spread/capacity/borrow realism.
+- **Not wired live**; both flags default off and are guarded.
 
 ## Recommendation
-The hybrid is a genuine "best of both" on the mechanism check — the tilt's Sharpe/drawdown edge **plus**
-the Tax-Managed Core's tax efficiency. This justifies a **real-data** run on the proxy-spliced matrix
-(swept across `k`, sub-periods, and the full sample) before any deployment decision. Promote the hybrid
-to the live Tax-Managed Core benchmark only if that holds up — never on this synthetic check.
+Do **not** promote the hybrid over the Tax-Managed Core wholesale — on the full sample the slow book
+still wins on after-tax. But the hybrid is a legitimate, more-diversified, tax-efficient book that is
+the **best after-tax option in the recent full-universe era (2006–2026)**. Next step before any
+deployment: a cost/capacity-aware run focused on the full-universe period, sweeping `k` and the
+no-trade band, and comparing on after-tax, risk-adjusted terms.

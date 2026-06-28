@@ -58,6 +58,10 @@ jobs:
       - name: Build Tax-Leakage Diagnostic (docs/leakage.html)
         run: drift leakage --out docs/leakage.html
 
+      # Multi-dimension State Tax Map (cap-gains / marriage / estate / step-up / Structural Alpha).
+      - name: Build State Tax Map (docs/statemap.html)
+        run: drift statemap --out docs/statemap.html
+
       # Rebuild the markets-only landing hub last (reads the fresh exhibits above).
       - name: Build landing hub (docs/index.html)
         run: drift hub --docs docs --out docs/index.html

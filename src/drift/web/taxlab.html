@@ -110,6 +110,13 @@
   #usmap text.lab{font-size:3.3px;fill:#fff;font-weight:600;pointer-events:none;letter-spacing:.1px}
   .legend{display:flex;flex-wrap:wrap;gap:9px 15px;margin-top:13px;font-size:11px;color:var(--dim)}
   .legend span{white-space:nowrap}
+  .smtabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+  .smtabs button{font:inherit;font-size:12px;font-weight:600;color:var(--dim);background:#fff;border:1px solid var(--rule);
+    border-radius:7px;padding:6px 11px;cursor:pointer}
+  .smtabs button[aria-selected="true"]{background:var(--ink,#1d242d);color:#f1ede3;border-color:var(--ink,#1d242d)}
+  .smtabs button.hl{border-color:var(--brass,#a9853f);color:var(--brass,#a9853f)}
+  .smtabs button.hl::before{content:"★ ";font-size:9px}
+  .smtabs button.hl[aria-selected="true"]{background:var(--teal,#15463a);color:#f1ede3;border-color:var(--teal,#15463a)}
   .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
   .disc{border:1px solid var(--line);border-radius:10px;padding:17px 19px;background:var(--soft)}
   .disc .stname{font-size:20px;font-weight:680;letter-spacing:-.3px;line-height:1.2}
@@ -429,8 +436,9 @@
 
   <div class="geo">
     <div class="map-wrap">
+      <div class="smtabs" id="smtabs" role="tablist"></div>
       <h3 id="maphdr">Tax severity by state <span class="hint">· click a state to localize the model</span></h3>
-      <svg id="usmap" viewBox="0 0 110 80" role="group" aria-label="US state capital-gains tax severity — select your state"></svg>
+      <svg id="usmap" viewBox="0 0 110 80" role="group" aria-label="US state tax map — select your state"></svg>
       <div class="legend" id="legend"></div>
     </div>
     <aside class="disc advisor-only" id="disc">
@@ -763,13 +771,29 @@ function paintLeadSel(code){
   const host=$("leadstate"); if(!host) return;
   host.querySelectorAll("button").forEach(b=>b.classList.toggle("sel", b.dataset.st===code));
 }
+// Multi-dimension state map: cap-gains keeps the existing severity coloring (it drives the localized
+// model); the other four dimensions recolor the SAME cartogram from the embedded statemap dataset.
+// Map colour is independent of the tax calc (which reads the selected state's rates), so this is safe.
+let MAPDIM="cg";
+function smDims(){ return (S.statemap&&S.statemap.dimensions)||[]; }
+function smDim(){ return smDims().find(d=>d.key===MAPDIM); }
 function buildMap(){
+  const useDim = MAPDIM!=="cg" && S.statemap && smDim();
+  const dim = useDim ? smDim() : null;
+  const cmap = useDim ? Object.fromEntries(dim.legend.map(z=>[z[0],z[1]])) : null;
   let parts="";
   for(const code in TILES){
     if(!(code in S.states)) continue;
-    const [c,row]=TILES[code], [slt,sst]=S.states[code], b=BUCKETS[bucketOf(slt,sst)];
-    const x=c*10, y=row*10;
-    parts+=`<rect class="st" role="button" tabindex="0" data-st="${code}" aria-label="${(NAMES[code]||code)} — ${b.lab} tax severity" x="${x}" y="${y}" width="9" height="9" rx="1.3" fill="${b.fill}" vector-effect="non-scaling-stroke"><title>${code} · ${b.lab}</title></rect>`+
+    const [c,row]=TILES[code]; const x=c*10, y=row*10;
+    let fill,lab;
+    if(useDim){
+      const rec=(S.statemap.states[code]||{})[MAPDIM];
+      fill = rec ? (cmap[rec.regime]||"#ece6da") : "#ece6da";
+      lab = rec ? ((dim.legend.find(z=>z[0]===rec.regime)||[])[2]||"") : "n/a";
+    } else {
+      const [slt,sst]=S.states[code], b=BUCKETS[bucketOf(slt,sst)]; fill=b.fill; lab=b.lab;
+    }
+    parts+=`<rect class="st" role="button" tabindex="0" data-st="${code}" aria-label="${(NAMES[code]||code)} — ${lab}" x="${x}" y="${y}" width="9" height="9" rx="1.3" fill="${fill}" vector-effect="non-scaling-stroke"><title>${code} · ${lab}</title></rect>`+
       `<text class="lab" x="${x+4.5}" y="${y+4.6}" text-anchor="middle" aria-hidden="true">${code}</text>`;
   }
   $("usmap").innerHTML=parts;
@@ -778,13 +802,42 @@ function buildMap(){
     r.addEventListener("click",pick);
     r.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });   // keyboard-operable tiles
   });
-  $("legend").innerHTML=BUCKETS.map(b=>`<span><i style="background:${b.fill}"></i>${b.lab}</span>`).join("");
+  $("legend").innerHTML = useDim
+    ? dim.legend.filter(z=>z[2]!=="").map(z=>`<span><i style="background:${z[1]}"></i>${z[2]}</span>`).join("")
+    : BUCKETS.map(b=>`<span><i style="background:${b.fill}"></i>${b.lab}</span>`).join("");
+}
+// Dimension tabs over the cartogram (built from the embedded statemap dataset). Switching a tab
+// recolors the map + swaps the legend + the detail panel; selecting a state still drives the model.
+function buildSmTabs(){
+  const host=$("smtabs"); if(!host) return;
+  const dims=smDims(); if(!dims.length){ host.style.display="none"; return; }
+  host.innerHTML=dims.map(d=>`<button type="button" role="tab" data-k="${d.key}" class="${d.highlight?'hl':''}" aria-selected="${d.key===MAPDIM}">${d.label}</button>`).join("");
+  host.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    MAPDIM=b.dataset.k;
+    host.querySelectorAll("button").forEach(x=>x.setAttribute("aria-selected", String(x.dataset.k===MAPDIM)));
+    const d=smDim();
+    $("maphdr").innerHTML = MAPDIM==="cg"
+      ? `Tax severity by state <span class="hint">· click a state to localize the model</span>`
+      : `${(d&&d.title)||""} <span class="hint">· click a state for the detail</span>`;
+    buildMap(); paintSel($("state").value); renderDisc(rates());
+  }));
+}
+function renderDimDisc(code){
+  const dim=smDim(); if(!dim) return;
+  const rec=(S.statemap.states[code]||{})[MAPDIM];
+  const name = code==="—" ? "No state tax" : (NAMES[code]||code);
+  if(!rec){ $("discbody").innerHTML=`<div class="stname">${name}</div><p class="adv">Not modeled for this dimension.</p>`; return; }
+  const leg=dim.legend.find(z=>z[0]===rec.regime)||[], col=leg[1]||"#d8cfbc", lab=leg[2]||"";
+  let html=`<div class="stname">${name}${lab?`<span class="pill" style="background:${col}">${lab}</span>`:""}</div><p class="adv">${rec.note}</p>`;
+  if(MAPDIM==="alpha"&&rec.deeplink) html+=`<p style="margin-top:8px"><a href="${rec.deeplink}" style="color:var(--teal,#15463a);font-weight:600">See ${name}'s diagnostic →</a></p>`;
+  $("discbody").innerHTML=html;
 }
 function paintSel(code){
   const tile = code==="NYC" ? "NY" : code;     // NYC has no tile of its own — light up NY
   $("usmap").querySelectorAll("rect.st").forEach(r=>r.classList.toggle("sel", r.dataset.st===tile));
 }
 function renderDisc(r){
+  if(MAPDIM!=="cg" && S.statemap){ return renderDimDisc(r.state); }
   const [slt,sst]=S.states[r.state], bi=bucketOf(slt,sst), b=BUCKETS[bi];
   const name = r.state==="—" ? "No state tax" : (NAMES[r.state]||r.state);
   $("discbody").innerHTML=
@@ -1532,6 +1585,7 @@ function init(){
   }
   // Illiquid / true-net-worth params feed the estate cliff directly (home equity, policies, business).
   setClamped("estre",qHome); setClamped("estli",qLi); setClamped("estbiz",qBiz);
+  buildSmTabs();
   buildMap();
   render();
   // Phase B: dual-mode — wire the toggle, seed the lead funnel, apply the current view.

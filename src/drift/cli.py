@@ -281,6 +281,18 @@ def leakage(
 
 
 @app.command()
+def statemap(
+    out: str = typer.Option("docs/statemap.html", "--out", help="State Tax Map exhibit"),
+):
+    """Build the multi-dimension State Tax Map (cap-gains / marriage / estate / step-up / Structural Alpha)."""
+    from .statemap import build_statemap
+    from .exhibit import export_statemap
+    state = build_statemap()
+    path = export_statemap(state, out)
+    console.print(f"[green]wrote[/] {path}  ({len(state['states'])} states · {len(state['dimensions'])} dimensions)")
+
+
+@app.command()
 def hub(
     docs: str = typer.Option("docs", "--docs", help="directory holding the exhibits"),
     out: str = typer.Option("docs/index.html", "--out", help="hub landing page"),

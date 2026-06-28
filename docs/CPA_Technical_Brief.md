@@ -22,32 +22,33 @@ management — the part a passive benchmark simply *leaks*. This brief is about 
 
 On an identical 18-ETF universe, holding the investment decisions fixed and varying **only** the tax
 treatment, the engine recovers the following in **after-tax CAGR** versus a concentrated, high-turnover
-book taxed naively (`scripts/tax_alpha.py`, 40-year proxy-spliced path):
+book taxed naively (`scripts/tax_alpha.py`, 30-year window 1996–2026 — the same horizon as the
+long-history tearsheet, for one consistent headline figure across artifacts):
 
 | Tax environment | After-tax CAGR — naive | After-tax CAGR — managed | **Structural Alpha (tax)** |
 |---|---:|---:|---:|
-| Federal only | 3.1%/yr | 6.4%/yr | **+3.2%/yr** |
-| Illinois | 2.3%/yr | 5.9%/yr | **+3.6%/yr** |
-| New York | 1.3%/yr | 5.4%/yr | **+4.1%/yr** |
-| California | 0.8%/yr | 5.2%/yr | **+4.3%/yr** |
+| Federal only | 2.7%/yr | 6.3%/yr | **+3.7%/yr** |
+| Illinois | 1.8%/yr | 5.9%/yr | **+4.0%/yr** |
+| New York | 0.8%/yr | 5.3%/yr | **+4.5%/yr** |
+| California | 0.4%/yr | 5.1%/yr | **+4.7%/yr** |
 
 Three things a CPA should note immediately:
 - It is **after-tax**, and it is **not** a pre-tax return claim — pre-tax CAGR is in fact slightly
-  *lower* on the managed book (9.3% vs 9.9%). The value is entirely in what is *kept*.
+  *lower* on the managed book (9.1% vs 9.4%). The value is entirely in what is *kept*.
 - It **rises with the marginal rate** — the higher the client's bracket/state, the larger the leak we
   plug. This is the opposite of luck; it is rate arithmetic.
 - It is **illustrative** (FIFO lot accounting on the book's own marks, paid-as-you-go, single
   historical path), not a guarantee. The mechanics below are what produce it.
 
-The assumption-free part decomposes ≈ **55–60% basis management** and ≈ **40–45% harvesting + rate
+The assumption-free part decomposes ≈ **60–65% basis management** and ≈ **35–40% harvesting + rate
 arbitrage**; **asset location** is the household-specific third driver, quantified per client.
 
 ## 3. Driver one — Basis management (lot protection + hysteresis)
 
 **Mechanic.** The engine holds positions through noise (hysteresis) and protects unrealized lots from
 being trimmed, so realizations are deferred and, when they occur, are more likely **long-term**. On the
-concentrated book ~**94%** of realized gains are short-term; the managed book cuts that to ~**50%** and
-roughly halves turnover (344% → 141%).
+concentrated book ~**96%** of realized gains are short-term; the managed book cuts that to ~**53%** and
+roughly a third the turnover (371% → 136%).
 
 **Why it matters (the rate arbitrage).** Short-term gains are taxed as ordinary income; long-term at
 preferential rates. The federal spread alone is **40.8% → 23.8%** (37% + 3.8% NIIT vs 20% + 3.8% NIIT),
@@ -104,7 +105,7 @@ substitutes and any duplicate holdings in *other* accounts (including a spouse's
 - **Rates:** top-of-bracket federal (37% ST / 20% LT) + 3.8% NIIT + representative top **state** rates
   (`drift.tax.STATE_RATES`, including the WA LT excise, MA higher ST, and the LT-exclusion states).
   Verify against the client's actual marginal rates.
-- **Horizon / path:** a single ~40-year history, **partly proxy-spliced** pre-2006; figures are
+- **Horizon / path:** a single 30-year history (1996–2026), **partly proxy-spliced** pre-2006; figures are
   cumulative and **paid-as-you-go**. A single path is not a distribution of outcomes.
 - **Determinism:** the lot-protection redistribution is hash-seed sensitive (~1–2% run-to-run); set
   `PYTHONHASHSEED=0` for bit-exact reproduction.

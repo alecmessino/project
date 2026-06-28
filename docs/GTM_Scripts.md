@@ -38,40 +38,67 @@ relevant deep-link from `GTM_Playbook.md`. Do not send without sign-off.
 *Compliance note:* 1c states the fee-only standard plainly — keep it accurate (no product sales). All
 three gate the number behind the diagnostic.
 
-## 2. CPA / gatekeeper — partner, don't poach
+## 2. CPA / gatekeeper — Operational Efficiency (lead with this channel)
 
-### 2a. First touch
-> Hi [Name] — I'm a wealth architect who helps high-net-worth clients clean up portfolio-level *tax
-> leakage*. You're often the one reconciling the mess that high-turnover, return-chasing strategies
-> create at filing time. My methodology — "Structural Alpha" — prioritizes lot protection, asset
-> location, and tax-loss harvesting so the portfolio is a **tax-friendly asset** on your clients'
-> returns, not a short-term-gains headache every April. I'm looking to partner with CPAs who want a
-> genuinely tax-integrated investment experience for their clients. Could I buy you a coffee and walk
-> you through our Tax-Leakage Diagnostic and technical brief?
+This is the highest-leverage wedge. The voice is **peer-to-peer — one professional describing how a
+book behaves on a return to another.** Not a sales pitch and not a "partner with me" ask up front;
+the frame is **operational**: a portfolio that is *lower-maintenance at filing time*. Let the
+mechanics do the talking; the relationship follows.
 
-### 2b. Follow-up email (operational efficiency; explicitly not poaching)
-> Subject: Following up — fewer April surprises for your clients
+### 2a. The opener (peer-to-peer)
+> Hi [Name] — I manage investments for a handful of HNW households, and I expect we see the same thing
+> from opposite sides: most portfolios that hit your desk in April are high-turnover and throw off a
+> wall of short-term gains you have to reconcile. I build them the other way — lot-protected, harvested,
+> specific-ID — so they read closer to net-neutral on the return. I'm not pitching you; I'd genuinely
+> value 20 minutes to compare notes on how the book behaves at filing and walk you through the mechanics.
+> Worth a coffee?
+
+### 2b. The mechanics (what actually clears your desk)
+The substance for the meeting — in their language, no marketing:
+
+- **Lot management.** Specific-identification cost basis and FIFO lot accounting with holding-period
+  discipline. Short-term realizations fall from ~**96%** of gains to ~**53%**, and turnover from
+  ~**371%** to ~**136%** — so the *volume* of short-term events you reconcile drops by roughly
+  two-thirds, and more of what's left is long-term.
+- **Tax-loss harvesting.** Security-level harvesting with **wash-sale-safe substitutes** (VT ↔
+  VTI/VXUS), losses netted **short-term-first** against the highest-rate gains. Documented
+  substitutions, clean carryforwards, and wash-sale exposure managed across the household's accounts —
+  not a surprise you find in March.
+- **Asset location.** The high-turnover sleeve sits in the Roth/Traditional accounts; the low-turnover,
+  qualified-dividend core sits in taxable. The taxable **1099-B stays quiet**, and the appreciated core
+  is positioned for the **§1014 step-up**.
+- **Net effect on your workload.** Fewer short-term events, cleaner basis records, fewer April
+  surprises — a portfolio that reads as a tax-friendly asset on the return rather than a liability.
+
+(Hand over `CPA_Technical_Brief.md` — it lays out the same basis-management / asset-location / TLH
+mechanics in filing language, with the substantiation boundary.)
+
+### 2c. Follow-up email (operational; explicitly not poaching)
+> Subject: Following up — a quieter 1099-B for your clients
 >
 > Hi [Name],
 >
-> Thanks for [the conversation / your time]. To be clear up front: **I'm not looking to take your
-> clients.** I'm looking to make their after-tax reality better and your busy season easier.
+> Thanks for the time. To be clear up front: **I'm not looking to take your clients** — I'm looking to
+> make their after-tax reality better and your busy season quieter.
 >
-> The mechanics, briefly: our engine runs ~50% short-term gains versus ~94% for a typical concentrated
-> high-turnover book, and roughly half the turnover. In practice that means **materially less
-> short-term-gain churn for you to reconcile**, cleaner 1099-Bs (specific-ID lots, wash-sale-safe
-> harvesting), and a portfolio that behaves like a tax-friendly asset rather than a liability at filing.
+> The mechanics, briefly: the book runs ~**53%** short-term gains versus ~**96%** for a typical
+> concentrated high-turnover account, at roughly **a third** the turnover (≈371% → ≈136%). In practice
+> that's **materially fewer short-term events for you to reconcile**, cleaner 1099-Bs (specific-ID lots,
+> wash-sale-safe harvesting), and a portfolio that behaves like a tax-friendly asset rather than a
+> liability at filing.
 >
 > The attached technical brief lays out the basis-management, asset-location, and TLH mechanics in your
-> language. If it's helpful, I can send a personalized Leakage Diagnostic you can forward to any client
-> — it shows their own state's illustrative numbers, with all the appropriate disclosures.
+> language. I can also send a personalized Leakage Diagnostic you can forward to any client — it shows
+> their own state's illustrative numbers, with all the appropriate disclosures.
 >
-> Open to a 20-minute call to see if a referral relationship makes sense?
+> Open to a 20-minute call to see whether a referral relationship makes sense?
 >
 > [Name] · CWS Planning (a registered investment adviser) · fee-only fiduciary
 
-*Compliance note:* keep the "not taking your clients" framing; the brief is `CPA_Technical_Brief.md`;
-the diagnostic carries its own disclosures.
+*Compliance note:* keep the "not taking your clients" framing; the operational claims (ST-share,
+turnover) are engine outputs documented in `CPA_Technical_Brief.md`; the diagnostic carries its own
+disclosures. The ST%/turnover figures are illustrative model outputs — not a promise about any specific
+client's account.
 
 ## 3. Holistic bridge — "found money" → protection (fee-only refer-out)
 

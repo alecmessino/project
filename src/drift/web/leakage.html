@@ -168,7 +168,7 @@ function render(s){
   }
   document.getElementById("h-note").textContent =
     `Pre-tax: ${hd.pretax_before}%/yr (before) vs ${hd.pretax_after}%/yr (after) — the structural book is `+
-    `NOT claimed to out-earn pre-tax. Illustrative, after-tax, over ~${(s.header||{}).horizon_years||40} years.`;
+    `NOT claimed to out-earn pre-tax. Illustrative, after-tax, over ~${(s.header||{}).horizon_years||30} years.`;
 
   // Personalized banner (compliant reframe: "up to ~X%/yr in our illustrative modeling").
   const pband = document.getElementById("pband");

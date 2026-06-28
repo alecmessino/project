@@ -154,9 +154,9 @@ edge from beta and from market timing by holding the **investable universe fixed
 region/size/style ETFs) and varying **only the tax treatment**:
 
 - **BEFORE** — a concentrated, high-turnover momentum book (the Unconstrained Core), taxed **naively**:
-  every realized gain taxed at full rate, **no harvesting**, fully in a taxable account (~94% ST).
+  every realized gain taxed at full rate, **no harvesting**, fully in a taxable account (~96% ST).
 - **AFTER** — the **Structural Alpha** book (tilt + lot-protection hybrid): lower turnover (lot
-  protection + hysteresis), **tax-loss harvesting + rate arbitrage ON** (~50% ST).
+  protection + hysteresis), **tax-loss harvesting + rate arbitrage ON** (~53% ST).
 
 The headline is **after-tax CAGR** (what a client actually compounds), so it is a tax-efficiency
 result, **not** a pre-tax return claim — the structural book is explicitly *not* asserted to out-earn
@@ -164,26 +164,30 @@ before tax (its pre-tax CAGR is in fact slightly lower). An adversarial cross-ch
 script's local FIFO lot walk reproduces `drift.tax.after_tax_track` to <1e-6; the two engine levers
 sum exactly to the total; harvesting can only ever lower tax.
 
-### Real 40y proxy-spliced cache, by state (after-tax CAGR, %/yr)
+### Real 30-year window (1996–2026), by state (after-tax CAGR, %/yr)
+
+This uses the **30-year window** — the same horizon the long-history tearsheet defaults to — so every
+client artifact (tearsheet + diagnostic) is calibrated to one headline horizon. (`TAX_ALPHA_YEARS=40
+python scripts/tax_alpha.py` reproduces the prior full-sample run.)
 
 | state | BEFORE (concentrated, naive) | AFTER (Structural Alpha) | lot+hysteresis | + harvesting | = **Tax Alpha** |
 |---|---:|---:|---:|---:|---:|
-| — (federal only) | 3.1 | 6.4 | 1.9 | 1.4 | **3.2** |
-| IL | 2.3 | 5.9 | 2.1 | 1.6 | **3.6** |
-| NY | 1.3 | 5.4 | 2.3 | 1.8 | **4.1** |
-| CA | 0.8 | 5.2 | 2.4 | 1.9 | **4.3** |
+| — (federal only) | 2.7 | 6.3 | 2.4 | 1.3 | **3.7** |
+| IL | 1.8 | 5.9 | 2.6 | 1.5 | **4.0** |
+| NY | 0.8 | 5.3 | 2.8 | 1.7 | **4.5** |
+| CA | 0.4 | 5.1 | 2.9 | 1.8 | **4.7** |
 
-Pre-tax: BEFORE 9.9%/yr vs AFTER 9.3%/yr (the structural book gives up ~0.6%/yr pre-tax and more than
-makes it back after tax). Federal-only "kept-of-the-gain": the concentrated book keeps **6%** of its
-40-year pre-tax gain after tax; the structural book keeps **32%**.
+Pre-tax: BEFORE 9.4%/yr vs AFTER 9.1%/yr (the structural book gives up ~0.3%/yr pre-tax and more than
+makes it back after tax). Federal-only "kept-of-the-gain": the concentrated book keeps **9%** of its
+30-year pre-tax gain after tax; the structural book keeps **41%**.
 
 ### Reading it
-- **Structural Alpha (tax) ≈ 3.2%/yr (federal) rising to ~4.3%/yr in California** — recovered against a
+- **Structural Alpha (tax) ≈ 3.7%/yr (federal) rising to ~4.7%/yr in California** — recovered against a
   concentrated, tax-naive book of the *same exposure*. It **rises with the state rate**: the higher the
   tax, the more devastating the leak, and the more the engine is worth. This is the leak a passive
   benchmark simply cannot plug.
-- **Decomposition:** roughly **55–60% lot protection + hysteresis** (converting short-term churn into
-  long-term gains) and **40–45% harvesting + rate arbitrage** (netting losses short-first against the
+- **Decomposition:** roughly **60–65% lot protection + hysteresis** (converting short-term churn into
+  long-term gains) and **35–40% harvesting + rate arbitrage** (netting losses short-first against the
   highest-rate gains).
 - **Asset location** (the third lever) is household-specific and quantified per client in the Tax Lab
   (`location_alpha3`): in CA it shelters the concentrated book's ~9%/yr taxable haircut on the dollars

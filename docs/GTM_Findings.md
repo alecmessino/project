@@ -17,10 +17,10 @@ All "found money → protection" copy in `GTM_Scripts.md` is written that way. I
 *earn* on insurance, that's a deliberate move to a **fee-based** model (relabel the badge, add Form ADV
 conflict disclosures) — not something to drift into.
 
-**b) The +3.6%/yr figure is hypothetical-backtest output.** Under SEC Marketing Rule 206(4)-1, every
-outreach piece is an advertisement. Saying *"you are losing 3.6% a year"* to a prospect we haven't
-analyzed is a misleading performance claim. **Decision (locked): compliant reframe — "up to ~3.6%/yr in
-our illustrative modeling," with the real number gated behind the personalized diagnostic.** The
+**b) The Illinois figure (~+4.0%/yr) is hypothetical-backtest output.** Under SEC Marketing Rule
+206(4)-1, every outreach piece is an advertisement. Saying *"you are losing 4% a year"* to a prospect
+we haven't analyzed is a misleading performance claim. **Decision (locked): compliant reframe — "up to
+~4.0%/yr in our illustrative modeling," with the real number gated behind the personalized diagnostic.** The
 diagnostic now does exactly that (below). Cold/"kitchen-table" outreach that leads to business is still
 advertising — the playbook flags what needs sign-off.
 
@@ -48,13 +48,15 @@ advertising — the playbook flags what needs sign-off.
 
 ## 4. Thesis / methodology notes (smaller, worth tracking)
 
-- **The "Before" book is a worst-case.** The diagnostic's BEFORE is a concentrated, ~94%-short-term,
-  ~344%-turnover book — fair as an illustration of the leak, but it is the *high end*. The honest
+- **The "Before" book is a worst-case.** The diagnostic's BEFORE is a concentrated, ~96%-short-term,
+  ~371%-turnover book — fair as an illustration of the leak, but it is the *high end*. The honest
   framing (used throughout) is "a concentrated / high-turnover book," and the personalized diagnostic
   lets each prospect see a number grounded in their own state rather than the worst case.
-- **Horizon inconsistency.** The tearsheet defaults to a 30-year window; the leakage diagnostic cites
-  40 years. Not wrong, but the story is cleaner if one headline horizon is used across artifacts —
-  recommend aligning the diagnostic to 30y (or footnoting why it's 40y) before heavy external use.
+- **Horizon — aligned (done).** Both the tearsheet and the diagnostic now use the **30-year window
+  (1996–2026)**, so the headline horizon is consistent across every artifact. On 30y the figures
+  recalibrated slightly *up* (IL ≈ +4.0%/yr, CA ≈ +4.7%/yr, federal ≈ +3.7%/yr); the per-state
+  `STATE_ALPHA` table regenerates via `TAX_ALPHA_STATES=1 python scripts/tax_alpha.py`
+  (`TAX_ALPHA_YEARS=40` reproduces the prior full-sample run).
 - **Asset location is still the one un-quantified lever in the diagnostic** (shown "household-specific").
   That's correct — it genuinely depends on account balances — and the Tax Lab computes it per client via
   `location_alpha3`. Keep it that way; don't bake a single asset-location number into outreach.

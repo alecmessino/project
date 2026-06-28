@@ -71,8 +71,8 @@ def test_state_alpha_table_covers_states_and_matches_the_static_anchors():
     assert len(sa) >= 50
     # the per-state table is the SAME source as the static "by state" rows (no drift)
     by_label = {r["state"]: r for r in s["states"]}
-    assert by_label["Illinois"]["alpha"] == sa["IL"]["alpha"] == 3.6
-    assert by_label["California"]["alpha"] == sa["CA"]["alpha"] == 4.3
+    assert by_label["Illinois"]["alpha"] == sa["IL"]["alpha"] == 4.0     # 30y window (1996–2026)
+    assert by_label["California"]["alpha"] == sa["CA"]["alpha"] == 4.7
     # higher state rate -> larger recovered alpha (CA/NYC > IL > no-tax)
     assert sa["NYC"]["alpha"] >= sa["CA"]["alpha"] >= sa["IL"]["alpha"] >= sa["—"]["alpha"]
     # every prospect state keeps more after the engine

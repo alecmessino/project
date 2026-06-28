@@ -159,6 +159,21 @@ def decompose(entries_fast, entries_hybrid, tax, years):
     }
 
 
+def all_state_alpha(entries_fast, entries_hybrid, years):
+    """Per-state Tax-Alpha table {state: {before, after, alpha}} in after-tax CAGR %/yr — the source
+    of the personalized Tax-Leakage Diagnostic. The two weight paths are built ONCE by the caller;
+    only the rates vary, so every state is cheap. Mirrors `drift.leakage.STATE_ALPHA`."""
+    from drift.tax import STATE_RATES
+    fast = Settings.load("config/drift.yaml")
+    out = {}
+    for st in STATE_RATES:
+        d = decompose(entries_fast, entries_hybrid, profile_for_state(fast.tax, st), years)
+        out[st] = {"before": round(d["atc_before"] * 100, 1),
+                   "after": round(d["atc_after"] * 100, 1),
+                   "alpha": round(d["total"] * 100, 1)}
+    return out
+
+
 def main() -> int:
     use_synth = os.environ.get("TAX_ALPHA_SYNTH") == "1"
     if use_synth:
@@ -175,6 +190,13 @@ def main() -> int:
     years = max(len(v) for v in series.values()) / BPY
     fast = Settings.load("config/drift.yaml")
     hybrid = _hybrid(fast, 0.5)
+
+    # Regenerate the per-state table for drift.leakage.STATE_ALPHA: `TAX_ALPHA_STATES=1 python scripts/tax_alpha.py`.
+    if os.environ.get("TAX_ALPHA_STATES") == "1":
+        import json
+        ef, eh = cross_book_entries(series, fast), cross_book_entries(series, hybrid)
+        print(json.dumps(all_state_alpha(ef, eh, years)))
+        return 0
     entries_fast = cross_book_entries(series, fast)
     entries_hybrid = cross_book_entries(series, hybrid)
     pre_cagr_fast = _cagr(entries_fast[-1]["equity"] - 1.0, years)

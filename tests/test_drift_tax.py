@@ -596,6 +596,11 @@ def test_personalized_outreach_url_params_supported():
     assert 'qp.get("li")' in tx and 'qp.get("biz")' in tx
     assert 'qp.get("bracket")' in tx
     assert 'v==="prospect"' in tx                          # ?view=prospect → lead view
+    # Campaign attribution: utm_* are parsed off the querystring into LEAD_UTM and ride along on the
+    # lead email + conversion event (so geo/segment campaigns are measurable).
+    for utm in ("utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"):
+        assert utm in tx, f"taxlab missing UTM capture: {utm}"
+    assert "LEAD_UTM" in tx and "Object.assign(payload, LEAD_UTM)" in tx
 
 
 def test_firm_models_are_well_formed_and_distinct_from_engine():

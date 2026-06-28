@@ -60,3 +60,34 @@ def test_leakage_is_in_the_primary_funnel_not_the_research_appendix(tmp_path):
     lk = next(e for e in state["exhibits"] if e["href"] == "leakage.html")
     assert lk["appendix"] is False                 # it leads with Structural Alpha, not proof-of-work
     assert "Structural Alpha" in lk["desc"]
+
+
+def test_state_alpha_table_covers_states_and_matches_the_static_anchors():
+    s = build_leakage()
+    sa = s["state_alpha"]
+    # broad coverage for the personalized diagnostic, incl. no-tax + high-tax + NYC overlay
+    for code in ("—", "IL", "NY", "CA", "TX", "FL", "NYC", "MA"):
+        assert code in sa and {"before", "after", "alpha"} <= set(sa[code])
+    assert len(sa) >= 50
+    # the per-state table is the SAME source as the static "by state" rows (no drift)
+    by_label = {r["state"]: r for r in s["states"]}
+    assert by_label["Illinois"]["alpha"] == sa["IL"]["alpha"] == 3.6
+    assert by_label["California"]["alpha"] == sa["CA"]["alpha"] == 4.3
+    # higher state rate -> larger recovered alpha (CA/NYC > IL > no-tax)
+    assert sa["NYC"]["alpha"] >= sa["CA"]["alpha"] >= sa["IL"]["alpha"] >= sa["—"]["alpha"]
+    # every prospect state keeps more after the engine
+    for code, r in sa.items():
+        assert r["after"] > r["before"]
+
+
+def test_leakage_template_personalizes_and_carries_a_booking_cta():
+    t = LEAKAGE_TEMPLATE.read_text()
+    # reads the cold-outreach deep-link params and localizes off the per-state table
+    assert 'qp.get("state")' in t and ('qp.get("portfolio")' in t or 'qp.get("port")' in t)
+    assert "state_alpha" in t and "pband" in t
+    # compliant reframe (Marketing-Rule): "up to ... in our illustrative modeling", diagnostic-gated
+    assert "up to +" in t and "illustrative modeling" in t
+    assert "Your actual figure depends on your" in t
+    # booking / conversion CTA into the Tax Lab prospect funnel, forwarding params + utm attribution
+    assert 'id="cta-analysis"' in t and "view=prospect" in t
+    assert "utm_campaign" in t                       # campaign params forwarded for attribution

@@ -20,6 +20,7 @@ PAGES = [
     ("taxlab-estate", "taxlab.html", "?view=estate&state=IL"),
     ("taxlab-strategy", "taxlab.html", "?view=strategy&state=IL"),
     ("taxlab-lead", "taxlab.html", "?view=lead&state=IL&port=2000000"),
+    ("leakage", "leakage.html", ""),
     ("ledger", "ledger.html", ""),
     ("thesis", "thesis.html", ""),
     ("index", "index.html", ""),

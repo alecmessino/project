@@ -24,6 +24,9 @@ EXHIBITS = [
     ("Tax Lab", "taxlab.html",
      "Holistic asset-location engine: after-tax return, three-account placement (taxable / Traditional / "
      "Roth), estate step-up, and tax-loss harvesting — personalized by bracket and state.", False),
+    ("Tax-Leakage Diagnostic", "leakage.html",
+     "The one-page Before/After: where a concentrated, high-turnover book leaks return to tax, and how "
+     "Structural Alpha plugs it — the quantified tax edge on an identical exposure.", False),
     ("Model Portfolio (hypothetical)", "ledger.html",
      "Exploratory research — a hypothetical, append-only momentum backtest marked daily, with alpha/beta "
      "attribution. Not the deployed strategy, not actual trading or any client account.", True),

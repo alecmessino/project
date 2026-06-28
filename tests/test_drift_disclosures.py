@@ -13,6 +13,7 @@ from drift.exhibit import (
     HUB_TEMPLATE,
     THESIS_TEMPLATE,
     TAXLAB_TEMPLATE,
+    LEAKAGE_TEMPLATE,
     TEMPLATE,  # index.html / dashboard
 )
 
@@ -78,7 +79,7 @@ def test_cross_pages_drop_the_live_track_framing():
 # Form CRS can be retrieved — a prospect should never reach the funnel without that (P0-1 / F3).
 def test_every_exhibit_carries_the_ria_identity_and_form_links():
     for tmpl in (LEDGER_TEMPLATE, TEARSHEET_TEMPLATE, HUB_TEMPLATE, THESIS_TEMPLATE,
-                 TEMPLATE, TAXLAB_TEMPLATE):
+                 TEMPLATE, TAXLAB_TEMPLATE, LEAKAGE_TEMPLATE):
         t = _read(tmpl)
         assert "registered investment adviser" in t, f"{tmpl.name}: no RIA identity disclosure"
         assert "adviserinfo.sec.gov" in t, f"{tmpl.name}: no public adviser-lookup link"
@@ -88,7 +89,7 @@ def test_every_exhibit_carries_the_ria_identity_and_form_links():
 def test_hypothetical_exhibits_carry_an_audience_statement():
     # P0-2: hypothetical performance shown publicly must state its intended audience and relevance
     # limits (subtle but always rendered). Guards the audience line against removal.
-    for tmpl in (LEDGER_TEMPLATE, TEARSHEET_TEMPLATE):
+    for tmpl in (LEDGER_TEMPLATE, TEARSHEET_TEMPLATE, LEAKAGE_TEMPLATE):
         t = _read(tmpl)
         assert "Intended for sophisticated investors" in t, f"{tmpl.name}: no audience statement"
         assert "may not be relevant to your situation" in t

@@ -7,7 +7,7 @@
 <link rel="canonical" href="https://alecmessino.github.io/project/taxlab.html" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Driftwood — Tax Lab" />
-<meta property="og:description" content="After-tax return, tax-loss-harvesting value, and the asset-location benefit for the live momentum sleeve — personalized by federal bracket and state. Research only, not tax advice." />
+<meta property="og:description" content="After-tax return, tax-loss-harvesting value, and the asset-location benefit — Structural Alpha from mechanical tax management, personalized by federal bracket and state. Research only, not tax advice." />
 <meta name="twitter:card" content="summary" />
 <!-- Privacy-first analytics (Plausible) — pageviews + the custom funnel events fired via track(). -->
 <script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
@@ -892,9 +892,9 @@ function renderDecisionTree(){
     <div class="flow">↓ located by tax treatment ↓</div>
     <div class="row">
       <div class="dnode roth"><h5>Roth IRA <span class="amt">${fmt$(inRoth)}</span></h5>
-        <p>Driftwood momentum sleeve.</p><div class="why">Tax-free compounding of its short-term gains; passes to heirs as a tax-free residuary, no RMDs.</div></div>
+        <p>Driftwood satellite sleeve.</p><div class="why">Tax-free compounding of its short-term gains; passes to heirs as a tax-free residuary, no RMDs.</div></div>
       <div class="dnode trad"><h5>Traditional IRA <span class="amt">${fmt$(inTrad)}</span></h5>
-        <p>Momentum overflow.</p><div class="why">Shelters short-term gains now; withdrawals taxed as ordinary income later.</div></div>
+        <p>High-turnover overflow.</p><div class="why">Shelters short-term gains now; withdrawals taxed as ordinary income later.</div></div>
       <div class="dnode tax"><h5>Taxable <span class="amt">${fmt$(T)}</span></h5>
         <p>Low-turnover index core.</p><div class="why">Held for the §1014 step-up in basis at death — heirs inherit the embedded gain wiped clean.</div></div>
     </div>
@@ -972,14 +972,14 @@ function renderLocation(){
     (the index replicated as individual securities) rather than one ETF lets you harvest losses at the <b>security</b>
     level: in most years dozens of individual names fall even when the index rises, so the wrapper banks structural
     losses an ETF simply can't — a fund only throws off a harvestable loss when the <i>whole</i> index is down. Those
-    banked losses offset the momentum sleeve's short-term gains at up to <b>${apct(r.r_st)}</b>, compounding the
+    banked losses offset the high-turnover sleeve's short-term gains at up to <b>${apct(r.r_st)}</b>, compounding the
     benefit above.`;
 
   // Phase 5/C: client executive summary + the CPA/attorney coordination brief.
   const stName = r.state==="—" ? "a no-income-tax state" : (NAMES[r.state]||r.state);
   const bword = (+$("bracket").value===S.brackets.length-1) ? "top-bracket" : (r.blabel.split("·")[0].trim()+" federal");
   $("execsummary").innerHTML=`<div class="es-h">Executive summary</div>
-    <p>For a <b>${bword}</b> resident of <b>${stName}</b>, locating the high-turnover momentum sleeve into the
+    <p>For a <b>${bword}</b> resident of <b>${stName}</b>, locating the high-turnover sleeve into the
     tax-advantaged accounts — <b>${fmt$(inRoth)}</b> in the Roth and <b>${fmt$(inTrad)}</b> in the Traditional IRA —
     and isolating a low-turnover ${fmt$(T)} VT core in taxable recovers about <b>${fmt$(savedR)}/yr</b> in
     capital-gains tax versus a naive equal split, a <b>${fmt$big(la.terminal)}</b> Location Alpha over ${H} years.
@@ -989,7 +989,7 @@ function renderLocation(){
     core is positioned for a step-up in basis at death; the Roth sleeve compounds tax-free with no RMDs for heirs.
     Illustrative only — not tax advice.</p>`;
   $("cpabrief").innerHTML=`<div class="es-h">CPA / Attorney execution &amp; coordination brief</div>
-    <p><b>Placement (execution).</b> Driftwood momentum sleeve → Roth IRA ${fmt$(inRoth)}, then Traditional IRA
+    <p><b>Placement (execution).</b> Driftwood satellite sleeve → Roth IRA ${fmt$(inRoth)}, then Traditional IRA
       ${fmt$(inTrad)}. VT buy-and-hold core → taxable ${fmt$(T)}. Use <b>specific-identification</b> cost basis on the
       taxable core; harvest losses with wash-sale-safe substitutes (VT↔VTI/VXUS sleeves).</p>
     <ul>
@@ -1251,7 +1251,7 @@ function renderStrategy(){
      <div class="bp"><span class="bt trad">Traditional IRA</span><div class="bh">Moderate-turnover &amp; fixed income</div>
        <p>Tax-deferred sleeves and bond/fixed-income exposure — interest and moderate turnover are sheltered now; withdrawals taxed as ordinary income later.</p></div>
      <div class="bp"><span class="bt roth">Roth IRA / Roth 401(k)</span><div class="bh">High-turnover Driftwood momentum</div>
-       <p>The high-turnover momentum sleeve — <b>designed to grow free of annual capital-gains tax under current law</b>, with no RMDs for heirs.</p></div>`;
+       <p>The high-turnover sleeve — <b>designed to grow free of annual capital-gains tax under current law</b>, with no RMDs for heirs.</p></div>`;
 }
 function applyMode(m){
   MODE=(m==="lead"||m==="estate"||m==="strategy")?m:"advisor";

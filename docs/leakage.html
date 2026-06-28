@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Driftwood — The Tax-Leakage Diagnostic</title>
+<link rel="stylesheet" href="driftwood.css">
+<style>
+  /* Institutional Editorial — paper, ink, brass. A one-page Before/After leave-behind. */
+  :root{
+    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
+    --ink:#1d242d; --body:#3a414b; --dim:#76747e; --muted:#8a8276;
+    --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);
+    font:14.5px/1.6 "IBM Plex Sans",ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .sheet{max-width:1040px;margin:30px auto;padding:0 20px 50px}
+  .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
+  .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #ddd5c6}
+  .chrome i{width:9px;height:9px;border-radius:999px;background:#cfc6b4;display:inline-block}
+  .chrome .url{margin-left:auto;font-size:11.5px;letter-spacing:.04em;color:var(--muted);font-family:ui-monospace,monospace}
+  .hd{padding:30px 40px 16px}
+  .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:12px}
+  h1{font-family:"Newsreader",Georgia,"Times New Roman",serif;font-weight:500;font-size:38px;line-height:1.04;
+    letter-spacing:-.02em;color:var(--ink);margin:0 0 12px}
+  .lede{font-size:15px;color:#54545c;margin:0;max-width:74ch}
+  .hero{margin:18px 40px 4px;padding:18px 24px;background:var(--navy);border-radius:12px;display:flex;
+    align-items:baseline;gap:18px;flex-wrap:wrap}
+  .hero .big{font-variant-numeric:tabular-nums;font-size:40px;font-weight:700;color:#f1ede3;letter-spacing:-.02em;line-height:1}
+  .hero .cap{font-size:12.5px;color:var(--gold);font-weight:600}
+  .hero .note{font-size:11.5px;color:#9aa3ae;margin-left:auto;max-width:34ch;line-height:1.45}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:20px 40px 6px}
+  @media(max-width:760px){.cols{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff}
+  .card.before{border-top:3px solid var(--neg)}
+  .card.after{border-top:3px solid var(--teal2)}
+  .card .tag{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:4px}
+  .before .tag{color:var(--neg)} .after .tag{color:var(--teal2)}
+  .card h3{font-family:"Newsreader",Georgia,serif;font-weight:500;font-size:19px;color:var(--ink);margin:0 0 4px}
+  .card .csub{font-size:12px;color:var(--dim);margin-bottom:14px;min-height:32px}
+  .leak{margin:8px 0 6px}
+  .leak .bar{display:flex;height:26px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+  .leak .kept{background:var(--teal2)} .leak .lost{background:var(--neg);opacity:.86}
+  .leak .lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-top:5px}
+  .leak .lbl b{color:var(--ink)}
+  .metrics{display:flex;gap:18px;margin-top:14px;border-top:1px solid var(--line2);padding-top:12px}
+  .metrics .m .v{font-variant-numeric:tabular-nums;font-size:20px;font-weight:700;letter-spacing:-.01em}
+  .before .metrics .m .v{color:var(--neg)} .after .metrics .m .v{color:var(--teal)}
+  .metrics .m .l{font-size:11px;color:var(--dim);margin-top:1px}
+  .sec{padding:14px 40px 4px}
+  .sec .h{font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .levers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:760px){.levers{grid-template-columns:1fr}}
+  .lv{border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:8px;padding:13px 15px;background:var(--soft)}
+  .lv .n{font-weight:600;font-size:13.5px;color:var(--ink)}
+  .lv .sh{font-size:11px;color:var(--brass);font-weight:600;margin:2px 0 6px}
+  .lv .d{font-size:12px;color:var(--body);line-height:1.45}
+  table.states{width:calc(100% - 80px);margin:8px 40px 0;border-collapse:collapse;font-size:13px}
+  table.states th,table.states td{padding:7px 10px;border-bottom:1px solid var(--line2);text-align:right}
+  table.states th:first-child,table.states td:first-child{text-align:left}
+  table.states thead th{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  table.states td.alpha{font-weight:700;color:var(--teal);font-variant-numeric:tabular-nums}
+  table.states td{font-variant-numeric:tabular-nums}
+  .foot{margin:18px 40px 30px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:11px;line-height:1.55}
+  .foot b{color:#5a5a62}
+  @media print{
+    body{background:#fff} .sheet{margin:0;max-width:none;padding:0}
+    .frame{border:0;border-radius:0;box-shadow:none} .chrome{display:none}
+    .hero{background:#1a2330 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .leak .kept,.leak .lost,.card.before,.card.after,.lv{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .hd,.cols,.sec{padding-top:8px;padding-bottom:4px}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="frame">
+    <div class="chrome"><i></i><i></i><i></i><span class="url">driftwood — the tax-leakage diagnostic</span></div>
+
+    <div class="hd">
+      <div class="eyebrow">The Tax-Leakage Diagnostic</div>
+      <h1>Where the return leaks — and how we plug it.</h1>
+      <p class="lede">A concentrated, high-turnover portfolio quietly leaks return to tax every year
+        through short-term gains. The same exposure, run through the Structural&nbsp;Alpha engine, keeps
+        far more of it. This compares the two on an identical universe — a tax-efficiency result, not a
+        pre-tax return claim.</p>
+    </div>
+
+    <div class="hero">
+      <div class="big" id="h-alpha">—</div>
+      <div class="cap" id="h-cap">after-tax / year recovered</div>
+      <div class="note" id="h-note"></div>
+    </div>
+
+    <div class="cols">
+      <div class="card before" id="c-before"></div>
+      <div class="card after" id="c-after"></div>
+    </div>
+
+    <div class="sec">
+      <div class="h">How the engine plugs the leak</div>
+      <div class="levers" id="levers"></div>
+    </div>
+
+    <div class="sec">
+      <div class="h">The higher the tax, the bigger the leak we plug — after-tax CAGR by state (%/yr)</div>
+    </div>
+    <table class="states">
+      <thead><tr><th>Tax environment</th><th>Before (concentrated, naive)</th><th>After (Structural Alpha)</th><th>Tax Alpha recovered</th></tr></thead>
+      <tbody id="states"></tbody>
+    </table>
+
+    <div class="foot" id="foot"></div>
+  </div>
+</div>
+
+<script>
+window.__STATE__ = {"header": {"generated": "2026-06-28 16:58:26 UTC", "source": "scripts/tax_alpha.py \u00b7 40y proxy-spliced cache (tests/data/matrix_history.json)", "horizon_years": 40}, "headline": {"alpha_low": 3.2, "alpha_high": 4.3, "pretax_before": 9.9, "pretax_after": 9.3}, "before": {"label": "Concentrated \u00b7 high-turnover", "sub": "A legacy momentum / concentrated book in a taxable account, taxed naively.", "st_share": 94, "turnover": 344, "atc_low": 0.8, "atc_high": 3.1, "keep_pct": 6}, "after": {"label": "Structural Alpha \u00b7 tax-managed", "sub": "The same exposure, run through the engine: lot protection + hysteresis + harvesting.", "st_share": 50, "turnover": 141, "atc_low": 5.2, "atc_high": 6.4, "keep_pct": 32}, "levers": [{"name": "Lot protection + hysteresis", "share": "\u2248 55\u201360%", "desc": "Holds positions through noise and protects unrealized lots, converting short-term churn into long-term gains taxed ~17 points lower."}, {"name": "Harvesting + rate arbitrage", "share": "\u2248 40\u201345%", "desc": "Realizes losses and nets them short-term-first against the highest-rate gains \u2014 banking the spread a buy-and-hold ETF can't reach."}, {"name": "Asset location", "share": "household-specific", "desc": "Stacks the high-turnover sleeve into Roth/Traditional so its short-term gains escape tax; quantified per client in the Tax Lab."}], "states": [{"state": "Federal only", "before": 3.1, "after": 6.4, "alpha": 3.2}, {"state": "Illinois", "before": 2.3, "after": 5.9, "alpha": 3.6}, {"state": "New York", "before": 1.3, "after": 5.4, "alpha": 4.1}, {"state": "California", "before": 0.8, "after": 5.2, "alpha": 4.3}]};
+
+function render(s){
+  const hd = s.headline||{}, b = s.before||{}, a = s.after||{};
+  document.getElementById("h-alpha").textContent = `+${hd.alpha_low}% to +${hd.alpha_high}%`;
+  document.getElementById("h-note").textContent =
+    `Pre-tax: ${hd.pretax_before}%/yr (before) vs ${hd.pretax_after}%/yr (after) — the structural book is `+
+    `NOT claimed to out-earn pre-tax. Illustrative, after-tax, over ~${(s.header||{}).horizon_years||40} years.`;
+
+  const sideHTML = (d) =>
+    `<div class="tag">${d===b?'Before — the leak':'After — plugged'}</div>`+
+    `<h3>${d.label}</h3><div class="csub">${d.sub}</div>`+
+    `<div class="leak"><div class="bar">`+
+      `<div class="kept" style="width:${d.keep_pct}%"></div>`+
+      `<div class="lost" style="width:${100-d.keep_pct}%"></div></div>`+
+      `<div class="lbl"><span><b>${d.keep_pct}%</b> kept after tax</span>`+
+      `<span><b>${100-d.keep_pct}%</b> leaked to tax</span></div></div>`+
+    `<div class="metrics">`+
+      `<div class="m"><div class="v">${d.atc_low}–${d.atc_high}%</div><div class="l">after-tax CAGR /yr</div></div>`+
+      `<div class="m"><div class="v">${d.st_share}%</div><div class="l">short-term gains</div></div>`+
+      `<div class="m"><div class="v">${d.turnover}%</div><div class="l">annual turnover</div></div>`+
+    `</div>`;
+  document.getElementById("c-before").innerHTML = sideHTML(b);
+  document.getElementById("c-after").innerHTML = sideHTML(a);
+
+  document.getElementById("levers").innerHTML = (s.levers||[]).map(l=>
+    `<div class="lv"><div class="n">${l.name}</div><div class="sh">${l.share}</div><div class="d">${l.desc}</div></div>`).join("");
+
+  document.getElementById("states").innerHTML = (s.states||[]).map(r=>
+    `<tr><td>${r.state}</td><td>${r.before.toFixed(1)}</td><td>${r.after.toFixed(1)}</td>`+
+    `<td class="alpha">+${r.alpha.toFixed(1)}</td></tr>`).join("");
+
+  document.getElementById("foot").innerHTML =
+    `<b>Illustrative / hypothetical — not a real track record and not advice.</b> Figures reflect the `+
+    `<b>retroactive application</b> of a quantitative model to historical data (FIFO lot accounting on the `+
+    `book's own marks, partly proxy-spliced); they are hypothetical, <b>no client capital was invested</b>, `+
+    `and past performance <b>does not guarantee future results</b>. This is structural tax &amp; fee `+
+    `optimization on an identical exposure — <b>not a forecast that these funds out-perform</b>. `+
+    `Intended for sophisticated investors; it may not be relevant to your situation. Source: ${(s.header||{}).source||''}.`+
+    `<div style="margin-top:7px">Driftwood is a research brand of <b>CWS&nbsp;Planning</b>, a `+
+    `<b>registered investment adviser</b>; <b>Form ADV</b> and <b>Form CRS</b> are available at `+
+    `<a href="https://adviserinfo.sec.gov/" style="color:var(--teal)">adviserinfo.sec.gov</a>.</div>`+
+    `<div style="margin-top:5px" id="gen">Generated ${(s.header||{}).generated||''}</div>`;
+}
+
+async function load(){
+  let s = window.__STATE__;
+  if(!s){ try{ s = await (await fetch("/api/leakage")).json(); }catch(e){} }
+  if(s) render(s);
+}
+load();
+</script>
+</body>
+</html>

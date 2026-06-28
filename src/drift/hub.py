@@ -14,21 +14,31 @@ import time
 from pathlib import Path
 from typing import Optional
 
-# (title, file, blurb) — order is the order shown on the hub.
+# (title, file, blurb, appendix) — order is the order shown on the hub. The primary funnel
+# (appendix=False) leads with Structural Alpha; the momentum exhibits are relegated to an honestly
+# labeled "Exploratory research" appendix (appendix=True) — proof-of-work, not the deployed strategy.
 EXHIBITS = [
-    ("Thesis & findings", "thesis.html",
-     "The trend-following thesis, the research, the results — and the name."),
-    ("Model Portfolio (hypothetical)", "ledger.html",
-     "Hypothetical, append-only backtest of the strategy — marked daily, with alpha/beta attribution. Not actual trading or any client account."),
-    ("Model Portfolio · long history", "tearsheet.html",
-     "The Model Portfolio across decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample."),
+    ("Thesis & approach", "thesis.html",
+     "How Structural Alpha works — deliberate factor exposure (engineered beta) plus mechanical tax "
+     "management — and the honest research behind the name.", False),
     ("Tax Lab", "taxlab.html",
      "Holistic asset-location engine: after-tax return, three-account placement (taxable / Traditional / "
-     "Roth), estate step-up, and tax-loss harvesting — personalized by bracket and state."),
+     "Roth), estate step-up, and tax-loss harvesting — personalized by bracket and state.", False),
+    ("Tax-Leakage Diagnostic", "leakage.html",
+     "The one-page Before/After: where a concentrated, high-turnover book leaks return to tax, and how "
+     "Structural Alpha plugs it — the quantified tax edge on an identical exposure.", False),
+    ("Model Portfolio (hypothetical)", "ledger.html",
+     "Exploratory research — a hypothetical, append-only momentum backtest marked daily, with alpha/beta "
+     "attribution. Not the deployed strategy, not actual trading or any client account.", True),
+    ("Model Portfolio · long history", "tearsheet.html",
+     "Exploratory research — the momentum model across decades of daily history: strategy vs buy-and-hold, "
+     "fit in-sample and reported out-of-sample.", True),
     ("Dashboard", "equities.html",
-     "Live trend signals, the relative-strength ranking, and per-name backtests across the matrix."),
+     "Exploratory research — the momentum engine's signals, the relative-strength ranking, and per-name "
+     "backtests across the matrix.", True),
     ("Case studies", "equities_case_studies.html",
-     "Five backtests: time-series, cross-sectional, lookback & cost sensitivity, and a control."),
+     "Exploratory research — five momentum backtests: time-series, cross-sectional, lookback & cost "
+     "sensitivity, and a control.", True),
 ]
 
 
@@ -148,8 +158,8 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
                     "including the worst loss — not just the in-sample curve.",
         })
 
-    exhibits = [{"title": t, "href": h, "desc": d, "present": (docs / h).exists()}
-                for t, h, d in EXHIBITS]
+    exhibits = [{"title": t, "href": h, "desc": d, "present": (docs / h).exists(), "appendix": ap}
+                for t, h, d, ap in EXHIBITS]
     return {
         "header": {
             "generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),

@@ -117,7 +117,7 @@
           and show you the dollars before you commit a thing.</p>
         <div class="ctas">
           <a class="primary" href="taxlab.html?view=prospect">See what we'd save you →</a>
-          <a class="ghost" href="ledger.html">View the track record</a>
+          <a class="ghost" href="thesis.html">How Structural Alpha works</a>
         </div>
         <div class="trust">
           <span><b>✓</b> Fiduciary, fee-only</span>
@@ -144,7 +144,7 @@
         <a class="step lead" href="taxlab.html?view=prospect"><div class="n">1</div><div class="t">Your situation</div><div class="d">Bracket, state, portfolio.</div></a>
         <a class="step" href="taxlab.html?view=prospect"><div class="n">2</div><div class="t">The problem</div><div class="d">What tax &amp; fees cost now.</div></a>
         <a class="step" href="taxlab.html"><div class="n">3</div><div class="t">The fix</div><div class="d">Asset location + harvesting.</div></a>
-        <a class="step" href="ledger.html"><div class="n">4</div><div class="t">The proof</div><div class="d">The model portfolio.</div></a>
+        <a class="step" href="thesis.html"><div class="n">4</div><div class="t">The proof</div><div class="d">Approach, evidence &amp; method.</div></a>
         <a class="step" href="taxlab.html"><div class="n">5</div><div class="t">Your proposal</div><div class="d">Brief + client PDF.</div></a>
       </div>
     </div>
@@ -152,6 +152,16 @@
     <div class="exsec">
       <div class="h">Explore the exhibits</div>
       <div class="exhibits" id="exhibits"></div>
+    </div>
+
+    <div class="exsec" id="appendixsec" style="display:none">
+      <div class="h">Exploratory research · proof of work</div>
+      <div style="margin:0 0 12px;padding:11px 15px;border:1px solid #e0c98a;border-left:3px solid var(--brass);background:#faf3df;border-radius:8px;font-size:12px;line-height:1.55;color:#5a4a22">
+        These are <b>exploratory research models</b>, not the strategy a client deploys. The shipped firm
+        engine prioritizes <b>Structural Alpha</b> — tax-engineering and engineered factor exposure; the
+        momentum / trend signal here ships <b>neutral</b> in production. Kept in full as proof of work.
+      </div>
+      <div class="exhibits" id="exhibits-appendix"></div>
     </div>
 
     <div class="foot">
@@ -192,10 +202,17 @@ function render(s){
       `<div class="stat">${v.stat}</div><div class="sl">${v.stat_label}</div>`+
       `<div class="vn">${v.note}</div></div>`).join("");
   }
-  document.getElementById("exhibits").innerHTML = (s.exhibits||[]).map(e=>
+  const exs = s.exhibits||[];
+  const exHTML = e =>
     `<a class="ex ${e.present?'':'absent'}" href="${e.href}">
       <div class="t">${e.title} <span class="arrow">→</span></div>
-      <div class="d">${e.desc}</div></a>`).join("");
+      <div class="d">${e.desc}</div></a>`;
+  document.getElementById("exhibits").innerHTML = exs.filter(e=>!e.appendix).map(exHTML).join("");
+  const appendix = exs.filter(e=>e.appendix);
+  if(appendix.length){
+    document.getElementById("appendixsec").style.display = "";
+    document.getElementById("exhibits-appendix").innerHTML = appendix.map(exHTML).join("");
+  }
   document.getElementById("gen").textContent = "Generated "+(s.header? s.header.generated : "");
 }
 

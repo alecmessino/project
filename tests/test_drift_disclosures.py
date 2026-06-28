@@ -13,6 +13,7 @@ from drift.exhibit import (
     HUB_TEMPLATE,
     THESIS_TEMPLATE,
     TAXLAB_TEMPLATE,
+    LEAKAGE_TEMPLATE,
     TEMPLATE,  # index.html / dashboard
 )
 
@@ -78,7 +79,7 @@ def test_cross_pages_drop_the_live_track_framing():
 # Form CRS can be retrieved — a prospect should never reach the funnel without that (P0-1 / F3).
 def test_every_exhibit_carries_the_ria_identity_and_form_links():
     for tmpl in (LEDGER_TEMPLATE, TEARSHEET_TEMPLATE, HUB_TEMPLATE, THESIS_TEMPLATE,
-                 TEMPLATE, TAXLAB_TEMPLATE):
+                 TEMPLATE, TAXLAB_TEMPLATE, LEAKAGE_TEMPLATE):
         t = _read(tmpl)
         assert "registered investment adviser" in t, f"{tmpl.name}: no RIA identity disclosure"
         assert "adviserinfo.sec.gov" in t, f"{tmpl.name}: no public adviser-lookup link"
@@ -88,7 +89,7 @@ def test_every_exhibit_carries_the_ria_identity_and_form_links():
 def test_hypothetical_exhibits_carry_an_audience_statement():
     # P0-2: hypothetical performance shown publicly must state its intended audience and relevance
     # limits (subtle but always rendered). Guards the audience line against removal.
-    for tmpl in (LEDGER_TEMPLATE, TEARSHEET_TEMPLATE):
+    for tmpl in (LEDGER_TEMPLATE, TEARSHEET_TEMPLATE, LEAKAGE_TEMPLATE):
         t = _read(tmpl)
         assert "Intended for sophisticated investors" in t, f"{tmpl.name}: no audience statement"
         assert "may not be relevant to your situation" in t
@@ -111,3 +112,33 @@ def test_ledger_attribution_states_alpha_significance_and_out_of_sample():
     assert "alpha_significant" in t and "alpha_t" in t
     assert "Out-of-sample only" in t
     assert "attribution_oos" in t
+
+
+# ── Structural Alpha pivot ────────────────────────────────────────────────────────────────────
+# The value proposition is "Structural Alpha" — deterministic tax+fee engineering plus deliberate
+# factor EXPOSURE ("engineered beta"), explicitly NOT a forecast that the funds out-perform, and NOT
+# momentum/market-timing. The momentum work is demoted to an honestly-labeled research satellite.
+
+def test_thesis_leads_with_structural_alpha_not_market_timing():
+    t = _read(THESIS_TEMPLATE)
+    # leads with the structural value prop
+    assert "Structural Alpha" in t
+    assert "engineered beta" in t.lower()
+    # factor tilt framed as EXPOSURE, never as an outperformance forecast (Marketing-Rule guard)
+    assert "not a forecast that these funds out-perform" in t
+    # the page explicitly says it is engineered beta, not market timing
+    assert "not market timing" in t.lower()
+    # the momentum work is present but demoted to an exploratory research section
+    assert "Exploratory research" in t
+
+
+def test_momentum_exhibits_carry_the_exploratory_research_banner():
+    # The momentum dashboard, ledger, and long-history tearsheet are relegated to proof-of-work and
+    # must each carry the honest banner: exploratory research, the shipped engine is Structural Alpha,
+    # and this signal ships neutral in production.
+    for tmpl in (LEDGER_TEMPLATE, TEARSHEET_TEMPLATE, TEMPLATE):
+        t = _read(tmpl)
+        assert "research-banner" in t, f"{tmpl.name}: missing the exploratory-research banner"
+        assert "Exploratory research" in t, f"{tmpl.name}: banner not labeled exploratory research"
+        assert "Structural Alpha" in t, f"{tmpl.name}: banner does not name the shipped strategy"
+        assert "neutral" in t, f"{tmpl.name}: banner must state the signal ships neutral"

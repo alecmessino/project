@@ -8,6 +8,13 @@ committed config and not wired into the live signal**; this is research only. Th
 is cached at `tests/data/matrix_history.json` so `TILT_SWEEP_REAL=1 python scripts/tilt_sweep.py`
 reproduces it offline.
 
+> **Narrative status (2026-06-28): this is exploratory research, not the value prop.** These runs are
+> what led us to retire "Signal Alpha" (momentum/timing) as a claim — the tilt added ~0.01 Sharpe and
+> ~0.5% return, i.e. no risk-adjusted edge. The firm now stands on **Structural Alpha** (engineered
+> factor *exposure* + mechanical tax management). See `docs/Structural_Alpha_Methodology.md` for the
+> canonical framing and the substantiation boundary; the figures below are the proof-of-work behind
+> that decision, not a momentum-timing pitch.
+
 ---
 
 ## The four books
@@ -136,3 +143,52 @@ is exactly the **Tax-Managed Core** thesis — **not** a momentum claim.
 *Caveats: single real path; proxy-spliced pre-2006 excluded by the window; flat-bps cost is a capacity
 proxy, not a market-impact model; research only — `tilt_overlay`/`lot_protect` are OFF in every shipped
 config and not wired to the live signal.*
+
+---
+
+## Tax-Alpha decomposition — quantifying "Structural Alpha (tax)"
+
+`scripts/tax_alpha.py` is the empirical backbone of the **Structural Alpha (tax)** claim used in the
+client-facing methodology and the Tax-Leakage Diagnostic. It isolates the *mechanical tax-management*
+edge from beta and from market timing by holding the **investable universe fixed** (the same 18
+region/size/style ETFs) and varying **only the tax treatment**:
+
+- **BEFORE** — a concentrated, high-turnover momentum book (the Unconstrained Core), taxed **naively**:
+  every realized gain taxed at full rate, **no harvesting**, fully in a taxable account (~94% ST).
+- **AFTER** — the **Structural Alpha** book (tilt + lot-protection hybrid): lower turnover (lot
+  protection + hysteresis), **tax-loss harvesting + rate arbitrage ON** (~50% ST).
+
+The headline is **after-tax CAGR** (what a client actually compounds), so it is a tax-efficiency
+result, **not** a pre-tax return claim — the structural book is explicitly *not* asserted to out-earn
+before tax (its pre-tax CAGR is in fact slightly lower). An adversarial cross-check confirms the
+script's local FIFO lot walk reproduces `drift.tax.after_tax_track` to <1e-6; the two engine levers
+sum exactly to the total; harvesting can only ever lower tax.
+
+### Real 40y proxy-spliced cache, by state (after-tax CAGR, %/yr)
+
+| state | BEFORE (concentrated, naive) | AFTER (Structural Alpha) | lot+hysteresis | + harvesting | = **Tax Alpha** |
+|---|---:|---:|---:|---:|---:|
+| — (federal only) | 3.1 | 6.4 | 1.9 | 1.4 | **3.2** |
+| IL | 2.3 | 5.9 | 2.1 | 1.6 | **3.6** |
+| NY | 1.3 | 5.4 | 2.3 | 1.8 | **4.1** |
+| CA | 0.8 | 5.2 | 2.4 | 1.9 | **4.3** |
+
+Pre-tax: BEFORE 9.9%/yr vs AFTER 9.3%/yr (the structural book gives up ~0.6%/yr pre-tax and more than
+makes it back after tax). Federal-only "kept-of-the-gain": the concentrated book keeps **6%** of its
+40-year pre-tax gain after tax; the structural book keeps **32%**.
+
+### Reading it
+- **Structural Alpha (tax) ≈ 3.2%/yr (federal) rising to ~4.3%/yr in California** — recovered against a
+  concentrated, tax-naive book of the *same exposure*. It **rises with the state rate**: the higher the
+  tax, the more devastating the leak, and the more the engine is worth. This is the leak a passive
+  benchmark simply cannot plug.
+- **Decomposition:** roughly **55–60% lot protection + hysteresis** (converting short-term churn into
+  long-term gains) and **40–45% harvesting + rate arbitrage** (netting losses short-first against the
+  highest-rate gains).
+- **Asset location** (the third lever) is household-specific and quantified per client in the Tax Lab
+  (`location_alpha3`): in CA it shelters the concentrated book's ~9%/yr taxable haircut on the dollars
+  moved into a Roth/Traditional account, stacking on top of the lot + harvest recovery above.
+
+*Caveats: single real path; proxy-spliced pre-2006 history included; FIFO lot accounting on the book's
+own marks, not a custodian's; illustrative, paid-as-you-go, not tax advice. Research only —
+`tilt_overlay`/`lot_protect` are OFF in every shipped config and not wired into the live signal.*

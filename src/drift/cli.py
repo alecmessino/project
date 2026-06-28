@@ -268,6 +268,19 @@ def taxlab(
 
 
 @app.command()
+def leakage(
+    out: str = typer.Option("docs/leakage.html", "--out", help="Tax-Leakage Diagnostic page"),
+):
+    """Build the Tax-Leakage Diagnostic — the one-page Before/After pitch artifact."""
+    from .leakage import build_leakage
+    from .exhibit import export_leakage
+    state = build_leakage()
+    path = export_leakage(state, out)
+    h = state["headline"]
+    console.print(f"[green]wrote[/] {path}  (Structural Alpha (tax) +{h['alpha_low']}–{h['alpha_high']}%/yr)")
+
+
+@app.command()
 def hub(
     docs: str = typer.Option("docs", "--docs", help="directory holding the exhibits"),
     out: str = typer.Option("docs/index.html", "--out", help="hub landing page"),

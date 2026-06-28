@@ -61,14 +61,14 @@ globalThis.__run = async () => {
   // success on 2xx + Web3Forms endpoint + UTM in payload
   ENV.setFetch({ ok:true, status:200 }); _leadBusy = false; LEAD_UTM = { utm_source:'linkedin', utm_campaign:'il_md' };
   form('a@b.com'); submitLead({ preventDefault(){} }); await tick();
-  out.ok_success = document.getElementById('leadcta').innerHTML.includes('on its way');
+  out.ok_success = document.getElementById('leadcta').innerHTML.includes('Your analysis');   // honest success card (P0-5: no "on its way")
   out.ok_web3forms = ENV.fetchLog[ENV.fetchLog.length-1].url.includes('web3forms.com');
   out.ok_utm = ENV.fetchLog[ENV.fetchLog.length-1].body.utm_campaign === 'il_md';
   // failure on !ok -> error path, not success
   ENV.setFetch({ ok:false, status:500 }); _leadBusy = false; form('a@b.com');
   submitLead({ preventDefault(){} }); await tick();
   const err = document.getElementById('leadcta').innerHTML;
-  out.err_recover = err.includes('cwsplanning.com') && !err.includes('on its way');
+  out.err_recover = err.includes('cwsplanning.com') && !err.includes('Your analysis');
   // invalid email -> no POST
   _leadBusy = false; const before = ENV.fetchLog.length; form('nope'); submitLead({ preventDefault(){} });
   out.invalid_nopost = ENV.fetchLog.length === before;
@@ -78,14 +78,35 @@ globalThis.__run = async () => {
   return out;
 };`;
 
-// ---- Flow: mobile state picker (T6) — selectState mirrors map <-> native select ----
+// ---- Flow: mobile state picker (F1) — a severity chip grid (replaced the bare <select>), all wired
+// through the single selectState handler (map <-> chips <-> the model stay in sync, no desync path) ----
 const mobileDriver = `
 globalThis.__run = async () => {
   const out = {}; S = FIXTURE; render = () => {}; flashDisc = () => {};
+  buildLeadStates();                                                              // build the mobile chip grid from S.states
+  const lhtml = document.getElementById('leadstate').innerHTML;
+  out.ss_chip_grid   = /data-st="TX"/.test(lhtml) && /class="grid"/.test(lhtml);  // chips, not a bare native select
   selectState('TX');
-  out.ss_sets_state     = document.getElementById('state').value === 'TX';
-  out.ss_sets_leadstate = document.getElementById('leadstate').value === 'TX';   // map/select stay in sync
-  out.ss_fires_event    = ENV.events.some(e => e[0] === 'state_selected' && e[1] && e[1].state === 'TX');
+  out.ss_sets_state  = document.getElementById('state').value === 'TX';           // the one handler drives the model
+  out.ss_fires_event = ENV.events.some(e => e[0] === 'state_selected' && e[1] && e[1].state === 'TX');
+  return out;
+};`;
+
+// ---- Flow: State Tax Map dimension tabs over the cartogram (cap-gains keeps the calc; the other
+// dimensions recolor the map + swap the detail from the embedded statemap dataset) ----
+const statemapDriver = `
+globalThis.__run = async () => {
+  const out = {}; S = FIXTURE;
+  document.getElementById('state').value = 'IL';
+  buildSmTabs();
+  const tabs = document.getElementById('smtabs').innerHTML;
+  out.tabs_built = /data-k="estate"/.test(tabs) && /data-k="alpha"/.test(tabs) && /class="hl"/.test(tabs);
+  MAPDIM = 'estate'; buildMap();
+  out.map_recolors = document.getElementById('usmap').innerHTML.includes('fill="#15806a"');   // IL estate -> teal
+  renderDisc(rates());
+  out.detail_swaps = document.getElementById('discbody').innerHTML.includes('Estate tax');     // dimension detail, not the rate ledger
+  MAPDIM = 'alpha'; buildMap(); renderDisc(rates());
+  out.alpha_deeplink = document.getElementById('discbody').innerHTML.includes('leakage.html?state=IL');
   return out;
 };`;
 
@@ -100,7 +121,7 @@ function staticFlow() {
     aria_valuetext: t.includes('aria-valuetext'),
     state_estate_js: t.includes('S.assumptions.estate.state_estate'),
     leadstate_markup: t.includes('id="leadstate"'),
-    leadstate_wired: t.includes('leadstate").innerHTML=$("state").innerHTML'),
+    leadstate_wired: t.includes('buildLeadStates(') && t.includes('paintLeadSel('),   // chip grid wired via the shared handler
     leadstate_mobile_css: t.includes('body.lead .leadstate'),
     ui_tokens: shim.cssText().includes('--s4:16px') && shim.cssText().includes('--t-mid'),   // tokens now live in driftwood.css
     reduced_motion: t.includes('prefers-reduced-motion'),
@@ -114,6 +135,7 @@ async function main() {
   // For the lead flow we need ENV visible to the driver; re-run drive with ENV alias.
   flows.push(['lead', await driveWithEnv(leadDriver)]);
   flows.push(['mobile', await driveWithEnv(mobileDriver)]);
+  flows.push(['statemap', await drive('', statemapDriver)]);
   flows.push(['static-a11y', staticFlow()]);
 
   let failed = 0, total = 0;

@@ -12,31 +12,36 @@ relevant deep-link from `GTM_Playbook.md`. Do not send without sign-off.
 
 ## 1. Austin tech — pre-liquidity (three angles)
 
+The voice: one operator to another, diagnosing a structural problem — not introducing a service. Lead
+with *their* situation and the mechanics; end at the diagnostic.
+
 ### 1a. Concentration Risk (manage the equity you already hold)
-> Hi [Name] — I work with a small group of Austin tech leaders on wealth architecture around
-> concentrated equity. The risk most people under-manage isn't picking the next winner; it's that a
-> single position quietly dominates the whole plan, and what *is* diversified is held tax-inefficiently.
-> My approach is "Structural Alpha" — engineering exposure and tax location, not timing the market. If
-> it's useful, I can run a Leakage Diagnostic on your current setup and show you what's recoverable.
-> No pitch — just the numbers on your situation.
+> Hi [Name] — an observation, one builder to another. When a single position (vested equity, an early
+> stake) grows into most of someone's net worth, the real exposure usually isn't the stock — it's that
+> *everything else* became an afterthought: held wherever it landed, taxed however it falls. The fix
+> isn't a market call; it's architecture — right-sizing the concentration and putting every other dollar
+> in the account and lot structure that keeps the most after tax. If it's useful, I can run a Leakage
+> Diagnostic on your current setup and show you, on your own numbers, what's recoverable. No pitch.
 
 ### 1b. Tax-Efficiency (prepare for a liquidity event)
-> Hi [Name] — congratulations on what you're building. The window that matters most for wealth is
-> usually *before* a liquidity event, not after. I help tech leaders engineer tax efficiency and asset
-> location ahead of time — mechanically suppressing short-term gains and aligning assets to protect the
-> compounding base. In our illustrative modeling, a high-turnover book can leak meaningfully to tax each
-> year versus a tax-managed one of the same exposure. I'd be glad to run a Leakage Diagnostic so you can
-> see your own number before anything's decided.
+> Hi [Name] — the highest-leverage tax work in a tech career happens *before* the liquidity event, and
+> most people miss the window. Beforehand the levers are real: holding-period and lot management on the
+> equity, where the diversified dollars sit (taxable vs. Roth / Traditional), harvesting set up in
+> advance. Afterward, most of those doors are shut. In our illustrative modeling a concentrated,
+> high-turnover book leaks meaningfully to tax each year versus a tax-managed one of the same exposure —
+> and the gap compounds. I'd run a Leakage Diagnostic so you can see your own number while the window's
+> still open.
 
 ### 1c. The Fiduciary Standard (why this is different)
-> Hi [Name] — quick note on why my model is structured differently from a typical brokerage
-> relationship. I'm a fee-only fiduciary: no products, no commissions, no incentive to trade your
-> account. The value I add is **structural** — lot protection, asset location, and tax-loss harvesting
-> that keep more of your return after tax. It's engineered beta, not market timing. If you want to see
-> what that's worth on your portfolio, I can send a personalized Leakage Diagnostic.
+> Hi [Name] — one structural point, because it changes the advice you'll get everywhere else. I'm a
+> fee-only fiduciary: no products, no commissions, no reason to trade your account. So what I optimize
+> isn't a sale — it's what you *keep*: lot protection, asset location, and tax-loss harvesting,
+> engineered as one system. Engineered beta, not market timing. If you want to see what that discipline
+> is worth on your actual portfolio, I'll send a personalized Leakage Diagnostic — your numbers, fully
+> illustrative, no obligation.
 
 *Compliance note:* 1c states the fee-only standard plainly — keep it accurate (no product sales). All
-three gate the number behind the diagnostic.
+three gate the number behind the diagnostic ("up to ~X%/yr in our illustrative modeling").
 
 ## 2. CPA / gatekeeper — Operational Efficiency (lead with this channel)
 
@@ -120,25 +125,30 @@ figure, not a marketing number.
 
 ## 4. Chicagoland — "The Illinois Hedge"
 
+The voice: the *local tax-architect* — grounded in the specific mechanics of building wealth in
+Illinois, diagnosing the structural leak rather than pitching an engine.
+
 ### 4a. Cold outreach (professional / business owner)
-> Hi [Name] — living and earning in Illinois means compounding with a tax handicap: capital gains taxed
-> as ordinary income on top of federal, plus the estate-tax cliff. Most people pour energy into which
-> stocks to buy, but in our illustrative modeling the bigger leak is the **tax drag**, not the market.
-> I've built a "Structural Alpha" engine that's designed to contain that leakage — engineered exposure
-> plus mechanical tax management. I can send a personalized diagnostic that shows the illustrative
-> numbers for an Illinois portfolio like yours. Worth a look?
+> Hi [Name] — a structural note for anyone building wealth in Illinois. The state taxes capital gains as
+> ordinary income — a flat 4.95% on top of the federal rate — and the estate tax starts at a $4M
+> exemption that works as a cliff, not a credit. So the biggest drag on a Chicagoland portfolio usually
+> isn't *which* stocks you own; it's the tax architecture around them — how gains get realized, where
+> the assets sit, what's exposed at death. That's the part I engineer. I can send a personalized
+> diagnostic with the illustrative numbers for an Illinois portfolio like yours — your situation, not a
+> generic pitch. Worth a look?
 
 ### 4b. The "kitchen-table" script (friends / family / neighbors)
-> We're all chasing the same milestones — homes, college, retiring comfortably — but in Illinois we're
-> playing with a tax handicap. Most people obsess over which stocks to pick; the math says the biggest
-> leak in our wealth isn't the market, it's the tax drag. I've built an engine designed to plug that
-> leakage — not by picking winners, but by making sure every dollar we earn for our goals actually
-> makes it to the finish line instead of getting caught in the tax trap. If you ever want to see the
-> illustrative numbers on your own situation, I'll run you a diagnostic.
+> We're all chasing the same milestones — a house, college, retiring comfortably — and in Illinois we're
+> doing it with the deck a little stacked: gains taxed as ordinary income, an estate cliff that sneaks
+> up on people. Here's what most miss — the biggest leak usually isn't the market, it's the tax
+> structure *around* the money: how it's realized, where it's held. That's fixable, and it's not about
+> picking winners; it's about making sure the dollars we earn for our goals actually reach the finish
+> line instead of getting caught in the trap. If you ever want to see the illustrative numbers on your
+> own situation, I'll run you a diagnostic.
 
-*Compliance note (4b):* casual conversations that lead to business are still advertising. Keep "designed
-to / illustrative," avoid promising a specific return, and route any genuine interest to the diagnostic
-+ a proper disclosure. Confirm the firm's policy on personal-network solicitation before using.
+*Compliance note (4b):* casual conversations that lead to business are still advertising. Keep the
+"illustrative" framing, avoid promising a specific return, and route any genuine interest to the
+diagnostic + a proper disclosure. Confirm the firm's policy on personal-network solicitation before using.
 
 ---
 

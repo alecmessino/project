@@ -11,16 +11,16 @@
 </script>
 <link rel="stylesheet" href="driftwood.css">
 <title>Driftwood — Model Portfolio (Hypothetical)</title>
-<meta name="description" content="A hypothetical Model Portfolio backtest of the Fast Book — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; its tax-efficient Slow Book companion is offline-validated) — benchmarked against VT (global) and VTI (US) buy-and-hold, with risk stats, regional and style-box exposure, and costs shown. Research only, not investment advice." />
+<meta name="description" content="A hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; its tax-efficient Tax-Managed Core Strategy companion is offline-validated) — benchmarked against VT (global) and VTI (US) buy-and-hold, with risk stats, regional and style-box exposure, and costs shown. Research only, not investment advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/ledger.html" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
 <meta property="og:title" content="Driftwood — Model Portfolio (Hypothetical)" />
-<meta property="og:description" content="A hypothetical Model Portfolio backtest of the Fast Book — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Slow Book companion for taxable accounts), benchmarked vs VT (global) and VTI (US) buy-and-hold — risk stats, regional + style-box exposure, and costs. Research only." />
+<meta property="og:description" content="A hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Tax-Managed Core Strategy companion for taxable accounts), benchmarked vs VT (global) and VTI (US) buy-and-hold — risk stats, regional + style-box exposure, and costs. Research only." />
 <meta property="og:url" content="https://alecmessino.github.io/project/ledger.html" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Driftwood — Model Portfolio (Hypothetical)" />
-<meta name="twitter:description" content="Hypothetical Model Portfolio backtest of the Fast Book — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Slow Book for taxable accounts), benchmarked vs VT & VTI buy-and-hold. Research only, not advice." />
+<meta name="twitter:description" content="Hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Tax-Managed Core Strategy for taxable accounts), benchmarked vs VT & VTI buy-and-hold. Research only, not advice." />
 <style>
   :root{
     --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --ink:#1d242d; --dim:#76747e;
@@ -71,9 +71,9 @@
     border-bottom:1px solid var(--rule)}
   .tag{font-size:11px;font-weight:600}
   .tag.LONG{color:var(--pos)} .tag.SHORT{color:var(--neg)} .tag--{color:var(--dim)}
-  .foot{margin-top:26px;padding:18px 44px 36px;border-top:1px solid var(--line);background:#fbf9f4;
-    color:var(--muted,#8a8276);font-size:12.5px}
-  .foot .note{color:#5a5a62;font-weight:600}
+  .foot{margin-top:26px;padding:14px 44px 30px;border-top:1px solid var(--line);background:#fbf9f4;
+    color:#9a98a0;font-size:11px;line-height:1.55}
+  .foot .note{color:var(--muted,#8a8276);font-weight:600}
   .empty{color:var(--dim);padding:30px 0}
   .expo{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:4px;align-items:start}
   @media(max-width:620px){.expo{grid-template-columns:1fr}}
@@ -131,10 +131,13 @@
   .figcap{font-size:11.5px;color:var(--dim);margin:6px 2px 0;line-height:1.5}
   /* SEC-grade hypothetical-performance disclosure, placed at the performance numbers */
   /* Calm "illustrative" ribbon — disclosure present but quiet (brass, not a wall of red caps) */
-  .disclaimer{border:1px solid #e7e0cf;border-left:3px solid var(--gold);border-radius:8px;
-    background:#fbf9f4;padding:13px 16px;margin:0 0 20px;font-size:12px;line-height:1.6;color:#76747e}
-  .disclaimer b{color:#9a7b3f;text-transform:uppercase;letter-spacing:.4px;font-size:11.5px}
-  .disclaimer .body{color:var(--slate);margin-top:5px}
+  /* Maximal-subtle: the full hypothetical-performance disclosure renders as a quiet small-print
+     footnote at the FOOT of the page; the "HYPOTHETICAL" header pill + the summary card's
+     "Hypothetical backtest" line keep the point-of-performance label. Required language unchanged. */
+  .disclaimer{border-top:1px solid var(--line);margin:20px 0 0;padding:11px 0 0;font-size:10.5px;
+    line-height:1.55;color:#9a98a0}
+  .disclaimer b{color:#76747e;font-weight:600;text-transform:none;letter-spacing:0;font-size:10.5px}
+  .disclaimer .body{color:#9a98a0;margin-top:3px}
   /* Alpha/beta attribution panel */
   .attrib{border:1px solid var(--line);border-radius:9px;background:var(--soft);padding:15px 17px;margin:6px 0 2px}
   .attrib h3{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);margin:0 0 11px;font-weight:600}
@@ -166,8 +169,8 @@
   <div id="body"></div>
   <div class="foot">
     <span class="note">Hypothetical Model Portfolio — backtested; research only, not investment advice.</span>
-    The model is the <b>Fast Book</b> — a long-only, fully-invested cross-sectional momentum
-    rotation (unbiased, no factor tilt; a tax-efficient Slow Book is the offline-validated taxable
+    The model is the <b>Unconstrained Core Alpha Strategy</b> — a long-only, fully-invested cross-sectional momentum
+    rotation (unbiased, no factor tilt; a tax-efficient Tax-Managed Core Strategy is the offline-validated taxable
     companion) — marked daily net of cost, vs
     buy-and-hold VT (global) and VTI (US) on the same total-return basis. Append-only:
     history is never recomputed. The full curve is a <b>hypothetical backtest</b> — the strategy
@@ -359,19 +362,19 @@ function render(s){
     <table class="cmp"><thead><tr><th>Track</th><th>Return</th><th>Sharpe</th>
       <th>Max DD</th><th>Edge</th></tr></thead><tbody id="cmpbody"></tbody></table>
     <div class="note-box"><b>How the book is built — a dual-engine system.</b> The model above is the
-      <b>Fast Book</b>: long-only and <b>always fully invested</b> (no cash, no leverage). Each month it ranks
+      <b>Unconstrained Core Alpha Strategy</b>: long-only and <b>always fully invested</b> (no cash, no leverage). Each month it ranks
       the global region/size/style ETF matrix by volatility-normalized momentum (~60-bar lookback) and holds the
       trending top half, inverse-volatility weighted — <b>unbiased cross-sectional momentum with no discretionary
       factor bet</b> (a 40-year test of an EM/value/small overweight showed it added risk, not risk-adjusted
       return, so the book carries none). Its turnover is high, so it belongs in <b>tax-advantaged</b> space
-      (IRA/Roth). A separate, natively-slow companion — the <b>Slow Book</b> — is built for <b>taxable</b>
+      (IRA/Roth). A separate, natively-slow companion — the <b>Tax-Managed Core Strategy</b> — is built for <b>taxable</b>
       accounts: a 12-month (252-bar) drift signal, asymmetric rank hysteresis (enter the top 40%, hold until a
       name leaves the top 60%), and a tax-lot holding-period cushion that ages near-one-year winners into
       long-term treatment. In an <b>illustrative</b> 40-year validation sweep (<code>scripts/slow_sweep.py</code>,
-      proxy-spliced or synthetic history) the Slow Book retained a meaningfully larger after-tax fraction than the
-      Fast Book (roughly <b>~2×</b> in that run) — a <b>mechanism demonstration, not a live or audited track
+      proxy-spliced or synthetic history) the Tax-Managed Core Strategy retained a meaningfully larger after-tax fraction than the
+      Unconstrained Core Alpha Strategy (roughly <b>~2×</b> in that run) — a <b>mechanism demonstration, not a live or audited track
       record</b> — making the case for unifying the two engines by <b>asset location</b>: fast where gains are
-      sheltered, slow where they are taxed. (The Slow Book is offline-validated and is not part of the
+      sheltered, slow where they are taxed. (The Tax-Managed Core Strategy is offline-validated and is not part of the
       Model Portfolio above; its figures are hypothetical.) <b>Diversification
       note:</b> the book holds the full global region×size×style matrix, so by construction it is far less
       US-mega-cap-concentrated than VT (~<b>62% US</b> as of mid-2026) — diversification, not a tactical bet.
@@ -468,7 +471,7 @@ function render(s){
   const summaryHTML=`<div class="summary">
     <h3>What this is — the short version</h3>
     <p><b>A hypothetical Model Portfolio</b> of a long-only, fully-invested global region/size/style ETF
-      momentum rotation (the Fast Book). Across the backtest it returned <b>${pct(h.total_return)}</b> with a
+      momentum rotation (the Unconstrained Core Alpha Strategy). Across the backtest it returned <b>${pct(h.total_return)}</b> with a
       worst peak-to-trough drawdown near <b>~${ddPct}%</b> — more volatile than buy-and-hold, in exchange for
       the trend premium.</p>
     <ul>
@@ -501,9 +504,8 @@ function render(s){
     <p class="cap">Single-factor (rf=0) regression of the model's daily returns on <b>${a.benchmark}</b>'s over the
     full backtest. <b>Beta</b> is the slice of return that is plain market drift; <b>alpha</b> is the annualized
     remainder — the momentum / structure component beta does not explain. A low <b>R²</b> means most of the
-    return is idiosyncratic to the strategy rather than the market. ${sigNote}${oosNote} Hypothetical; see disclosure above.</p></div>` : "";
+    return is idiosyncratic to the strategy rather than the market. ${sigNote}${oosNote} Hypothetical; see disclosures at the foot of the page.</p></div>` : "";
   document.getElementById("body").innerHTML = `
-    ${disclaimerHTML}
     ${summaryHTML}
     <div class="metrics">${stats}</div>
     ${costHTML}
@@ -520,7 +522,8 @@ function render(s){
     <table><thead><tr><th>Instrument</th><th>Leg</th><th>Weight</th></tr></thead><tbody>${positions}</tbody></table>
     <h2 class="sec">Recent sessions</h2>
     <table><thead><tr><th>Date</th><th>Realized</th><th>Equity</th></tr></thead><tbody>${recent}</tbody></table>
-    ${glossHTML}`;
+    ${glossHTML}
+    ${disclaimerHTML}`;
   document.querySelectorAll(".tools button").forEach(btn=>btn.addEventListener("click",()=>applyPeriod(btn.dataset.k)));
   requestAnimationFrame(()=>applyPeriod("ALL"));
 }

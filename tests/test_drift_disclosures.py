@@ -28,13 +28,19 @@ def _read(p):
     return p.read_text()
 
 
-def test_ledger_carries_hypothetical_disclosure_near_the_numbers():
+def test_ledger_hypothetical_disclosure_present_with_point_of_performance_marker():
+    # Maximal-subtle posture (RIA-principal approved, see docs/Compliance_Disclosure_Changes.md):
+    # the FULL hypothetical-performance disclosure renders as small print at the FOOT of the page,
+    # while the point-of-performance label is kept by the "HYPOTHETICAL" header pill AND the summary
+    # card's "Hypothetical backtest" line. All required Marketing-Rule language stays present.
     t = _read(LEDGER_TEMPLATE)
-    assert 'class="disclaimer"' in t                      # the styled banner exists
+    assert 'class="disclaimer"' in t                      # the disclosure block still exists
     for phrase in _REQUIRED_PHRASES:
         assert phrase in t, f"ledger disclosure missing: {phrase!r}"
-    # The banner is injected at the top of the body, above the metrics block.
-    assert t.index("disclaimerHTML") < t.index('<div class="metrics">${stats}</div>')
+    assert "hyp-pill" in t and "HYPOTHETICAL" in t        # header marker at the point of performance
+    assert "Hypothetical backtest" in t                   # summary-card inline marker
+    # The full disclosure is rendered at the foot — AFTER the metrics, not above them.
+    assert t.index("${disclaimerHTML}") > t.index('<div class="metrics">${stats}</div>')
 
 
 def test_ledger_is_framed_as_a_model_portfolio_not_a_live_track():

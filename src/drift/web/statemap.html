@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Driftwood — The State Tax Map</title>
+<link rel="stylesheet" href="driftwood.css">
+<style>
+  :root{
+    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
+    --ink:#1d242d; --body:#3a414b; --dim:#76747e; --muted:#8a8276;
+    --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);
+    font:14.5px/1.6 "IBM Plex Sans",ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .sheet{max-width:1100px;margin:30px auto;padding:0 20px 50px}
+  .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
+  .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #ddd5c6}
+  .chrome i{width:9px;height:9px;border-radius:999px;background:#cfc6b4;display:inline-block}
+  .chrome .url{margin-left:auto;font-size:11.5px;letter-spacing:.04em;color:var(--muted);font-family:ui-monospace,monospace}
+  .hd{padding:28px 40px 6px}
+  .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
+  h1{font-family:"Newsreader",Georgia,"Times New Roman",serif;font-weight:500;font-size:36px;line-height:1.05;
+    letter-spacing:-.02em;color:var(--ink);margin:0 0 10px}
+  .lede{font-size:14.5px;color:#54545c;margin:0;max-width:76ch}
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;padding:14px 40px 4px}
+  .tabs button{font:inherit;font-size:13px;font-weight:600;color:var(--dim);background:#fff;border:1px solid var(--line);
+    border-radius:8px;padding:8px 14px;cursor:pointer;transition:all .12s}
+  .tabs button:hover{background:var(--soft)}
+  .tabs button[aria-selected="true"]{background:var(--ink);color:#f1ede3;border-color:var(--ink)}
+  .tabs button.hl{border-color:var(--brass);color:var(--brass)}
+  .tabs button.hl::before{content:"★ ";font-size:10px}
+  .tabs button.hl[aria-selected="true"]{background:var(--teal);color:#f1ede3;border-color:var(--teal)}
+  .split{display:grid;grid-template-columns:1.35fr .85fr;gap:20px;padding:10px 40px 8px;align-items:start}
+  @media(max-width:820px){.split{grid-template-columns:1fr}}
+  .maptitle{font-family:"Newsreader",Georgia,serif;font-size:19px;color:var(--ink);margin:0 0 10px}
+  .frame-hl .maptitle .syn{color:var(--brass);font-style:italic;font-size:14px;display:block;margin-top:2px;font-family:inherit}
+  svg.cart{width:100%;height:auto;display:block}
+  .tile rect{cursor:pointer;transition:filter .12s,stroke .12s}
+  .tile:hover rect{stroke:#fff;stroke-width:2.4;filter:brightness(1.1)}
+  .tile.sel rect{stroke:var(--ink);stroke-width:3}
+  .tcode{font-size:11px;font-weight:700;fill:#16130f;pointer-events:none}
+  .tcode.lt{fill:#f4f1e8}
+  .ttag{font-size:8.5px;fill:#16130f;opacity:.8;pointer-events:none}
+  .ttag.lt{fill:#f4f1e8}
+  .striplab{font-size:8px;fill:var(--muted);letter-spacing:.1em}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px}
+  .legend span{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--dim)}
+  .legend i{width:13px;height:13px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.08)}
+  .detail{border:1px solid var(--line);border-radius:10px;padding:20px;background:#fff;min-height:220px}
+  .detail .dn{font-family:"Newsreader",Georgia,serif;font-size:21px;color:var(--ink);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .detail .dn .code{font-size:13px;color:var(--dim)}
+  .detail .pill{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:999px;color:#16130f;margin-left:auto}
+  .detail .dnote{font-size:13px;line-height:1.6;color:var(--body);margin:14px 0 0}
+  .detail .src{font-size:10.5px;color:var(--muted);margin-top:14px;border-top:1px solid var(--line2);padding-top:10px;line-height:1.45}
+  .detail a.cta{display:inline-block;margin-top:14px;background:var(--teal);color:#f1ede3;text-decoration:none;
+    font-weight:600;font-size:13px;padding:10px 16px;border-radius:8px}
+  .foot{margin:14px 40px 30px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:11px;line-height:1.55}
+  .foot b{color:#5a5a62}
+  .asof{font-size:11px;color:var(--muted);padding:0 40px;margin:2px 0 0}
+  @media print{ body{background:#fff} .sheet{margin:0;max-width:none;padding:0} .frame{border:0;box-shadow:none} .chrome,.detail a.cta{display:none} }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="frame" id="frame">
+    <div class="chrome"><i></i><i></i><i></i><span class="url">driftwood — the state tax map</span></div>
+    <div class="hd">
+      <div class="eyebrow">Driftwood · the state tax map</div>
+      <h1>Fifty states. One after-tax plan.</h1>
+      <p class="lede">Every state has its own tax personality — on gains, on marriage, at death, and on
+        the basis your heirs inherit. Move across the dimensions to see where a state helps and where it
+        leaks; the last tab is what our engine is built to recover from all of it.</p>
+    </div>
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="split">
+      <div>
+        <div class="maptitle" id="maptitle"></div>
+        <svg class="cart" id="cart" role="img" aria-label="US state tax cartogram"></svg>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="detail" id="detail"></div>
+    </div>
+    <p class="asof" id="asof"></p>
+    <div class="foot" id="foot"></div>
+  </div>
+</div>
+
+<script>
+window.__STATE__ = /*__STATE__*/null/*__END__*/;
+const CELL = 46, TILE = 42;
+
+function render(s){
+  const dims = s.dimensions||[], tiles = s.tiles||{}, states = s.states||{}, names = s.names||{};
+  let active = 0;
+  // optional ?state= / ?dim= preselect
+  const qp = new URLSearchParams(location.search);
+  let sel = (qp.get("state")||"").toUpperCase(); if(!(sel in tiles)) sel = "IL" in tiles ? "IL" : Object.keys(tiles)[0];
+  const qdim = qp.get("dim"); const di = dims.findIndex(d=>d.key===qdim); if(di>=0) active = di;
+
+  const colorMap = d => Object.fromEntries(d.legend.map(([r,c])=>[r,c]));
+  const DARK = new Set(["#5b6b74","#9b4439","#15806a","#2f8467","#15604a","#15463a"]);
+
+  // ---- tabs
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = dims.map((d,i)=>
+    `<button role="tab" data-i="${i}" class="${d.highlight?'hl':''}" aria-selected="${i===active}">${d.label}</button>`).join("");
+  tabs.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ active=+b.dataset.i; paint(); }));
+
+  function paint(){
+    const d = dims[active];
+    document.getElementById("frame").className = "frame" + (d.highlight?" frame-hl":"");
+    tabs.querySelectorAll("button").forEach((b,i)=>b.setAttribute("aria-selected", i===active));
+    document.getElementById("maptitle").innerHTML = d.title +
+      (d.highlight ? `<span class="syn">Structural Alpha — the recoverable tax leakage our engine targets, illustrative.</span>`:"");
+    const cmap = colorMap(d);
+    // cartogram
+    let maxc=0,maxr=0; for(const k in tiles){ maxc=Math.max(maxc,tiles[k][0]); maxr=Math.max(maxr,tiles[k][1]); }
+    let parts = `<text class="striplab" x="${4}" y="${(maxr)*CELL+TILE/2}">TERRITORIES</text>`;
+    for(const code in tiles){
+      const [c,r] = tiles[code], x=c*CELL, y=r*CELL;
+      const rec = (states[code]||{})[d.key];
+      const fill = rec ? (cmap[rec.regime]||"#ece6da") : "#ece6da";
+      const lt = DARK.has(fill) ? " lt" : "";
+      const tag = rec ? (rec.tag||"") : "—";
+      parts += `<g class="tile ${code===sel?'sel':''}" data-code="${code}" tabindex="0" role="button" aria-label="${names[code]||code}">`+
+        `<title>${names[code]||code}</title>`+
+        `<rect x="${x}" y="${y}" width="${TILE}" height="${TILE}" rx="3" fill="${fill}" stroke="#FBF8F1" stroke-width="2"></rect>`+
+        `<text class="tcode${lt}" x="${x+TILE/2}" y="${y+ (tag? TILE/2-2 : TILE/2+4)}" text-anchor="middle">${code}</text>`+
+        (tag ? `<text class="ttag${lt}" x="${x+TILE/2}" y="${y+TILE/2+11}" text-anchor="middle">${tag}</text>`:"")+
+        `</g>`;
+    }
+    const svg = document.getElementById("cart");
+    svg.setAttribute("viewBox", `-2 -2 ${(maxc+1)*CELL+2} ${(maxr+1)*CELL}`);
+    svg.innerHTML = parts;
+    svg.querySelectorAll("g.tile").forEach(g=>{
+      const pick=()=>{ sel=g.dataset.code; paint(); };
+      g.addEventListener("click",pick);
+      g.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });
+    });
+    // legend
+    document.getElementById("legend").innerHTML = d.legend.filter(([,,l])=>l!=="").map(([r,c,l])=>
+      `<span><i style="background:${c}"></i>${l}</span>`).join("");
+    renderDetail(d);
+  }
+
+  function renderDetail(d){
+    const rec = (states[sel]||{})[d.key];
+    const nm = names[sel]||sel;
+    const cmap = colorMap(d);
+    if(!rec){
+      document.getElementById("detail").innerHTML =
+        `<div class="dn">${nm} <span class="code">(${sel})</span></div>`+
+        `<p class="dnote">Not modeled for this dimension.</p>`;
+      return;
+    }
+    const lab = (d.legend.find(([r])=>r===rec.regime)||[])[2] || "";
+    const col = cmap[rec.regime]||"#d8cfbc";
+    let html = `<div class="dn">${nm} <span class="code">(${sel})</span>`+
+      (lab?`<span class="pill" style="background:${col};color:${["#5b6b74","#9b4439","#15806a","#2f8467","#15604a"].includes(col)?'#f4f1e8':'#16130f'}">${lab}</span>`:"")+
+      `</div><p class="dnote">${rec.note}</p>`;
+    if(d.key==="alpha" && rec.deeplink){
+      html += `<a class="cta" href="${rec.deeplink}">See ${nm}'s diagnostic →</a>`;
+    }
+    html += `<div class="src">${rec.source||""}</div>`;
+    document.getElementById("detail").innerHTML = html;
+  }
+
+  document.getElementById("asof").textContent = (s.header||{}).asof||"";
+  document.getElementById("foot").innerHTML =
+    `<b>Educational — not tax, legal, or investment advice.</b> State tax treatment is summarized at a high `+
+    `level for tax year 2025 and changes with legislation; confirm any figure with your CPA or attorney. The `+
+    `Structural Alpha dimension is <b>illustrative / hypothetical</b> modeling (no client capital was invested; `+
+    `past performance does not guarantee future results) and is <b>not a forecast that any fund out-performs</b>; `+
+    `your figure requires the personalized diagnostic.`+
+    `<div style="margin-top:7px">Driftwood is a research brand of <b>CWS&nbsp;Planning</b>, a `+
+    `<b>registered investment adviser</b>; <b>Form ADV</b> and <b>Form CRS</b> are available at `+
+    `<a href="https://adviserinfo.sec.gov/" style="color:var(--teal)">adviserinfo.sec.gov</a>.</div>`+
+    `<div style="margin-top:5px" id="gen">Generated ${(s.header||{}).generated||""}</div>`;
+  paint();
+}
+
+async function load(){
+  let s = window.__STATE__;
+  if(!s){ try{ s = await (await fetch("/api/statemap")).json(); }catch(e){} }
+  if(s) render(s);
+}
+load();
+</script>
+</body>
+</html>

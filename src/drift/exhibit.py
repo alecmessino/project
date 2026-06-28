@@ -28,6 +28,7 @@ HUB_TEMPLATE = Path(__file__).with_name("web") / "hub.html"
 THESIS_TEMPLATE = Path(__file__).with_name("web") / "thesis.html"
 TAXLAB_TEMPLATE = Path(__file__).with_name("web") / "taxlab.html"
 LEAKAGE_TEMPLATE = Path(__file__).with_name("web") / "leakage.html"
+STATEMAP_TEMPLATE = Path(__file__).with_name("web") / "statemap.html"
 
 
 def _spark(curve: Sequence[float], n: int = 90) -> list[float]:
@@ -263,4 +264,17 @@ def export_leakage(state: dict, out: str | Path) -> Path:
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render_leakage(state))
+    return out
+
+
+def render_statemap(state: dict) -> str:
+    """Static, self-contained multi-dimension State Tax Map with state embedded."""
+    template = STATEMAP_TEMPLATE.read_text()
+    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+
+
+def export_statemap(state: dict, out: str | Path) -> Path:
+    out = Path(out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(render_statemap(state))
     return out

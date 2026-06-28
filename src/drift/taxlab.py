@@ -267,6 +267,7 @@ def build_taxlab(docs_dir: str | Path = "docs") -> dict:
         "profile": None, "states": STATE_RATES, "brackets": FED_BRACKETS,
         "assumptions": ASSUMPTIONS, "models": models_state(),
     }
+    _attach_statemap(state)        # static dimension dataset — independent of the ledger
     led_path = docs / "ledger.json"
     if not led_path.exists():
         return state
@@ -302,3 +303,13 @@ def build_taxlab(docs_dir: str | Path = "docs") -> dict:
         "years": round(years, 2),
     }
     return state
+
+
+def _attach_statemap(state: dict) -> None:
+    """Embed the multi-dimension State Tax Map dataset so the Tax Lab cartogram can switch dimensions
+    (capital gains / marriage / estate / basis step-up / Structural Alpha) from the same data the
+    standalone exhibit uses. Map coloring is independent of the tax calculator (which reads the
+    selected state's rates), so adding dimensions never affects the computed figures."""
+    from .statemap import build_statemap
+    sm = build_statemap()
+    state["statemap"] = {"dimensions": sm["dimensions"], "states": sm["states"]}

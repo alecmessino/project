@@ -74,9 +74,9 @@ def variants(real: bool) -> list[tuple[str, Settings]]:
     slow = Settings.load("config/slow.yaml")
     cs35 = slow.cross_section.model_copy(update={"buy_quantile": 0.35, "hold_quantile": 0.65})
     slow35 = slow.model_copy(update={"cross_section": cs35})
-    return [("Fast book (vanilla)", fast),
-            ("Slow sleeve 40/60", slow),
-            ("Slow sleeve 35/65", slow35)]
+    return [("Unconstrained Core", fast),
+            ("Tax-Managed Core 40/60", slow),
+            ("Tax-Managed Core 35/65", slow35)]
 
 
 def row(name: str, settings: Settings, series: dict) -> dict:
@@ -123,11 +123,11 @@ def tilt_attribution(series: dict) -> None:
     })
     off = fast.model_copy(update={"cross_section": neutral})
     print("Tilt attribution — does the EM/value/small overweight add risk-adjusted return?")
-    hdr = f"{'variant':<22}{'pre-tax':>10}{'sharpe':>8}{'maxDD':>8}{'turnov':>9}"
+    hdr = f"{'variant':<25}{'pre-tax':>10}{'sharpe':>8}{'maxDD':>8}{'turnov':>9}"
     print(hdr); print("-" * len(hdr))
     for name, s in [("tilt ON (as shipped)", fast), ("tilt OFF (neutral)", off)]:
         r, sh, dd, tv = _curve_stats(cross_book_entries(series, s))
-        print(f"{name:<22}{r*100:>9.1f}%{sh:>8.2f}{dd*100:>7.1f}%{tv*100:>8.0f}%")
+        print(f"{name:<25}{r*100:>9.1f}%{sh:>8.2f}{dd*100:>7.1f}%{tv*100:>8.0f}%")
     print()
 
 
@@ -154,14 +154,14 @@ def main() -> int:
 
     rows = [row(name, s, series) for name, s in variants(use_real)]
 
-    hdr = f"{'variant':<22}{'pre-tax':>10}{'after-tax':>11}{'retain':>9}{'drag':>8}{'turnov':>9}{'ST%':>7}{'hold(d)':>9}"
+    hdr = f"{'variant':<25}{'pre-tax':>10}{'after-tax':>11}{'retain':>9}{'drag':>8}{'turnov':>9}{'ST%':>7}{'hold(d)':>9}"
     print(hdr)
     print("-" * len(hdr))
     for r in rows:
         if not r["ok"]:
-            print(f"{r['name']:<22}  (no after-tax — prices missing)")
+            print(f"{r['name']:<25}  (no after-tax — prices missing)")
             continue
-        print(f"{r['name']:<22}"
+        print(f"{r['name']:<25}"
               f"{r['pretax']*100:>9.1f}%"
               f"{r['aftertax']*100:>10.1f}%"
               f"{r['retention']*100:>8.1f}%"

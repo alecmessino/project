@@ -6,12 +6,12 @@ session it (a) marks the positions held from the prior session against the price
 printed, (b) advances a cumulative equity, and (c) records the next target positions.
 It only ever appends — history is never recomputed.
 
-The live book is the **Fast Book**: the long-only, fully-invested cross-sectional
+The live book is the **Unconstrained Core Alpha Strategy**: the long-only, fully-invested cross-sectional
 momentum rotation — the trending top half of the region/size/style ETF matrix,
 inverse-volatility weighted, with NO discretionary factor tilt (a 40-year test of an
 EM/value/small overweight showed it added risk, not risk-adjusted return) — marked daily.
 No cash and no leverage: always ~100% invested. Its high turnover suits tax-advantaged
-accounts; a separate, offline-validated **Slow Book**
+accounts; a separate, offline-validated **Tax-Managed Core Strategy**
 (12-month drift, asymmetric rank hysteresis, and tax-lot aging — config/slow.yaml) is the
 taxable-located companion and is **not** part of this live track. Weekends/holidays fall
 out naturally: an instrument is marked from its last close on-or-before the prior ledger

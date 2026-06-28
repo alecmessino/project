@@ -157,6 +157,28 @@ def test_lot_protection_is_noop_when_slow_mode_off():
     assert out == target
 
 
+def test_lot_protection_fires_for_tilt_hybrid_without_slow_sleeve():
+    # The hybrid turns on lot_protect WITHOUT slow_sleeve_mode (it keeps the fast-signal continuous
+    # tilt). Protection must still delay a near-LT sale — that is what converts the tilt's short-term
+    # churn into long-term gains.
+    from drift.cross_section import _lot_protected_weights
+    cs = CrossSectionSettings(lot_protect=True, slow_sleeve_mode=False, gross_exposure=1.0,
+                              lt_protection_window_bars=30, catastrophic_quantile=0.10)
+    names = list("ABCDEFGHIJ")
+    scores = {n: float(10 - i) for i, n in enumerate(names)}    # A best (rank 0) .. J worst
+    prev = {"A": 0.5, "B": 0.5}
+    target = {"A": 1.0, "B": 0.0}                               # tilt cuts B
+    # B (rank 1, not catastrophic) held 240 bars -> within 30 of the 252 LT mark -> frozen.
+    out = _lot_protected_weights(target, prev, scores, {"A": 300, "B": 240}, cs, lt_bars=252)
+    assert out["B"] == 0.5                                      # sale delayed though slow sleeve is OFF
+    assert abs(sum(out.values()) - 1.0) < 1e-9                  # book stays fully invested
+    # ...but a catastrophic breakdown is still sold even under lot_protect.
+    bad = ["A", "C", "D", "E", "F", "G", "H", "I", "J", "B"]    # B now worst (bottom decile)
+    sc2 = {n: float(10 - i) for i, n in enumerate(bad)}
+    out2 = _lot_protected_weights(target, prev, sc2, {"A": 300, "B": 240}, cs, lt_bars=252)
+    assert out2.get("B", 0.0) == 0.0
+
+
 def test_slow_sleeve_config_defaults():
     cs = CrossSectionSettings()
     assert cs.slow_sleeve_mode is False
@@ -515,13 +537,13 @@ def test_state_estate_embedded(tmp_path):
 
 def test_methodology_dual_engine_and_honest():
     """Methodology copy describes the dual-engine architecture and NEVER claims the live track
-    includes the offline-validated Slow Book (honesty guard)."""
+    includes the offline-validated Tax-Managed Core Strategy (honesty guard)."""
     from pathlib import Path
     import drift.taxlab as T
     led = " ".join((Path(T.__file__).with_name("web") / "ledger.html").read_text().split())  # collapse HTML line-wrap
-    assert "Fast Book" in led and "Slow Book" in led
+    assert "Unconstrained Core Alpha" in led and "Tax-Managed Core" in led   # institutional nomenclature
     assert "asset location" in led.lower()
-    assert "not part of the Model Portfolio above" in led   # the Slow Book is NOT in the model curve
+    assert "not part of the Model Portfolio above" in led   # the Tax-Managed Core is NOT in the model curve
     # Its comparative claim must be framed as a hypothetical/illustrative validation run, not a track record.
     assert "illustrative" in led.lower() and "scripts/slow_sweep.py" in led
 

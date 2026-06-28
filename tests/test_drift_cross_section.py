@@ -104,7 +104,11 @@ def test_tilt_overlay_holds_whole_universe_long_only_summing_to_gross():
 
 def test_tilt_overlay_off_by_default_and_in_shipped_configs():
     # The live signal must never silently become the research tilt: off in the default and in every
-    # committed config.
+    # committed config. The hybrid's lot_protect flag is likewise research-only (the slow book gets
+    # its protection via slow_sleeve_mode, not this flag).
     assert CrossSectionSettings().tilt_overlay is False
+    assert CrossSectionSettings().lot_protect is False
     for cfg in ("config/drift.yaml", "config/slow.yaml"):
-        assert Settings.load(cfg).cross_section.tilt_overlay is False, f"{cfg} ships tilt_overlay ON"
+        cs = Settings.load(cfg).cross_section
+        assert cs.tilt_overlay is False, f"{cfg} ships tilt_overlay ON"
+        assert cs.lot_protect is False, f"{cfg} ships lot_protect ON"

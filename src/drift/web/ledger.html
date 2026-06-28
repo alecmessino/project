@@ -11,16 +11,16 @@
 </script>
 <link rel="stylesheet" href="driftwood.css">
 <title>Driftwood — Model Portfolio (Hypothetical)</title>
-<meta name="description" content="A hypothetical Model Portfolio backtest of the Fast Book — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; its tax-efficient Slow Book companion is offline-validated) — benchmarked against VT (global) and VTI (US) buy-and-hold, with risk stats, regional and style-box exposure, and costs shown. Research only, not investment advice." />
+<meta name="description" content="A hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; its tax-efficient Tax-Managed Core Strategy companion is offline-validated) — benchmarked against VT (global) and VTI (US) buy-and-hold, with risk stats, regional and style-box exposure, and costs shown. Research only, not investment advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/ledger.html" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
 <meta property="og:title" content="Driftwood — Model Portfolio (Hypothetical)" />
-<meta property="og:description" content="A hypothetical Model Portfolio backtest of the Fast Book — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Slow Book companion for taxable accounts), benchmarked vs VT (global) and VTI (US) buy-and-hold — risk stats, regional + style-box exposure, and costs. Research only." />
+<meta property="og:description" content="A hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Tax-Managed Core Strategy companion for taxable accounts), benchmarked vs VT (global) and VTI (US) buy-and-hold — risk stats, regional + style-box exposure, and costs. Research only." />
 <meta property="og:url" content="https://alecmessino.github.io/project/ledger.html" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Driftwood — Model Portfolio (Hypothetical)" />
-<meta name="twitter:description" content="Hypothetical Model Portfolio backtest of the Fast Book — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Slow Book for taxable accounts), benchmarked vs VT & VTI buy-and-hold. Research only, not advice." />
+<meta name="twitter:description" content="Hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Tax-Managed Core Strategy for taxable accounts), benchmarked vs VT & VTI buy-and-hold. Research only, not advice." />
 <style>
   :root{
     --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --ink:#1d242d; --dim:#76747e;
@@ -166,8 +166,8 @@
   <div id="body"></div>
   <div class="foot">
     <span class="note">Hypothetical Model Portfolio — backtested; research only, not investment advice.</span>
-    The model is the <b>Fast Book</b> — a long-only, fully-invested cross-sectional momentum
-    rotation (unbiased, no factor tilt; a tax-efficient Slow Book is the offline-validated taxable
+    The model is the <b>Unconstrained Core Alpha Strategy</b> — a long-only, fully-invested cross-sectional momentum
+    rotation (unbiased, no factor tilt; a tax-efficient Tax-Managed Core Strategy is the offline-validated taxable
     companion) — marked daily net of cost, vs
     buy-and-hold VT (global) and VTI (US) on the same total-return basis. Append-only:
     history is never recomputed. The full curve is a <b>hypothetical backtest</b> — the strategy
@@ -359,19 +359,19 @@ function render(s){
     <table class="cmp"><thead><tr><th>Track</th><th>Return</th><th>Sharpe</th>
       <th>Max DD</th><th>Edge</th></tr></thead><tbody id="cmpbody"></tbody></table>
     <div class="note-box"><b>How the book is built — a dual-engine system.</b> The model above is the
-      <b>Fast Book</b>: long-only and <b>always fully invested</b> (no cash, no leverage). Each month it ranks
+      <b>Unconstrained Core Alpha Strategy</b>: long-only and <b>always fully invested</b> (no cash, no leverage). Each month it ranks
       the global region/size/style ETF matrix by volatility-normalized momentum (~60-bar lookback) and holds the
       trending top half, inverse-volatility weighted — <b>unbiased cross-sectional momentum with no discretionary
       factor bet</b> (a 40-year test of an EM/value/small overweight showed it added risk, not risk-adjusted
       return, so the book carries none). Its turnover is high, so it belongs in <b>tax-advantaged</b> space
-      (IRA/Roth). A separate, natively-slow companion — the <b>Slow Book</b> — is built for <b>taxable</b>
+      (IRA/Roth). A separate, natively-slow companion — the <b>Tax-Managed Core Strategy</b> — is built for <b>taxable</b>
       accounts: a 12-month (252-bar) drift signal, asymmetric rank hysteresis (enter the top 40%, hold until a
       name leaves the top 60%), and a tax-lot holding-period cushion that ages near-one-year winners into
       long-term treatment. In an <b>illustrative</b> 40-year validation sweep (<code>scripts/slow_sweep.py</code>,
-      proxy-spliced or synthetic history) the Slow Book retained a meaningfully larger after-tax fraction than the
-      Fast Book (roughly <b>~2×</b> in that run) — a <b>mechanism demonstration, not a live or audited track
+      proxy-spliced or synthetic history) the Tax-Managed Core Strategy retained a meaningfully larger after-tax fraction than the
+      Unconstrained Core Alpha Strategy (roughly <b>~2×</b> in that run) — a <b>mechanism demonstration, not a live or audited track
       record</b> — making the case for unifying the two engines by <b>asset location</b>: fast where gains are
-      sheltered, slow where they are taxed. (The Slow Book is offline-validated and is not part of the
+      sheltered, slow where they are taxed. (The Tax-Managed Core Strategy is offline-validated and is not part of the
       Model Portfolio above; its figures are hypothetical.) <b>Diversification
       note:</b> the book holds the full global region×size×style matrix, so by construction it is far less
       US-mega-cap-concentrated than VT (~<b>62% US</b> as of mid-2026) — diversification, not a tactical bet.
@@ -468,7 +468,7 @@ function render(s){
   const summaryHTML=`<div class="summary">
     <h3>What this is — the short version</h3>
     <p><b>A hypothetical Model Portfolio</b> of a long-only, fully-invested global region/size/style ETF
-      momentum rotation (the Fast Book). Across the backtest it returned <b>${pct(h.total_return)}</b> with a
+      momentum rotation (the Unconstrained Core Alpha Strategy). Across the backtest it returned <b>${pct(h.total_return)}</b> with a
       worst peak-to-trough drawdown near <b>~${ddPct}%</b> — more volatile than buy-and-hold, in exchange for
       the trend premium.</p>
     <ul>

@@ -78,3 +78,61 @@ still wins on after-tax. But the hybrid is a legitimate, more-diversified, tax-e
 the **best after-tax option in the recent full-universe era (2006–2026)**. Next step before any
 deployment: a cost/capacity-aware run focused on the full-universe period, sweeping `k` and the
 no-trade band, and comparing on after-tax, risk-adjusted terms.
+
+---
+
+## Modern-era optimization (2006–present) — `scripts/tilt_optimize.py`
+Deterministic (`PYTHONHASHSEED=0`) grid over tilt aggressiveness `k` × no-trade band, on the
+20-year full-universe window, net of cost. Benchmarks on the same window (5 bps/side):
+Unconstrained Core after-tax **165.5%** (Sharpe 0.51, turn 368%, ST 96%); Tax-Managed Core (slow)
+after-tax **181.6%** (Sharpe 0.45, turn 150%, ST 41%).
+
+**AFTER-TAX RETURN %** (rows `k`, cols band) — **SHARPE** in parentheses:
+
+| k \ band | 2% | 4% | 6% | 8% | 10% |
+|---|---|---|---|---|---|
+| 0.3  | 250 (.51) | 308 (.50) | 337 (.46) | 439 (.49) | **486 (.49)** |
+| 0.5  | 208 (.52) | 241 (.51) | 275 (.49) | 302 (.50) | 344 (.52) |
+| 0.75 | 187 (.52) | 204 (.52) | 243 (.53) | 256 (.52) | 261 (.51) |
+| 1.0  | 188 (.53) | 195 (.53) | 212 (.53) | 217 (.51) | 216 (.50) |
+
+Turnover and short-term share fall monotonically toward the low-`k` / wide-band corner (e.g. k=0.3,
+band=10% → **3% turnover, 1% ST**; k=1.0, band=2% → 291% turnover, 96% ST).
+
+### What the grid actually says (read this before celebrating the 486%)
+- **The momentum signal adds no risk-adjusted value here.** Sharpe is flat (**0.45–0.53**) across the
+  *entire* grid and across both benchmarks — turning `k` up (more aggressive momentum) does **not**
+  raise Sharpe; it only adds turnover and short-term tax drag.
+- **The "after-tax optimum" is degenerate.** The selection rule (max after-tax s.t. turnover ≤ slow and
+  ST% ≤ 50%) lands at **k=0.3, band=10% → 486% after-tax, 3% turnover, 1% ST** — but that is a
+  *near-static, mildly-tilted, equal-weight buy-and-hold of all 18 ETFs*, not a momentum strategy. Its
+  high after-tax number is **tax deferral + diversified beta**, not alpha: it barely trades, so it
+  realizes almost no taxable gains. Its edge survives 15 bps/side untouched (485.3%) precisely because
+  there is nothing to trade.
+- **It is not a free lunch.** That cell's max drawdown is **65.5%** — *deeper* than the slow book (61%)
+  and the concentrated book (56%): a fully-invested broad basket that tilts toward small/EM took the
+  full 2008 hit. The Sharpe (0.49) reflects high return against high risk.
+
+### Honest conclusion
+The optimization does **not** validate a momentum-alpha deployment. What it validates is that, in the
+modern era, **after-tax return is dominated by tax efficiency (low turnover) and diversification, not
+by the momentum signal** — the logical optimum of "maximize after-tax, keep turnover defensible" is to
+*barely trade a broad ETF basket*, which is essentially low-cost, tax-managed, broadly-diversified
+indexing (asset location + minimal realization). That is the firm's genuine, defensible edge — and it
+is exactly the **Tax-Managed Core** thesis — **not** a momentum claim.
+
+**Recommendations:**
+- **Marketing:** position the Tax-Managed Core on **breadth + tax management** (it leverages an ETF
+  universe that didn't exist 30 years ago to compound more *after tax* than concentrated or
+  high-turnover legacy books). Do **not** market the momentum tilt as alpha — the data does not support
+  it (flat Sharpe).
+- **Engine split:** the large-account-only hybrid case is **weak** — if the edge is tax-deferred broad
+  beta, a large account gets the same from a broad, tax-managed, low-turnover basket without the
+  momentum machinery. Keep momentum aggressiveness **low** (`k≈0.3`) and the band **wide** if used at
+  all; the value is in *not trading*, not in the signal.
+- **Risk:** any broad fully-invested version carries a ~60–65% historical drawdown — size and disclose
+  accordingly.
+
+*Caveats: single real path; proxy-spliced pre-2006 excluded by the window; flat-bps cost is a capacity
+proxy, not a market-impact model; research only — `tilt_overlay`/`lot_protect` are OFF in every shipped
+config and not wired to the live signal.*

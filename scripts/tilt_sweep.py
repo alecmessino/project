@@ -20,6 +20,7 @@ better after-tax, risk-adjusted profile across sub-periods.
 
 from __future__ import annotations
 
+import json
 import math
 import os
 import sys
@@ -36,6 +37,7 @@ from drift.universes import MATRIX
 BPY = 252.0
 YEARS = 40
 N_BARS = YEARS * int(BPY)
+CACHE_PATH = "tests/data/matrix_history.json"
 
 
 def synthetic_universe() -> dict:
@@ -59,11 +61,42 @@ def synthetic_universe() -> dict:
 
 
 def real_universe() -> dict:
-    """Best-effort 40-year proxy-spliced history from the Yahoo feed (the real test)."""
+    """Real 40-year proxy-spliced history. Prefers the committed offline cache so the real sweep
+    reproduces forever without the network; otherwise pulls via the Tiingo->Stooq->Yahoo chain and
+    writes the cache. Force a fresh pull with TILT_SWEEP_REFRESH=1 (e.g. the keyed CI workflow)."""
+    if os.path.exists(CACHE_PATH) and os.environ.get("TILT_SWEEP_REFRESH") != "1":
+        return _load_cache()
     from drift.tearsheet import _pull
+    print("  pulling via Tiingo -> Stooq -> Yahoo …")
     series, applied = _pull(list(MATRIX), years=float(YEARS), proxies=True)
     if applied:
         print(f"  (proxy-spliced: {', '.join(f'{k}<-{v}' for k, v in applied.items())})")
+    if series and len(series) >= 8:
+        _save_cache(series, applied)
+    return series
+
+
+def _save_cache(series: dict, applied: dict) -> None:
+    """Persist a compact post-splice close series (the engine only needs asof + close)."""
+    payload = {
+        "_meta": {"source": "drift.tearsheet._pull (Tiingo->Stooq->Yahoo), proxy-spliced",
+                  "years": YEARS, "tickers": sorted(series), "applied_proxies": applied or {}},
+        "series": {t: {"asof": [b.asof for b in bars], "close": [b.close for b in bars]}
+                   for t, bars in series.items()},
+    }
+    os.makedirs(os.path.dirname(CACHE_PATH), exist_ok=True)
+    with open(CACHE_PATH, "w") as fh:
+        json.dump(payload, fh)
+    print(f"  cached {len(series)} tickers -> {CACHE_PATH}")
+
+
+def _load_cache() -> dict:
+    from drift.models import Bar
+    with open(CACHE_PATH) as fh:
+        payload = json.load(fh)
+    series = {t: [Bar(asof=a, close=c) for a, c in zip(d["asof"], d["close"])]
+              for t, d in payload["series"].items()}
+    print(f"  loaded {len(series)} tickers from {CACHE_PATH} (offline cache)")
     return series
 
 
@@ -116,27 +149,10 @@ def row(name: str, settings: Settings, series: dict) -> dict:
     }
 
 
-def main() -> int:
-    use_real = os.environ.get("TILT_SWEEP_REAL") == "1"
-    src = "real (Yahoo, proxy-spliced)"
-    series = None
-    if use_real:
-        try:
-            print("Pulling real 40-year history …")
-            series = real_universe()
-            if not series or len(series) < 8:
-                print(f"  only {len(series or {})} names returned — falling back to synthetic")
-                series = None
-        except Exception as e:  # noqa: BLE001 — network is best-effort
-            print(f"  real pull failed ({e!r}) — falling back to synthetic")
-            series = None
-    if series is None:
-        series = synthetic_universe()
-        src = "synthetic (deterministic, rotating leadership — mechanism check, NOT evidence)"
-
+def print_matrix(series: dict, label: str) -> None:
+    """One return-vs-tax matrix (all variants) for a given series window."""
     yrs = max(len(v) for v in series.values()) / BPY
-    print(f"\nUniverse: {len(series)} tickers · ~{yrs:.0f}y · source = {src}\n")
-
+    print(f"\n=== {label} · {len(series)} tickers · ~{yrs:.1f}y ===")
     hdr = (f"{'variant':<26}{'pre-tax':>10}{'after-tax':>11}{'retain':>9}{'sharpe':>8}"
            f"{'maxDD':>8}{'turnov':>9}{'ST%':>7}{'names':>7}")
     print(hdr)
@@ -155,11 +171,54 @@ def main() -> int:
               f"{r['turnover']*100:>8.0f}%"
               f"{r['st_share']*100:>6.0f}%"
               f"{r['avg_names']:>7.1f}")
+
+
+def _subperiods(series: dict, n: int = 4) -> list[tuple[str, dict]]:
+    """Split the aligned history into n contiguous windows so we can see the matrix per sub-period
+    (real-data robustness: a single 40y path can over-fit). Each window keeps its own warmup."""
+    all_dates = sorted({b.asof for bars in series.values() for b in bars})
+    if len(all_dates) < n * 400:
+        return []
+    size = len(all_dates) // n
+    out: list[tuple[str, dict]] = []
+    for i in range(n):
+        lo = all_dates[i * size]
+        hi = all_dates[-1] if i == n - 1 else all_dates[(i + 1) * size - 1]
+        sub = {t: [b for b in bars if lo <= b.asof <= hi] for t, bars in series.items()}
+        sub = {t: b for t, b in sub.items() if len(b) >= 300}
+        if len(sub) >= 8:
+            out.append((f"{lo[:7]} – {hi[:7]}", sub))
+    return out
+
+
+def main() -> int:
+    use_real = os.environ.get("TILT_SWEEP_REAL") == "1"
+    series = None
+    if use_real:
+        try:
+            print("Loading real 40-year history …")
+            series = real_universe()
+            if not series or len(series) < 8:
+                print(f"  only {len(series or {})} names returned — falling back to synthetic")
+                series = None
+        except Exception as e:  # noqa: BLE001 — network is best-effort
+            print(f"  real pull failed ({e!r}) — falling back to synthetic")
+            series = None
+    real = series is not None
+    src = "real (proxy-spliced)" if real else "synthetic (deterministic, rotating leadership — mechanism check, NOT evidence)"
+    if series is None:
+        series = synthetic_universe()
+
+    print_matrix(series, f"FULL SAMPLE · source = {src}")
+    if real:
+        for label, sub in _subperiods(series, 4):
+            print_matrix(sub, f"SUB-PERIOD {label}")
+
     print("\nRead: 'retain' = after-tax / pre-tax (higher = more tax-efficient). The hybrid "
           "(tilt +band +lots) should keep the broad tilt's Sharpe / shallow drawdown while the band "
           "and lot-protection cut ST% and lift retention toward the Tax-Managed Core — bridging the "
           "risk-vs-tax gap. The +band row isolates the no-trade band; +lots adds lot protection.")
-    if not use_real:
+    if not real:
         print("SYNTHETIC RUN — proves the mechanism discriminates; NOT evidence on real ETFs.")
     print("Research only — tilt_overlay is OFF in every shipped config and not wired into the live signal.")
     return 0

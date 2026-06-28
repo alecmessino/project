@@ -16,7 +16,9 @@ Everything is pure given the input series; the network pull is isolated in `_pul
 
 from __future__ import annotations
 
+import json
 import time
+from pathlib import Path
 from typing import Optional, Sequence
 
 from . import analytics
@@ -28,6 +30,23 @@ from .models import Bar
 
 GRID_LOOKBACK = (40, 60, 80, 120)
 GRID_CONTINUATION = (0.10, 0.25)
+
+# Committed, proxy-spliced 40-year MATRIX cache (built by scripts/tilt_sweep.py / the
+# tilt-real-sweep workflow). The long-history tearsheet builds from this by default so it is
+# DETERMINISTIC and COMPLETE — a fragile partial live pull can otherwise ship a degraded book
+# (e.g. only the few names whose proxies reach the 1980s), leaving the early decades flat.
+_MATRIX_CACHE = Path(__file__).resolve().parents[2] / "tests" / "data" / "matrix_history.json"
+
+
+def _load_matrix_cache() -> tuple[Optional[dict], dict]:
+    """(series, applied_proxies) from the committed cache, or (None, {}) if it isn't present."""
+    try:
+        payload = json.loads(_MATRIX_CACHE.read_text())
+    except Exception:
+        return None, {}
+    series = {t: [Bar(asof=a, close=c) for a, c in zip(d["asof"], d["close"])]
+              for t, d in payload["series"].items()}
+    return (series or None), (payload.get("_meta", {}).get("applied_proxies", {}) or {})
 
 
 def _splice(fund: list[Bar], proxy: list[Bar]) -> list[Bar]:
@@ -246,13 +265,19 @@ def build_tearsheet(settings: Settings, equities: Sequence[str] = EQUITY_UNIVERS
             if ser:
                 books.append(build_book(nm, ser, settings, train_frac))
     else:
-        eq, eq_px = _pull(equities, years=years)
-        proxied.update(eq_px)
-        # Global-market reference: VT, extended with VTI before VT's 2008 inception.
-        mkt, mkt_px = _pull(["VT"], years=years)
-        if mkt.get("VT"):
-            market = mkt["VT"]
-            proxied.update(mkt_px)
+        # Prefer the committed proxy-spliced cache (deterministic + complete, invested from the
+        # 1980s); fall back to a best-effort live pull only when the cache isn't present.
+        eq, cache_px = _load_matrix_cache()
+        if eq:
+            proxied.update(cache_px)
+        else:
+            eq, eq_px = _pull(equities, years=years)
+            proxied.update(eq_px)
+            # Global-market reference: VT, extended with VTI before VT's 2008 inception.
+            mkt, mkt_px = _pull(["VT"], years=years)
+            if mkt.get("VT"):
+                market = mkt["VT"]
+                proxied.update(mkt_px)
         if eq:
             books.append(build_book("Equities & ETFs", eq, settings, train_frac,
                                     market=market, mode="cross"))

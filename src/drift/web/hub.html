@@ -207,7 +207,10 @@ function render(s){
     `<a class="ex ${e.present?'':'absent'}" href="${e.href}">
       <div class="t">${e.title} <span class="arrow">→</span></div>
       <div class="d">${e.desc}</div></a>`;
-  document.getElementById("exhibits").innerHTML = exs.filter(e=>!e.appendix).map(exHTML).join("");
+  document.getElementById("exhibits").innerHTML = exs.filter(e=>!e.appendix).map(exHTML).join("")
+    + `<a class="ex" href="taxlab.html?view=prospect">
+        <div class="t">Book a 15-min diagnostic <span class="arrow">→</span></div>
+        <div class="d">See your own after-tax number — by bracket, state, and portfolio. The fastest path from the research to your plan.</div></a>`;
   const appendix = exs.filter(e=>e.appendix);
   if(appendix.length){
     document.getElementById("appendixsec").style.display = "";

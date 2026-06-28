@@ -151,6 +151,10 @@ class CrossSectionSettings(BaseModel):
     # and NEVER wired into the shipped configs.
     tilt_overlay: bool = False
     tilt_strength: float = 0.5            # k: how hard the signal pushes weights off the equal-weight base
+    # Apply the tax-lot capital-gains protection (the execution layer below) WITHOUT the rest of the
+    # slow sleeve — so the continuous-tilt book can delay near-long-term sales the same way the slow
+    # sleeve does. Offline research; off in every shipped config, never wired into the live signal.
+    lot_protect: bool = False
     # Neutralize the ranking within a grouping before ranking: "none", "region",
     # or "factor". Region-neutral isolates which STYLE is trending (controlling for
     # region); factor-neutral isolates which REGION is trending. Demeaning trend

@@ -67,20 +67,33 @@ def real_universe() -> dict:
     return series
 
 
-def _tilt(base: Settings, k: float) -> Settings:
-    """The live book reconfigured as a full-universe continuous tilt of strength k."""
-    cs = base.cross_section.model_copy(update={"tilt_overlay": True, "tilt_strength": k})
+def _tilt(base: Settings, k: float, **extra) -> Settings:
+    """The live book reconfigured as a full-universe continuous tilt of strength k, plus any extra
+    cross-section overrides (the hybrid layers the Tax-Managed Core levers on top)."""
+    cs = base.cross_section.model_copy(update={"tilt_overlay": True, "tilt_strength": k, **extra})
     return base.model_copy(update={"cross_section": cs})
 
 
+def _band(base: Settings, k: float) -> Settings:
+    """Tilt + the tax-aware no-trade band only (isolates the band's contribution)."""
+    return _tilt(base, k, tax_aware=True, no_trade_band=0.03)
+
+
+def _hybrid(base: Settings, k: float) -> Settings:
+    """The hybrid: continuous tilt + BOTH Tax-Managed Core levers (no-trade band + lot protection)."""
+    return _tilt(base, k, tax_aware=True, no_trade_band=0.03, lot_protect=True)
+
+
 def variants() -> list[tuple[str, Settings]]:
-    fast = Settings.load("config/drift.yaml")
-    slow = Settings.load("config/slow.yaml")
+    fast = Settings.load("config/drift.yaml")    # Unconstrained Core Alpha (concentrated, the live book)
+    slow = Settings.load("config/slow.yaml")     # Tax-Managed Core (the slow 40/60 predecessor)
     return [
-        ("Concentrated (live)", fast),
-        ("Slow sleeve 40/60", slow),
-        ("Continuous tilt k=0.5", _tilt(fast, 0.5)),
-        ("Continuous tilt k=1.0", _tilt(fast, 1.0)),
+        ("Unconstrained Core", fast),
+        ("Tax-Managed Core (slow)", slow),
+        ("Tilt k=0.5", _tilt(fast, 0.5)),
+        ("Tilt k=0.5 +band", _band(fast, 0.5)),
+        ("Tilt k=0.5 +band+lots", _hybrid(fast, 0.5)),
+        ("Tilt k=1.0 +band+lots", _hybrid(fast, 1.0)),
     ]
 
 
@@ -124,16 +137,16 @@ def main() -> int:
     yrs = max(len(v) for v in series.values()) / BPY
     print(f"\nUniverse: {len(series)} tickers · ~{yrs:.0f}y · source = {src}\n")
 
-    hdr = (f"{'variant':<24}{'pre-tax':>10}{'after-tax':>11}{'retain':>9}{'sharpe':>8}"
+    hdr = (f"{'variant':<26}{'pre-tax':>10}{'after-tax':>11}{'retain':>9}{'sharpe':>8}"
            f"{'maxDD':>8}{'turnov':>9}{'ST%':>7}{'names':>7}")
     print(hdr)
     print("-" * len(hdr))
     for name, s in variants():
         r = row(name, s, series)
         if not r["ok"]:
-            print(f"{r['name']:<24}  (no after-tax — prices missing)")
+            print(f"{r['name']:<26}  (no after-tax — prices missing)")
             continue
-        print(f"{r['name']:<24}"
+        print(f"{r['name']:<26}"
               f"{r['pretax']*100:>9.1f}%"
               f"{r['aftertax']*100:>10.1f}%"
               f"{r['retention']*100:>8.1f}%"
@@ -142,9 +155,10 @@ def main() -> int:
               f"{r['turnover']*100:>8.0f}%"
               f"{r['st_share']*100:>6.0f}%"
               f"{r['avg_names']:>7.1f}")
-    print("\nRead: 'retain' = after-tax / pre-tax (higher = more tax-efficient). The tilt book should "
-          "show lower turnover, lower ST%, and more names held; whether it KEEPS more after tax — and "
-          "at what Sharpe — is the question.")
+    print("\nRead: 'retain' = after-tax / pre-tax (higher = more tax-efficient). The hybrid "
+          "(tilt +band +lots) should keep the broad tilt's Sharpe / shallow drawdown while the band "
+          "and lot-protection cut ST% and lift retention toward the Tax-Managed Core — bridging the "
+          "risk-vs-tax gap. The +band row isolates the no-trade band; +lots adds lot protection.")
     if not use_real:
         print("SYNTHETIC RUN — proves the mechanism discriminates; NOT evidence on real ETFs.")
     print("Research only — tilt_overlay is OFF in every shipped config and not wired into the live signal.")

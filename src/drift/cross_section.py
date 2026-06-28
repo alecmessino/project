@@ -263,8 +263,10 @@ def _lot_protected_weights(target: dict[str, float], prev: dict[str, float],
     fallen into the bottom `catastrophic_quantile` of the cross-section), in which case it
     is sold regardless. Frozen names keep their prior weight; the rest of the long book is
     renormalized to fill the residual gross budget so the book stays fully invested (mirrors
-    the residual logic in `_tax_aware_weights`). No-op unless `slow_sleeve_mode` and `prev`."""
-    if not cs.slow_sleeve_mode or not prev:
+    the residual logic in `_tax_aware_weights`). No-op unless (`slow_sleeve_mode` or `lot_protect`)
+    and `prev` — the latter lets the continuous-tilt hybrid reuse this protection without the rest of
+    the slow sleeve."""
+    if not ((cs.slow_sleeve_mode or cs.lot_protect) and prev):
         return target
     ranked = sorted((k for k, v in scores.items() if v is not None),
                     key=lambda k: scores[k], reverse=True)

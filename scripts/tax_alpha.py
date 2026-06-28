@@ -50,6 +50,18 @@ from tilt_sweep import _hybrid, real_universe, synthetic_universe  # noqa: E402
 
 BPY = 252.0
 STATES = ["—", "IL", "NY", "CA"]          # no-tax -> mid -> high -> highest (state dependence of TLH)
+WINDOW_YEARS = 30                          # align with the tearsheet's 30y window (1996-2026) for a
+                                           # single, consistent headline horizon across all artifacts.
+
+
+def slice_recent_years(series, years):
+    """Keep only the most recent `years` of bars — mirrors tearsheet._load_matrix_cache's cutoff so the
+    diagnostic and the tearsheet share the identical window. Set TAX_ALPHA_YEARS to override (e.g. 40)."""
+    if not years:
+        return series
+    last = max(b.asof for bars in series.values() for b in bars)
+    cutoff = f"{int(last[:4]) - int(years)}{last[4:]}"
+    return {t: [b for b in bars if b.asof >= cutoff] for t, bars in series.items()}
 
 
 def lot_after_tax(entries, rate_st, rate_lt, lt_bars, harvest):
@@ -187,6 +199,8 @@ def main() -> int:
         except Exception as e:  # noqa: BLE001
             series, src = synthetic_universe(), f"synthetic (real pull failed: {e!r})"
 
+    win = float(os.environ.get("TAX_ALPHA_YEARS", WINDOW_YEARS))
+    series = slice_recent_years(series, win)
     years = max(len(v) for v in series.values()) / BPY
     fast = Settings.load("config/drift.yaml")
     hybrid = _hybrid(fast, 0.5)

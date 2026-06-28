@@ -39,8 +39,8 @@ funnel to the campaign automatically.
 | Austin tech (pre-liquidity) | `leakage.html?state=TX&port=1500000&utm_source=linkedin&utm_medium=dm&utm_campaign=atx_tech` |
 | CPA partner (sends to their client) | `leakage.html?state=IL&port=3000000&utm_source=cpa&utm_medium=partner&utm_campaign=cpa_il` |
 
-(IL alpha ≈ +3.6%/yr, NY ≈ +4.1, CA ≈ +4.3, no-tax states ≈ +3.2 — all illustrative; the page shows the
-prospect's own state.)
+(30y window: IL alpha ≈ +4.0%/yr, NY ≈ +4.5, CA ≈ +4.7, no-tax states ≈ +3.7 — all illustrative; the
+page shows the prospect's own state.)
 
 ---
 
@@ -53,7 +53,7 @@ who contains tax leakage — not a stock-picker.
 
 **Persona A — the high-earning professional (Big Law / medical / tech).** High income, zero time for
 asset-location mechanics. *Architect message:* "In our illustrative modeling, a high-turnover Illinois
-book can leak up to ~3.6%/yr after tax versus a tax-managed one of the same exposure. My system
+book can leak up to ~4.0%/yr after tax versus a tax-managed one of the same exposure. My system
 automates the location-matching so you keep more of it — here's the diagnostic on your numbers." →
 `il_hedge` deep-link.
 

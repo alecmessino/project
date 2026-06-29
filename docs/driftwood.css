@@ -1,12 +1,14 @@
-/* Driftwood shared design system — self-hosted institutional type (Newsreader display serif +
-   IBM Plex Sans text). Linked LAST in each <head> to unify tokens/fonts across all pages. */
-@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/ibmplexsans-400.woff2") format("woff2")}
-@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/ibmplexsans-500.woff2") format("woff2")}
-@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/ibmplexsans-600.woff2") format("woff2")}
-@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/ibmplexsans-700.woff2") format("woff2")}
-@font-face{font-family:'Newsreader';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/newsreader-400.woff2") format("woff2")}
-@font-face{font-family:'Newsreader';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/newsreader-500.woff2") format("woff2")}
-@font-face{font-family:'Newsreader';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/newsreader-600.woff2") format("woff2")}
+/* Driftwood shared design system — self-hosted institutional type. Two families, strict roles:
+   Inter (global body / UI / tables / grids / metadata) + Moret (editorial H1/H2 only).
+   Linked LAST in each <head> to unify tokens/fonts across all pages. */
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/inter-400.woff2") format("woff2")}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/inter-500.woff2") format("woff2")}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/inter-600.woff2") format("woff2")}
+@font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/inter-700.woff2") format("woff2")}
+/* Moret — licensed commercial display face, self-hosted (Semibold=600, Bold=700) for the H1/H2 titles.
+   Georgia remains the fallback in --serif below if a weight is ever unavailable. */
+@font-face{font-family:'Moret';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/moret-600.woff2") format("woff2")}
+@font-face{font-family:'Moret';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/moret-700.woff2") format("woff2")}
 
 :root{
   --bg:#fff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#5f5f68;
@@ -15,13 +17,42 @@
   --r1:7px; --r2:9px; --r3:10px; --r4:12px; --rfull:999px;
   --sh1:0 1px 3px rgba(20,20,26,.06); --sh2:0 8px 30px rgba(20,20,26,.12);
   --t-fast:.12s ease; --t-mid:.2s ease;
-  --serif:"Newsreader",Georgia,"Times New Roman",serif;
-  --sans:"IBM Plex Sans",ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --serif:'Moret','Georgia','Times New Roman',serif;   /* editorial display — H1/H2 only */
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   --fz-xs:11px; --fz-sm:12.5px; --fz-md:15px; --fz-lg:18px; --fz-hero:30px;
 }
 body{ font-family:var(--sans); -webkit-font-smoothing:antialiased; letter-spacing:-.004em; }
-h1,h2,h3,.ph-title,.es-h{ font-family:var(--serif); letter-spacing:-.01em; }
-h1{ font-weight:600; } h2,h3{ font-weight:500; }
+/* Moret (var(--serif)) is restricted to the two editorial title levels + their print equivalents. */
+h1,h2,.ph-title,.es-h{ font-family:var(--serif); letter-spacing:-.02em; }
+h1{ font-weight:700; } h2,.ph-title,.es-h{ font-weight:600; }
+h3{ font-weight:600; letter-spacing:-.01em; }   /* H3 is an Inter subhead, not Moret */
 .num,.v,.big,output,.amt,.recovered{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
 a{ color:var(--accent); }
 ::selection{ background:rgba(21,128,106,.16); }
+
+/* ── One-click PDF proposal / CPA brief (window.print → Save as PDF) ─────────────────────────
+   A clean, multi-page print template: strip the app chrome and interactive controls, keep the
+   rendered analysis (placement, transition before/after, decision tree), and append formal
+   disclosures with a running firm footer on every page. */
+#printproposal,#printdisc,#printfoot{ display:none; }
+@media print{
+  @page{ margin:16mm 14mm 20mm; }
+  *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ font-size:10.5px; color:var(--ink); }
+  /* strip all interactive chrome, the prospect funnel, and raw sliders (their values print in the cards) */
+  header,.modetog,.fab,.fabwrap,.controls,.toolbar,.trans-models,.tools,#transmodels,
+    input[type=range],.slider,#leadgen,.lead-cta,.foot a.back,.map-wrap h3 .hint,.methods>summary{ display:none!important; }
+  /* surface the proposal blocks */
+  #printproposal,#printdisc{ display:block!important; break-inside:avoid;
+    border:1px solid var(--line); border-radius:8px; padding:12px 15px; margin:14px 0; }
+  #printdisc{ border-color:var(--slate); }
+  #printproposal p,#printdisc p{ font-size:10px; line-height:1.5; margin:0 0 6px; }
+  .es-h{ font-family:var(--serif); font-size:12px; font-weight:600; margin-bottom:5px; }
+  /* keep visual atoms intact across page breaks */
+  .alloc-card,.dnode,.struct-alpha,.transgrid,.dtree .row,.holdings,.estate-node,
+    .opt-card,.est-cliff,table,#execsummary,#cpabrief{ break-inside:avoid; }
+  h2,h3,.es-h{ break-after:avoid; }
+  /* running firm footer, repeated on every printed page */
+  #printfoot{ display:block!important; position:fixed; bottom:0; left:0; right:0;
+    font-size:8px; color:var(--slate); text-align:center; padding-top:4px; border-top:.5px solid var(--line); }
+}

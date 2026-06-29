@@ -5,10 +5,10 @@
 @font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/inter-500.woff2") format("woff2")}
 @font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/inter-600.woff2") format("woff2")}
 @font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/inter-700.woff2") format("woff2")}
-/* Moret is a licensed, commercial display face (NOT on Google Fonts). Drop the woff2 into fonts/ and
-   uncomment to activate; until then H1/H2 render in Georgia via the --serif fallback stack below. */
-/* @font-face{font-family:'Moret';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/moret-600.woff2") format("woff2")} */
-/* @font-face{font-family:'Moret';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/moret-700.woff2") format("woff2")} */
+/* Moret — licensed commercial display face, self-hosted (Semibold=600, Bold=700) for the H1/H2 titles.
+   Georgia remains the fallback in --serif below if a weight is ever unavailable. */
+@font-face{font-family:'Moret';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/moret-600.woff2") format("woff2")}
+@font-face{font-family:'Moret';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/moret-700.woff2") format("woff2")}
 
 :root{
   --bg:#fff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#5f5f68;

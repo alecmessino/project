@@ -9,7 +9,7 @@
   /* Institutional Editorial — paper, ink, brass. A one-page Before/After leave-behind. */
   :root{
     --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
-    --ink:#1d242d; --body:#3a414b; --dim:#76747e; --muted:#8a8276;
+    --ink:#1d242d; --body:#3a414b; --dim:#5f5d68; --muted:#6f675b;
     --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
   }
   *{box-sizing:border-box}
@@ -64,6 +64,11 @@
   table.states thead th{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
   table.states td.alpha{font-weight:700;color:var(--teal);font-variant-numeric:tabular-nums}
   table.states td{font-variant-numeric:tabular-nums}
+  @media(max-width:760px){
+    table.states{width:100%;margin:8px 0 0}
+    table.states th,table.states td{padding:7px 6px;font-size:12px}
+    table.states thead th{font-size:9.5px}
+  }
   .pband{margin:14px 40px 0;padding:10px 16px;border:1px solid #cfe0d6;border-left:3px solid var(--teal2);
     background:#eef5f0;border-radius:8px;font-size:13px;color:#244c3f}
   .pband b{color:var(--teal)}
@@ -74,8 +79,10 @@
   .cta .ctxt .cd{font-size:12.5px;color:var(--dim)}
   .cta .btns{display:flex;gap:10px;flex-wrap:wrap}
   .cta a{text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;white-space:nowrap;padding:12px 20px}
-  .cta a.primary{background:var(--teal);color:#f1ede3}
-  .cta a.ghost{border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
+  .cta a.primary{background:var(--teal);color:#f1ede3;transition:filter .12s,transform .12s}
+  .cta a.ghost{border:1px solid #cdc4b2;color:var(--ink);font-weight:500;transition:background .12s,border-color .12s}
+  .cta a.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .cta a.ghost:hover{background:var(--soft);border-color:var(--teal)}
   .foot{margin:18px 40px 30px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:11px;line-height:1.55}
   .foot b{color:#5a5a62}
   @media print{
@@ -91,7 +98,17 @@
 <body>
 <div class="sheet">
   <div class="frame">
-    <div class="chrome"><i></i><i></i><i></i><span class="url">driftwood — the tax-leakage diagnostic</span></div>
+    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — the tax-leakage diagnostic</span></div>
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+      <div class="dwnav-links">
+        <a href="thesis.html">Approach</a>
+        <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+        <a href="leakage.html" aria-current="page">Leakage</a>
+        <a href="statemap.html">State&nbsp;Map</a>
+        <a href="ledger.html">Research</a>
+      </div>
+    </nav>
 
     <div class="hd">
       <div class="eyebrow">The Tax-Leakage Diagnostic</div>
@@ -103,7 +120,7 @@
     </div>
 
     <div class="hero">
-      <div class="big" id="h-alpha">—</div>
+      <div class="big" id="h-alpha" aria-live="polite">…</div>
       <div class="cap" id="h-cap">after-tax / year recovered</div>
       <div class="note" id="h-note"></div>
     </div>
@@ -123,10 +140,12 @@
     <div class="sec">
       <div class="h">The higher the tax, the bigger the leak we plug — after-tax CAGR by state (%/yr)</div>
     </div>
+    <div class="tscroll">
     <table class="states">
       <thead><tr><th>Tax environment</th><th>Before (concentrated, naive)</th><th>After (Structural Alpha)</th><th>Tax Alpha recovered</th></tr></thead>
       <tbody id="states"></tbody>
     </table>
+    </div>
 
     <div class="cta" id="cta">
       <div class="ctxt">

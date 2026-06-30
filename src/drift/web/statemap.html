@@ -8,7 +8,7 @@
 <style>
   :root{
     --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
-    --ink:#1d242d; --body:#3a414b; --dim:#76747e; --muted:#8a8276;
+    --ink:#1d242d; --body:#3a414b; --dim:#5f5d68; --muted:#6f675b;
     --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
   }
   *{box-sizing:border-box}
@@ -39,6 +39,9 @@
   .maptitle{font-family:var(--sans);font-size:19px;color:var(--ink);margin:0 0 10px}
   .frame-hl .maptitle .syn{color:var(--brass);font-style:italic;font-size:14px;display:block;margin-top:2px;font-family:inherit}
   svg.cart{width:100%;height:auto;display:block}
+  /* On phones the cartogram would shrink each tappable state to ~27px; keep a floor width and let
+     the wrapper scroll horizontally so tiles stay grabbable. */
+  @media(max-width:620px){ svg.cart{min-width:470px} }
   .tile rect{cursor:pointer;transition:filter .12s,stroke .12s}
   .tile:hover rect{stroke:#fff;stroke-width:2.4;filter:brightness(1.1)}
   .tile.sel rect{stroke:var(--ink);stroke-width:3}
@@ -67,7 +70,17 @@
 <body>
 <div class="sheet">
   <div class="frame" id="frame">
-    <div class="chrome"><i></i><i></i><i></i><span class="url">driftwood — the state tax map</span></div>
+    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — the state tax map</span></div>
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+      <div class="dwnav-links">
+        <a href="thesis.html">Approach</a>
+        <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+        <a href="leakage.html">Leakage</a>
+        <a href="statemap.html" aria-current="page">State&nbsp;Map</a>
+        <a href="ledger.html">Research</a>
+      </div>
+    </nav>
     <div class="hd">
       <div class="eyebrow">Driftwood · the state tax map</div>
       <h1>Fifty states. One after-tax plan.</h1>
@@ -79,7 +92,7 @@
     <div class="split">
       <div>
         <div class="maptitle" id="maptitle"></div>
-        <svg class="cart" id="cart" role="img" aria-label="US state tax cartogram"></svg>
+        <div class="tscroll"><svg class="cart" id="cart" role="img" aria-label="US state tax cartogram"></svg></div>
         <div class="legend" id="legend"></div>
       </div>
       <div class="detail" id="detail"></div>
@@ -126,8 +139,12 @@ function render(s){
       const fill = rec ? (cmap[rec.regime]||"#ece6da") : "#ece6da";
       const lt = DARK.has(fill) ? " lt" : "";
       const tag = rec ? (rec.tag||"") : "—";
-      parts += `<g class="tile ${code===sel?'sel':''}" data-code="${code}" tabindex="0" role="button" aria-label="${names[code]||code}">`+
-        `<title>${names[code]||code}</title>`+
+      // a11y: carry the tax category (legend label) — not just color — into the accessible name and
+      // tooltip, so colorblind / screen-reader users get the regime, not only the rate number.
+      const regimeLabel = rec ? ((d.legend.find(([r])=>r===rec.regime)||[])[2]||"") : "";
+      const a11y = (names[code]||code) + (regimeLabel ? ` — ${regimeLabel}` : "") + (tag && tag!=="—" ? `, ${tag}` : "");
+      parts += `<g class="tile ${code===sel?'sel':''}" data-code="${code}" tabindex="0" role="button" aria-label="${a11y}">`+
+        `<title>${a11y}</title>`+
         `<rect x="${x}" y="${y}" width="${TILE}" height="${TILE}" rx="3" fill="${fill}" stroke="#FBF8F1" stroke-width="2"></rect>`+
         `<text class="tcode${lt}" x="${x+TILE/2}" y="${y+ (tag? TILE/2-2 : TILE/2+4)}" text-anchor="middle">${code}</text>`+
         (tag ? `<text class="ttag${lt}" x="${x+TILE/2}" y="${y+TILE/2+11}" text-anchor="middle">${tag}</text>`:"")+

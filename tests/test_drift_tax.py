@@ -698,3 +698,16 @@ def test_shipped_configs_ship_neutral_tilt():
         cs = Settings.load(cfg).cross_section
         for name, d in (("region", cs.tilt_region), ("size", cs.tilt_size), ("style", cs.tilt_style)):
             assert all(v == 1.0 for v in d.values()), f"{cfg} ships a non-neutral {name} tilt: {d}"
+
+
+def test_shipped_configs_keep_research_flags_off():
+    """Research-flag deploy gate. `tilt_overlay` (the factor overlay) and `lot_protect` (the
+    lot-protection sleeve) are research-only and explicitly NOT wired into the live signal
+    (docs/Tilt_Validation_Results.md, leakage.py). Either of them set true in a COMMITTED config would
+    silently advertise an unvalidated edge in the shipped book — this must fail loudly, and the same
+    check gates the nightly publish in .github/workflows/drift-pages.yml."""
+    from drift.config import Settings
+    for cfg in ("config/drift.yaml", "config/slow.yaml"):
+        cs = Settings.load(cfg).cross_section
+        assert cs.tilt_overlay is False, f"{cfg} ships tilt_overlay=True — research-only flag"
+        assert cs.lot_protect is False, f"{cfg} ships lot_protect=True — research-only flag"

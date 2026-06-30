@@ -26,6 +26,19 @@ jobs:
           python-version: '3.11'
       - run: pip install -e ".[dev]"
 
+      # Research-flag deploy gate: refuse to publish if a shipped config ever turns on the research-only
+      # tilt_overlay / lot_protect (would advertise an unvalidated edge). Mirrors the pytest guard
+      # test_shipped_configs_keep_research_flags_off so the nightly [skip ci] path is gated too.
+      - name: Guard — research flags must be OFF before publishing
+        run: |
+          python - <<'PY'
+          from drift.config import Settings
+          for c in ("config/drift.yaml", "config/slow.yaml"):
+              cs = Settings.load(c).cross_section
+              assert cs.tilt_overlay is False and cs.lot_protect is False, f"{c}: research flags must be OFF"
+          print("research-flag gate OK — tilt_overlay / lot_protect are off in all shipped configs")
+          PY
+
       # Data fetched through the shared Tiingo->Stooq->Yahoo chain (feed.resolve). The LIVE ledger
       # runs FIRST so it gets a fresh Tiingo budget — the heavy 40y tearsheet pull runs last so its
       # retry storm can't starve the ledger/equities (the regression that froze the ledger RED).

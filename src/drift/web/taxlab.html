@@ -1534,6 +1534,8 @@ function init(){
     // Prospect-view portfolio slider — drives the lead-gen bleed off the prospect's OWN number.
     $("leadport").max=A.wealth_max; $("leadport").step=A.wealth_step; $("leadport").value=CONFIG.leadPortfolio;
     $("leadport").addEventListener("input",renderLead);
+    let _portT; $("leadport").addEventListener("input",()=>{ clearTimeout(_portT);   // debounced: one funnel event per settle, not per drag tick
+      _portT=setTimeout(()=>track("portfolio_adjusted",{state:$("state").value,portfolio:leadPortfolio()}),600); });
     // Frontier sliders: alpha (0–alpha_max) and turnover (0–turnover_max); drags repaint only the point/alert.
     $("falpha").min=0; $("falpha").max=A.alpha_max; $("falpha").step=0.005; $("falpha").value=A.frontier_alpha;
     $("fturn").min=0; $("fturn").max=A.turnover_max; $("fturn").step=0.1; $("fturn").value=A.frontier_turnover;
@@ -1602,6 +1604,10 @@ function init(){
   applyMode(MODE);
   // a11y: keep aria-valuetext in sync on every slider drag (runs after each render handler sets the output).
   document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener("input",syncValueText));
+  // C · the real conversion: fire when the prospect opens / completes the embedded Calendly booking.
+  window.addEventListener("message",e=>{ const ev=e&&e.data&&e.data.event; if(typeof ev!=="string"||ev.indexOf("calendly.")!==0) return;
+    if(ev==="calendly.event_scheduled") track("booking_scheduled", leadProps());
+    else if(ev==="calendly.profile_page_viewed") track("booking_opened", leadProps()); });
   syncValueText();
 }
 init();

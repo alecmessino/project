@@ -229,6 +229,10 @@ function render(s){
   const tl = "taxlab.html?view=prospect" + (fwd.toString()?("&"+fwd.toString()):"");
   const ca = document.getElementById("cta-analysis"); if(ca) ca.href = tl;
   const cb = document.getElementById("cta-book"); if(cb) cb.href = tl;
+  // Funnel continuity: count click-throughs from the diagnostic into the Tax Lab prospect flow.
+  const st0 = qp.get("state") || "—";
+  if(ca) ca.addEventListener("click", ()=>{ if(window.plausible) plausible("diagnostic_to_taxlab",{props:{state:st0,target:"analysis"}}); });
+  if(cb) cb.addEventListener("click", ()=>{ if(window.plausible) plausible("diagnostic_to_taxlab",{props:{state:st0,target:"book"}}); });
 
   document.getElementById("levers").innerHTML = (s.levers||[]).map(l=>
     `<div class="lv"><div class="n">${l.name}</div><div class="sh">${l.share}</div><div class="d">${l.desc}</div></div>`).join("");

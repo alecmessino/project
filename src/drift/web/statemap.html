@@ -156,7 +156,7 @@ function render(s){
     svg.setAttribute("viewBox", `-2 -2 ${(maxc+1)*CELL+2} ${(maxr+1)*CELL}`);
     svg.innerHTML = parts;
     svg.querySelectorAll("g.tile").forEach(g=>{
-      const pick=()=>{ sel=g.dataset.code; paint(); };
+      const pick=()=>{ sel=g.dataset.code; paint(); if(window.plausible) plausible("map_state_clicked",{props:{state:sel}}); };
       g.addEventListener("click",pick);
       g.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });
     });

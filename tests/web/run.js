@@ -120,6 +120,8 @@ function staticFlow() {
     vh_class: t.includes('.vh{'),
     aria_valuetext: t.includes('aria-valuetext'),
     state_estate_js: t.includes('S.assumptions.estate.state_estate'),
+    booking_tracked: t.includes('calendly.event_scheduled') && t.includes('booking_scheduled'),  // the real conversion event
+    portfolio_tracked: t.includes('portfolio_adjusted'),                                          // lead-gen slider funnel event
     leadstate_markup: t.includes('id="leadstate"'),
     leadstate_wired: t.includes('buildLeadStates(') && t.includes('paintLeadSel('),   // chip grid wired via the shared handler
     leadstate_mobile_css: t.includes('body.lead .leadstate'),

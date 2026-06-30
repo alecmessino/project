@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-06-30T04:48:57Z",
+  "git_commit": "a742c3108fcc52e27724359316f9068e0692268d",
+  "git_short": "a742c31",
+  "branch": "claude/driftwood-audit-ux-bqmzqe",
+  "determinism": "PYTHONHASHSEED=0 for the lot-protected tax-alpha path (scripts/tax_alpha.py)",
+  "data_sources": {
+    "tests/data/matrix_history.json": {
+      "sha256_16": "f7d2828c49e17592",
+      "note": "40y proxy-spliced ETF cache (Tiingo->Stooq->Yahoo); the published figures use the most recent 30y window (1996-2026)."
+    }
+  },
+  "claims": {
+    "Structural Alpha (tax) +3.7-4.7%/yr": {
+      "source": "scripts/tax_alpha.py::all_state_alpha -> src/drift/leakage.py::STATE_ALPHA",
+      "window": "30y (1996-2026)",
+      "regression_test": "tests/test_leakage_alpha_lineage.py"
+    },
+    "Model Portfolio backtest (hypothetical)": {
+      "source": "src/drift/ledger.py, src/drift/tearsheet.py",
+      "note": "hypothetical / backtested model results \u2014 not a live account or client track."
+    }
+  },
+  "research_flags": {
+    "tilt_overlay": false,
+    "lot_protect": false,
+    "note": "OFF in every shipped config; enforced by tests/test_drift_tax.py (test_shipped_configs_keep_research_flags_off) AND the drift-pages.yml pre-publish gate."
+  },
+  "disclosures": "Every exhibit carries RIA identity + Form ADV/CRS + hypothetical-performance language; guarded by tests/test_drift_disclosures.py."
+}

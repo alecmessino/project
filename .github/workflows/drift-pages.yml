@@ -79,13 +79,17 @@ jobs:
       - name: Build landing hub (docs/index.html)
         run: drift hub --docs docs --out docs/index.html
 
+      # Rule 204-2 provenance: record the commit, data fingerprint, and claim->source map for this build.
+      - name: Stamp provenance (docs/_provenance.json)
+        run: python scripts/stamp_provenance.py
+
       - name: Commit if changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/index.html docs/thesis.html docs/taxlab.html \
             docs/equities.html docs/equities_case_studies.html docs/tearsheet.html \
-            docs/ledger.html docs/ledger.json
+            docs/ledger.html docs/ledger.json docs/_provenance.json
           # Use an explicit if/else: the old `A && B || C && D` one-liner pushed even on a
           # no-change run (operator precedence), and a holiday no-op should commit nothing.
           if git diff --cached --quiet; then

@@ -161,7 +161,18 @@
     line-height:1.5;letter-spacing:0;text-transform:none;font-weight:400;padding:9px 11px;border-radius:7px;
     opacity:0;visibility:hidden;transition:opacity .12s ease;z-index:6;box-shadow:0 4px 16px rgba(0,0,0,.17);pointer-events:none}
   .term .tip::after{content:"";position:absolute;left:15px;top:100%;border:5px solid transparent;border-top-color:var(--ink)}
-  .term:hover .tip,.term:focus .tip,.term:focus-within .tip{opacity:1;visibility:visible}
+  .term:hover .tip,.term:focus .tip,.term:focus-within .tip,.term.on .tip{opacity:1;visibility:visible}
+  /* Recompute feedback: a brief ring pulse so a changed input visibly updates the result. */
+  @media (prefers-reduced-motion: no-preference){
+    @keyframes dwpulse{0%{box-shadow:0 0 0 3px rgba(21,128,106,.30)}100%{box-shadow:0 0 0 3px rgba(21,128,106,0)}}
+    .dw-pulse{animation:dwpulse .55s ease}
+  }
+  /* Dismiss control for the floating export buttons. */
+  .fabx{align-self:flex-end;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);
+    background:#fff;color:var(--dim);font-size:16px;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(20,18,12,.18)}
+  .fabx:hover{color:var(--ink)}
+  .resetbtn{margin-top:10px;font:inherit;font-size:12px;color:var(--dim);background:none;border:none;cursor:pointer;padding:2px 0}
+  .resetbtn:hover{color:var(--ink);text-decoration:underline}
   /* --- Layer 3: alpha-turnover frontier --- */
   .frontgrid{display:grid;grid-template-columns:1.55fr 1fr;gap:22px;align-items:stretch;margin-top:12px}
   #ftchart{width:100%;height:auto;display:block}
@@ -431,6 +442,7 @@
       <button type="button" data-mode="strategy">Strategy</button>
       <button type="button" data-mode="lead">Prospect view</button>
     </div>
+    <button type="button" id="resetbtn" class="resetbtn" onclick="resetDefaults()">↺ Reset inputs to defaults</button>
   </header>
 
   <div id="printhead">
@@ -641,6 +653,7 @@
 </div>
 <div id="printfoot">CWS Planning · a registered investment adviser · adviserinfo.sec.gov — Illustrative; not investment, tax, or legal advice</div>
 <div class="fabwrap advisor-only">
+  <button class="fabx" type="button" aria-label="Hide the export buttons" title="Hide">×</button>
   <button id="genbrief" type="button" class="fab brief" title="Generate a CPA / attorney execution brief">
     <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 2h6l3 3v9H4z M10 2v3h3" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>Generate CPA / Attorney Brief</button>
   <button id="genpdf" type="button" class="fab" title="Generate a client proposal PDF">
@@ -741,6 +754,31 @@ function enableTypeIn(el){
   }
   out.addEventListener("click",function(e){ if(e.target===out) open(); });
   out.addEventListener("keydown",function(e){ if(e.target===out && (e.key==="Enter"||e.key===" ")){ e.preventDefault(); open(); } });
+}
+// a11y: ARIA roving-tablist (Arrow/Home/End) over a role=tablist of buttons. Idempotent across rebuilds.
+function wireRovingTablist(host){
+  if(!host) return;
+  const tabs=()=>Array.prototype.slice.call(host.querySelectorAll('[role="tab"]'));
+  tabs().forEach(t=>t.tabIndex = t.getAttribute("aria-selected")==="true" ? 0 : -1);
+  if(host.__roving) return; host.__roving=true;
+  host.addEventListener("keydown",function(e){
+    const t=tabs(); if(!t.length) return;
+    let i=t.indexOf(document.activeElement); if(i<0) return; let j=i;
+    if(e.key==="ArrowRight"||e.key==="ArrowDown") j=(i+1)%t.length;
+    else if(e.key==="ArrowLeft"||e.key==="ArrowUp") j=(i-1+t.length)%t.length;
+    else if(e.key==="Home") j=0; else if(e.key==="End") j=t.length-1; else return;
+    e.preventDefault(); t.forEach(x=>x.tabIndex=-1); t[j].tabIndex=0; t[j].focus(); t[j].click();
+  });
+}
+// Feedback: a brief highlight pulse so a recompute is visibly registered (on discrete change, not every drag tick).
+function pulse(el){ if(!el) return; el.classList.remove("dw-pulse"); void el.offsetWidth; el.classList.add("dw-pulse"); }
+function pulseResult(){ pulse(MODE==="lead" ? document.getElementById("leadhero") : document.getElementById("cards")); }
+// Restore every control to the values captured at load.
+function resetDefaults(){
+  const d=window.__DEFAULTS__||{};
+  for(const id in d){ const el=document.getElementById(id); if(!el) continue; el.value=d[id];
+    el.dispatchEvent(new Event(el.tagName==="SELECT"?"change":"input",{bubbles:true})); }
+  if(typeof render==="function") render();
 }
 const $=id=>document.getElementById(id);
 // Phase A: punchy dollar formatter with words ("$1.52 Million", "$640k", "$8,200").
@@ -880,6 +918,7 @@ function buildSmTabs(){
   const host=$("smtabs"); if(!host) return;
   const dims=smDims(); if(!dims.length){ host.style.display="none"; return; }
   host.innerHTML=dims.map(d=>`<button type="button" role="tab" data-k="${d.key}" class="${d.highlight?'hl':''}" aria-selected="${d.key===MAPDIM}">${d.label}</button>`).join("");
+  wireRovingTablist(host);
   host.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
     MAPDIM=b.dataset.k;
     host.querySelectorAll("button").forEach(x=>x.setAttribute("aria-selected", String(x.dataset.k===MAPDIM)));
@@ -946,6 +985,7 @@ function renderTransition(){
   const A=S.assumptions, r=rates(), p=S.profile, yrs=p.years||1;
   const T=+$("taxbal").value, Tr=+$("tradbal").value, Ro=+$("rothbal").value, W=(T+Tr+Ro)||0;
   $("transmodels").innerHTML=models.map((mm,i)=>`<button type="button" role="tab" aria-selected="${i===TMODEL}" class="${i===TMODEL?"on":""}" data-i="${i}">${mm.name}</button>`).join("");
+  wireRovingTablist($("transmodels"));
   $("transmodels").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ TMODEL=+b.dataset.i; renderTransition(); }));
   const legBps=+$("legfee").value||A.legacy_fee_bps; $("legfeev").textContent=legBps+" bps";
   // Proposed all-in = the firm's advisory fee + the model's low blended fund ER (vs the legacy all-in).
@@ -1244,12 +1284,12 @@ function ctaSuccess(){
 }
 function ctaMailto(){
   _leadBusy=false;
-  track("lead_submitted", leadProps());
-  $("leadcta").innerHTML=`<div class="lead-success" role="status" aria-live="polite">
-      <div class="h" tabindex="-1">Your email app should open — hit Send. ✓</div>
-      <p>Once you send that message we'll follow up by email with your personalized analysis. If nothing opened, email us at
+  track("lead_mailto_opened", leadProps());   // opening a draft is NOT a verified submit — don't count it as a conversion
+  $("leadcta").innerHTML=`<div class="lead-note" role="status" aria-live="polite" style="text-align:left">
+      <div class="h" tabindex="-1" style="font-weight:600;color:var(--ink)">Your email app should open — your message isn't sent until you hit Send.</div>
+      <p>Once you send it, we'll follow up by email with your personalized analysis. If nothing opened, email us at
         <a href="mailto:${CONFIG.contactEmail}">${CONFIG.contactEmail}</a>.</p></div>`;
-  const h=$("leadcta").querySelector(".lead-success .h"); if(h) h.focus();
+  const h=$("leadcta").querySelector(".h"); if(h) h.focus();
 }
 // --- Estate Planning View (entity-level architecture + IL cliff + HB2601) ---
 // Calibrated to the Illinois AG estate-tax calculator (mirror of drift.taxlab.il_estate_tax):
@@ -1574,7 +1614,7 @@ function init(){
   S=window.__STATE__;
   if(!S||!S.profile){document.querySelector(".wrap").insertAdjacentHTML("beforeend","<p class='lede'>No ledger data yet.</p>");return;}
   $("bracket").innerHTML=S.brackets.map((b,i)=>`<option value="${i}"${i===S.brackets.length-1?" selected":""}>${b.label}</option>`).join("");
-  $("state").innerHTML=Object.keys(S.states).map(s=>`<option value="${s}">${SLABEL[s]||s}</option>`).join("");
+  $("state").innerHTML=Object.keys(S.states).map(s=>`<option value="${s}">${NAMES[s]||SLABEL[s]||s}</option>`).join("");
   buildLeadStates();   // F1: the mobile severity chip grid (reads the same S.states the map does)
   ["bracket","state","account"].forEach(id=>$(id).addEventListener("change",render));
   // Phase 5/C: print -> Save as PDF. Two outputs off one print stylesheet: the client proposal,
@@ -1664,6 +1704,16 @@ function init(){
   document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener("input",syncValueText));
   document.querySelectorAll('input[type=range]').forEach(enableTypeIn);
   syncValueText();
+  // Snapshot defaults for Reset, wire recompute pulse on discrete changes, FAB dismiss, and touch tooltips.
+  window.__DEFAULTS__={};
+  document.querySelectorAll('input[type=range], select').forEach(function(el){ if(el.id) window.__DEFAULTS__[el.id]=el.value; });
+  document.querySelectorAll('input[type=range], select').forEach(function(el){ el.addEventListener("change", pulseResult); });
+  var _fx=document.querySelector(".fabx"); if(_fx) _fx.addEventListener("click",function(){ var w=document.querySelector(".fabwrap"); if(w) w.style.display="none"; });
+  document.addEventListener("click",function(e){
+    var t=(e.target.closest)?e.target.closest(".term"):null;
+    document.querySelectorAll(".term.on").forEach(function(x){ if(x!==t) x.classList.remove("on"); });
+    if(t) t.classList.toggle("on");
+  });
 }
 init();
 </script>

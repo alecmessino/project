@@ -101,7 +101,7 @@
 </head>
 <body>
 <div class="frame">
-  <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — the engine · live signals</span></div>
+  <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — the engine · research signals</span></div>
   <nav class="dwnav" aria-label="Driftwood">
     <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
     <div class="dwnav-links">
@@ -211,7 +211,7 @@ function spark(el, data){
 
 function render(s){
   const h = s.header, x = s.cross_backtest;
-  document.getElementById("gen").textContent = "Generated "+h.generated+".";
+  document.getElementById("gen").textContent = "Generated "+h.generated+" · static snapshot, not a live feed.";
 
   // Plain-English regime read derived from breadth (no fabricated regime the engine doesn't compute).
   const held = s.rankings.filter(r=>r.weight>0).length, total = s.rankings.length || 1;

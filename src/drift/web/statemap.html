@@ -122,6 +122,16 @@ function render(s){
   tabs.innerHTML = dims.map((d,i)=>
     `<button role="tab" data-i="${i}" class="${d.highlight?'hl':''}" aria-selected="${i===active}">${d.label}</button>`).join("");
   tabs.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ active=+b.dataset.i; paint(); }));
+  // a11y: roving tabindex + Arrow/Home/End across the dimension tablist.
+  const _tb=()=>Array.prototype.slice.call(tabs.querySelectorAll('[role="tab"]'));
+  _tb().forEach(b=>b.tabIndex = b.getAttribute("aria-selected")==="true"?0:-1);
+  tabs.addEventListener("keydown",function(e){
+    const t=_tb(); let i=t.indexOf(document.activeElement); if(i<0) return; let j=i;
+    if(e.key==="ArrowRight"||e.key==="ArrowDown") j=(i+1)%t.length;
+    else if(e.key==="ArrowLeft"||e.key==="ArrowUp") j=(i-1+t.length)%t.length;
+    else if(e.key==="Home") j=0; else if(e.key==="End") j=t.length-1; else return;
+    e.preventDefault(); t.forEach(x=>x.tabIndex=-1); t[j].tabIndex=0; t[j].focus(); t[j].click();
+  });
 
   function paint(){
     const d = dims[active];

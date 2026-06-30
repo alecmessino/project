@@ -15,8 +15,9 @@ name: Live Game Tracker — NBA Finals G1
 #     redeploy per push and is much slower — branch mode is the hands-off path.)
 
 on:
-  schedule:
-    - cron: "30 0 * * *"        # 00:30 UTC = 8:30 PM ET tip-off
+  # schedule DISABLED — automation halted per request; uncomment to re-enable.
+#  schedule:
+#    - cron: "30 0 * * *"        # 00:30 UTC = 8:30 PM ET tip-off
   workflow_dispatch:
     inputs:
       game:

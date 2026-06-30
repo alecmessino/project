@@ -5,8 +5,9 @@ name: Refresh Driftwood exhibits
 # then publishes docs/ on the resulting push to master.
 
 on:
-  schedule:
-    - cron: '20 22 * * *'      # daily, 22:20 UTC (after the US equity close)
+  # schedule DISABLED — automation halted per request; uncomment to re-enable.
+#  schedule:
+#    - cron: '20 22 * * *'      # daily, 22:20 UTC (after the US equity close)
   workflow_dispatch:            # run on demand from the Actions tab
 
 permissions:

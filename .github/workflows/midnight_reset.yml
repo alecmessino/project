@@ -6,8 +6,9 @@ name: Midnight reset → load NBA slate
 # and may start a few minutes late — fine for an overnight reset.
 
 on:
-  schedule:
-    - cron: "5 4 * * *"          # 04:05 UTC = 12:05 AM ET (EDT)
+  # schedule DISABLED — automation halted per request; uncomment to re-enable.
+#  schedule:
+#    - cron: "5 4 * * *"          # 04:05 UTC = 12:05 AM ET (EDT)
   workflow_dispatch:
     inputs:
       league:

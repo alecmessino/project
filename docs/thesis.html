@@ -25,7 +25,7 @@
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/thesis.png" />
 <style>
   :root{
-    --bg:#ffffff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#5f5f68;
+    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --ink:#1b1b1f; --dim:#5f5d68;
     --pos:#2f6f5b; --neg:#9b4439; --slate:#4a4f57; --rule:#222226;
   }
   *{box-sizing:border-box}
@@ -33,8 +33,8 @@
     font:16px/1.74 ui-serif,Georgia,"Times New Roman",serif;-webkit-font-smoothing:antialiased}
   .wrap{max-width:720px;margin:0 auto;padding:64px 26px 96px}
   header{border-top:3px solid var(--rule);padding-top:22px;margin-bottom:8px}
-  .kicker{color:var(--dim);font-size:13.5px;font-family:ui-sans-serif,system-ui,sans-serif;
-    text-transform:uppercase;letter-spacing:1px}
+  .kicker{color:var(--brass,#a9853f);font-size:11px;font-weight:600;font-family:var(--sans);
+    text-transform:uppercase;letter-spacing:.16em;margin-bottom:6px}
   h1{font-size:31px;line-height:1.16;margin:8px 0 0;font-weight:680;letter-spacing:-.5px;
     font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif}
   h1 .w{color:var(--slate)}
@@ -81,6 +81,16 @@
 </head>
 <body>
 <div class="wrap">
+  <nav class="dwnav" aria-label="Driftwood" style="border-radius:10px;margin-bottom:10px">
+    <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+    <div class="dwnav-links">
+      <a href="thesis.html" aria-current="page">Approach</a>
+      <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+      <a href="leakage.html">Leakage</a>
+      <a href="statemap.html">State&nbsp;Map</a>
+      <a href="ledger.html">Research</a>
+    </div>
+  </nav>
   <header>
     <div class="kicker">Driftwood · approach &amp; methodology</div>
     <h1>Own the drift. Refuse the leakage.</h1>
@@ -298,7 +308,7 @@
 </div>
 
 <script>
-window.__STATE__ = {"header": {"generated": "2026-06-30 04:38:32 UTC"}, "equities": {"name": "Equities & ETFs", "span": "1986\u20132026", "n_names": 18, "strat_maxdd": 0.5805873238226694, "bench_maxdd": 0.5884617342505769, "strat_sharpe": 0.6491294594519929, "bench_sharpe": 0.5684227755857684, "strat_cagr": 0.10041839567132049, "bench_cagr": 0.0868087570365903, "oos_sharpe": 0.6512287830434156}, "ledger": {"total_return": 0.4030959999999999, "sessions": 446, "inception": "2024-09-16", "universe": 18}};
+window.__STATE__ = {"header": {"generated": "2026-07-01 22:26:31 UTC"}, "equities": {"name": "Equities & ETFs", "span": "1986\u20132026", "n_names": 18, "strat_maxdd": 0.5805873238226694, "bench_maxdd": 0.5884617342505769, "strat_sharpe": 0.6491294594519929, "bench_sharpe": 0.5684227755857684, "strat_cagr": 0.10041839567132049, "bench_cagr": 0.0868087570365903, "oos_sharpe": 0.6512287830434156}, "ledger": {"total_return": 0.4095770000000001, "sessions": 447, "inception": "2024-09-16", "universe": 18}};
 const pct=(x,d=1)=>x==null?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
 const apct=(x,d=0)=>x==null?"—":(x*100).toFixed(d)+"%";
 const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;};

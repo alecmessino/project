@@ -14,8 +14,9 @@ name: Sentinel watchdog — continuous live-game coverage
 # instead of piling up overlapping 5.5h runs.
 
 on:
-  schedule:
-    - cron: "5 13,17,21,1 * * *"   # every ~4h — bootstrap/restart only (not tip timing)
+  # schedule DISABLED — automation halted per request; uncomment to re-enable.
+#  schedule:
+#    - cron: "5 13,17,21,1 * * *"   # every ~4h — bootstrap/restart only (not tip timing)
   workflow_dispatch:
 
 permissions:

@@ -12,8 +12,9 @@ on:
         description: "League to discover (nba locked for the Finals; wnba dispatchable)"
         required: true
         default: "nba"
-  schedule:
-    - cron: "*/15 * * * *"   # best-effort; dispatch is the reliable trigger
+  # schedule DISABLED — automation halted per request; uncomment to re-enable.
+#  schedule:
+#    - cron: "*/15 * * * *"   # best-effort; dispatch is the reliable trigger
 
 permissions:
   contents: write

@@ -8,8 +8,9 @@ name: Pregame lock-in → final NBA closing lines
 # a 15-min-before-tip lock, but dispatch manually if you need it exact.
 
 on:
-  schedule:
-    - cron: "15 0 * * *"          # 00:15 UTC = 8:15 PM ET (EDT, June)
+  # schedule DISABLED — automation halted per request; uncomment to re-enable.
+#  schedule:
+#    - cron: "15 0 * * *"          # 00:15 UTC = 8:15 PM ET (EDT, June)
   workflow_dispatch:
     inputs:
       league:

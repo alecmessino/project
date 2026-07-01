@@ -28,7 +28,7 @@
   /* Institutional Editorial — paper, ink, brass. Serif narrative over geometric-sans data. */
   :root{
     --paper:#f6f3ec; --card:#ffffff; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
-    --ink:#1d242d; --body:#3a414b; --dim:#76747e; --muted:#8a8276;
+    --ink:#1d242d; --body:#3a414b; --dim:#5f5d68; --muted:#6f675b;
     --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --teal2:#15806a; --neg:#9b4439;
   }
   *{box-sizing:border-box}
@@ -114,7 +114,17 @@
 </head>
 <body>
 <div class="frame">
-  <div class="chrome"><i></i><i></i><i></i><span class="url">driftwood — the engine · live signals</span></div>
+  <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — the engine · research signals</span></div>
+  <nav class="dwnav" aria-label="Driftwood">
+    <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+    <div class="dwnav-links">
+      <a href="thesis.html">Approach</a>
+      <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+      <a href="leakage.html">Leakage</a>
+      <a href="statemap.html">State&nbsp;Map</a>
+      <a href="ledger.html" aria-current="page">Research</a>
+    </div>
+  </nav>
 
   <div class="pad top">
     <div class="eyebrow">Exploratory research · the momentum engine</div>
@@ -214,7 +224,7 @@ function spark(el, data){
 
 function render(s){
   const h = s.header, x = s.cross_backtest;
-  document.getElementById("gen").textContent = "Generated "+h.generated+".";
+  document.getElementById("gen").textContent = "Generated "+h.generated+" · static snapshot, not a live feed.";
 
   // Plain-English regime read derived from breadth (no fabricated regime the engine doesn't compute).
   const held = s.rankings.filter(r=>r.weight>0).length, total = s.rankings.length || 1;
@@ -255,7 +265,7 @@ function render(s){
   }
 
   document.getElementById("rankbody").innerHTML = s.rankings.map(r=>{
-    const isHeld = r.weight>0, dot = isHeld?"#15806a":"#d8cfbd", muted = isHeld?"":"color:#9a98a0";
+    const isHeld = r.weight>0, dot = isHeld?"#15806a":"#d8cfbd", muted = isHeld?"":"color:#6f6d77";
     return `<tr>
       <td class="sym" style="${muted}"><i style="background:${dot}"></i>${r.instrument}</td>
       <td style="${muted}">${nameOf(r.instrument)}</td>

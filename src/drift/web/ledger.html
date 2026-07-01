@@ -26,7 +26,7 @@
 <meta name="twitter:description" content="Hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Tax-Managed Core Strategy for taxable accounts), benchmarked vs VT & VTI buy-and-hold. Research only, not advice." />
 <style>
   :root{
-    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --ink:#1d242d; --dim:#76747e;
+    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --ink:#1d242d; --dim:#5f5d68;
     --pos:#15806a; --neg:#9b4439; --slate:#54545c; --rule:#1d242d;
     --brass:#a9853f; --gold:#c2a05a; --teal:#15463a; --chrome:#ece6da; --card:#ffffff;
   }
@@ -163,7 +163,17 @@
 <body>
 <div class="wrap">
   <div class="frame">
-  <div class="chrome"><i></i><i></i><i></i><span class="url">driftwood — the proof · model portfolio</span></div>
+  <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — the proof · model portfolio</span></div>
+  <nav class="dwnav" aria-label="Driftwood">
+    <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+    <div class="dwnav-links">
+      <a href="thesis.html">Approach</a>
+      <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+      <a href="leakage.html">Leakage</a>
+      <a href="statemap.html">State&nbsp;Map</a>
+      <a href="ledger.html" aria-current="page">Research</a>
+    </div>
+  </nav>
   <header>
     <div class="eyebrow">Model Portfolio · the proof <span class="hyp-pill">HYPOTHETICAL</span></div>
     <h1>The proof — an illustrative track record.</h1>
@@ -348,7 +358,7 @@ function render(s){
   const h=s.header;
   document.getElementById("sub").innerHTML =
     `<b>Hypothetical backtest</b> · <b>${h.universe.length}</b> instruments · modeled from <b>${h.inception||"—"}</b>`;
-  document.getElementById("gen").textContent = h.updated ? ("Updated "+h.updated) : "";
+  document.getElementById("gen").textContent = h.updated ? ("Generated "+h.updated+" · snapshot") : "";
   if(!s.equity.length){
     document.getElementById("body").innerHTML='<p class="empty">No entries yet — the ledger begins on the next run.</p>';
     return;

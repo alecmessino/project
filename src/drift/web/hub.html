@@ -49,7 +49,7 @@
   /* Institutional Editorial — paper, ink, brass. The front door: outcome-led, one guided path. */
   :root{
     --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
-    --ink:#1d242d; --body:#3a414b; --dim:#76747e; --muted:#8a8276;
+    --ink:#1d242d; --body:#3a414b; --dim:#5f5d68; --muted:#6f675b;
     --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
   }
   *{box-sizing:border-box}
@@ -133,15 +133,17 @@
 <body>
 <div class="wrap">
   <div class="frame">
-    <div class="chrome"><i></i><i></i><i></i><span class="url">driftwood — welcome</span></div>
-    <div class="nav">
-      <div class="brand">Drift<span class="w">wood</span></div>
-      <div class="links">
+    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — welcome</span></div>
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+      <div class="dwnav-links">
         <a href="thesis.html">Approach</a>
-        <a href="thesis.html">Methodology</a>
-        <span class="pill">Illustrative modeling</span>
+        <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+        <a href="leakage.html">Leakage</a>
+        <a href="statemap.html">State&nbsp;Map</a>
+        <a href="ledger.html">Research</a>
       </div>
-    </div>
+    </nav>
 
     <div class="hero">
       <div>
@@ -162,6 +164,9 @@
         <div class="ocard" id="ocard"></div>
         <div class="onote">Hypothetical, backtested model results for the strategy — not a forecast and not a client
           account. Your own after-tax figures depend on your situation; compute them in the Tax&nbsp;Lab.</div>
+        <noscript><style>#ocard:empty{display:none}</style><div class="onote" style="border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:#fff;color:#5a5a62;margin-top:12px">
+          The live model figures on this page need JavaScript. Use the navigation above to explore the Tax&nbsp;Lab,
+          the State&nbsp;Map, and the research exhibits, or re-enable scripts to see the numbers.</div></noscript>
       </div>
     </div>
 
@@ -169,17 +174,17 @@
       <div class="h">Why investors choose Driftwood</div>
       <div class="vadds" id="vadds"></div>
       <div class="cap">Hypothetical / illustrative model results — not a forecast and not advice. Each figure is drawn
-        from the exhibits below and shown with its own risk; see full disclosures.</div>
+        from the exhibits below and shown with its own risk; <a href="#disclosures" style="color:var(--teal2)">see full disclosures</a>.</div>
     </div>
 
     <div class="path">
       <div class="h">Your path · five steps, in order</div>
       <div class="steps">
         <a class="step lead" href="taxlab.html?view=prospect"><div class="n">1</div><div class="t">Your situation</div><div class="d">Bracket, state, portfolio.</div></a>
-        <a class="step" href="taxlab.html?view=prospect"><div class="n">2</div><div class="t">The problem</div><div class="d">What tax &amp; fees cost now.</div></a>
-        <a class="step" href="taxlab.html"><div class="n">3</div><div class="t">The fix</div><div class="d">Asset location + harvesting.</div></a>
+        <a class="step" href="leakage.html"><div class="n">2</div><div class="t">The problem</div><div class="d">What tax &amp; fees cost now.</div></a>
+        <a class="step" href="taxlab.html?view=advisor"><div class="n">3</div><div class="t">The fix</div><div class="d">Asset location + harvesting.</div></a>
         <a class="step" href="thesis.html"><div class="n">4</div><div class="t">The proof</div><div class="d">Approach, evidence &amp; method.</div></a>
-        <a class="step" href="taxlab.html"><div class="n">5</div><div class="t">Your proposal</div><div class="d">Brief + client PDF.</div></a>
+        <a class="step" href="taxlab.html?view=prospect"><div class="n">5</div><div class="t">Your proposal</div><div class="d">Brief + client PDF.</div></a>
       </div>
     </div>
 
@@ -198,7 +203,7 @@
       <div class="exhibits" id="exhibits-appendix"></div>
     </div>
 
-    <div class="foot">
+    <div class="foot" id="disclosures">
       <span class="note">Research &amp; illustrative modeling — not investment, tax, or legal advice.</span>
       The Model Portfolio is a hypothetical, append-only backtest — the retroactive application of the model to
       historical data, not actual trading or any client account. Past performance — hypothetical or actual —
@@ -242,7 +247,7 @@ function render(s){
       <div class="t">${e.title} <span class="arrow">→</span></div>
       <div class="d">${e.desc}</div></a>`;
   document.getElementById("exhibits").innerHTML = exs.filter(e=>!e.appendix).map(exHTML).join("")
-    + `<a class="ex" href="taxlab.html?view=prospect">
+    + `<a class="ex" href="taxlab.html?view=prospect" style="grid-column:1 / -1">
         <div class="t">Book a 15-min diagnostic <span class="arrow">→</span></div>
         <div class="d">See your own after-tax number — by bracket, state, and portfolio. The fastest path from the research to your plan.</div></a>`;
   const appendix = exs.filter(e=>e.appendix);
@@ -256,7 +261,13 @@ function render(s){
 async function load(){
   let s=window.__STATE__;
   if(!s){ try{ s=await (await fetch("/api/hub")).json(); }catch(e){} }
-  if(s) render(s);
+  if(s){ render(s); return; }
+  // Visible failure instead of a silent blank hub — the static nav above still works.
+  var ex=document.getElementById("exhibits");
+  if(ex) ex.innerHTML='<a class="ex" href="taxlab.html?view=prospect" style="grid-column:1 / -1">'+
+    '<div class="t">Couldn’t load the model figures <span class="arrow">→</span></div>'+
+    '<div class="d">Refresh the page, or open the Tax Lab to compute your own after-tax number. '+
+    'Use the navigation above to explore the rest of Driftwood.</div></a>';
 }
 load();
 </script>

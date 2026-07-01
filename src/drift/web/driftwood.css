@@ -13,6 +13,8 @@
 :root{
   --bg:#fff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#5f5f68;
   --pos:#2f6f5b; --neg:#9b4439; --slate:#4a4f57; --rule:#222226; --accent:#15806a; --bench:#b8bcc2;
+  /* One brand-teal system: --teal for solid CTAs/active states, --teal2 (=--accent) for links/accents. */
+  --teal:#15463a; --teal2:#15806a; --brass:#a9853f;
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:22px; --s6:30px;
   --r1:7px; --r2:9px; --r3:10px; --r4:12px; --rfull:999px;
   --sh1:0 1px 3px rgba(20,20,26,.06); --sh2:0 8px 30px rgba(20,20,26,.12);
@@ -29,6 +31,44 @@ h3{ font-weight:600; letter-spacing:-.01em; }   /* H3 is an Inter subhead, not M
 .num,.v,.big,output,.amt,.recovered{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
 a{ color:var(--accent); }
 ::selection{ background:rgba(21,128,106,.16); }
+
+/* ── Global keyboard-focus indicator ────────────────────────────────────────────────────────
+   One definition for the whole site (previously only taxlab.html had a focus ring, leaving the
+   hub and every exhibit on the near-invisible UA default over cream). Token-driven; pages that
+   need a contrasting ring (e.g. SVG map tiles on a dark fill) can still override locally. */
+:focus-visible{ outline:2px solid var(--accent,#15806a); outline-offset:2px; }
+a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,
+input:focus-visible,[tabindex]:focus-visible{ outline:2px solid var(--accent,#15806a); outline-offset:2px; }
+
+/* ── Shared persistent nav (rendered on every page) ─────────────────────────────────────────
+   The brand wordmark links home and the section links give lateral wayfinding, so no page is a
+   dead end. Token-driven so each page's local palette cascades through. */
+.dwnav{ display:flex; justify-content:space-between; align-items:center; gap:10px 18px;
+  flex-wrap:wrap; padding:13px 24px; border-bottom:1px solid var(--line,#e3dccd);
+  background:var(--soft,#fbf9f4); font-family:var(--sans); }
+.dwnav .brand{ font-size:19px; font-weight:700; color:var(--ink,#1d242d); text-decoration:none;
+  letter-spacing:-.01em; white-space:nowrap; }
+.dwnav .brand .w{ color:var(--brass,#a9853f); }
+.dwnav .brand:hover{ opacity:.85; }
+.dwnav-links{ display:flex; gap:6px 18px; align-items:center; flex-wrap:wrap; }
+.dwnav-links a{ font-size:13px; color:var(--dim,#5f5f68); text-decoration:none; padding:3px 1px;
+  border-bottom:2px solid transparent; }
+.dwnav-links a:hover{ color:var(--ink,#1d242d); }
+.dwnav-links a[aria-current="page"]{ color:var(--ink,#1d242d); font-weight:600;
+  border-bottom-color:var(--brass,#a9853f); }
+@media (max-width:620px){ .dwnav{ padding:11px 16px; gap:8px 14px; } .dwnav-links{ gap:6px 14px; } }
+
+/* Horizontal-scroll wrapper for wide data tables on narrow screens (keeps cell padding instead
+   of crushing columns to fit). */
+.tscroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+/* Collapsible affordance: a rotating chevron so <details> summaries read as toggles, not static
+   headers. We suppress the default disclosure triangle and append our own marker. */
+details > summary{ list-style:none; }
+details > summary::-webkit-details-marker{ display:none; }
+details > summary::after{ content:"\25B8"; display:inline-block; margin-left:.5em;
+  color:var(--brass,#a9853f); font-size:.85em; transition:transform .15s ease; }
+details[open] > summary::after{ transform:rotate(90deg); }
 
 /* ── One-click PDF proposal / CPA brief (window.print → Save as PDF) ─────────────────────────
    A clean, multi-page print template: strip the app chrome and interactive controls, keep the

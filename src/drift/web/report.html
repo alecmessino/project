@@ -25,7 +25,7 @@
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/equities.png" />
 <style>
   :root{
-    --bg:#ffffff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#717179;
+    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --ink:#1b1b1f; --dim:#5f5d68;
     --pos:#2f6f5b; --neg:#9b4439; --slate:#4a4f57; --rule:#222226;
   }
   *{box-sizing:border-box}
@@ -63,9 +63,22 @@
 </head>
 <body>
 <div class="wrap">
+  <nav class="dwnav" aria-label="Driftwood" style="border-radius:10px;margin-bottom:10px">
+    <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+    <div class="dwnav-links">
+      <a href="thesis.html">Approach</a>
+      <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+      <a href="leakage.html">Leakage</a>
+      <a href="statemap.html">State&nbsp;Map</a>
+      <a href="ledger.html" aria-current="page">Research</a>
+    </div>
+  </nav>
   <header>
     <h1>Drift<span class="w">wood</span> · backtest case studies</h1>
     <div class="sub" id="sub"></div>
+    <div style="margin-top:10px;font-size:11.5px;color:var(--dim);border:1px solid var(--line);border-left:3px solid var(--brass,#a9853f);background:var(--soft,#faf7f0);border-radius:7px;padding:8px 12px;line-height:1.5">
+      Exploratory research — not the deployed Structural&nbsp;Alpha strategy. <a href="index.html" style="color:var(--slate,#4a4f57)">More on the approach →</a>
+    </div>
   </header>
   <p class="lede" id="lede"></p>
   <div id="studies"></div>

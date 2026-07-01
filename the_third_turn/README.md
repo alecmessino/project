@@ -127,6 +127,32 @@ TTO3·CONFIRM 74%, TTO2·CONFIRM 68%, WATCH 56% Over — **vs a park-adjusted PR
 > Odds API key) for true EV. The WATCH rows are included so its hit rate is measurable before
 > it's ever enabled live.
 
+## Real lines & Discord alerts — `odds_collector.py`, `.env`
+
+Copy `.env.example` → `.env` (git-ignored) and set `DISCORD_WEBHOOK_URL` and `ODDS_API_KEY`
+(scripts load `.env` automatically via `shared_piping/envload.py`). Secrets stay in the
+environment — never committed.
+
+```bash
+python the_third_turn/send_test_alert.py     # post one embed to confirm the webhook
+python the_third_turn/odds_collector.py       # snapshot real pregame totals (1 credit)
+```
+
+`odds_collector.py` pulls **real** pregame game totals from The Odds API current-odds endpoint
+(median Over across US books, sanity-filtered), matches each to its `game_pk`, and appends to
+`data/closing_lines.csv` (resumable). Feed that to the simulation for **true** hit rates:
+
+```bash
+python the_third_turn/simulate_execution.py --seasons 2025 --totals-csv data/closing_lines.csv --real-only
+```
+
+The report then **splits hit rate by `line_source`** (real closing line vs park-average proxy).
+
+> ⚠ **Free-tier reality:** The Odds API free plan does **not** allow historical retro-fill
+> (`HISTORICAL_UNAVAILABLE_ON_FREE_USAGE_PLAN`), so past-season closing lines aren't available.
+> The collector runs **forward** (1 credit/day) to accumulate real lines as games are played;
+> true real-line hit rates therefore build up over time. Retro-filling 2024–25 needs a paid plan.
+
 ## Reference tables — `build_reference.py`
 
 Precomputes what the engine loads (from the MLB Stats API; xFIP/FanGraphs are IP-blocked):

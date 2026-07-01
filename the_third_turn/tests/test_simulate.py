@@ -46,3 +46,16 @@ def test_report_density_and_conditional_hit_rate():
     assert tto2["hit_rate_over_%"] == 50.0
     tto3 = rep[rep["rule_name"] == "TTO3"].iloc[0]
     assert tto3["hit_rate_over_%"] == 100.0
+
+
+def test_report_splits_real_vs_proxy():
+    rows = [
+        {"rule_name": "TTO2", "trigger_type": "CONFIRM", "outcome": "Over", "line_source": "real"},
+        {"rule_name": "TTO2", "trigger_type": "CONFIRM", "outcome": "Under", "line_source": "real"},
+        {"rule_name": "TTO3", "trigger_type": "CONFIRM", "outcome": "Over", "line_source": "proxy"},
+    ]
+    rep = report(rows, n_game_days=1, n_games=3)
+    real = rep[rep["rule_name"] == "ALL [real]"].iloc[0]
+    proxy = rep[rep["rule_name"] == "ALL [proxy]"].iloc[0]
+    assert real["fires"] == 2 and real["hit_rate_over_%"] == 50.0
+    assert proxy["fires"] == 1 and proxy["hit_rate_over_%"] == 100.0

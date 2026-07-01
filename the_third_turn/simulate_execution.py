@@ -98,7 +98,8 @@ def _candidate_mask(pa: pd.DataFrame, rules) -> pd.Series:
 
 
 def simulate(pa: pd.DataFrame, rules, c: Constraints, bullpen: dict,
-             pregame: dict[int, float], finals: dict[int, float]) -> list[dict]:
+             pregame: dict[int, float], finals: dict[int, float],
+             real_keys: set[int], real_only: bool = False) -> list[dict]:
     cand = pa[_candidate_mask(pa, rules)]
     console.log(f"evaluating {len(cand):,} candidate states (of {len(pa):,} PAs)")
     seen: set[str] = set()
@@ -107,6 +108,9 @@ def simulate(pa: pd.DataFrame, rules, c: Constraints, bullpen: dict,
         gp = int(r["game_pk"])
         pg = pregame.get(gp)
         if pg is None:
+            continue
+        source = "real" if gp in real_keys else "proxy"
+        if real_only and source != "real":
             continue
         state = _row_to_state(r)
         quote = Quote(book="sim", home=state.home, away=state.away, line=pg)
@@ -121,7 +125,7 @@ def simulate(pa: pd.DataFrame, rules, c: Constraints, bullpen: dict,
                     if final is not None else "Unknown"
                 ledger_rows.append(build_row(
                     trig, bullpen_elite_ra9=c.bullpen_elite_ra9, ts=str(r.get("game_date")),
-                    extra={"final_total": final, "outcome": outcome}))
+                    extra={"final_total": final, "outcome": outcome, "line_source": source}))
     return ledger_rows
 
 
@@ -132,20 +136,21 @@ def report(rows: list[dict], n_game_days: int, n_games: int) -> pd.DataFrame:
         decided = sub[sub["outcome"].isin(["Over", "Under"])]
         return (100.0 * (decided["outcome"] == "Over").mean()) if len(decided) else float("nan")
 
-    overall = {
-        "rule_name": "ALL", "trigger_type": "*", "fires": len(df),
-        "fires_per_game_day": round(len(df) / n_game_days, 2) if n_game_days else 0,
-        "fires_per_game": round(len(df) / n_games, 3) if n_games else 0,
-        "hit_rate_over_%": round(hit_rate(df), 1) if len(df) else float("nan"),
-    }
-    lines.append(overall)
-    for (rule, ttype), sub in df.groupby(["rule_name", "trigger_type"]):
-        lines.append({
-            "rule_name": rule, "trigger_type": ttype, "fires": len(sub),
+    def summary(name, ttype, sub):
+        return {
+            "rule_name": name, "trigger_type": ttype, "fires": len(sub),
             "fires_per_game_day": round(len(sub) / n_game_days, 2) if n_game_days else 0,
             "fires_per_game": round(len(sub) / n_games, 3) if n_games else 0,
-            "hit_rate_over_%": round(hit_rate(sub), 1),
-        })
+            "hit_rate_over_%": round(hit_rate(sub), 1) if len(sub) else float("nan"),
+        }
+
+    lines.append(summary("ALL", "*", df))
+    # honest split: true (real closing line) vs proxy (park-average).
+    if "line_source" in df.columns:
+        for src, sub in df.groupby("line_source"):
+            lines.append(summary(f"ALL [{src}]", "*", sub))
+    for (rule, ttype), sub in df.groupby(["rule_name", "trigger_type"]):
+        lines.append(summary(rule, ttype, sub))
     return pd.DataFrame(lines)
 
 
@@ -167,6 +172,8 @@ def main(argv=None) -> int:
     ap.add_argument("--seasons", type=int, nargs="+", default=[2025])
     ap.add_argument("--start"); ap.add_argument("--end")
     ap.add_argument("--totals-csv", help="game_pk,pregame_total closing lines (optional)")
+    ap.add_argument("--real-only", action="store_true",
+                    help="restrict to games with a real closing line (true hit rate)")
     args = ap.parse_args(argv)
 
     ranges = ([(args.start, args.end)] if args.start and args.end
@@ -185,10 +192,13 @@ def main(argv=None) -> int:
     rules = constraints.rules   # include disabled WATCH so its hit-rate is measured
     settings = EngineSettings()
     bullpen = settings.load_bullpen_quality()
-    pregame = _pregame_totals(pa, _load_override(args.totals_csv))
-    proxy = not args.totals_csv
+    override = _load_override(args.totals_csv)
+    pregame = _pregame_totals(pa, override)
+    real_keys = set(override)
+    proxy = not override
 
-    rows = simulate(pa, rules, constraints, bullpen, pregame, finals)
+    rows = simulate(pa, rules, constraints, bullpen, pregame, finals,
+                    real_keys=real_keys, real_only=args.real_only)
     OUT.mkdir(parents=True, exist_ok=True)
     with (OUT / "simulation_ledger.jsonl").open("w") as fh:
         for r in rows:
@@ -200,8 +210,9 @@ def main(argv=None) -> int:
     rep = report(rows, n_game_days, n_games)
     rep.to_csv(OUT / "report.csv", index=False)
 
-    table = Table(title=f"Execution simulation — {n_games} games, {n_game_days} game-days"
-                        + ("  [PROXY LINE]" if proxy else "  [REAL LINES]"))
+    tag = "[PROXY LINE]" if proxy else (f"[REAL-ONLY: {len(real_keys)} games]" if args.real_only
+                                        else f"[MIXED: {len(real_keys)} real lines]")
+    table = Table(title=f"Execution simulation — {n_games} games, {n_game_days} game-days  {tag}")
     for col in rep.columns:
         table.add_column(col, justify="left" if col == "rule_name" else "right")
     for _, r in rep.iterrows():

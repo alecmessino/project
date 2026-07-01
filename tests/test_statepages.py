@@ -59,6 +59,16 @@ def test_page_alpha_matches_the_source_of_truth(code):
     assert f"{a['before']:.1f}%/yr" in h and f"{a['after']:.1f}%/yr" in h
 
 
+@pytest.mark.parametrize("code", ["CA", "TX", "NY", "IL"])
+def test_page_has_honest_inline_capture(code):
+    h = SP.render_state_html(PAGES[code])
+    assert 'id="capform"' in h                              # inline lead capture, converts in place
+    assert "api.web3forms.com" in h and "access_key" in h
+    assert 'source:"state_page"' in h                       # tagged for attribution
+    assert "report is on its way" not in h                  # honesty guardrail (mirror of the taxlab test)
+    assert "usually within a business day" in h             # honest manual-follow-up framing
+
+
 def test_sitemap_covers_core_plus_every_state():
     xml = SP.render_sitemap()
     assert xml.count("<loc>") == len(SP._CORE_SITEMAP) + len(SP.STATE_PAGE_CODES)

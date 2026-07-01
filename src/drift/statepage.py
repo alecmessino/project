@@ -270,11 +270,66 @@ _HEAD_CSS = """
   .cta a{text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;white-space:nowrap;padding:12px 20px}
   .cta a.primary{background:var(--teal);color:#f1ede3} .cta a.ghost{border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
   .rel{padding:6px 40px 4px;font-size:12.5px;color:var(--dim)} .rel a{color:var(--teal2);text-decoration:none;font-weight:600}
+  .capture{margin:12px 40px 4px}
+  .capform{display:flex;gap:8px;flex-wrap:wrap}
+  .capform input[type=email]{flex:1;min-width:220px;padding:11px 14px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:14px;background:#fff}
+  .capform button{background:var(--brass);color:#fff;border:0;border-radius:8px;font:inherit;font-weight:600;font-size:14px;padding:11px 18px;cursor:pointer}
+  .capform button:disabled{opacity:.6;cursor:default}
+  .capnote{font-size:11.5px;color:var(--dim);margin-top:8px} .capnote a{color:var(--teal2)}
+  .capok{background:#eef5f0;border:1px solid #cfe0d6;border-left:3px solid var(--teal2);border-radius:8px;padding:14px 16px;font-size:13.5px;color:#244c3f;font-weight:600}
+  .vh{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
   .disc{margin:16px 40px 6px;font-size:10.5px;line-height:1.55;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
   .disc a{color:var(--teal2)}
   .foot{margin:6px 40px 26px;color:var(--muted);font-size:11px}
-  @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.dwnav{display:none}}
+  @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}
 """
+
+# Web3Forms lead-capture (public key — safe in client code; mirrors taxlab.html CONFIG).
+_FORM_EP = "https://api.web3forms.com/submit"
+_FORM_KEY = "cf6b1c2d-9971-4256-9ff9-72d6918c84e6"
+_FORM_HP = "botcheck"
+_CONTACT = "alec.messino@cwsplanning.com"
+
+
+def _capture(code: str, name: str, alpha, rate: str) -> str:
+    """An inline email capture so a state page converts in place — no click-through required. Posts to
+    Web3Forms tagged with the state + a lead-quality flag; honest manual-follow-up copy (no auto-report
+    promise). Falls back to a mailto on failure."""
+    a = f"{alpha:.1f}" if alpha is not None else ""
+    nm = _esc(name)
+    return f"""    <div class="capture" id="capture">
+      <form class="capform" id="capform" novalidate>
+        <label class="vh" for="capemail">Your email address</label>
+        <input type="email" id="capemail" placeholder="you@email.com" required autocomplete="email" aria-label="Your email address" />
+        <input type="text" id="caphp" name="{_FORM_HP}" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <button type="submit" id="capsend">Email me {nm}'s 1-pager →</button>
+      </form>
+      <div class="capnote" id="capnote">A one-page, {nm}-specific tax-leakage breakdown — we'll follow up by email, usually within a business day. We never share your address.</div>
+    </div>
+    <script>
+    (function(){{
+      var f=document.getElementById("capform"); if(!f) return;
+      var qp=new URLSearchParams(location.search);
+      f.addEventListener("submit",function(ev){{
+        ev.preventDefault();
+        var el=document.getElementById("capemail"), email=(el.value||"").trim();
+        if(!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email)){{ if(el.reportValidity)el.reportValidity(); return; }}
+        var btn=document.getElementById("capsend"); btn.disabled=true; btn.textContent="Sending…";
+        var p={{email:email, access_key:"{_FORM_KEY}", from_name:"CWS Planning",
+          _subject:"New {nm} state-page lead", state:"{code}", state_name:"{nm}",
+          structural_alpha_pct:"{a}", top_lt_rate:"{_esc(rate)}", source:"state_page",
+          lead_quality:({a or 0}>=4.5?"high":"standard")}};
+        ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(function(k){{var v=qp.get(k); if(v)p[k]=v;}});
+        p["{_FORM_HP}"]=(document.getElementById("caphp").value||"");
+        fetch("{_FORM_EP}",{{method:"POST",headers:{{"Content-Type":"application/json",Accept:"application/json"}},body:JSON.stringify(p)}})
+          .then(function(r){{ if(!r.ok) throw 0;
+            document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Thanks — we\\'ll email your {nm} tax-leakage breakdown, usually within a business day.</div>';
+            if(window.plausible) plausible("lead_submitted",{{props:{{source:"state_page",state:"{code}"}}}}); }})
+          .catch(function(){{ btn.disabled=false; btn.textContent="Email me {nm}'s 1-pager →";
+            document.getElementById("capnote").innerHTML='Sorry — that didn\\'t send. Email us at <a href="mailto:{_CONTACT}">{_CONTACT}</a>.'; }});
+      }});
+    }})();
+    </script>"""
 
 
 def render_state_html(data: dict) -> str:
@@ -290,6 +345,8 @@ def render_state_html(data: dict) -> str:
     faq_html = _faq_html(faq).replace("{}", _esc(name)) if faq else ""
     related = " · ".join(
         f'<a href="{page_path(c)}">{_esc(nm)}</a>' for c, nm in data["related"])
+    rate = (rec.get("cg") or {}).get("tag", "")
+    capture = _capture(code, name, (a or {}).get("value"), rate)
     lede = (f"Every state taxes gains, marriage, and death differently. Here is how {name} treats a "
             f"harvested loss, capital gains at the top rate, estate and inheritance tax, and the basis "
             f"step-up your heirs inherit — and the after-tax Structural Alpha our engine is built to "
@@ -343,6 +400,7 @@ def render_state_html(data: dict) -> str:
       <a class="primary" href="leakage.html?state={code}">Run my {_esc(name)} diagnostic →</a>
       <a class="ghost" href="taxlab.html?view=prospect&state={code}">Book a 15-min intro</a>
     </div>
+{capture}
     <div class="rel">Compare nearby regimes: {related} · <a href="states.html">all 50 states + DC →</a></div>
     {DISCLOSURE}
     <div class="foot">Driftwood · CWS Planning. Tax facts compiled from state statutes, tax year 2025.</div>

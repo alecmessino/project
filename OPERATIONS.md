@@ -21,6 +21,7 @@ drift taxlab   --docs docs --out docs/taxlab.html
 drift thesis   --docs docs --out docs/thesis.html
 drift leakage  --out docs/leakage.html             # fixed figures, no network
 drift statemap --out docs/statemap.html            # static dataset, no network
+drift states   --out-dir docs                      # 51 per-state SEO pages + states.html + sitemap.xml
 drift hub      --docs docs --out docs/index.html   # reads the other exhibits; run last
 python scripts/stamp_provenance.py                 # refresh docs/_provenance.json
 ```
@@ -74,6 +75,11 @@ re-derives the table from the engine and fails if a figure drifts — it is the 
   `booking_opened`, `booking_scheduled` (taxlab); `map_state_clicked` (statemap);
   `diagnostic_to_taxlab` (leakage). `booking_scheduled` is the true conversion.
 - **Calendly**: the success-card iframe; `booking_*` events come from its postMessage API.
+- **State landing pages** (`<slug>-tax.html`, e.g. `california-tax.html`): 51 server-rendered SEO
+  pages built by `drift states` from `statepage.py`. Each carries an inline Web3Forms email capture
+  (`source:"state_page"`, tagged with the state + a lead-quality flag) so organic traffic converts in
+  place, plus a CTA into `leakage.html?state=XX`. Regenerate after any `STATE_ALPHA`/`statemap.py`
+  change; refresh the share cards with `node scripts/og_states.mjs`.
 
 ## Disaster recovery
 - **Lost/corrupt `tests/data/matrix_history.json`** → `TILT_SWEEP_REFRESH=1 python scripts/tilt_sweep.py`

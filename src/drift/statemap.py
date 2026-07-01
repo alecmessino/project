@@ -107,9 +107,14 @@ def _income(code):
     if code not in _INCOME:
         return None
     regime, rate, quirk = _INCOME[code]
-    note = _INCOME_NOTE[regime].format(rate=rate, quirk=quirk)
-    if regime == "conforming" and quirk:
-        note += f" Quirk: {quirk}."
+    if regime == "notax" and quirk:
+        # A no-income-tax state can still have loss quirks (e.g. MO: gains exempt but losses deduct);
+        # the generic "loss worth only the federal rate" line would be FALSE, so state the quirk instead.
+        note = f"No state tax on realized capital gains. {quirk[0].upper() + quirk[1:]}."
+    else:
+        note = _INCOME_NOTE[regime].format(rate=rate, quirk=quirk)
+        if regime == "conforming" and quirk:
+            note += f" Quirk: {quirk}."
     return {"regime": regime, "tag": rate, "note": note,
             "source": "State revenue departments, tax year 2025 — verify with a tax advisor."}
 

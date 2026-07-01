@@ -76,6 +76,10 @@ jobs:
       - name: Build State Tax Map (docs/statemap.html)
         run: drift statemap --out docs/statemap.html
 
+      # Per-state SEO landing pages (50 + DC), states.html index, and the generated sitemap.
+      - name: Build state landing pages + sitemap
+        run: drift states --out-dir docs
+
       # Rebuild the markets-only landing hub last (reads the fresh exhibits above).
       - name: Build landing hub (docs/index.html)
         run: drift hub --docs docs --out docs/index.html
@@ -90,7 +94,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/index.html docs/thesis.html docs/taxlab.html \
             docs/equities.html docs/equities_case_studies.html docs/tearsheet.html \
-            docs/ledger.html docs/ledger.json docs/_provenance.json
+            docs/ledger.html docs/ledger.json docs/_provenance.json \
+            docs/states.html docs/sitemap.xml docs/*-tax.html
           # Use an explicit if/else: the old `A && B || C && D` one-liner pushed even on a
           # no-change run (operator precedence), and a holiday no-op should commit nothing.
           if git diff --cached --quiet; then

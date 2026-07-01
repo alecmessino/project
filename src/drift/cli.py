@@ -293,6 +293,22 @@ def statemap(
 
 
 @app.command()
+def states(
+    out_dir: str = typer.Option("docs", "--out-dir", help="directory for the per-state landing pages + sitemap"),
+    sitemap: bool = typer.Option(True, "--sitemap/--no-sitemap", help="also regenerate docs/sitemap.xml"),
+):
+    """Build the per-state SEO landing pages (50 states + DC), the states.html index, and the sitemap."""
+    from .statepage import export_state_pages, export_sitemap, STATE_PAGE_CODES
+    written = export_state_pages(out_dir)
+    msg = (f"[green]wrote[/] {len(written)} pages to {out_dir}/ "
+           f"({len(STATE_PAGE_CODES)} states + DC + index)")
+    if sitemap:
+        sp = export_sitemap(out_dir)
+        msg += f"; sitemap -> {sp}"
+    console.print(msg)
+
+
+@app.command()
 def hub(
     docs: str = typer.Option("docs", "--docs", help="directory holding the exhibits"),
     out: str = typer.Option("docs/index.html", "--out", help="hub landing page"),

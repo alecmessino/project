@@ -235,9 +235,12 @@ class LiveEngine:
             console.print(f"   ✓ {r}")
 
     async def run(self, once: bool = False) -> None:
-        console.print(f"[cyan]The Third Turn engine (v2)[/] · fire on 3rd-turn arrival: "
+        slots = self.c.top_of_order_slots
+        console.print(f"[cyan]The Third Turn engine (v2)[/] · trigger "
+                      f"[bold]{self.c.top_indicator or 'TTO'+str(self.c.times_through_order)}[/]: "
                       f"inning≥{self.c.min_inning}, TTO≥{self.c.times_through_order}, "
-                      f"top {self.c.top_of_order_slots}, RE24 edge≥{self.c.line_edge_min_runs}, "
+                      f"slots {slots[0]}-{slots[-1]}, tiers {self.c.starter_tier_filter}, "
+                      f"RE24 edge≥{self.c.line_edge_min_runs}, "
                       f"suppress bullpen<{self.c.bullpen_elite_ra9} RA/9")
         timeout = aiohttp.ClientTimeout(total=45)
         async with aiohttp.ClientSession(timeout=timeout) as session:

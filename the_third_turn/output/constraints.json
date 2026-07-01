@@ -1,15 +1,16 @@
 {
-  "min_inning": 5,
+  "min_inning": 3,
   "top_of_order_slots": [
     1,
     2,
     3,
-    4
+    4,
+    5
   ],
-  "times_through_order": 3,
+  "times_through_order": 2,
   "use_re24": true,
   "line_edge_min_runs": 0.5,
-  "ttop_run_multiplier": 1.15,
+  "ttop_run_multiplier": 1.159,
   "bullpen_elite_ra9": 3.8,
   "require_starter_on_mound": true,
   "lookahead_outs": 2,
@@ -17,15 +18,20 @@
     8,
     9
   ],
-  "starter_tier_filter": [],
-  "pitch_count_reference": null,
-  "expected_ra9_lift": 0.65,
-  "expected_runs_per_pa_lift": 0.0131,
-  "expected_whip_lift": 0.12,
-  "seasons": [
-    2025
+  "starter_tier_filter": [
+    "Mid",
+    "Back"
   ],
-  "sample_bf": 15002,
-  "ra9_vs_true_ra9_r": 0.9482,
+  "pitch_count_reference": null,
+  "expected_ra9_lift": 0.69,
+  "expected_runs_per_pa_lift": 0.0146,
+  "expected_whip_lift": 0.132,
+  "seasons": [
+    2024,
+    2025,
+    2026
+  ],
+  "sample_bf": 53514,
+  "ra9_vs_true_ra9_r": 0.9082,
   "top_indicator": "TTO2 top5 all Back"
 }

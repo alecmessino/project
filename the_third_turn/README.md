@@ -35,32 +35,34 @@ python the_third_turn/backtest_thesis.py --start 2025-04-01 --end 2025-05-01  # 
 Outputs (`output/`): `constraints.json`, `indicator_sweep.csv`, `ttop_decision_matrix.csv`,
 `run_environment_report.json`.
 
-### Findings (full 2025 season)
+### Findings (full 2024 + 2025 + 2026-YTD sample)
 
-**The TTOP is real and pays in runs.** 3rd-turn-through-top-4 vs innings 1–3:
-RA/9 **4.37 → 5.02** (+0.65), runs/PA +0.013, WHIP +0.120 — on 15,002 PAs (Welch t = 3.4).
+**The TTOP is real, and the cliff comes EARLIER for weaker arms.** The dynamic sweep,
+ranked by Welch t across ~55k+ plate appearances, is topped decisively by
+**2nd-time-through vs Back-of-rotation starters** — not the canonical 3rd turn:
 
-**The edge concentrates on weaker starters** (the sweep + tier breakdown):
+| Rank | Indicator | PAs | RA/9 lift | Welch t | p |
+|---|---|---:|---:|---:|---:|
+| 1 | **TTO2 · top5 · Back** | 25,929 | **+1.42** | 9.8 | 1e-22 |
+| 2 | TTO2 · top4 · Back | 20,847 | +1.56 | 9.6 | 6e-22 |
+| 3 | TTO2 · top3 · Back | 15,702 | +1.63 | 8.7 | 5e-18 |
+| 4 | TTO3 · top4 · All (canonical) | 38,086 | +0.75 | 6.3 | 2e-10 |
 
-| Starter tier | runs/PA | lift vs baseline |
-|---|---:|---:|
-| Ace | 0.110 | **−0.003 (no edge)** |
-| Mid | 0.126 | +0.013 |
-| Back | 0.135 | **+0.021** |
-
-Aces *suppress* the penalty; the money is on mid/back-of-rotation starters. The dynamic
-sweep's single most-reliable run signal is actually **2nd-time-through vs Back-rotation**
-(RA/9 +1.54, t = 6.5) — read `indicator_sweep.csv` (ranked by Welch t). The engine still
-triggers on the canonical **3rd-turn top-4** thesis, but `constraints.top_indicator`
-records whatever the sweep currently ranks #1, and `starter_tier_filter` lets you act on
-the tier finding (e.g. exclude aces).
+The baseball story: **the weaker the starter, the earlier the penalty.** Aces have the
+arsenal to fool a lineup a 3rd time; back/mid-rotation and spot starters get hit hard the
+*2nd* time through. So the engine **auto-pivots** its live trigger to the sweep's #1 robust
+signal (`backtest_thesis.choose_trigger`, gated on p < 1e-6 and ≥ 2000 PAs) and excludes
+aces via `starter_tier_filter`. The current fitted trigger is **TTO ≥ 2, slots 1–5, tiers
+{Mid, Back}, inning ≥ 3** — recorded in `constraints.top_indicator`. If a future run finds a
+different robust #1, the trigger follows it automatically; otherwise it falls back to the
+canonical 3rd-turn top-4.
 
 ### Run-environment validation (calibrate to *runs*, not ERA)
 
 A live Over pays on **total runs** (earned or not), so we validate Statcast RA/9 against
-**true RA/9** (runs allowed) from the MLB Stats API — not ERA. Full season, 224 pitchers:
-**Pearson r = 0.948**, R² = 0.90 (`true_RA9 ≈ 1.03·RA9 + 0.21`). Statcast run-attribution
-is a reliable proxy for actual runs allowed.
+**true RA/9** (runs allowed) from the MLB Stats API — not ERA. Across the 3-season sample,
+329 pitchers: **Pearson r = 0.908**, R² = 0.82 (`true_RA9 ≈ 0.92·RA9 + 0.65`). Statcast
+run-attribution is a reliable proxy for actual runs allowed.
 
 ## 2. Live Execution Engine — `live_engine.py`
 
@@ -72,12 +74,12 @@ An `asyncio`/`aiohttp` daemon polling three sources concurrently every 30s:
 * **Source C — Bovada:** live game totals.
 * **Fallback — Pinnacle:** used only if FanDuel returns nothing.
 
-It fires **two** alert types:
+It fires **two** alert types (both keyed to the fitted `times_through_order`, currently 2):
 
-* **🟡 ARM (look-ahead)** — `2 outs` + an `8/9` hitter up + that batter on their 2nd turn,
-  so the top-of-order 3rd turn **leads off next inning**. This beats the ~10–20s MLB-API
-  latency, giving a buffer to read the odds *before* books move at the inning break.
-* **🔴 CONFIRM** — the top-of-order 3rd turn is actually at bat.
+* **🟡 ARM (look-ahead)** — `2 outs` + an `8/9` hitter up + that batter one turn short of
+  the target, so the top-of-order target turn **leads off next inning**. This beats the
+  ~10–20s MLB-API latency, giving a buffer to read the odds *before* books move at the break.
+* **🔴 CONFIRM** — the top-of-order target turn is actually at bat.
 
 Both require, beyond the state match:
 

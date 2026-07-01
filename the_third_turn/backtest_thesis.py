@@ -392,6 +392,67 @@ def render_sweep(sweep: pd.DataFrame, n: int = 12) -> None:
     console.print(table)
 
 
+def parse_indicator(name: str) -> tuple[int, int, str, str]:
+    """'TTO2 top5 all Back' -> (tto=2, top_n=5, pc='all', tier='Back')."""
+    parts = name.split()
+    return int(parts[0][3:]), int(parts[1][3:]), parts[2], parts[3]
+
+
+def choose_trigger(pa: pd.DataFrame, sweep: pd.DataFrame) -> dict:
+    """Follow the sweep's #1 robust signal automatically (Fix #1, dynamic).
+
+    Adopts the top reliable, NON-pitch-gated, NON-ace indicator as the live trigger
+    (its TTO + top-of-order size), fits ``min_inning`` and the TTOP run multiplier to
+    that window, and narrows the tier filter to the tiers that actually score above
+    baseline there (always excluding aces). Falls back to the canonical 3rd-turn top-4
+    thesis if nothing clears the robustness gate.
+    """
+    base = pa[pa["inning"] <= 3]
+    base_rpp = float(base["runs"].mean())
+    base_ra9 = 9.0 * base["runs"].sum() / (base["outs"].sum() / 3.0)
+
+    # live-eligible candidates: reliable, no PC gate ("all"), not an Ace-only split.
+    cand = sweep[sweep["reliable"] & sweep["indicator"].str.contains(" all ")
+                 & ~sweep["indicator"].str.endswith(" Ace")]
+    # robustness gate for pivoting off the canonical thesis.
+    canonical = (3, 4, "TTO3 top4 all All")
+    if len(cand):
+        top = cand.iloc[0]
+        tto, top_n, _, tier = parse_indicator(top["indicator"])
+        undeniable = bool(top["welch_p"] < 1e-6 and top["BF"] >= 2000)
+        chosen = (tto, top_n, top["indicator"]) if undeniable else canonical
+    else:
+        chosen = canonical
+    tto, top_n, indicator = chosen
+
+    # which non-ace tiers actually score above baseline at this window (the edge is
+    # earlier for weaker arms) — that's what the engine will fire on.
+    window = pa[(pa["slot"] <= top_n) & (pa["tto"] == tto)]
+    tier_filter = [t for t in ("Mid", "Back")
+                   if len(window[window["tier"] == t])
+                   and float(window[window["tier"] == t]["runs"].mean()) > base_rpp]
+    tier_filter = tier_filter or ["Mid", "Back"]
+
+    # report lift + multiplier for the ACTUAL fired population (window ∩ tier_filter).
+    fired = window[window["tier"].isin(tier_filter)]
+    fired = fired if len(fired) else window
+    win_rpp = float(fired["runs"].mean())
+    win_ra9 = 9.0 * fired["runs"].sum() / (fired["outs"].sum() / 3.0)
+    return {
+        "times_through_order": tto,
+        "top_of_order_slots": list(range(1, top_n + 1)),
+        "min_inning": int(fired["inning"].median()) if len(fired) else 5,
+        "ttop_run_multiplier": round(win_ra9 / base_ra9, 3) if base_ra9 else 1.0,
+        "starter_tier_filter": tier_filter,
+        "top_indicator": indicator,
+        "pivoted": indicator != canonical[2],
+        "sample_bf": int(len(fired)),
+        "win_ra9": round(win_ra9, 2), "base_ra9": round(base_ra9, 2),
+        "expected_ra9_lift": round(win_ra9 - base_ra9, 2),
+        "expected_runs_per_pa_lift": round(win_rpp - base_rpp, 4),
+    }
+
+
 def render_tier_lift(pa: pd.DataFrame) -> None:
     base_rpp = float(pa[pa["inning"] <= 3]["runs"].mean())
     window = pa[pa["slot"].isin(TOP_OF_ORDER) & (pa["tto"] == 3)]
@@ -438,22 +499,22 @@ def main(argv=None) -> int:
     render_matrix(mdf)
     mdf.to_csv(OUT / "ttop_decision_matrix.csv")
 
-    # Fix #1: the signal is TTO3-top4 ARRIVAL — no pitch-count gate.
-    window = pa[pa["slot"].isin(TOP_OF_ORDER) & (pa["tto"] == 3)]
-    baseline = pa[pa["inning"] <= 3]
-    base_rpp, win_rpp = float(baseline["runs"].mean()), float(window["runs"].mean())
-    base_ra9 = 9.0 * baseline["runs"].sum() / (baseline["outs"].sum() / 3.0)
-    win_ra9 = 9.0 * window["runs"].sum() / (window["outs"].sum() / 3.0)
-    ttop_mult = round(win_ra9 / base_ra9, 3) if base_ra9 else 1.0
-    min_inning = int(window["inning"].median()) if len(window) else 6
-
-    # Fix #1 (dynamic): sweep + tier breakdown.
+    # Fix #1 (dynamic): sweep the indicator grid + tier breakdown.
     console.rule("[bold]Dynamic indicator sweep")
     sweep = indicator_sweep(pa)
     render_sweep(sweep)
     sweep.to_csv(OUT / "indicator_sweep.csv", index=False)
-    top_indicator = sweep.iloc[0]["indicator"] if len(sweep) else "n/a"
     render_tier_lift(pa)
+
+    # Follow the sweep's #1 robust signal automatically (fall back to canonical).
+    trig = choose_trigger(pa, sweep)
+    if trig["pivoted"]:
+        console.print(f"\n[bold magenta]PIVOT:[/] sweep's #1 signal "
+                      f"[bold]{trig['top_indicator']}[/] beats the canonical 3rd-turn "
+                      f"thesis — adopting it as the live trigger.")
+    else:
+        console.print(f"\n[cyan]Canonical 3rd-turn top-4 remains the live trigger[/] "
+                      f"(top sweep signal: {trig['top_indicator']}).")
 
     # Fix #2: calibrate to RUNS, not ERA.
     console.rule("[bold]Run-environment validation (RA/9 vs true runs allowed)")
@@ -466,18 +527,23 @@ def main(argv=None) -> int:
     (OUT / "run_environment_report.json").write_text(json.dumps(report, indent=2))
 
     constraints = Constraints(
-        min_inning=min_inning, top_of_order_slots=TOP_OF_ORDER, times_through_order=3,
-        ttop_run_multiplier=ttop_mult, pitch_count_reference=None,
-        expected_ra9_lift=round(win_ra9 - base_ra9, 2),
-        expected_runs_per_pa_lift=round(win_rpp - base_rpp, 4),
+        min_inning=trig["min_inning"], top_of_order_slots=trig["top_of_order_slots"],
+        times_through_order=trig["times_through_order"],
+        ttop_run_multiplier=trig["ttop_run_multiplier"],
+        starter_tier_filter=trig["starter_tier_filter"], pitch_count_reference=None,
+        expected_ra9_lift=trig["expected_ra9_lift"],
+        expected_runs_per_pa_lift=trig["expected_runs_per_pa_lift"],
         expected_whip_lift=round(float(mdf.loc["3rd time thru, top 4", "WHIP_lift"]), 3),
-        seasons=seasons, sample_bf=int(len(window)), top_indicator=top_indicator,
+        seasons=seasons, sample_bf=trig["sample_bf"], top_indicator=trig["top_indicator"],
         ra9_vs_true_ra9_r=report.get("statcast_ra9_vs_true_ra9_pearson_r"),
     )
     constraints.save()
-    console.print(f"\n[green]Wrote {OUT/'constraints.json'}[/] — fire on 3rd-turn arrival "
-                  f"(inning≥{min_inning}, TTO≥3, top-4); TTOP run multiplier "
-                  f"{ttop_mult}× (RA/9 {base_ra9:.2f}→{win_ra9:.2f}). No pitch-count gate.")
+    slots = trig["top_of_order_slots"]
+    console.print(f"\n[green]Wrote {OUT/'constraints.json'}[/] — trigger: TTO≥"
+                  f"{trig['times_through_order']}, slots {slots[0]}-{slots[-1]}, inning≥"
+                  f"{trig['min_inning']}, tiers {trig['starter_tier_filter']}; TTOP "
+                  f"multiplier {trig['ttop_run_multiplier']}× "
+                  f"(RA/9 {trig['base_ra9']}→{trig['win_ra9']}).")
     return 0
 
 

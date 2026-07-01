@@ -1,16 +1,16 @@
 {
   "metric": "total runs (RA/9), not ERA \u2014 the Over pays on all runs",
   "true_source": "MLB Stats API season pitching (runs/IP)",
-  "n_pitchers": 224,
-  "overall_runs_per_pa": 0.1082,
-  "statcast_ra9_vs_true_ra9_pearson_r": 0.9482,
-  "statcast_ra9_vs_true_ra9_r_squared": 0.899,
-  "p_value": 1.688e-112,
+  "n_pitchers": 329,
+  "overall_runs_per_pa": 0.1083,
+  "statcast_ra9_vs_true_ra9_pearson_r": 0.9082,
+  "statcast_ra9_vs_true_ra9_r_squared": 0.8247,
+  "p_value": 1.064e-125,
   "regression": {
-    "slope": 1.0322,
-    "intercept": 0.2113,
+    "slope": 0.9211,
+    "intercept": 0.6467,
     "formula": "true_RA9 \u2248 slope * RA9_statcast + intercept"
   },
-  "statcast_whip_vs_true_whip_r": 0.936,
+  "statcast_whip_vs_true_whip_r": 0.9266,
   "interpretation": "Statcast run-attribution is a reliable proxy for actual runs allowed"
 }

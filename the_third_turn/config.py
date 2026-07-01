@@ -50,8 +50,9 @@ class Constraints(BaseModel):
     lookahead_outs: int = 2
     lookahead_slots: list[int] = Field(default_factory=lambda: [8, 9])
 
-    # --- starter tier (Fix #1) — annotation + optional soft filter ---
-    starter_tier_filter: list[str] = Field(default_factory=list)  # empty = allow all
+    # --- starter tier (Fix #1) — never fire on aces (they have the arsenal to
+    # neutralize the TTOP). Default excludes Ace; the backtest may narrow further. ---
+    starter_tier_filter: list[str] = Field(default_factory=lambda: ["Mid", "Back"])
 
     # --- informational (not a gate) ---
     pitch_count_reference: Optional[int] = None

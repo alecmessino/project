@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import math
 import time
+from datetime import datetime, timezone
 from typing import Optional
 
 import aiohttp
@@ -65,6 +66,22 @@ class MLBStatsSource:
                     continue
                 pks.append(int(g["gamePk"]))
         return pks, status
+
+    @staticmethod
+    def _data_age(feed: dict) -> Optional[float]:
+        """Seconds between the feed's own snapshot timestamp and now (latency check).
+
+        ``metaData.timeStamp`` is UTC ``YYYYMMDD_HHMMSS``; the MLB feed is typically
+        ~15-25s behind real time even at fetch, which is why the ARM look-ahead exists.
+        """
+        ts = feed.get("metaData", {}).get("timeStamp")
+        if not ts:
+            return None
+        try:
+            snap = datetime.strptime(ts, "%Y%m%d_%H%M%S").replace(tzinfo=timezone.utc)
+            return (datetime.now(timezone.utc) - snap).total_seconds()
+        except (ValueError, TypeError):
+            return None
 
     def _parse_feed(self, feed: dict) -> Optional[LiveGameState]:
         game = feed.get("gameData", {})
@@ -140,7 +157,7 @@ class MLBStatsSource:
             batting_slot_due=slot, times_through_order=tto, status=status,
             outs=outs, on_first=on_first, on_second=on_second, on_third=on_third,
             starter_id=starter_id, starter_on_mound=starter_on_mound,
-            starter_tier=starter_tier,
+            starter_tier=starter_tier, data_age_seconds=self._data_age(feed),
         )
 
     async def fetch(self, session: aiohttp.ClientSession) -> SourceResult:

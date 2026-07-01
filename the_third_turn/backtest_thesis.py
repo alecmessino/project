@@ -42,7 +42,7 @@ import pandas as pd  # noqa: E402
 from rich.console import Console  # noqa: E402
 from rich.table import Table  # noqa: E402
 
-from config import Constraints  # noqa: E402
+from config import Constraints, TriggerRule  # noqa: E402
 
 console = Console()
 HERE = Path(__file__).resolve().parent
@@ -398,59 +398,70 @@ def parse_indicator(name: str) -> tuple[int, int, str, str]:
     return int(parts[0][3:]), int(parts[1][3:]), parts[2], parts[3]
 
 
-def choose_trigger(pa: pd.DataFrame, sweep: pd.DataFrame) -> dict:
-    """Follow the sweep's #1 robust signal automatically (Fix #1, dynamic).
-
-    Adopts the top reliable, NON-pitch-gated, NON-ace indicator as the live trigger
-    (its TTO + top-of-order size), fits ``min_inning`` and the TTOP run multiplier to
-    that window, and narrows the tier filter to the tiers that actually score above
-    baseline there (always excluding aces). Falls back to the canonical 3rd-turn top-4
-    thesis if nothing clears the robustness gate.
-    """
-    base = pa[pa["inning"] <= 3]
-    base_rpp = float(base["runs"].mean())
-    base_ra9 = 9.0 * base["runs"].sum() / (base["outs"].sum() / 3.0)
-
-    # live-eligible candidates: reliable, no PC gate ("all"), not an Ace-only split.
-    cand = sweep[sweep["reliable"] & sweep["indicator"].str.contains(" all ")
-                 & ~sweep["indicator"].str.endswith(" Ace")]
-    # robustness gate for pivoting off the canonical thesis.
-    canonical = (3, 4, "TTO3 top4 all All")
-    if len(cand):
-        top = cand.iloc[0]
-        tto, top_n, _, tier = parse_indicator(top["indicator"])
-        undeniable = bool(top["welch_p"] < 1e-6 and top["BF"] >= 2000)
-        chosen = (tto, top_n, top["indicator"]) if undeniable else canonical
-    else:
-        chosen = canonical
-    tto, top_n, indicator = chosen
-
-    # which non-ace tiers actually score above baseline at this window (the edge is
-    # earlier for weaker arms) — that's what the engine will fire on.
+def _rule_from_window(pa: pd.DataFrame, tto: int, top_n: int, base_rpp: float,
+                      base_ra9: float) -> tuple[TriggerRule, dict]:
+    """Build one TriggerRule fitted to the (tto, top_n) window + a diagnostics dict."""
     window = pa[(pa["slot"] <= top_n) & (pa["tto"] == tto)]
     tier_filter = [t for t in ("Mid", "Back")
                    if len(window[window["tier"] == t])
                    and float(window[window["tier"] == t]["runs"].mean()) > base_rpp]
     tier_filter = tier_filter or ["Mid", "Back"]
-
-    # report lift + multiplier for the ACTUAL fired population (window ∩ tier_filter).
     fired = window[window["tier"].isin(tier_filter)]
     fired = fired if len(fired) else window
-    win_rpp = float(fired["runs"].mean())
     win_ra9 = 9.0 * fired["runs"].sum() / (fired["outs"].sum() / 3.0)
-    return {
-        "times_through_order": tto,
-        "top_of_order_slots": list(range(1, top_n + 1)),
-        "min_inning": int(fired["inning"].median()) if len(fired) else 5,
-        "ttop_run_multiplier": round(win_ra9 / base_ra9, 3) if base_ra9 else 1.0,
-        "starter_tier_filter": tier_filter,
-        "top_indicator": indicator,
-        "pivoted": indicator != canonical[2],
-        "sample_bf": int(len(fired)),
-        "win_ra9": round(win_ra9, 2), "base_ra9": round(base_ra9, 2),
-        "expected_ra9_lift": round(win_ra9 - base_ra9, 2),
-        "expected_runs_per_pa_lift": round(win_rpp - base_rpp, 4),
-    }
+    rule = TriggerRule(
+        name=f"TTO{tto}-{'/'.join(tier_filter)}", times_through_order=tto,
+        top_of_order_slots=list(range(1, top_n + 1)), starter_tier_filter=tier_filter,
+        min_inning=int(fired["inning"].median()) if len(fired) else 5,
+        ttop_run_multiplier=round(win_ra9 / base_ra9, 3) if base_ra9 else 1.0)
+    diag = {"BF": int(len(fired)), "RA9": round(win_ra9, 2),
+            "RA9_lift": round(win_ra9 - base_ra9, 2),
+            "rpp_lift": round(float(fired["runs"].mean()) - base_rpp, 4)}
+    return rule, diag
+
+
+def choose_rules(pa: pd.DataFrame, sweep: pd.DataFrame) -> tuple[list[TriggerRule], str, dict]:
+    """Emit the top DISTINCT-TTO robust archetypes as parallel rules (Revision 3).
+
+    Captures both TTOP windows the sweep surfaces (e.g. TTO2·Back/Mid AND TTO3·Mid/Back)
+    so the engine fires on each independently. Each rule takes the best top-of-order size
+    for its TTO, a data-driven tier filter (non-ace tiers that lift), and a fitted
+    min_inning + TTOP multiplier. Falls back to the canonical 3rd turn if nothing clears
+    the gate. A disabled WATCH template is always appended.
+    """
+    base = pa[pa["inning"] <= 3]
+    base_rpp = float(base["runs"].mean())
+    base_ra9 = 9.0 * base["runs"].sum() / (base["outs"].sum() / 3.0)
+
+    cand = sweep[sweep["reliable"] & sweep["indicator"].str.contains(" all ")
+                 & ~sweep["indicator"].str.endswith(" Ace")]
+    top_indicator = cand.iloc[0]["indicator"] if len(cand) else "none"
+
+    rules: list[TriggerRule] = []
+    diagnostics: dict[str, dict] = {}
+    seen_tto: set[int] = set()
+    for _, row in cand.iterrows():
+        tto, top_n, _, _ = parse_indicator(row["indicator"])
+        if tto in seen_tto:
+            continue
+        if not (row["welch_p"] < 1e-5 and row["BF"] >= 2000):
+            continue
+        seen_tto.add(tto)
+        rule, diag = _rule_from_window(pa, tto, top_n, base_rpp, base_ra9)
+        rules.append(rule)
+        diagnostics[rule.name] = {**diag, "top_indicator": row["indicator"]}
+        if len(rules) >= 2:            # cap at two distinct-TTO archetypes
+            break
+
+    if not rules:                      # canonical fallback
+        rule, diag = _rule_from_window(pa, 3, 4, base_rpp, base_ra9)
+        rules.append(rule)
+        diagnostics[rule.name] = diag
+
+    rules.append(TriggerRule(name="WATCH-low-scoring", kind="watch", enabled=False,
+                             starter_tier_filter=["Mid", "Back"],
+                             watch_max_inning=4, watch_max_runs=2))
+    return rules, top_indicator, diagnostics
 
 
 def render_tier_lift(pa: pd.DataFrame) -> None:
@@ -506,15 +517,18 @@ def main(argv=None) -> int:
     sweep.to_csv(OUT / "indicator_sweep.csv", index=False)
     render_tier_lift(pa)
 
-    # Follow the sweep's #1 robust signal automatically (fall back to canonical).
-    trig = choose_trigger(pa, sweep)
-    if trig["pivoted"]:
-        console.print(f"\n[bold magenta]PIVOT:[/] sweep's #1 signal "
-                      f"[bold]{trig['top_indicator']}[/] beats the canonical 3rd-turn "
-                      f"thesis — adopting it as the live trigger.")
-    else:
-        console.print(f"\n[cyan]Canonical 3rd-turn top-4 remains the live trigger[/] "
-                      f"(top sweep signal: {trig['top_indicator']}).")
+    # Emit the top distinct-TTO archetypes as parallel rules (+ disabled WATCH).
+    rules, top_indicator, diagnostics = choose_rules(pa, sweep)
+    console.print("\n[bold magenta]Emitted trigger rules:[/]")
+    for r in rules:
+        if r.kind == "watch":
+            console.print(f"   • [dim]{r.name} (WATCH, disabled — console/ledger only)[/]")
+            continue
+        d = diagnostics.get(r.name, {})
+        console.print(f"   • [bold]{r.name}[/] · TTO{r.times_through_order}, "
+                      f"slots {r.top_of_order_slots[0]}-{r.top_of_order_slots[-1]}, "
+                      f"inning≥{r.min_inning}, mult {r.ttop_run_multiplier}× · "
+                      f"RA/9 lift {d.get('RA9_lift', '?')} on {d.get('BF', '?')} PAs")
 
     # Fix #2: calibrate to RUNS, not ERA.
     console.rule("[bold]Run-environment validation (RA/9 vs true runs allowed)")
@@ -527,23 +541,13 @@ def main(argv=None) -> int:
     (OUT / "run_environment_report.json").write_text(json.dumps(report, indent=2))
 
     constraints = Constraints(
-        min_inning=trig["min_inning"], top_of_order_slots=trig["top_of_order_slots"],
-        times_through_order=trig["times_through_order"],
-        ttop_run_multiplier=trig["ttop_run_multiplier"],
-        starter_tier_filter=trig["starter_tier_filter"], pitch_count_reference=None,
-        expected_ra9_lift=trig["expected_ra9_lift"],
-        expected_runs_per_pa_lift=trig["expected_runs_per_pa_lift"],
-        expected_whip_lift=round(float(mdf.loc["3rd time thru, top 4", "WHIP_lift"]), 3),
-        seasons=seasons, sample_bf=trig["sample_bf"], top_indicator=trig["top_indicator"],
+        rules=rules, seasons=seasons, top_indicator=top_indicator,
         ra9_vs_true_ra9_r=report.get("statcast_ra9_vs_true_ra9_pearson_r"),
     )
     constraints.save()
-    slots = trig["top_of_order_slots"]
-    console.print(f"\n[green]Wrote {OUT/'constraints.json'}[/] — trigger: TTO≥"
-                  f"{trig['times_through_order']}, slots {slots[0]}-{slots[-1]}, inning≥"
-                  f"{trig['min_inning']}, tiers {trig['starter_tier_filter']}; TTOP "
-                  f"multiplier {trig['ttop_run_multiplier']}× "
-                  f"(RA/9 {trig['base_ra9']}→{trig['win_ra9']}).")
+    console.print(f"\n[green]Wrote {OUT/'constraints.json'}[/] — "
+                  f"{len([r for r in rules if r.kind == 'tto'])} live rule(s) + WATCH template. "
+                  f"Top sweep signal: {top_indicator}.")
     return 0
 
 

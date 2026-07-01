@@ -3,14 +3,14 @@
   "true_source": "MLB Stats API season pitching (runs/IP)",
   "n_pitchers": 329,
   "overall_runs_per_pa": 0.1083,
-  "statcast_ra9_vs_true_ra9_pearson_r": 0.9082,
-  "statcast_ra9_vs_true_ra9_r_squared": 0.8247,
-  "p_value": 1.064e-125,
+  "statcast_ra9_vs_true_ra9_pearson_r": 0.9099,
+  "statcast_ra9_vs_true_ra9_r_squared": 0.828,
+  "p_value": 5.157e-127,
   "regression": {
-    "slope": 0.9211,
-    "intercept": 0.6467,
+    "slope": 0.9246,
+    "intercept": 0.633,
     "formula": "true_RA9 \u2248 slope * RA9_statcast + intercept"
   },
-  "statcast_whip_vs_true_whip_r": 0.9266,
+  "statcast_whip_vs_true_whip_r": 0.9276,
   "interpretation": "Statcast run-attribution is a reliable proxy for actual runs allowed"
 }

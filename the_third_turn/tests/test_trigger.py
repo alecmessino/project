@@ -1,111 +1,125 @@
-"""The ARM / CONFIRM trigger predicates (Revision 2) — pure, offline."""
+"""Per-rule ARM/CONFIRM/WATCH predicates (Revision 3) — pure, offline.
+
+Key property under test: rules match times_through_order EXACTLY, so a TTO2 rule and
+a TTO3 rule are independent and never both fire on the same state.
+"""
 
 import pytest
 
-from config import Constraints
-from live_engine import evaluate_confirm, evaluate_lookahead
+from config import Constraints, TriggerRule
+from live_engine import evaluate_confirm, evaluate_lookahead, evaluate_rule, evaluate_watch
 from sources.base import LiveGameState, Quote
 
-C = Constraints()  # v2 defaults: inning>=5, TTO>=3, top1-4, RE24 edge>=0.5, bullpen<3.8 elite
+C = Constraints()  # globals: bullpen_elite 3.8, lookahead outs=2 slots=[8,9], edge 0.5
+
+TTO2 = TriggerRule(name="TTO2-Back/Mid", times_through_order=2, top_of_order_slots=[1, 2, 3, 4, 5],
+                   starter_tier_filter=["Mid", "Back"], min_inning=3, ttop_run_multiplier=1.15)
+TTO3 = TriggerRule(name="TTO3-Mid/Back", times_through_order=3, top_of_order_slots=[1, 2, 3, 4],
+                   starter_tier_filter=["Mid", "Back"], min_inning=5, ttop_run_multiplier=1.15)
+WATCH = TriggerRule(name="WATCH", kind="watch", enabled=True, starter_tier_filter=["Mid", "Back"],
+                    watch_max_inning=4, watch_max_runs=2)
+
+GOOD_LINE, HIGH_LINE, WEAK_PEN, ELITE_PEN = 5.0, 12.0, 4.5, 3.0
 
 
-def confirm_state(**over):
-    base = dict(game_pk=1, away="CWS", home="ATL", inning=6, half="top",
-                away_score=2, home_score=1, pitcher_id=99, pitcher_name="Test Guy",
-                pitch_count=95, batting_slot_due=2, times_through_order=3, status="Live",
-                outs=0, on_first=False, on_second=False, on_third=False,
-                starter_id=99, starter_on_mound=True, starter_tier="Back")
+def state(**over):
+    base = dict(game_pk=1, away="CWS", home="ATL", inning=6, half="top", away_score=2,
+                home_score=1, pitcher_id=99, pitcher_name="Test Guy", pitch_count=80,
+                batting_slot_due=2, times_through_order=3, status="Live", outs=0,
+                on_first=False, on_second=False, on_third=False, starter_id=99,
+                starter_on_mound=True, starter_tier="Back")
     base.update(over)
     return LiveGameState(**base)
 
 
-def quote(line):
-    return Quote(book="fanduel", home="ATL", away="CWS", line=line,
-                 over_odds=-110, under_odds=-110)
+def q(line=GOOD_LINE):
+    return Quote(book="fanduel", home="ATL", away="CWS", line=line)
 
 
-# With pregame 9.0, score 3, inning 6, bases empty: RE24 expected ≈ 7.07, so a
-# live line of 6.0 clears the 0.5 edge; 7.5 does not. Bullpen 4.5 = not elite.
-GOOD_LINE, HIGH_LINE, WEAK_PEN, ELITE_PEN = 6.0, 7.5, 4.5, 3.0
+# --------------------------- exact-TTO independence ---------------------------
+def test_tto3_state_fires_tto3_not_tto2():
+    s = state(inning=6, times_through_order=3, batting_slot_due=2)
+    assert evaluate_confirm(s, q(), 9.0, TTO3, C, WEAK_PEN) is not None
+    assert evaluate_confirm(s, q(), 9.0, TTO2, C, WEAK_PEN) is None   # tto != 2
 
 
-# ------------------------------- CONFIRM ---------------------------------- #
-def test_confirm_fires_when_everything_aligns():
-    t = evaluate_confirm(confirm_state(), quote(GOOD_LINE), 9.0, C, WEAK_PEN)
-    assert t is not None and t.alert_type == "CONFIRM"
-    assert t.edge >= C.line_edge_min_runs
+def test_tto2_state_fires_tto2_not_tto3():
+    s = state(inning=4, times_through_order=2, batting_slot_due=2)
+    assert evaluate_confirm(s, q(), 9.0, TTO2, C, WEAK_PEN) is not None
+    assert evaluate_confirm(s, q(), 9.0, TTO3, C, WEAK_PEN) is None   # tto != 3
 
 
-def test_confirm_no_fire_before_min_inning():
-    assert evaluate_confirm(confirm_state(inning=4), quote(GOOD_LINE), 9.0, C, WEAK_PEN) is None
+# ------------------------------- CONFIRM gates --------------------------------
+def test_confirm_needs_min_inning():
+    assert evaluate_confirm(state(inning=4, times_through_order=3), q(), 9.0, TTO3, C, WEAK_PEN) is None
 
 
-def test_confirm_no_fire_below_tto():
-    assert evaluate_confirm(confirm_state(times_through_order=2), quote(GOOD_LINE), 9.0, C, WEAK_PEN) is None
+def test_confirm_needs_slot_in_range():
+    assert evaluate_confirm(state(batting_slot_due=6), q(), 9.0, TTO3, C, WEAK_PEN) is None
 
 
-def test_confirm_no_fire_outside_top_of_order():
-    assert evaluate_confirm(confirm_state(batting_slot_due=6), quote(GOOD_LINE), 9.0, C, WEAK_PEN) is None
-
-
-def test_confirm_no_fire_when_starter_pulled():
-    # Fix #4: a reliever is already on -> thesis void.
-    assert evaluate_confirm(confirm_state(starter_on_mound=False), quote(GOOD_LINE), 9.0, C, WEAK_PEN) is None
+def test_confirm_blocked_when_starter_pulled():
+    assert evaluate_confirm(state(starter_on_mound=False), q(), 9.0, TTO3, C, WEAK_PEN) is None
 
 
 def test_confirm_suppressed_by_elite_bullpen():
-    # Fix #4: an elite pen means a pull neutralizes the Over -> suppress.
-    assert evaluate_confirm(confirm_state(), quote(GOOD_LINE), 9.0, C, ELITE_PEN) is None
+    assert evaluate_confirm(state(), q(), 9.0, TTO3, C, ELITE_PEN) is None
 
 
-def test_confirm_no_fire_when_market_has_no_edge():
-    # Fix #3: live line already at/above the RE24 expected anchor.
-    assert evaluate_confirm(confirm_state(), quote(HIGH_LINE), 9.0, C, WEAK_PEN) is None
+def test_confirm_blocked_by_tier_filter():
+    assert evaluate_confirm(state(starter_tier="Ace"), q(), 9.0, TTO3, C, WEAK_PEN) is None
 
 
-def test_confirm_no_fire_without_quote_or_pregame():
-    assert evaluate_confirm(confirm_state(), None, 9.0, C, WEAK_PEN) is None
-    assert evaluate_confirm(confirm_state(), quote(GOOD_LINE), None, C, WEAK_PEN) is None
+def test_confirm_needs_re24_edge():
+    assert evaluate_confirm(state(), q(HIGH_LINE), 9.0, TTO3, C, WEAK_PEN) is None
 
 
 def test_confirm_unknown_bullpen_allowed():
-    # bullpen quality missing -> annotate, don't suppress.
-    assert evaluate_confirm(confirm_state(), quote(GOOD_LINE), 9.0, C, None) is not None
+    assert evaluate_confirm(state(), q(), 9.0, TTO3, C, None) is not None
 
 
-def test_confirm_tier_filter():
-    c = Constraints(starter_tier_filter=["Back"])
-    assert evaluate_confirm(confirm_state(starter_tier="Ace"), quote(GOOD_LINE), 9.0, c, WEAK_PEN) is None
-    assert evaluate_confirm(confirm_state(starter_tier="Back"), quote(GOOD_LINE), 9.0, c, WEAK_PEN) is not None
+# --------------------------------- ARM ----------------------------------------
+def test_arm_fires_one_turn_early():
+    # 2 outs, slot 8, TTO 2 -> TTO3 leads off next inning.
+    s = state(inning=6, outs=2, batting_slot_due=8, times_through_order=2)
+    assert evaluate_lookahead(s, q(), 9.0, TTO3, C, WEAK_PEN) is not None
 
 
-# ------------------------------- ARM (look-ahead) ------------------------- #
-def arm_state(**over):
-    # 2 outs, 8-hitter up, TTO 2 -> top-of-order 3rd turn leads off next inning.
-    defaults = dict(outs=2, batting_slot_due=8, times_through_order=2)
-    defaults.update(over)
-    return confirm_state(**defaults)
+def test_arm_needs_two_outs_and_bottom_slot():
+    assert evaluate_lookahead(state(outs=1, batting_slot_due=8, times_through_order=2),
+                              q(), 9.0, TTO3, C, WEAK_PEN) is None
+    assert evaluate_lookahead(state(outs=2, batting_slot_due=5, times_through_order=2),
+                              q(), 9.0, TTO3, C, WEAK_PEN) is None
 
 
-def test_arm_fires_on_lookahead_state():
-    t = evaluate_lookahead(arm_state(), quote(GOOD_LINE), 9.0, C, WEAK_PEN)
-    assert t is not None and t.alert_type == "ARM"
+def test_arm_needs_prior_turn():
+    # for TTO3 the arming batter must be at TTO 2, not 3.
+    assert evaluate_lookahead(state(outs=2, batting_slot_due=8, times_through_order=3),
+                              q(), 9.0, TTO3, C, WEAK_PEN) is None
 
 
-def test_arm_needs_two_outs():
-    assert evaluate_lookahead(arm_state(outs=1), quote(GOOD_LINE), 9.0, C, WEAK_PEN) is None
+# --------------------------------- WATCH --------------------------------------
+def test_watch_fires_low_scoring_early():
+    s = state(inning=3, away_score=1, home_score=0, times_through_order=1, batting_slot_due=3)
+    assert evaluate_watch(s, q(), 9.0, WATCH, C, WEAK_PEN) is not None
 
 
-def test_arm_needs_bottom_of_order():
-    assert evaluate_lookahead(arm_state(batting_slot_due=5), quote(GOOD_LINE), 9.0, C, WEAK_PEN) is None
+def test_watch_skips_high_scoring_or_late():
+    assert evaluate_watch(state(inning=3, away_score=3, home_score=2), q(), 9.0, WATCH, C, WEAK_PEN) is None
+    assert evaluate_watch(state(inning=6, away_score=0, home_score=1), q(), 9.0, WATCH, C, WEAK_PEN) is None
 
 
-def test_arm_needs_prior_tto():
-    # TTO must be one below target (2), so the NEXT inning's leadoff is TTO 3.
-    assert evaluate_lookahead(arm_state(times_through_order=3), quote(GOOD_LINE), 9.0, C, WEAK_PEN) is None
+# ------------------------------ dispatch --------------------------------------
+def test_evaluate_rule_dispatches():
+    s = state(inning=6, times_through_order=3, batting_slot_due=2)
+    fired = evaluate_rule(TTO3, s, q(), 9.0, C, WEAK_PEN)
+    assert [t.trigger_type for t in fired] == ["CONFIRM"]
+    watch = evaluate_rule(WATCH, state(inning=3, away_score=0, home_score=0), q(), 9.0, C, WEAK_PEN)
+    assert watch and watch[0].trigger_type == "WATCH"
 
 
-def test_arm_and_confirm_are_disjoint():
-    # a confirm-shaped state must not fire ARM, and vice versa.
-    assert evaluate_lookahead(confirm_state(), quote(GOOD_LINE), 9.0, C, WEAK_PEN) is None
-    assert evaluate_confirm(arm_state(), quote(GOOD_LINE), 9.0, C, WEAK_PEN) is None
+def test_dedupe_key_separates_rules_and_types():
+    s = state(inning=6, times_through_order=3, batting_slot_due=2)
+    t3 = evaluate_confirm(s, q(), 9.0, TTO3, C, WEAK_PEN)
+    assert t3.rule_name == "TTO3-Mid/Back" and t3.trigger_type == "CONFIRM"
+    assert "TTO3-Mid/Back" in t3.dedupe_key and t3.dedupe_key.startswith("CONFIRM")

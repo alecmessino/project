@@ -74,28 +74,58 @@ An `asyncio`/`aiohttp` daemon polling three sources concurrently every 30s:
 * **Source C — Bovada:** live game totals.
 * **Fallback — Pinnacle:** used only if FanDuel returns nothing.
 
-It fires **two** alert types (both keyed to the fitted `times_through_order`, currently 2):
+It evaluates a **list of independent `TriggerRule`s** (from `constraints.rules`) against
+every game. The backtest emits both TTOP archetypes — **`TTO2·Mid/Back`** (weaker arms
+cliff at the 2nd turn) and **`TTO3·Mid/Back`** (mid-rotation an inning later). Rules match
+`times_through_order` **exactly**, so they never overlap: a Mid starter can fire the TTO2
+rule at his 2nd turn *and* the TTO3 rule at his 3rd — two distinct bets. Each rule fires:
 
-* **🟡 ARM (look-ahead)** — `2 outs` + an `8/9` hitter up + that batter one turn short of
-  the target, so the top-of-order target turn **leads off next inning**. This beats the
-  ~10–20s MLB-API latency, giving a buffer to read the odds *before* books move at the break.
-* **🔴 CONFIRM** — the top-of-order target turn is actually at bat.
+* **🟡 ARM (look-ahead)** — `2 outs` + an `8/9` hitter up + one turn short of the target, so
+  the target turn **leads off next inning**. Beats the ~10–20s MLB-API latency, giving a
+  buffer to read the odds *before* books move at the break.
+* **🔴 CONFIRM** — the target turn is actually at bat.
 
-Both require, beyond the state match:
+Both require: the **starter still on the mound**, the **fielding bullpen not elite**
+(a pull would neutralize the Over), an **RE24 run-environment edge** (live total below the
+expected-final anchor by `line_edge_min_runs`), and the starter's tier passing the rule's
+`starter_tier_filter` (aces excluded).
 
-1. **the starter is still on the mound** (thesis void if a reliever is already in),
-2. **the fielding bullpen is not elite** (`RA/9 ≥ bullpen_elite_ra9`) — an elite pen means
-   a pull would neutralize the Over,
-3. **an RE24 run-environment edge**: the live total sits below the expected-final anchor
-   (base level from the pregame total × innings-remaining, plus a park-scaled situational
-   premium from the **RE24 base/out matrix** and the backtested **TTOP multiplier**) by at
-   least `line_edge_min_runs`,
-4. (optional) the starter's tier passes `starter_tier_filter`.
+A third **`WATCH` rule** (the low-scoring game-script heuristic) is **disabled by default**;
+enabled, it logs to console with a `[WATCH_RULE]` prefix and **never** posts to Discord.
+
+**Alerting & ledger:** validated CONFIRM/ARM signals post a formatted **Discord embed**
+(**Why** / **Gap** vs RE24 fair / **Pull Risk** / **Score** + game-script / **Latency**).
+**Every** fired signal — CONFIRM, ARM, *and* WATCH — is appended to `output/ledger.jsonl`
+with a `trigger_type` tag for post-season hit-rate analysis. Each alert carries the MLB
+feed's **data age**; a ⚠ warns when it exceeds `max_data_age_seconds` (the feed runs ~20s
+behind, which is why the ARM look-ahead exists).
 
 ```bash
-python the_third_turn/live_engine.py          # headless daemon (SIGINT/SIGTERM clean)
-python the_third_turn/live_engine.py --once    # one poll, then exit (dry run)
+export DISCORD_WEBHOOK_URL=...                 # optional; without it, console + ledger only
+python the_third_turn/live_engine.py           # headless daemon (SIGINT/SIGTERM clean)
+python the_third_turn/live_engine.py --once     # one poll, then exit (dry run)
 ```
+
+## 3. Execution simulation — `simulate_execution.py`
+
+Replays the **exact live predicates** over historical play-by-play (reconstructing per-PA
+base/out/score state into a `LiveGameState` and calling the same `evaluate_rule` + RE24 +
+rules the engine uses) to report how often the bot fires and how reliable it is.
+
+```bash
+python the_third_turn/simulate_execution.py --seasons 2024 2025 2026
+python the_third_turn/simulate_execution.py --seasons 2025 --totals-csv closing_lines.csv
+```
+
+Outputs `output/report.csv` (**trigger density**, **hit rate**, **conditional hit rate by
+rule**) + `output/simulation_ledger.jsonl`. 3-season result (6,666 games): ~28 fires/game-day;
+TTO3·CONFIRM 74%, TTO2·CONFIRM 68%, WATCH 56% Over — **vs a park-adjusted PROXY line**.
+
+> ⚠ **Proxy caveat:** no historical live-odds feed is reachable, so the default pregame total
+> is a park-adjusted league average. Hit rates measure "does firing predict above-average
+> scoring," **not** edge against a sharp closing line — supply `--totals-csv` real lines (or an
+> Odds API key) for true EV. The WATCH rows are included so its hit rate is measurable before
+> it's ever enabled live.
 
 ## Reference tables — `build_reference.py`
 

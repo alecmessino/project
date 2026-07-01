@@ -57,6 +57,7 @@ class LiveGameState:
     starter_id: Optional[int] = None          # the game's starting pitcher (this side)
     starter_on_mound: bool = True             # is the current pitcher still the starter?
     starter_tier: str = "Unknown"             # Ace / Mid / Back (season baseline WHIP)
+    data_age_seconds: Optional[float] = None  # age of the MLB feed snapshot (latency)
 
     @property
     def game_key(self) -> str:

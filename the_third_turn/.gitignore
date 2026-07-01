@@ -2,5 +2,8 @@
 data/cache/*
 !data/cache/.gitkeep
 *.log
+# Runtime signal ledger (live daemon output) + large sim ledger (report.csv is kept).
+output/ledger.jsonl
+output/simulation_ledger.jsonl
 __pycache__/
 *.pyc

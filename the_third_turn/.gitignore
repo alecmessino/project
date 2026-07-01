@@ -5,5 +5,8 @@ data/cache/*
 # Runtime signal ledger (live daemon output) + large sim ledger (report.csv is kept).
 output/ledger.jsonl
 output/simulation_ledger.jsonl
+# Odds Papi reference caches (regenerable, opapi_fixtures.json is multi-MB).
+data/opapi_fixtures.json
+data/opapi_markets.json
 __pycache__/
 *.pyc

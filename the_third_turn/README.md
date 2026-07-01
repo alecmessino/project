@@ -141,20 +141,47 @@ next day.)
 > Odds API key) for true EV. The WATCH rows are included so its hit rate is measurable before
 > it's ever enabled live.
 
-## Real lines & Discord alerts — `odds_collector.py`, `.env`
+## Run live (daemon + dashboard) — full launch sequence
 
-Copy `.env.example` → `.env` (git-ignored) and set `DISCORD_WEBHOOK_URL` and `ODDS_API_KEY`
-(scripts load `.env` automatically via `shared_piping/envload.py`). Secrets stay in the
-environment — never committed.
+Copy `.env.example` → `.env` (git-ignored) and set your keys (all scripts auto-load `.env` via
+`shared_piping/envload.py`; secrets never touch the repo):
 
 ```bash
-python the_third_turn/send_test_alert.py     # post one embed to confirm the webhook
-python the_third_turn/odds_collector.py       # snapshot real pregame totals (1 credit)
+# 1) code + deps
+git clone https://github.com/alecmessino/project.git && cd project
+git checkout claude/third-turn-service-x7m4vr && git pull origin claude/third-turn-service-x7m4vr
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r the_third_turn/requirements.txt
+
+# 2) secrets (the_third_turn/.env)
+cp the_third_turn/.env.example the_third_turn/.env      # then edit in your keys:
+#   DISCORD_WEBHOOK_URL=...   ODDS_API_KEY=...   ODDS_PAPI_KEY=...
+
+python the_third_turn/send_test_alert.py                # confirm the webhook (one embed)
+
+# 3) live daemon (Terminal A) — polls games, posts CONFIRM/ARM to Discord, logs to ledger.jsonl
+python the_third_turn/live_engine.py
+
+# 4) dashboard (Terminal B) — interactive control center at http://localhost:8501
+streamlit run the_third_turn/dashboard.py
+
+# 5) (daily, pregame) real lines going forward + historical backfill
+python the_third_turn/odds_collector.py                 # upcoming lines, 1 credit
+python the_third_turn/odds_papi_history.py --start 2026-06-01 --end 2026-06-30 --max-requests 60
 ```
 
-`odds_collector.py` pulls **real** pregame game totals from The Odds API current-odds endpoint
-(median Over across US books, sanity-filtered), matches each to its `game_pk`, and appends to
-`data/closing_lines.csv` (resumable). Feed that to the simulation for **true** hit rates:
+Keep the daemon alive with `screen`/`nohup` (it only alerts while running).
+
+## Historical & forward real lines — `odds_papi_history.py`, `odds_collector.py`
+
+* **`odds_papi_history.py`** backfills **real historical closing totals** from Odds Papi
+  (free tier *has* history since Jan 2026; 250-request cap, 5s cooldown). Closing total = the
+  balanced main line at the last snapshot before first pitch (Pinnacle by default), matched to
+  `game_pk`, appended to `data/closing_lines.csv` (`source=oddspapi`), resumable + budget-capped.
+* **`odds_collector.py`** snapshots **upcoming** real totals from The Odds API current-odds
+  endpoint (1 credit) for forward collection (`source=theoddsapi`).
+
+Feed either to the simulation for **true** hit rates:
 
 ```bash
 python the_third_turn/simulate_execution.py --seasons 2025 --totals-csv data/closing_lines.csv --real-only

@@ -312,6 +312,8 @@ class LiveEngine:
 
 async def _amain(once: bool) -> int:
     from datetime import date
+    from shared_piping.envload import load_env
+    load_env()   # pick up DISCORD_WEBHOOK_URL / DISCORD_PING from the_third_turn/.env
     constraints, from_file = Constraints.load()
     if not from_file:
         console.print("[yellow]⚠ constraints.json not found — using default rules. "

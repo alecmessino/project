@@ -25,7 +25,7 @@ import os
 import statistics
 import sys
 import urllib.request
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -128,19 +128,18 @@ def main(argv=None) -> int:
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     existing = load_existing(out_path)
-    now = datetime.now(timezone.utc).isoformat()
 
     written = 0
     new_file = not out_path.exists()
     with out_path.open("a", newline="") as fh:
         w = csv.writer(fh)
         if new_file:
-            w.writerow(["game_pk", "pregame_total", "n_books", "commence_time", "captured_at"])
+            w.writerow(["game_pk", "pregame_total", "n_books", "commence_time", "source"])
         for away, home, total, n, ct in parsed:
             gp = sched.get((resolve(away or ""), resolve(home or "")))
             if gp is None or gp in existing:
                 continue
-            w.writerow([gp, total, n, ct, now])
+            w.writerow([gp, total, n, ct, "theoddsapi"])
             existing.add(gp)
             written += 1
 

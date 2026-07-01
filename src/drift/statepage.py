@@ -185,8 +185,8 @@ def _alpha_hero(name: str, a: dict | None) -> str:
         f'<div class="hero">'
         f'<div class="big">+{alpha:.1f}<span class="u">%/yr</span></div>'
         f'<div class="hlab">Illustrative Structural&nbsp;Alpha (tax) recovered in {_esc(name)}<br>'
-        f'<span class="hsub">a concentrated, naive book keeps ~{before:.1f}%/yr after tax vs '
-        f'~{after:.1f}%/yr tax-managed — over ~30 years, our modeling</span></div>'
+        f'<span class="hsub">the tax-managed book keeps ~{after:.1f}%/yr after tax vs ~{before:.1f}%/yr '
+        f'for a concentrated, naive one — illustrative, over ~30 years, figures rounded to 0.1%/yr</span></div>'
         f'<div class="hbar" aria-hidden="true">'
         f'<span class="kept" style="width:{kept_before}%"></span></div>'
         f'</div>'
@@ -332,6 +332,30 @@ def _capture(code: str, name: str, alpha, rate: str) -> str:
     </script>"""
 
 
+def _summary(name: str, rec: dict) -> str:
+    """A one-sentence synthesis of the state's tax profile across the dimensions — gives each page a
+    distinct body paragraph (not just a swapped name) and explains unusual regimes (e.g. WA's excise)."""
+    cg, est, su = rec.get("cg"), rec.get("estate"), rec.get("stepup")
+    income = ""
+    if cg:
+        if cg["regime"] == "notax":
+            income = f"{name} levies no state income tax on capital gains"
+        elif cg["regime"] == "lt_only":
+            income = f"{name} taxes only long-term gains, via a {cg['tag']} excise gross of short-term losses"
+        else:
+            income = f"{name} taxes long-term gains at a top effective {cg['tag']}"
+    death = {"none": "no state death tax", "estate": "a state estate tax",
+             "inheritance": "a state inheritance tax", "both": "both an estate and an inheritance tax"
+             }.get((est or {}).get("regime"), "")
+    step = {"community": "community-property step-up (a full basis step-up at the first death)",
+            "optin": "an elective community-property trust for a full step-up",
+            "udcprda": "UDCPRDA treatment of imported community property",
+            "common": "common-law step-up (only half of jointly-held property)"
+            }.get((su or {}).get("regime"), "")
+    bits = [b for b in (income, death, step) if b]
+    return ("; ".join(bits) + ".") if bits else ""
+
+
 def render_state_html(data: dict) -> str:
     code, name, slug = data["code"], data["name"], data["slug"]
     rec, a, faq = data["rec"], data["alpha"], data["faq"]
@@ -351,6 +375,8 @@ def render_state_html(data: dict) -> str:
             f"harvested loss, capital gains at the top rate, estate and inheritance tax, and the basis "
             f"step-up your heirs inherit — and the after-tax Structural Alpha our engine is built to "
             f"recover from all of it.")
+    summary = _summary(name, rec)
+    summary_p = f'<p class="lede" style="margin-top:10px">{_esc(summary)}</p>' if summary else ""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -384,6 +410,7 @@ def render_state_html(data: dict) -> str:
       <div class="eyebrow">Driftwood · {_esc(name)} tax profile</div>
       <h1>{_esc(name)}: where your portfolio leaks to tax</h1>
       <p class="lede">{_esc(lede)}</p>
+      {summary_p}
     </div>
     {_alpha_hero(name, a)}
     <div class="grid">

@@ -85,6 +85,27 @@ def test_states_index_links_every_page_and_discloses():
         assert s in idx
 
 
+def test_no_tax_state_with_a_loss_quirk_is_not_misstated():
+    # MO exempts capital gains but still deducts losses (up to 4.7%). The generic "notax" note claims a
+    # harvested loss is "worth only the federal rate", which is FALSE for MO — this guards the fix.
+    h = SP.render_state_html(PAGES["MO"])
+    assert "losses still deduct" in h, "MO's real loss-deduction quirk was dropped"
+    assert "only the federal rate" not in h, "MO page states a false state-tax fact"
+
+
+def test_pages_carry_a_distinct_profile_summary():
+    # Differentiation guard (duplicate-content): the per-state synthesis renders and distinct-profile
+    # states do not share it.
+    ca = SP._summary("California", PAGES["CA"]["rec"])
+    tx = SP._summary("Texas", PAGES["TX"]["rec"])
+    ny = SP._summary("New York", PAGES["NY"]["rec"])
+    wa = SP._summary("Washington", PAGES["WA"]["rec"])
+    assert ca and tx and ny and wa
+    assert len({ca, tx, ny, wa}) == 4                       # four distinct profiles -> four distinct summaries
+    assert "13.3%" in ca                                    # weaves in the real top rate
+    assert "excise" in wa                                   # explains WA's unusual long-term-only excise
+
+
 def test_export_writes_all_files(tmp_path):
     written = SP.export_state_pages(tmp_path)
     assert len(written) == 52                              # 51 states + states.html

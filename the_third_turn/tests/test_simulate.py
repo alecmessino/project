@@ -3,7 +3,38 @@
 import pandas as pd
 import pytest
 
-from simulate_execution import _final_totals, _pregame_totals, report
+from simulate_execution import (_final_totals, _matchup_pregame_totals, _pregame_totals,
+                                report)
+
+
+def _pa_frame(away_sp_ra9, home_sp_ra9, home_team="ATL", away_team="CWS"):
+    """Tiny 2-starter PA frame: away SP pitches the bottom, home SP the top.
+    runs/outs are set so each starter's season RA/9 = the requested value over 30 IP (90 outs)."""
+    rows = []
+    for topbot, ra9, pid in [("Bot", away_sp_ra9, 100), ("Top", home_sp_ra9, 200)]:
+        runs = round(ra9 * 90 / 3 / 9)   # ra9 = 9*runs/(outs/3), outs=90 -> runs = ra9*30/9
+        rows.append({"game_pk": 1, "inning_topbot": topbot, "pitcher": pid,
+                     "runs": runs, "outs": 90, "home_team": home_team, "away_team": away_team})
+    return pd.DataFrame(rows)
+
+
+def test_matchup_line_lower_for_strong_pitching():
+    strong = _matchup_pregame_totals(_pa_frame(2.5, 2.5), {}, bullpen={"ATL": 3.0, "CWS": 3.0})
+    weak = _matchup_pregame_totals(_pa_frame(6.0, 6.0), {}, bullpen={"ATL": 5.5, "CWS": 5.5})
+    assert strong[1] < weak[1]           # aces ⇒ lower total than batting-practice arms
+
+
+def test_matchup_park_scales_line():
+    coors = _matchup_pregame_totals(_pa_frame(4.3, 4.3, home_team="COL"), {},
+                                    bullpen={"COL": 4.3, "CWS": 4.3})
+    tmobile = _matchup_pregame_totals(_pa_frame(4.3, 4.3, home_team="SEA"), {},
+                                      bullpen={"SEA": 4.3, "CWS": 4.3})
+    assert coors[1] > tmobile[1]
+
+
+def test_matchup_override_wins():
+    out = _matchup_pregame_totals(_pa_frame(6.0, 6.0), {1: 6.5}, bullpen={"ATL": 5.5, "CWS": 5.5})
+    assert out[1] == 6.5
 
 
 def test_final_total_is_max_running_sum():
@@ -55,7 +86,7 @@ def test_report_splits_real_vs_proxy():
         {"rule_name": "TTO3", "trigger_type": "CONFIRM", "outcome": "Over", "line_source": "proxy"},
     ]
     rep = report(rows, n_game_days=1, n_games=3)
-    real = rep[rep["rule_name"] == "ALL [real]"].iloc[0]
-    proxy = rep[rep["rule_name"] == "ALL [proxy]"].iloc[0]
+    real = rep[rep["rule_name"] == "ALL (real)"].iloc[0]
+    proxy = rep[rep["rule_name"] == "ALL (proxy)"].iloc[0]
     assert real["fires"] == 2 and real["hit_rate_over_%"] == 50.0
     assert proxy["fires"] == 1 and proxy["hit_rate_over_%"] == 100.0

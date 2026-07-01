@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import statistics
 import sys
 from pathlib import Path
 
@@ -60,6 +61,54 @@ def _pregame_totals(pa: pd.DataFrame, override: dict[int, float]) -> dict[int, f
         else:
             pk = park_factor(resolve(str(home)))
             out[int(gp)] = round(pk * LEAGUE_AVG_TOTAL * 2) / 2.0
+    return out
+
+
+# --- Option C: matchup-based proxy line (starter RA/9 + bullpen RA/9 × park) ---
+SP_IP, RP_IP = 5.3, 3.7   # avg starter / bullpen innings split over a 9-inning game
+
+
+def _starter_ra9(pa: pd.DataFrame) -> dict[int, float]:
+    """Pitcher id -> season RA/9 as a starter, from the cached PA frame."""
+    g = pa.groupby("pitcher").agg(runs=("runs", "sum"), outs=("outs", "sum"))
+    g = g[g["outs"] >= 90]                     # >= 30 IP; thinner samples fall back to league
+    return (9.0 * g["runs"] / (g["outs"] / 3.0)).to_dict()
+
+
+def _game_starters(pa: pd.DataFrame) -> dict[int, tuple]:
+    """game_pk -> (away_sp_id, home_sp_id, away_key, home_key). Home pitches the top half."""
+    out = {}
+    for gp, sub in pa.groupby("game_pk"):
+        top = sub[sub["inning_topbot"].astype(str).str.lower().str.startswith("top")]
+        bot = sub[sub["inning_topbot"].astype(str).str.lower().str.startswith("bot")]
+        home_sp = int(top["pitcher"].iloc[0]) if len(top) else None
+        away_sp = int(bot["pitcher"].iloc[0]) if len(bot) else None
+        out[int(gp)] = (away_sp, home_sp, resolve(str(sub["away_team"].iloc[0])),
+                        resolve(str(sub["home_team"].iloc[0])))
+    return out
+
+
+def _matchup_pregame_totals(pa: pd.DataFrame, override: dict[int, float],
+                            bullpen: dict) -> dict[int, float]:
+    """Game-specific line: each side's runs-allowed (starter+bullpen blend), park-scaled.
+
+    total = park · (away_side_RA + home_side_RA), where a side's RA/game is
+    (SP_RA9·SP_IP + PEN_RA9·RP_IP)/9. Good-pitching matchups get lower lines, so the
+    RE24 gate clears less often — deflating the phantom edge. Real lines still win.
+    """
+    sra = _starter_ra9(pa)
+    starters = _game_starters(pa)
+    lg_sp = statistics.median(sra.values()) if sra else 4.4
+    lg_pen = statistics.median(bullpen.values()) if bullpen else 4.3
+    out = {}
+    for gp, (asp, hsp, away, home) in starters.items():
+        if gp in override:
+            out[gp] = override[gp]
+            continue
+        away_side = (sra.get(asp, lg_sp) * SP_IP + bullpen.get(away, lg_pen) * RP_IP) / 9.0
+        home_side = (sra.get(hsp, lg_sp) * SP_IP + bullpen.get(home, lg_pen) * RP_IP) / 9.0
+        total = park_factor(home) * (away_side + home_side)
+        out[gp] = round(total * 2) / 2.0
     return out
 
 
@@ -146,9 +195,9 @@ def report(rows: list[dict], n_game_days: int, n_games: int) -> pd.DataFrame:
 
     lines.append(summary("ALL", "*", df))
     # honest split: true (real closing line) vs proxy (park-average).
-    if "line_source" in df.columns:
+    if "line_source" in df.columns and df["line_source"].nunique() > 1:
         for src, sub in df.groupby("line_source"):
-            lines.append(summary(f"ALL [{src}]", "*", sub))
+            lines.append(summary(f"ALL ({src})", "*", sub))
     for (rule, ttype), sub in df.groupby(["rule_name", "trigger_type"]):
         lines.append(summary(rule, ttype, sub))
     return pd.DataFrame(lines)
@@ -174,6 +223,9 @@ def main(argv=None) -> int:
     ap.add_argument("--totals-csv", help="game_pk,pregame_total closing lines (optional)")
     ap.add_argument("--real-only", action="store_true",
                     help="restrict to games with a real closing line (true hit rate)")
+    ap.add_argument("--proxy", choices=["matchup", "park"], default="matchup",
+                    help="pregame line model when no real line: matchup (starter+bullpen×park) "
+                         "or park (flat league-avg×park)")
     args = ap.parse_args(argv)
 
     ranges = ([(args.start, args.end)] if args.start and args.end
@@ -193,7 +245,8 @@ def main(argv=None) -> int:
     settings = EngineSettings()
     bullpen = settings.load_bullpen_quality()
     override = _load_override(args.totals_csv)
-    pregame = _pregame_totals(pa, override)
+    pregame = (_matchup_pregame_totals(pa, override, bullpen) if args.proxy == "matchup"
+               else _pregame_totals(pa, override))
     real_keys = set(override)
     proxy = not override
 
@@ -210,18 +263,21 @@ def main(argv=None) -> int:
     rep = report(rows, n_game_days, n_games)
     rep.to_csv(OUT / "report.csv", index=False)
 
-    tag = "[PROXY LINE]" if proxy else (f"[REAL-ONLY: {len(real_keys)} games]" if args.real_only
-                                        else f"[MIXED: {len(real_keys)} real lines]")
-    table = Table(title=f"Execution simulation — {n_games} games, {n_game_days} game-days  {tag}")
+    base_tag = ("[PROXY]" if proxy else (f"[REAL-ONLY: {len(real_keys)}]" if args.real_only
+                                         else f"[MIXED: {len(real_keys)} real]"))
+    table = Table(title=f"Execution simulation — {n_games} games, {n_game_days} game-days  "
+                        f"{base_tag} · {args.proxy} proxy")
     for col in rep.columns:
         table.add_column(col, justify="left" if col == "rule_name" else "right")
     for _, r in rep.iterrows():
         table.add_row(*[str(r[c]) for c in rep.columns])
     console.print(table)
     if proxy:
-        console.print("[yellow]NOTE:[/] pregame totals are a park-adjusted league-average "
-                      "PROXY — hit rates measure 'fires → above-average scoring', not true "
-                      "closing-line edge. Supply --totals-csv real lines for EV.")
+        model = ("matchup model (starter+bullpen RA/9 × park)" if args.proxy == "matchup"
+                 else "flat park-average")
+        console.print(f"[yellow]NOTE:[/] pregame totals are a {model} PROXY, not a market "
+                      "line — hit rates are directional, not true closing-line EV. Supply "
+                      "--totals-csv real lines (collected forward by odds_collector.py) for EV.")
     console.print(f"[green]Wrote {OUT/'report.csv'} and {OUT/'simulation_ledger.jsonl'}[/]")
     return 0
 

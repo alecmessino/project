@@ -118,8 +118,22 @@ python the_third_turn/simulate_execution.py --seasons 2025 --totals-csv closing_
 ```
 
 Outputs `output/report.csv` (**trigger density**, **hit rate**, **conditional hit rate by
-rule**) + `output/simulation_ledger.jsonl`. 3-season result (6,666 games): ~28 fires/game-day;
-TTO3·CONFIRM 74%, TTO2·CONFIRM 68%, WATCH 56% Over — **vs a park-adjusted PROXY line**.
+rule**) + `output/simulation_ledger.jsonl`. The pregame line (when no real line is supplied) is a
+**matchup model** by default — `total = park · Σ_side (SP_RA9·5.3 + PEN_RA9·3.7)/9` from cached
+starter/bullpen RA/9 — which deflates the phantom edge of a flat average (`--proxy park` for the
+old flat line, `--totals-csv` for real lines, `--real-only` to score only real-line games).
+
+### Same-day check — `replay_today.py`
+
+Baseball Savant publishes a day late, so to check *today's* completed games run:
+
+```bash
+python the_third_turn/replay_today.py            # reconstructs state from the MLB Stats API
+```
+
+It walks `feed/live` play-by-play, runs the exact rules, and prints which games fired + whether
+they went Over. (Base/out RE24 premium is approximated bases-empty; the full Statcast replay runs
+next day.)
 
 > ⚠ **Proxy caveat:** no historical live-odds feed is reachable, so the default pregame total
 > is a park-adjusted league average. Hit rates measure "does firing predict above-average
@@ -185,5 +199,9 @@ pytest the_third_turn -q     # pure/offline: team_map, headers, RE24 model, ARM/
   runs-not-ERA framing anyway. **Reliever rest/usage fatigue is a phase-2 enhancement.**
 * **`constraints.json` is only as good as the sample** — committed values are 2025-only;
   re-run with `--seasons 2024 2025 2026` before trusting live triggers.
+* **Live alerts require a running daemon on a persistent host.** `live_engine.py` only pushes
+  Discord alerts *while it is running* with `DISCORD_WEBHOOK_URL` set — run it (and a daily
+  `odds_collector.py` cron) on an always-on machine during the games. `output/ledger.jsonl` is
+  created on the first fire and appends every signal (CONFIRM/ARM/WATCH) for later retraining.
 * This tool **only signals**. It never places a wager, and it respects each site's terms via
   personal, low-rate polling.

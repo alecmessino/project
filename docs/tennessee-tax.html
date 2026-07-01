@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Privacy-first analytics (Plausible) -->
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<title>Tennessee Capital Gains &amp; Estate Tax — Tax-Leakage Diagnostic | Driftwood</title>
+<meta name="description" content="Tennessee capital-gains, estate, marriage, and basis-step-up taxes — and where a concentrated portfolio leaks return to tax. No state tax on capital gains. A tax-managed book of the same exposure recovers up to ~+3.7%/yr after tax in our illustrative modeling. Illustrative, not advice." />
+<link rel="canonical" href="https://alecmessino.github.io/project/tennessee-tax.html" />
+<link rel="icon" href="favicon.svg" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="Tennessee Capital Gains &amp; Estate Tax — Tax-Leakage Diagnostic | Driftwood" />
+<meta property="og:description" content="Tennessee capital-gains, estate, marriage, and basis-step-up taxes — and where a concentrated portfolio leaks return to tax. No state tax on capital gains. A tax-managed book of the same exposure recovers up to ~+3.7%/yr after tax in our illustrative modeling. Illustrative, not advice." />
+<meta property="og:url" content="https://alecmessino.github.io/project/tennessee-tax.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/states/tn.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Tennessee Capital Gains &amp; Estate Tax — Tax-Leakage Diagnostic | Driftwood" />
+<meta name="twitter:description" content="Tennessee capital-gains, estate, marriage, and basis-step-up taxes — and where a concentrated portfolio leaks return to tax. No state tax on capital gains. A tax-managed book of the same exposure recovers up to ~+3.7%/yr after tax in our illustrative modeling. Illustrative, not advice." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/states/tn.png" />
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FinancialService", "name": "Driftwood \u2014 Tennessee tax-aware investing", "legalName": "CWS Planning", "url": "https://alecmessino.github.io/project/tennessee-tax.html", "areaServed": {"@type": "State", "name": "Tennessee"}, "feeBasis": "Fee-only", "description": "Tax-aware investment management for Tennessee investors \u2014 asset location, tax-loss harvesting, and lot protection. Illustrative modeling, not advice."}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Driftwood", "item": "https://alecmessino.github.io/project/index.html"}, {"@type": "ListItem", "position": 2, "name": "State Tax Map", "item": "https://alecmessino.github.io/project/statemap.html"}, {"@type": "ListItem", "position": 3, "name": "Tennessee", "item": "https://alecmessino.github.io/project/tennessee-tax.html"}]}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How are capital gains taxed in Tennessee?", "acceptedAnswer": {"@type": "Answer", "text": "No state tax on capital gains \u2014 and a harvested loss is worth only the federal rate here."}}, {"@type": "Question", "name": "Does Tennessee have a state estate or inheritance tax?", "acceptedAnswer": {"@type": "Answer", "text": "No state estate or inheritance tax \u2014 only the federal estate tax applies."}}, {"@type": "Question", "name": "Is there a marriage penalty in Tennessee?", "acceptedAnswer": {"@type": "Answer", "text": "No state income tax \u2014 no marriage penalty on the state return."}}, {"@type": "Question", "name": "How much investment tax can tax-managed investing recover in Tennessee?", "acceptedAnswer": {"@type": "Answer", "text": "Illustrative recoverable tax leakage for a portfolio in Tennessee: up to ~+3.7%/yr after tax in our modeling (a concentrated, naive book keeps ~2.7%/yr vs ~6.3%/yr tax-managed). Your actual figure depends on your holdings \u2014 the diagnostic computes it."}}]}
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<style>
+  :root{--bg:#f6f3ec;--soft:#fbf9f4;--line:#e3dccd;--line2:#f0ece2;--chrome:#ece6da;
+    --ink:#1d242d;--body:#3a414b;--dim:#5f5d68;--muted:#6f675b;
+    --brass:#a9853f;--gold:#c9b896;--teal:#15463a;--teal2:#15806a;--neg:#9b4439;--navy:#1a2330;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:14.5px/1.6 var(--sans);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .sheet{max-width:1040px;margin:30px auto;padding:0 20px 50px}
+  .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
+  .bcrumb{padding:12px 40px 0;font-size:11.5px;color:var(--muted)}
+  .bcrumb a{color:var(--brass);text-decoration:none} .bcrumb a:hover{text-decoration:underline}
+  .hd{padding:22px 40px 6px}
+  .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
+  h1{font-family:var(--serif);font-weight:700;font-size:36px;line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin:0 0 10px}
+  .lede{font-size:15px;color:#54545c;margin:0;max-width:76ch}
+  .hero{margin:18px 40px 4px;padding:18px 24px;background:var(--navy);border-radius:12px;display:flex;
+    align-items:center;gap:20px;flex-wrap:wrap}
+  .hero .big{font-variant-numeric:tabular-nums;font-size:44px;font-weight:700;color:#f1ede3;letter-spacing:-.02em;line-height:1}
+  .hero .big .u{font-size:18px;color:var(--gold);margin-left:2px}
+  .hero .hlab{font-size:13px;color:#dfe4ea;font-weight:600;flex:1;min-width:220px}
+  .hero .hsub{font-weight:400;color:#9aa3ae;font-size:12px}
+  .hero .hbar{width:100%;height:8px;border-radius:5px;background:var(--neg);overflow:hidden}
+  .hero .hbar .kept{display:block;height:100%;background:var(--teal2)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px 40px 6px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+  .dcard{border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:8px;padding:14px 16px;background:#fff}
+  .dcard .dh{font-family:var(--sans);font-weight:600;font-size:14.5px;color:var(--ink);margin-bottom:5px;display:flex;align-items:center;gap:8px}
+  .dcard .dtag{font-size:10.5px;font-weight:700;color:var(--brass);border:1px solid var(--gold);border-radius:999px;padding:1px 8px}
+  .dcard p{margin:0;font-size:12.5px;color:var(--body);line-height:1.5}
+  .dcard .dsrc{font-size:10px;color:var(--muted);margin-top:8px}
+  .sec{padding:14px 40px 4px}
+  .sec .sh{font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .levers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:760px){.levers{grid-template-columns:1fr}}
+  .lv{border:1px solid var(--line);border-left:3px solid var(--teal2);border-radius:8px;padding:13px 15px;background:var(--soft)}
+  .lv .n{font-weight:600;font-size:13px;color:var(--ink)} .lv .d{font-size:12px;color:var(--body);line-height:1.45;margin-top:4px}
+  details.faq{border-bottom:1px solid var(--line2);padding:10px 0}
+  details.faq summary{font-weight:600;font-size:13.5px;color:var(--ink);cursor:pointer}
+  details.faq p{margin:8px 0 2px;font-size:12.5px;color:var(--body)}
+  .cta{margin:20px 40px 4px;padding:20px 24px;background:var(--soft);border:1px solid var(--line);border-radius:12px;
+    display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .cta .ctxt{flex:1;min-width:240px} .cta .ch{font-weight:600;font-size:18px;color:var(--ink);margin-bottom:3px}
+  .cta .cd{font-size:12.5px;color:var(--dim)}
+  .cta a{text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;white-space:nowrap;padding:12px 20px}
+  .cta a.primary{background:var(--teal);color:#f1ede3} .cta a.ghost{border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
+  .rel{padding:6px 40px 4px;font-size:12.5px;color:var(--dim)} .rel a{color:var(--teal2);text-decoration:none;font-weight:600}
+  .disc{margin:16px 40px 6px;font-size:10.5px;line-height:1.55;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+  .disc a{color:var(--teal2)}
+  .foot{margin:6px 40px 26px;color:var(--muted);font-size:11px}
+  @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.dwnav{display:none}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="frame">
+    <nav class="dwnav" aria-label="Driftwood">
+  <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+  <div class="dwnav-links">
+    <a href="thesis.html">Approach</a>
+    <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+    <a href="leakage.html">Leakage</a>
+    <a href="statemap.html">State&nbsp;Map</a>
+    <a href="ledger.html">Research</a>
+  </div>
+</nav>
+    <div class="bcrumb"><a href="index.html">Driftwood</a> › <a href="statemap.html">State Tax Map</a> › Tennessee</div>
+    <div class="hd">
+      <div class="eyebrow">Driftwood · Tennessee tax profile</div>
+      <h1>Tennessee: where your portfolio leaks to tax</h1>
+      <p class="lede">Every state taxes gains, marriage, and death differently. Here is how Tennessee treats a harvested loss, capital gains at the top rate, estate and inheritance tax, and the basis step-up your heirs inherit — and the after-tax Structural Alpha our engine is built to recover from all of it.</p>
+    </div>
+    <div class="hero"><div class="big">+3.7<span class="u">%/yr</span></div><div class="hlab">Illustrative Structural&nbsp;Alpha (tax) recovered in Tennessee<br><span class="hsub">a concentrated, naive book keeps ~2.7%/yr after tax vs ~6.3%/yr tax-managed — over ~30 years, our modeling</span></div><div class="hbar" aria-hidden="true"><span class="kept" style="width:43%"></span></div></div>
+    <div class="grid">
+      <div class="dcard"><div class="dh">Income &amp; gains<span class="dtag">0%</span></div><p>No state tax on capital gains — and a harvested loss is worth only the federal rate here.</p><div class="dsrc">State revenue departments, tax year 2025 — verify with a tax advisor.</div></div>
+<div class="dcard"><div class="dh">Marriage</div><p>No state income tax — no marriage penalty on the state return.</p><div class="dsrc">State income-tax filing schedules, tax year 2025 — verify with a tax advisor.</div></div>
+<div class="dcard"><div class="dh">Estate</div><p>No state estate or inheritance tax — only the federal estate tax applies.</p><div class="dsrc">State estate/inheritance statutes, tax year 2025 — confirm with counsel.</div></div>
+<div class="dcard"><div class="dh">Basis step-up<span class="dtag">opt-in</span></div><p>Offers an elective community-property trust: a couple can opt in to obtain a full (double) basis step-up at the first death.</p><div class="dsrc">State marital-property law / IRS Pub. 555; IRC 1014 — verify with counsel.</div></div>
+    </div>
+    <div class="sec"><div class="sh">How the engine plugs the leak</div>
+      <div class="levers"><div class="lv"><div class="n">Lot protection + hysteresis</div><div class="d">Holds positions through noise and protects unrealized lots, converting short-term churn into long-term gains taxed ~17 points lower.</div></div>
+<div class="lv"><div class="n">Harvesting + rate arbitrage</div><div class="d">Realizes losses and nets them short-term-first against the highest-rate gains — banking the spread a buy-and-hold ETF can&#x27;t reach.</div></div>
+<div class="lv"><div class="n">Asset location</div><div class="d">Stacks the high-turnover sleeve into Roth/Traditional so its short-term gains escape tax; quantified per client in the Tax Lab.</div></div></div></div>
+    <div class="sec"><div class="sh">Frequently asked — 4 on Tennessee</div><details class="faq"><summary>How are capital gains taxed in Tennessee?</summary><p>No state tax on capital gains — and a harvested loss is worth only the federal rate here.</p></details>
+<details class="faq"><summary>Does Tennessee have a state estate or inheritance tax?</summary><p>No state estate or inheritance tax — only the federal estate tax applies.</p></details>
+<details class="faq"><summary>Is there a marriage penalty in Tennessee?</summary><p>No state income tax — no marriage penalty on the state return.</p></details>
+<details class="faq"><summary>How much investment tax can tax-managed investing recover in Tennessee?</summary><p>Illustrative recoverable tax leakage for a portfolio in Tennessee: up to ~+3.7%/yr after tax in our modeling (a concentrated, naive book keeps ~2.7%/yr vs ~6.3%/yr tax-managed). Your actual figure depends on your holdings — the diagnostic computes it.</p></details></div>
+    <div class="cta">
+      <div class="ctxt">
+        <div class="ch">See the number on your own Tennessee portfolio.</div>
+        <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture — by bracket and holdings.</div>
+      </div>
+      <a class="primary" href="leakage.html?state=TN">Run my Tennessee diagnostic →</a>
+      <a class="ghost" href="taxlab.html?view=prospect&state=TN">Book a 15-min intro</a>
+    </div>
+    <div class="rel">Compare nearby regimes: <a href="california-tax.html">California</a> · <a href="texas-tax.html">Texas</a> · <a href="new-york-tax.html">New York</a> · <a href="new-jersey-tax.html">New Jersey</a> · <a href="states.html">all 50 states + DC →</a></div>
+    <div class="disc"><b>Illustrative / hypothetical — not a real track record and not advice.</b> The Structural Alpha figure is a hypothetical, after-tax result from the <b>retroactive application</b> of a tax-management model to ~30 years of proxy-spliced market data on a single illustrative path; <b>no client capital was invested</b>, and hypothetical performance <b>does not guarantee future results</b>. Intended for sophisticated investors; it may not be relevant to your situation, and your actual figure depends on your own holdings, basis, and bracket. State tax facts reflect tax year 2025 and can change — confirm with a tax advisor. Driftwood is the brand of CWS Planning, a <b>registered investment adviser</b>; <b>Form ADV</b> and <b>Form CRS</b> are available at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.</div>
+    <div class="foot">Driftwood · CWS Planning. Tax facts compiled from state statutes, tax year 2025.</div>
+  </div>
+</div>
+</body>
+</html>

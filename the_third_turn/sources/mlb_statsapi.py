@@ -41,10 +41,13 @@ class MLBStatsSource:
 
     name = "mlb_statsapi"
 
-    def __init__(self, date: str, *, live_only: bool = True, timeout: float = 15.0):
+    def __init__(self, date: str, *, live_only: bool = True, timeout: float = 15.0,
+                 starter_tiers: Optional[dict] = None):
         self.date = date
         self.live_only = live_only
         self.timeout = aiohttp.ClientTimeout(total=timeout)
+        # pitcher MLBAM id -> "Ace"/"Mid"/"Back" (from build_reference.py); optional.
+        self.starter_tiers = {int(k): v for k, v in (starter_tiers or {}).items()}
 
     async def _get_json(self, session: aiohttp.ClientSession, url: str):
         headers = rotating_headers(referer=REFERER)
@@ -86,6 +89,16 @@ class MLBStatsSource:
         pitcher_id = pitcher.get("id")
         pitcher_name = pitcher.get("fullName")
 
+        # outs + base occupancy (RE24 inputs). Base keys appear only when occupied.
+        cur = live.get("plays", {}).get("currentPlay", {})
+        outs = ls.get("outs")
+        if outs is None:
+            outs = cur.get("count", {}).get("outs")
+        outs = int(outs) if outs is not None else None
+        on_first = "first" in offense
+        on_second = "second" in offense
+        on_third = "third" in offense
+
         # pitch count + battersFaced from the boxscore for the current pitcher.
         pitch_count = batters_faced = None
         box = live.get("boxscore", {}).get("teams", {})
@@ -112,12 +125,22 @@ class MLBStatsSource:
             if slot is None:
                 slot = ((pa_number - 1) % LINEUP_SIZE) + 1
 
+        # starting pitcher (this side) = first entry in the boxscore pitcher list;
+        # if a reliever is already on, the TTOP thesis is void (Fix #4).
+        pitchers_used = box.get(pitching_side, {}).get("pitchers", []) or []
+        starter_id = int(pitchers_used[0]) if pitchers_used else pitcher_id
+        starter_on_mound = (pitcher_id == starter_id) if pitcher_id is not None else True
+        starter_tier = self.starter_tiers.get(int(starter_id), "Unknown") if starter_id else "Unknown"
+
         return LiveGameState(
             game_pk=game_pk, away=away, home=home, inning=inning,
             half="top" if is_top else "bottom", away_score=away_score,
             home_score=home_score, pitcher_id=pitcher_id, pitcher_name=pitcher_name,
             pitch_count=int(pitch_count) if pitch_count is not None else None,
             batting_slot_due=slot, times_through_order=tto, status=status,
+            outs=outs, on_first=on_first, on_second=on_second, on_third=on_third,
+            starter_id=starter_id, starter_on_mound=starter_on_mound,
+            starter_tier=starter_tier,
         )
 
     async def fetch(self, session: aiohttp.ClientSession) -> SourceResult:

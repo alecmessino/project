@@ -49,6 +49,14 @@ class LiveGameState:
     batting_slot_due: Optional[int] = None   # lineup slot of the batter due up (1-9)
     times_through_order: Optional[int] = None  # TTO for the batter due up vs this pitcher
     status: str = ""             # MLB abstractGameState ("Live", "Final", ...)
+    # --- Revision 2 additions ---
+    outs: Optional[int] = None               # outs in the current half-inning (0-2)
+    on_first: bool = False                    # base occupancy (for RE24)
+    on_second: bool = False
+    on_third: bool = False
+    starter_id: Optional[int] = None          # the game's starting pitcher (this side)
+    starter_on_mound: bool = True             # is the current pitcher still the starter?
+    starter_tier: str = "Unknown"             # Ace / Mid / Back (season baseline WHIP)
 
     @property
     def game_key(self) -> str:
@@ -57,6 +65,10 @@ class LiveGameState:
     @property
     def is_live(self) -> bool:
         return self.status.lower() in ("live", "in progress")
+
+    @property
+    def total_runs(self) -> int:
+        return self.away_score + self.home_score
 
 
 @dataclass

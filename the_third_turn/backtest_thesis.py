@@ -12,14 +12,16 @@ What it computes, per starter, from raw pitches:
   * entering pitch count = starter's cumulative pitches before each PA
   * per-PA outcomes      = H / BB / outs (from `events`) and runs (post_bat_score-bat_score)
 
-Windows compared (WHIP exact, RA/9 from runs):
-  innings 1-3 (baseline)  vs  {3rd-time-thru top-4}  and that split by PC>75/85/90.
-
-Decision matrix answers: "is the edge higher when PC>75 OR PC>90?" (bigger lift wins).
-
-ERA calibration (second source): season RA/9 (from Statcast) vs true ERA + WHIP
-(FanGraphs via pybaseball.pitching_stats) -> Pearson r, R^2, regression, so we know
-how reliably the quick RA/9 proxy tracks true ERA before the engine leans on it.
+Revision 2 (methodology hardening):
+  * Fix #1 — the signal is the TTO3-top-4 ARRIVAL; NO pitch-count gate (that filter
+    weakened the edge via survivorship bias). A dynamic indicator SWEEP ranks
+    candidate splits by run-lift reliability (Welch t vs baseline), and starters are
+    bucketed into Ace/Mid/Back tiers so we can see which tier carries the edge.
+  * Fix #2 — calibrate to RUNS, not ERA (the Over pays on total runs). The report
+    validates Statcast RA/9 against true RA/9 (runs) from the MLB Stats API.
+The decision matrix (with PC buckets) is retained only to DOCUMENT the survivorship
+effect. The emitted constraint is the raw TTO3-top-4 window + a fitted TTOP run
+multiplier the live RE24 model uses.
 
     python the_third_turn/backtest_thesis.py --seasons 2025
     python the_third_turn/backtest_thesis.py --seasons 2024 2025 2026
@@ -254,8 +256,9 @@ def _fetch_true_pitching(seasons: list[int]) -> pd.DataFrame:
     return out
 
 
-def era_calibration(pa: pd.DataFrame, seasons: list[int]) -> dict:
-    """Season RA/9 (Statcast) vs true ERA + WHIP (MLB Stats API) -> correlation."""
+def run_environment_report(pa: pd.DataFrame, seasons: list[int]) -> dict:
+    """Fix #2: calibrate to RUNS, not ERA. Validate Statcast RA/9 vs true RA/9
+    (total runs from the MLB Stats API) — what a live Over actually pays on."""
     from scipy import stats
 
     agg = pa.groupby("pitcher").agg(outs=("outs", "sum"), R=("runs", "sum"),
@@ -266,33 +269,100 @@ def era_calibration(pa: pd.DataFrame, seasons: list[int]) -> dict:
     agg["WHIP_statcast"] = (agg["H"] + agg["BB"]) / agg["IP"]
     agg["pitcher"] = agg["pitcher"].astype(int)
 
+    overall_runs_per_pa = float(pa["runs"].mean())
     truth = _fetch_true_pitching(seasons)
     if truth.empty:
-        return {"error": "could not fetch true pitching stats from MLB Stats API"}
+        return {"overall_runs_per_pa": round(overall_runs_per_pa, 4),
+                "error": "could not fetch true pitching stats from MLB Stats API"}
     merged = agg.merge(truth, on="pitcher", how="inner").dropna(
-        subset=["RA9_statcast", "ERA_true"])
+        subset=["RA9_statcast", "RA9_true"])
     if len(merged) < 5:
-        return {"n": int(len(merged)), "note": "insufficient overlap for calibration"}
+        return {"overall_runs_per_pa": round(overall_runs_per_pa, 4),
+                "n": int(len(merged)), "note": "insufficient overlap"}
 
-    r, p = stats.pearsonr(merged["RA9_statcast"], merged["ERA_true"])
-    slope, intercept = np.polyfit(merged["RA9_statcast"], merged["ERA_true"], 1)
-    ra9_r, _ = stats.pearsonr(merged["RA9_statcast"], merged["RA9_true"])
+    ra9_r, ra9_p = stats.pearsonr(merged["RA9_statcast"], merged["RA9_true"])
+    slope, intercept = np.polyfit(merged["RA9_statcast"], merged["RA9_true"], 1)
     whip_r, _ = stats.pearsonr(merged["WHIP_statcast"], merged["WHIP_true"])
     return {
+        "metric": "total runs (RA/9), not ERA — the Over pays on all runs",
+        "true_source": "MLB Stats API season pitching (runs/IP)",
         "n_pitchers": int(len(merged)),
-        "true_source": "MLB Stats API season pitching (earnedRuns/IP)",
-        "ra9_to_era_pearson_r": round(float(r), 4),
-        "ra9_to_era_r_squared": round(float(r) ** 2, 4),
-        "ra9_to_era_p_value": float(f"{p:.3e}"),
+        "overall_runs_per_pa": round(overall_runs_per_pa, 4),
+        "statcast_ra9_vs_true_ra9_pearson_r": round(float(ra9_r), 4),
+        "statcast_ra9_vs_true_ra9_r_squared": round(float(ra9_r) ** 2, 4),
+        "p_value": float(f"{ra9_p:.3e}"),
         "regression": {"slope": round(float(slope), 4),
                        "intercept": round(float(intercept), 4),
-                       "formula": "true_ERA ≈ slope * RA9_statcast + intercept"},
-        "statcast_ra9_vs_true_ra9_r": round(float(ra9_r), 4),
+                       "formula": "true_RA9 ≈ slope * RA9_statcast + intercept"},
         "statcast_whip_vs_true_whip_r": round(float(whip_r), 4),
         "interpretation": (
-            "RA/9 from Statcast is a reliable proxy for true ERA" if r >= 0.8 else
-            "RA/9 tracks ERA only moderately — treat window RA/9 as directional"),
+            "Statcast run-attribution is a reliable proxy for actual runs allowed"
+            if ra9_r >= 0.8 else "RA/9 tracks actual runs only moderately"),
     }
+
+
+# --------------------------------------------------------------------------- #
+# Starter tiers (Fix #1) + dynamic indicator sweep                            #
+# --------------------------------------------------------------------------- #
+ACE_WHIP, MID_WHIP = 1.10, 1.30
+
+
+def assign_tiers(pa: pd.DataFrame) -> pd.DataFrame:
+    """Tag each PA with the starter's tier from his OWN innings-1-3 baseline WHIP."""
+    base = pa[pa["inning"] <= 3]
+    g = base.groupby("pitcher").agg(H=("is_hit", "sum"), BB=("is_bb", "sum"),
+                                    outs=("outs", "sum"))
+    whip = (g["H"] + g["BB"]) / (g["outs"] / 3.0).replace(0, np.nan)
+    tier = whip.apply(lambda w: "Ace" if w <= ACE_WHIP else
+                      ("Mid" if w <= MID_WHIP else "Back"))
+    pa = pa.copy()
+    pa["tier"] = pa["pitcher"].map(tier).fillna("Unknown")
+    return pa
+
+
+def indicator_sweep(pa: pd.DataFrame) -> pd.DataFrame:
+    """Sweep candidate splits and rank by run-lift reliability (Welch t vs baseline).
+
+    Keeps the methodology DYNAMIC: as data grows, the most robust run-scoring
+    indicators re-surface at the top rather than being hardcoded.
+    """
+    from scipy import stats
+
+    baseline = pa[pa["inning"] <= 3]
+    base_runs = baseline["runs"].to_numpy()
+    base_rpp = float(base_runs.mean())
+    base_ra9 = 9.0 * baseline["runs"].sum() / (baseline["outs"].sum() / 3.0)
+
+    rows = []
+    for tto in (2, 3, 4):
+        for top_n in (3, 4, 5):
+            for pc_label, pc_mask in (("all", pd.Series(True, index=pa.index)),
+                                      ("PC>75", pa["entering_pc"] > 75),
+                                      ("PC>90", pa["entering_pc"] > 90)):
+                for tier in ("All", "Ace", "Mid", "Back"):
+                    tier_mask = True if tier == "All" else (pa["tier"] == tier)
+                    mask = (pa["slot"] <= top_n) & (pa["tto"] == tto) & pc_mask & tier_mask
+                    w = pa[mask]
+                    if len(w) < 100:  # skip too-thin cells
+                        continue
+                    wr = w["runs"].to_numpy()
+                    ip = w["outs"].sum() / 3.0
+                    t, p = stats.ttest_ind(wr, base_runs, equal_var=False)
+                    rows.append({
+                        "indicator": f"TTO{tto} top{top_n} {pc_label} {tier}",
+                        "BF": len(w), "IP": round(ip, 1),
+                        "runs_per_pa": round(float(wr.mean()), 4),
+                        "rpp_lift": round(float(wr.mean()) - base_rpp, 4),
+                        "RA9": round(9.0 * w["runs"].sum() / ip, 2) if ip else float("nan"),
+                        "RA9_lift": round((9.0 * w["runs"].sum() / ip) - base_ra9, 2) if ip else float("nan"),
+                        "WHIP": round((w["is_hit"].sum() + w["is_bb"].sum()) / ip, 3) if ip else float("nan"),
+                        "welch_t": round(float(t), 2), "welch_p": float(f"{p:.2e}"),
+                    })
+    sweep = pd.DataFrame(rows)
+    # rank: most reliable POSITIVE run lift first (positive t, small p, decent sample).
+    sweep["reliable"] = (sweep["rpp_lift"] > 0) & (sweep["welch_p"] < 0.05)
+    sweep = sweep.sort_values(["reliable", "welch_t"], ascending=[False, False]).reset_index(drop=True)
+    return sweep
 
 
 # --------------------------------------------------------------------------- #
@@ -311,15 +381,30 @@ def render_matrix(mdf: pd.DataFrame) -> None:
     console.print(table)
 
 
-def choose_cliff(mdf: pd.DataFrame) -> tuple[int, str]:
-    """Answer '>75 vs >90': the cut with the larger WHIP lift over baseline."""
-    lift75 = mdf.loc["3rd/top4 & PC>75", "WHIP_lift"]
-    lift90 = mdf.loc["3rd/top4 & PC>90", "WHIP_lift"]
-    if lift90 >= lift75:
-        return 90, (f"Edge is HIGHER at PC>90 (WHIP lift {lift90:+.3f}) "
-                    f"than PC>75 ({lift75:+.3f}).")
-    return 75, (f"Edge is HIGHER at PC>75 (WHIP lift {lift75:+.3f}) "
-                f"than PC>90 ({lift90:+.3f}).")
+def render_sweep(sweep: pd.DataFrame, n: int = 12) -> None:
+    table = Table(title=f"Dynamic indicator sweep — top {n} by run-lift reliability")
+    for col in ("indicator", "BF", "runs_per_pa", "rpp_lift", "RA9_lift", "WHIP", "welch_t", "welch_p"):
+        table.add_column(col, justify="right" if col != "indicator" else "left", overflow="fold")
+    for _, r in sweep.head(n).iterrows():
+        table.add_row(r["indicator"], f"{int(r['BF'])}", f"{r['runs_per_pa']:.3f}",
+                      f"{r['rpp_lift']:+.3f}", f"{r['RA9_lift']:+.2f}", f"{r['WHIP']:.3f}",
+                      f"{r['welch_t']:.1f}", f"{r['welch_p']:.1e}")
+    console.print(table)
+
+
+def render_tier_lift(pa: pd.DataFrame) -> None:
+    base_rpp = float(pa[pa["inning"] <= 3]["runs"].mean())
+    window = pa[pa["slot"].isin(TOP_OF_ORDER) & (pa["tto"] == 3)]
+    table = Table(title="3rd-turn top-4 run lift by starter tier (ace vs back-of-rotation)")
+    for col in ("tier", "BF", "runs_per_pa", "rpp_lift vs baseline"):
+        table.add_column(col, justify="right" if col != "tier" else "left")
+    for tier in ("Ace", "Mid", "Back", "Unknown"):
+        w = window[window["tier"] == tier]
+        if not len(w):
+            continue
+        rpp = float(w["runs"].mean())
+        table.add_row(tier, f"{len(w)}", f"{rpp:.3f}", f"{rpp - base_rpp:+.3f}")
+    console.print(table)
 
 
 def main(argv=None) -> int:
@@ -337,48 +422,62 @@ def main(argv=None) -> int:
         ranges = _seasons_to_ranges(args.seasons)
         seasons = args.seasons
 
-    console.rule("[bold]The Third Turn · TTOP backtest")
+    console.rule("[bold]The Third Turn · TTOP backtest (Revision 2)")
     df = load_statcast(ranges)
     if df.empty:
         console.print("[red]No Statcast data pulled — check connectivity / dates.[/]")
         return 1
     console.log(f"loaded {len(df):,} pitch rows")
 
-    pa = build_pa_frame(df)
+    pa = assign_tiers(build_pa_frame(df))
     console.log(f"derived {len(pa):,} starter plate appearances")
+    OUT.mkdir(parents=True, exist_ok=True)
 
+    # Documentation matrix (keeps the PC buckets so the survivorship effect is visible).
     mdf = decision_matrix(pa)
     render_matrix(mdf)
-    OUT.mkdir(parents=True, exist_ok=True)
     mdf.to_csv(OUT / "ttop_decision_matrix.csv")
 
-    cliff, verdict = choose_cliff(mdf)
-    console.print(f"\n[bold cyan]CONSTRAINT FINDING:[/] {verdict}")
+    # Fix #1: the signal is TTO3-top4 ARRIVAL — no pitch-count gate.
+    window = pa[pa["slot"].isin(TOP_OF_ORDER) & (pa["tto"] == 3)]
+    baseline = pa[pa["inning"] <= 3]
+    base_rpp, win_rpp = float(baseline["runs"].mean()), float(window["runs"].mean())
+    base_ra9 = 9.0 * baseline["runs"].sum() / (baseline["outs"].sum() / 3.0)
+    win_ra9 = 9.0 * window["runs"].sum() / (window["outs"].sum() / 3.0)
+    ttop_mult = round(win_ra9 / base_ra9, 3) if base_ra9 else 1.0
+    min_inning = int(window["inning"].median()) if len(window) else 6
 
-    tto3_top4 = pa[pa["slot"].isin(TOP_OF_ORDER) & (pa["tto"] == 3)]
-    min_inning = int(tto3_top4["inning"].median()) if len(tto3_top4) else 6
+    # Fix #1 (dynamic): sweep + tier breakdown.
+    console.rule("[bold]Dynamic indicator sweep")
+    sweep = indicator_sweep(pa)
+    render_sweep(sweep)
+    sweep.to_csv(OUT / "indicator_sweep.csv", index=False)
+    top_indicator = sweep.iloc[0]["indicator"] if len(sweep) else "n/a"
+    render_tier_lift(pa)
 
-    console.rule("[bold]ERA calibration (RA/9 proxy vs true ERA)")
+    # Fix #2: calibrate to RUNS, not ERA.
+    console.rule("[bold]Run-environment validation (RA/9 vs true runs allowed)")
     try:
-        calib = era_calibration(pa, seasons)
-        console.print_json(data=calib)
+        report = run_environment_report(pa, seasons)
+        console.print_json(data=report)
     except Exception as exc:  # noqa: BLE001
-        console.print(f"[yellow]calibration skipped: {type(exc).__name__}: {exc}[/]")
-        calib = {"error": f"{type(exc).__name__}: {exc}"}
-    (OUT / "era_calibration_report.json").write_text(json.dumps(calib, indent=2))
+        console.print(f"[yellow]validation skipped: {type(exc).__name__}: {exc}[/]")
+        report = {"error": f"{type(exc).__name__}: {exc}"}
+    (OUT / "run_environment_report.json").write_text(json.dumps(report, indent=2))
 
-    row = mdf.loc[f"3rd/top4 & PC>{cliff}"]
     constraints = Constraints(
         min_inning=min_inning, top_of_order_slots=TOP_OF_ORDER, times_through_order=3,
-        pitch_count_threshold=cliff, line_drop_max_runs=1.5,
-        expected_whip_lift=round(float(row["WHIP_lift"]), 3),
-        expected_ra9_lift=round(float(row["RA9_lift"]), 2),
-        seasons=seasons, sample_bf=int(row["BF"]),
-        ra9_to_era_r=calib.get("ra9_to_era_pearson_r"),
+        ttop_run_multiplier=ttop_mult, pitch_count_reference=None,
+        expected_ra9_lift=round(win_ra9 - base_ra9, 2),
+        expected_runs_per_pa_lift=round(win_rpp - base_rpp, 4),
+        expected_whip_lift=round(float(mdf.loc["3rd time thru, top 4", "WHIP_lift"]), 3),
+        seasons=seasons, sample_bf=int(len(window)), top_indicator=top_indicator,
+        ra9_vs_true_ra9_r=report.get("statcast_ra9_vs_true_ra9_pearson_r"),
     )
     constraints.save()
-    console.print(f"\n[green]Wrote {OUT/'constraints.json'}[/] — engine will trigger at "
-                  f"inning≥{min_inning}, TTO≥3, top-4, PC>{cliff}.")
+    console.print(f"\n[green]Wrote {OUT/'constraints.json'}[/] — fire on 3rd-turn arrival "
+                  f"(inning≥{min_inning}, TTO≥3, top-4); TTOP run multiplier "
+                  f"{ttop_mult}× (RA/9 {base_ra9:.2f}→{win_ra9:.2f}). No pitch-count gate.")
     return 0
 
 

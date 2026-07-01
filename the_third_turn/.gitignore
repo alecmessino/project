@@ -1,0 +1,6 @@
+# Statcast/parquet cache and run logs are reproducible — don't commit them.
+data/cache/*
+!data/cache/.gitkeep
+*.log
+__pycache__/
+*.pyc

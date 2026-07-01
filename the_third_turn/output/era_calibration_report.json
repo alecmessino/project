@@ -1,0 +1,15 @@
+{
+  "n_pitchers": 224,
+  "true_source": "MLB Stats API season pitching (earnedRuns/IP)",
+  "ra9_to_era_pearson_r": 0.9284,
+  "ra9_to_era_r_squared": 0.8618,
+  "ra9_to_era_p_value": 2.195e-97,
+  "regression": {
+    "slope": 0.9718,
+    "intercept": 0.1719,
+    "formula": "true_ERA \u2248 slope * RA9_statcast + intercept"
+  },
+  "statcast_ra9_vs_true_ra9_r": 0.9482,
+  "statcast_whip_vs_true_whip_r": 0.936,
+  "interpretation": "RA/9 from Statcast is a reliable proxy for true ERA"
+}

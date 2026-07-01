@@ -1,0 +1,11 @@
+# The Third Turn — isolated dependency set (kept separate from the mrbet pyproject).
+# Install with:  pip install -r the_third_turn/requirements.txt
+pybaseball>=2.2
+aiohttp>=3.9
+pandas>=2.0
+pyarrow>=14.0        # parquet cache for Statcast pulls
+numpy>=1.26
+scipy>=1.11          # Pearson r / regression for the ERA calibration
+pydantic>=2.5
+rich>=13.7           # console tables + structured alert rendering
+tqdm>=4.66

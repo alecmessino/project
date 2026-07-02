@@ -82,6 +82,38 @@ def _pitching_team(state: LiveGameState) -> str:
     return state.home if state.half == "top" else state.away
 
 
+def merge_quotes(*result_lists: list[Quote]) -> dict[str, Quote]:
+    """One quote per game_key; an IN-PLAY quote always beats a pregame one.
+
+    Books list the same matchup for TOMORROW's series game under the same key —
+    without the live preference, a pregame line for the next game could be read as
+    today's live total.
+    """
+    merged: dict[str, Quote] = {}
+    for quotes in result_lists:
+        for q in quotes:
+            cur = merged.get(q.game_key)
+            if cur is None or (q.live_game and not cur.live_game):
+                merged[q.game_key] = q
+    return merged
+
+
+def load_closing_lines(path) -> dict[int, float]:
+    """game_pk -> real pregame total from data/closing_lines.csv (collector output)."""
+    import csv
+    p = Path(path)
+    if not p.exists():
+        return {}
+    with p.open() as fh:
+        out = {}
+        for r in csv.DictReader(fh):
+            try:
+                out[int(r["game_pk"])] = float(r["pregame_total"])
+            except (KeyError, TypeError, ValueError):
+                continue
+        return out
+
+
 def _line_anchor(state: LiveGameState, pregame_total: float,
                  rule: TriggerRule) -> RunEnvAnchor:
     return expected_final_total(
@@ -209,16 +241,17 @@ class LiveEngine:
         self.discord = DiscordNotifier(settings.alert_webhook, settings.discord_ping,
                                        constraints.bullpen_elite_ra9,
                                        settings.max_data_age_seconds)
+        # REAL pregame anchors first (collector/backfill output); first-seen is only
+        # the fallback — for games already live at daemon start, first-seen would be
+        # an in-play line, not the pregame total.
+        self.closing_lines = load_closing_lines(
+            Path(__file__).resolve().parent / "data" / "closing_lines.csv")
         self.pregame_total: dict[str, float] = {}
         self._alerted: set[str] = set()
         self._stop = asyncio.Event()
 
     def _merge_quotes(self, *result_lists: list[Quote]) -> dict[str, Quote]:
-        merged: dict[str, Quote] = {}
-        for quotes in result_lists:
-            for q in quotes:
-                merged.setdefault(q.game_key, q)
-        return merged
+        return merge_quotes(*result_lists)
 
     async def poll_once(self, session: aiohttp.ClientSession):
         """Return ``(fired_triggers, live_states, merged_quotes)`` for this poll."""
@@ -240,8 +273,17 @@ class LiveEngine:
         fired: list[Trigger] = []
         for st in state_res.states:
             q = quotes.get(st.game_key)
-            if q is not None and st.game_key not in self.pregame_total:
-                self.pregame_total[st.game_key] = q.line
+            if st.game_key not in self.pregame_total:
+                seeded = self.closing_lines.get(st.game_pk)
+                if seeded is not None:
+                    self.pregame_total[st.game_key] = seeded   # true pregame line
+                elif q is not None and not q.live_game:
+                    self.pregame_total[st.game_key] = q.line   # fallback: first-seen pregame
+                elif q is not None:
+                    # last resort: first-seen while already in-play — log the caveat
+                    self.pregame_total[st.game_key] = q.line
+                    console.log(f"[yellow]{st.game_key}: no real pregame line — "
+                                f"anchoring to first-seen in-play total {q.line}[/]")
             pregame = self.pregame_total.get(st.game_key)
             bullpen = self.bullpen_quality.get(_pitching_team(st))
             for rule in self.c.active_rules():
@@ -277,6 +319,8 @@ class LiveEngine:
         rules = self.c.active_rules()
         console.print(f"[cyan]The Third Turn engine (v3)[/] · {len(rules)} rule(s): "
                       + ", ".join(f"{r.name}(TTO{r.times_through_order},{r.kind})" for r in rules))
+        console.print(f"[cyan]pregame anchors:[/] {len(self.closing_lines)} real closing "
+                      f"line(s) loaded from data/closing_lines.csv")
         if self.discord.enabled:
             console.print("[green]Discord alerts ON[/] for CONFIRM/ARM.")
         else:
@@ -311,7 +355,8 @@ class LiveEngine:
 
 
 async def _amain(once: bool) -> int:
-    from datetime import date
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
     from shared_piping.envload import load_env
     load_env()   # pick up DISCORD_WEBHOOK_URL / DISCORD_PING from the_third_turn/.env
     constraints, from_file = Constraints.load()
@@ -319,7 +364,10 @@ async def _amain(once: bool) -> int:
         console.print("[yellow]⚠ constraints.json not found — using default rules. "
                       "Run backtest_thesis.py to fit them.[/]")
     settings = EngineSettings()
-    engine = LiveEngine(constraints, settings, date_str=date.today().isoformat())
+    # MLB schedule dates are US/Eastern — a UTC date would flip to "tomorrow" at
+    # 8pm ET and lose the evening slate mid-game.
+    et_today = datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+    engine = LiveEngine(constraints, settings, date_str=et_today)
 
     loop = asyncio.get_running_loop()
     for sig in (signal.SIGINT, signal.SIGTERM):

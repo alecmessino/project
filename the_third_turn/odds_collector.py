@@ -32,6 +32,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from shared_piping.envload import load_env  # noqa: E402
 from shared_piping.headers import rotating_headers  # noqa: E402
+from shared_piping.mlb_schedule import match_game_pk, pair_date_map  # noqa: E402
 from shared_piping.team_map import resolve  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
@@ -66,23 +67,8 @@ def consensus_total(event: dict, min_books: int) -> tuple[float | None, int]:
     return round(statistics.median(pts) * 2) / 2.0, len(pts)
 
 
-def schedule_map(dates: set[str]) -> dict[tuple[str, str], int]:
-    """(away_key, home_key) -> game_pk for the given calendar dates (± boundary)."""
-    if not dates:
-        return {}
-    lo, hi = min(dates), max(dates)
-    # widen by a day each side so a UTC/ET commence-date boundary can't miss a game.
-    lo = (datetime.fromisoformat(lo) - timedelta(days=1)).date().isoformat()
-    hi = (datetime.fromisoformat(hi) + timedelta(days=1)).date().isoformat()
-    data, _ = _get(SCHEDULE_URL.format(start=lo, end=hi))
-    out: dict[tuple[str, str], int] = {}
-    for day in data.get("dates", []):
-        for g in day.get("games", []):
-            away = resolve(g["teams"]["away"]["team"]["name"])
-            home = resolve(g["teams"]["home"]["team"]["name"])
-            if away and home:
-                out.setdefault((away, home), int(g["gamePk"]))
-    return out
+# game_pk matching is date-aware (shared_piping.mlb_schedule) — a team-pair-only
+# lookup mislabels consecutive-day series games with an adjacent game's pk.
 
 
 def load_existing(path: Path) -> set[int]:
@@ -124,7 +110,7 @@ def main(argv=None) -> int:
         dates.add(ct[:10])
         parsed.append((e.get("away_team"), e.get("home_team"), total, n, ct))
 
-    sched = schedule_map(dates)
+    sched = pair_date_map(min(dates), max(dates)) if dates else {}
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     existing = load_existing(out_path)
@@ -136,7 +122,7 @@ def main(argv=None) -> int:
         if new_file:
             w.writerow(["game_pk", "pregame_total", "n_books", "commence_time", "source"])
         for away, home, total, n, ct in parsed:
-            gp = sched.get((resolve(away or ""), resolve(home or "")))
+            gp = match_game_pk(sched, away or "", home or "", ct)
             if gp is None or gp in existing:
                 continue
             w.writerow([gp, total, n, ct, "theoddsapi"])

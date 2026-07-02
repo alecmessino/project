@@ -25,6 +25,8 @@ class Quote:
     over_odds: Optional[int] = None
     under_odds: Optional[int] = None
     ts: Optional[float] = None   # epoch seconds when observed (stamped by caller)
+    live_game: Optional[bool] = None  # book flags the event in-play (guards vs the
+                                      # same matchup listed pregame for TOMORROW)
 
     @property
     def game_key(self) -> str:

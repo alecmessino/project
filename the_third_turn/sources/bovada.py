@@ -92,7 +92,8 @@ class BovadaSource:
                             continue
                         quotes.append(Quote(book=self.name, home=home, away=away,
                                             line=line, over_odds=over,
-                                            under_odds=under, ts=ts))
+                                            under_odds=under, ts=ts,
+                                            live_game=bool(ev.get("live"))))
         return quotes
 
     async def fetch(self, session: aiohttp.ClientSession) -> SourceResult:

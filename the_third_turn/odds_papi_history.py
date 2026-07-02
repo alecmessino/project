@@ -45,7 +45,6 @@ BASE = "https://api.oddspapi.io"
 SPORT_BASEBALL, TOURNAMENT_MLB = 13, 109
 MAIN_PERIODS = ("result", "fulltime")   # full-game total
 COOLDOWN = 5.1                          # plan rate limit is 5000ms
-SCHEDULE = "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate={s}&endDate={e}"
 
 
 class Budget:
@@ -173,30 +172,10 @@ def closing_total(hist: dict, mmap: dict[int, dict], start: datetime):
 # --------------------------------------------------------------------------- #
 # game_pk matching + orchestration                                            #
 # --------------------------------------------------------------------------- #
-def schedule_map(start: str, end: str) -> dict[tuple, int]:
-    lo = (datetime.fromisoformat(start) - timedelta(days=1)).date().isoformat()
-    hi = (datetime.fromisoformat(end) + timedelta(days=1)).date().isoformat()
-    req = urllib.request.Request(SCHEDULE.format(s=lo, e=hi),
-                                 headers={"User-Agent": "the-third-turn/1.0"})
-    data = json.loads(urllib.request.urlopen(req, timeout=30).read())
-    out = {}
-    for day in data.get("dates", []):
-        for g in day.get("games", []):
-            a = resolve(g["teams"]["away"]["team"]["name"])
-            h = resolve(g["teams"]["home"]["team"]["name"])
-            if a and h:
-                out[(frozenset((a, h)), day["date"])] = int(g["gamePk"])
-    return out
-
-
-def _match_game_pk(sched: dict, t1: str, t2: str, start_iso: str):
-    pair = frozenset((resolve(t1), resolve(t2)))
-    d = start_iso[:10]
-    for delta in (0, -1, 1):   # tolerate UTC/ET date boundary
-        day = (datetime.fromisoformat(d) + timedelta(days=delta)).date().isoformat()
-        if (pair, day) in sched:
-            return sched[(pair, day)]
-    return None
+# game_pk matching is date-aware via shared_piping.mlb_schedule: the ET schedule
+# date is derived from the UTC commence time (a 01:41Z start is the PREVIOUS ET
+# night's game), so consecutive-day series games can't be mislabeled.
+from shared_piping.mlb_schedule import match_game_pk, pair_date_map  # noqa: E402
 
 
 def load_existing(path: Path) -> set[int]:
@@ -231,7 +210,7 @@ def main(argv=None) -> int:
         return 1
     print(f"reference: {len(mmap)} baseball totals markets, {len(fixtures)} fixtures cached")
 
-    sched = schedule_map(args.start, args.end)
+    sched = pair_date_map(args.start, args.end)
     existing = load_existing(OUT)
     in_range = [f for f in fixtures
                 if args.start <= str(f.get("startTime", ""))[:10] <= args.end]
@@ -246,8 +225,8 @@ def main(argv=None) -> int:
         if new_file:
             w.writerow(["game_pk", "pregame_total", "n_books", "commence_time", "source"])
         for f in in_range:
-            gp = _match_game_pk(sched, f.get("participant1Name", ""),
-                                f.get("participant2Name", ""), f.get("startTime", ""))
+            gp = match_game_pk(sched, f.get("participant1Name", ""),
+                               f.get("participant2Name", ""), f.get("startTime", ""))
             if gp is None or gp in existing:
                 continue
             if budget.used >= args.max_requests:

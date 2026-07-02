@@ -88,7 +88,7 @@ class FanDuelSource:
                 continue
             quotes.append(Quote(book=self.name, home=home, away=away,
                                 line=float(line), over_odds=over, under_odds=under,
-                                ts=ts))
+                                ts=ts, live_game=bool(ev.get("inPlay"))))
         return quotes
 
     async def fetch(self, session: aiohttp.ClientSession) -> SourceResult:

@@ -5,9 +5,11 @@ name: Refresh Driftwood exhibits
 # then publishes docs/ on the resulting push to master.
 
 on:
-  # schedule DISABLED — automation halted per request; uncomment to re-enable.
-#  schedule:
-#    - cron: '20 22 * * *'      # daily, 22:20 UTC (after the US equity close)
+  # Re-enabled for the Driftwood site only (the betting-app crons stay halted): the exhibits froze
+  # silently for weeks when every cron was swept off together — tests/test_data_freshness.py now
+  # guards against that, and this refresh is what keeps it green.
+  schedule:
+    - cron: '20 22 * * *'      # daily, 22:20 UTC (after the US equity close)
   workflow_dispatch:            # run on demand from the Actions tab
 
 permissions:

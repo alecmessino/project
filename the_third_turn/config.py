@@ -32,7 +32,10 @@ class TriggerRule(BaseModel):
     starter_tier_filter: list[str] = Field(default_factory=lambda: ["Mid", "Back"])
     min_inning: int = 3
     ttop_run_multiplier: float = 1.15
-    line_edge_min_runs: Optional[float] = None   # override; else Constraints default
+    # per-rule edge-gate overrides; else the Constraints-level defaults apply
+    line_edge_min_runs: Optional[float] = None
+    line_edge_min_pct: Optional[float] = None    # fraction of the live line (0.05 = 5%)
+    line_edge_min_z: Optional[float] = None      # edge / sqrt(line) — σ-scaled
     # WATCH rule params (game-script): fire early when the game is low-scoring.
     watch_max_inning: int = 4
     watch_max_runs: int = 2
@@ -58,8 +61,18 @@ class Constraints(BaseModel):
     rules: list[TriggerRule] = Field(default_factory=_default_rules)
 
     # --- shared line / RE24 params ---
+    # The edge gate is the MAX of the active thresholds, so mixed modes compose:
+    # runs = flat floor; pct = scales with the run environment (Coors vs pitcher's
+    # park); z = edge/sqrt(line), scaling with outcome σ (value ∝ Φ(edge/σ)).
     use_re24: bool = True
-    line_edge_min_runs: float = 0.5     # default; a rule may override
+    line_edge_min_runs: float = 0.5     # flat floor (runs); a rule may override
+    line_edge_min_pct: Optional[float] = None   # fraction of live line (0.05 = 5%)
+    # σ-scaled component (edge/√line ≥ z), composed with the floor via max().
+    # Swept on 48.5k windows (edge_threshold_sweep.csv): the hit-rate gradient is
+    # strong and monotone in every family; z matches runs at equal volume and is
+    # the theoretically right scaling for LIVE lines (σ ∝ √remaining). 0.2 trims
+    # thin fires on high totals (req 0.68 at 11.5) while the 0.5 floor guards low ones.
+    line_edge_min_z: Optional[float] = 0.2
 
     # --- pull risk / bullpen quality (Fix #4) ---
     bullpen_elite_ra9: float = 3.80     # suppress if fielding bullpen RA/9 below this
@@ -77,6 +90,19 @@ class Constraints(BaseModel):
     def active_rules(self) -> list[TriggerRule]:
         return [r for r in self.rules if r.enabled]
 
+    def required_edge(self, rule: TriggerRule, line: float) -> float:
+        """Minimum edge (in runs) to fire at this live line — max of active modes."""
+        import math
+        req = rule.line_edge_min_runs if rule.line_edge_min_runs is not None else self.line_edge_min_runs
+        pct = rule.line_edge_min_pct if rule.line_edge_min_pct is not None else self.line_edge_min_pct
+        if pct is not None and line:
+            req = max(req, pct * line)
+        z = rule.line_edge_min_z if rule.line_edge_min_z is not None else self.line_edge_min_z
+        if z is not None and line > 0:
+            req = max(req, z * math.sqrt(line))
+        return req
+
+    # back-compat alias (flat-runs view, used by older call sites/tests)
     def edge_for(self, rule: TriggerRule) -> float:
         return rule.line_edge_min_runs if rule.line_edge_min_runs is not None else self.line_edge_min_runs
 

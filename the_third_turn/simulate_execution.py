@@ -226,6 +226,9 @@ def main(argv=None) -> int:
     ap.add_argument("--proxy", choices=["matchup", "park"], default="matchup",
                     help="pregame line model when no real line: matchup (starter+bullpen×park) "
                          "or park (flat league-avg×park)")
+    ap.add_argument("--edge-floor", type=float, default=None,
+                    help="override every rule's line_edge_min_runs (e.g. -99 to record "
+                         "ALL state-matched windows for an edge-threshold sweep)")
     args = ap.parse_args(argv)
 
     ranges = ([(args.start, args.end)] if args.start and args.end
@@ -242,6 +245,12 @@ def main(argv=None) -> int:
     if not from_file:
         console.print("[yellow]No constraints.json — using default rules.[/]")
     rules = constraints.rules   # include disabled WATCH so its hit-rate is measured
+    if args.edge_floor is not None:
+        # record every state-matched window regardless of line edge (threshold sweep)
+        constraints.line_edge_min_runs = args.edge_floor
+        for r in rules:
+            r.line_edge_min_runs = args.edge_floor
+        console.log(f"[yellow]edge gate floored at {args.edge_floor} — sweep mode[/]")
     settings = EngineSettings()
     bullpen = settings.load_bullpen_quality()
     override = _load_override(args.totals_csv)

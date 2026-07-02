@@ -231,7 +231,7 @@ def _common_gates(state: LiveGameState, quote: Optional[Quote],
     if quote is None or pregame_total is None:
         return None
     anchor = _line_anchor(state, pregame_total, rule)
-    edge_min = c.edge_for(rule)
+    edge_min = c.required_edge(rule, quote.line)
     if not (quote.line < anchor.expected_final - edge_min):
         return None                              # market not offering the Over cheaply
     reasons = [
@@ -422,8 +422,11 @@ class LiveEngine:
         if trig.trigger_type != "WATCH" and self.verifier:
             verified = await self.verifier.lookup(session, trig.game_key)
             if verified:
+                rule = next((r for r in self.c.rules if r.name == trig.rule_name), None)
+                min_edge = (self.c.required_edge(rule, verified["median"]) if rule
+                            else self.c.line_edge_min_runs)
                 v_edge, suppressed = verification_verdict(
-                    trig.anchor.expected_final, verified["median"], self.c.line_edge_min_runs)
+                    trig.anchor.expected_final, verified["median"], min_edge)
                 extra = {"verified_line": verified["median"], "verified_edge": v_edge,
                          "verified_books": verified["books"],
                          "suppressed_stale_feed": bool(suppressed)}

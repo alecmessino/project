@@ -2,6 +2,8 @@
 
 from datetime import datetime, timedelta, timezone
 
+import pytest
+
 from live_engine import LineVerifier, verification_verdict
 from shared_piping.notify import build_embed
 from tests.test_notify import make_trigger
@@ -65,6 +67,35 @@ def test_probe_quote_reveals_state_match():
     vq = Quote(book="market-verified", home=st.home, away=st.away, line=5.0, live_game=True)
     rescued = evaluate_rule(rule, st, vq, 9.0, c, 4.5)
     assert rescued and rescued[0].quote.book == "market-verified"
+
+
+def test_required_edge_families_compose():
+    """Edge gate = max(runs, pct·line, z·√line) — pct/z scale with the environment."""
+    import math
+    from config import Constraints, TriggerRule
+    rule = TriggerRule(name="t")
+    # runs only (z disabled): flat 0.5 everywhere
+    c = Constraints(line_edge_min_z=None)
+    assert c.required_edge(rule, 5.5) == 0.5 == c.required_edge(rule, 11.5)
+    # shipped default: 0.5 floor + z=0.2 → scales up on big totals
+    d = Constraints()
+    assert d.required_edge(rule, 5.5) == 0.5
+    assert d.required_edge(rule, 11.5) == pytest.approx(0.2 * (11.5 ** 0.5))
+    # pct mode: 6% of the line — bigger bar at Coors totals than late low totals
+    c = Constraints(line_edge_min_pct=0.06, line_edge_min_runs=0.0, line_edge_min_z=None)
+    assert c.required_edge(rule, 11.5) == pytest.approx(0.69)
+    assert c.required_edge(rule, 5.5) == pytest.approx(0.33)
+    # z mode: 0.2·sqrt(line)
+    c = Constraints(line_edge_min_z=0.2, line_edge_min_runs=0.0)
+    assert c.required_edge(rule, 9.0) == pytest.approx(0.2 * math.sqrt(9.0))
+    # composition: max() wins — flat floor still protects tiny lines
+    c = Constraints(line_edge_min_runs=0.5, line_edge_min_pct=0.06, line_edge_min_z=None)
+    assert c.required_edge(rule, 5.5) == 0.5        # floor dominates
+    assert c.required_edge(rule, 11.5) == pytest.approx(0.69)  # pct dominates
+    # per-rule override beats the global
+    r2 = TriggerRule(name="t2", line_edge_min_pct=0.10, line_edge_min_runs=0.0,
+                     line_edge_min_z=0.0)
+    assert c.required_edge(r2, 10.0) == pytest.approx(1.0)
 
 
 def test_verifier_daily_budget_cap():

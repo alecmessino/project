@@ -125,11 +125,22 @@ class LineVerifier:
     URL = ("https://api.the-odds-api.com/v4/sports/baseball_mlb/odds"
            "?apiKey={key}&regions=us&markets=totals&oddsFormat=american")
 
-    def __init__(self, api_key: str, ttl: float = 60.0):
+    def __init__(self, api_key: str, ttl: float = 60.0, daily_cap: int = 25):
         self.key = api_key
         self.ttl = ttl
+        self.daily_cap = daily_cap        # hard credit budget per (ET) day
+        self.fetches_today = 0
+        self._day = None
+        self.credits_remaining: Optional[str] = None
         self._board: Optional[dict] = None
         self._at = 0.0
+
+    def _budget_ok(self) -> bool:
+        from zoneinfo import ZoneInfo
+        day = datetime.now(ZoneInfo("America/New_York")).date()
+        if day != self._day:
+            self._day, self.fetches_today = day, 0
+        return self.fetches_today < self.daily_cap
 
     @staticmethod
     def parse_board(data: list) -> dict[str, dict]:
@@ -164,14 +175,19 @@ class LineVerifier:
     async def lookup(self, session: aiohttp.ClientSession, game_key: str) -> Optional[dict]:
         now = time.monotonic()
         if self._board is None or now - self._at > self.ttl:
+            if not self._budget_ok():
+                # budget spent: serve the stale board rather than nothing
+                return self._board.get(game_key) if self._board else None
             try:
                 async with session.get(self.URL.format(key=self.key),
                                        timeout=aiohttp.ClientTimeout(total=15)) as resp:
                     if resp.status != 200:
                         return None
+                    self.credits_remaining = resp.headers.get("x-requests-remaining")
                     data = await resp.json(content_type=None)
             except Exception:  # noqa: BLE001 — verification is best-effort
                 return None
+            self.fetches_today += 1
             self._board = self.parse_board(data)
             self._at = now
         return self._board.get(game_key)
@@ -327,7 +343,8 @@ class LiveEngine:
             Path(__file__).resolve().parent / "data" / "closing_lines.csv")
         # fire-time verification against betable books (needs ODDS_API_KEY).
         odds_key = os.environ.get("ODDS_API_KEY")
-        self.verifier = LineVerifier(odds_key) if (settings.verify_lines and odds_key) else None
+        self.verifier = (LineVerifier(odds_key, daily_cap=settings.verify_daily_credit_cap)
+                         if (settings.verify_lines and odds_key) else None)
         self.pregame_total: dict[str, float] = {}
         self._alerted: set[str] = set()
         self._stop = asyncio.Event()
@@ -369,11 +386,33 @@ class LiveEngine:
             pregame = self.pregame_total.get(st.game_key)
             bullpen = self.bullpen_quality.get(_pitching_team(st))
             for rule in self.c.active_rules():
-                for trig in evaluate_rule(rule, st, q, pregame, self.c, bullpen):
+                trigs = evaluate_rule(rule, st, q, pregame, self.c, bullpen)
+                if not trigs and rule.kind == "tto":
+                    # RESCUE PASS: the scraped line may be stale-HIGH (or missing),
+                    # silently blocking a real fire. If the STATE gates match (probe
+                    # with a free line), re-gate on the VERIFIED market median.
+                    trigs = await self._rescue(session, rule, st, q, pregame, bullpen)
+                for trig in trigs:
                     if trig.dedupe_key not in self._alerted:
                         self._alerted.add(trig.dedupe_key)
                         fired.append(trig)
         return fired, state_res.states, quotes
+
+    async def _rescue(self, session, rule, st, q, pregame, bullpen) -> list[Trigger]:
+        """Re-gate a state-matched window on the verified market line (budgeted)."""
+        if self.verifier is None or pregame is None:
+            return []
+        # probe: line=0 always clears the line gate, so a fire here means every
+        # STATE gate (inning/TTO/slot/tier/starter/bullpen) passed.
+        probe = Quote(book="probe", home=st.home, away=st.away, line=0.0, live_game=True)
+        if not evaluate_rule(rule, st, probe, pregame, self.c, bullpen):
+            return []
+        verified = await self.verifier.lookup(session, st.game_key)
+        if not verified:
+            return []
+        vq = Quote(book="market-verified", home=st.home, away=st.away,
+                   line=verified["median"], live_game=True)
+        return evaluate_rule(rule, st, vq, pregame, self.c, bullpen)
 
     async def _handle(self, session: aiohttp.ClientSession, trig: Trigger) -> None:
         # verify the live line against REAL betable books before alerting (Fix for
@@ -424,8 +463,9 @@ class LiveEngine:
         console.print(f"[cyan]pregame anchors:[/] {len(self.closing_lines)} real closing "
                       f"line(s) loaded from data/closing_lines.csv")
         if self.verifier:
-            console.print("[green]Line verification ON[/] — alerts checked against "
-                          "betable books (The Odds API) before posting.")
+            console.print(f"[green]Line verification ON[/] — trigger gating + alerts use "
+                          f"the betable-book median (The Odds API, cap "
+                          f"{self.verifier.daily_cap} credits/day).")
         else:
             console.print("[yellow]Line verification OFF (no ODDS_API_KEY) — feed "
                           "lines are unverified.[/]")
@@ -443,9 +483,13 @@ class LiveEngine:
                     console.log(f"[yellow]poll error: {type(exc).__name__}: {exc}[/]")
                     fired, states, quotes = [], [], {}
                 stale = [s for s in states if (s.data_age_seconds or 0) > self.s.max_data_age_seconds]
+                cred = (f" · verify {self.verifier.fetches_today}/{self.verifier.daily_cap}"
+                        + (f" (API rem {self.verifier.credits_remaining})"
+                           if self.verifier.credits_remaining else "")) if self.verifier else ""
                 console.log(f"polled {len(states)} live game(s), {len(quotes)} quoted; "
                             f"{len(fired)} new alert(s) [{(time.monotonic()-t0)*1000:.0f}ms]"
-                            + (f" [yellow]⚠ {len(stale)} stale feed(s)[/]" if stale else ""))
+                            + (f" [yellow]⚠ {len(stale)} stale feed(s)[/]" if stale else "")
+                            + cred)
                 for trig in fired:
                     await self._handle(session, trig)
                 if once:

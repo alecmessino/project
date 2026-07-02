@@ -107,8 +107,11 @@ class EngineSettings(BaseModel):
     ledger_path: str = str(HERE / "output" / "ledger.jsonl")
     max_data_age_seconds: float = 30.0
     # verify fired alerts against real betable books via The Odds API (1 credit per
-    # refresh, 60s cache) — suppresses alerts whose edge dies at the real line.
+    # refresh, 60s cache) — suppresses alerts whose edge dies at the real line, and
+    # RESCUES fires the stale scraped feed would silently block (state gates matched
+    # but the scrape's line failed). Capped per ET day; raise with a paid key.
     verify_lines: bool = True
+    verify_daily_credit_cap: int = 25
     alert_webhook: Optional[str] = None      # overrides $DISCORD_WEBHOOK_URL if set
     discord_ping: Optional[str] = None       # overrides $DISCORD_PING (user id / "everyone")
 

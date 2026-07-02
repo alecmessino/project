@@ -33,6 +33,7 @@ from rich.table import Table  # noqa: E402
 
 from config import Constraints, EngineSettings  # noqa: E402
 from replay_today import replay_game  # noqa: E402
+from shared_piping.decay import PACE_BAND, bucket_of  # noqa: E402
 from shared_piping.run_expectancy import fraction_remaining  # noqa: E402
 
 console = Console()
@@ -99,8 +100,10 @@ def main() -> int:
     buckets: dict[tuple, list[float]] = defaultdict(list)
     # ---- part 2: honest replays --------------------------------------------
     variants = {
-        "z-gate (β=1, pre-shrink)": Constraints(market_shrink_beta=1.0),
-        "z-gate + shrink β=0.4": Constraints(market_shrink_beta=0.4),
+        "OLD fair (ratio=1), β=1.0": Constraints(use_decay_ratio=False, market_shrink_beta=1.0),
+        "decay fair, β=1.0": Constraints(use_decay_ratio=True, market_shrink_beta=1.0),
+        "decay fair, β=0.75 (ship)": Constraints(use_decay_ratio=True, market_shrink_beta=0.75),
+        "decay fair, β=0.4 (old choke)": Constraints(use_decay_ratio=True, market_shrink_beta=0.4),
     }
     fires: dict[str, list] = {k: [] for k in variants}
 
@@ -126,11 +129,7 @@ def main() -> int:
             naive_remaining = pregame * frac
             if naive_remaining < 1.5:
                 continue
-            elapsed = 1 - frac
-            expected_so_far = pregame * elapsed
-            pace = ("cold" if runs < expected_so_far - 1.5 else
-                    "hot" if runs > expected_so_far + 1.5 else "normal")
-            prog = "early" if frac > 0.66 else ("mid" if frac > 0.33 else "late")
+            prog, pace = bucket_of(pregame, inning, half, outs, runs)  # shared binning
             buckets[(prog, pace)].append((line - runs) / naive_remaining)
 
         # honest replay per variant — β affects the market-verified gate; the

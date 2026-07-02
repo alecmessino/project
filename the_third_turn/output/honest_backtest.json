@@ -1,20 +1,32 @@
 {
   "summary": {
-    "z-gate (\u03b2=1, pre-shrink)": {
+    "OLD fair (ratio=1), \u03b2=1.0": {
       "fires": 72,
       "wins": 38,
       "hit_pct": 52.8,
       "units": 0.55
     },
-    "z-gate + shrink \u03b2=0.4": {
-      "fires": 5,
-      "wins": 3,
-      "hit_pct": 60.0,
-      "units": 0.73
+    "decay fair, \u03b2=1.0": {
+      "fires": 42,
+      "wins": 21,
+      "hit_pct": 50.0,
+      "units": -1.91
+    },
+    "decay fair, \u03b2=0.75 (ship)": {
+      "fires": 25,
+      "wins": 14,
+      "hit_pct": 56.0,
+      "units": 1.73
+    },
+    "decay fair, \u03b2=0.4 (old choke)": {
+      "fires": 2,
+      "wins": 1,
+      "hit_pct": 50.0,
+      "units": -0.09
     }
   },
   "fires": {
-    "z-gate (\u03b2=1, pre-shrink)": [
+    "OLD fair (ratio=1), \u03b2=1.0": [
       {
         "game_pk": 824505,
         "rule": "TTO2-Back/Mid",
@@ -736,45 +748,405 @@
         "win": true
       }
     ],
-    "z-gate + shrink \u03b2=0.4": [
+    "decay fair, \u03b2=1.0": [
       {
         "game_pk": 824505,
         "rule": "TTO2-Back/Mid",
         "type": "CONFIRM",
         "line": 12.5,
-        "fair": 15.312172296296296,
-        "edge": 2.81,
+        "fair": 15.280690814814815,
+        "edge": 2.78,
         "final": 12,
         "win": false
+      },
+      {
+        "game_pk": 823046,
+        "rule": "TTO3-Mid/Back",
+        "type": "ARM",
+        "line": 5.5,
+        "fair": 6.280274074074074,
+        "edge": 0.78,
+        "final": 3,
+        "win": false
+      },
+      {
+        "game_pk": 823046,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 5.0,
+        "fair": 5.743983333333333,
+        "edge": 0.74,
+        "final": 3,
+        "win": false
+      },
+      {
+        "game_pk": 824666,
+        "rule": "TTO2-Back/Mid",
+        "type": "ARM",
+        "line": 8.0,
+        "fair": 8.708116666666665,
+        "edge": 0.71,
+        "final": 9,
+        "win": true
+      },
+      {
+        "game_pk": 824993,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 10.5,
+        "fair": 11.530409333333333,
+        "edge": 1.03,
+        "final": 13,
+        "win": true
+      },
+      {
+        "game_pk": 824993,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 10.0,
+        "fair": 11.148764,
+        "edge": 1.15,
+        "final": 13,
+        "win": true
+      },
+      {
+        "game_pk": 824993,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 9.5,
+        "fair": 10.527264,
+        "edge": 1.03,
+        "final": 13,
+        "win": true
+      },
+      {
+        "game_pk": 824993,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 11.0,
+        "fair": 11.70768711111111,
+        "edge": 0.71,
+        "final": 13,
+        "win": true
+      },
+      {
+        "game_pk": 825071,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 8.5,
+        "fair": 9.192593,
+        "edge": 0.69,
+        "final": 7,
+        "win": false
+      },
+      {
+        "game_pk": 825071,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 7.5,
+        "fair": 8.286494,
+        "edge": 0.79,
+        "final": 7,
+        "win": false
+      },
+      {
+        "game_pk": 825071,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 7.0,
+        "fair": 7.678862,
+        "edge": 0.68,
+        "final": 7,
+        "win": false
+      },
+      {
+        "game_pk": 822723,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 7.5,
+        "fair": 8.121647666666666,
+        "edge": 0.62,
+        "final": 10,
+        "win": true
       },
       {
         "game_pk": 823535,
         "rule": "TTO2-Back/Mid",
         "type": "CONFIRM",
         "line": 14.0,
-        "fair": 16.23881666666667,
-        "edge": 2.24,
+        "fair": 15.809650000000001,
+        "edge": 1.81,
         "final": 14,
         "win": false
+      },
+      {
+        "game_pk": 823775,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 5.0,
+        "fair": 5.54615,
+        "edge": 0.55,
+        "final": 3,
+        "win": false
+      },
+      {
+        "game_pk": 822888,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 8.0,
+        "fair": 8.798536,
+        "edge": 0.8,
+        "final": 14,
+        "win": true
+      },
+      {
+        "game_pk": 824991,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 10.5,
+        "fair": 11.188264,
+        "edge": 0.69,
+        "final": 11,
+        "win": true
+      },
+      {
+        "game_pk": 825070,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 7.0,
+        "fair": 7.602278666666667,
+        "edge": 0.6,
+        "final": 7,
+        "win": false
+      },
+      {
+        "game_pk": 825070,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 7.5,
+        "fair": 8.198593,
+        "edge": 0.7,
+        "final": 7,
+        "win": false
+      },
+      {
+        "game_pk": 823939,
+        "rule": "TTO2-Back/Mid",
+        "type": "ARM",
+        "line": 5.5,
+        "fair": 6.096628222222222,
+        "edge": 0.6,
+        "final": 1,
+        "win": false
+      },
+      {
+        "game_pk": 823939,
+        "rule": "TTO3-Mid/Back",
+        "type": "ARM",
+        "line": 3.5,
+        "fair": 4.170591185185186,
+        "edge": 0.67,
+        "final": 1,
+        "win": false
+      },
+      {
+        "game_pk": 824178,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 5.5,
+        "fair": 6.097069222222221,
+        "edge": 0.6,
+        "final": 6,
+        "win": true
+      },
+      {
+        "game_pk": 824178,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 5.5,
+        "fair": 6.061643296296295,
+        "edge": 0.56,
+        "final": 6,
+        "win": true
+      },
+      {
+        "game_pk": 824178,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 5.5,
+        "fair": 6.4524902592592595,
+        "edge": 0.95,
+        "final": 6,
+        "win": true
+      },
+      {
+        "game_pk": 824178,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 6.0,
+        "fair": 6.7447048333333335,
+        "edge": 0.74,
+        "final": 6,
+        "win": false
+      },
+      {
+        "game_pk": 825072,
+        "rule": "TTO3-Mid/Back",
+        "type": "ARM",
+        "line": 10.5,
+        "fair": 11.200994,
+        "edge": 0.7,
+        "final": 9,
+        "win": false
+      },
+      {
+        "game_pk": 824668,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 14.0,
+        "fair": 15.59272962962963,
+        "edge": 1.59,
+        "final": 14,
+        "win": false
+      },
+      {
+        "game_pk": 824668,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 13.5,
+        "fair": 14.705483333333335,
+        "edge": 1.21,
+        "final": 14,
+        "win": true
       },
       {
         "game_pk": 823127,
         "rule": "TTO2-Back/Mid",
         "type": "CONFIRM",
         "line": 5.5,
-        "fair": 7.569373555555555,
-        "edge": 2.07,
+        "fair": 7.663817999999999,
+        "edge": 2.16,
         "final": 8,
         "win": true
+      },
+      {
+        "game_pk": 822889,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 9.5,
+        "fair": 10.266147111111112,
+        "edge": 0.77,
+        "final": 12,
+        "win": true
+      },
+      {
+        "game_pk": 823125,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 8.0,
+        "fair": 8.761147333333332,
+        "edge": 0.76,
+        "final": 3,
+        "win": false
+      },
+      {
+        "game_pk": 823125,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 6.0,
+        "fair": 6.733591777777777,
+        "edge": 0.73,
+        "final": 3,
+        "win": false
       },
       {
         "game_pk": 824098,
         "rule": "TTO2-Back/Mid",
         "type": "CONFIRM",
         "line": 14.0,
-        "fair": 15.873338333333335,
-        "edge": 1.87,
+        "fair": 15.839171666666669,
+        "edge": 1.84,
         "final": 20,
+        "win": true
+      },
+      {
+        "game_pk": 824989,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 8.5,
+        "fair": 9.335930666666666,
+        "edge": 0.84,
+        "final": 5,
+        "win": false
+      },
+      {
+        "game_pk": 824989,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 7.5,
+        "fair": 8.212597333333335,
+        "edge": 0.71,
+        "final": 5,
+        "win": false
+      },
+      {
+        "game_pk": 823534,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 10.0,
+        "fair": 10.682649999999999,
+        "edge": 0.68,
+        "final": 5,
+        "win": false
+      },
+      {
+        "game_pk": 824910,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 5.5,
+        "fair": 6.157150000000001,
+        "edge": 0.66,
+        "final": 5,
+        "win": false
+      },
+      {
+        "game_pk": 824345,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 6.5,
+        "fair": 7.038241851851852,
+        "edge": 0.54,
+        "final": 7,
+        "win": true
+      },
+      {
+        "game_pk": 824990,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 10.0,
+        "fair": 10.849264000000002,
+        "edge": 0.85,
+        "final": 23,
+        "win": true
+      },
+      {
+        "game_pk": 823936,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 9.0,
+        "fair": 10.048456999999999,
+        "edge": 1.05,
+        "final": 11,
+        "win": true
+      },
+      {
+        "game_pk": 823936,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 8.5,
+        "fair": 9.511707,
+        "edge": 1.01,
+        "final": 11,
         "win": true
       },
       {
@@ -782,9 +1154,293 @@
         "rule": "TTO2-Back/Mid",
         "type": "CONFIRM",
         "line": 7.0,
-        "fair": 8.348484777777779,
-        "edge": 1.35,
+        "fair": 8.137373666666667,
+        "edge": 1.14,
         "final": 11,
+        "win": true
+      },
+      {
+        "game_pk": 823936,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 6.0,
+        "fair": 6.852995407407407,
+        "edge": 0.85,
+        "final": 11,
+        "win": true
+      }
+    ],
+    "decay fair, \u03b2=0.75 (ship)": [
+      {
+        "game_pk": 824505,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 12.5,
+        "fair": 15.280690814814815,
+        "edge": 2.78,
+        "final": 12,
+        "win": false
+      },
+      {
+        "game_pk": 823046,
+        "rule": "TTO3-Mid/Back",
+        "type": "ARM",
+        "line": 5.5,
+        "fair": 6.280274074074074,
+        "edge": 0.78,
+        "final": 3,
+        "win": false
+      },
+      {
+        "game_pk": 823046,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 5.0,
+        "fair": 5.743983333333333,
+        "edge": 0.74,
+        "final": 3,
+        "win": false
+      },
+      {
+        "game_pk": 824993,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 10.5,
+        "fair": 11.530409333333333,
+        "edge": 1.03,
+        "final": 13,
+        "win": true
+      },
+      {
+        "game_pk": 824993,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 10.0,
+        "fair": 11.148764,
+        "edge": 1.15,
+        "final": 13,
+        "win": true
+      },
+      {
+        "game_pk": 824993,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 9.5,
+        "fair": 10.527264,
+        "edge": 1.03,
+        "final": 13,
+        "win": true
+      },
+      {
+        "game_pk": 824993,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 10.5,
+        "fair": 11.489667555555556,
+        "edge": 0.99,
+        "final": 13,
+        "win": true
+      },
+      {
+        "game_pk": 825071,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 7.5,
+        "fair": 8.286494,
+        "edge": 0.79,
+        "final": 7,
+        "win": false
+      },
+      {
+        "game_pk": 823535,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 14.0,
+        "fair": 15.809650000000001,
+        "edge": 1.81,
+        "final": 14,
+        "win": false
+      },
+      {
+        "game_pk": 822888,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 8.0,
+        "fair": 8.798536,
+        "edge": 0.8,
+        "final": 14,
+        "win": true
+      },
+      {
+        "game_pk": 823939,
+        "rule": "TTO3-Mid/Back",
+        "type": "ARM",
+        "line": 3.5,
+        "fair": 4.170591185185186,
+        "edge": 0.67,
+        "final": 1,
+        "win": false
+      },
+      {
+        "game_pk": 824178,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 5.5,
+        "fair": 6.4524902592592595,
+        "edge": 0.95,
+        "final": 6,
+        "win": true
+      },
+      {
+        "game_pk": 824178,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 6.0,
+        "fair": 6.7447048333333335,
+        "edge": 0.74,
+        "final": 6,
+        "win": false
+      },
+      {
+        "game_pk": 824668,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 14.0,
+        "fair": 15.59272962962963,
+        "edge": 1.59,
+        "final": 14,
+        "win": false
+      },
+      {
+        "game_pk": 824668,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 13.5,
+        "fair": 14.705483333333335,
+        "edge": 1.21,
+        "final": 14,
+        "win": true
+      },
+      {
+        "game_pk": 823127,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 5.5,
+        "fair": 7.663817999999999,
+        "edge": 2.16,
+        "final": 8,
+        "win": true
+      },
+      {
+        "game_pk": 823125,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 8.0,
+        "fair": 8.761147333333332,
+        "edge": 0.76,
+        "final": 3,
+        "win": false
+      },
+      {
+        "game_pk": 823125,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 6.0,
+        "fair": 6.733591777777777,
+        "edge": 0.73,
+        "final": 3,
+        "win": false
+      },
+      {
+        "game_pk": 824098,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 14.0,
+        "fair": 15.839171666666669,
+        "edge": 1.84,
+        "final": 20,
+        "win": true
+      },
+      {
+        "game_pk": 824989,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 8.5,
+        "fair": 9.335930666666666,
+        "edge": 0.84,
+        "final": 5,
+        "win": false
+      },
+      {
+        "game_pk": 824990,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 10.0,
+        "fair": 10.849264000000002,
+        "edge": 0.85,
+        "final": 23,
+        "win": true
+      },
+      {
+        "game_pk": 823936,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 9.0,
+        "fair": 10.048456999999999,
+        "edge": 1.05,
+        "final": 11,
+        "win": true
+      },
+      {
+        "game_pk": 823936,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 8.5,
+        "fair": 9.511707,
+        "edge": 1.01,
+        "final": 11,
+        "win": true
+      },
+      {
+        "game_pk": 823936,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 7.0,
+        "fair": 8.137373666666667,
+        "edge": 1.14,
+        "final": 11,
+        "win": true
+      },
+      {
+        "game_pk": 823936,
+        "rule": "TTO3-Mid/Back",
+        "type": "CONFIRM",
+        "line": 6.0,
+        "fair": 6.852995407407407,
+        "edge": 0.85,
+        "final": 11,
+        "win": true
+      }
+    ],
+    "decay fair, \u03b2=0.4 (old choke)": [
+      {
+        "game_pk": 824505,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 12.5,
+        "fair": 15.280690814814815,
+        "edge": 2.78,
+        "final": 12,
+        "win": false
+      },
+      {
+        "game_pk": 823127,
+        "rule": "TTO2-Back/Mid",
+        "type": "CONFIRM",
+        "line": 5.5,
+        "fair": 7.663817999999999,
+        "edge": 2.16,
+        "final": 8,
         "win": true
       }
     ]

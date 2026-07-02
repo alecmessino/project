@@ -212,13 +212,19 @@ def load_closing_lines(path) -> dict[int, float]:
         return out
 
 
-def _line_anchor(state: LiveGameState, pregame_total: float,
-                 rule: TriggerRule) -> RunEnvAnchor:
+def _line_anchor(state: LiveGameState, pregame_total: float, rule: TriggerRule,
+                 c: Constraints) -> RunEnvAnchor:
+    ratio = 1.0
+    if c.use_decay_ratio:
+        from shared_piping.decay import decay_ratio
+        ratio = decay_ratio(pregame_total, state.inning, state.half,
+                            state.outs or 0, state.total_runs)
     return expected_final_total(
         pregame_total=pregame_total, runs_so_far=state.total_runs,
         inning=state.inning, half=state.half, outs=state.outs or 0,
         on_first=state.on_first, on_second=state.on_second, on_third=state.on_third,
-        home_key=state.home, ttop_mult=rule.ttop_run_multiplier, in_window=True)
+        home_key=state.home, ttop_mult=rule.ttop_run_multiplier, in_window=True,
+        decay_ratio=ratio)
 
 
 def _common_gates(state: LiveGameState, quote: Optional[Quote],
@@ -233,7 +239,7 @@ def _common_gates(state: LiveGameState, quote: Optional[Quote],
         return None                              # elite bullpen — a pull kills the Over
     if quote is None or pregame_total is None:
         return None
-    anchor = _line_anchor(state, pregame_total, rule)
+    anchor = _line_anchor(state, pregame_total, rule, c)
     edge_min = c.required_edge(rule, quote.line)
     if quote.book == "market-verified" and c.market_shrink_beta > 0:
         # gating directly on the REAL market line: apply the same shrinkage as the

@@ -91,10 +91,16 @@ def expected_final_total(
     home_key: Optional[str],
     ttop_mult: float = 1.0,
     in_window: bool = False,
+    decay_ratio: float = 1.0,
 ) -> RunEnvAnchor:
-    """Expected full-game total (both teams) given live state — the Over anchor."""
+    """Expected full-game total (both teams) given live state — the Over anchor.
+
+    ``decay_ratio`` scales the naive remaining component to the MARKET's measured
+    behavior for this situation (see shared_piping.decay) — the structural fix for
+    the revealed-pace bias (fair ran −1.77 runs vs finals with ratio fixed at 1).
+    """
     frac = fraction_remaining(inning, half, outs)
-    base_remaining = pregame_total * frac
+    base_remaining = pregame_total * frac * decay_ratio
     re_here = re24(on_first, on_second, on_third, outs)
     re_excess = re_here - re24(False, False, False, outs)
     ttop_bump = (ttop_mult - 1.0) * re_here if in_window else 0.0

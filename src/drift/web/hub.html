@@ -119,6 +119,8 @@
   .exsec{padding:4px 44px 30px}
   .exsec .h{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
   .exhibits{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .rstat{grid-column:1 / -1;background:var(--soft);padding:13px 18px;font-size:12px;color:var(--dim);line-height:1.7}
+  .rstat b{color:var(--ink);font-variant-numeric:tabular-nums}
   a.ex{display:block;background:#fff;padding:16px 20px;text-decoration:none;color:inherit;transition:background .12s}
   a.ex:hover{background:var(--soft)}
   a.ex.absent{opacity:.5;pointer-events:none}
@@ -162,8 +164,9 @@
       </div>
       <div>
         <div class="ocard" id="ocard"></div>
-        <div class="onote">Hypothetical, backtested model results for the strategy — not a forecast and not a client
-          account. Your own after-tax figures depend on your situation; compute them in the Tax&nbsp;Lab.</div>
+        <div class="onote">Illustrative, hypothetical tax modeling on one 30-year market path — not a forecast, not a
+          client account, and not a promise about your account. Your own after-tax figures depend on your
+          holdings, basis, and bracket; compute them in the Tax&nbsp;Lab.</div>
         <noscript><style>#ocard:empty{display:none}</style><div class="onote" style="border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:#fff;color:#5a5a62;margin-top:12px">
           The live model figures on this page need JavaScript. Use the navigation above to explore the Tax&nbsp;Lab,
           the State&nbsp;Map, and the research exhibits, or re-enable scripts to see the numbers.</div></noscript>
@@ -221,17 +224,30 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
 
 function render(s){
   const head = s.headline || [];
-  // Outcome card — the REAL hypothetical Model Portfolio headline (not a fabricated dollar figure).
-  // The drawdown shown is THIS track's own (mp.dd), never the multi-decade backtest's — pairing the
-  // 445-session return with the deep-history drawdown would be apples-to-oranges.
-  const mp = head.find(m => /Model Portfolio/i.test(m.label)) || head[0];
-  if(mp){
+  // Outcome card — the firm's substantiated edge (Structural Alpha), framed as a before/after a
+  // reader can feel: the share of a 30-yr pre-tax gain KEPT after tax, tax-naive vs tax-managed.
+  // Never a bare hypothetical return — those live in the research appendix with their dates.
+  const hr = s.hero;
+  if(hr){
     document.getElementById("ocard").innerHTML =
-      `<div class="k">The hypothetical Model Portfolio</div>`+
-      `<div class="sub">${mp.sub||""}</div>`+
-      `<div class="big">${mp.value}</div>`+
-      `<div class="cap">illustrative model return, net of cost</div>`+
-      (mp.dd ? `<div class="row"><div><div class="v">${mp.dd}</div><div class="l">${mp.dd_label||"max drawdown"}</div></div></div>` : "");
+      `<div class="k">The after-tax difference · illustrative</div>`+
+      `<div class="sub">share of a ${hr.horizon}-year pre-tax gain KEPT after tax — the same exposure, `+
+      `concentrated tax-naive vs tax-managed</div>`+
+      `<div class="big">${hr.keep_before}% → ${hr.keep_after}%</div>`+
+      `<div class="cap">federal-only illustration · not a forecast</div>`+
+      `<div class="row"><div><div class="v">+${hr.alpha_low.toFixed(1)}–${hr.alpha_high.toFixed(1)}%/yr</div>`+
+      `<div class="l">illustrative Structural Alpha (tax), by state — see yours below</div></div></div>`;
+  } else {
+    // Fallback for a bare checkout (no leakage figures): the labeled Model Portfolio card.
+    const mp = head.find(m => /Model Portfolio/i.test(m.label)) || head[0];
+    if(mp){
+      document.getElementById("ocard").innerHTML =
+        `<div class="k">The hypothetical Model Portfolio</div>`+
+        `<div class="sub">${mp.sub||""}</div>`+
+        `<div class="big">${mp.value}</div>`+
+        `<div class="cap">illustrative model return, net of cost</div>`+
+        (mp.dd ? `<div class="row"><div><div class="v">${mp.dd}</div><div class="l">${mp.dd_label||"max drawdown"}</div></div></div>` : "");
+    }
   }
   const va = s.value_adds || [];
   if(va.length){
@@ -253,7 +269,13 @@ function render(s){
   const appendix = exs.filter(e=>e.appendix);
   if(appendix.length){
     document.getElementById("appendixsec").style.display = "";
-    document.getElementById("exhibits-appendix").innerHTML = appendix.map(exHTML).join("");
+    // Research-tagged headlines (the raw hypothetical model figures) render HERE, dated, beside the
+    // exhibits they come from — context first, number second.
+    const rh = head.filter(m=>m.research);
+    const rline = rh.length ? `<div class="rstat">`+rh.map(m=>
+        `<b>${m.value}</b> ${m.label.toLowerCase()} · ${m.sub||""}`+
+        (m.dd?` · <b>${m.dd}</b> ${m.dd_label||""}`:"")).join("<br>")+`</div>` : "";
+    document.getElementById("exhibits-appendix").innerHTML = rline + appendix.map(exHTML).join("");
   }
   document.getElementById("gen").textContent = "Generated "+(s.header? s.header.generated : "");
 }

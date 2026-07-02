@@ -103,7 +103,11 @@ jobs:
           if git diff --cached --quiet; then
             echo "no change — nothing to commit"
           else
-            git commit -m "chore: refresh Driftwood exhibits [skip ci]"
+            # NO [skip ci]: it would also skip pages.yml (on: push), so the refreshed data would
+            # land on master but never DEPLOY — the exact silent-staleness bug this refresh exists to
+            # prevent. Letting the push run means pages.yml publishes docs/ and ci.yml re-validates the
+            # freshly-refreshed artifacts. (drift-pages is schedule/dispatch-only, so no self-trigger.)
+            git commit -m "chore: refresh Driftwood exhibits"
             # Robust against a concurrent push (Pages deploy / a merge landing mid-run):
             # rebase onto the latest master and retry; fail loudly if it still can't push.
             pushed=0

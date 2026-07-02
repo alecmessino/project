@@ -224,7 +224,8 @@ function spark(el, data){
 
 function render(s){
   const h = s.header, x = s.cross_backtest;
-  document.getElementById("gen").textContent = "Generated "+h.generated+" · static snapshot, not a live feed.";
+  document.getElementById("gen").textContent = "Generated "+h.generated
+    + (h.data_through ? " · data through "+h.data_through : "") + " · static snapshot, not a live feed.";
 
   // Plain-English regime read derived from breadth (no fabricated regime the engine doesn't compute).
   const held = s.rankings.filter(r=>r.weight>0).length, total = s.rankings.length || 1;
@@ -248,8 +249,12 @@ function render(s){
   const bl = s.blotter, bw = document.getElementById("blotwrap");
   if(bl && bl.trades && bl.trades.length){
     bw.style.display = "";
+    // book=ledger -> these ARE the Model Portfolio ledger's trades (single source of truth);
+    // book=recomputed -> labeled fallback so a fresh recomputation can't masquerade as the ledger.
+    const book = bl.book==="ledger" ? "same book as the Model Portfolio ledger"
+               : "recomputed book (ledger unavailable)";
     document.getElementById("blothint").innerHTML =
-      `${bl.date} · ${bl.n_held} held · <b class="${cls(bl.since_return)}">${pct(bl.since_return)}</b> since`;
+      `${bl.date} · ${bl.n_held} held · <b class="${cls(bl.since_return)}">${pct(bl.since_return)}</b> since · ${book}`;
     const ICON = {NEW:"＋", ADD:"▲", TRIM:"▼", EXIT:"✕"}, VERB = {NEW:"Entered", ADD:"Added", TRIM:"Trimmed", EXIT:"Exited"};
     document.getElementById("blotter").innerHTML = bl.trades.map(t=>{
       const wcur = t.weight>0 ? (t.weight*100).toFixed(0)+"%" : "—";

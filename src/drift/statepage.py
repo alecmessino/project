@@ -26,8 +26,9 @@ from pathlib import Path
 from .leakage import STATE_ALPHA, STATE_NAMES, build_leakage
 from .statemap import DIMENSIONS, _state_record
 
-# Single place to change when the site moves to cwsplanning.com (also update the other templates + sitemap).
-BASE_URL = "https://alecmessino.github.io/project"
+# Single source of truth for the public base URL lives in drift.site (re-exported here for callers
+# and tests); flip it with scripts/set_domain.py when the custom domain goes live.
+from .site import BASE_URL
 
 # The 50 states + DC get a landing page (territories are edge cases; "—"/"NYC" are pseudo-keys).
 STATE_PAGE_CODES = sorted(

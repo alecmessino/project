@@ -80,6 +80,19 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
     headline: list[dict] = []
     value_adds: list[dict] = []
 
+    # ── Hero: the firm's SUBSTANTIATED edge (Structural Alpha), not the momentum research track.
+    # Sourced from the leakage engine (regression-locked to scripts/tax_alpha by
+    # tests/test_leakage_alpha_lineage.py) — a contextualized before/after, never a bare return.
+    from .leakage import build_leakage
+    leak = build_leakage()
+    hero = {
+        "keep_before": leak["before"]["keep_pct"],       # % of the 30y pre-tax gain kept, tax-naive
+        "keep_after": leak["after"]["keep_pct"],         # … same exposure, tax-managed
+        "alpha_low": leak["headline"]["alpha_low"],      # illustrative Structural Alpha band (%/yr)
+        "alpha_high": leak["headline"]["alpha_high"],
+        "horizon": leak["header"]["horizon_years"],
+    }
+
     # Long-history tearsheet (the multi-decade backtest) and the live 445-session ledger are two
     # DISTINCT tracks. Keep their risk figures attributed to their own track — pairing one's return
     # with the other's drawdown is exactly the imbalanced framing the Marketing Rule targets.
@@ -100,11 +113,16 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
                 headline.append({
                     "label": "Model Portfolio (hypothetical)",
                     "value": f"{tr*100:+.1f}%",
-                    "sub": f"{len(entries)} sessions · hypothetical backtest from {j.get('inception', '')}",
+                    # Always date the data: an undated figure reads as current the day it goes stale.
+                    "sub": f"{len(entries)} sessions · hypothetical backtest from {j.get('inception', '')} "
+                           f"· data through {entries[-1].get('date', '?')}",
                     "dd": f"−{own_dd*100:.0f}%",
                     "dd_label": "max drawdown · this track",
                     # Deliberately neutral: a hypothetical return is not a win to colour green.
                     "tone": "neutral",
+                    # A raw hypothetical return is research context, not the pitch — the template
+                    # renders research-tagged headlines in the exploratory-research appendix.
+                    "research": True,
                 })
         except Exception:
             pass
@@ -124,16 +142,19 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
     # label). Cards degrade gracefully — absent when their source exhibit isn't built yet.
     hdr = (led_state or {}).get("header", {})
     benches = (led_state or {}).get("benchmarks", [])
-    # 1 · Tax + fee optimization — the firm's actual, deterministic edge (not product outperformance).
+    # 1 · Tax + fee optimization — lead with the RECOVERY (the edge), not the bare drag; the drag is
+    # the context inside the note, anchored to the model's own before/after.
     if hdr.get("tax_drag") is not None and hdr.get("after_tax_total_return") is not None:
         value_adds.append({
             "tag": "Tax + fee optimization",
-            "title": "We target the tax drag — not just the return.",
-            "stat": f"−{hdr['tax_drag']*100:.0f}%",
-            "stat_label": f"the model's own {hdr.get('total_return', 0)*100:.0f}% pre-tax → "
-                          f"{hdr['after_tax_total_return']*100:.0f}% after tax",
-            "note": "Asset location across taxable / Traditional / Roth plus tax-loss harvesting is built "
-                    "to recover a share of exactly this drag. Illustrative — your figures depend on your situation.",
+            "title": "We recover the tax drag — not chase return.",
+            "stat": f"+{hero['alpha_low']:.1f}–{hero['alpha_high']:.1f}%/yr",
+            "stat_label": "illustrative after-tax return recovered (Structural Alpha) · no-tax states → California",
+            "note": f"The leak it plugs, on the model's own track: {hdr.get('total_return', 0)*100:.0f}% "
+                    f"pre-tax became {hdr['after_tax_total_return']*100:.0f}% after tax "
+                    f"(−{hdr['tax_drag']*100:.0f}%). Asset location across taxable / Traditional / Roth plus "
+                    "tax-loss harvesting recovers a share of exactly that. Illustrative — your figures "
+                    "depend on your situation.",
         })
     # 2 · Risk-managed — from the live track, paired with its drawdown (fair-and-balanced by construction).
     if hdr.get("sharpe") is not None and benches and own_dd is not None:
@@ -149,16 +170,20 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
             "note": f"Worst drawdown −{dd_self*100:.0f}% vs {bench_dd} over the same window. "
                     "Hypothetical model track, not a client account.",
         })
-    # 3 · Out-of-sample honesty — from the multi-decade backtest; the trust signal is reporting the
-    # number after the fit, with its full drawdown disclosed.
+    # 3 · Out-of-sample honesty — the 0.65 means nothing bare; its story is the COMPARISON: the
+    # out-of-sample number held up against the in-sample fit (no flattery), with the drawdown disclosed.
     if ts and ts.get("books"):
         bk = ts["books"][0]
         s, b, o = bk["strategy"], bk["benchmark"], bk["oos"]["test"]
+        tr = (bk["oos"].get("train") or {}).get("sharpe")
+        stat = f"{o['sharpe']:.2f} ≈ {tr:.2f}" if tr is not None else f"{o['sharpe']:.2f}"
+        stat_label = ("out-of-sample vs in-sample Sharpe — the fit didn't flatter · multi-decade backtest"
+                      if tr is not None else "out-of-sample Sharpe · multi-decade backtest, after the fit")
         value_adds.append({
             "tag": "Stress-tested across decades",
-            "title": "We report the out-of-sample number.",
-            "stat": f"{o['sharpe']:.2f}",
-            "stat_label": "out-of-sample Sharpe · multi-decade backtest, after the fit",
+            "title": "We report the number after the fit.",
+            "stat": stat,
+            "stat_label": stat_label,
             "note": f"Through a worst-case −{s['max_drawdown']*100:.0f}% drawdown "
                     f"(vs −{b['max_drawdown']*100:.0f}% buy-and-hold). We show the figure after the fit, "
                     "including the worst loss — not just the in-sample curve.",
@@ -170,6 +195,7 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
         "header": {
             "generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
         },
+        "hero": hero,
         "headline": headline,
         "value_adds": value_adds,
         "exhibits": exhibits,

@@ -81,6 +81,22 @@ re-derives the table from the engine and fails if a figure drifts — it is the 
   place, plus a CTA into `leakage.html?state=XX`. Regenerate after any `STATE_ALPHA`/`statemap.py`
   change; refresh the share cards with `node scripts/og_states.mjs`.
 
+## Moving to the custom domain (driftwoodplanning.com — or whichever is purchased)
+The full site hosts on the domain via GitHub Pages (same repo, same deploy; the site serves at the
+domain ROOT, no `/project/` subpath; github.io URLs auto-redirect). **Sequence matters — do not flip
+canonicals before DNS is live:**
+1. Purchase the domain (verify a trademark screen first: "Driftwood Wealth Partners" and
+   "Driftwood Capital/Advisors" are existing, unrelated financial firms).
+2. At the registrar: apex `A` records → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`,
+   `185.199.111.153`; `www` CNAME → `alecmessino.github.io`. Wait for DNS to resolve.
+3. Repo Settings → Pages → Custom domain = `www.driftwoodplanning.com` (writes `docs/CNAME`) →
+   wait for the certificate → check **Enforce HTTPS**.
+4. `python scripts/set_domain.py https://www.driftwoodplanning.com` — rewrites the base URL
+   everywhere (single source: `src/drift/site.py`); then rebuild
+   (`drift states`, `drift hub`, leakage/statemap/taxlab/thesis) + `python scripts/stamp_provenance.py`.
+5. `pytest -q tests/test_site_domain.py` must pass (asserts no stale-host references), then commit+push.
+6. Re-submit `sitemap.xml` in Google Search Console under the new property.
+
 ## Disaster recovery
 - **Lost/corrupt `tests/data/matrix_history.json`** → `TILT_SWEEP_REFRESH=1 python scripts/tilt_sweep.py`
   re-pulls and rewrites the cache (needs `TIINGO_API_KEY`); then regenerate STATE_ALPHA (above).

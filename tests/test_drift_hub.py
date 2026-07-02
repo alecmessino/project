@@ -79,7 +79,8 @@ def test_value_adds_sourced_and_fair_and_balanced(tmp_path):
     assert any("Risk" in t for t in tags)           # 2 · risk-managed, paired with its drawdown
     assert any("decades" in t for t in tags)        # 3 · out-of-sample honesty
     tax = next(v for v in va if "Tax" in v["tag"])
-    assert tax["stat"] == "−14%"                    # the tax drag itself, not a promised return
+    assert tax["stat"].startswith("+") and "%/yr" in tax["stat"]   # leads with the RECOVERY band…
+    assert "−14%" in tax["note"]                    # …with the drag it plugs as context, not headline
     risk = next(v for v in va if "Risk" in v["tag"])
     assert "−15%" in risk["note"]                   # this track's own drawdown, shown beside Sharpe
     oos = next(v for v in va if "decades" in v["tag"])
@@ -122,6 +123,31 @@ def test_hub_funnel_leads_with_structural_alpha_and_demotes_momentum_to_appendix
     # the momentum exhibits are described as exploratory research, not the deployed book
     assert "Exploratory research" in by_href["ledger.html"]["desc"]
     assert "Exploratory research" in by_href["equities.html"]["desc"]
+
+
+def test_hero_leads_with_the_structural_alpha_before_after(tmp_path):
+    # The hero is the substantiated tax edge (keep-rate before/after + the alpha band), sourced from
+    # the regression-locked leakage engine — available even on a bare checkout, never a raw return.
+    state = build_hub(tmp_path)
+    hr = state["hero"]
+    assert hr["keep_before"] < hr["keep_after"]                    # a before/after, not a bare number
+    assert 0 < hr["alpha_low"] <= hr["alpha_high"] < 10
+    assert hr["horizon"] == 30
+    from drift.leakage import build_leakage
+    leak = build_leakage()
+    assert hr["alpha_low"] == leak["headline"]["alpha_low"]        # single source of truth
+    assert hr["keep_after"] == leak["after"]["keep_pct"]
+
+
+def test_raw_model_return_is_research_tagged_for_the_appendix(tmp_path):
+    (tmp_path / "ledger.json").write_text(json.dumps({
+        "inception": "2024-09-16",
+        "entries": [{"equity": 1.0, "date": "2026-06-26"}, {"equity": 1.41, "date": "2026-06-29"}],
+    }))
+    state = build_hub(tmp_path)
+    mp = next(h for h in state["headline"] if h["label"] == "Model Portfolio (hypothetical)")
+    assert mp.get("research") is True                              # renders in the appendix, not the hero
+    assert "data through 2026-06-29" in mp["sub"]                  # the figure is always dated
 
 
 def test_hub_template_renders_an_exploratory_research_appendix_and_does_not_lead_with_the_ledger():

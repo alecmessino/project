@@ -44,6 +44,37 @@ def test_verdict_passes_when_edge_holds():
     assert not suppress and v_edge == 1.08
 
 
+def test_verdict_shrinks_model_market_gap():
+    # β=0.4: a 1.08-run raw gap is worth only 0.43 effective — below a 0.5 gate.
+    v_edge, suppress = verification_verdict(fair=10.58, verified_line=9.5,
+                                            min_edge=0.5, beta=0.4)
+    assert suppress and v_edge == pytest.approx(0.43, abs=0.01)
+    # a 1.5-run raw gap survives (0.6 effective ≥ 0.5).
+    v_edge, suppress = verification_verdict(fair=11.0, verified_line=9.5,
+                                            min_edge=0.5, beta=0.4)
+    assert not suppress and v_edge == pytest.approx(0.6)
+
+
+def test_rescue_gate_scales_with_shrinkage():
+    # gating on a market-verified quote inflates the required raw gap by 1/β.
+    from config import Constraints, TriggerRule
+    from live_engine import evaluate_rule
+    from sources.base import Quote
+    from tests.test_trigger import state
+    rule = TriggerRule(name="TTO3-Mid/Back", times_through_order=3,
+                       top_of_order_slots=[1, 2, 3, 4], starter_tier_filter=["Mid", "Back"],
+                       min_inning=5, ttop_run_multiplier=1.15)
+    st = state(inning=6, times_through_order=3, batting_slot_due=2)
+    c = Constraints(line_edge_min_z=None)          # req = 0.5 flat; β default 0.4 → raw gap ≥ 1.25
+    vq = lambda line: Quote(book="market-verified", home=st.home, away=st.away,
+                            line=line, live_game=True)
+    # fair at this state (pregame 9.0, 3 runs, top 6) ≈ 7.07; the bar is fair − 1.25.
+    # a verified 6.5 (gap 0.57 — would fire WITHOUT shrinkage) must NOT fire...
+    assert evaluate_rule(rule, st, vq(6.5), 9.0, c, 4.5) == []
+    # ...but a verified 5.5 (gap 1.57 ≥ 1.25) fires.
+    assert evaluate_rule(rule, st, vq(5.5), 9.0, c, 4.5) != []
+
+
 def test_probe_quote_reveals_state_match():
     """The rescue pass probes with line=0 — a fire proves the STATE gates pass,
     then the verified median decides. Stale-HIGH scrape lines can't block fires."""

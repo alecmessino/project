@@ -67,6 +67,13 @@ class Constraints(BaseModel):
     use_re24: bool = True
     line_edge_min_runs: float = 0.5     # flat floor (runs); a rule may override
     line_edge_min_pct: Optional[float] = None   # fraction of live line (0.05 = 5%)
+    # Market shrinkage (interim bias fix): first live night measured our fair at
+    # −1.77 runs bias vs finals while the market sat at −1.04 — so the effective
+    # edge vs a VERIFIED line is shrunk toward the sharper counterparty:
+    #   edge_eff = β · (fair − market_line),  β=1.0 disables.
+    # With β=0.4 a fire needs a raw model-market gap ≈2.5× the gate. Volume drops
+    # hard by design until the empirical decay calibration replaces this.
+    market_shrink_beta: float = 0.4
     # σ-scaled component (edge/√line ≥ z), composed with the floor via max().
     # Swept on 48.5k windows (edge_threshold_sweep.csv): the hit-rate gradient is
     # strong and monotone in every family; z matches runs at equal volume and is

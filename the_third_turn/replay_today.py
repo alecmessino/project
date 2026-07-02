@@ -59,7 +59,14 @@ def _real_lines() -> dict[int, float]:
 
 
 def replay_game(feed: dict, c: Constraints, bullpen: dict, tiers: dict,
-                pregame: float) -> list[Trigger]:
+                pregame: float, line_fn=None) -> list[Trigger]:
+    """Replay the engine rules over a game's play-by-play.
+
+    ``line_fn(iso_ts) -> float|None`` supplies the LIVE total at each plate
+    appearance (e.g. from a harvested trajectory) — the honest-backtest mode.
+    Without it, the pregame total stands in as the live line (same approximation
+    as simulate_execution).
+    """
     gd, ld = feed.get("gameData", {}), feed.get("liveData", {})
     away = resolve(gd.get("teams", {}).get("away", {}).get("name", "")) or "?"
     home = resolve(gd.get("teams", {}).get("home", {}).get("name", "")) or "?"
@@ -105,7 +112,18 @@ def replay_game(feed: dict, c: Constraints, bullpen: dict, tiers: dict,
             on_first=False, on_second=False, on_third=False, starter_id=sid,
             starter_on_mound=(pitcher_id == sid),
             starter_tier=tiers.get(str(sid), "Unknown"), data_age_seconds=None)
-        quote = Quote(book="statsapi-replay", home=home, away=away, line=pregame)
+        live_line = pregame
+        if line_fn is not None:
+            live_line = line_fn(play.get("about", {}).get("startTime") or "")
+            if live_line is None:
+                cum_pitches[pitcher_id] += sum(
+                    1 for ev in play.get("playEvents", []) if ev.get("isPitch"))
+                running_outs = int(play.get("count", {}).get("outs") or running_outs)
+                away_sc = int(res.get("awayScore") or away_sc)
+                home_sc = int(res.get("homeScore") or home_sc)
+                continue   # no market at this moment — skip evaluation, keep state
+        book = "market-verified" if line_fn is not None else "statsapi-replay"
+        quote = Quote(book=book, home=home, away=away, line=live_line, live_game=True)
         pen = bullpen.get(_pitching_team(state))
         for rule in c.rules:
             for trig in evaluate_rule(rule, state, quote, pregame, c, pen):

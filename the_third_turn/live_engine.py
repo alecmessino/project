@@ -102,14 +102,17 @@ def merge_quotes(*result_lists: list[Quote]) -> dict[str, Quote]:
     return merged
 
 
-def verification_verdict(fair: float, verified_line: float, min_edge: float) -> tuple[float, bool]:
+def verification_verdict(fair: float, verified_line: float, min_edge: float,
+                         beta: float = 1.0) -> tuple[float, bool]:
     """(verified_edge, suppress?) — the alert dies if the REAL betable line kills the edge.
 
     Scraped in-play feeds can serve stale totals (observed: Bovada coupon 8.5 while
     every betable book sat 9.5-10.5). The trigger edge is recomputed against the
-    verified consensus; if it no longer clears the gate, the alert is suppressed.
+    verified consensus — SHRUNK toward the market by β (interim bias fix: night one
+    measured our fair at −1.77 runs bias vs finals, the market at −1.04, so the
+    model-market gap is discounted rather than trusted at face value).
     """
-    v_edge = fair - verified_line
+    v_edge = beta * (fair - verified_line)
     return round(v_edge, 2), v_edge < min_edge
 
 
@@ -232,6 +235,10 @@ def _common_gates(state: LiveGameState, quote: Optional[Quote],
         return None
     anchor = _line_anchor(state, pregame_total, rule)
     edge_min = c.required_edge(rule, quote.line)
+    if quote.book == "market-verified" and c.market_shrink_beta > 0:
+        # gating directly on the REAL market line: apply the same shrinkage as the
+        # verification verdict (β·gap ≥ req  ⟺  gap ≥ req/β) so both paths agree.
+        edge_min = edge_min / c.market_shrink_beta
     if not (quote.line < anchor.expected_final - edge_min):
         return None                              # market not offering the Over cheaply
     reasons = [
@@ -426,7 +433,8 @@ class LiveEngine:
                 min_edge = (self.c.required_edge(rule, verified["median"]) if rule
                             else self.c.line_edge_min_runs)
                 v_edge, suppressed = verification_verdict(
-                    trig.anchor.expected_final, verified["median"], min_edge)
+                    trig.anchor.expected_final, verified["median"], min_edge,
+                    beta=self.c.market_shrink_beta)
                 extra = {"verified_line": verified["median"], "verified_edge": v_edge,
                          "verified_books": verified["books"],
                          "suppressed_stale_feed": bool(suppressed)}

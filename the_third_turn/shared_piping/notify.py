@@ -50,7 +50,12 @@ def data_age_label(data_age: Optional[float], max_age: float) -> str:
     return f"{data_age:.0f}s old{flag}"
 
 
-def build_embed(trigger, *, bullpen_elite_ra9: float, max_data_age: float) -> dict:
+_BOOK_ABBR = {"draftkings": "DK", "fanduel": "FD", "betmgm": "MGM", "bovada": "BOV",
+              "betrivers": "BR", "mybookieag": "MB", "caesars": "CZR"}
+
+
+def build_embed(trigger, *, bullpen_elite_ra9: float, max_data_age: float,
+                verified: Optional[dict] = None) -> dict:
     """Pure Discord embed payload for a fired CONFIRM/ARM trigger."""
     s = trigger.state
     is_arm = trigger.trigger_type == "ARM"
@@ -73,6 +78,13 @@ def build_embed(trigger, *, bullpen_elite_ra9: float, max_data_age: float) -> di
         {"name": "Latency", "inline": True,
          "value": f"data {data_age_label(s.data_age_seconds, max_data_age)}"},
     ]
+    if verified:
+        books = " · ".join(f"{_BOOK_ABBR.get(k, k[:4])} {v}"
+                           for k, v in sorted(verified["books"].items())[:5])
+        v_edge = trigger.anchor.expected_final - verified["median"]
+        fields.append({"name": "Betable line (verified)", "inline": False,
+                       "value": f"```median {verified['median']} | {books}```"
+                                f"edge vs fair: **{v_edge:+.1f}**"})
     return {
         "title": f"{emoji} {trigger.trigger_type} · {trigger.rule_name} · {s.away} @ {s.home}",
         "description": f"Inning {s.inning} {s.half} · {trigger.quote.book} · **hammer the OVER**",
@@ -96,9 +108,9 @@ class DiscordNotifier:
     def enabled(self) -> bool:
         return bool(self.url)
 
-    def _payload(self, trigger) -> dict:
+    def _payload(self, trigger, verified: Optional[dict] = None) -> dict:
         embed = build_embed(trigger, bullpen_elite_ra9=self.bullpen_elite_ra9,
-                             max_data_age=self.max_data_age)
+                             max_data_age=self.max_data_age, verified=verified)
         payload = {"embeds": [embed]}
         # ping only on the strong CONFIRM alerts, mirroring mrbet's behavior.
         if trigger.trigger_type == "CONFIRM" and self.ping:
@@ -111,12 +123,13 @@ class DiscordNotifier:
                 payload["allowed_mentions"] = {"parse": ["everyone"]}
         return payload
 
-    async def post(self, session: aiohttp.ClientSession, trigger) -> bool:
+    async def post(self, session: aiohttp.ClientSession, trigger,
+                   verified: Optional[dict] = None) -> bool:
         """POST the embed; returns True on success. Never raises past here."""
         if not self.enabled:
             return False
         try:
-            async with session.post(self.url, json=self._payload(trigger),
+            async with session.post(self.url, json=self._payload(trigger, verified),
                                     timeout=aiohttp.ClientTimeout(total=10)) as resp:
                 return resp.status < 300
         except Exception as exc:  # noqa: BLE001 — a webhook failure must not kill the loop

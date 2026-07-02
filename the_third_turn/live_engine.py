@@ -27,10 +27,13 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import os
 import signal
+import statistics
 import sys
 import time
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -43,6 +46,7 @@ from config import Constraints, EngineSettings, TriggerRule  # noqa: E402
 from shared_piping.ledger import Ledger  # noqa: E402
 from shared_piping.notify import DiscordNotifier, data_age_label, pull_risk_label  # noqa: E402
 from shared_piping.run_expectancy import RunEnvAnchor, expected_final_total  # noqa: E402
+from shared_piping.team_map import resolve  # noqa: E402
 from sources.base import LiveGameState, Quote  # noqa: E402
 from sources.bovada import BovadaSource  # noqa: E402
 from sources.fanduel import FanDuelSource  # noqa: E402
@@ -96,6 +100,81 @@ def merge_quotes(*result_lists: list[Quote]) -> dict[str, Quote]:
             if cur is None or (q.live_game and not cur.live_game):
                 merged[q.game_key] = q
     return merged
+
+
+def verification_verdict(fair: float, verified_line: float, min_edge: float) -> tuple[float, bool]:
+    """(verified_edge, suppress?) — the alert dies if the REAL betable line kills the edge.
+
+    Scraped in-play feeds can serve stale totals (observed: Bovada coupon 8.5 while
+    every betable book sat 9.5-10.5). The trigger edge is recomputed against the
+    verified consensus; if it no longer clears the gate, the alert is suppressed.
+    """
+    v_edge = fair - verified_line
+    return round(v_edge, 2), v_edge < min_edge
+
+
+class LineVerifier:
+    """Fire-time line verification against REAL betable books (The Odds API).
+
+    One credit per refresh, cached ``ttl`` seconds so multiple fires in a poll share
+    a call — used only when an alert is about to post, so cost is a few credits per
+    game night. Only games already commenced are indexed (excludes the next series
+    game's pregame listing under the same matchup).
+    """
+
+    URL = ("https://api.the-odds-api.com/v4/sports/baseball_mlb/odds"
+           "?apiKey={key}&regions=us&markets=totals&oddsFormat=american")
+
+    def __init__(self, api_key: str, ttl: float = 60.0):
+        self.key = api_key
+        self.ttl = ttl
+        self._board: Optional[dict] = None
+        self._at = 0.0
+
+    @staticmethod
+    def parse_board(data: list) -> dict[str, dict]:
+        """game_key -> {median, books} for COMMENCED games only."""
+        out: dict[str, dict] = {}
+        now = datetime.now(timezone.utc)
+        for e in data if isinstance(data, list) else []:
+            try:
+                commenced = datetime.fromisoformat(
+                    str(e.get("commence_time", "")).replace("Z", "+00:00")) <= now
+            except ValueError:
+                continue
+            if not commenced:
+                continue
+            away = resolve(e.get("away_team", ""))
+            home = resolve(e.get("home_team", ""))
+            if not away or not home:
+                continue
+            books: dict[str, float] = {}
+            for b in e.get("bookmakers", []):
+                for m in b.get("markets", []):
+                    if m.get("key") != "totals":
+                        continue
+                    for o in m.get("outcomes", []):
+                        if o.get("name") == "Over" and o.get("point") is not None:
+                            books[b.get("key", "?")] = float(o["point"])
+            if books:
+                out[f"{away}@{home}"] = {"median": statistics.median(books.values()),
+                                         "books": books}
+        return out
+
+    async def lookup(self, session: aiohttp.ClientSession, game_key: str) -> Optional[dict]:
+        now = time.monotonic()
+        if self._board is None or now - self._at > self.ttl:
+            try:
+                async with session.get(self.URL.format(key=self.key),
+                                       timeout=aiohttp.ClientTimeout(total=15)) as resp:
+                    if resp.status != 200:
+                        return None
+                    data = await resp.json(content_type=None)
+            except Exception:  # noqa: BLE001 — verification is best-effort
+                return None
+            self._board = self.parse_board(data)
+            self._at = now
+        return self._board.get(game_key)
 
 
 def load_closing_lines(path) -> dict[int, float]:
@@ -246,6 +325,9 @@ class LiveEngine:
         # an in-play line, not the pregame total.
         self.closing_lines = load_closing_lines(
             Path(__file__).resolve().parent / "data" / "closing_lines.csv")
+        # fire-time verification against betable books (needs ODDS_API_KEY).
+        odds_key = os.environ.get("ODDS_API_KEY")
+        self.verifier = LineVerifier(odds_key) if (settings.verify_lines and odds_key) else None
         self.pregame_total: dict[str, float] = {}
         self._alerted: set[str] = set()
         self._stop = asyncio.Event()
@@ -294,16 +376,36 @@ class LiveEngine:
         return fired, state_res.states, quotes
 
     async def _handle(self, session: aiohttp.ClientSession, trig: Trigger) -> None:
-        self.ledger.record(trig)                 # every signal, always
-        self._emit(trig)
-        if trig.trigger_type != "WATCH":         # WATCH never hits Discord
-            await self.discord.post(session, trig)
+        # verify the live line against REAL betable books before alerting (Fix for
+        # stale scraped in-play quotes — a Bovada 8.5 while DK/FD sat at 9.5-10.5).
+        verified = suppressed = None
+        extra = None
+        if trig.trigger_type != "WATCH" and self.verifier:
+            verified = await self.verifier.lookup(session, trig.game_key)
+            if verified:
+                v_edge, suppressed = verification_verdict(
+                    trig.anchor.expected_final, verified["median"], self.c.line_edge_min_runs)
+                extra = {"verified_line": verified["median"], "verified_edge": v_edge,
+                         "verified_books": verified["books"],
+                         "suppressed_stale_feed": bool(suppressed)}
+        self.ledger.record(trig, extra=extra)    # every signal, always (with verification)
+        self._emit(trig, verified=verified, suppressed=bool(suppressed))
+        if trig.trigger_type != "WATCH" and not suppressed:  # WATCH never hits Discord
+            await self.discord.post(session, trig, verified=verified)
 
-    def _emit(self, trig: Trigger) -> None:
+    def _emit(self, trig: Trigger, verified: Optional[dict] = None,
+              suppressed: bool = False) -> None:
         s = trig.state
         tag = {"ARM": "🟡 ARM", "CONFIRM": "🔴 CONFIRM",
                "WATCH": "[WATCH_RULE] 🔵 WATCH"}[trig.trigger_type]
+        if suppressed:
+            tag = f"⛔ SUPPRESSED {tag}"
         console.rule(f"[bold]{tag} · {trig.rule_name} · {trig.game_key}")
+        if verified:
+            vb = " · ".join(f"{k}:{v}" for k, v in sorted(verified["books"].items())[:5])
+            note = ("stale feed line — edge dies at the real books" if suppressed
+                    else "edge holds at the real books")
+            console.print(f"   verified live line: median {verified['median']} ({vb}) — {note}")
         console.print(
             f"[bold]{s.away} {s.away_score} — {s.home_score} {s.home}[/]  "
             f"inn {s.inning} {s.half} · {s.pitcher_name} ({s.starter_tier}) · "
@@ -321,6 +423,12 @@ class LiveEngine:
                       + ", ".join(f"{r.name}(TTO{r.times_through_order},{r.kind})" for r in rules))
         console.print(f"[cyan]pregame anchors:[/] {len(self.closing_lines)} real closing "
                       f"line(s) loaded from data/closing_lines.csv")
+        if self.verifier:
+            console.print("[green]Line verification ON[/] — alerts checked against "
+                          "betable books (The Odds API) before posting.")
+        else:
+            console.print("[yellow]Line verification OFF (no ODDS_API_KEY) — feed "
+                          "lines are unverified.[/]")
         if self.discord.enabled:
             console.print("[green]Discord alerts ON[/] for CONFIRM/ARM.")
         else:

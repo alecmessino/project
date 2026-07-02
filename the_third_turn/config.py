@@ -106,6 +106,9 @@ class EngineSettings(BaseModel):
     # Revision 3: ledger, latency, Discord.
     ledger_path: str = str(HERE / "output" / "ledger.jsonl")
     max_data_age_seconds: float = 30.0
+    # verify fired alerts against real betable books via The Odds API (1 credit per
+    # refresh, 60s cache) — suppresses alerts whose edge dies at the real line.
+    verify_lines: bool = True
     alert_webhook: Optional[str] = None      # overrides $DISCORD_WEBHOOK_URL if set
     discord_ping: Optional[str] = None       # overrides $DISCORD_PING (user id / "everyone")
 

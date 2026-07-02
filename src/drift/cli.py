@@ -187,6 +187,9 @@ def export(
     series: Optional[str] = typer.Option(None, "--series", help="multi-instrument CSV"),
     config: Optional[str] = typer.Option(None, "--config"),
     out: str = typer.Option("docs/equities.html", "--out", help="static HTML exhibit path"),
+    ledger: str = typer.Option("docs/ledger.json", "--ledger",
+                               help="forward-ledger JSON; when present, the 'Latest rebalance' blotter "
+                                    "is derived from ITS entries (single source of truth)"),
 ):
     """Build a self-contained static dashboard HTML (shareable, no server)."""
     from .exhibit import export_html
@@ -196,7 +199,7 @@ def export(
     if not series_dict and source != "synthetic":
         console.print("[yellow]no data pulled (rate-limited?) — keeping existing exhibit.[/]")
         raise typer.Exit()
-    path = export_html(series_dict, settings, out, source=source)
+    path = export_html(series_dict, settings, out, source=source, ledger_path=ledger)
     console.print(f"[green]wrote[/] {path}  ({len(series_dict)} instruments)")
 
 

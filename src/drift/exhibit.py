@@ -40,17 +40,41 @@ def _spark(curve: Sequence[float], n: int = 90) -> list[float]:
 
 
 def latest_rebalance_blotter(series: dict[str, list[Bar]], settings: Settings) -> dict | None:
-    """The most recent rebalance as a trade blotter: what the book actually did at its last
-    turn — names entered, exited, and weights raised/trimmed — plus the P&L since.
-
-    Built by diffing the per-session weight book (`cross_book_entries`) at its last change, so it
-    answers the dashboard's missing question ("what changed, and what to do now") straight from the
-    engine. Pure and self-contained; returns None when there isn't a prior book to diff against.
-    """
+    """Fallback blotter: recompute the book fresh and diff its last weight change. Only used when the
+    forward ledger isn't available — the recomputation's window/boundaries can differ from the
+    ledger's persisted path, so `ledger_blotter` is ALWAYS preferred (single source of truth)."""
     try:
         entries = cross_book_entries(series, settings)
     except Exception:
         return None
+    b = blotter_from_entries(entries)
+    if b:
+        b["book"] = "recomputed"
+    return b
+
+
+def ledger_blotter(ledger_path: str | Path) -> dict | None:
+    """The dashboard blotter derived from the SAME entries the Model Portfolio ledger publishes
+    (docs/ledger.json) — so 'the trades the book just made' can never contradict the ledger page."""
+    try:
+        j = json.loads(Path(ledger_path).read_text())
+        entries = j.get("entries", [])
+    except Exception:
+        return None
+    b = blotter_from_entries(entries)
+    if b:
+        b["book"] = "ledger"
+    return b
+
+
+def blotter_from_entries(entries: list[dict]) -> dict | None:
+    """The most recent rebalance as a trade blotter: what the book actually did at its last
+    turn — names entered, exited, and weights raised/trimmed — plus the P&L since.
+
+    Built by diffing a per-session weight book (entries need date/weights/equity) at its last change,
+    so it answers the dashboard's missing question ("what changed, and what to do now") straight from
+    the book. Pure and self-contained; returns None when there isn't a prior book to diff against.
+    """
     if len(entries) < 2:
         return None
     cur = entries[-1]["weights"]
@@ -94,8 +118,12 @@ def latest_rebalance_blotter(series: dict[str, list[Bar]], settings: Settings) -
     }
 
 
-def build_state(series: dict[str, list[Bar]], settings: Settings, source: str = "—") -> dict:
-    """Full dashboard state for a universe of instrument -> bar-series."""
+def build_state(series: dict[str, list[Bar]], settings: Settings, source: str = "—",
+                ledger_path: str | Path | None = None) -> dict:
+    """Full dashboard state for a universe of instrument -> bar-series.
+
+    `ledger_path`: when the forward ledger exists, the 'Latest rebalance' blotter is derived from ITS
+    entries (single source of truth with the Model Portfolio page) instead of a fresh recomputation."""
     s = settings.signal
     instruments: list[dict] = []
     for inst, bars in sorted(series.items()):
@@ -126,7 +154,8 @@ def build_state(series: dict[str, list[Bar]], settings: Settings, source: str = 
 
     rankings = [vars(r) for r in rank_snapshot(series, settings)]
     xbt = cross_backtest(series, settings)
-    blotter = latest_rebalance_blotter(series, settings)
+    blotter = (ledger_blotter(ledger_path) if ledger_path and Path(ledger_path).exists() else None) \
+        or latest_rebalance_blotter(series, settings)
     n_bars = max((len(b) for b in series.values()), default=0)
 
     return {
@@ -137,6 +166,8 @@ def build_state(series: dict[str, list[Bar]], settings: Settings, source: str = 
             "n_bars": n_bars,
             "n_flagged": sum(1 for i in instruments if i["flagged"]),
             "generated": time.strftime("%Y-%m-%d %H:%M:%S"),
+            # Last bar across the universe — dates the DATA, not just the render.
+            "data_through": max((b[-1].asof for b in series.values() if b), default=""),
             "model": f"lookback {s.lookback} · vol {s.vol_window} · channel {s.breakout_channel}",
         },
         "instruments": instruments,
@@ -166,9 +197,9 @@ def render_html(state: dict) -> str:
 
 
 def export_html(series: dict[str, list[Bar]], settings: Settings, out: str | Path,
-                source: str = "—") -> Path:
+                source: str = "—", ledger_path: str | Path | None = None) -> Path:
     """Build state and write a self-contained exhibit HTML to `out`."""
-    state = build_state(series, settings, source=source)
+    state = build_state(series, settings, source=source, ledger_path=ledger_path)
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render_html(state))

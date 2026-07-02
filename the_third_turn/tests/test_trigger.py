@@ -118,6 +118,17 @@ def test_evaluate_rule_dispatches():
     assert watch and watch[0].trigger_type == "WATCH"
 
 
+def test_exit_notes_only_for_alerted_games_once():
+    from live_engine import exit_notes_due
+    pulled = state(starter_on_mound=False, half="top")   # home (ATL) pitching
+    live = state(starter_on_mound=True)
+    # not alerted -> no note; alerted -> one note; repeat -> silenced
+    assert exit_notes_due([pulled, live], set(), set()) == []
+    due = exit_notes_due([pulled, live], {"CWS@ATL"}, set())
+    assert len(due) == 1 and due[0][1] == ("CWS@ATL", "ATL")
+    assert exit_notes_due([pulled], {"CWS@ATL"}, {("CWS@ATL", "ATL")}) == []
+
+
 def test_dedupe_key_separates_rules_and_types():
     s = state(inning=6, times_through_order=3, batting_slot_due=2)
     t3 = evaluate_confirm(s, q(), 9.0, TTO3, C, WEAK_PEN)

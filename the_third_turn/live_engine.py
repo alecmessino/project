@@ -86,6 +86,22 @@ def _pitching_team(state: LiveGameState) -> str:
     return state.home if state.half == "top" else state.away
 
 
+def exit_notes_due(states: list[LiveGameState], alerted_games: set[str],
+                   already_noted: set[tuple]) -> list[tuple]:
+    """(game_key, pitching_team, pen_note_key) for alerted games whose CURRENT
+    pitching side just lost its starter and hasn't been announced yet."""
+    due = []
+    for st in states:
+        if st.starter_on_mound:
+            continue
+        if st.game_key not in alerted_games:
+            continue
+        key = (st.game_key, _pitching_team(st))
+        if key not in already_noted:
+            due.append((st, key))
+    return due
+
+
 def merge_quotes(*result_lists: list[Quote]) -> dict[str, Quote]:
     """One quote per game_key; an IN-PLAY quote always beats a pregame one.
 
@@ -360,6 +376,8 @@ class LiveEngine:
                          if (settings.verify_lines and odds_key) else None)
         self.pregame_total: dict[str, float] = {}
         self._alerted: set[str] = set()
+        self._alerted_games: set[str] = set()      # games with a DELIVERED alert
+        self._exit_noted: set[tuple] = set()       # (game_key, pitching_team) announced
         self._stop = asyncio.Event()
 
     def _merge_quotes(self, *result_lists: list[Quote]) -> dict[str, Quote]:
@@ -447,6 +465,7 @@ class LiveEngine:
         self.ledger.record(trig, extra=extra)    # every signal, always (with verification)
         self._emit(trig, verified=verified, suppressed=bool(suppressed))
         if trig.trigger_type != "WATCH" and not suppressed:  # WATCH never hits Discord
+            self._alerted_games.add(trig.game_key)
             await self.discord.post(session, trig, verified=verified)
 
     def _emit(self, trig: Trigger, verified: Optional[dict] = None,
@@ -509,6 +528,20 @@ class LiveEngine:
                             + cred)
                 for trig in fired:
                     await self._handle(session, trig)
+                # position hygiene: announce when an alerted game's starter exits
+                # (thesis window closed; remaining innings ride on the bullpen).
+                for st, key in exit_notes_due(states, self._alerted_games, self._exit_noted):
+                    self._exit_noted.add(key)
+                    pen_team = _pitching_team(st)
+                    ra9 = self.bullpen_quality.get(pen_team)
+                    note = (f"⚪ **{st.game_key}** — starter pulled ({pen_team}). TTOP window "
+                            f"closed; remaining innings ride on the {pen_team} pen"
+                            + (f" ({ra9:.2f} RA/9)." if ra9 else "."))
+                    console.print(f"   {note}")
+                    try:
+                        await self.discord.post_note(session, note)
+                    except Exception:  # noqa: BLE001
+                        pass
                 if once:
                     if not states:
                         console.print("[dim]no live games right now (nothing to evaluate).[/]")

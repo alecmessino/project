@@ -123,6 +123,18 @@ class DiscordNotifier:
                 payload["allowed_mentions"] = {"parse": ["everyone"]}
         return payload
 
+    async def post_note(self, session: aiohttp.ClientSession, text: str) -> bool:
+        """Plain (non-embed) operational note, e.g. 'starter pulled — window closed'."""
+        if not self.enabled:
+            return False
+        try:
+            async with session.post(self.url, json={"content": text},
+                                    timeout=aiohttp.ClientTimeout(total=10)) as resp:
+                return resp.status < 300
+        except Exception as exc:  # noqa: BLE001
+            print(f"[discord error] {type(exc).__name__}: {exc}")
+            return False
+
     async def post(self, session: aiohttp.ClientSession, trigger,
                    verified: Optional[dict] = None) -> bool:
         """POST the embed; returns True on success. Never raises past here."""

@@ -125,13 +125,23 @@ stopping rule — we stop when the evidence no longer supports the original clai
 boundary rather than keep drilling. This section tells the reviewer the design was one program
 with a spine (Figures 2→3), not a fishing expedition.
 
-## 6. Results (organize the boundary — the paper's strength)
-- **5.1 Hypothesis battery table** (see Appendix A for the full one-page version).
-- **5.2 Remaining-runs:** baseline R²=0.224 (calibrated); + fatigue → ΔMAE = −0.001.
-- **5.3 Encompassing (G+E+):** market R²=0.304 > features 0.279; adding features ΔR²=−0.017;
-  book error not predictable OOS (R²=−0.037); per-feature ΔR² ≤ 0.002.
-- **5.4 Transfer function (A):** ΔRE validated vs linear weights (HR 1.34/1.40); response
-  ratios 0.63–0.84, *uniform* → measurement low-pass filter, not per-event inefficiency.
+## 6. Results (DRAFTED — `draft_results.md`; brief order: lead with the hardest evidence)
+Ordered as a legal brief, not a chronicle. **One figure per paragraph**, opening from the
+evidence. Sequence:
+1. **Research Question** (one sentence) → "Figure 4 answers this question directly."
+2. **Forecast encompassing (Fig. 4):** market R²=0.304 > features 0.279; combined ΔR²=−0.017;
+   per-feature incremental ≤ +0.0018; book error not predictable OOS (R²=−0.037). Labeled in
+   text as *the central empirical result of the study.*
+3. **Hypothesis elimination (Fig. 2):** the boundary holds across the whole battery; the pattern
+   of elimination (different gate per row) rules out a single artifact. Table → **Appendix A1**.
+4. **Incremental-information funnel (Fig. 3):** 10 → 9 → 3 → 0 → 0; the empirical boundary.
+5. **Velocity debiasing (Fig. 5):** 0.420 → 0.610 → 0.524; post-treatment selection, a general
+   statistical principle.
+6. **Transfer function (Fig. 6):** one common slope ≈0.74; uniform attenuation (measurement
+   low-pass), not a per-event edge.
+7. **Calibration (Fig. 7):** approximately calibrated within-sample; residual unpredictable;
+   "together with Figure 4, defines the empirical boundary."
+8. **Summary of Results:** one-paragraph bridge into the Discussion.
 
 ## 7. Discussion (restructured — where the paper becomes memorable)
 - **7.1 Why intuitive baseball hypotheses are encompassed.** Not because baseball theory is
@@ -166,7 +176,9 @@ pitching-change repricing.
 
 ---
 
-## Appendix A — every hypothesis, one page
+## Appendix Table A1 — every hypothesis, one page
+*(Referenced once from Results; Figure 2 is the main-text representation — reviewers read the
+graphic faster than the table.)*
 
 | Hypothesis | Motivation | Test | Outcome | Why it failed |
 |---|---|---|---|---|

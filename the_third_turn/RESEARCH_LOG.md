@@ -41,7 +41,22 @@ with live line + price trajectories (Odds Papi) joined to play-by-play + Statcas
 
 | 15 | **Program A · Transfer function** (does the line move by the *correct amount*?) | 6,414 events | ΔRE = runs + ΔRE24 (validated vs linear weights). Response ratio ΔBook(+5m)/ΔRE by event: HR **0.81**, 3B 0.84, 2B 0.64, 1B 0.72, BB 0.63 — hits cluster **0.64–0.84**, roughly *uniform* (⇒ the sub-1 level is single-source/convergence attenuation, not a per-event edge). Line takes >1 min to converge (+1m ≈ half of +5m). Pitching change **0.12** but RE24 can't benchmark it (ignores reliever quality) | ✅ Sharp market adjusts ~correctly; **historical phase complete** |
 
-**Historical phase complete.** The sharp market prices public baseball information and adjusts to information shocks by roughly the right magnitude (uniformly across event types). The only interpretable anomaly — pitching changes — is a *benchmark* gap (RE24 doesn't price reliever quality), and it's exactly the event where the live line's repricing is worth testing directly. From here the project is **entirely live microstructure**: cross-book lag, sub-second latency, transient state-specific miscalibration, and distributional/tail effects — all on the timestamped odds + game-state + implied-distribution streams now banking.
+**Historical phase complete — precise conclusion.** *Within the limits of our data (163 games, ~1-minute historical odds snapshots, one Pinnacle-grade source), we find no evidence that publicly observable baseball state variables provide incremental predictive information beyond the live market.* We deliberately bind the claim to the experiment rather than asserting universal efficiency.
+
+Program A adds a methodological point: the response ratios are **remarkably stable** (0.63–0.84 across every hit type). That uniformity is evidence about the **measurement pipeline** — a low-pass filter (single source + convergence window attenuating every event equally) — *not* about market inefficiency. Its consistency strengthens the experiment's credibility. The one non-attenuation anomaly, pitching changes, is a *benchmark* gap (RE24 can't price reliever quality) and is a live experiment, not a historical result.
+
+## Forward agenda — live market microstructure (all live-data-gated)
+
+The project has crossed from sports analytics into **price-discovery / information-processing** research. These run on the timestamped odds + game-state + implied-distribution streams now banking; each needs days–weeks of accumulation.
+
+1. **Price discovery / information network** — how does a shock propagate *across* books? Estimate the directed graph `P(A→B)` (movement in A precedes B). Who leads, who follows.
+2. **Information half-life (τ½)** — per event type, the time for 50% of the eventual adjustment. A measurable market characteristic (e.g. HR vs pitching change vs injury may differ).
+3. **Cross-book price leadership** — Pinnacle vs FanDuel/Bovada move-order and lag distribution; the *tradable* version (bet the laggard / a derivative market).
+4. **Distribution dynamics (flagship)** — not just μ: how do σ, skew, and tail probabilities evolve after each event? Markets often update the mean better than the higher moments — the Pinnacle implied-distribution panel is built to test this.
+5. **Market compression (new)** — cross-book variance spikes at a shock then collapses as books update. Measures *when disagreement exists* — arguably more actionable than move-order alone.
+6. **Pitching-change repricing** — does the live line correctly reprice the run environment when a pitcher changes? (The one lead Program A surfaced; RE24-blind, so a quality-aware model could differ.)
+
+**Stopping rule:** if cross-book propagation is effectively instantaneous and distributional calibration is accurate, the live market is highly efficient under the conditions measured. If persistent lags or systematic distributional miscalibration appear, that's a market mechanism to evaluate for economic significance. Either outcome is a falsifiable, publishable result.
 
 **Fatigue/TTOP edge refuted 3×:** V4 bullpen (#8), velocity debiasing (#10), remaining-runs fatigue terms (#11). Consistent with the literature.
 

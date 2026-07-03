@@ -114,10 +114,11 @@ def walk_game(feed, points, start_time, rules, elite, bullpen, tiers) -> dict:
             rule = active_cliff(rules, elite, tto, slot, inning, starter_on, tier, pen_ra9)
             key = (inning, half)
             slot_row = half_rows.get(key)
+            feat = {"tier": tier, "pen_ra9": pen_ra9}
             if slot_row is None:
-                half_rows[key] = {"line": line, "active_rule": rule}
+                half_rows[key] = {"line": line, "active_rule": rule, **feat}
             elif rule and not slot_row["active_rule"]:
-                slot_row["line"], slot_row["active_rule"] = line, rule  # upgrade to context
+                slot_row.update(line=line, active_rule=rule, **feat)  # upgrade to context
 
         running_outs = int(play.get("count", {}).get("outs") or running_outs)
 
@@ -126,7 +127,7 @@ def walk_game(feed, points, start_time, rules, elite, bullpen, tiers) -> dict:
         obs = {"inning": inning, "drop": round(closing - row["line"], 2),
                "line": row["line"], "win": final > row["line"], "push": final == row["line"]}
         if row["active_rule"]:
-            obs["rule"] = row["active_rule"]
+            obs.update(rule=row["active_rule"], tier=row.get("tier"), pen_ra9=row.get("pen_ra9"))
             context.append(obs)
         else:
             control.append(obs)

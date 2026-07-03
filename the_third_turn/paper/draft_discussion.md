@@ -57,7 +57,7 @@ Forecast encompassing is valuable precisely because it isolates the middle link 
 papers most often skip. A naïve backtest measures something closer to prediction; a
 profit-and-loss simulation measures something closer to the third link and is easily flattered by
 overfitting and by using stale lines. Encompassing asks the hard question directly: *does this
-variable improve on what the price already knows?* In our data, for every variable we measured,
+variable improve on what the price already reflects?* In our data, for every variable we measured,
 the answer is no — and because the test speaks to increment rather than to a particular staking
 scheme, that conclusion does not depend on how one would have bet.
 

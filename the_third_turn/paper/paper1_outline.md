@@ -16,9 +16,19 @@ of Public Information in Live MLB Totals Markets*
 Betting Markets? Evidence from Escalating Validation Tests*
 (Deliberately does **not** lead with "market efficiency"; the subtitle names the design.)
 
-Status: historical phase complete. Prose drafted for anchor sections; language bound to
-the experiment (claims are "no evidence of incremental information within our data," never
-"the market is efficient").
+Status: historical phase complete; **all sections drafted and ASSEMBLED into `paper1.md`**
+(Related Work still a stub, references TBD). Language bound to the experiment (claims are "no
+evidence of incremental information within our data," never "the market is efficient").
+
+**Registered versions (research, not software):** Paper 1 **Draft 0.9** (assembled `paper1.md`);
+Figure Set **v1**; Analysis Pipeline (the `output/*.json` producers) **v1**; Third Turn Benchmark
+**Preview / initial release** (packaging pending). Next: end-to-end editorial sweep → Related Work
+→ benchmark packaging → external review (3 readers) → arXiv.
+
+**Assembly note:** final section numbering is normalized in `paper1.md` — 1 Intro, 2 Related Work,
+3 Methods (3.1–3.5), 4 Results, 5 Discussion (5.1–5.4), 6 Limitations, 7 Remaining Questions,
+8 Conclusion, Figures manifest, Appendix A1, availability, references. The per-section draft files
+keep their original heading numbers; `paper1.md` is now canonical.
 
 ---
 

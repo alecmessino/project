@@ -60,6 +60,10 @@ class LiveGameState:
     starter_on_mound: bool = True             # is the current pitcher still the starter?
     starter_tier: str = "Unknown"             # Ace / Mid / Back (season baseline WHIP)
     data_age_seconds: Optional[float] = None  # age of the MLB feed snapshot (latency)
+    # --- live velocity (current pitcher; for the in-play velocity-cliff study) ---
+    velo_early: Optional[float] = None        # avg startSpeed, first ~15 pitches
+    velo_recent: Optional[float] = None       # avg startSpeed, last ~10 pitches
+    velo_drop: Optional[float] = None         # velo_early − velo_recent (+ = losing velocity)
 
     @property
     def game_key(self) -> str:

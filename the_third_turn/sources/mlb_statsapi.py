@@ -33,6 +33,26 @@ from sources.base import LiveGameState, SourceResult
 
 SCHEDULE_URL = "https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={date}"
 FEED_URL = "https://statsapi.mlb.com/api/v1.1/game/{game_pk}/feed/live"
+
+
+def _pitcher_velo(live, pitcher_id, early_n=15, recent_n=10):
+    """(early avg, recent avg, early−recent) startSpeed for the CURRENT pitcher, or
+    (None, None, None) if too few pitches. The live in-game velocity trend."""
+    if pitcher_id is None:
+        return None, None, None
+    speeds = []
+    for play in live.get("plays", {}).get("allPlays", []):
+        if (play.get("matchup", {}).get("pitcher") or {}).get("id") != pitcher_id:
+            continue
+        for e in play.get("playEvents", []):
+            sp = (e.get("pitchData") or {}).get("startSpeed")
+            if sp:
+                speeds.append(sp)
+    if len(speeds) < early_n + 3:
+        return None, None, None
+    early = sum(speeds[:early_n]) / early_n
+    recent = sum(speeds[-recent_n:]) / min(recent_n, len(speeds))
+    return round(early, 1), round(recent, 1), round(early - recent, 2)
 REFERER = "https://www.mlb.com/"
 LINEUP_SIZE = 9
 
@@ -148,6 +168,7 @@ class MLBStatsSource:
         starter_id = int(pitchers_used[0]) if pitchers_used else pitcher_id
         starter_on_mound = (pitcher_id == starter_id) if pitcher_id is not None else True
         starter_tier = self.starter_tiers.get(int(starter_id), "Unknown") if starter_id else "Unknown"
+        velo_early, velo_recent, velo_drop = _pitcher_velo(live, pitcher_id)
 
         return LiveGameState(
             game_pk=game_pk, away=away, home=home, inning=inning,
@@ -158,6 +179,7 @@ class MLBStatsSource:
             outs=outs, on_first=on_first, on_second=on_second, on_third=on_third,
             starter_id=starter_id, starter_on_mound=starter_on_mound,
             starter_tier=starter_tier, data_age_seconds=self._data_age(feed),
+            velo_early=velo_early, velo_recent=velo_recent, velo_drop=velo_drop,
         )
 
     async def fetch(self, session: aiohttp.ClientSession) -> SourceResult:

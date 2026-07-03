@@ -429,7 +429,7 @@ class LiveEngine:
         for s in states:
             sig = (s.inning, s.half, s.outs, s.away_score, s.home_score, s.on_first,
                    s.on_second, s.on_third, s.times_through_order, s.pitch_count,
-                   s.starter_on_mound, s.pitcher_id)
+                   s.starter_on_mound, s.pitcher_id, s.velo_recent)
             if self._gs_last.get(s.game_key) == sig:
                 continue
             self._gs_last[s.game_key] = sig
@@ -438,7 +438,8 @@ class LiveEngine:
                          "bases": [int(s.on_first), int(s.on_second), int(s.on_third)],
                          "tto": s.times_through_order, "pitch_count": s.pitch_count,
                          "starter_on": s.starter_on_mound, "starter_tier": s.starter_tier,
-                         "pitcher_id": s.pitcher_id})
+                         "pitcher_id": s.pitcher_id, "velo_early": s.velo_early,
+                         "velo_recent": s.velo_recent, "velo_drop": s.velo_drop})
         if rows:
             with self._gs_path.open("a") as f:
                 f.writelines(json.dumps(r) + "\n" for r in rows)
@@ -473,7 +474,8 @@ class LiveEngine:
                 "away_score": s.away_score, "home_score": s.home_score,
                 "bases": [int(s.on_first), int(s.on_second), int(s.on_third)],
                 "tto": s.times_through_order, "pitch_count": s.pitch_count,
-                "starter_on": s.starter_on_mound, "starter_tier": s.starter_tier}
+                "starter_on": s.starter_on_mound, "starter_tier": s.starter_tier,
+                "velo_recent": s.velo_recent, "velo_drop": s.velo_drop}
             rows.append({"ts": ts, "game": t.game_key, "team": t.team, "line": t.implied_line,
                          "sd": t.sd, "skew": t.skew, "live": t.live, "probs": t.probs,
                          "state": state})

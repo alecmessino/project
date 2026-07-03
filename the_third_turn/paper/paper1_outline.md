@@ -143,36 +143,38 @@ evidence. Sequence:
    "together with Figure 4, defines the empirical boundary."
 8. **Summary of Results:** one-paragraph bridge into the Discussion.
 
-## 7. Discussion (restructured — where the paper becomes memorable)
-- **7.1 Why intuitive baseball hypotheses are encompassed.** Not because baseball theory is
-  wrong — because sharp sportsbooks already know baseball. The variables predict runs; the
-  market reflects them. The boundary is about *incremental* information, not about whether the
-  physics is real.
-- **7.2 Prediction ≠ profit.** The central distinction most betting papers miss: a variable
-  can predict *runs* without predicting *sportsbook error*. Forecast encompassing separates
-  the two directly; every feature is predictive yet non-incremental.
-- **7.3 The efficient frontier of public-information baseball betting.** *Inside* the
-  frontier: observable baseball variables — the market encompasses them. *Outside*:
-  microstructure (timing, cross-book, distribution) — still open. Our project maps the
-  frontier. (Introduce this phrase as the conceptual contribution.)
-- **7.4 The durable contribution is methodological (protect this above all).** The baseball
-  context draws readers in; what outlives these datasets and betting markets is the *arc* —
-  take a plausible domain hypothesis, subject it to progressively stronger tests, surface the
-  biases (selection / post-treatment), benchmark against a strong reference (the sharp market),
-  and **stop when the evidence no longer supports the original claim**. This is an empirical
-  case study in scientific inference that happens to be set in baseball; the falsification
-  protocol transfers to NBA/NFL/soccer/tennis/racing unchanged. Guard this narrative in every
-  edit — it is the paper's best chance of remaining interesting years from now.
+## 7. Discussion (DRAFTED — `draft_discussion.md`; an essay, not a longer Results)
+Answers the four questions the Results avoid — *what it means, why it happened, why it matters
+beyond baseball, what remains open* — and protects the methodological thread above all. Opens on
+the research-question sentence (the spine).
+- **7.1 What the boundary actually means.** Separate *prediction* from *incremental prediction*:
+  the variables predict runs; conditioned on the market they add nothing (err R²=−0.037). Disarms
+  the "but weather obviously matters" reviewer in advance. Mechanism: a sharp market already
+  processes public state (transfer function moves proportionately ⇒ residual carries no signal).
+- **7.2 Prediction is not profit (≈ a full page).** The manuscript's most portable sentence:
+  *prediction and profit are distinct statistical problems.* Three independent links —
+  prediction → increment → profit — most betting papers assume one arrow. Encompassing isolates
+  the middle link.
+- **7.3 The efficient frontier of public information.** Formalized (conceptually, not
+  mathematically): the point at which added public variables stop improving prediction once the
+  market forecast is conditioned upon. Every hypothesis was an attempt to move past it; none did.
+- **7.4 The methodological contribution.** Escalating validation protocol; displayed ladder
+  (Signal→Robustness→Out-of-sample→Debiasing→Conditional testing→Forecast encompassing→Transfer
+  function); released as **The Third Turn Benchmark (v1.0)** + "the Third Turn validation
+  protocol." The durable contribution — guard it above all.
 
-## 8. Limitations (prominent)
-One month; 163 games; ~1-min snapshots; single Pinnacle-grade source (cannot separate
-latency from feed cadence, nor test cross-book); no retail live team totals; June-only.
-Claims bound to these conditions.
+## 8. Remaining Questions (NOT "Future Work" — what the evidence genuinely can't answer)
+Folds the old Limitations in: single Pinnacle-grade source at ~1-min cadence cannot separate
+latency from feed cadence (the uniform transfer ratio is consistent with either); cannot test
+cross-book leadership or distribution-shape (σ/skew/tail) updating; retail live team totals and
+first-five-inning markets untested; one month / 163 games / one sport — boundary characterized
+precisely but only under those conditions. Each is a live-data question → Paper 2 microstructure.
 
-## 9. Future Work → Paper 2
-Live microstructure on the banking streams: price discovery `P(A→B)`, information half-life
-`τ½`, cross-book leadership, distribution dynamics (μ/σ/skew/tail), market compression,
-pitching-change repricing.
+## Closing — "What we learned" (NOT a Future Work section)
+The literary final paragraph: began as a search for an exploitable feature, ended by identifying
+the empirical boundary; the boundary is itself the result; the contribution is a reproducible
+framework for determining when an edge exists, not a betting strategy. (Verbatim in
+`draft_discussion.md`.)
 
 ---
 

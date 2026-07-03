@@ -110,9 +110,7 @@ def units():
         if r.get("final") is None:
             continue
         for runs, sk in ((r["final_away"], r["away_faces"]), (r["final_home"], r["home_faces"])):
-            if sk["vel_drop_13"] is None:
-                continue
-            out.append({"runs": runs, "vd": float(sk["vel_drop_13"]),
+            out.append({"runs": runs, "vd": sk.get("vel_drop_13"), "ed": sk.get("early_vel_decline"),
                         "back": 1.0 if sk["tier"] == "Back" else 0.0,
                         "mid": 1.0 if sk["tier"] == "Mid" else 0.0})
     return out
@@ -122,15 +120,16 @@ def design(rows, cols, mean, std):
     X = np.ones((len(rows), len(cols) + 1))
     for j, c in enumerate(cols, 1):
         v = np.array([r[c] for r in rows])
-        X[:, j] = (v - mean[c]) / std[c] if c == "vd" else v
+        X[:, j] = (v - mean[c]) / std[c] if c in ("vd", "ed") else v
     return X
 
 
 def logo_oos(rows, cols, K):
     """Leave-one-game-out P(team runs > K). Games are pairs of consecutive units."""
     y = np.array([1.0 if r["runs"] > K else 0.0 for r in rows])
-    mean = {"vd": float(np.mean([r["vd"] for r in rows]))}
-    std = {"vd": float(np.std([r["vd"] for r in rows]) or 1.0)}
+    cont = [c for c in cols if c in ("vd", "ed")]
+    mean = {c: float(np.mean([r[c] for r in rows])) for c in cont}
+    std = {c: float(np.std([r[c] for r in rows]) or 1.0) for c in cont}
     oos = np.full(len(rows), np.nan)
     games = [(i, i + 1) for i in range(0, len(rows) - 1, 2)]
     for te in games:
@@ -141,36 +140,45 @@ def logo_oos(rows, cols, K):
     return y, oos
 
 
+def _stats(rows, K):
+    yb, p = logo_oos(rows, ["back", "mid"], K)
+    return None  # unused placeholder
+
+
 def main() -> int:
     rows = units()
     K = 4.5
-    y = np.array([1.0 if r["runs"] > K else 0.0 for r in rows])
-    console.rule(f"[bold]Calibration engine · model P(team scores >{K}) · {len(rows)} team-units")
-    console.print(f"[dim]base rate over {K} = {100*y.mean():.0f}%. Leave-one-game-out. "
-                  f"This validates the MODEL side; the market side plugs in the banked "
-                  f"Pinnacle implied prob once live snapshots + outcomes accumulate.[/]\n")
+    have_vd = [r for r in rows if r["vd"] is not None]
+    have_ed = [r for r in rows if r["ed"] is not None]
+    console.rule(f"[bold]Calibration engine · P(team scores >{K}) · debiasing the velocity signal")
+    console.print(f"[dim]COVERAGE: old vel_drop_13 (TTO1→TTO3, needs 3rd-time survival) defined for "
+                  f"{len(have_vd)}/{len(rows)} units; new early_vel_decline (pitches 1-20 vs 21-40) for "
+                  f"{len(have_ed)}/{len(rows)}. Leave-one-game-out; each model on its own defined subset.[/]\n")
 
-    _, p_full = logo_oos(rows, ["vd", "back", "mid"], K)
-    _, p_base = logo_oos(rows, ["back", "mid"], K)   # tier-only "market proxy"
+    yv, p_base_v = logo_oos(have_vd, ["back", "mid"], K)
+    _, p_vd = logo_oos(have_vd, ["vd", "back", "mid"], K)
+    ye, p_base_e = logo_oos(have_ed, ["back", "mid"], K)
+    _, p_ed = logo_oos(have_ed, ["ed", "back", "mid"], K)
 
-    t = Table(title="Discrimination + calibration (out-of-sample)")
-    for c in ("model", "Brier ↓", "AUC ↑", "ECE ↓"):
+    t = Table(title="Does the signal survive debiasing? (out-of-sample AUC / Brier)")
+    for c in ("model", "n", "AUC ↑", "Brier ↓"):
         t.add_column(c, justify="left" if c == "model" else "right")
-    t.add_row("tier only (market proxy)", f"{brier(p_base,y):.3f}", f"{auc(p_base,y):.3f}", f"{ece(p_base,y):.3f}")
-    t.add_row("tier + velocity drop", f"{brier(p_full,y):.3f}", f"{auc(p_full,y):.3f}", f"{ece(p_full,y):.3f}")
+    t.add_row("tier only", str(len(have_vd)), f"{auc(p_base_v,yv):.3f}", f"{brier(p_base_v,yv):.3f}")
+    t.add_row("tier + vel_drop_13 (OLD, biased)", str(len(have_vd)), f"{auc(p_vd,yv):.3f}", f"{brier(p_vd,yv):.3f}")
+    t.add_row("tier + early_vel_decline (DEBIASED)", str(len(have_ed)), f"{auc(p_ed,ye):.3f}", f"{brier(p_ed,ye):.3f}")
     console.print(t)
 
-    rt = Table(title="Reliability — model P(over) vs observed frequency (tier+velocity)")
-    for c in ("implied bucket", "n", "avg pred", "observed"):
-        rt.add_column(c, justify="left" if c == "implied bucket" else "right")
-    for lab, n, pred, obs in reliability_curve(p_full, y):
+    rt = Table(title="Reliability — debiased model P(over) vs observed frequency")
+    for c in ("pred bucket", "n", "avg pred", "observed"):
+        rt.add_column(c, justify="left" if c == "pred bucket" else "right")
+    for lab, n, pred, obs in reliability_curve(p_ed, ye):
         flag = " [green]↑[/]" if obs - pred > 0.06 else (" [red]↓[/]" if pred - obs > 0.06 else "")
         rt.add_row(lab, str(n), f"{100*pred:.0f}%", f"{100*obs:.0f}%{flag}")
     console.print(rt)
 
-    # residual illustration: where does velocity move the model away from a tier-only market?
-    big = np.array([r["vd"] >= 2.0 for r in rows])
-    console.print(f"\n[bold]Residual in the ≥2.0 mph velocity-drop state (n={int(big.sum())}):[/] "
+    rows, y, p_full, p_base = have_ed, ye, p_ed, p_base_e
+    big = np.array([(r["ed"] or 0) >= 1.0 for r in rows])
+    console.print(f"\n[bold]Residual in the ≥1.0 mph EARLY-decline state (n={int(big.sum())}):[/] "
                   f"tier-only market P={100*p_base[big].mean():.0f}% · model P={100*p_full[big].mean():.0f}% "
                   f"· realized={100*y[big].mean():.0f}% → residual "
                   f"[bold]{100*(y[big].mean()-p_base[big].mean()):+.0f} pts[/] vs a tier-pricing market")

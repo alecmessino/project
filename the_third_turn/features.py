@@ -55,6 +55,8 @@ def extract(feed, points, start_time, tiers) -> dict:
 
     faced: dict[tuple, int] = defaultdict(int)
     vel: dict[tuple, list] = defaultdict(lambda: [0.0, 0])   # (side, tto) -> [sum, n]
+    velband: dict[tuple, list] = defaultdict(lambda: [0.0, 0])  # (side, 20-pitch band) -> [sum, n]
+    pc = {"away": 0, "home": 0}                               # starter pitch counter per side
     runs_half: dict[tuple, int] = defaultdict(int)
     cause1 = {"hit": 0, "walk": 0, "error": 0, "other": 0}
     runs_vs_starter = {"away": 0, "home": 0}
@@ -88,6 +90,10 @@ def extract(feed, points, start_time, tiers) -> dict:
                     if sp:
                         vel[(pside, tto)][0] += sp
                         vel[(pside, tto)][1] += 1
+                        band = min(pc[pside] // 20, 3)       # 0:pitches1-20, 1:21-40, 2:41-60, 3:61+
+                        velband[(pside, band)][0] += sp
+                        velband[(pside, band)][1] += 1
+                        pc[pside] += 1
 
         aw, hm = res.get("awayScore"), res.get("homeScore")
         if aw is not None and hm is not None:
@@ -107,8 +113,11 @@ def extract(feed, points, start_time, tiers) -> dict:
     def side_rec(s):
         vt = {t: (vel[(s, t)][0] / vel[(s, t)][1] if vel[(s, t)][1] else None) for t in (1, 2, 3)}
         drop = (vt[1] - vt[3]) if (vt[1] and vt[3]) else None
+        vb = {b: (velband[(s, b)][0] / velband[(s, b)][1] if velband[(s, b)][1] else None) for b in (0, 1, 2)}
+        early = (vb[0] - vb[1]) if (vb[0] and vb[1]) else None   # first 20 vs next 20 pitches (low selection)
         return {"tier": tiers.get(str(starter[s]), "Unknown"), "starter_id": starter[s],
                 "vel_tto": vt, "vel_drop_13": round(drop, 2) if drop is not None else None,
+                "early_vel_decline": round(early, 2) if early is not None else None,
                 "runs_allowed": runs_vs_starter[s], "exit_inning": exit_inning[s]}
 
     r1 = runs_half.get((1, "top"), 0) + runs_half.get((1, "bottom"), 0)

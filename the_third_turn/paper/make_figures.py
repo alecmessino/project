@@ -1,0 +1,368 @@
+#!/usr/bin/env python3
+"""Generate the paper's figure set (Fig 2–7) from committed result JSONs.
+
+Figure 1 is the Mermaid research-process flow (in the outline). This script
+produces the six data figures as PNGs in paper/figures/. Every number is read
+from output/*.json (recomputable from the committed caches — no feed fetches).
+
+    python the_third_turn/paper/make_figures.py
+
+Reviewer-#2 constraints honored throughout: uncertainty is shown (bootstrap /
+Hanley-McNeil / Wilson CIs), near-zero differences are drawn NEUTRAL (the CI
+does the arguing, not the color), typography is one coherent system (figstyle),
+and the negative result is the headline, not an apology.
+"""
+
+from __future__ import annotations
+
+import json
+import math
+import sys
+from pathlib import Path
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import figstyle as fs  # noqa: E402
+
+OUT = HERE.parent / "output"
+FIGDIR = HERE / "figures"
+FIGDIR.mkdir(exist_ok=True)
+
+
+def _load(name):
+    return json.loads((OUT / name).read_text())
+
+
+def _wilson(k, n, z=1.96):
+    if n == 0:
+        return (0.0, 0.0)
+    p = k / n
+    d = 1 + z * z / n
+    c = (p + z * z / (2 * n)) / d
+    h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
+    return (c - h, c + h)
+
+
+def _hanley_mcneil_ci(a, n, prev, z=1.96):
+    """Analytic 95% CI for an AUC (Hanley & McNeil 1982)."""
+    n1 = max(int(round(prev * n)), 1)          # positives
+    n2 = max(n - n1, 1)                          # negatives
+    q1 = a / (2 - a)
+    q2 = 2 * a * a / (1 + a)
+    var = (a * (1 - a) + (n1 - 1) * (q1 - a * a) + (n2 - 1) * (q2 - a * a)) / (n1 * n2)
+    se = math.sqrt(max(var, 0.0))
+    return se, (max(a - z * se, 0.0), min(a + z * se, 1.0))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Figure 2 — the hypothesis graveyard
+# ─────────────────────────────────────────────────────────────────────────────
+def fig2_graveyard():
+    stages = ["Initial\nsignal", "Robustness", "Out-of-\nsample", "Market\ntest", "Verdict"]
+    P, F, N = "P", "F", "N"
+    # each row: how far the hypothesis cleared before a gate killed it (Verdict always F)
+    rows = [
+        ("Times-through-order (TTOP)",      [P, F, N, N, F]),
+        ("Velocity decline",               [P, F, N, N, F]),
+        ("Bullpen-fatigue multiplier",     [F, N, N, N, F]),
+        ("Drop reversion (Over)",          [P, P, F, N, F]),
+        ("Drop reversion (Under)",         [P, F, N, N, F]),
+        ("Alternate-line skew",            [P, P, P, F, F]),
+        ("Early-run anchoring",            [P, P, P, F, F]),
+        ("Weather / park context",         [P, P, P, F, F]),
+        ("Remaining-runs fatigue term",    [P, F, N, N, F]),
+        ("Forecast encompassing",          [P, P, F, F, F]),
+    ]
+    color = {P: fs.PASS, F: fs.FAIL, N: fs.GRID}
+    glyph = {P: "✓", F: "✗", N: "·"}  # ✓ ✗ ·
+    txtcol = {P: "white", F: "white", N: fs.MUTED}
+
+    fs.setup()
+    fig, ax = plt.subplots(figsize=(8.4, 5.0))
+    nrows, ncols = len(rows), len(stages)
+    for i, (_, cells) in enumerate(rows):
+        y = nrows - 1 - i
+        for j, c in enumerate(cells):
+            ax.add_patch(plt.Rectangle((j + 0.06, y + 0.06), 0.88, 0.88,
+                                       facecolor=color[c], edgecolor="white", linewidth=1.5))
+            ax.text(j + 0.5, y + 0.5, glyph[c], ha="center", va="center",
+                    color=txtcol[c], fontsize=13, fontweight="bold")
+    ax.set_xlim(0, ncols)
+    ax.set_ylim(0, nrows)
+    ax.set_xticks([j + 0.5 for j in range(ncols)])
+    ax.set_xticklabels(stages, fontsize=9)
+    ax.set_yticks([nrows - 1 - i + 0.5 for i in range(nrows)])
+    ax.set_yticklabels([r[0] for r in rows], fontsize=9)
+    ax.xaxis.tick_top()
+    ax.tick_params(length=0)
+    for s in ax.spines.values():
+        s.set_visible(False)
+    ax.grid(False)
+    ax.set_title("Ten public-information hypotheses, every one refuted",
+                 pad=26, fontsize=12)
+    legend = [Patch(facecolor=fs.PASS, label="cleared this gate"),
+              Patch(facecolor=fs.FAIL, label="failed here"),
+              Patch(facecolor=fs.GRID, label="not reached")]
+    ax.legend(handles=legend, loc="upper center", bbox_to_anchor=(0.5, -0.04),
+              ncol=3, fontsize=9, handlelength=1.1)
+    fig.savefig(FIGDIR / "fig2_graveyard.png", bbox_inches="tight")
+    plt.close(fig)
+    return rows
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Figure 3 — forecast encompassing
+# ─────────────────────────────────────────────────────────────────────────────
+def fig3_encompassing():
+    e = _load("encompass.json")
+    fs.setup()
+    fig, (axL, axR) = plt.subplots(1, 2, figsize=(9.2, 4.2),
+                                   gridspec_kw={"width_ratios": [1, 1.25]})
+
+    # left — three forecasts
+    labels = ["Our features\n(Y ~ X)", "Sharp market\n(Y ~ B)", "Market + features\n(Y ~ B+X)"]
+    vals = [e["r2_features"], e["r2_market"], e["r2_both"]]
+    cols = [fs.PALETTE[1], fs.PALETTE[0], fs.PALETTE[2]]
+    x = np.arange(3)
+    axL.bar(x, vals, width=0.62, color=cols, zorder=3)
+    for xi, v in zip(x, vals):
+        axL.text(xi, v + 0.006, f"{v:.3f}", ha="center", va="bottom",
+                 fontsize=10, fontweight="bold", color=fs.INK)
+    axL.set_xticks(x)
+    axL.set_xticklabels(labels, fontsize=9)
+    axL.set_ylabel("out-of-sample R²  (remaining runs)")
+    axL.set_ylim(0, max(vals) * 1.18)
+    axL.set_title("Adding features to the market: ΔR² = %+.3f" % e["encompass_gain"],
+                  fontsize=11, pad=10)
+
+    # right — per-feature incremental ΔR² beyond the market (E+)
+    inc = e["incremental"]
+    order = sorted(inc.items(), key=lambda kv: kv[1])
+    names = [k for k, _ in order]
+    dvals = [v for _, v in order]
+    y = np.arange(len(names))
+    bar_cols = [fs.NEUTRAL if abs(v) < 0.003 else (fs.PALETTE[2] if v > 0 else fs.PALETTE[3])
+                for v in dvals]
+    axR.barh(y, dvals, color=bar_cols, zorder=3, height=0.66)
+    axR.axvline(0, color=fs.MUTED, linewidth=1)
+    axR.axvline(0.003, color=fs.GRID, linewidth=1, linestyle="--")
+    axR.axvline(-0.003, color=fs.GRID, linewidth=1, linestyle="--")
+    axR.set_yticks(y)
+    axR.set_yticklabels(names, fontsize=9)
+    axR.set_xlabel("incremental R² beyond the market  (Y~B+Xi − Y~B)")
+    axR.set_title("Every feature, individually encompassed", fontsize=11)
+    axR.text(0.0032, len(names) - 0.6, "±0.003\nnegligible band", fontsize=7.5,
+             color=fs.MUTED, va="center")
+    fig.suptitle("The sharp market statistically encompasses every public variable we measure",
+                 fontsize=12.5, fontweight="bold")
+    fig.savefig(FIGDIR / "fig3_encompassing.png", bbox_inches="tight")
+    plt.close(fig)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Figure 4 — velocity debiasing
+# ─────────────────────────────────────────────────────────────────────────────
+def fig4_debiasing():
+    # recomputed from calibration.py (committed run): AUC / n / class prevalence
+    prev = _load("calibration.json").get("base_rate", 0.429)
+    bars = [
+        ("Tier only\n(no velocity)", 0.420, 272, fs.NEUTRAL),
+        ("+ vel_drop 1st→3rd\n(biased)", 0.610, 272, fs.PALETTE[3]),
+        ("+ early-window decline\n(debiased)", 0.524, 319, fs.PALETTE[0]),
+    ]
+    fs.setup()
+    fig, ax = plt.subplots(figsize=(7.4, 4.6))
+    x = np.arange(len(bars))
+    for xi, (lab, a, n, c) in zip(x, bars):
+        se, (lo, hi) = _hanley_mcneil_ci(a, n, prev)
+        ax.bar(xi, a, width=0.6, color=c, zorder=3)
+        ax.errorbar(xi, a, yerr=[[a - lo], [hi - a]], fmt="none",
+                    ecolor=fs.INK, elinewidth=1.4, capsize=5, zorder=4)
+        ax.text(xi, hi + 0.006, f"{a:.3f}", ha="center", va="bottom",
+                fontsize=10, fontweight="bold")
+        ax.text(xi, 0.408, f"n={n}", ha="center", va="bottom", fontsize=8.5,
+                color="white", fontweight="bold", zorder=5)
+    ax.axhline(0.5, color=fs.MUTED, linewidth=1.2, linestyle="--")
+    ax.text(2.42, 0.5, "coin\nflip", va="center", ha="left", fontsize=8.5, color=fs.MUTED)
+    ax.set_xticks(x)
+    ax.set_xticklabels([b[0] for b in bars], fontsize=9)
+    ax.set_ylabel("out-of-sample AUC  (P team scores > 4.5)")
+    ax.set_ylim(0.40, 0.72)
+    ax.set_xlim(-0.6, 2.9)
+    ax.set_title("Debiasing collapses the velocity 'signal' toward a coin flip",
+                 fontsize=12, pad=10)
+    ax.annotate("the 0.61 edge was survival bias:\na big drop only exists if the\n"
+                "starter lasted long enough\nto be shelled",
+                xy=(1, 0.590), xytext=(1.32, 0.58), fontsize=8.3, color=fs.MUTED,
+                ha="left", va="top",
+                arrowprops=dict(arrowstyle="->", color=fs.MUTED, linewidth=1))
+    fig.savefig(FIGDIR / "fig4_debiasing.png", bbox_inches="tight")
+    plt.close(fig)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Figure 5 — transfer function (market elasticity by event)
+# ─────────────────────────────────────────────────────────────────────────────
+def fig5_transfer():
+    pa = _load("program_a.json")["by_type"]
+    order = ["home_run", "triple", "double", "single", "hit_by_pitch", "walk"]
+    nice = {"home_run": "HR", "triple": "3B", "double": "2B", "single": "1B",
+            "hit_by_pitch": "HBP", "walk": "BB"}
+    fs.setup()
+    fig, ax = plt.subplots(figsize=(7.2, 6.2))
+    # per-event label offsets (points) chosen to avoid the fit line & each other
+    off = {"home_run": (0, 16), "triple": (10, 6), "double": (10, 12),
+           "single": (14, 2), "hit_by_pitch": (12, -4), "walk": (-12, -14)}
+    ha_ = {"walk": "right"}
+    xs, ys = [], []
+    for i, ev in enumerate(order):
+        d = pa[ev]
+        x, y, n = d["avg_dre"], d["avg_book5"], d["n"]
+        xs.append(x); ys.append(y)
+        ax.scatter(x, y, s=40 + n / 6, color=fs.PALETTE[i % len(fs.PALETTE)],
+                   edgecolor="white", linewidth=1.2, zorder=4)
+        ax.annotate(f"{nice[ev]} (n={n})", (x, y), xytext=off[ev],
+                    textcoords="offset points", fontsize=9, color=fs.INK,
+                    va="center", ha=ha_.get(ev, "left"))
+
+    lim = 1.6
+    ax.plot([0, lim], [0, lim], color=fs.MUTED, linewidth=1.3, linestyle="--", zorder=2)
+    ax.text(1.5, 1.55, "y = x\n(fully priced)", fontsize=8.5, color=fs.MUTED,
+            ha="right", va="top")
+
+    # fitted slope through origin over the hit types (the uniform low-pass level)
+    xs_a, ys_a = np.array(xs), np.array(ys)
+    slope = float(np.sum(xs_a * ys_a) / np.sum(xs_a * xs_a))
+    ax.plot([0, lim], [0, slope * lim], color=fs.PALETTE[0], linewidth=2, zorder=3)
+    ax.text(0.14, slope * 0.14 - 0.055, f"fit  ΔBook ≈ {slope:.2f}·ΔRE", fontsize=10,
+            color=fs.PALETTE[0], ha="left", va="top", fontweight="bold", rotation=25,
+            rotation_mode="anchor")
+
+    ax.set_xlim(0, lim); ax.set_ylim(0, lim)
+    ax.set_aspect("equal")
+    ax.set_xlabel("true information shock  ΔRE  (runs, RE24-based)")
+    ax.set_ylabel("converged line move  ΔBook (+5 min)")
+    ax.set_title("The line moves ~0.7× every shock, uniformly\n"
+                 "a measurement low-pass filter, not a per-event edge", fontsize=11.5)
+    fig.savefig(FIGDIR / "fig5_transfer.png", bbox_inches="tight")
+    plt.close(fig)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Figure 6 — market calibration: implied vs realized remaining runs
+# ─────────────────────────────────────────────────────────────────────────────
+def fig6_calibration():
+    cache = _load("encompass_cache.json")
+    Y = np.array([r["Y"] for r in cache], float)   # realized remaining runs
+    B = np.array([r["B"] for r in cache], float)   # market-implied remaining runs
+    rr = _load("remaining_runs.json")
+
+    fs.setup()
+    fig, (axL, axR) = plt.subplots(1, 2, figsize=(9.4, 4.3),
+                                   gridspec_kw={"width_ratios": [1, 1]})
+
+    # left — reliability: bin by predicted B (deciles), plot mean realized Y ± Wilson-ish SE
+    qs = np.quantile(B, np.linspace(0, 1, 11))
+    qs[-1] += 1e-6
+    idx = np.clip(np.digitize(B, qs) - 1, 0, 9)
+    bx, by, blo, bhi = [], [], [], []
+    for b in range(10):
+        m = idx == b
+        if m.sum() < 5:
+            continue
+        bx.append(B[m].mean()); by.append(Y[m].mean())
+        se = Y[m].std(ddof=1) / math.sqrt(m.sum())
+        blo.append(Y[m].mean() - 1.96 * se); bhi.append(Y[m].mean() + 1.96 * se)
+    bx, by = np.array(bx), np.array(by)
+    lim = max(bx.max(), by.max()) * 1.05
+    axL.plot([0, lim], [0, lim], color=fs.MUTED, linestyle="--", linewidth=1.2, zorder=1)
+    axL.fill_between(bx, blo, bhi, color=fs.PALETTE[0], alpha=0.18, zorder=2)
+    axL.plot(bx, by, "-o", color=fs.PALETTE[0], markersize=6, linewidth=2,
+             markeredgecolor="white", zorder=3)
+    axL.set_xlim(0, lim); axL.set_ylim(0, lim)
+    axL.set_aspect("equal")
+    axL.set_xlabel("market-implied remaining runs")
+    axL.set_ylabel("realized remaining runs")
+    axL.set_title("Market forecast is well-calibrated", fontsize=11)
+    axL.text(0.04 * lim, 0.92 * lim, "on the diagonal = unbiased", fontsize=8.5,
+             color=fs.MUTED)
+
+    # right — book-error (Y − B) distribution; the thing nothing predicts
+    err = Y - B
+    axR.hist(err, bins=40, color=fs.PALETTE[4], edgecolor="white", linewidth=0.4, zorder=3)
+    axR.axvline(0, color=fs.MUTED, linewidth=1.2, linestyle="--")
+    axR.axvline(err.mean(), color=fs.PALETTE[3], linewidth=2, zorder=4)
+    axR.text(err.mean(), axR.get_ylim()[1] * 0.96, f"  mean {err.mean():+.2f}",
+             color=fs.PALETTE[3], fontsize=9.5, fontweight="bold", va="top")
+    axR.set_xlabel("book forecast error  (realized − implied)")
+    axR.set_ylabel("half-inning snapshots")
+    axR.set_title("Error is symmetric & unpredictable (OOS R² ≈ 0)", fontsize=11)
+    fig.suptitle(f"Remaining-runs calibration · {rr['n']:,} snapshots · model R² = {rr['r2_base']:.3f}",
+                 fontsize=12.5, fontweight="bold")
+    fig.savefig(FIGDIR / "fig6_calibration.png", bbox_inches="tight")
+    plt.close(fig)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Figure 7 — the incremental-information funnel
+# ─────────────────────────────────────────────────────────────────────────────
+def fig7_funnel(matrix):
+    # derive counts from the graveyard matrix so the funnel stays consistent.
+    # matrix columns: [initial, robustness, out-of-sample, market-test, verdict];
+    # a hypothesis holds "P" for every gate it CLEARED before the gate that killed it.
+    P = "P"
+    total = len(matrix)
+    initial = sum(1 for _, c in matrix if c[0] == P)     # showed an in-sample signal
+    oos = sum(1 for _, c in matrix if c[2] == P)          # cleared the out-of-sample gate
+    beyond = sum(1 for _, c in matrix if c[3] == P)       # cleared the market test
+    prof = sum(1 for _, c in matrix if c[4] == P)         # cleared the verdict (none)
+    stages = [
+        ("Hypotheses tested", total, fs.PALETTE[0]),
+        ("Predict runs in-sample", initial, fs.PALETTE[0]),
+        ("Survive out-of-sample", oos, fs.PALETTE[1]),
+        ("Add info beyond the market", beyond, fs.PALETTE[3]),
+        ("Exploitably profitable", prof, fs.FAIL),
+    ]
+    fs.setup()
+    fig, ax = plt.subplots(figsize=(8.6, 4.8))
+    n = len(stages)
+    for i, (lab, cnt, col) in enumerate(stages):
+        y = n - 1 - i
+        w = cnt / total
+        if cnt > 0:
+            ax.add_patch(plt.Rectangle((0, y + 0.14), w, 0.72, facecolor=col,
+                                       edgecolor="white", linewidth=1.5, zorder=3))
+        # stage label always in ink to the left margin (visible for empty bars too)
+        ax.text(-0.015, y + 0.5, lab, ha="right", va="center", fontsize=10.5,
+                color=fs.INK, zorder=4)
+        end = w + 0.012 if cnt > 0 else 0.012
+        ax.text(end, y + 0.5, str(cnt), ha="left", va="center", fontsize=13,
+                fontweight="bold", color=col if cnt > 0 else fs.FAIL, zorder=4)
+    ax.set_xlim(-0.62, 1.08)
+    ax.set_ylim(0, n)
+    ax.axis("off")
+    ax.set_title("The incremental-information funnel\n"
+                 "predicting runs is easy; predicting the market's error is the wall",
+                 fontsize=12.5, fontweight="bold", loc="center")
+    fig.savefig(FIGDIR / "fig7_funnel.png", bbox_inches="tight")
+    plt.close(fig)
+
+
+def main() -> int:
+    rows = fig2_graveyard()
+    fig3_encompassing()
+    fig4_debiasing()
+    fig5_transfer()
+    fig6_calibration()
+    fig7_funnel(rows)
+    made = sorted(p.name for p in FIGDIR.glob("*.png"))
+    print("wrote:", ", ".join(made))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

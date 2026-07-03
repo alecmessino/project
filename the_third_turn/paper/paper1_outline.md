@@ -49,25 +49,10 @@ baseball enters in paragraph two, so the paper reads broad from the first line.
 
 ---
 
-## Abstract (draft, ~180 words)
-
-Live in-play betting is now a majority of sports-wagering volume, yet market-efficiency
-research concentrates on pregame moneylines; live totals and calibration remain little
-studied, especially for baseball. We ask whether publicly observable baseball state
-variables carry *incremental* predictive information about remaining runs beyond the live
-total posted by a sharp market. Using 163 MLB games (June 2026) with one-minute live-odds
-trajectories (Pinnacle-grade), pitch-level Statcast, and full play-by-play, we subject a
-sequence of community hypotheses — times-through-order, velocity decline, bullpen fatigue,
-drop reversion, alternate-line skew, early-run under-reaction, weather/park — to escalating
-validation: out-of-sample cross-validation, selection-bias debiasing, context-controlled
-conditioning, and finally a forecast-encompassing test against the market itself. No
-variable survives. A game-state remaining-runs model is well-calibrated (R²≈0.22) but
-fatigue terms change its error by <0.001 runs; the market's forecast error is not
-predictable from any feature we measure (out-of-sample R²≈0). An event-level transfer
-function shows the sharp line adjusts to information shocks by approximately the correct
-magnitude. Within our data, we find no evidence of exploitable public-information
-inefficiency, and we characterize the boundary precisely. We contribute a transferable
-protocol for testing betting hypotheses and a reproducible benchmark.
+## Abstract (DRAFTED — `draft_abstract.md`, ~190 words)
+Spine = the research-question sentence, answered. Numbers committed. Boundary language, bound to
+the data; closes on the framework + benchmark with modest verbs. (The v2 prose that lived here is
+superseded by the drafted file.)
 
 ---
 
@@ -91,16 +76,13 @@ flowchart TD
 ```
 *Start the paper with the process, not with baseball.*
 
-## 1. Introduction
-- Live/in-play betting dominates handle; efficiency research is pregame-centric. Live
-  totals + calibration are under-studied.
-- MLB as testbed: discrete events with established run values (RE24, linear weights),
-  Statcast, and a strong community prior.
-- **Reframe:** we evaluate *incremental information beyond a sharp market*, using TTOP as
-  the entry case study. State the three contributions. Preview the **boundary result** —
-  where publicly observable variables stop adding information beyond the market — + scope.
-  *(Language rule for the whole manuscript: never "negative result." Frame findings as a
-  **constraint / boundary** we identify, not a failure we report.)*
+## 1. Introduction (DRAFTED — `draft_intro.md`)
+Opens on the live-betting handle statistic (not baseball); baseball enters paragraph two (RE24 /
+linear weights / pitch measurement / TTOP as the entry case study); paragraph three draws the
+prediction-vs-incremental distinction and previews the boundary result + scope; **boxed
+Contributions** (Empirical / Methodological / Infrastructure); closes on the research-question
+sentence — the spine echoed verbatim in the Abstract and at the top of the Discussion.
+*(Language rule: never "negative result" — always constraint / boundary.)*
 
 ## 2. Related Work
 TTOP as continuous familiarity (arXiv 2210.06724); relative-velocity ≈ 0.0006 wOBA/mph

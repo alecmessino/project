@@ -385,6 +385,10 @@ class LiveEngine:
         self._tt_path = Path(settings.ledger_path).parent / "team_total_panel.jsonl"
         self._tt_last: dict[tuple[str, str], float] = {}
         self._tt_next = 0.0
+        # full live game-state stream (change-only) so EVERY game event is captured for
+        # matching against the odds streams by (game, ts) — maximal live game data
+        self._gs_path = Path(settings.ledger_path).parent / "game_state_panel.jsonl"
+        self._gs_last: dict[str, tuple] = {}
         self._alerted: set[str] = set()
         self._alerted_games: set[str] = set()      # games with a DELIVERED alert
         self._exit_noted: set[tuple] = set()       # (game_key, pitching_team) announced
@@ -415,6 +419,28 @@ class LiveEngine:
                              "live": bool(q.live_game)})
         if rows:
             with self._panel_path.open("a") as f:
+                f.writelines(json.dumps(r) + "\n" for r in rows)
+
+    def _log_state(self, states) -> None:
+        """Append a row whenever a live game's state changes (change-only) so every event
+        (run, out, inning, pitching change) is captured for matching to the odds streams."""
+        ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        rows = []
+        for s in states:
+            sig = (s.inning, s.half, s.outs, s.away_score, s.home_score, s.on_first,
+                   s.on_second, s.on_third, s.times_through_order, s.pitch_count,
+                   s.starter_on_mound, s.pitcher_id)
+            if self._gs_last.get(s.game_key) == sig:
+                continue
+            self._gs_last[s.game_key] = sig
+            rows.append({"ts": ts, "game": s.game_key, "inning": s.inning, "half": s.half,
+                         "outs": s.outs, "away_score": s.away_score, "home_score": s.home_score,
+                         "bases": [int(s.on_first), int(s.on_second), int(s.on_third)],
+                         "tto": s.times_through_order, "pitch_count": s.pitch_count,
+                         "starter_on": s.starter_on_mound, "starter_tier": s.starter_tier,
+                         "pitcher_id": s.pitcher_id})
+        if rows:
+            with self._gs_path.open("a") as f:
                 f.writelines(json.dumps(r) + "\n" for r in rows)
 
     async def _log_team_totals(self, session, states, interval: float = 90.0) -> None:
@@ -467,6 +493,7 @@ class LiveEngine:
         state_res = results[0]
         quote_lists = [r.quotes for r in results[1:] if r.ok]
         self._log_panel(quote_lists)
+        self._log_state(state_res.states)
         await self._log_team_totals(session, state_res.states)
         quotes = self._merge_quotes(*quote_lists)
         if not quotes and self.s.use_pinnacle_fallback:

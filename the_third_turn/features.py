@@ -41,6 +41,37 @@ HIT = {"single", "double", "triple", "home_run"}
 FREE = {"walk", "hit_by_pitch"}
 ERR = {"field_error"}
 
+# rough run park factors (100 = neutral); matched by venue-name substring
+PARK_FACTORS = {"Coors": 112, "Fenway": 106, "Great American": 105, "Chase": 103,
+                "Globe Life": 103, "Yankee": 102, "Citizens Bank": 102, "Wrigley": 101,
+                "Camden": 101, "Truist": 101, "Nationals": 100, "Dodger": 99,
+                "Progressive": 99, "Rogers": 99, "Angel": 98, "loanDepot": 97,
+                "Petco": 96, "Oracle": 96, "American Family": 97, "Kauffman": 98,
+                "Comerica": 98, "T-Mobile": 94, "Oakland": 96, "Citi Field": 95}
+
+
+def parse_weather(gd) -> dict:
+    w = gd.get("weather", {}) or {}
+    try:
+        temp = int(w.get("temp"))
+    except (TypeError, ValueError):
+        temp = None
+    wind = w.get("wind") or ""
+    parts = wind.split()
+    mph = int(parts[0]) if parts and parts[0].isdigit() else 0
+    wl = wind.lower()
+    direction, signed = ("out", mph) if "out" in wl else \
+        ("in", -mph) if "in" in wl else ("calm", 0) if (not wind or "calm" in wl) else ("cross", 0)
+    return {"temp": temp, "wind_mph": mph, "wind_dir": direction, "wind_signed": signed}
+
+
+def park_factor(gd) -> int:
+    v = (gd.get("venue", {}) or {}).get("name", "")
+    for k, pf in PARK_FACTORS.items():
+        if k in v:
+            return pf
+    return 100
+
 
 def extract(feed, points, start_time, tiers) -> dict:
     gd, ld = feed.get("gameData", {}), feed.get("liveData", {})
@@ -129,6 +160,7 @@ def extract(feed, points, start_time, tiers) -> dict:
         "runs_half": {f"{i}:{h}": n for (i, h), n in runs_half.items()},
         # the batting side faces the OTHER side's starter:
         "away_faces": side_rec("home"), "home_faces": side_rec("away"),
+        "weather": parse_weather(gd), "park_factor": park_factor(gd),
         "points": points,          # keep the price/line series for the skew vector
     }
 

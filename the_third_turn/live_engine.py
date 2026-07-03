@@ -417,11 +417,13 @@ class LiveEngine:
             with self._panel_path.open("a") as f:
                 f.writelines(json.dumps(r) + "\n" for r in rows)
 
-    async def _log_team_totals(self, session, interval: float = 90.0) -> None:
-        """Bank Pinnacle's per-team implied run line/skew (change-only, throttled).
+    async def _log_team_totals(self, session, states, interval: float = 90.0) -> None:
+        """Bank Pinnacle's per-team implied run line/skew, joined to live GAME STATE.
 
-        Fetches two guest-API endpoints, so it runs at most every `interval` seconds
-        and never lets a Pinnacle failure break the poll loop.
+        Each row carries the market quote AND the game state at that snapshot (inning,
+        outs, score, base-out, times-through-order, pitch count, starter tier) so the
+        calibration study can bucket implied-vs-realized by state. Change-only + throttled;
+        a Pinnacle failure never breaks the poll loop.
         """
         if time.time() < self._tt_next:
             return
@@ -430,6 +432,7 @@ class LiveEngine:
             tts = await fetch_team_totals(session)
         except Exception:  # noqa: BLE001
             return
+        st_by_key = {s.game_key: s for s in states}
         ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
         rows = []
         for t in tts:
@@ -438,8 +441,16 @@ class LiveEngine:
             if prev is not None and abs(prev - t.implied_line) < 0.05:
                 continue
             self._tt_last[key] = t.implied_line
+            s = st_by_key.get(t.game_key)
+            state = None if s is None else {
+                "inning": s.inning, "half": s.half, "outs": s.outs,
+                "away_score": s.away_score, "home_score": s.home_score,
+                "bases": [int(s.on_first), int(s.on_second), int(s.on_third)],
+                "tto": s.times_through_order, "pitch_count": s.pitch_count,
+                "starter_on": s.starter_on_mound, "starter_tier": s.starter_tier}
             rows.append({"ts": ts, "game": t.game_key, "team": t.team, "line": t.implied_line,
-                         "sd": t.sd, "skew": t.skew, "live": t.live, "probs": t.probs})
+                         "sd": t.sd, "skew": t.skew, "live": t.live, "probs": t.probs,
+                         "state": state})
         if rows:
             with self._tt_path.open("a") as f:
                 f.writelines(json.dumps(r) + "\n" for r in rows)
@@ -456,7 +467,7 @@ class LiveEngine:
         state_res = results[0]
         quote_lists = [r.quotes for r in results[1:] if r.ok]
         self._log_panel(quote_lists)
-        await self._log_team_totals(session)
+        await self._log_team_totals(session, state_res.states)
         quotes = self._merge_quotes(*quote_lists)
         if not quotes and self.s.use_pinnacle_fallback:
             pin = await self.pinnacle.fetch(session)

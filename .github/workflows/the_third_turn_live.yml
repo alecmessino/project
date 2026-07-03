@@ -65,14 +65,15 @@ jobs:
           set -uo pipefail
           BR="${GITHUB_REF_NAME}"
           LEDGER="the_third_turn/output/ledger.jsonl"
-          PANEL="the_third_turn/output/book_panel.jsonl"   # gitignored locally; forced here to bank it
+          PANEL="the_third_turn/output/book_panel.jsonl"       # gitignored locally; forced here to bank it
+          TTPANEL="the_third_turn/output/team_total_panel.jsonl"
           START=$(date +%s)
 
           checkpoint() {
             git add "$LEDGER" 2>/dev/null || true
-            git add -f "$PANEL" 2>/dev/null || true
+            git add -f "$PANEL" "$TTPANEL" 2>/dev/null || true
             git diff --cached --quiet && return 0
-            git commit -q -m "ledger + book-panel checkpoint [skip ci]" || return 0
+            git commit -q -m "ledger + book/team-total panels checkpoint [skip ci]" || return 0
             for a in 1 2 3; do
               git pull --rebase -q origin "$BR" && git push -q origin "HEAD:$BR" && return 0
               sleep 5

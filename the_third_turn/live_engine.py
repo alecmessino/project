@@ -53,6 +53,7 @@ from sources.bovada import BovadaSource  # noqa: E402
 from sources.fanduel import FanDuelSource  # noqa: E402
 from sources.mlb_statsapi import MLBStatsSource  # noqa: E402
 from sources.pinnacle import PinnacleSource  # noqa: E402
+from team_totals import fetch_team_totals  # noqa: E402
 
 console = Console()
 
@@ -380,6 +381,10 @@ class LiveEngine:
         # later measure whether soft books (FanDuel/Bovada) lag sharp Pinnacle.
         self._panel_path = Path(settings.ledger_path).parent / "book_panel.jsonl"
         self._panel_last: dict[tuple[str, str], float] = {}
+        # Pinnacle per-team implied run distribution (the team-total signal) — throttled
+        self._tt_path = Path(settings.ledger_path).parent / "team_total_panel.jsonl"
+        self._tt_last: dict[tuple[str, str], float] = {}
+        self._tt_next = 0.0
         self._alerted: set[str] = set()
         self._alerted_games: set[str] = set()      # games with a DELIVERED alert
         self._exit_noted: set[tuple] = set()       # (game_key, pitching_team) announced
@@ -412,6 +417,33 @@ class LiveEngine:
             with self._panel_path.open("a") as f:
                 f.writelines(json.dumps(r) + "\n" for r in rows)
 
+    async def _log_team_totals(self, session, interval: float = 90.0) -> None:
+        """Bank Pinnacle's per-team implied run line/skew (change-only, throttled).
+
+        Fetches two guest-API endpoints, so it runs at most every `interval` seconds
+        and never lets a Pinnacle failure break the poll loop.
+        """
+        if time.time() < self._tt_next:
+            return
+        self._tt_next = time.time() + interval
+        try:
+            tts = await fetch_team_totals(session)
+        except Exception:  # noqa: BLE001
+            return
+        ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        rows = []
+        for t in tts:
+            key = (t.game_key, t.team)
+            prev = self._tt_last.get(key)
+            if prev is not None and abs(prev - t.implied_line) < 0.05:
+                continue
+            self._tt_last[key] = t.implied_line
+            rows.append({"ts": ts, "game": t.game_key, "team": t.team, "line": t.implied_line,
+                         "sd": t.sd, "skew": t.skew, "live": t.live, "probs": t.probs})
+        if rows:
+            with self._tt_path.open("a") as f:
+                f.writelines(json.dumps(r) + "\n" for r in rows)
+
     async def poll_once(self, session: aiohttp.ClientSession):
         """Return ``(fired_triggers, live_states, merged_quotes)`` for this poll."""
         tasks = [self.mlb.fetch(session)]
@@ -424,6 +456,7 @@ class LiveEngine:
         state_res = results[0]
         quote_lists = [r.quotes for r in results[1:] if r.ok]
         self._log_panel(quote_lists)
+        await self._log_team_totals(session)
         quotes = self._merge_quotes(*quote_lists)
         if not quotes and self.s.use_pinnacle_fallback:
             pin = await self.pinnacle.fetch(session)

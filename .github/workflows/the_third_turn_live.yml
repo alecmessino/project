@@ -1,0 +1,117 @@
+name: The Third Turn — live ledger (24/7 self-rearming)
+
+# The reliable live runner for the baseball totals daemon, independent of any Claude
+# session. GitHub jobs run up to ~6h: this runs the_third_turn/live_engine.py for
+# ~5.5h, checkpoints the ledger back to the branch every 15 min (so fires are durable
+# even if the run is cancelled), then RE-ARMS itself so coverage is continuous. Mirrors
+# the sentinel_watch pattern — the schedule is only a bootstrap; landing on a game is
+# the long-running loop's job, not cron's.
+#
+# REQUIRES repo secrets (Settings → Secrets and variables → Actions):
+#   ODDS_API_KEY, DISCORD_WEBHOOK_URL, ODDS_PAPI_KEY   (SLACK_WEBHOOK_URL / NTFY_TOPIC optional)
+# Without them the daemon starts blind and fires nothing.
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_minutes:
+        description: "Run length before re-arm (minutes; GH cap ~360)"
+        required: false
+        default: "330"
+  # Bootstrap schedule DISABLED by default (repo convention: don't trust cron cadence).
+  # Uncomment to have GitHub relaunch the loop after any overnight gap.
+#  schedule:
+#    - cron: "7 */5 * * *"   # every ~5h — bootstrap/restart only
+
+permissions:
+  contents: write        # checkpoint the ledger back to the branch
+  actions: write         # re-arm self via workflow_dispatch
+
+concurrency:
+  group: ttt-live
+  cancel-in-progress: true   # newest run wins; never stack 5.5h loops
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 345       # must exceed max_minutes so the loop exits first
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          pip install -e ".[dev]" || true
+          pip install -r the_third_turn/requirements.txt
+
+      - name: Configure git
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run daemon + checkpoint ledger + re-arm
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          ODDS_PAPI_KEY: ${{ secrets.ODDS_PAPI_KEY }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAX_MINUTES: ${{ github.event.inputs.max_minutes || '330' }}
+        run: |
+          set -uo pipefail
+          BR="${GITHUB_REF_NAME}"
+          LEDGER="the_third_turn/output/ledger.jsonl"
+          PANEL="the_third_turn/output/book_panel.jsonl"       # gitignored locally; forced here to bank it
+          TTPANEL="the_third_turn/output/team_total_panel.jsonl"
+          START=$(date +%s)
+
+          checkpoint() {
+            git add "$LEDGER" 2>/dev/null || true
+            git add -f "$PANEL" "$TTPANEL" 2>/dev/null || true
+            git diff --cached --quiet && return 0
+            git commit -q -m "ledger + book/team-total panels checkpoint [skip ci]" || return 0
+            for a in 1 2 3; do
+              git pull --rebase -q origin "$BR" && git push -q origin "HEAD:$BR" && return 0
+              sleep 5
+            done
+          }
+
+          # periodic checkpoint every 15 min so fires survive a cancelled run
+          ( while true; do sleep 900; checkpoint; done ) &
+          CK=$!
+
+          timeout -s INT "$((MAX_MINUTES*60))" python3 the_third_turn/live_engine.py || true
+
+          kill "$CK" 2>/dev/null || true
+          checkpoint
+
+          # maintenance probe — ping Discord ONLY when the V3 sample is ripe or a stream broke
+          REPORT="$(python3 the_third_turn/ripeness_check.py || true)"
+          echo "$REPORT"
+          if echo "$REPORT" | grep -q "RIPE: YES" || echo "$REPORT" | grep -q "HEALTH_OK: no"; then
+            COV="$(echo "$REPORT" | grep '^COVERAGE' | head -1)"
+            RIP="$(echo "$REPORT" | grep '^RIPE' | head -1)"
+            HLTH="$(echo "$REPORT" | grep '^HEALTH_OK' | head -1)"
+            if [ -n "${DISCORD_WEBHOOK_URL:-}" ]; then
+              curl -s -H "Content-Type: application/json" \
+                -d "{\"content\":\"🔔 The Third Turn maintenance — ${COV} · ${RIP} · ${HLTH}\"}" \
+                "$DISCORD_WEBHOOK_URL" || true
+            fi
+          fi
+
+          # re-arm only after a meaningful run, so a fast crash can't storm dispatches
+          ELAPSED=$(( ($(date +%s) - START) / 60 ))
+          if [ "$ELAPSED" -ge 60 ]; then
+            curl -sX POST \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/the_third_turn_live.yml/dispatches" \
+              -d "{\"ref\":\"${BR}\",\"inputs\":{\"max_minutes\":\"${MAX_MINUTES}\"}}" || true
+            echo "re-armed after ${ELAPSED} min"
+          else
+            echo "ran only ${ELAPSED} min — NOT re-arming (avoids crash-loop dispatch storm)"
+          fi

@@ -1,4 +1,10 @@
-# Paper 1 — Outline & Draft Skeleton (v2)
+# Paper 1 — Outline & Draft Skeleton (v3)
+
+**v3 changes (reviewer pass):** figures built + reordered (2→3 funnel→4 encompassing…); added
+§5 *Research philosophy*; "negative result" language banned in favor of **boundary / constraint**;
+Fig captions updated (formal graveyard name, "no incremental information" annotation, three-stage
+debiasing, "one common slope", "approximately calibrated within this sample"); added a
+pre-release three-reviewer protocol and a Discussion subsection protecting the methodological arc.
 
 **Reframe (v2):** this is **not a betting paper** — it is an **empirical market-efficiency
 paper**. Pitcher fatigue / TTOP is one *case study* within a general question. Every
@@ -80,7 +86,10 @@ flowchart TD
 - MLB as testbed: discrete events with established run values (RE24, linear weights),
   Statcast, and a strong community prior.
 - **Reframe:** we evaluate *incremental information beyond a sharp market*, using TTOP as
-  the entry case study. State the three contributions. Preview the negative result + scope.
+  the entry case study. State the three contributions. Preview the **boundary result** —
+  where publicly observable variables stop adding information beyond the market — + scope.
+  *(Language rule for the whole manuscript: never "negative result." Frame findings as a
+  **constraint / boundary** we identify, not a failure we report.)*
 
 ## 2. Related Work
 TTOP as continuous familiarity (arXiv 2210.06724); relative-velocity ≈ 0.0006 wOBA/mph
@@ -98,7 +107,25 @@ Naïve reversion → gradient signal → vector battery (V1–V4) → calibratio
 velocity debiasing → remaining-runs model → forecast encompassing (G, E+) → transfer
 function (A, RE24-based ΔRE). Emphasize each test is *more* stringent than the last.
 
-## 5. Results (organize the failures — the paper's strength)
+## 5. Research philosophy (½ page — sits between Methods and Results)
+*One escalating empirical program, not ten unrelated backtests.* Each successive experiment
+was designed to **invalidate the surviving explanation** of the previous one — so a hypothesis
+that clears one gate is not "confirmed," only "not yet eliminated," and is handed to a stricter
+test. State the ladder explicitly:
+
+> initial signal → robustness → debiasing → conditional testing → forecast encompassing →
+> transfer function
+
+Four short paragraphs: (1) the falsificationist stance — we sought each variable's *kill*, not
+its confirmation; (2) why escalation matters — an in-sample edge is the weakest possible
+evidence, so every rung strips one more artifact (overfitting, then selection, then confounding,
+then redundancy-with-the-market); (3) the market as the terminal benchmark — forecast
+encompassing asks the hardest question, "does it beat what the price already knows?"; (4) the
+stopping rule — we stop when the evidence no longer supports the original claim, and we map the
+boundary rather than keep drilling. This section tells the reviewer the design was one program
+with a spine (Figures 2→3), not a fishing expedition.
+
+## 6. Results (organize the boundary — the paper's strength)
 - **5.1 Hypothesis battery table** (see Appendix A for the full one-page version).
 - **5.2 Remaining-runs:** baseline R²=0.224 (calibrated); + fatigue → ΔMAE = −0.001.
 - **5.3 Encompassing (G+E+):** market R²=0.304 > features 0.279; adding features ΔR²=−0.017;
@@ -106,24 +133,33 @@ function (A, RE24-based ΔRE). Emphasize each test is *more* stringent than the 
 - **5.4 Transfer function (A):** ΔRE validated vs linear weights (HR 1.34/1.40); response
   ratios 0.63–0.84, *uniform* → measurement low-pass filter, not per-event inefficiency.
 
-## 6. Discussion (restructured — where the paper becomes memorable)
-- **6.1 Why intuitive baseball hypotheses failed.** Not because baseball theory is wrong —
-  because sharp sportsbooks already know baseball. The variables predict runs; the market
-  reflects them.
-- **6.2 Prediction ≠ profit.** The central distinction most betting papers miss: a variable
+## 7. Discussion (restructured — where the paper becomes memorable)
+- **7.1 Why intuitive baseball hypotheses are encompassed.** Not because baseball theory is
+  wrong — because sharp sportsbooks already know baseball. The variables predict runs; the
+  market reflects them. The boundary is about *incremental* information, not about whether the
+  physics is real.
+- **7.2 Prediction ≠ profit.** The central distinction most betting papers miss: a variable
   can predict *runs* without predicting *sportsbook error*. Forecast encompassing separates
   the two directly; every feature is predictive yet non-incremental.
-- **6.3 The efficient frontier of public-information baseball betting.** *Inside* the
+- **7.3 The efficient frontier of public-information baseball betting.** *Inside* the
   frontier: observable baseball variables — the market encompasses them. *Outside*:
   microstructure (timing, cross-book, distribution) — still open. Our project maps the
   frontier. (Introduce this phrase as the conceptual contribution.)
+- **7.4 The durable contribution is methodological (protect this above all).** The baseball
+  context draws readers in; what outlives these datasets and betting markets is the *arc* —
+  take a plausible domain hypothesis, subject it to progressively stronger tests, surface the
+  biases (selection / post-treatment), benchmark against a strong reference (the sharp market),
+  and **stop when the evidence no longer supports the original claim**. This is an empirical
+  case study in scientific inference that happens to be set in baseball; the falsification
+  protocol transfers to NBA/NFL/soccer/tennis/racing unchanged. Guard this narrative in every
+  edit — it is the paper's best chance of remaining interesting years from now.
 
-## 7. Limitations (prominent)
+## 8. Limitations (prominent)
 One month; 163 games; ~1-min snapshots; single Pinnacle-grade source (cannot separate
 latency from feed cadence, nor test cross-book); no retail live team totals; June-only.
 Claims bound to these conditions.
 
-## 8. Future Work → Paper 2
+## 9. Future Work → Paper 2
 Live microstructure on the banking streams: price discovery `P(A→B)`, information half-life
 `τ½`, cross-book leadership, distribution dynamics (μ/σ/skew/tail), market compression,
 pitching-change repricing.
@@ -145,14 +181,35 @@ pitching-change repricing.
 | Remaining-runs fatigue | Fatigue adds to a state model | Incremental MAE, LOGO | Refuted | Game state already contains the info; ΔMAE −0.001 |
 | **Forecast encompassing** | Does *anything* beat the market? | Y~B+X; (Y−B)~X; per-feature E+ | **Refuted** | Book error not predictable from any feature OOS (R²≈0) |
 
-## Figures & tables to produce (Phase 3)
-1. **Figure 1** — research-process flow (above).
-2. Hypothesis→outcome table (Appendix A).
-3. Reliability curve(s) (calibration engine).
-4. Encompassing: R²(market/features/both) + per-feature ΔR².
-5. Velocity debiasing: biased vs early-window AUC.
-6. Transfer-function elasticity: ΔBook vs ΔRE by event.
-7. Remaining-runs calibration: predicted vs realized.
+## Figures (BUILT — `make_figures.py` → `figures/*.png`; final order below)
+The figures carry the argument before the prose does. **Order is deliberate:** the conceptual
+story (2 → 3) precedes the statistics (4 →). The funnel now sits *immediately after* the
+graveyard so the reader sees the shape of the result before any regression.
+
+1. **Figure 1** — research-process flow (Mermaid, above). The spine.
+2. **Figure 2 — Sequential elimination of candidate public-information hypotheses.**
+   `fig2_graveyard.png`. Manuscript caption uses the formal name; "hypothesis graveyard" is the
+   talk/blog nickname only. Ten hypotheses × five escalating gates; green cleared / red failed /
+   grey not reached; every row ends refuted.
+3. **Figure 3 — The incremental-information funnel.** `fig3_funnel.png`. 10 → 9 → 3 → 0 → 0.
+   Counts are derived from Fig 2's matrix so they can never drift. Placed here (not last) on the
+   reviewer's advice: it states the conceptual result before the statistics open.
+4. **Figure 4 — Forecast encompassing.** `fig4_encompassing.png`. Three forecasts +
+   per-feature incremental R²; the combined bar is annotated **"no incremental information"**;
+   near-zero features drawn neutral.
+5. **Figure 5 — Velocity debiasing / post-treatment bias.** `fig5_debiasing.png`. Stages labeled
+   **Baseline → Post-treatment → Debiased** (pedagogical: this is the figure non-baseball readers
+   will cite). AUC 0.42 → 0.61 → 0.52 with Hanley–McNeil CIs; debiased CI straddles the coin flip.
+6. **Figure 6 — Market transfer function.** `fig6_transfer.png`. ΔRE vs ΔBook by event; the
+   headline is **one common slope** (≈0.74), not the 0.74 itself — every event lies on a single
+   line ⇒ uniform attenuation (measurement low-pass), not a per-event edge.
+7. **Figure 7 — Remaining-runs calibration.** `fig7_calibration.png`. Reliability curve +
+   book-error histogram. Wording softened to **"approximately calibrated within this sample"**
+   (no absolute "unbiased"). Appendix A hypothesis table travels with the figures.
+
+*Typography/uncertainty:* one shared `figstyle` system; every estimate ships a CI
+(Hanley–McNeil / bootstrap / SE bands); differences inside ±0.003 are neutral-colored so the
+intervals, not the palette, carry the claim.
 
 ## Reproducibility & data availability
 Release under a **Zenodo DOI**: cleaned trajectories, feature schema, calibration outputs;
@@ -164,7 +221,14 @@ arXiv 2210.06724 (TTOP); Simon (2025); *Management Science* (2024); arXiv 2606.0
 Baseball Prospectus (relative velocity).
 
 ## Collaboration phases
-Phase 1 — outline (**this doc, v2**). Phase 2 — draft Abstract→Discussion in prose.
-Phase 3 — figures (most are one script from the JSONs). Phase 4 — rigor/causal-language
-edit ("associated with" vs "caused by"; confounders; claim support). *Reviewer-#2 pass by
-you throughout.*
+Phase 1 — outline (**this doc, v3**). Phase 2 — draft Abstract→Discussion in prose.
+Phase 3 — figures (**BUILT** — `make_figures.py`). Phase 4 — rigor/causal-language
+edit ("associated with" vs "caused by"; confounders; claim support; no "negative result"
+anywhere). *Reviewer-#2 pass by you throughout.*
+
+## Pre-release review protocol (do NOT rush arXiv)
+Before public release, hand the complete draft to **three readers with different lenses** —
+a **statistician**, a **sports-analytics researcher**, and a **quantitative bettor** — and ask
+each the *same single question*: **"Where does the paper overstate its conclusions?"** Fix only
+those places, then release. This is deliberately narrow: the risk on a boundary/efficiency paper
+is overclaiming, and three independent overclaim-hunters catch more than one generalist reviewer.

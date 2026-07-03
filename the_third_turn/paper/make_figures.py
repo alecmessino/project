@@ -7,10 +7,15 @@ from output/*.json (recomputable from the committed caches — no feed fetches).
 
     python the_third_turn/paper/make_figures.py
 
-Reviewer-#2 constraints honored throughout: uncertainty is shown (bootstrap /
+Manuscript order (deliberate — conceptual story before statistics):
+    Fig 2 graveyard → Fig 3 funnel → Fig 4 encompassing → Fig 5 debiasing
+    → Fig 6 transfer → Fig 7 calibration.
+
+Reviewer constraints honored throughout: uncertainty is shown (bootstrap /
 Hanley-McNeil / Wilson CIs), near-zero differences are drawn NEUTRAL (the CI
 does the arguing, not the color), typography is one coherent system (figstyle),
-and the negative result is the headline, not an apology.
+labels crossing gridlines wear a white halo, and the result is framed as a
+BOUNDARY we identify — never a "negative result."
 """
 
 from __future__ import annotations
@@ -31,6 +36,9 @@ import figstyle as fs  # noqa: E402
 OUT = HERE.parent / "output"
 FIGDIR = HERE / "figures"
 FIGDIR.mkdir(exist_ok=True)
+
+# white halo so a label crossing a gridline / mark stays legible
+HALO = dict(facecolor="white", edgecolor="none", alpha=0.78, boxstyle="round,pad=0.15")
 
 
 def _load(name):
@@ -102,7 +110,7 @@ def fig2_graveyard():
     for s in ax.spines.values():
         s.set_visible(False)
     ax.grid(False)
-    ax.set_title("Ten public-information hypotheses, every one refuted",
+    ax.set_title("Sequential elimination of candidate public-information hypotheses",
                  pad=26, fontsize=12)
     legend = [Patch(facecolor=fs.PASS, label="cleared this gate"),
               Patch(facecolor=fs.FAIL, label="failed here"),
@@ -132,6 +140,11 @@ def fig3_encompassing():
     for xi, v in zip(x, vals):
         axL.text(xi, v + 0.006, f"{v:.3f}", ha="center", va="bottom",
                  fontsize=10, fontweight="bold", color=fs.INK)
+    # visual annotation over the combined bar — tells the reader what they're seeing
+    axL.annotate("no incremental\ninformation", xy=(2, vals[2] + 0.004),
+                 xytext=(2, vals[2] + 0.052), ha="center", va="bottom", fontsize=8.6,
+                 color=fs.PALETTE[3], fontweight="bold",
+                 arrowprops=dict(arrowstyle="-", color=fs.PALETTE[3], linewidth=1))
     axL.set_xticks(x)
     axL.set_xticklabels(labels, fontsize=9)
     axL.set_ylabel("out-of-sample R²  (remaining runs)")
@@ -159,7 +172,7 @@ def fig3_encompassing():
              color=fs.MUTED, va="center")
     fig.suptitle("The sharp market statistically encompasses every public variable we measure",
                  fontsize=12.5, fontweight="bold")
-    fig.savefig(FIGDIR / "fig3_encompassing.png", bbox_inches="tight")
+    fig.savefig(FIGDIR / "fig4_encompassing.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -170,9 +183,9 @@ def fig4_debiasing():
     # recomputed from calibration.py (committed run): AUC / n / class prevalence
     prev = _load("calibration.json").get("base_rate", 0.429)
     bars = [
-        ("Tier only\n(no velocity)", 0.420, 272, fs.NEUTRAL),
-        ("+ vel_drop 1st→3rd\n(biased)", 0.610, 272, fs.PALETTE[3]),
-        ("+ early-window decline\n(debiased)", 0.524, 319, fs.PALETTE[0]),
+        ("BASELINE\ntier only, no velocity", 0.420, 272, fs.NEUTRAL),
+        ("POST-TREATMENT\nvel drop 1st→3rd time", 0.610, 272, fs.PALETTE[3]),
+        ("DEBIASED\nearly-window decline", 0.524, 319, fs.PALETTE[0]),
     ]
     fs.setup()
     fig, ax = plt.subplots(figsize=(7.4, 4.6))
@@ -189,18 +202,18 @@ def fig4_debiasing():
     ax.axhline(0.5, color=fs.MUTED, linewidth=1.2, linestyle="--")
     ax.text(2.42, 0.5, "coin\nflip", va="center", ha="left", fontsize=8.5, color=fs.MUTED)
     ax.set_xticks(x)
-    ax.set_xticklabels([b[0] for b in bars], fontsize=9)
+    ax.set_xticklabels([b[0] for b in bars], fontsize=8.6)
     ax.set_ylabel("out-of-sample AUC  (P team scores > 4.5)")
     ax.set_ylim(0.40, 0.72)
     ax.set_xlim(-0.6, 2.9)
-    ax.set_title("Debiasing collapses the velocity 'signal' toward a coin flip",
-                 fontsize=12, pad=10)
-    ax.annotate("the 0.61 edge was survival bias:\na big drop only exists if the\n"
-                "starter lasted long enough\nto be shelled",
+    ax.set_title("Post-treatment bias inflates the velocity 'signal';\n"
+                 "debiasing collapses it toward a coin flip", fontsize=11.5, pad=10)
+    ax.annotate("conditioning on 3rd-time-through is\npost-treatment: a big drop only exists\n"
+                "if the starter survived to be shelled",
                 xy=(1, 0.590), xytext=(1.32, 0.58), fontsize=8.3, color=fs.MUTED,
-                ha="left", va="top",
+                ha="left", va="top", bbox=HALO,
                 arrowprops=dict(arrowstyle="->", color=fs.MUTED, linewidth=1))
-    fig.savefig(FIGDIR / "fig4_debiasing.png", bbox_inches="tight")
+    fig.savefig(FIGDIR / "fig5_debiasing.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -227,18 +240,20 @@ def fig5_transfer():
                    edgecolor="white", linewidth=1.2, zorder=4)
         ax.annotate(f"{nice[ev]} (n={n})", (x, y), xytext=off[ev],
                     textcoords="offset points", fontsize=9, color=fs.INK,
-                    va="center", ha=ha_.get(ev, "left"))
+                    va="center", ha=ha_.get(ev, "left"), bbox=HALO)
 
     lim = 1.6
     ax.plot([0, lim], [0, lim], color=fs.MUTED, linewidth=1.3, linestyle="--", zorder=2)
     ax.text(1.5, 1.55, "y = x\n(fully priced)", fontsize=8.5, color=fs.MUTED,
-            ha="right", va="top")
+            ha="right", va="top", bbox=HALO)
 
-    # fitted slope through origin over the hit types (the uniform low-pass level)
+    # one common slope through the origin over every event type (the key point:
+    # the events don't scatter — they lie on a SINGLE line, so the sub-1 level is
+    # uniform attenuation, not a per-event mispricing)
     xs_a, ys_a = np.array(xs), np.array(ys)
     slope = float(np.sum(xs_a * ys_a) / np.sum(xs_a * xs_a))
     ax.plot([0, lim], [0, slope * lim], color=fs.PALETTE[0], linewidth=2, zorder=3)
-    ax.text(0.14, slope * 0.14 - 0.055, f"fit  ΔBook ≈ {slope:.2f}·ΔRE", fontsize=10,
+    ax.text(0.14, slope * 0.14 - 0.055, f"one common slope ≈ {slope:.2f}", fontsize=10.5,
             color=fs.PALETTE[0], ha="left", va="top", fontweight="bold", rotation=25,
             rotation_mode="anchor")
 
@@ -246,9 +261,10 @@ def fig5_transfer():
     ax.set_aspect("equal")
     ax.set_xlabel("true information shock  ΔRE  (runs, RE24-based)")
     ax.set_ylabel("converged line move  ΔBook (+5 min)")
-    ax.set_title("The line moves ~0.7× every shock, uniformly\n"
-                 "a measurement low-pass filter, not a per-event edge", fontsize=11.5)
-    fig.savefig(FIGDIR / "fig5_transfer.png", bbox_inches="tight")
+    ax.set_title("Every event type lies on one common slope\n"
+                 "uniform attenuation (a measurement low-pass filter), not a per-event edge",
+                 fontsize=11)
+    fig.savefig(FIGDIR / "fig6_transfer.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -287,9 +303,9 @@ def fig6_calibration():
     axL.set_aspect("equal")
     axL.set_xlabel("market-implied remaining runs")
     axL.set_ylabel("realized remaining runs")
-    axL.set_title("Market forecast is well-calibrated", fontsize=11)
-    axL.text(0.04 * lim, 0.92 * lim, "on the diagonal = unbiased", fontsize=8.5,
-             color=fs.MUTED)
+    axL.set_title("Market forecast ≈ calibrated (within this sample)", fontsize=11)
+    axL.text(0.04 * lim, 0.92 * lim, "on the diagonal ⇒ approximately\ncalibrated in this sample",
+             fontsize=8.5, color=fs.MUTED, bbox=HALO)
 
     # right — book-error (Y − B) distribution; the thing nothing predicts
     err = Y - B
@@ -297,13 +313,13 @@ def fig6_calibration():
     axR.axvline(0, color=fs.MUTED, linewidth=1.2, linestyle="--")
     axR.axvline(err.mean(), color=fs.PALETTE[3], linewidth=2, zorder=4)
     axR.text(err.mean(), axR.get_ylim()[1] * 0.96, f"  mean {err.mean():+.2f}",
-             color=fs.PALETTE[3], fontsize=9.5, fontweight="bold", va="top")
+             color=fs.PALETTE[3], fontsize=9.5, fontweight="bold", va="top", bbox=HALO)
     axR.set_xlabel("book forecast error  (realized − implied)")
     axR.set_ylabel("half-inning snapshots")
     axR.set_title("Error is symmetric & unpredictable (OOS R² ≈ 0)", fontsize=11)
     fig.suptitle(f"Remaining-runs calibration · {rr['n']:,} snapshots · model R² = {rr['r2_base']:.3f}",
                  fontsize=12.5, fontweight="bold")
-    fig.savefig(FIGDIR / "fig6_calibration.png", bbox_inches="tight")
+    fig.savefig(FIGDIR / "fig7_calibration.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -348,7 +364,7 @@ def fig7_funnel(matrix):
     ax.set_title("The incremental-information funnel\n"
                  "predicting runs is easy; predicting the market's error is the wall",
                  fontsize=12.5, fontweight="bold", loc="center")
-    fig.savefig(FIGDIR / "fig7_funnel.png", bbox_inches="tight")
+    fig.savefig(FIGDIR / "fig3_funnel.png", bbox_inches="tight")
     plt.close(fig)
 
 

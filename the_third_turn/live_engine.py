@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import json
 import os
 import signal
 import statistics
@@ -375,6 +376,10 @@ class LiveEngine:
         self.verifier = (LineVerifier(odds_key, daily_cap=settings.verify_daily_credit_cap)
                          if (settings.verify_lines and odds_key) else None)
         self.pregame_total: dict[str, float] = {}
+        # book-lag panel: append a row whenever a book's live total MOVES, so we can
+        # later measure whether soft books (FanDuel/Bovada) lag sharp Pinnacle.
+        self._panel_path = Path(settings.ledger_path).parent / "book_panel.jsonl"
+        self._panel_last: dict[tuple[str, str], float] = {}
         self._alerted: set[str] = set()
         self._alerted_games: set[str] = set()      # games with a DELIVERED alert
         self._exit_noted: set[tuple] = set()       # (game_key, pitching_team) announced
@@ -382,6 +387,30 @@ class LiveEngine:
 
     def _merge_quotes(self, *result_lists: list[Quote]) -> dict[str, Quote]:
         return merge_quotes(*result_lists)
+
+    def _log_panel(self, quote_lists) -> None:
+        """Append a compact row whenever a book's live total moves (book-lag panel).
+
+        Change-only: unchanged lines are skipped, so the file stays small but records
+        every movement — the raw material for a Pinnacle-vs-soft-book lag study. Zero
+        extra API cost; these quotes were already fetched this poll.
+        """
+        ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        rows = []
+        for quotes in quote_lists:
+            for q in quotes:
+                if q.line is None:
+                    continue
+                key = (q.game_key, q.book)
+                if self._panel_last.get(key) == q.line:
+                    continue
+                self._panel_last[key] = q.line
+                rows.append({"ts": ts, "game": q.game_key, "book": q.book, "line": q.line,
+                             "over_odds": q.over_odds, "under_odds": q.under_odds,
+                             "live": bool(q.live_game)})
+        if rows:
+            with self._panel_path.open("a") as f:
+                f.writelines(json.dumps(r) + "\n" for r in rows)
 
     async def poll_once(self, session: aiohttp.ClientSession):
         """Return ``(fired_triggers, live_states, merged_quotes)`` for this poll."""
@@ -394,10 +423,12 @@ class LiveEngine:
 
         state_res = results[0]
         quote_lists = [r.quotes for r in results[1:] if r.ok]
+        self._log_panel(quote_lists)
         quotes = self._merge_quotes(*quote_lists)
         if not quotes and self.s.use_pinnacle_fallback:
             pin = await self.pinnacle.fetch(session)
             if pin.ok:
+                self._log_panel([pin.quotes])
                 quotes = self._merge_quotes(pin.quotes)
 
         fired: list[Trigger] = []

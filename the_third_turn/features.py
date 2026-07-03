@@ -70,8 +70,8 @@ def extract(feed, points, start_time, tiers) -> dict:
         half = "top" if is_top else "bottom"
         pside = "home" if is_top else "away"          # the pitching (defending) side
         line = fn(about.get("startTime") or "")
-        if line is not None and inning >= 2 and inning not in line_by_inn:
-            line_by_inn[inning - 1] = line             # live total at the END of (inning-1)
+        if line is not None and inning >= 2 and (inning - 1) not in line_by_inn:
+            line_by_inn[inning - 1] = line             # first play of `inning` = END of (inning-1)
 
         pitcher_id = (match.get("pitcher") or {}).get("id")
         batter_id = (match.get("batter") or {}).get("id")

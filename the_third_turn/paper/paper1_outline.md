@@ -188,22 +188,22 @@ graveyard so the reader sees the shape of the result before any regression.
 
 1. **Figure 1** — research-process flow (Mermaid, above). The spine.
 2. **Figure 2 — Sequential elimination of candidate public-information hypotheses.**
-   `fig2_graveyard.png`. Manuscript caption uses the formal name; "hypothesis graveyard" is the
+   `hypothesis_elimination.png`. Manuscript caption uses the formal name; "hypothesis graveyard" is the
    talk/blog nickname only. Ten hypotheses × five escalating gates; green cleared / red failed /
    grey not reached; every row ends refuted.
-3. **Figure 3 — The incremental-information funnel.** `fig3_funnel.png`. 10 → 9 → 3 → 0 → 0.
+3. **Figure 3 — The incremental-information funnel.** `incremental_information_funnel.png`. 10 → 9 → 3 → 0 → 0.
    Counts are derived from Fig 2's matrix so they can never drift. Placed here (not last) on the
    reviewer's advice: it states the conceptual result before the statistics open.
-4. **Figure 4 — Forecast encompassing.** `fig4_encompassing.png`. Three forecasts +
+4. **Figure 4 — Forecast encompassing.** `forecast_encompassing.png`. Three forecasts +
    per-feature incremental R²; the combined bar is annotated **"no incremental information"**;
    near-zero features drawn neutral.
-5. **Figure 5 — Velocity debiasing / post-treatment bias.** `fig5_debiasing.png`. Stages labeled
+5. **Figure 5 — Velocity debiasing / post-treatment bias.** `velocity_post_treatment_bias.png`. Stages labeled
    **Baseline → Post-treatment → Debiased** (pedagogical: this is the figure non-baseball readers
    will cite). AUC 0.42 → 0.61 → 0.52 with Hanley–McNeil CIs; debiased CI straddles the coin flip.
-6. **Figure 6 — Market transfer function.** `fig6_transfer.png`. ΔRE vs ΔBook by event; the
+6. **Figure 6 — Market transfer function.** `transfer_function.png`. ΔRE vs ΔBook by event; the
    headline is **one common slope** (≈0.74), not the 0.74 itself — every event lies on a single
    line ⇒ uniform attenuation (measurement low-pass), not a per-event edge.
-7. **Figure 7 — Remaining-runs calibration.** `fig7_calibration.png`. Reliability curve +
+7. **Figure 7 — Remaining-runs calibration.** `market_calibration.png`. Reliability curve +
    book-error histogram. Wording softened to **"approximately calibrated within this sample"**
    (no absolute "unbiased"). Appendix A hypothesis table travels with the figures.
 

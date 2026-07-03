@@ -117,7 +117,7 @@ def fig2_graveyard():
               Patch(facecolor=fs.GRID, label="not reached")]
     ax.legend(handles=legend, loc="upper center", bbox_to_anchor=(0.5, -0.04),
               ncol=3, fontsize=9, handlelength=1.1)
-    fig.savefig(FIGDIR / "fig2_graveyard.png", bbox_inches="tight")
+    fig.savefig(FIGDIR / "hypothesis_elimination.png", bbox_inches="tight")
     plt.close(fig)
     return rows
 
@@ -172,7 +172,7 @@ def fig3_encompassing():
              color=fs.MUTED, va="center")
     fig.suptitle("The sharp market statistically encompasses every public variable we measure",
                  fontsize=12.5, fontweight="bold")
-    fig.savefig(FIGDIR / "fig4_encompassing.png", bbox_inches="tight")
+    fig.savefig(FIGDIR / "forecast_encompassing.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -213,7 +213,7 @@ def fig4_debiasing():
                 xy=(1, 0.590), xytext=(1.32, 0.58), fontsize=8.3, color=fs.MUTED,
                 ha="left", va="top", bbox=HALO,
                 arrowprops=dict(arrowstyle="->", color=fs.MUTED, linewidth=1))
-    fig.savefig(FIGDIR / "fig5_debiasing.png", bbox_inches="tight")
+    fig.savefig(FIGDIR / "velocity_post_treatment_bias.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -264,7 +264,7 @@ def fig5_transfer():
     ax.set_title("Every event type lies on one common slope\n"
                  "uniform attenuation (a measurement low-pass filter), not a per-event edge",
                  fontsize=11)
-    fig.savefig(FIGDIR / "fig6_transfer.png", bbox_inches="tight")
+    fig.savefig(FIGDIR / "transfer_function.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -319,7 +319,7 @@ def fig6_calibration():
     axR.set_title("Error is symmetric & unpredictable (OOS R² ≈ 0)", fontsize=11)
     fig.suptitle(f"Remaining-runs calibration · {rr['n']:,} snapshots · model R² = {rr['r2_base']:.3f}",
                  fontsize=12.5, fontweight="bold")
-    fig.savefig(FIGDIR / "fig7_calibration.png", bbox_inches="tight")
+    fig.savefig(FIGDIR / "market_calibration.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -364,7 +364,7 @@ def fig7_funnel(matrix):
     ax.set_title("The incremental-information funnel\n"
                  "predicting runs is easy; predicting the market's error is the wall",
                  fontsize=12.5, fontweight="bold", loc="center")
-    fig.savefig(FIGDIR / "fig3_funnel.png", bbox_inches="tight")
+    fig.savefig(FIGDIR / "incremental_information_funnel.png", bbox_inches="tight")
     plt.close(fig)
 
 

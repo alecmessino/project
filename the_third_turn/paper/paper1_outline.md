@@ -34,9 +34,11 @@ the experiment (claims are "no evidence of incremental information within our da
    transfers to NBA/NFL/soccer/tennis/racing.
 3. **Infrastructure** (was "reproducibility" — it's bigger than that). The calibration engine,
    encompassing tests, remaining-runs model, transfer-function code, feature schema, and cleaned
-   data, released as **The Third Turn Benchmark (v1.0)** — a citable research artifact others
-   evaluate new hypotheses against (cf. GLUE / ImageNet / MMLU / HELM in their fields), not just a
-   reproducible appendix.
+   data, released as the **initial release of the Third Turn Benchmark** — a citable research
+   artifact others evaluate new hypotheses against (cf. GLUE / ImageNet / MMLU / HELM in their
+   fields), not just a reproducible appendix. *Modest verb: "we release," never "we introduce /
+   establish." "v1.0" waits until the paper is public + revised once — version numbers imply a
+   stability we're not at yet. Benchmark is documented BY Paper 1, not owned by it.*
 
 ## Two audiences (lean forecasting, not baseball, on every terminology fork)
 (1) *Sports analytics* — TTOP, Statcast, betting. (2) *Applied statistics / forecasting* —
@@ -106,33 +108,32 @@ TTOP as continuous familiarity (arXiv 2210.06724); relative-velocity ≈ 0.0006 
 (*Management Science* 2024); underreaction ~0.64:1 (arXiv 2606.07811). Gap: none combine
 pitch-level state, live totals, calibration, and encompassing vs a sharp book.
 
-## 3. Data
-163 games, June 2026; ~1-min live totals + O/U prices (Odds Papi, Pinnacle-grade); MLB
-Stats play-by-play + boxscore; Statcast `startSpeed`; weather + venue; realized finals.
-Derived substrate `features.py`. Report coverage, cadence, single-source caveat.
+## 3. Methods (DRAFTED — `draft_methods.md`; written as an experimental design, not a pipeline)
+Organized around the research question, forecasting terms over baseball terms, **no subsection
+named for a hypothesis** (TTOP/velocity are objects of study, not methods). Five subsections:
+- **3.1 Data** — what exists, non-interpretive. 163 games / June 2026; one-minute Pinnacle-grade
+  total trajectories; MLB Stats play-by-play + boxscore; pitch `startSpeed`; weather/venue;
+  realized finals. Unit of analysis = the *half-inning snapshot*.
+- **3.2 Feature construction** — how variables are built, no statistics yet. Defines the two
+  forecasts compared: market remaining `B = live total − runs so far`, realized remaining
+  `Y = final − runs so far`, so `Y−B` = the market's forecast error. State variables built without
+  reference to outcome; `ΔRE = runs + ΔRE24`.
+- **3.3 Validation protocol** — the ladder lives HERE (it is experimental design, not Results):
+  Signal → Robustness → Out-of-sample → Debiasing → Conditional testing → Forecast encompassing →
+  Transfer function. Carry a variable forward only until eliminated; report the rung of
+  elimination. Guiding principle: *evaluate against the market, not merely against the outcome.*
+- **3.4 Statistical evaluation** — the math: LOGO ridge encompassing (`Y~B`, `Y~X`, `Y~B+X`;
+  direct `(Y−B)~X`; per-feature E+); calibration (reliability/Brier/ECE/AUC + Hanley–McNeil);
+  transfer function (response ratio + common slope; linear-weights control); uncertainty
+  (LOGO/Wilson/bootstrap). **Includes a one-paragraph "Why forecast encompassing?"** — ordinary
+  accuracy can't separate *predicts outcome* from *adds info beyond an existing forecast*.
+- **3.5 Reproducibility** — deterministic recompute from committed inputs; frozen `output/*.json`;
+  release of datasets + protocol + reference models as the **initial release of the Third Turn
+  Benchmark** under a DOI. Modest verb: "we release."
 
-## 4. Methods — escalating stringency (the protocol; one subsection each)
-Naïve reversion → gradient signal → vector battery (V1–V4) → calibration engine →
-velocity debiasing → remaining-runs model → forecast encompassing (G, E+) → transfer
-function (A, RE24-based ΔRE). Emphasize each test is *more* stringent than the last.
-
-## 5. Research philosophy (½ page — sits between Methods and Results)
-*One escalating empirical program, not ten unrelated backtests.* Each successive experiment
-was designed to **invalidate the surviving explanation** of the previous one — so a hypothesis
-that clears one gate is not "confirmed," only "not yet eliminated," and is handed to a stricter
-test. State the ladder explicitly:
-
-> initial signal → robustness → debiasing → conditional testing → forecast encompassing →
-> transfer function
-
-Four short paragraphs: (1) the falsificationist stance — we sought each variable's *kill*, not
-its confirmation; (2) why escalation matters — an in-sample edge is the weakest possible
-evidence, so every rung strips one more artifact (overfitting, then selection, then confounding,
-then redundancy-with-the-market); (3) the market as the terminal benchmark — forecast
-encompassing asks the hardest question, "does it beat what the price already knows?"; (4) the
-stopping rule — we stop when the evidence no longer supports the original claim, and we map the
-boundary rather than keep drilling. This section tells the reviewer the design was one program
-with a spine (Figures 2→3), not a fishing expedition.
+*Note:* the old standalone "Research philosophy" section is now redundant — its falsificationist
+stance is split between Methods §3.3 (the ladder as design) and Discussion §7.4 (the burden-of-
+proof philosophy). Do not reintroduce it as its own section.
 
 ## 6. Results (DRAFTED — `draft_results.md`; brief order: lead with the hardest evidence)
 Ordered as a legal brief, not a chronicle. **One figure per paragraph**, opening from the

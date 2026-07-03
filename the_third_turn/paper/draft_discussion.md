@@ -112,11 +112,13 @@ That shift is a philosophy of evidence, not merely a workflow.
 The ladder transfers unchanged to any market with a sharp public forecast and observable state:
 NBA totals, NFL spreads, soccer in-play, tennis, racing. A researcher there can adopt the same
 sequence, report at which rung each candidate variable is eliminated, and compare results across
-domains. We release the pipeline, feature schema, and result artifacts as **The Third Turn
-Benchmark (v1.0)** so that future hypotheses can be evaluated against the same reference rather
-than re-derived from scratch. Over time a shared benchmark and a citable protocol — "the Third
-Turn validation protocol" — may prove more durable than any single finding, because they let a
-field accumulate falsifications instead of scattered one-off backtests.
+domains. To facilitate reproducibility, we release the datasets, evaluation protocol, and
+reference implementations accompanying this study as the initial release of the **Third Turn
+Benchmark**, so that future hypotheses can be evaluated against the same reference rather than
+re-derived from scratch. Its guiding principle is a single sentence — *a betting hypothesis should
+be evaluated against the market, not merely against the outcome* — and over time a shared
+benchmark and a citable protocol may prove more durable than any single finding, because they let
+a field accumulate falsifications instead of scattered one-off backtests.
 
 ## 8. Limitations
 

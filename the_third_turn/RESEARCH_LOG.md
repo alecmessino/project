@@ -39,6 +39,10 @@ with live line + price trajectories (Odds Papi) joined to play-by-play + Statcas
 
 **Pivotal conclusion (G + E+):** the sportsbook forecast statistically **encompasses every public baseball variable we can measure.** Per the research design, this converges the project onto **market microstructure** — latency, cross-book divergence, transient state-specific miscalibration — not discovering another baseball variable. All three are live-data-gated (banking now).
 
+| 15 | **Program A · Transfer function** (does the line move by the *correct amount*?) | 6,414 events | ΔRE = runs + ΔRE24 (validated vs linear weights). Response ratio ΔBook(+5m)/ΔRE by event: HR **0.81**, 3B 0.84, 2B 0.64, 1B 0.72, BB 0.63 — hits cluster **0.64–0.84**, roughly *uniform* (⇒ the sub-1 level is single-source/convergence attenuation, not a per-event edge). Line takes >1 min to converge (+1m ≈ half of +5m). Pitching change **0.12** but RE24 can't benchmark it (ignores reliever quality) | ✅ Sharp market adjusts ~correctly; **historical phase complete** |
+
+**Historical phase complete.** The sharp market prices public baseball information and adjusts to information shocks by roughly the right magnitude (uniformly across event types). The only interpretable anomaly — pitching changes — is a *benchmark* gap (RE24 doesn't price reliever quality), and it's exactly the event where the live line's repricing is worth testing directly. From here the project is **entirely live microstructure**: cross-book lag, sub-second latency, transient state-specific miscalibration, and distributional/tail effects — all on the timestamped odds + game-state + implied-distribution streams now banking.
+
 **Fatigue/TTOP edge refuted 3×:** V4 bullpen (#8), velocity debiasing (#10), remaining-runs fatigue terms (#11). Consistent with the literature.
 
 ---

@@ -51,9 +51,19 @@ def units():
             pen = bull.get(pen_key)
             if not pen or "pen_pitches_3d" not in pen:
                 continue
-            out.append({"runs": facing_runs, "tier": sk["tier"], "vdrop": sk["vel_drop_13"],
-                        "exit": sk["exit_inning"], "pen3d": pen["pen_pitches_3d"],
-                        "gassed": pen["gassed_1d"], "heavy": pen["heavy_3d"]})
+            # runs the facing team scored AFTER the opposing starter exited = the
+            # bullpen's innings (isolates the pen's contribution from the starter shelling)
+            bats = "top" if pen_key.endswith(":home") else "bottom"
+            exit_i = sk["exit_inning"]
+            post = None
+            if exit_i is not None:
+                rh = r.get("runs_half", {})
+                post = sum(v for k, v in rh.items()
+                           if k.endswith(f":{bats}") and int(k.split(":")[0]) >= exit_i)
+            out.append({"runs": facing_runs, "post": post, "tier": sk["tier"],
+                        "vdrop": sk["vel_drop_13"], "exit": exit_i,
+                        "pen3d": pen["pen_pitches_3d"], "gassed": pen["gassed_1d"],
+                        "heavy": pen["heavy_3d"]})
     return out
 
 
@@ -93,8 +103,25 @@ def main() -> int:
     t2.add_row(f"high workload (>{hi_c}p/3d)", *summary([r for r in cliff if r["pen3d"] > hi_c]))
     t2.add_row(f"low workload (≤{lo_c}p/3d)", *summary([r for r in cliff if r["pen3d"] <= lo_c]))
     console.print(t2)
-    console.print("\n[dim]V4 thesis holds if 'chased + gassed/high-workload pen' scores meaningfully more "
-                  "than 'chased + rested pen'. Watch the unit counts — cliff cells are thin.[/]")
+
+    # C. THE CLEAN TEST — isolate the pen's own innings (runs AFTER the starter exits)
+    def post_summary(rs):
+        rs = [r for r in rs if r["post"] is not None]
+        if not rs:
+            return "0", "—"
+        return str(len(rs)), f"{statistics.mean(r['post'] for r in rs):.2f}"
+
+    t3 = Table(title="C. Runs in the BULLPEN's innings (after starter exits), cliff games")
+    for c in ("pen behind him", "units", "avg post-starter runs"):
+        t3.add_column(c, justify="left" if c == "pen behind him" else "right")
+    t3.add_row("rested (0 gassed arms)", *post_summary([r for r in cliff if r["gassed"] == 0]))
+    t3.add_row("≥1 gassed arm (≥30p yest)", *post_summary([r for r in cliff if r["gassed"] >= 1]))
+    t3.add_row(f"high workload (>{hi_c}p/3d)", *post_summary([r for r in cliff if r["pen3d"] > hi_c]))
+    t3.add_row(f"low workload (≤{lo_c}p/3d)", *post_summary([r for r in cliff if r["pen3d"] <= lo_c]))
+    console.print(t3)
+    console.print("\n[dim]C is the honest pen-fatigue test: total facing runs (B) are dominated by the "
+                  "starter's shelling; C counts only the innings the bullpen actually pitched. Thin cells "
+                  "— read as directional.[/]")
 
     (HERE / "output" / "v4_bullpen.json").write_text(json.dumps({
         "n": len(rows), "cliff_n": len(cliff),

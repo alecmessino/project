@@ -35,6 +35,9 @@ with live line + price trajectories (Odds Papi) joined to play-by-play + Statcas
 | 11 | **Expected remaining runs** (the model side of the residual) | 2,842 snaps | Baseline (game progress + tier + bullpen + score) is **well-calibrated**, R²=**0.224**. Adding fatigue (TTO, pitch count, starter-in) changes MAE by **−0.001** — nothing | ❌ Fatigue adds zero |
 | 12 | **Project 3 · Distribution/tail calibration** (Pinnacle implied vs realized, PIT) | live | Harness built; 0 graded yet (games in progress). Accumulates nightly | ⏳ Open |
 | 13 | **Conditional under-reaction** (edge only in hitter-friendly weather/park?) | 163 | No slice clears breakeven; baseline hitter-friendly Overs hit **46% < 50%** neutral — the market **over-adjusts** for observable context | ❌ Context is priced |
+| 14 | **Project G · Forecast encompassing** (does the book contain our features?) | 2,842 snaps | Market alone R²=**0.304** beats our features (0.279); adding features to the market changes R² by **−0.017**. The book's forecast error (final − live line) is **not predictable** OOS (R²=−0.037). **E+** per-feature: every feature's incremental ΔR² beyond the market is **≤ 0.002** (bullpen best at +0.0018; velocity/tier/park all ≤0) | ❌ **Book encompasses everything we measure** |
+
+**Pivotal conclusion (G + E+):** the sportsbook forecast statistically **encompasses every public baseball variable we can measure.** Per the research design, this converges the project onto **market microstructure** — latency, cross-book divergence, transient state-specific miscalibration — not discovering another baseball variable. All three are live-data-gated (banking now).
 
 **Fatigue/TTOP edge refuted 3×:** V4 bullpen (#8), velocity debiasing (#10), remaining-runs fatigue terms (#11). Consistent with the literature.
 

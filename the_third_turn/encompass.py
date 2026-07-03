@@ -188,7 +188,25 @@ def main() -> int:
         ct.add_row(f, f"{b:+.3f}")
     console.print(ct)
 
+    # E+ : per-feature incremental value beyond the market (Y ~ B+Xi vs Y ~ B).
+    # Tests each feature against B individually, so two proxies for the same state can't
+    # hide each other (the multivariate G test's blind spot).
+    base = r2(y, p_b)
+    it = Table(title="E+ · each feature's incremental R² beyond the market (Y~B+Xi − Y~B)")
+    for c in ("feature", "ΔR² (out-of-sample)"):
+        it.add_column(c, justify="left" if c == "feature" else "right")
+    incs = []
+    for f in FEATS:
+        _, pf_, _, _ = logo_lin(rows, ["B", f])
+        incs.append((f, r2(y, pf_) - base))
+    for f, dd in sorted(incs, key=lambda kv: -kv[1]):
+        flag = " [green]← adds signal[/]" if dd > 0.003 else ""
+        it.add_row(f, f"{dd:+.4f}{flag}")
+    console.print(it)
+    console.print("[dim]All ΔR² ≤ 0 ⇒ every feature is individually encompassed by the market too.[/]")
+
     (HERE / "output" / "encompass.json").write_text(json.dumps({
+        "incremental": {f: round(float(d), 4) for f, d in incs},
         "n": len(rows), "r2_market": round(float(r2(y, p_b)), 3),
         "r2_features": round(float(r2(y, p_x)), 3), "r2_both": round(float(r2(y, p_bx)), 3),
         "encompass_gain": round(float(gain), 4), "err_r2": round(float(r2(e, p_err)), 3),

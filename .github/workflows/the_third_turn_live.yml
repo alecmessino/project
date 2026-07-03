@@ -89,6 +89,20 @@ jobs:
           kill "$CK" 2>/dev/null || true
           checkpoint
 
+          # maintenance probe — ping Discord ONLY when the V3 sample is ripe or a stream broke
+          REPORT="$(python3 the_third_turn/ripeness_check.py || true)"
+          echo "$REPORT"
+          if echo "$REPORT" | grep -q "RIPE: YES" || echo "$REPORT" | grep -q "HEALTH_OK: no"; then
+            COV="$(echo "$REPORT" | grep '^COVERAGE' | head -1)"
+            RIP="$(echo "$REPORT" | grep '^RIPE' | head -1)"
+            HLTH="$(echo "$REPORT" | grep '^HEALTH_OK' | head -1)"
+            if [ -n "${DISCORD_WEBHOOK_URL:-}" ]; then
+              curl -s -H "Content-Type: application/json" \
+                -d "{\"content\":\"🔔 The Third Turn maintenance — ${COV} · ${RIP} · ${HLTH}\"}" \
+                "$DISCORD_WEBHOOK_URL" || true
+            fi
+          fi
+
           # re-arm only after a meaningful run, so a fast crash can't storm dispatches
           ELAPSED=$(( ($(date +%s) - START) / 60 ))
           if [ "$ELAPSED" -ge 60 ]; then

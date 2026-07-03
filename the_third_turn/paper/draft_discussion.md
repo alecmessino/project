@@ -28,17 +28,16 @@ runs. Both are true. The point of forecast encompassing is not to deny that thes
 signal; it is to ask whether their signal is *already priced*. When the market's forecast error —
 the difference between what actually happened and what the line implied — cannot be predicted from
 any of these variables out-of-sample (R² = −0.037), the most parsimonious reading is that the
-market has already incorporated them. The variables are informative about runs and redundant with
-the price. Prediction survives; increment does not.
+information is already incorporated into the market forecast. The variables are informative about
+runs and redundant with the price. Prediction survives; increment does not.
 
-Why does this happen? Not because baseball theory is wrong, but because the counterparties setting
-these lines are themselves sophisticated processors of exactly this public information. A sharp
-live market is a forecast produced by participants with strong incentives to price observable
-state correctly and quickly. The transfer-function evidence sharpens this: the line moves in the
-right direction and by a stable fraction of the true change in run expectancy after every event
-type, with no event class systematically under- or over-priced. A market that responds
-proportionately to information shocks is precisely the kind of market whose residual should carry
-no recoverable public-information signal — which is what we observe.
+Why does this happen? Not because baseball theory is wrong, but because the forecast embedded in a
+sharp live market already reflects these variables. Such a forecast is produced by participants
+with strong incentives to price observable state correctly and quickly, and the transfer-function
+evidence is consistent with that: the line moves in the right direction and by a stable fraction of
+the true change in run expectancy after every event type, with no event class systematically under-
+or over-priced. A forecast that adjusts proportionately to information shocks is precisely the kind
+whose residual should carry no recoverable public-information signal — which is what we observe.
 
 ## 7.2 Prediction is not profit
 
@@ -88,6 +87,14 @@ one more class of illusion — overfitting, then selection, then confounding, th
 redundancy-with-the-market — so that a hypothesis surviving to the top has been tested against
 progressively harder alternatives rather than a single easy one.
 
+The reason a protocol like this matters is a matter of where the burden of proof sits. Sports
+betting research frequently terminates after the discovery of an in-sample signal. The present
+study instead treated each positive result as a hypothesis requiring progressively stronger
+attempts at falsification. The protocol therefore shifts the burden of proof from demonstrating
+*prediction* to demonstrating *incremental information beyond an existing market forecast* — a
+higher and more economically meaningful standard, and one that a single backtest can never meet.
+That shift is a philosophy of evidence, not merely a workflow.
+
 > Signal
 > ↓
 > Robustness
@@ -111,25 +118,42 @@ than re-derived from scratch. Over time a shared benchmark and a citable protoco
 Turn validation protocol" — may prove more durable than any single finding, because they let a
 field accumulate falsifications instead of scattered one-off backtests.
 
-## 8. Remaining questions
+## 8. Limitations
 
-We deliberately title this section *Remaining Questions* rather than *Future Work*: it lists what
-the evidence genuinely does not answer, not merely what we would like to do next.
+We state the conditions under which our conclusion holds, without interpretation. **Scope.** The
+study covers 163 games over a single month (June 2026) of one sport; the boundary is characterized
+precisely, but only under those conditions, and we make no claim of seasonal or cross-sport
+generality. **Odds source.** Historical line trajectories derive from a single Pinnacle-grade
+feed sampled at roughly one-minute intervals; we therefore cannot separate genuine price-formation
+latency from feed cadence, and the uniform sub-one response ratio in the transfer function is
+consistent with either. **Single-book benchmark.** All encompassing tests are conducted against
+one sharp book; we cannot test cross-book agreement or leadership. **Market coverage.** Retail live
+team totals were not exposed by our feeds and are untested, as are first-five-inning totals.
+**Ground truth.** The remaining-runs model and RE24 transfer benchmark use published static run
+values, not park- or season-specific re-estimation; the pitching-change response is reported but
+excluded from the elasticity claim because RE24 cannot price reliever quality. **Estimation.**
+Out-of-sample figures are leave-one-game-out; effective sample sizes for the rarer event types
+(e.g. triples, n = 47) are small, and the corresponding response ratios should be read with that
+in mind. None of these conditions is load-bearing for the central result — the book's forecast
+error is unpredictable from every feature we measure — but each bounds how far it may be
+generalized.
 
-Our data cannot separate latency from feed cadence. Because the historical trajectories come from
-a single Pinnacle-grade source sampled at roughly one-minute intervals, the uniform sub-one
-response ratio in the transfer function is consistent with either a real convergence lag or a
-measurement artifact; distinguishing them requires higher-frequency, multi-source capture. For the
-same reason we cannot test cross-book price leadership — who moves first, and whether a laggard is
-tradable — nor whether the market updates the *shape* of the implied distribution (variance, skew,
-tail) as accurately as it updates the mean. Retail live team totals, which some books post and
-which our feeds did not expose, remain untested; so does whether the boundary we map for full-game
-totals holds for first-five-inning markets that isolate the starters. And the entire study covers
-one month and 163 games of one sport: the boundary is characterized precisely, but only under
-those conditions. Each of these is a live-data question, and each is the natural subject of the
-market-microstructure study our forward-collected streams are built to support.
+## 9. Remaining Questions
 
-## What we learned
+Distinct from the limitations above, this section lists what the evidence *genuinely does not
+answer* — the questions that remain open not because our experiment was narrow, but because they
+require data of a kind the historical record cannot provide. Does information propagate across
+books with a measurable lag, and is a laggard ever tradable? Does the market update the *shape* of
+the implied run distribution — its variance, skew, and tail — as accurately as it updates the
+mean, or is higher-moment miscalibration the place a residual edge could still hide? What is the
+information half-life of a given shock: how long does the line take to absorb a home run versus a
+pitching change versus an injury? Does the boundary we map for full-game totals move when the
+market isolates the starters, as first-five-inning totals do? Each of these is a live-data
+question — none is answerable from one-minute historical snapshots of a single book — and each is
+the natural subject of the market-microstructure study that our forward-collected, timestamped
+streams are being built to support.
+
+## 10. Conclusion — what we learned
 
 This project began with a search for an exploitable feature of baseball. It ended by identifying
 the empirical boundary at which publicly observable baseball information ceases to provide

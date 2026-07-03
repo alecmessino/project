@@ -22,19 +22,28 @@ the experiment (claims are "no evidence of incremental information within our da
 
 ---
 
-## Three contributions (state explicitly in the Introduction)
+## Three contributions (own BOXED section in the Introduction — visually distinct, numbered)
 
-1. **Incremental information (primary, statistical).** For each public variable (TTOP,
-   velocity, fatigue, bullpen, park, weather, pitch count) we ask *"does it survive
-   conditioning on the market?"* — not merely *"does it predict runs?"* — via escalating
-   tests culminating in forecast encompassing. Predicting runs ≠ predicting book error.
-2. **A methodology for evaluating betting hypotheses (framework).** The test sequence —
-   naïve backtest → robustness → debiasing → conditional testing → forecast encompassing →
-   transfer function — is domain-general and transfers to NBA/NFL/soccer/tennis/racing.
-   We present it as a reusable protocol.
-3. **A reproducible benchmark (sleeper).** The calibration engine, encompassing tests,
-   remaining-runs model, and transfer-function code + cleaned data give future researchers
-   something concrete to compare against.
+1. **Empirical.** For each public variable (TTOP, velocity, fatigue, bullpen, park, weather,
+   pitch count) we ask *"does it survive conditioning on the market?"* — not merely *"does it
+   predict runs?"* — via escalating tests culminating in forecast encompassing. Predicting runs ≠
+   predicting book error.
+2. **Methodological.** The escalating validation protocol (signal → robustness → out-of-sample →
+   debiasing → conditional testing → forecast encompassing → transfer function) shifts the burden
+   of proof from *prediction* to *incremental information beyond a market forecast*. Domain-general;
+   transfers to NBA/NFL/soccer/tennis/racing.
+3. **Infrastructure** (was "reproducibility" — it's bigger than that). The calibration engine,
+   encompassing tests, remaining-runs model, transfer-function code, feature schema, and cleaned
+   data, released as **The Third Turn Benchmark (v1.0)** — a citable research artifact others
+   evaluate new hypotheses against (cf. GLUE / ImageNet / MMLU / HELM in their fields), not just a
+   reproducible appendix.
+
+## Two audiences (lean forecasting, not baseball, on every terminology fork)
+(1) *Sports analytics* — TTOP, Statcast, betting. (2) *Applied statistics / forecasting* —
+calibration, encompassing, incremental information, benchmark evaluation. Audience 2 is the larger
+long-term readership; when a choice arises between baseball and forecasting terminology, choose
+forecasting. Intro should **open with a live-betting statistic** (share of handle), not baseball —
+baseball enters in paragraph two, so the paper reads broad from the first line.
 
 ---
 
@@ -163,14 +172,22 @@ the research-question sentence (the spine).
   function); released as **The Third Turn Benchmark (v1.0)** + "the Third Turn validation
   protocol." The durable contribution — guard it above all.
 
-## 8. Remaining Questions (NOT "Future Work" — what the evidence genuinely can't answer)
-Folds the old Limitations in: single Pinnacle-grade source at ~1-min cadence cannot separate
-latency from feed cadence (the uniform transfer ratio is consistent with either); cannot test
-cross-book leadership or distribution-shape (σ/skew/tail) updating; retail live team totals and
-first-five-inning markets untested; one month / 163 games / one sport — boundary characterized
-precisely but only under those conditions. Each is a live-data question → Paper 2 microstructure.
+## 8. Limitations (STANDALONE — reviewers look for this reflexively; audit tone, ~1 page)
+Kept separate from Remaining Questions on purpose: a dedicated Limitations section signals
+"weaknesses of our experiment" (and pre-empts limitations reviewers would otherwise invent),
+whereas Remaining Questions signals "open science." Unemotional, itemized: scope (163 games /
+one month / one sport); single Pinnacle-grade source at ~1-min cadence (cannot separate latency
+from feed cadence); single-book benchmark (no cross-book test); market coverage (retail live team
+totals, F5 untested); ground truth (static RE24/park values; pitching-change excluded from the
+elasticity claim); estimation (LOGO; small n on rare events). None load-bearing for the central
+result; each bounds generality.
 
-## Closing — "What we learned" (NOT a Future Work section)
+## 9. Remaining Questions (NOT "Future Work" — what the evidence genuinely can't answer)
+The *exciting* section: cross-book propagation/leadership + tradable laggard; distribution-shape
+(σ/skew/tail) vs mean updating; information half-life per shock type; does the boundary move for
+first-five-inning (starter-isolating) totals. Each is live-data-gated → Paper 2 microstructure.
+
+## 10. Conclusion — "what we learned" (NOT a Future Work section)
 The literary final paragraph: began as a search for an exploitable feature, ended by identifying
 the empirical boundary; the boundary is itself the result; the contribution is a reproducible
 framework for determining when an edge exists, not a betting strategy. (Verbatim in

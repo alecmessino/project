@@ -49,7 +49,7 @@ def main() -> int:
         out_p.write_text(rendered)
         print(f"   {tpl:16} -> docs/{out:30} ({len(rendered)} bytes, data {len(data)})")
     # Plain static assets (not templated) — copy them through.
-    for asset in ("driftwood.css", "dw-context.js"):
+    for asset in ("driftwood.css", "dw-context.js", "about.html"):
         (DOCS / asset).write_text((WEB / asset).read_text())
         print(f"   {asset:15} -> docs/{asset} (copied)")
     if bad:

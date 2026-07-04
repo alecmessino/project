@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Privacy-first analytics (Plausible) -->
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>About — Driftwood</title>
+<meta name="description" content="Driftwood is a fee-only, fiduciary registered investment adviser built around a single idea: wealth is what you keep. Who we serve, how we work, and why the after-tax outcome is the one that matters." />
+<link rel="canonical" href="https://alecmessino.github.io/project/about.html" />
+<link rel="icon" href="favicon.svg" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="About Driftwood — wealth is what you keep" />
+<meta property="og:description" content="A fee-only, fiduciary registered investment adviser built to manage the after-tax outcome as deliberately as most firms manage the pre-tax return." />
+<meta property="og:url" content="https://alecmessino.github.io/project/about.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="About Driftwood — wealth is what you keep" />
+<meta name="twitter:description" content="A fee-only, fiduciary registered investment adviser built around the after-tax outcome." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": "About Driftwood",
+  "url": "https://alecmessino.github.io/project/about.html",
+  "mainEntity": {
+    "@type": "FinancialService",
+    "name": "Driftwood",
+    "legalName": "Driftwood",
+    "description": "Fee-only, fiduciary registered investment adviser managing the after-tax outcome — asset location, tax-aware factor exposure, and mechanical tax management coordinated into one plan.",
+    "areaServed": "US",
+    "feeBasis": "Fee-only",
+    "founder": { "@type": "Person", "name": "Alec Messino" },
+    "sameAs": [ "https://adviserinfo.sec.gov/" ]
+  }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
+    --ink:#1d242d; --body:#3a414b; --dim:#5f5d68; --muted:#6f675b;
+    --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --teal2:#15806a; --navy:#1a2330;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:16px/1.7 var(--serif);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1080px;margin:40px auto;padding:0 20px 60px}
+  .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
+  .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #ddd5c6}
+  .chrome i{width:9px;height:9px;border-radius:999px;background:#cfc6b4;display:inline-block}
+  .chrome .url{margin-left:auto;font-size:11.5px;letter-spacing:.04em;color:var(--muted);font-family:ui-monospace,monospace}
+
+  /* One prose column — institutional pages are typography, not widgets. */
+  .doc{max-width:720px;padding:0 44px}
+  .eyebrow{font-weight:600;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin:44px 0 16px}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,4vw+18px,52px);line-height:1.02;
+    letter-spacing:-.02em;color:var(--ink);margin:0 0 22px}
+  .lead{font-size:19px;line-height:1.55;color:#4b4b53;margin:0 0 6px;max-width:34ch}
+  .sec{padding:0 44px;max-width:720px}
+  .sec + .sec{margin-top:6px}
+  .rule{height:1px;background:var(--line);margin:40px 44px;max-width:720px}
+  .sh{font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--muted);margin:0 0 14px}
+  /* The one memorable line that opens each section — principle before explanation. */
+  .principle{font-family:var(--serif);font-weight:600;font-size:23px;line-height:1.3;letter-spacing:-.01em;
+    color:var(--ink);margin:0 0 16px}
+  p{font-size:16px;line-height:1.75;color:var(--body);margin:0 0 16px}
+  p b{color:var(--ink);font-weight:600}
+  a{color:var(--teal2)}
+
+  /* Who it's for — five plain cards, no jargon. */
+  .who{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 4px}
+  .who .card{border:1px solid var(--line);border-radius:10px;background:#fff;padding:16px 18px}
+  .who .card .t{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--ink);margin-bottom:4px}
+  .who .card .d{font-size:13.5px;line-height:1.55;color:var(--dim)}
+  @media(max-width:600px){ .who{grid-template-columns:1fr} }
+
+  /* Fiduciary trust row. */
+  .trust-row{display:flex;flex-wrap:wrap;gap:10px 22px;margin:10px 0 4px}
+  .trust-row span{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--body)}
+  .trust-row b{color:var(--teal2)}
+
+  /* Founder block. */
+  .founder{border-left:3px solid var(--brass);background:var(--soft);border-radius:0 10px 10px 0;
+    padding:18px 22px;margin:6px 0 2px}
+  .founder .sig{font-family:var(--sans);font-size:13px;color:var(--dim);margin-top:12px}
+  .founder .sig b{color:var(--ink)}
+
+  /* Regulatory identity links. */
+  .idlinks{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 2px}
+  .idlinks a{display:inline-flex;align-items:center;min-height:44px;padding:9px 16px;border:1px solid #cdc4b2;
+    border-radius:8px;text-decoration:none;color:var(--ink);font-family:var(--sans);font-size:13.5px;font-weight:500;
+    background:#fff;transition:background-color var(--t-fast,.12s ease)}
+  .idlinks a:hover{background:var(--soft)}
+
+  /* Closing CTA. */
+  .cta{margin:36px 44px 0;max-width:720px;background:var(--navy);border-radius:14px;padding:30px 32px;color:#e7ecf2;
+    box-shadow:0 20px 50px -30px rgba(8,12,10,.7)}
+  .cta .ct{font-family:var(--serif);font-weight:700;font-size:24px;line-height:1.2;color:#f4f1ea;margin:0 0 8px;letter-spacing:-.01em}
+  .cta .cd{font-size:14.5px;line-height:1.6;color:#aeb7c1;margin:0 0 20px;max-width:46ch}
+  .cta .btns{display:flex;flex-wrap:wrap;gap:12px}
+  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:8px;
+    font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px}
+  .cta a.primary{background:var(--teal2);color:#f1ede3}
+  .cta a.ghost{border:1px solid #3a4657;color:#dfe5ec}
+
+  .foot{margin-top:40px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
+    color:var(--muted);font-size:12.5px;line-height:1.65}
+  .foot .note{color:#5a5a62;font-weight:600}
+
+  @media(max-width:620px){
+    .doc,.sec,.cta{padding-left:20px;padding-right:20px}
+    .rule,.cta{margin-left:20px;margin-right:20px}
+    .foot{padding-left:20px;padding-right:20px}
+    .cta{padding:24px 22px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — about</span></div>
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+      <div class="dwnav-links">
+        <a href="about.html" aria-current="page">About</a>
+        <a href="thesis.html">Approach</a>
+        <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+        <a href="leakage.html">Leakage</a>
+        <a href="statemap.html">State&nbsp;Map</a>
+        <a href="ledger.html">Research</a>
+      </div>
+    </nav>
+
+    <div class="doc">
+      <div class="eyebrow">About Driftwood</div>
+      <h1>Wealth is what you keep.</h1>
+      <p class="lead">Every portfolio is measured before taxes. Every family spends after them.
+        Driftwood exists to close that gap.</p>
+    </div>
+
+    <div class="rule"></div>
+
+    <section class="sec">
+      <div class="sh">Why we exist</div>
+      <p class="principle">The largest cost most investors ever pay isn't a fee. It's tax.</p>
+      <p>It's paid slowly, quietly, over decades — on gains few investors ever chose to realize. Most
+        management optimizes the return and treats the tax bill as something that happens afterward.
+        Driftwood reverses the order. We decide <b>where</b> each dollar belongs before we decide what it
+        holds, because the account a position lives in often matters more than the position itself.</p>
+      <p>That is the whole idea, and it is enough to build a firm around: manage the after-tax result as
+        deliberately as most firms manage the pre-tax return.</p>
+    </section>
+
+    <section class="sec">
+      <div class="sh">Who Driftwood is for</div>
+      <p class="principle">Coordination is worth more than any single product.</p>
+      <p>We are built for people whose finances are complex enough that the pieces have to work
+        together — where the tax return, the estate plan, and the portfolio are one problem, not three.</p>
+      <div class="who">
+        <div class="card"><div class="t">Business owners &amp; founders</div><div class="d">Concentrated wealth, uneven income, and a liquidity event to plan around.</div></div>
+        <div class="card"><div class="t">Executives with equity</div><div class="d">RSUs, options, and vesting that arrive faster than a plan for them does.</div></div>
+        <div class="card"><div class="t">Concentrated-stock households</div><div class="d">A single large, low-basis position that is hard to sell and risky to keep.</div></div>
+        <div class="card"><div class="t">High-tax families</div><div class="d">Households where state and federal rates make every realized dollar expensive.</div></div>
+        <div class="card"><div class="t">Clients who work with a CPA or attorney</div><div class="d">People who want their advisers coordinated — not talking past each other.</div></div>
+      </div>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="sec">
+      <div class="sh">How we work</div>
+      <p class="principle">A fiduciary is simply someone required to put your interests first.</p>
+      <p>We built the firm so that is the only way it can operate. Driftwood is <b>fee-only</b> — we are paid
+        by our clients and by no one else. There are no commissions, no products sold to you, and no
+        incentive that points anywhere but at your outcome.</p>
+      <div class="trust-row">
+        <span><b>&#10003;</b> Fee-only, fiduciary</span>
+        <span><b>&#10003;</b> No commissions or product sales</span>
+        <span><b>&#10003;</b> Coordinated with your CPA &amp; attorney</span>
+      </div>
+      <p>We work <b>with</b> your existing advisers rather than around them. The result is one after-tax plan
+        — not a pile of accounts that each look reasonable on their own and add up to a tax bill no one
+        was watching.</p>
+    </section>
+
+    <section class="sec">
+      <div class="sh">The adviser</div>
+      <div class="founder">
+        <p class="principle" style="font-size:20px;margin-bottom:12px">"The after-tax result is the only one that pays for a family's life. Almost no one manages it directly. I wanted to."</p>
+        <p style="margin-bottom:0">Driftwood was founded on that conviction — that the difference between a good
+          portfolio and a good <b>outcome</b> is mostly tax, and that closing it takes a firm built for the job
+          rather than a product bolted onto an old one.</p>
+        <!-- FOUNDER BIO — to be supplied by Alec: professional background, years of experience, prior roles,
+             and any credentials (CFA/CPA/CFP, degrees). Nothing here is invented; this block stays a
+             philosophy statement until the factual bio is provided, so no unverifiable claim ships. -->
+        <div class="sig">— <b>Alec Messino</b>, Founder, Driftwood</div>
+      </div>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="sec">
+      <div class="sh">Our record, in the open</div>
+      <p class="principle">We show our work — and we don't revise it.</p>
+      <p>Our model portfolio is <b>append-only</b>: every rebalance is dated and permanent, so the record you
+        see is the record as it happened, not a version tidied up afterward. When our thinking changes, the
+        change is dated too. We would rather be judged by a history that cannot be quietly edited than by a
+        number chosen in hindsight.</p>
+      <p>The full research — the model, its evidence, and how the approach has evolved — is open to read in
+        our <a href="thesis.html">Approach</a> and <a href="ledger.html">Research</a>.</p>
+    </section>
+
+    <section class="sec">
+      <div class="sh">Registered, and public about it</div>
+      <p>Driftwood is a <b>registered investment adviser</b>. Our Form ADV and Form CRS — the plain-language
+        documents describing how we operate, what we charge, and any conflicts we carry — are public. Read
+        them before we ever speak.</p>
+      <div class="idlinks">
+        <a href="https://adviserinfo.sec.gov/">Adviser record · adviserinfo.sec.gov</a>
+        <a href="https://adviserinfo.sec.gov/">Form ADV</a>
+        <a href="https://adviserinfo.sec.gov/">Form CRS</a>
+      </div>
+    </section>
+
+    <div class="cta">
+      <div class="ct">The clearest way to understand how we think is to see it on your own numbers.</div>
+      <div class="cd">A short, private diagnostic estimates your after-tax picture by bracket, state, and
+        portfolio. No account, no commitment — just the number that most portfolios never show you.</div>
+      <div class="btns">
+        <a class="primary" href="taxlab.html?view=prospect">See your after-tax number →</a>
+        <a class="ghost" href="thesis.html">Read our approach</a>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span class="note">Illustrative modeling — not investment, tax, or legal advice.</span>
+      Figures shown elsewhere on this site are hypothetical and depend on your own holdings, basis, and
+      bracket; past performance — hypothetical or actual — does not guarantee future results. Driftwood is a
+      <b>registered investment adviser</b>; Form ADV and Form CRS are available at
+      <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
+  </div>
+</div>
+</body>
+</html>

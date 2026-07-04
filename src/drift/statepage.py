@@ -178,6 +178,7 @@ NAV = (
     '<nav class="dwnav" aria-label="Driftwood">\n'
     '  <a class="brand" href="index.html">Drift<span class="w">wood</span></a>\n'
     '  <div class="dwnav-links">\n'
+    '    <a href="about.html">About</a>\n'
     '    <a href="thesis.html">Approach</a>\n'
     '    <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>\n'
     '    <a href="leakage.html">Leakage</a>\n'
@@ -598,7 +599,8 @@ def export_state_pages(out_dir: str | Path = "docs") -> list[str]:
 
 # Core (non-state) pages that also belong in the sitemap, with priorities.
 _CORE_SITEMAP = [
-    ("index.html", "1.0", "weekly"), ("taxlab.html", "0.9", "weekly"),
+    ("index.html", "1.0", "weekly"), ("about.html", "0.9", "monthly"),
+    ("taxlab.html", "0.9", "weekly"),
     ("leakage.html", "0.9", "monthly"), ("statemap.html", "0.8", "monthly"),
     ("concentration.html", "0.8", "monthly"),
     ("states.html", "0.8", "monthly"), ("thesis.html", "0.7", "monthly"),

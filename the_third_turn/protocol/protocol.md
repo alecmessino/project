@@ -52,13 +52,21 @@ forward only until it is eliminated, and you report **the rung at which it is el
 
 Report the earliest rung your signal fails, with the diagnostic that failed it. Only a signal that
 clears rung 6 (and, for markets, is priced by the wrong magnitude at rung 7) carries information
-the incumbent forecast does not already hold. See `examples/report_template.md` for the format, and
-`dataset/reference_results.md` for the ten reference signals evaluated in the accompanying paper —
-all of which are eliminated at or before forecast encompassing.
+the incumbent forecast does not already hold. See `../benchmark/examples/report_template.md` for the
+format, and `../benchmark/dataset/reference_results.md` for the ten reference signals evaluated in
+the accompanying paper — all eliminated at or before forecast encompassing.
+
+## Safeguards and gates
+
+The rungs above are the spine; the specific checks that make each rung trustworthy are catalogued
+with IDs in [`safeguards.md`](safeguards.md), and each traces to a logged failure in
+[`../decisions/RESEARCH_DECISIONS_LOG.md`](../decisions/RESEARCH_DECISIONS_LOG.md). Analyses that
+depend on data volume (e.g. cross-book leadership) are gated by [`stopping_rules.md`](stopping_rules.md).
+Papers cite safeguards by ID ("following S-05 and S-11…").
 
 ## Provenance
 
 Introduced in Messino (2026), *Forecast Encompassing as a Test of Predictive Signals: Evidence from
 Live MLB Totals Markets*. The forecast-encompassing rung follows Chong & Hendry (1986); the AUC
 diagnostics follow Hanley & McNeil (1982). This document is the canonical definition of the
-protocol; cite it via `CITATION.cff`.
+protocol; cite it via `../benchmark/CITATION.cff`.

@@ -690,10 +690,12 @@ improve on the market.
 ## Data and code availability
 
 The cleaned datasets, feature schema, and frozen result artifacts are released as the **Third Turn
-Benchmark Dataset (v1)**; the **Third Turn Protocol** is specified canonically in `benchmark/`
-(`evaluation.md`), with reference implementations that reproduce every reported number from the
-committed inputs. Both are archived alongside the code repository and the research log. *(Persistent
-DOI and packaged archive pending publication.)*
+Benchmark Dataset (v1)** (`benchmark/`); the **Third Turn Protocol** is specified canonically in
+`protocol/` — the validation ladder (`protocol.md`), a safeguard registry with per-safeguard
+provenance (`safeguards.md`), and objective stopping rules (`stopping_rules.md`) — with reference
+implementations that reproduce every reported number from the committed inputs. Both are archived
+alongside the code repository and the research decisions log. *(Persistent DOI and packaged archive
+pending publication.)*
 
 ## References
 

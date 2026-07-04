@@ -5,7 +5,9 @@ version independently.
 
 ## Third Turn Protocol — v1 (preview)
 - Initial specification of the seven-rung ladder (signal → robustness → out-of-sample → debiasing →
-  conditional testing → forecast encompassing → transfer function) in `evaluation.md`.
+  conditional testing → forecast encompassing → transfer function) in `../protocol/protocol.md`,
+  with the safeguard registry (`../protocol/safeguards.md`) and stopping rules
+  (`../protocol/stopping_rules.md`).
 
 ## Third Turn Benchmark Dataset — v1 (preview)
 - 163 MLB games, June 2026: half-inning snapshots (`B`, `Y`, features), 6,414-event transfer

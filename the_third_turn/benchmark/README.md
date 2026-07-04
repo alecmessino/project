@@ -7,7 +7,8 @@ This directory is the citable front door for two separate, deliberately named ar
 
 - **The Third Turn Protocol** — a domain-general *method*: an escalating validation ladder for
   deciding whether a candidate predictive signal carries information beyond an existing forecast.
-  Canonical definition in [`evaluation.md`](evaluation.md).
+  Canonical definition in [`../protocol/protocol.md`](../protocol/protocol.md) (with its safeguard
+  registry and stopping rules alongside).
 - **The Third Turn Benchmark Dataset (v1)** — the *data*: 163 MLB games (June 2026) as aligned
   half-inning snapshots of a sharp live market forecast and full game state, plus the frozen result
   artifacts against which new signals can be compared. Schema in
@@ -27,9 +28,8 @@ Protocol isolates the second — the one that matters when a strong incumbent fo
 ## Contents
 
 ```
-benchmark/
+benchmark/                       THE DATA (the method lives in ../protocol/)
 ├── README.md                    this file
-├── evaluation.md                THE PROTOCOL — the canonical ladder (start here)
 ├── CITATION.cff                 how to cite the protocol and dataset
 ├── CHANGELOG.md                 version history
 ├── dataset/
@@ -40,9 +40,12 @@ benchmark/
     └── report_template.md       how to report where your signal is eliminated
 ```
 
+The method itself — the protocol ladder, safeguard registry, and stopping rules — lives in
+[`../protocol/`](../protocol/); this directory is the dataset it was first validated on.
+
 ## How to evaluate a new signal
 
-1. Read [`evaluation.md`](evaluation.md).
+1. Read [`../protocol/protocol.md`](../protocol/protocol.md).
 2. Express your signal as a per-snapshot feature `X` over the schema in
    [`dataset/schema.md`](dataset/schema.md) (or your own dataset with an incumbent forecast `B`, a
    realized outcome `Y`, and candidate features).

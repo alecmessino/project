@@ -73,14 +73,11 @@ Not "find inefficiencies" but **"how does information propagate through partiall
 forecasting systems?"** Sportsbooks are the observable laboratory; the transferable question is a
 forecasting one. Same evidentiary standard as Paper 1.
 
-## Stopping rule (operational — not "wait," but an objective gate)
+## Stopping rule
 
-Cross-book **leadership** will not be analyzed until *all* of the following hold:
-
-- **≥ 2,000 simultaneous live quote pairs** (both books live within the same tight window),
-- **≥ 100 independent games** with live overlap,
-- **median synchronization lag < 15 s** between the paired quotes (tonight: ~3,663 s),
-- **≥ 3 sportsbooks** quoting live concurrently.
-
-Until every criterion is met, the daemon **collects, it does not conclude.** The
-`microstructure_probe.py` coverage report is the checklist against these thresholds.
+The leadership gate is now canonical as **SR-1** in [`protocol/stopping_rules.md`](protocol/stopping_rules.md)
+(≥2,000 simultaneous live quote pairs, ≥100 overlap games, median sync lag <15 s, ≥3 live books).
+`microstructure_probe.py` prints its live status each run — tonight all four FAIL. The lead-lag and
+divergence lessons are catalogued as safeguards **S-10** and **S-11** in
+[`protocol/safeguards.md`](protocol/safeguards.md), with their failures logged in
+[`decisions/RESEARCH_DECISIONS_LOG.md`](decisions/RESEARCH_DECISIONS_LOG.md).

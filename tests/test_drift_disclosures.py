@@ -86,6 +86,22 @@ def test_every_exhibit_carries_the_ria_identity_and_form_links():
         assert "Form ADV" in t and "Form CRS" in t, f"{tmpl.name}: Form ADV/CRS not referenced"
 
 
+def test_no_cws_planning_brand_anywhere():
+    # The RIA identity is now "Driftwood" itself. The legacy "CWS Planning" brand/legal token must not
+    # appear on any shipped surface (the RIA-disclosure phrases guarded above are preserved separately).
+    # NB: the functional Calendly booking slug may still contain "cwsplanning" — that is a live URL, not
+    # a brand reference, so we check for the human brand phrase, not the slug.
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    targets = list((root / "src" / "drift" / "web").glob("*.html"))
+    targets += [root / "src" / "drift" / "statepage.py", root / "src" / "drift" / "firm_models.py",
+                root / "scripts" / "og_cards.mjs", root / "scripts" / "og_states.mjs"]
+    for p in targets:
+        t = p.read_text()
+        assert "CWS Planning" not in t and "CWS&nbsp;Planning" not in t, \
+            f"{p.name} still references the retired 'CWS Planning' brand"
+
+
 def test_hypothetical_exhibits_carry_an_audience_statement():
     # P0-2: hypothetical performance shown publicly must state its intended audience and relevance
     # limits (subtle but always rendered). Guards the audience line against removal.

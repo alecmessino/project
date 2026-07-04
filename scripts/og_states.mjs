@@ -41,7 +41,7 @@ const card = (r) => `<!doctype html><html><head><meta charset="utf-8"><style>
   <div class="stat"><div class="n">+${Number(r.alpha).toFixed(1)}%/yr</div>
     <div class="l">illustrative after-tax Structural Alpha a tax-managed book can recover</div></div>
   <div class="foot"><span class="pill">Illustrative modeling</span>
-    <span>CWS Planning · registered investment adviser</span></div>
+    <span>Driftwood · registered investment adviser</span></div>
 </body></html>`;
 
 const b = await chromium.launch({ executablePath: EXE });

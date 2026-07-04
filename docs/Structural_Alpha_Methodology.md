@@ -1,6 +1,6 @@
 # Structural Alpha — Methodology
 
-**Status: canonical narrative reference for CWS Planning / Driftwood client-facing copy.**
+**Status: canonical narrative reference for Driftwood client-facing copy.**
 This document defines the firm's value proposition and the exact boundary of what each claim is
 allowed to assert. Every word of client-facing copy (the hub, thesis, Tax Lab, and the research
 exhibits) must map to one of the three pillars below — and no further. It is written to be defensible

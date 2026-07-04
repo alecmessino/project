@@ -1,4 +1,4 @@
-"""CWS Planning institutional model portfolios (firm IPS layer).
+"""Driftwood institutional model portfolios (firm IPS layer).
 
 These are the firm's *standard allocation models* — the destination a prospect's legacy
 portfolio transitions into. They are deliberately SEPARATE from the Driftwood momentum

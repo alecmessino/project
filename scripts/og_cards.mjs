@@ -51,7 +51,7 @@ const card = (title, sub) => `<!doctype html><html><head><meta charset="utf-8"><
   <h1>${title}</h1>
   <div class="sub">${sub}</div>
   <div class="foot"><span class="pill">Illustrative modeling</span>
-    <span>CWS Planning · registered investment adviser</span></div>
+    <span>Driftwood · registered investment adviser</span></div>
 </body></html>`;
 
 const b = await chromium.launch({ executablePath: EXE });

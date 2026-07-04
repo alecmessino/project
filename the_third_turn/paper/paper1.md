@@ -5,9 +5,11 @@
 <p class="wp">Working paper &middot; Draft 0.9 &middot; July 2026 &middot; Comments welcome</p>
 </div>
 
-<!-- Draft 0.9 — editorial pass applied (one-job, dedupe, forecasting-first, softened claims);
-pending: Related Work (§2), reference list, Benchmark packaging. Figures embedded from
-`figures/` (content-named). Numbers are committed values in `output/*.json`. Build PDF with
+<!-- Draft 0.9 — editorial pass applied; §2 + references drafted with source-verified citations
+(every reference checked against the publisher/arXiv/search record, July 2026); pending:
+Benchmark packaging, external review. Figures embedded from `figures/` (content-named). Numbers
+are committed values in `output/*.json`; the input caches (encompass_cache, program_a_cache,
+remaining_snapshots) are now committed as frozen build inputs. Build PDF with
 `python3 paper/build_pdf.py`. -->
 
 ## Abstract
@@ -37,8 +39,9 @@ information; reproducible benchmark.
 ## 1. Introduction
 
 Live, in-play wagering has grown from a marginal product into a large and rising share of
-sportsbook handle, in some markets exceeding pre-game betting. Yet the empirical study of market
-efficiency has concentrated on pre-game moneylines and point spreads, where a single closing price
+sportsbook handle — industry reporting consistently places it at or near half of volume in mature
+markets. Yet the empirical study of wagering-market efficiency, a literature surveyed by Sauer
+(1998), has concentrated on pre-game moneylines and point spreads, where a single closing price
 can be compared against a realized outcome. Live markets pose a different and less-studied problem:
 prices update continuously as the game state evolves, so the object of interest is not a single
 forecast but a stream of them, and the natural questions concern calibration and information
@@ -51,9 +54,9 @@ sequence of discrete events with well-established run values (the RE24 base-out 
 table and linear weights), so the informational content of each event can be quantified rather than
 estimated. Pitch-level measurement makes within-game state — velocity, pitch count, times through
 the order — observable in fine detail. And the sport carries a strong body of public prior belief,
-most prominently the times-through-order penalty (TTOP): the widely held view that a starting
-pitcher degrades sharply the third time he faces a lineup, which, if under-priced, would make the
-live Over a profitable bet. That belief is a natural entry point — a concrete, popular, plausible
+most prominently the times-through-order penalty (Tango, Lichtman, and Dolphin, 2007): the widely
+held view that a starting pitcher degrades sharply the third time he faces a lineup, which, if
+under-priced, would make the live Over a profitable bet. That belief is a natural entry point — a concrete, popular, plausible
 hypothesis with which to probe the general question.
 
 The general question, however, is not whether such variables predict scoring. Many of them do.
@@ -100,24 +103,45 @@ remaining runs beyond the forecast embedded in a sharp live betting market?*
 
 ## 2. Related Work
 
-> *This section is deliberately brief in the current draft and will be completed in the next pass.
-> Its job is to establish a gap, not to survey a literature. Planned structure:*
->
-> **2.1 Sports-betting market efficiency.** Pre-game literature; markets generally efficient near
-> the close; little published live/in-play work. *(cf. betting-market overreaction and
-> autocorrelation, Simon 2025; real-time inefficiency, Management Science 2024; underreaction
-> ≈ 0.64:1, arXiv 2606.07811.)*
->
-> **2.2 Baseball performance.** Times-through-order as continuous familiarity rather than a
-> discontinuity (arXiv 2210.06724); relative velocity ≈ 0.0006 wOBA/mph (Baseball Prospectus); run
-> expectancy (RE24, linear weights).
->
-> **2.3 Forecast evaluation.** Calibration (reliability, Brier, expected calibration error);
-> forecast encompassing and information incorporation; benchmark-style reproducible evaluation.
->
-> **2.4 The gap.** To our knowledge no published work combines live baseball state, pitch-level
-> features, forecast encompassing, calibration analysis, and transfer-function analysis against a
-> sharp live market.
+This section is deliberately brief: its job is to establish a gap, not to survey three
+literatures. We draw on each only for what the design requires.
+
+**Wagering-market efficiency.** The economics of wagering markets is a mature literature, surveyed
+by Sauer (1998), whose broad finding is that betting prices are accurate but not perfect:
+systematic deviations such as the favorite–longshot bias exist, yet rarely survive transaction
+costs. For baseball specifically, Woodland and Woodland (1994) document a *reverse*
+favorite–longshot bias in the moneyline market and conclude that the deviations are insufficient
+for profitable betting. This literature is overwhelmingly pre-game. The in-play evidence is
+thinner and mixed. Croxson and Reade (2014) find that soccer exchange prices update swiftly and
+essentially fully at goal arrival, consistent with semi-strong efficiency. More recent work
+documents imperfections in the price *process* itself: Simon (2024) rejects weak-form efficiency
+for MLB moneyline movement, finding systematic overreaction; Simon (2025) generalizes the negative
+autocorrelation of price changes to NFL, NBA, and NHL markets; and Angelini and De Angelis (2026)
+measure an approximately 0.64-for-one contemporaneous underreaction to benchmark-probability
+changes in real-time prediction markets, with predictable subsequent drift.
+
+**Baseball performance.** The times-through-order penalty entered the sabermetric canon through
+Tango, Lichtman, and Dolphin (2007). The strongest recent evidence, however, favors continuous
+decay over a discontinuity: Brill, Deshpande, and Wyner (2023) find little support for a
+performance cliff at the third time through the order once batter and pitcher quality and other
+confounders are controlled — a conclusion our own gradient analysis independently reproduces.
+Velocity effects on batting outcomes are real but small per mile per hour: Sutton-Brown (2023)
+estimates roughly 0.004 wOBA per mph operating through pitch quality, with a residual direct
+effect an order of magnitude smaller. Run values for discrete events (the RE24 base-out
+run-expectancy table and linear weights) are standard tools from the same tradition.
+
+**Forecast evaluation.** Our central test imports the forecast-encompassing framework of Chong and
+Hendry (1986) from macroeconomic forecast evaluation: a benchmark forecast encompasses a rival
+when the rival adds no explanatory power for the target beyond the benchmark. Calibration
+diagnostics — reliability curves, the Brier score, expected calibration error — and the
+probabilistic interpretation of the area under the ROC curve (Hanley and McNeil, 1982) complete
+the evaluation toolkit.
+
+**The gap.** These strands study either the price series in isolation, a single discrete shock, or
+baseball performance without reference to prices. To our knowledge, no published work combines
+live baseball state, pitch-level features, calibration analysis, an event-level transfer function,
+and a forecast-encompassing test in which a sharp live betting line serves as the benchmark
+forecast. That combination is this paper's contribution.
 
 ---
 
@@ -164,7 +188,8 @@ distinction that becomes decisive in §3.3. Bullpen quality is each team's seaso
 allowed per nine innings; park factor and signed wind/temperature come from static published
 tables. The true change in run expectancy at each event, used by the transfer function, is
 `ΔRE = (runs scored) + (RE24_after − RE24_before)`, where RE24 is the standard 24-state base-out
-run-expectancy table. No feature uses information unavailable at the snapshot it describes.
+run-expectancy table (Tango, Lichtman, and Dolphin, 2007). No feature uses information unavailable
+at the snapshot it describes.
 
 ### 3.3 Validation protocol
 
@@ -200,9 +225,9 @@ sequence terminates at a boundary, not at an edge.
 
 Each rung is a specific estimator, all computed out-of-sample by leave-one-game-out.
 
-**Forecast encompassing.** For remaining runs `Y`, market forecast `B`, and a candidate feature set
-`X`, we fit three ridge-regularized linear forecasts — `Y ~ B`, `Y ~ X`, and `Y ~ B + X` — and
-compare their out-of-sample R² and mean absolute error. If `Y ~ B + X` does not improve on `Y ~ B`,
+**Forecast encompassing** (Chong and Hendry, 1986)**.** For remaining runs `Y`, market forecast
+`B`, and a candidate feature set `X`, we fit three ridge-regularized linear forecasts — `Y ~ B`,
+`Y ~ X`, and `Y ~ B + X` — and compare their out-of-sample R² and mean absolute error. If `Y ~ B + X` does not improve on `Y ~ B`,
 the market encompasses `X`. The sharpest form regresses the market's forecast error `Y − B`
 directly on `X`: if `X` cannot predict the error out-of-sample, it carries no information the price
 lacks. A per-feature variant (E+) fits `Y ~ B + Xᵢ` against `Y ~ B` for each variable individually,
@@ -225,7 +250,7 @@ probability a team exceeds a run threshold) with reliability curves, the Brier s
 calibration error, and area under the ROC curve. The velocity debiasing of §3.3 is evaluated here
 as the change in out-of-sample AUC between a baseline forecast and forecasts augmented with the
 post-treatment versus pre-treatment velocity measures; AUC confidence intervals use the analytic
-Hanley–McNeil variance.
+variance of Hanley and McNeil (1982).
 
 **Transfer function.** For each in-game event we pair the true change in run expectancy `ΔRE` with
 the converged change in the live total one and five minutes later (`ΔBook`), and estimate the
@@ -335,11 +360,11 @@ RE24 cannot benchmark reliever quality, so we exclude them from the elasticity c
 **Figure 6.** The market transfer function. Every positive-run event type lies on one common slope
 ≈ 0.74; marker area is proportional to event count.
 
-Figure 7 closes the loop on the model side of the comparison. The left panel bins the 2,842
+Figure 7 closes the loop on the model side of the comparison. The left panel bins the 2,505
 half-inning snapshots by market-implied remaining runs and plots the mean realized remaining runs in
 each bin: the points track the diagonal, so the market forecast is approximately calibrated within
-this sample (the underlying leave-one-game-out remaining-runs model reaches R² = 0.224, and adding
-fatigue terms changes its mean absolute error by −0.001 runs). The right panel shows the
+this sample (the underlying leave-one-game-out remaining-runs model, fit on 2,859 snapshots,
+reaches R² = 0.226, and adding fatigue terms changes its mean absolute error by −0.001 runs). The right panel shows the
 distribution of the book's forecast error: symmetric, centered near zero (mean +0.49 runs), and — as
 Figure 4 establishes — not predictable from any feature we measure. Together with Figure 4, this
 defines the empirical boundary of public-information prediction against a sharp live market.
@@ -544,7 +569,35 @@ pending.)*
 
 ## References
 
-*[To compile with §2 — sports-betting efficiency; times-through-order (arXiv 2210.06724); relative
-velocity (Baseball Prospectus); betting-market overreaction (Simon 2025); real-time inefficiency
-(Management Science 2024); underreaction (arXiv 2606.07811); calibration & forecast encompassing
-(Chong & Hendry 1986; Hanley & McNeil 1982).]*
+Angelini, G., and L. De Angelis (2026). "When Do Markets Fully Process Public Information?
+Evidence from Real-Time Prediction Markets." arXiv:2606.07811.
+
+Brill, R. S., S. K. Deshpande, and A. J. Wyner (2023). "A Bayesian Analysis of the Time Through
+the Order Penalty in Baseball." *Journal of Quantitative Analysis in Sports* 19(4): 245–262.
+
+Chong, Y. Y., and D. F. Hendry (1986). "Econometric Evaluation of Linear Macro-Economic Models."
+*Review of Economic Studies* 53(4): 671–690.
+
+Croxson, K., and J. J. Reade (2014). "Information and Efficiency: Goal Arrival in Soccer Betting."
+*The Economic Journal* 124(575): 62–91.
+
+Hanley, J. A., and B. J. McNeil (1982). "The Meaning and Use of the Area Under a Receiver
+Operating Characteristic (ROC) Curve." *Radiology* 143(1): 29–36.
+
+Sauer, R. D. (1998). "The Economics of Wagering Markets." *Journal of Economic Literature* 36(4):
+2021–2064.
+
+Simon, J. (2024). "Inefficient Forecasts at the Sportsbook: An Analysis of Real-Time Betting Line
+Movement." *Management Science*. doi:10.1287/mnsc.2022.00456.
+
+Simon, J. (2025). "Autocorrelation and Weekend Effects: Inefficiencies in Moneyline Movement for
+Three Major Sports." *International Journal of Sport Finance* 20: 211–231.
+
+Sutton-Brown, S. (2023). "The Value of Relative Velocity." *Baseball Prospectus*, December 14,
+2023.
+
+Tango, T., M. Lichtman, and A. Dolphin (2007). *The Book: Playing the Percentages in Baseball.*
+Potomac Books.
+
+Woodland, L. M., and B. M. Woodland (1994). "Market Efficiency and the Favorite–Longshot Bias:
+The Baseball Betting Market." *Journal of Finance* 49(1): 269–279.

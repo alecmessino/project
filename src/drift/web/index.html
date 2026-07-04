@@ -10,6 +10,7 @@
   plausible.init()
 </script>
 <link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
 <title>Driftwood — Core Alpha book (research)</title>
 <meta name="description" content="The Core Alpha book: what the hypothetical Model Portfolio holds now, its signal strength by sleeve, the last rebalance in and out, and the dated track. Research only, not investment advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/equities.html" />
@@ -139,7 +140,8 @@
 
   <div class="pad">
     <div class="statstrip" id="statstrip"></div>
-    <svg class="chart" id="chart" preserveAspectRatio="none"></svg>
+    <svg class="chart" id="chart" preserveAspectRatio="none" role="img"
+      aria-label="Model Portfolio equity over time versus buy-and-hold benchmarks"></svg>
     <div class="chartcap">Model Portfolio equity, rebased to its start and marked daily against buy-and-hold benchmarks — a hypothetical backtest, not a track record.</div>
   </div>
 
@@ -149,7 +151,7 @@
       <div class="hint">Signal strength (z) = trend vs. the sleeve's own normal noise</div>
     </div>
     <div class="tscroll"><table class="book stickcol"><thead><tr>
-      <th>Sleeve</th><th>What it is</th><th>Signal strength (z)</th><th>Portfolio weight</th><th>Status</th>
+      <th scope="col">Sleeve</th><th scope="col">What it is</th><th scope="col">Signal strength (z)</th><th scope="col">Portfolio weight</th><th scope="col">Status</th>
     </tr></thead><tbody id="bookbody"></tbody></table></div>
     <div class="blotnote">Held sleeves first (by portfolio weight), then the waiting list (universe members below the
       cut, by signal strength). <b>Status</b> is what the last rebalance did to each name — Buy / Increase / Reduce /
@@ -270,11 +272,12 @@ function render(s){
   document.getElementById("bookbody").innerHTML = rows.map(r=>{
     const waiting = r.status==="Waiting";
     const z = (r.signal_strength>=0?"+":"")+(r.signal_strength||0).toFixed(2);
+    const zsr = (r.signal_strength||0)>=0 ? "positive signal" : "negative signal";
     const pw = r.portfolio_weight>0 ? (r.portfolio_weight*100).toFixed(1)+"%" : "—";
     return `<tr class="${waiting?'waiting':''}">
       <td class="sym">${r.instrument}</td>
       <td>${nameOf(r.instrument)}</td>
-      <td class="z ${waiting?'':cls(r.signal_strength)}">${z}</td>
+      <td class="z ${waiting?'':cls(r.signal_strength)}">${z}<span class="sr-only">, ${zsr}</span></td>
       <td class="${r.portfolio_weight>0?'pw':''}">${pw}</td>
       <td><span class="st st-${r.status}">${r.status}</span></td>
     </tr>`;
@@ -292,7 +295,7 @@ function render(s){
       const d = (t.delta>=0?"+":"")+(t.delta*100).toFixed(1)+" pts";
       const st = t.status||"Hold";
       return `<div class="trade ${st}">
-        <span class="act"><i>${ICON[st]||"·"}</i>${st}</span>
+        <span class="act"><i aria-hidden="true">${ICON[st]||"·"}</i>${st}</span>
         <span class="tk">${t.instrument} <span class="nm">${nameOf(t.instrument)}</span></span>
         <span class="mv">${wprev} → ${wcur}</span>
         <span class="dl">${d}</span>

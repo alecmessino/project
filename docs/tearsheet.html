@@ -77,6 +77,7 @@
   .disclaimer .body{color:#9a98a0;margin-top:3px}
 </style>
 <link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -209,7 +210,7 @@ function render(st){
         <span><i style="background:#b8bcc2"></i>Buy &amp; hold (universe)</span>
         ${bk.market ? '<span><i style="background:#9aa0c0"></i>Global market (VT)</span>' : ''}
         <span><i style="background:#cfcfd4"></i>in-sample / out-of-sample split</span></div>
-      <svg class="eq" id="eq${i}" preserveAspectRatio="none"></svg>
+      <svg class="eq" id="eq${i}" preserveAspectRatio="none" role="img" aria-label="${bk.name} — strategy versus buy-and-hold equity curves"></svg>
       <div class="oos">
         <div class="b"><div class="t">In-sample (fit)</div>
           <div class="r"><span>Sharpe</span><b>${num(o.train.sharpe)}</b></div>
@@ -221,7 +222,7 @@ function render(st){
           <div class="r"><span>Max DD</span><b>${pct(-o.test.max_drawdown)}</b></div></div>
       </div>
       <details><summary>Returns by year (strategy vs buy &amp; hold)</summary>
-        <div class="table-wrapper"><table><thead><tr><th>Year</th><th>Strategy</th><th>Buy &amp; hold</th></tr></thead>
+        <div class="table-wrapper"><table><thead><tr><th scope="col">Year</th><th scope="col">Strategy</th><th scope="col">Buy &amp; hold</th></tr></thead>
         <tbody>${yr}</tbody></table></div></details>
     </section>`;
   }).join("");

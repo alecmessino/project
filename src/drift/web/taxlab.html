@@ -24,6 +24,7 @@
   plausible.init()
 </script>
 <link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
 <style>
   /* Spacing/radius/shadow/motion/type tokens come from the shared driftwood.css (linked FIRST in
      <head> now, so the local :root below can re-point the palette). */
@@ -628,7 +629,7 @@
   <div class="wf advisor-only" id="waterfall"></div>
 
   <details id="tlhtable-wrap" class="fold advisor-only"><summary>Tax-loss-harvesting value by state <span class="sub">· at the selected bracket</span></summary>
-  <div class="table-wrapper"><table id="tlhtable"><thead><tr><th>State</th><th>LT rate</th><th>ST rate</th><th>TLH value (total)</th><th>per year</th></tr></thead><tbody></tbody></table></div></details>
+  <div class="table-wrapper"><table id="tlhtable"><thead><tr><th scope="col">State</th><th scope="col">LT rate</th><th scope="col">ST rate</th><th scope="col">TLH value (total)</th><th scope="col">per year</th></tr></thead><tbody></tbody></table></div></details>
 
   <div class="note" id="note"></div>
 
@@ -864,7 +865,8 @@ function advisory(code,slt,sst,bi){
   if(bi>=4) return `${nm} taxes capital gains as ordinary income at up to <b>${apct(slt)}</b> — among the steepest in the nation. Asset location (hold the fast book tax-advantaged) and harvesting deliver their largest dollar value in high-rate states like this one.`;
   return `${nm} taxes capital gains at <b>${apct(slt)}</b> (as ordinary income). A harvested loss here is worth that rate on every dollar of gain it offsets, stacked on top of the federal rate.`;
 }
-function selectState(code){ $("state").value=code; paintLeadSel(code); render(); flashDisc(); track("state_selected",{state:code,view:MODE}); }
+function selectState(code){ $("state").value=code; paintLeadSel(code); render(); flashDisc(); track("state_selected",{state:code,view:MODE});
+  if(window.dwTaxContext) dwTaxContext.save({state:code}); }
 // F1 · mobile state picker: a tappable severity-coloured chip grid, built from the same BUCKETS /
 // bucketOf heat-map the desktop map uses, wired to the one selectState handler (no desync path).
 function buildLeadStates(){
@@ -1625,6 +1627,10 @@ function init(){
   $("state").innerHTML=Object.keys(S.states).map(s=>`<option value="${s}">${NAMES[s]||SLABEL[s]||s}</option>`).join("");
   buildLeadStates();   // F1: the mobile severity chip grid (reads the same S.states the map does)
   ["bracket","state","account"].forEach(id=>$(id).addEventListener("change",render));
+  // Persist the visitor's context (this browser only) so it follows them site-wide via nav links.
+  $("state").addEventListener("change",()=>window.dwTaxContext&&dwTaxContext.save({state:$("state").value}));
+  $("bracket").addEventListener("change",()=>{ const b=S.brackets[+$("bracket").value];
+    if(b&&window.dwTaxContext) dwTaxContext.save({bracket:Math.round(b.ord*100)}); });
   // Phase 5/C: print -> Save as PDF. Two outputs off one print stylesheet: the client proposal,
   // and the CPA/attorney execution brief (body.brief swaps which print block is shown).
   $("genpdf").addEventListener("click",()=>{ document.body.classList.remove("brief"); window.print(); });
@@ -1690,10 +1696,15 @@ function init(){
   const qPort=parseFloat(qp.get("portfolio")||qp.get("port"));       // ?portfolio= (alias of legacy ?port=)
   const qHome=parseFloat(qp.get("home")), qLi=parseFloat(qp.get("li")), qBiz=parseFloat(qp.get("biz"));
   const qBracket=parseInt(qp.get("bracket"),10);                     // plain federal ordinary-rate %, e.g. 37
+  // Hydrate from the browser-local context (dw-context.js) ONLY where the URL is silent — a
+  // personalized deep-link always wins over what this browser remembered.
+  const dwc=(window.dwTaxContext&&dwTaxContext.get())||{};
   if(qState && S.states && (qState in S.states)) $("state").value=qState;
+  else if(!qState && dwc.state && S.states && (dwc.state in S.states)) $("state").value=dwc.state;
   paintLeadSel($("state").value);   // keep the mobile chip grid in sync with the initial state
-  if(Number.isFinite(qBracket) && S.brackets){                       // map "37" → the matching bracket index
-    const bi=S.brackets.findIndex(b=>Math.round(b.ord*100)===qBracket);
+  const wantBracket=Number.isFinite(qBracket)?qBracket:dwc.bracket;  // URL first, stored second
+  if(Number.isFinite(wantBracket) && S.brackets){                    // map "37" → the matching bracket index
+    const bi=S.brackets.findIndex(b=>Math.round(b.ord*100)===wantBracket);
     if(bi>=0) $("bracket").value=bi;
   }
   if(qPort>0){

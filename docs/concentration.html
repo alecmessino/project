@@ -24,6 +24,7 @@
 <meta name="twitter:description" content="Every way to de-risk a concentrated, low-basis position — scored on the tradeoffs that matter." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/concentration.png" />
 <link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
 <style>
   :root{
     --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
@@ -224,8 +225,8 @@
 
   // header
   var thead=$("thead");
-  var thName=document.createElement("th"); thName.innerHTML='<button class="th name" data-sort="bucket">Strategy</button>'; thead.appendChild(thName);
-  axes.forEach(function(a){ var th=document.createElement("th");
+  var thName=document.createElement("th"); thName.setAttribute("scope","col"); thName.innerHTML='<button class="th name" data-sort="bucket">Strategy</button>'; thead.appendChild(thName);
+  axes.forEach(function(a){ var th=document.createElement("th"); th.setAttribute("scope","col");
     th.innerHTML='<button class="th" data-sort="'+a.key+'" title="'+a.hint+'">'+a.label+'</button>'; thead.appendChild(th); });
   thead.addEventListener("click", function(e){ var b=e.target.closest("button.th"); if(!b) return;
     var key=b.getAttribute("data-sort");
@@ -265,7 +266,7 @@
       var tr=document.createElement("tr"); tr.setAttribute("data-key",s.key);
       if(state.sel===s.key) tr.className="sel";
       var bk=bucket[s.bucket];
-      var td='<td class="name"><span class="nm"><span class="dot" style="background:'+bk.color+'"></span>'+s.name+'</span>'+
+      var td='<td class="name"><span class="nm"><span class="dot" aria-hidden="true" style="background:'+bk.color+'"></span>'+s.name+'</span>'+
              '<span class="bk">'+bk.label+'</span></td>';
       axes.forEach(function(a){ var c=s.scores[a.key];
         td+='<td class="cell heat-'+c.n+'"><span class="box" title="'+a.label+': '+c.label+'">'+c.label+'</span></td>'; });

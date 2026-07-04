@@ -10,6 +10,7 @@
   plausible.init()
 </script>
 <link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
 <title>Driftwood — private wealth architecture</title>
 <meta name="description" content="Driftwood — after-tax wealth architecture: two return engines (Structural Alpha for taxable wealth, Core Alpha for tax-advantaged capital) routed by one tax-location engine into a single after-tax portfolio. Fee-only, fiduciary. Illustrative modeling, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/index.html" />
@@ -263,11 +264,11 @@ function render(s){
   const exs = s.exhibits||[];
   const exHTML = e =>
     `<a class="ex ${e.present?'':'absent'}" href="${e.href}">
-      <div class="t">${e.title} <span class="arrow">→</span></div>
+      <div class="t">${e.title} <span class="arrow" aria-hidden="true">→</span></div>
       <div class="d">${e.desc}</div></a>`;
   document.getElementById("exhibits").innerHTML = exs.filter(e=>!e.appendix).map(exHTML).join("")
     + `<a class="ex" href="taxlab.html?view=prospect" style="grid-column:1 / -1">
-        <div class="t">Book a 15-min diagnostic <span class="arrow">→</span></div>
+        <div class="t">Book a 15-min diagnostic <span class="arrow" aria-hidden="true">→</span></div>
         <div class="d">See your own after-tax number — by bracket, state, and portfolio. The fastest path from the research to your plan.</div></a>`;
   const appendix = exs.filter(e=>e.appendix);
   if(appendix.length){
@@ -290,7 +291,7 @@ async function load(){
   // Visible failure instead of a silent blank hub — the static nav above still works.
   var ex=document.getElementById("exhibits");
   if(ex) ex.innerHTML='<a class="ex" href="taxlab.html?view=prospect" style="grid-column:1 / -1">'+
-    '<div class="t">Couldn’t load the model figures <span class="arrow">→</span></div>'+
+    '<div class="t">Couldn’t load the model figures <span class="arrow" aria-hidden="true">→</span></div>'+
     '<div class="d">Refresh the page, or open the Tax Lab to compute your own after-tax number. '+
     'Use the navigation above to explore the rest of Driftwood.</div></a>';
 }

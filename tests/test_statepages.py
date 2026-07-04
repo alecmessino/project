@@ -106,6 +106,40 @@ def test_pages_carry_a_distinct_profile_summary():
     assert "excise" in wa                                   # explains WA's unusual long-term-only excise
 
 
+# The no-income-tax states are identical on EVERY regime dimension (income/marriage/estate/muni/qsbs/
+# loss/step-up), so only hand-authored context can differentiate their pages. This is the evidence-backed
+# duplicate-content SEO risk; the guard is that each renders genuinely distinct body prose.
+_NO_TAX_CLUSTER = ["AK", "FL", "NV", "NH", "SD", "TN", "TX", "WY"]
+
+
+def test_no_tax_pages_carry_distinct_hand_authored_context():
+    for code in _NO_TAX_CLUSTER:
+        assert code in SP._STATE_CONTEXT, f"{code} needs a hand-authored context nugget for dedup"
+        h = SP.render_state_html(PAGES[code])
+        # the nugget's distinctive opening actually renders on the page
+        assert SP._STATE_CONTEXT[code][:48] in h, f"{code} context not rendered"
+
+
+def test_no_tax_pages_are_not_near_duplicates():
+    norm_bodies = []
+    for code in _NO_TAX_CLUSTER:
+        h = SP.render_state_html(PAGES[code])
+        # strip every state-identifying token so what's left is the real body prose
+        n = h.replace(STATE_NAMES[code], "STATE").replace(SP.slug_for(code), "slug")
+        n = n.replace(f"state={code}", "state=CC").replace(code.lower(), "cc").replace(code, "CC")
+        norm_bodies.append(n)
+    assert len(set(norm_bodies)) == len(norm_bodies), \
+        "no-tax state pages are still near-duplicates after normalizing names — add distinct context"
+
+
+def test_new_dimensions_surface_on_state_pages():
+    h = SP.render_state_html(PAGES["CA"])
+    for label in ("Munis", "QSBS", "Losses"):
+        assert label in h, f"CA page is missing the {label} dimension card"
+    # the muni/qsbs/loss FAQ questions render too
+    assert "municipal-bond interest" in h and "§1202" in h
+
+
 def test_export_writes_all_files(tmp_path):
     written = SP.export_state_pages(tmp_path)
     assert len(written) == 52                              # 51 states + states.html

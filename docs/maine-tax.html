@@ -24,7 +24,7 @@
 <meta name="twitter:description" content="Maine capital-gains, estate, marriage, and basis-step-up taxes — and where a concentrated portfolio leaks return to tax. Top effective long-term rate 7.15%. A tax-managed book of the same exposure recovers up to ~+4.2%/yr after tax in our illustrative modeling. Illustrative, not advice." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/states/me.png" />
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "FinancialService", "name": "Driftwood \u2014 Maine tax-aware investing", "legalName": "CWS Planning", "url": "https://alecmessino.github.io/project/maine-tax.html", "areaServed": {"@type": "State", "name": "Maine"}, "feeBasis": "Fee-only", "description": "Tax-aware investment management for Maine investors \u2014 asset location, tax-loss harvesting, and lot protection. Illustrative modeling, not advice."}
+{"@context": "https://schema.org", "@type": "FinancialService", "name": "Driftwood \u2014 Maine tax-aware investing", "legalName": "Driftwood", "url": "https://alecmessino.github.io/project/maine-tax.html", "areaServed": {"@type": "State", "name": "Maine"}, "feeBasis": "Fee-only", "description": "Tax-aware investment management for Maine investors \u2014 asset location, tax-loss harvesting, and lot protection. Illustrative modeling, not advice."}
 </script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Driftwood", "item": "https://alecmessino.github.io/project/index.html"}, {"@type": "ListItem", "position": 2, "name": "State Tax Map", "item": "https://alecmessino.github.io/project/statemap.html"}, {"@type": "ListItem", "position": 3, "name": "Maine", "item": "https://alecmessino.github.io/project/maine-tax.html"}]}
@@ -164,7 +164,7 @@
         var el=document.getElementById("capemail"), email=(el.value||"").trim();
         if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ if(el.reportValidity)el.reportValidity(); return; }
         var btn=document.getElementById("capsend"); btn.disabled=true; btn.textContent="Sending…";
-        var p={email:email, access_key:"cf6b1c2d-9971-4256-9ff9-72d6918c84e6", from_name:"CWS Planning",
+        var p={email:email, access_key:"cf6b1c2d-9971-4256-9ff9-72d6918c84e6", from_name:"Driftwood",
           _subject:"New Maine state-page lead", state:"ME", state_name:"Maine",
           structural_alpha_pct:"4.2", top_lt_rate:"7.15%", source:"state_page",
           lead_quality:(4.2>=4.5?"high":"standard")};
@@ -175,13 +175,13 @@
             document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Thanks — we\'ll email your Maine tax-leakage breakdown, usually within a business day.</div>';
             if(window.plausible) plausible("lead_submitted",{props:{source:"state_page",state:"ME"}}); })
           .catch(function(){ btn.disabled=false; btn.textContent="Email me Maine's 1-pager →";
-            document.getElementById("capnote").innerHTML='Sorry — that didn\'t send. Email us at <a href="mailto:alec.messino@cwsplanning.com">alec.messino@cwsplanning.com</a>.'; });
+            document.getElementById("capnote").innerHTML='Sorry — that didn\'t send. Email us at <a href="mailto:alec.messino@gmail.com">alec.messino@gmail.com</a>.'; });
       });
     })();
     </script>
     <div class="rel">Compare nearby regimes: <a href="california-tax.html">California</a> · <a href="texas-tax.html">Texas</a> · <a href="new-york-tax.html">New York</a> · <a href="new-jersey-tax.html">New Jersey</a> · <a href="states.html">all 50 states + DC →</a></div>
-    <div class="disc"><b>Illustrative / hypothetical — not a real track record and not advice.</b> The Structural Alpha figure is a hypothetical, after-tax result from the <b>retroactive application</b> of a tax-management model to ~30 years of proxy-spliced market data on a single illustrative path; <b>no client capital was invested</b>, and hypothetical performance <b>does not guarantee future results</b>. Intended for sophisticated investors; it may not be relevant to your situation, and your actual figure depends on your own holdings, basis, and bracket. State tax facts reflect tax year 2025 and can change — confirm with a tax advisor. Driftwood is the brand of CWS Planning, a <b>registered investment adviser</b>; <b>Form ADV</b> and <b>Form CRS</b> are available at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.</div>
-    <div class="foot">Driftwood · CWS Planning. Tax facts compiled from state statutes, tax year 2025.</div>
+    <div class="disc"><b>Illustrative / hypothetical — not a real track record and not advice.</b> The Structural Alpha figure is a hypothetical, after-tax result from the <b>retroactive application</b> of a tax-management model to ~30 years of proxy-spliced market data on a single illustrative path; <b>no client capital was invested</b>, and hypothetical performance <b>does not guarantee future results</b>. Intended for sophisticated investors; it may not be relevant to your situation, and your actual figure depends on your own holdings, basis, and bracket. State tax facts reflect tax year 2025 and can change — confirm with a tax advisor. Driftwood is a <b>registered investment adviser</b>; <b>Form ADV</b> and <b>Form CRS</b> are available at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.</div>
+    <div class="foot">Driftwood. Tax facts compiled from state statutes, tax year 2025.</div>
   </div>
 </div>
 </body>

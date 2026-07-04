@@ -54,7 +54,7 @@ def main() -> int:
         print(f"   {asset:15} -> docs/{asset} (copied)")
     # Binary assets (e.g. the founder headshot) — copy through only if present, so the About page's
     # <img> resolves once the file is dropped in. Optional: absent is fine (the page hides it).
-    for asset in ("alec-messino.jpg",):
+    for asset in ("Headshot.jpg",):
         src = WEB / asset
         if src.exists():
             (DOCS / asset).write_bytes(src.read_bytes())

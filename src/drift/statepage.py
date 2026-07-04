@@ -178,7 +178,7 @@ NAV = (
     '<nav class="dwnav" aria-label="Driftwood">\n'
     '  <a class="brand" href="index.html">Drift<span class="w">wood</span></a>\n'
     '  <div class="dwnav-links">\n'
-    '    <a href="about.html">About</a>\n'
+    '    <a href="about.html">Our Story</a>\n'
     '    <a href="thesis.html">Approach</a>\n'
     '    <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>\n'
     '    <a href="leakage.html">Leakage</a>\n'

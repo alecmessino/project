@@ -2,6 +2,8 @@
 """Build paper1.pdf from paper1.md — SSRN-style working paper.
 
 python-markdown → styled HTML → headless Chromium print-to-PDF. No LaTeX needed.
+Deps: `pip install -r the_third_turn/paper/requirements.txt` (the container recycle
+wipes them). Self-provisions python-markdown on first run if missing.
 
     python3 the_third_turn/paper/build_pdf.py
 """
@@ -12,7 +14,11 @@ import subprocess
 import sys
 from pathlib import Path
 
-import markdown
+try:
+    import markdown
+except ModuleNotFoundError:
+    subprocess.run([sys.executable, "-m", "pip", "install", "-q", "markdown"], check=True)
+    import markdown
 
 HERE = Path(__file__).resolve().parent
 CHROMIUM = "/opt/pw-browsers/chromium"

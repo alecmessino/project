@@ -24,11 +24,14 @@ measurement, and full play-by-play, we subject a battery of public hypotheses �
 order, velocity decline, bullpen fatigue, line-drop reversion, alternate-line skew, early-run
 anchoring, and weather/park effects — to an escalating validation protocol ending in a
 forecast-encompassing test against the market itself. No variable survives. The market's forecast
-error is not predictable from any variable we measure (out-of-sample R² = −0.037); an apparent
-velocity signal is shown to be selection bias; and an event-level transfer function indicates the
-line adjusts to information shocks by an approximately uniform, near-correct magnitude. Within our
-data we find no evidence of exploitable public-information inefficiency, and we characterize the
-boundary precisely. We release a transferable validation protocol and a reproducible benchmark.
+error is not predictable from any variable we measure (out-of-sample R² = −0.037; a Clark–West
+nested forecast comparison does not favor the augmented model), and the design is powered to
+exclude moderate incremental information. An apparent velocity signal is shown to be selection
+bias, and an event-level transfer function indicates the line adjusts to information shocks by an
+approximately uniform magnitude. At the one-minute, single-book resolution of our data we find no
+evidence of exploitable public-information inefficiency, and we characterize this boundary
+precisely. We release the Third Turn Protocol — an integration of standard forecast-evaluation
+tools into a sequential validation ladder — and an accompanying benchmark dataset.
 
 *Keywords:* market efficiency; in-play betting; forecast encompassing; calibration; incremental
 information; reproducible benchmark.
@@ -82,11 +85,12 @@ a single sharp-book feed.
 > remaining runs once conditioned on the live market forecast, and we locate the point at which that
 > incremental value disappears.
 >
-> **2. Methodological.** We formalize an escalating validation protocol — the **Third Turn
-> Protocol**: signal, robustness, out-of-sample, debiasing, conditional testing, forecast
-> encompassing, transfer function — that shifts the burden of proof from demonstrating *prediction*
-> to demonstrating *incremental information beyond an existing forecast*. It is domain-general and
-> applies to any market with a sharp public forecast and observable state.
+> **2. Methodological.** The individual tools are standard; our contribution is their *integration*
+> into a single escalating protocol — the **Third Turn Protocol**: signal, robustness, out-of-sample,
+> debiasing, conditional testing, forecast encompassing, transfer function — that shifts the burden
+> of proof from demonstrating *prediction* to demonstrating *incremental information beyond an
+> existing forecast*. It is domain-general and applies to any market with a sharp public forecast and
+> observable state.
 >
 > **3. Infrastructure.** We release the cleaned datasets and feature schema as the **Third Turn
 > Benchmark Dataset (v1)**, together with reference implementations of the market forecast,
@@ -155,12 +159,17 @@ estimates roughly 0.004 wOBA per mph operating through pitch quality, with a res
 effect an order of magnitude smaller. Run values for discrete events (the RE24 base-out
 run-expectancy table and linear weights) are standard tools from the same tradition.
 
-**Forecast evaluation.** Our central test imports the forecast-encompassing framework of Chong and
-Hendry (1986) from macroeconomic forecast evaluation: a benchmark forecast encompasses a rival
-when the rival adds no explanatory power for the target beyond the benchmark. Calibration
-diagnostics — reliability curves, the Brier score, expected calibration error — and the
-probabilistic interpretation of the area under the ROC curve (Hanley and McNeil, 1982) complete
-the evaluation toolkit.
+**Forecast evaluation.** Our tests are drawn from the econometric forecast-evaluation literature.
+The pivotal one is the forecast-encompassing framework of Chong and Hendry (1986): a benchmark
+forecast encompasses a rival when the rival adds no explanatory power for the target beyond the
+benchmark. Because our nested models are compared out-of-sample, we use the tools developed for
+that setting — the Diebold and Mariano (1995) comparison of predictive accuracy, West's (1996)
+asymptotic theory of predictive inference, the Clark and West (2007) correction for nested-model
+comparison, and, for the conditional case, Giacomini and White (2006). Calibration diagnostics —
+reliability curves, the Brier score, expected calibration error — and the probabilistic
+interpretation of the area under the ROC curve (Hanley and McNeil, 1982) complete the toolkit. None
+of these instruments is new; our contribution is to assemble them into a single sequential protocol
+and apply it with a sharp live betting line as the benchmark forecast.
 
 **The gap.** These strands study either the price series in isolation, a single discrete shock, or
 baseball performance without reference to prices. To our knowledge, no published work combines
@@ -184,9 +193,12 @@ and the artifacts released for reproduction (§3.5).
 ### 3.1 Data
 
 The study draws on 163 Major League Baseball games played in June 2026, each observed from three
-aligned sources. **Market prices.** Live full-game total (Over/Under) lines and their associated
-prices were recorded as one-minute trajectories from a single Pinnacle-grade feed, giving, for each
-game, the market's evolving point forecast of final total runs and its implied Over probability.
+aligned sources. **Market prices.** Live full-game total (Over/Under) lines were recorded as
+one-minute trajectories from a single Pinnacle-grade feed. From each trajectory we take the main
+balanced total — the handicap at which the Over and Under prices are closest to even, i.e. the
+market's median-outcome forecast of final total runs — as the incumbent forecast, and its implied
+Over probability for the calibration diagnostics. Appendix B details how a snapshot's line is
+matched to game state by timestamp.
 **Game state.** Complete play-by-play and boxscore records from the MLB Stats API supply, at every
 plate appearance, the inning and half, base-out state, score, batting-order position, the identity
 and pitch count of the pitcher, and the times each batter has faced the current starter. **Pitch
@@ -258,7 +270,12 @@ directly on `X`: if `X` cannot predict the error out-of-sample, it carries no in
 lacks. A per-feature variant (E+) fits `Y ~ B + Xᵢ` against `Y ~ B` for each variable individually,
 so that two proxies for the same state cannot mask one another in the joint model. Continuous
 predictors are standardized; the ridge penalty is fixed a priori and applied to all non-intercept
-terms.
+terms, and Appendix B confirms that the encompassing conclusion is invariant from ordinary least
+squares (penalty zero) through heavy shrinkage. Because the restricted (`Y ~ B`) and unrestricted
+(`Y ~ B + X`) models are nested, a naïve out-of-sample MSPE comparison is biased against the larger
+model; we therefore report the Clark and West (2007) adjusted statistic, which corrects for the
+noise the extra parameters introduce, clustered by game, alongside a 95% confidence interval for the
+encompassing gain obtained by block-bootstrapping whole games.
 
 *Why forecast encompassing?* Ordinary predictive accuracy cannot separate the two claims this paper
 must distinguish. A model that predicts runs well demonstrates only that a variable is informative
@@ -281,6 +298,17 @@ variance of Hanley and McNeil (1982).
 the converged change in the live total one and five minutes later (`ΔBook`), and estimate the
 response ratio `ΔBook / ΔRE` by event type together with a single common slope through the origin.
 Mean `ΔRE` by event type is checked against published linear weights as a validity control.
+
+**Statistical power.** Because the paper's claims are null, we report what effect sizes the design
+could have detected. For the incremental-information test (an *F*-test for the ten features beyond
+the market), 80% power at the 5% level corresponds to a minimum detectable incremental R² of about
+0.007 treating the 2,505 snapshots as independent, rising to about 0.10 under the conservative
+assumption that only the 163 games are independent; the true effective sample lies between. Every
+observed per-feature incremental R² (≤ 0.0018) sits below even the optimistic floor, so the design
+is powered to exclude moderate incremental information but not arbitrarily small amounts. In
+betting terms, detecting a 55% win rate against the 52.4% break-even at 80% power would require on
+the order of 2,000 wagers; our few hundred qualifying situations can rule out large edges, not tiny
+ones. Appendix B gives the full calculation.
 
 **Uncertainty.** All point forecasts are out-of-sample (leave-one-game-out); interval estimates use
 the Hanley–McNeil formula for AUC, Wilson intervals for proportions, and the bootstrap otherwise.
@@ -315,7 +343,11 @@ individual incremental R² beyond the market falls inside a ±0.003 band (best c
 +0.0018; velocity, starter tier, temperature, wind, and park at or below zero), so no single
 variable hides behind the others. As the sharpest test, we regress the book's forecast error —
 realized minus market-implied remaining runs — directly on the features: it is not predictable
-out-of-sample, R² = −0.037. This is the central empirical result of the study. Forecast
+out-of-sample, R² = −0.037. This is the central empirical result of the study. The difference is
+small and its uncertainty is bounded: the encompassing gain of −0.017 has a 95% block-bootstrap
+confidence interval (resampling whole games) of [−0.036, +0.002], and a Clark–West test for nested
+forecast comparison (2007) does not reject equal predictive accuracy in the market's favor
+(statistic −0.1, one-sided *p* = 0.55) — the market is, if anything, the better forecast. Forecast
 encompassing is the highest evidentiary standard we apply, because it conditions on the market's
 own forecast rather than on realized outcomes alone: a variable clears it only by improving a
 forecast that already reflects the market's information.
@@ -392,10 +424,16 @@ Figure 7 closes the loop on the model side of the comparison. The left panel bin
 half-inning snapshots by market-implied remaining runs and plots the mean realized remaining runs in
 each bin: the points track the diagonal, so the market forecast is approximately calibrated within
 this sample (the underlying leave-one-game-out remaining-runs model, fit on 2,859 snapshots,
-reaches R² = 0.226, and adding fatigue terms changes its mean absolute error by −0.001 runs). The right panel shows the
-distribution of the book's forecast error: symmetric, centered near zero (mean +0.49 runs), and — as
-Figure 4 establishes — not predictable from any feature we measure. Together with Figure 4, this
-defines the empirical boundary of public-information prediction against a sharp live market.
+reaches R² = 0.226, and adding fatigue terms changes its mean absolute error by −0.001 runs). The
+right panel shows the distribution of the book's forecast error. Its *median is zero*, but its
+*mean is +0.49 runs* — the signature of a right-skewed remaining-runs distribution (skewness +1.23),
+in which a balanced betting line tracks the median outcome while realized runs and a least-squares
+forecast track the higher mean. This mean–median gap is a level term — its dependence on the market
+forecast is negligible (a slope of +0.01 on `B`) — that any regression with an intercept absorbs; it
+is therefore orthogonal to the incremental-information tests rather than a market bias, and Appendix
+B documents it. Beyond that intercept the error is not predictable from any feature we measure.
+Together with Figure 4, this defines the empirical boundary of public-information prediction against
+a sharp live market, at the one-minute, single-book resolution of our data.
 
 ![](figures/market_calibration.png)
 
@@ -476,6 +514,14 @@ market encompasses. Outside it lie the dimensions our data cannot reach: the tim
 formation, disagreement across books, and the evolution of the full implied distribution rather
 than its mean.
 
+One caution bounds the claim. What we observe is limited by the *resolution of our instrument* — a
+single sharp book sampled once a minute — not necessarily by the resolution of the *market*. A
+lag that resolves within that minute, or a disagreement visible only across books, would be
+invisible to us and would register, incorrectly, as efficiency. Our result is therefore that public
+baseball variables carry no incremental information *at the one-minute, single-book resolution of
+our data*; finer-grained or cross-book measurement could revise the boundary, and mapping it is the
+subject of the microstructure work in Section 7.
+
 Every hypothesis in this study was, in effect, an attempt to move beyond that frontier using
 public state variables. None succeeded. That uniformity is not a series of independent
 disappointments; it is a single, coherent mapping of where the frontier sits for one sport, one
@@ -485,12 +531,14 @@ information stops helping," and it tells the next researcher where *not* to dig.
 
 ### 5.4 The methodological contribution
 
-Although motivated by baseball, the methodology is not baseball-specific. The contribution is an
-escalating validation protocol designed to distinguish variables that predict outcomes from
-variables that contain incremental information beyond an existing forecast. Each rung strips away
-one more class of illusion — overfitting, then selection, then confounding, then
-redundancy-with-the-market — so that a hypothesis surviving to the top has been tested against
-progressively harder alternatives rather than a single easy one.
+Although motivated by baseball, the methodology is not baseball-specific. Its individual
+components — cross-validation, selection-bias correction, forecast encompassing, nested
+forecast-comparison tests — are standard; the contribution is their *integration* into a single
+escalating protocol that distinguishes variables which predict outcomes from variables that contain
+incremental information beyond an existing forecast. Each rung strips away one more class of
+illusion — overfitting, then selection, then confounding, then redundancy-with-the-market — so that
+a hypothesis surviving to the top has been tested against progressively harder alternatives rather
+than a single easy one.
 
 The reason a protocol like this matters is a matter of where the burden of proof sits. Sports
 betting research frequently terminates after the discovery of an in-sample signal. The present
@@ -518,7 +566,8 @@ falsifications instead of scattered one-off backtests.
 We state the conditions under which our conclusion holds, without interpretation. **Scope.** The
 study covers 163 games over a single month (June 2026) of one sport; the boundary is characterized
 precisely, but only under those conditions, and we make no claim of seasonal or cross-sport
-generality. **Odds source.** Historical line trajectories derive from a single Pinnacle-grade
+generality. A second month of live data is being collected and will be added before journal
+submission to test temporal stability. **Odds source.** Historical line trajectories derive from a single Pinnacle-grade
 feed sampled at roughly one-minute intervals; we therefore cannot separate genuine price-formation
 latency from feed cadence, and the uniform sub-one response ratio in the transfer function is
 consistent with either. **Single-book benchmark.** All encompassing tests are conducted against
@@ -585,6 +634,59 @@ Referenced once from §4; Figure 2 is the main-text representation.
 
 ---
 
+## Appendix B — construction, power, and the forecast-error bias
+
+**Snapshot construction.** The unit of analysis is the first plate appearance of each half-inning
+through the eighth, for which a live line is available. Game state (inning, half, base-out, score,
+batting slot, pitcher, pitch count, times-through-order) is read from the play-by-play at that plate
+appearance; the market line is matched to it by timestamp, using the most recent quote at or before
+the plate-appearance start time. The incumbent forecast is `B = (main total) − (runs already
+scored)` and the target is `Y = (final total) − (runs already scored)`.
+
+**Sample sizes.** The three analyses use overlapping but distinct samples, by construction. The
+encompassing and calibration analysis uses 2,505 half-inning snapshots (innings 1–8 with a matched
+line). The remaining-runs baseline uses 2,859 half-inning states (it does not require a market line,
+so a few additional states qualify). The transfer function uses 6,414 *events* rather than
+snapshots — every run-scoring play and pitching change with a converged before/after line — a
+different unit entirely.
+
+**The forecast-error bias.** The book error `E = Y − B` has mean +0.489 but median 0.000, on
+snapshots whose remaining-runs distribution has skewness +1.23. This is the mean–median gap of a
+right-skewed count distribution: a balanced betting line sits at the median outcome, while realized
+runs and any least-squares forecast track the higher mean. Regressing `E` on `B` gives a slope of
++0.014 — the gap is essentially a constant level term, not a function of the forecast — so any model
+with an intercept absorbs it, and it does not enter the incremental-information comparisons. It is a
+property of the forecast's target functional, not evidence of market bias.
+
+**Nested forecast comparison.** Comparing the nested out-of-sample forecasts `Y ~ B` and
+`Y ~ B + X` by raw MSPE is biased toward the smaller model; the Clark–West (2007) adjustment
+corrects this. The market model has the lower MSPE (13.79 vs 14.14); the Clark–West statistic,
+clustered by game, is −0.1 (one-sided *p* = 0.55), so we do not reject equal predictive accuracy in
+the market's favor. Block-bootstrapping whole games, the encompassing gain R²(`B+X`) − R²(`B`) is
+−0.017 with a 95% interval of [−0.036, +0.002].
+
+**Power.** For the ten-feature *F*-test of incremental information, 80% power at the 5% level
+requires an incremental R² of about 0.007 if the 2,505 snapshots are treated as independent and
+about 0.10 if only the 163 games are; every observed per-feature incremental R² (≤ 0.0018) is below
+even the former. A win-rate edge of 55% versus the 52.4% break-even would need ≈ 2,000 wagers to
+detect at 80% power. The design excludes moderate incremental information, not tiny amounts.
+
+**Penalty sensitivity.** The encompassing conclusion is invariant to the ridge penalty. From
+ordinary least squares (penalty 0) through heavy shrinkage (penalty 100), the encompassing gain
+stays in [−0.017, −0.013] and the book-error out-of-sample R² in [−0.037, −0.034]; features never
+improve on the market.
+
+| ridge penalty | R²(`Y~B`) | R²(`Y~X`) | R²(`Y~B+X`) | gain | (`Y−B`)~X R² |
+|---|---|---|---|---|---|
+| 0 (OLS) | 0.304 | 0.279 | 0.286 | −0.017 | −0.037 |
+| 1 | 0.304 | 0.279 | 0.286 | −0.017 | −0.037 |
+| 10 | 0.304 | 0.279 | 0.287 | −0.017 | −0.037 |
+| 100 | 0.303 | 0.281 | 0.290 | −0.013 | −0.034 |
+
+*All Appendix B numbers are produced by `revision1.py` from the committed caches.*
+
+---
+
 ## Data and code availability
 
 The cleaned datasets, feature schema, and frozen result artifacts are released as the **Third Turn
@@ -603,6 +705,15 @@ the Order Penalty in Baseball." *Journal of Quantitative Analysis in Sports* 19(
 
 Chong, Y. Y., and D. F. Hendry (1986). "Econometric Evaluation of Linear Macro-Economic Models."
 *Review of Economic Studies* 53(4): 671–690.
+
+Clark, T. E., and K. D. West (2007). "Approximately Normal Tests for Equal Predictive Accuracy in
+Nested Models." *Journal of Econometrics* 138(1): 291–311.
+
+Diebold, F. X., and R. S. Mariano (1995). "Comparing Predictive Accuracy." *Journal of Business &
+Economic Statistics* 13(3): 253–263.
+
+Giacomini, R., and H. White (2006). "Tests of Conditional Predictive Ability." *Econometrica* 74(6):
+1545–1578.
 
 Croxson, K., and J. J. Reade (2014). "Information and Efficiency: Goal Arrival in Soccer Betting."
 *The Economic Journal* 124(575): 62–91.
@@ -624,6 +735,9 @@ Sutton-Brown, S. (2023). "The Value of Relative Velocity." *Baseball Prospectus*
 
 Tango, T., M. Lichtman, and A. Dolphin (2007). *The Book: Playing the Percentages in Baseball.*
 Potomac Books.
+
+West, K. D. (1996). "Asymptotic Inference About Predictive Ability." *Econometrica* 64(5):
+1067–1084.
 
 Woodland, L. M., and B. M. Woodland (1994). "Market Efficiency and the Favorite–Longshot Bias:
 The Baseball Betting Market." *Journal of Finance* 49(1): 269–279.

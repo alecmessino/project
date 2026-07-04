@@ -1,0 +1,7 @@
+# Paper build dependencies (the container recycle wipes these; reinstall with:
+#   pip install -r the_third_turn/paper/requirements.txt
+# PDF rendering also needs Chromium (pre-installed at /opt/pw-browsers/chromium)
+# and, only for page inspection, the system package poppler-utils.
+markdown>=3.10
+matplotlib>=3.9
+numpy>=1.26

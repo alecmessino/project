@@ -1,14 +1,14 @@
-# From Pitcher Fatigue to Market Efficiency: An Empirical Evaluation of Public Information in Live MLB Totals Markets
+<div class="titleblock">
+<h1>From Pitcher Fatigue to Market Efficiency: An Empirical Evaluation of Public Information in Live MLB Totals Markets</h1>
+<p class="epigraph">This paper asks whether publicly observable baseball information predicts outcomes, or merely predicts what the market already knows.</p>
+<p class="author">Alec Messino<br/><span class="affil">The Third Turn Research Initiative &middot; alec.messino@gmail.com</span></p>
+<p class="wp">Working paper &middot; Draft 0.9 &middot; July 2026 &middot; Comments welcome</p>
+</div>
 
-*This paper asks whether publicly observable baseball information predicts outcomes, or merely
-predicts what the market already knows.*
-
-<!-- Working draft 0.9 — assembled from section drafts; pending the end-to-end editorial pass,
-Related Work (§2), reference list, and Benchmark packaging. Figures live in `figures/` (content-
-named); the manifest at the end maps figure numbers to files. Numbers are committed values in
-`output/*.json`, recomputable from the caches without feed access. -->
-
----
+<!-- Draft 0.9 — editorial pass applied (one-job, dedupe, forecasting-first, softened claims);
+pending: Related Work (§2), reference list, Benchmark packaging. Figures embedded from
+`figures/` (content-named). Numbers are committed values in `output/*.json`. Build PDF with
+`python3 paper/build_pdf.py`. -->
 
 ## Abstract
 
@@ -27,6 +27,10 @@ velocity signal is shown to be selection bias; and an event-level transfer funct
 line adjusts to information shocks by an approximately uniform, near-correct magnitude. Within our
 data we find no evidence of exploitable public-information inefficiency, and we characterize the
 boundary precisely. We release a transferable validation protocol and a reproducible benchmark.
+
+*Keywords:* market efficiency; in-play betting; forecast encompassing; calibration; incremental
+information; reproducible benchmark.
+*JEL codes:* C53 (forecasting), G14 (information and market efficiency), Z23 (sports economics).
 
 ---
 
@@ -96,24 +100,24 @@ remaining runs beyond the forecast embedded in a sharp live betting market?*
 
 ## 2. Related Work
 
-> **[TO DRAFT — deliberately short: prove a gap, not a reading list. Four subsections.]**
+> *This section is deliberately brief in the current draft and will be completed in the next pass.
+> Its job is to establish a gap, not to survey a literature. Planned structure:*
 >
 > **2.1 Sports-betting market efficiency.** Pre-game literature; markets generally efficient near
-> the close; little published live/in-play work. *(cf. betting-market overreaction/autocorrelation,
-> Simon 2025; real-time inefficiency, Management Science 2024; underreaction ≈0.64:1, arXiv
-> 2606.07811.)*
+> the close; little published live/in-play work. *(cf. betting-market overreaction and
+> autocorrelation, Simon 2025; real-time inefficiency, Management Science 2024; underreaction
+> ≈ 0.64:1, arXiv 2606.07811.)*
 >
-> **2.2 Baseball performance.** Times-through-order as continuous familiarity, not a cliff (arXiv
-> 2210.06724); relative velocity ≈0.0006 wOBA/mph (Baseball Prospectus); run expectancy (RE24,
-> linear weights).
+> **2.2 Baseball performance.** Times-through-order as continuous familiarity rather than a
+> discontinuity (arXiv 2210.06724); relative velocity ≈ 0.0006 wOBA/mph (Baseball Prospectus); run
+> expectancy (RE24, linear weights).
 >
-> **2.3 Forecast evaluation** *(the most important subsection).* Calibration (reliability, Brier,
-> ECE); forecast encompassing and information incorporation; benchmark-style reproducible
-> evaluation.
+> **2.3 Forecast evaluation.** Calibration (reliability, Brier, expected calibration error);
+> forecast encompassing and information incorporation; benchmark-style reproducible evaluation.
 >
-> **2.4 Gap (one paragraph).** To our knowledge no published work combines live baseball state,
-> pitch-level features, forecast encompassing, calibration analysis, and transfer-function analysis
-> against a sharp live market.
+> **2.4 The gap.** To our knowledge no published work combines live baseball state, pitch-level
+> features, forecast encompassing, calibration analysis, and transfer-function analysis against a
+> sharp live market.
 
 ---
 
@@ -185,7 +189,12 @@ on the market forecast itself and asks whether the variable adds anything to it.
 finally asks not whether the market prices the variable but whether it prices it by the correct
 magnitude. The protocol embodies a single guiding principle — *a betting hypothesis should be
 evaluated against the market, not merely against the outcome* — and the last two rungs are what
-enforce it.
+enforce it. Figure 1 traces the study's actual course through this sequence.
+
+![](figures/research_process.png)
+
+**Figure 1.** The research process. Each surviving explanation was handed to a stricter test; the
+sequence terminates at a boundary, not at an edge.
 
 ### 3.4 Statistical evaluation
 
@@ -258,6 +267,12 @@ variable hides behind the others. As the sharpest test, we regress the book's fo
 realized minus market-implied remaining runs — directly on the features: it is not predictable
 out-of-sample, R² = −0.037. This is the central empirical result of the study.
 
+![](figures/forecast_encompassing.png)
+
+**Figure 4.** Forecast encompassing. *Left:* adding the feature set to the market forecast changes
+out-of-sample R² by −0.017. *Right:* each feature's individual incremental R² beyond the market;
+bars within the ±0.003 band are drawn neutral.
+
 Figure 2 shows that this boundary is not a property of one variable but of the entire battery. The
 figure arranges ten candidate hypotheses drawn from the public handicapping literature —
 times-through-order, velocity decline, bullpen-fatigue multipliers, drop reversion on both sides,
@@ -268,8 +283,13 @@ in-sample signal, fewer survive robustness, fewer survive out-of-sample cross-va
 clears the market test. Because the gate of elimination varies by row — times-through-order and the
 velocity signal die at robustness, drop-reversion (Over) and forecast encompassing at out-of-sample,
 the context hypotheses at the market test — no single artifact (a coding error, one anomalous month,
-one mis-specified model) can be the common cause. The complete battery, with each hypothesis's
+one mis-specified model) is a plausible common cause. The complete battery, with each hypothesis's
 motivation and mode of elimination, is summarized in Appendix Table A1.
+
+![](figures/hypothesis_elimination.png)
+
+**Figure 2.** Sequential elimination of candidate public-information hypotheses across five
+escalating gates. Green = cleared this gate; red = failed here; grey = not reached.
 
 Figure 3 quantifies the attrition as a funnel: of ten hypotheses tested, nine produce a detectable
 in-sample association with runs, three survive out-of-sample validation, and zero add information
@@ -277,6 +297,10 @@ beyond the market or clear a profitability threshold. The collapse between "surv
 (three) and "adds information beyond the market" (zero) is the paper's pivot: predicting runs is
 common; predicting the market's error is the empirical boundary. The funnel counts are derived
 directly from the Figure 2 matrix, so the two figures cannot diverge.
+
+![](figures/incremental_information_funnel.png)
+
+**Figure 3.** The incremental-information funnel. Counts derive from the Figure 2 matrix.
 
 Figure 5 explains why one hypothesis appeared to survive before it was eliminated, and in doing so
 illustrates a general statistical principle. A model that adds a starter's velocity decline
@@ -288,6 +312,11 @@ decline within a pre-treatment early window (first twenty pitches versus the nex
 the AUC to 0.524, whose Hanley–McNeil confidence interval straddles the 0.500 coin-flip line. The
 apparent 0.61 signal was survivorship, not fatigue — a conditioning artifact that the escalating
 protocol is designed to catch.
+
+![](figures/velocity_post_treatment_bias.png)
+
+**Figure 5.** Post-treatment bias in the velocity signal. Out-of-sample AUC with Hanley–McNeil 95%
+intervals; the debiased estimate straddles the coin-flip line.
 
 Figure 6 turns from whether the market prices information to whether it prices it by the right
 *amount*. For each of 6,414 in-game events we compute the true change in run expectancy (ΔRE, from a
@@ -301,6 +330,11 @@ attenuates every shock by the same factor — rather than a per-event mispricing
 exploit. (Hit-by-pitch, n = 115, sits below the band; pitching changes move the line near zero, but
 RE24 cannot benchmark reliever quality, so we exclude them from the elasticity claim.)
 
+![](figures/transfer_function.png)
+
+**Figure 6.** The market transfer function. Every positive-run event type lies on one common slope
+≈ 0.74; marker area is proportional to event count.
+
 Figure 7 closes the loop on the model side of the comparison. The left panel bins the 2,842
 half-inning snapshots by market-implied remaining runs and plots the mean realized remaining runs in
 each bin: the points track the diagonal, so the market forecast is approximately calibrated within
@@ -309,6 +343,11 @@ fatigue terms changes its mean absolute error by −0.001 runs). The right panel
 distribution of the book's forecast error: symmetric, centered near zero (mean +0.49 runs), and — as
 Figure 4 establishes — not predictable from any feature we measure. Together with Figure 4, this
 defines the empirical boundary of public-information prediction against a sharp live market.
+
+![](figures/market_calibration.png)
+
+**Figure 7.** Market calibration. *Left:* binned market-implied versus realized remaining runs.
+*Right:* the distribution of the market's forecast error.
 
 ### Summary of results
 
@@ -336,14 +375,15 @@ question was narrower and economically more meaningful: *after* conditioning on 
 already embedded in a sharp live betting market, do those publicly observable variables provide
 *additional* predictive information? Within the limits of our data, the answer is no.
 
-That distinction is the whole paper, and it disarms the most natural objection in advance. A
-reader may protest that weather obviously matters, or that a tiring pitcher obviously concedes more
-runs. Both are true. The point of forecast encompassing is not to deny that these variables carry
-signal; it is to ask whether their signal is *already priced*. When the market's forecast error —
-the difference between what actually happened and what the line implied — cannot be predicted from
-any of these variables out-of-sample (R² = −0.037), the most parsimonious reading is that the
-information is already incorporated into the market forecast. The variables are informative about
-runs and redundant with the price. Prediction survives; increment does not.
+That distinction — introduced in Section 1 as the paper's conceptual center — disarms the most
+natural objection in advance. A reader may protest that weather obviously matters, or that a tiring
+pitcher obviously concedes more runs. Both are true. The point of forecast encompassing is not to
+deny that these variables carry signal; it is to ask whether their signal is *already priced*. When
+the market's forecast error — the difference between what actually happened and what the line
+implied — cannot be predicted from any of these variables out-of-sample (R² = −0.037), the most
+parsimonious reading is that the information is already incorporated into the market forecast. The
+variables are informative about runs and redundant with the price. Prediction survives; increment
+does not.
 
 Why does this happen? Not because baseball theory is wrong, but because the forecast embedded in a
 sharp live market already reflects these variables. Such a forecast is produced by participants
@@ -356,7 +396,7 @@ whose residual should carry no recoverable public-information signal — which i
 ### 5.2 Prediction is not profit
 
 Here the paper stops being about baseball. **Prediction and profit are distinct statistical
-problems**, and conflating them is the most common error in applied betting research.
+problems**, and conflating them is among the most common errors in applied betting research.
 
 Much of that literature implicitly assumes a single arrow: better prediction leads to better
 betting. Our results break that arrow into three distinct links that must each hold independently.
@@ -418,10 +458,10 @@ sequence, report at which rung each candidate variable is eliminated, and compar
 domains. To facilitate reproducibility, we release the datasets, evaluation protocol, and
 reference implementations accompanying this study as the initial release of the **Third Turn
 Benchmark**, so that future hypotheses can be evaluated against the same reference rather than
-re-derived from scratch. Its guiding principle is a single sentence — *a betting hypothesis should
-be evaluated against the market, not merely against the outcome* — and over time a shared
-benchmark and a citable protocol may prove more durable than any single finding, because they let
-a field accumulate falsifications instead of scattered one-off backtests.
+re-derived from scratch. Its guiding principle is the same sentence that organizes the protocol
+(§3.3), and over time a shared benchmark and a citable protocol may prove more durable than any
+single finding, because they let a field accumulate falsifications instead of scattered one-off
+backtests.
 
 ---
 
@@ -476,34 +516,19 @@ does — and does not — exist.
 
 ---
 
-## Figures
-
-Figure files live in `figures/` (content-named; the manuscript assigns the numbers below).
-
-1. **Figure 1** — the research process (Mermaid flow; the paper's spine). See `paper1_outline.md`.
-2. **Figure 2** — sequential elimination of candidate public-information hypotheses.
-   `hypothesis_elimination.png`
-3. **Figure 3** — the incremental-information funnel. `incremental_information_funnel.png`
-4. **Figure 4** — forecast encompassing. `forecast_encompassing.png`
-5. **Figure 5** — velocity debiasing / post-treatment bias. `velocity_post_treatment_bias.png`
-6. **Figure 6** — the market transfer function. `transfer_function.png`
-7. **Figure 7** — remaining-runs calibration. `market_calibration.png`
-
----
-
 ## Appendix Table A1 — the full hypothesis battery
 
 Referenced once from §4; Figure 2 is the main-text representation.
 
 | Hypothesis | Motivation | Test | Outcome | Mode of elimination |
 |---|---|---|---|---|
-| Times-through-order | Familiarity/fatigue penalty on 3rd time through | Binary gate → gradient, LOGO | Encompassed | Decay is continuous, not a cliff; out-of-sample fires −EV; market prices it |
-| Velocity decline | Fatigue shows as lost mph | Debiased early-window vs post-treatment | Artifact | Defined only if the starter survived to be shelled (selection); clean signal AUC ≈ 0.52 |
-| Bullpen fatigue | Gassed pen → higher scoring after a cliff | Isolated to the pen's own innings | No effect | Gassed pens concede the same/fewer runs; no multiplier |
+| Times-through-order | Familiarity/fatigue penalty on 3rd time through | Binary gate → gradient, LOGO | Encompassed | Decay is continuous, not a discontinuity; out-of-sample fires below breakeven; market prices it |
+| Velocity decline | Fatigue shows as lost velocity | Debiased early-window vs post-treatment | Artifact | Defined only for starters who remained in long enough to be measured (selection); clean signal AUC ≈ 0.52 |
+| Bullpen fatigue | Fatigued bullpen → higher scoring after a starter collapse | Isolated to the bullpen's own innings | No effect | Fatigued bullpens concede the same or fewer runs; no multiplier |
 | Drop reversion (Over) | Over-dropped line reverts up | Threshold sweep, all games | Not out-of-sample | Reversion is right-skewed (win-big/lose-small); median below the line |
-| Drop reversion (Under) | Line stays low after a slow start | Banded + robustness gates | Not robust | Hot band moves with the snapshot inning; concentrated in the recent sample |
-| Alternate-line skew | Buy the fat upper tail at plus money | Empirical win% vs efficient-implied | Priced | Empirical < implied at every hook; tail priced fatter than realized |
-| Early-run anchoring | Live total under-reacts to a 1st-inning explosion | Post-1st Over, cause split | Priced | 49/50 explosions hit-driven (no fluky-runs population); market prices the climb |
+| Drop reversion (Under) | Line stays low after a slow start | Banded + robustness gates | Not robust | Effective band moves with the snapshot inning; concentrated in the recent sample |
+| Alternate-line skew | Buy the fat upper tail at longer odds | Empirical win% vs efficient-implied | Priced | Empirical < implied at every half-run increment above the main line; tail priced fatter than realized |
+| Early-run anchoring | Live total under-reacts to a 1st-inning scoring burst | Post-1st Over, cause split | Priced | 49/50 bursts hit-driven (no fluky-runs population); market prices the change |
 | Weather / park | Books under-price hitter-friendly context | Conditional split | Priced | Hitter-friendly Overs hit *less* (46% < 50%): market over-adjusts for context |
 | Remaining-runs fatigue | Fatigue adds to a state model | Incremental MAE, LOGO | No increment | Game state already contains the information; ΔMAE −0.001 |
 | **Forecast encompassing** | Does *anything* beat the market? | `Y~B+X`; `(Y−B)~X`; per-feature E+ | **Encompassed** | Book error not predictable from any feature out-of-sample (R² ≈ 0) |
@@ -519,7 +544,7 @@ pending.)*
 
 ## References
 
-*[To compile — see §2 notes: sports-betting efficiency; times-through-order (arXiv 2210.06724);
-relative velocity (Baseball Prospectus); betting-market overreaction (Simon 2025); real-time
-inefficiency (Management Science 2024); underreaction (arXiv 2606.07811); calibration & forecast
-encompassing.]*
+*[To compile with §2 — sports-betting efficiency; times-through-order (arXiv 2210.06724); relative
+velocity (Baseball Prospectus); betting-market overreaction (Simon 2025); real-time inefficiency
+(Management Science 2024); underreaction (arXiv 2606.07811); calibration & forecast encompassing
+(Chong & Hendry 1986; Hanley & McNeil 1982).]*

@@ -368,7 +368,58 @@ def fig7_funnel(matrix):
     plt.close(fig)
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Figure 1 — the research process (escalating tests and their outcomes)
+# ─────────────────────────────────────────────────────────────────────────────
+def fig1_process():
+    # (stage, outcome, killed?)  — the study's actual course through the protocol
+    steps = [
+        ("Initial hypothesis:\ntimes-through-order penalty",
+         "naïve backtest: at/below breakeven", True),
+        ("Velocity-decline signal",
+         "debiasing: AUC 0.61 → 0.52 (selection)", True),
+        ("Bullpen-fatigue multiplier",
+         "no effect: fatigued pens concede no more", True),
+        ("Remaining-runs model\n+ fatigue terms",
+         "ΔMAE = −0.001 — game state already suffices", True),
+        ("Forecast encompassing\n(joint + per-feature)",
+         "book error unpredictable, OOS R² ≈ 0", True),
+        ("Transfer function\n(ΔBook vs ΔRE)",
+         "one common slope ≈ 0.74 — priced ≈ correctly", False),
+        ("Boundary identified",
+         "open frontier: live market microstructure", False),
+    ]
+    fs.setup()
+    fig, ax = plt.subplots(figsize=(8.6, 5.8))
+    n = len(steps)
+    for i, (stage, outcome, killed) in enumerate(steps):
+        y = n - 1 - i
+        last = i == n - 1
+        face = fs.INK if last else fs.PALETTE[0]
+        ax.add_patch(plt.Rectangle((0.0, y + 0.12), 0.46, 0.76, facecolor=face,
+                                   edgecolor="white", linewidth=1.5, zorder=3))
+        ax.text(0.23, y + 0.5, stage, ha="center", va="center", color="white",
+                fontsize=8.6, fontweight="bold", zorder=4)
+        mark = "✗" if killed else "→"
+        mcol = fs.FAIL if killed else fs.PASS
+        ax.text(0.49, y + 0.5, mark, ha="center", va="center", color=mcol,
+                fontsize=12, fontweight="bold")
+        ax.text(0.525, y + 0.5, outcome, ha="left", va="center", color=fs.MUTED,
+                fontsize=8.8)
+        if not last:
+            ax.annotate("", xy=(0.23, y + 0.03), xytext=(0.23, y + 0.12),
+                        arrowprops=dict(arrowstyle="-|>", color=fs.MUTED, linewidth=1.4))
+    ax.set_xlim(-0.02, 1.04)
+    ax.set_ylim(-0.05, n + 0.05)
+    ax.axis("off")
+    ax.set_title("The research process: each surviving explanation handed to a stricter test",
+                 fontsize=11.5, pad=12)
+    fig.savefig(FIGDIR / "research_process.png", bbox_inches="tight")
+    plt.close(fig)
+
+
 def main() -> int:
+    fig1_process()
     rows = fig2_graveyard()
     fig3_encompassing()
     fig4_debiasing()

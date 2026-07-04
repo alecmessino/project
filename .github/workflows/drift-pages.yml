@@ -74,9 +74,13 @@ jobs:
       - name: Build Tax-Leakage Diagnostic (docs/leakage.html)
         run: drift leakage --out docs/leakage.html
 
-      # Multi-dimension State Tax Map (cap-gains / marriage / estate / step-up / Structural Alpha).
+      # Multi-dimension State Tax Map (cap-gains / marriage / estate / munis / QSBS / losses / step-up / alpha).
       - name: Build State Tax Map (docs/statemap.html)
         run: drift statemap --out docs/statemap.html
+
+      # "Single asset risk" — de-risking a concentrated stock position (static dataset, no network).
+      - name: Build Single-asset-risk tool (docs/concentration.html)
+        run: drift concentration --out docs/concentration.html
 
       # Per-state SEO landing pages (50 + DC), states.html index, and the generated sitemap.
       - name: Build state landing pages + sitemap
@@ -97,6 +101,7 @@ jobs:
           git add docs/index.html docs/thesis.html docs/taxlab.html \
             docs/equities.html docs/equities_case_studies.html docs/tearsheet.html \
             docs/ledger.html docs/ledger.json docs/_provenance.json \
+            docs/statemap.html docs/concentration.html \
             docs/states.html docs/sitemap.xml docs/*-tax.html
           # Use an explicit if/else: the old `A && B || C && D` one-liner pushed even on a
           # no-change run (operator precedence), and a holiday no-op should commit nothing.

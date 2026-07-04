@@ -20,6 +20,7 @@ PAIRS = {
     "report.html": "equities_case_studies.html",
     "leakage.html": "leakage.html",
     "statemap.html": "statemap.html",
+    "concentration.html": "concentration.html",
     "ledger.html": "ledger.html",
     "tearsheet.html": "tearsheet.html",
     "taxlab.html": "taxlab.html",

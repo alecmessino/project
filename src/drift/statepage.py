@@ -592,6 +592,7 @@ def export_state_pages(out_dir: str | Path = "docs") -> list[str]:
 _CORE_SITEMAP = [
     ("index.html", "1.0", "weekly"), ("taxlab.html", "0.9", "weekly"),
     ("leakage.html", "0.9", "monthly"), ("statemap.html", "0.8", "monthly"),
+    ("concentration.html", "0.8", "monthly"),
     ("states.html", "0.8", "monthly"), ("thesis.html", "0.7", "monthly"),
     ("ledger.html", "0.5", "weekly"), ("tearsheet.html", "0.5", "weekly"),
     ("equities.html", "0.4", "weekly"), ("equities_case_studies.html", "0.4", "weekly"),

@@ -29,6 +29,7 @@ THESIS_TEMPLATE = Path(__file__).with_name("web") / "thesis.html"
 TAXLAB_TEMPLATE = Path(__file__).with_name("web") / "taxlab.html"
 LEAKAGE_TEMPLATE = Path(__file__).with_name("web") / "leakage.html"
 STATEMAP_TEMPLATE = Path(__file__).with_name("web") / "statemap.html"
+CONCENTRATION_TEMPLATE = Path(__file__).with_name("web") / "concentration.html"
 
 
 def _spark(curve: Sequence[float], n: int = 90) -> list[float]:
@@ -308,4 +309,17 @@ def export_statemap(state: dict, out: str | Path) -> Path:
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render_statemap(state))
+    return out
+
+
+def render_concentration(state: dict) -> str:
+    """Static, self-contained "Single asset risk" heatmap with the strategy dataset embedded."""
+    template = CONCENTRATION_TEMPLATE.read_text()
+    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+
+
+def export_concentration(state: dict, out: str | Path) -> Path:
+    out = Path(out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(render_concentration(state))
     return out

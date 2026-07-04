@@ -296,6 +296,18 @@ def statemap(
 
 
 @app.command()
+def concentration(
+    out: str = typer.Option("docs/concentration.html", "--out", help="Single-asset-risk heatmap exhibit"),
+):
+    """Build the "Single asset risk" tool — de-risking a concentrated stock position, scored 22 ways."""
+    from .concentration import build_concentration
+    from .exhibit import export_concentration
+    state = build_concentration()
+    path = export_concentration(state, out)
+    console.print(f"[green]wrote[/] {path}  ({len(state['strategies'])} strategies · {len(state['axes'])} axes)")
+
+
+@app.command()
 def states(
     out_dir: str = typer.Option("docs", "--out-dir", help="directory for the per-state landing pages + sitemap"),
     sitemap: bool = typer.Option(True, "--sitemap/--no-sitemap", help="also regenerate docs/sitemap.xml"),

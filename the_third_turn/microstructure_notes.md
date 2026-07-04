@@ -48,8 +48,10 @@ frequencies; use equal-cadence resampling or an event study."* The lesson genera
 - **The implied-distribution panel.** Pinnacle's per-team full pmf every snapshot (implied σ, skew
   banked) is unusual — most datasets carry only line + odds. It is the substrate for
   variance-repricing, skew evolution, uncertainty collapse, and inning-level entropy — plausibly a
-  stronger paper than price leadership. (Note: the +0.14 implied skew here is the *full-game
-  per-team* distribution, a different object from Paper 1's +1.23 *remaining-runs* skew.)
+  stronger paper than price leadership, and gated by **SR-2** in
+  [`protocol/stopping_rules.md`](protocol/stopping_rules.md). (Note: the +0.14 implied skew here is
+  the *full-game per-team* distribution, a different object from Paper 1's +1.23 *remaining-runs*
+  skew.)
 
 ## Daemon priority changes (reordered: overlap is now the scarce resource)
 

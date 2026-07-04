@@ -2,10 +2,17 @@
   "n": 319,
   "K": 4.5,
   "base_rate": 0.429,
-  "brier_tier": NaN,
-  "brier_full": NaN,
+  "brier_tier": null,
+  "brier_full": null,
   "auc_tier": 0.414,
   "auc_full": 0.524,
   "ece_full": 0.053,
-  "residual_bigdrop_pts": -0.4
+  "residual_bigdrop_pts": -0.4,
+  "debias": {
+    "auc_tier_only": 0.42,
+    "auc_biased_vel_drop": 0.61,
+    "auc_debiased_early": 0.524,
+    "n_vel_drop": 272,
+    "n_early": 319
+  }
 }

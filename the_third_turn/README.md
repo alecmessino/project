@@ -1,16 +1,22 @@
 # The Third Turn
 
-A **decoupled, headless** MLB signal service that flags live-Over opportunities off
-the **Time-Through-Order Penalty (TTOP)**: starting pitchers degrade when they face
-the top of the order for the 3rd time. Like its sibling `mrbet`, it is a *signal*
-system — it flags +EV spots and alerts; **it does not place bets.**
+> **What this is now.** A research program on **forecast validation and information
+> incorporation in live probabilistic forecasting systems**, with MLB betting markets as the
+> observable laboratory. Start at **[`HANDBOOK.md`](HANDBOOK.md)**. The scholarly output is
+> [`paper/paper1.md`](paper/paper1.md) — *Forecast Encompassing as a Test of Predictive Signals*.
+>
+> **On the original thesis.** The project began as a live-Over signal service built on the
+> **Time-Through-Order Penalty (TTOP)**. That thesis, and every other public-information edge we
+> tested, was **refuted** — the sharp market already prices them (see the paper and
+> [`decisions/RESEARCH_DECISIONS_LOG.md`](decisions/RESEARCH_DECISIONS_LOG.md)). The code below
+> still runs as a research logger, **not** as a source of +EV signals; the legacy alerts fire off
+> the refuted gate and are informational only.
 
-It runs isolated from the `mrbet` NBA code (own folder, own deps, own async runtime)
-and has two halves, joined by one artifact (`output/constraints.json`):
+The historical pipeline has two halves, joined by one artifact (`output/constraints.json`):
 
 ```
 backtest_thesis.py ──writes──▶ output/constraints.json ──read by──▶ live_engine.py
-   (prove the edge)              (the fitted parameters)            (fire alerts)
+   (measure the run environment)   (the fitted parameters)          (log / informational alerts)
 ```
 
 ## Install

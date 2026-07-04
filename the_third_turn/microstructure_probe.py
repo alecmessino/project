@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Microstructure probe — exploratory analysis of the live-banked panels.
 
-Runs on the runner-committed streams (output/{book,team_total,game_state}_panel.jsonl).
+Runs on the runner-committed streams (output/{book,team_total}_panel.jsonl).
 Every "finding" here is validated against the measurement process before it is believed;
 tonight's two candidate findings (cross-book leadership, cross-book divergence) BOTH
 dissolve under that scrutiny. See microstructure_notes.md for the write-up.

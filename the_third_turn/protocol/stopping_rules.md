@@ -2,7 +2,8 @@
 
 Objective gates, not "wait until it feels like enough." Each rule states the criteria that must
 *all* hold before a given analysis is permitted. Until then, the daemon **collects; it does not
-conclude.** `../microstructure_probe.py` prints the live status of these gates every run.
+conclude.** `../microstructure_probe.py` prints the live status of **SR-1** every run; SR-2 and
+SR-3 are forward gates whose counters are not yet instrumented.
 
 ## SR-1 · Cross-book leadership
 
@@ -18,7 +19,7 @@ this scale (SR born from the one-night sample where every estimate was an artifa
 and the July 3–4 entries in the decisions log). The synchronization bound exists because
 non-contemporaneous quotes measure nothing (S-11); tonight's median lag was ~3,663 s.
 
-## SR-2 · Distribution dynamics
+## SR-2 · Distribution dynamics *(forward gate — not yet active)*
 
 Higher-moment (variance / skew / tail) repricing analysis is permitted once:
 
@@ -29,12 +30,13 @@ This gate is looser than SR-1 because the implied-distribution panel is single-s
 and needs no cross-book synchronization — the scarce resource is *within-game continuity*, not
 overlap.
 
-## SR-3 · Real-line encompassing robustness (Paper 1 appendix)
+## SR-3 · Real-line encompassing robustness *(forward gate — planned Paper 1 appendix, not yet written)*
 
-The de-vigged-implied-mean robustness re-run is permitted once alternate-total strips are collected
-for **≥ 30 games**, enabling a distribution-free implied mean. Until then the parametric version
-(single line + de-vigged P(over) under an assumed run-total law) is the only available form and
-must be labelled as assumption-dependent.
+A distribution-free de-vigged-implied-mean robustness re-run of the encompassing test is permitted
+once alternate-total strips are collected for **≥ 30 games**. Until then only the parametric version
+(single line + de-vigged P(over) under an assumed run-total law) is available, and it must be
+labelled assumption-dependent. This gate corresponds to a *pre-submission checklist item*, not to
+anything currently in the manuscript.
 
 ## Discipline
 

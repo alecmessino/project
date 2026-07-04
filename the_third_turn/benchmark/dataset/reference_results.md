@@ -29,7 +29,7 @@ velocity, tier, park, weather ≤ 0). The market encompasses each feature jointl
 | Alternate-line skew | 5 Conditional | empirical < implied at every increment |
 | Early-run anchoring | 5 Conditional | market prices the climb (hit-driven bursts) |
 | Weather / park context | 5 Conditional | hitter-friendly Overs hit *less* (over-adjusted) |
-| Remaining-runs fatigue term | 6 Encompassing | ΔMAE −0.001; game state already suffices |
+| Remaining-runs fatigue term | 6 Encompassing | ΔMAE ≈ 0 (no improvement); game state already suffices |
 | **Forecast encompassing (all features)** | **6 Encompassing** | **book error not predictable OOS (R² −0.037)** |
 
 ## Transfer function (rung 7)
@@ -37,6 +37,6 @@ velocity, tier, park, weather ≤ 0). The market encompasses each feature jointl
 Every positive-run event lies on one common slope ≈ 0.74 through the origin (walk 0.63, double 0.64,
 single 0.72, home run 0.81, triple 0.84) — uniform attenuation consistent with single-source ~1-min
 measurement, not a per-event inefficiency. The market is approximately calibrated within the sample
-(remaining-runs model R² = 0.226; book error mean +0.49, symmetric, unpredictable).
+(remaining-runs model R² = 0.226; book error mean +0.49 but median 0 — right-skewed, and unpredictable).
 
 *All numbers are the committed values in `../../output/*.json`.*

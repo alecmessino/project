@@ -59,10 +59,11 @@ the accompanying paper — all eliminated at or before forecast encompassing.
 ## Safeguards and gates
 
 The rungs above are the spine; the specific checks that make each rung trustworthy are catalogued
-with IDs in [`safeguards.md`](safeguards.md), and each traces to a logged failure in
+with IDs in [`safeguards.md`](safeguards.md), and each traces to a logged failure, a review
+requirement, or a documented design risk recorded in
 [`../decisions/RESEARCH_DECISIONS_LOG.md`](../decisions/RESEARCH_DECISIONS_LOG.md). Analyses that
 depend on data volume (e.g. cross-book leadership) are gated by [`stopping_rules.md`](stopping_rules.md).
-Papers cite safeguards by ID ("following S-05 and S-11…").
+Papers may cite safeguards by ID ("following S-05 and S-11…").
 
 ## Provenance
 

@@ -186,12 +186,21 @@ def main() -> int:
                   "tier-only proxy (ignores velocity), it under-rates the Over in the velocity-cliff state by "
                   "~that much. The live Pinnacle distribution replaces the proxy to test if it ACTUALLY does.[/]")
 
+    def _n(x):  # NaN is not valid JSON — emit null instead
+        return None if isinstance(x, float) and x != x else x
     (HERE / "output" / "calibration.json").write_text(json.dumps({
         "n": len(rows), "K": K, "base_rate": round(float(y.mean()), 3),
-        "brier_tier": round(brier(p_base, y), 3), "brier_full": round(brier(p_full, y), 3),
+        "brier_tier": _n(round(brier(p_base, y), 3)), "brier_full": _n(round(brier(p_full, y), 3)),
         "auc_tier": round(auc(p_base, y), 3), "auc_full": round(auc(p_full, y), 3),
         "ece_full": round(ece(p_full, y), 3),
-        "residual_bigdrop_pts": round(float(100 * (y[big].mean() - p_base[big].mean())), 1)}, indent=2))
+        "residual_bigdrop_pts": round(float(100 * (y[big].mean() - p_base[big].mean())), 1),
+        # velocity-debiasing comparison (the numbers in the paper's Figure 5), on matched subsets:
+        "debias": {
+            "auc_tier_only": round(auc(p_base_v, yv), 3),          # 0.420  (n = len(have_vd))
+            "auc_biased_vel_drop": round(auc(p_vd, yv), 3),        # 0.610  post-treatment / survivorship
+            "auc_debiased_early": round(auc(p_ed, ye), 3),         # 0.524  pre-treatment early window
+            "n_vel_drop": len(have_vd), "n_early": len(have_ed),
+        }}, indent=2))
     return 0
 
 

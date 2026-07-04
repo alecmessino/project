@@ -339,8 +339,8 @@ leave-one-game-out forecast of remaining runs from our full feature set achieves
 R² of 0.279; the market-implied remaining total alone achieves 0.304; and combining the two changes
 R² by −0.017 — adding the features to the market does not improve, and slightly degrades, the
 forecast. The right panel shows the per-feature version of the same test (E+): each variable's
-individual incremental R² beyond the market falls inside a ±0.003 band (best case, bullpen, at
-+0.0018; velocity, starter tier, temperature, wind, and park at or below zero), so no single
+individual incremental R² beyond the market is at most +0.0018 (best case, bullpen); the rest are
+at or below zero, several materially so (park, temperature, and wind near −0.006), so no single
 variable hides behind the others. As the sharpest test, we regress the book's forecast error —
 realized minus market-implied remaining runs — directly on the features: it is not predictable
 out-of-sample, R² = −0.037. This is the central empirical result of the study. The difference is
@@ -424,7 +424,8 @@ Figure 7 closes the loop on the model side of the comparison. The left panel bin
 half-inning snapshots by market-implied remaining runs and plots the mean realized remaining runs in
 each bin: the points track the diagonal, so the market forecast is approximately calibrated within
 this sample (the underlying leave-one-game-out remaining-runs model, fit on 2,859 snapshots,
-reaches R² = 0.226, and adding fatigue terms changes its mean absolute error by −0.001 runs). The
+reaches R² = 0.226, and adding fatigue terms leaves its mean absolute error essentially unchanged —
+≈ 0.001 runs, if anything slightly worse). The
 right panel shows the distribution of the book's forecast error. Its *median is zero*, but its
 *mean is +0.49 runs* — the signature of a right-skewed remaining-runs distribution (skewness +1.23),
 in which a balanced betting line tracks the median outcome while realized runs and a least-squares
@@ -629,7 +630,7 @@ Referenced once from §4; Figure 2 is the main-text representation.
 | Alternate-line skew | Buy the fat upper tail at longer odds | Empirical win% vs efficient-implied | Priced | Empirical < implied at every half-run increment above the main line; tail priced fatter than realized |
 | Early-run anchoring | Live total under-reacts to a 1st-inning scoring burst | Post-1st Over, cause split | Priced | 49/50 bursts hit-driven (no fluky-runs population); market prices the change |
 | Weather / park | Books under-price hitter-friendly context | Conditional split | Priced | Hitter-friendly Overs hit *less* (46% < 50%): market over-adjusts for context |
-| Remaining-runs fatigue | Fatigue adds to a state model | Incremental MAE, LOGO | No increment | Game state already contains the information; ΔMAE −0.001 |
+| Remaining-runs fatigue | Fatigue adds to a state model | Incremental MAE, LOGO | No increment | Game state already contains the information; ΔMAE ≈ 0 (no improvement) |
 | **Forecast encompassing** | Does *anything* beat the market? | `Y~B+X`; `(Y−B)~X`; per-feature E+ | **Encompassed** | Book error not predictable from any feature out-of-sample (R² ≈ 0) |
 
 ---

@@ -182,25 +182,25 @@ def xbacktest(
 
 @app.command()
 def export(
-    source: str = typer.Option("yahoo", "--source", help="yahoo | polygon | synthetic"),
-    instrument: str = typer.Option(_universes.csv(_universes.EQUITIES), "--instrument"),
-    series: Optional[str] = typer.Option(None, "--series", help="multi-instrument CSV"),
     config: Optional[str] = typer.Option(None, "--config"),
-    out: str = typer.Option("docs/equities.html", "--out", help="static HTML exhibit path"),
+    out: str = typer.Option("docs/equities.html", "--out", help="static HTML dashboard path"),
     ledger: str = typer.Option("docs/ledger.json", "--ledger",
-                               help="forward-ledger JSON; when present, the 'Latest rebalance' blotter "
-                                    "is derived from ITS entries (single source of truth)"),
+                               help="Model Portfolio ledger JSON — the single source of truth the "
+                                    "operational dashboard projects (holdings, signals, rebalance, track)"),
 ):
-    """Build a self-contained static dashboard HTML (shareable, no server)."""
+    """Build the operational Core Alpha dashboard — a projection of the Model Portfolio ledger.
+
+    No independent data pull: the dashboard's holdings, signal strengths, statuses, last rebalance, and
+    performance chart all derive from the ledger, so they can never contradict the ledger page. Build the
+    ledger first (`drift ledger`)."""
+    from pathlib import Path as _P
     from .exhibit import export_html
     settings = _load_settings(config)
-    instruments = [s.strip() for s in instrument.split(",") if s.strip()]
-    series_dict = _universe(source, instruments, series)
-    if not series_dict and source != "synthetic":
-        console.print("[yellow]no data pulled (rate-limited?) — keeping existing exhibit.[/]")
+    if not _P(ledger).exists():
+        console.print(f"[yellow]no ledger at {ledger} — run `drift ledger` first. Keeping existing exhibit.[/]")
         raise typer.Exit()
-    path = export_html(series_dict, settings, out, source=source, ledger_path=ledger)
-    console.print(f"[green]wrote[/] {path}  ({len(series_dict)} instruments)")
+    path = export_html(ledger, settings, out)
+    console.print(f"[green]wrote[/] {path}")
 
 
 @app.command()
@@ -437,19 +437,15 @@ def tearsheet(
 
 @app.command()
 def serve(
-    source: str = typer.Option("yahoo", "--source", help="yahoo | polygon | synthetic"),
-    instrument: str = typer.Option(_universes.csv(_universes.EQUITIES), "--instrument"),
-    series: Optional[str] = typer.Option(None, "--series", help="multi-instrument CSV"),
+    ledger: str = typer.Option("docs/ledger.json", "--ledger", help="Model Portfolio ledger JSON"),
     config: Optional[str] = typer.Option(None, "--config"),
     host: str = typer.Option("127.0.0.1", "--host"),
     port: int = typer.Option(8000, "--port"),
 ):
-    """Serve the live dashboard for a universe."""
+    """Serve the live operational dashboard (a projection of the Model Portfolio ledger)."""
     from .web.server import serve as serve_dashboard
     settings = _load_settings(config)
-    instruments = [s.strip() for s in instrument.split(",") if s.strip()]
-    series_dict = _universe(source, instruments, series)
-    serve_dashboard(series_dict, settings, source=source, host=host, port=port)
+    serve_dashboard(ledger, settings, host=host, port=port)
 
 
 @app.command()

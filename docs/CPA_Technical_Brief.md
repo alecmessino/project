@@ -1,7 +1,7 @@
 # Structural Alpha — Technical Brief for CPAs and Tax Advisors
 
 **Audience:** the client's accountant / tax advisor (the gatekeeper). **Purpose:** explain, in
-quantitative and mechanical terms, where Driftwood / CWS Planning generates measurable value for a
+quantitative and mechanical terms, where Driftwood generates measurable value for a
 taxable household — and to be precise about what that value is and is not. **Tone:** institutional;
 no marketing claims. Companion to the client-facing **Tax-Leakage Diagnostic** (`leakage.html`) and the
 canonical **`Structural_Alpha_Methodology.md`**.
@@ -120,7 +120,7 @@ substitutes and any duplicate holdings in *other* accounts (including a spouse's
 | Deliberate factor **exposure** (engineered beta) as a risk-premia choice. | That the factor tilt **will out-perform** the market. |
 | The momentum research is honest **proof of work**, demoted to a research satellite. | A market-timing or signal edge — it ships neutral. |
 
-Driftwood is a research brand of **CWS Planning**, a **registered investment adviser**; Form ADV and
+Driftwood is a **registered investment adviser**; Form ADV and
 Form CRS are available at adviserinfo.sec.gov. Performance figures herein are **hypothetical /
 backtested** (retroactive application of a model to historical data; no client capital was invested;
 past performance does not guarantee future results).

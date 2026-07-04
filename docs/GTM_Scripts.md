@@ -98,7 +98,7 @@ mechanics in filing language, with the substantiation boundary.)
 >
 > Open to a 20-minute call to see whether a referral relationship makes sense?
 >
-> [Name] · CWS Planning (a registered investment adviser) · fee-only fiduciary
+> [Name] · Driftwood (a registered investment adviser) · fee-only fiduciary
 
 *Compliance note:* keep the "not taking your clients" framing; the operational claims (ST-share,
 turnover) are engine outputs documented in `CPA_Technical_Brief.md`; the diagnostic carries its own
@@ -156,5 +156,5 @@ diagnostic + a proper disclosure. Confirm the firm's policy on personal-network 
 - [ ] Number framed as **"up to ~X%/yr, illustrative,"** gated behind the diagnostic — never asserted.
 - [ ] **After-tax / structural** claim only — no pre-tax outperformance, no stock-picking edge.
 - [ ] Protection is **referral-only** — no product sale, no commission, fee-only intact.
-- [ ] RIA identity available (CWS Planning, registered investment adviser; ADV/CRS at adviserinfo.sec.gov).
+- [ ] RIA identity available (Driftwood, registered investment adviser; ADV/CRS at adviserinfo.sec.gov).
 - [ ] Principal sign-off + advertising recordkeeping (Rule 204-2) before send.

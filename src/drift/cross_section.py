@@ -511,6 +511,7 @@ class CrossBacktestResult:
     turnover: float
     avg_names_held: float
     equity_curve: list[float] = field(default_factory=list)
+    dates: list[str] = field(default_factory=list)   # per-bar dates parallel to equity_curve
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -539,7 +540,7 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
     bpy = settings.engine.bars_per_year
     instruments = list(series)
     if not instruments:
-        return CrossBacktestResult(instruments, 0, 0, 0, 0, 0, 0, 0, 0, [])
+        return CrossBacktestResult(instruments, 0, 0, 0, 0, 0, 0, 0, 0, [], [])
 
     length = min(len(bars) for bars in series.values())
     rebalance = max(1, cs.rebalance_bars)
@@ -550,6 +551,8 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
     entry_idx: dict[str, int] = {}          # bar index a held name was entered (for lot aging)
     gross_eq = net_eq = 1.0
     net_curve: list[float] = []
+    net_dates: list[str] = []
+    _anchor = series[instruments[0]]           # any aligned series dates the book (bars share an index)
     net_rets: list[float] = []
     turnover = 0.0
     held_counts: list[int] = []
@@ -598,6 +601,7 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
         gross_eq *= (1.0 + gross_pnl)
         net_eq *= (1.0 + net_pnl)
         net_curve.append(net_eq)
+        net_dates.append(_anchor[i + 1].asof)
         net_rets.append(net_pnl)
         held_counts.append(held)
 
@@ -617,4 +621,5 @@ def cross_backtest(series: dict[str, list[Bar]], settings: Settings) -> CrossBac
         turnover=turnover,
         avg_names_held=(sum(held_counts) / len(held_counts)) if held_counts else 0.0,
         equity_curve=[round(v, 6) for v in net_curve],
+        dates=net_dates,
     )

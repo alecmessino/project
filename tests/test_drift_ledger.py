@@ -79,7 +79,8 @@ def test_zero_weight_positions_are_filtered_from_the_book():
     st = L.build_ledger_state(led)
     names = [p["instrument"] for p in st["positions"]]
     assert "AVDV" not in names and "AVEE" not in names
-    assert all(abs(p["weight"]) > 0 for p in st["positions"])      # only active allocations shown
+    # positions carry the explicit "portfolio_weight" field (never a bare, ambiguous "weight")
+    assert all("weight" not in p and abs(p["portfolio_weight"]) > 0 for p in st["positions"])
 
 
 def test_realized_return_marks_prior_weights():

@@ -1,6 +1,6 @@
 # Disclosure Placement Change Log — for RIA Principal Sign-Off
 
-**Date:** 2026-06-28 · **Requested by:** CWS Planning principal · **Change:** make disclosures
+**Date:** 2026-06-28 · **Requested by:** Driftwood principal · **Change:** make disclosures
 "maximal subtle" while remaining defensibly compliant with SEC Marketing Rule 206(4)-1.
 
 This records exactly what was de-emphasized so the principal can review and sign off. **No required

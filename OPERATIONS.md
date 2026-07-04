@@ -1,6 +1,6 @@
 # Driftwood — Operations Runbook
 
-Continuity guide for the Driftwood site (CWS Planning's client-facing brand). The architecture lives in
+Continuity guide for the Driftwood site. The architecture lives in
 `README_DRIFT.md`; the compliance posture in `docs/Structural_Alpha_Methodology.md`. This is the
 **how-to-run-it** so the site survives a maintainer handoff.
 
@@ -101,5 +101,5 @@ canonicals before DNS is live:**
 - **Lost/corrupt `tests/data/matrix_history.json`** → `TILT_SWEEP_REFRESH=1 python scripts/tilt_sweep.py`
   re-pulls and rewrites the cache (needs `TIINGO_API_KEY`); then regenerate STATE_ALPHA (above).
 - **Domain**: the site currently serves from `alecmessino.github.io/project/` (canonical/OG URLs point
-  there). Moving to `cwsplanning.com` is a deferred consolidation — update the canonical/OG base in the
+  there). Moving to a firm domain (e.g. `driftwoodplanning.com`) is a deferred consolidation — update the canonical/OG base in the
   templates + `sitemap.xml`/`robots.txt` and add a 301.

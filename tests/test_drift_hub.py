@@ -75,16 +75,17 @@ def test_value_adds_sourced_and_fair_and_balanced(tmp_path):
         "x window.__STATE__ = " + json.dumps(ts_state) + ";\n y")
     va = build_hub(tmp_path)["value_adds"]
     tags = [v["tag"] for v in va]
-    assert any("Tax" in t for t in tags)            # 1 · tax + fee optimization
-    assert any("Risk" in t for t in tags)           # 2 · risk-managed, paired with its drawdown
-    assert any("decades" in t for t in tags)        # 3 · out-of-sample honesty
-    tax = next(v for v in va if "Tax" in v["tag"])
-    assert tax["stat"].startswith("+") and "%/yr" in tax["stat"]   # leads with the RECOVERY band…
-    assert "−14%" in tax["note"]                    # …with the drag it plugs as context, not headline
-    risk = next(v for v in va if "Risk" in v["tag"])
-    assert "−15%" in risk["note"]                   # this track's own drawdown, shown beside Sharpe
-    oos = next(v for v in va if "decades" in v["tag"])
-    assert "59%" in oos["note"]                     # the long-backtest worst loss, disclosed
+    # The three architecture pillars (process-led), each figure appearing once.
+    assert any("Structural Alpha" in t for t in tags)   # 1 · the flagship (taxable wealth)
+    assert any("Core Alpha" in t for t in tags)         # 2 · the tactical engine (tax-advantaged)
+    assert any("Tax-location" in t for t in tags)       # 3 · the moat that routes them
+    flag = next(v for v in va if "Structural Alpha" in v["tag"])
+    assert flag["stat"].startswith("+") and "%/yr" in flag["stat"]   # leads with the tax-recovery band
+    core = next(v for v in va if "Core Alpha" in v["tag"])
+    assert "persist" in core["note"].lower()            # persistence framing, not a Sharpe race
+    assert "1.35" in core["note"]                       # the current hypothetical track is CONTEXT, in the note
+    loc = next(v for v in va if "Tax-location" in v["tag"])
+    assert "9% → 41%" in loc["stat"]                    # the de-villained tax-naive vs tax-managed before/after
 
 
 def test_build_hub_reads_tearsheet_drawdown_headline(tmp_path):
@@ -109,20 +110,20 @@ def test_render_hub_embeds_state(tmp_path):
 
 
 def test_hub_funnel_leads_with_structural_alpha_and_demotes_momentum_to_appendix(tmp_path):
-    # Structural Alpha pivot: the primary funnel leads with the structural narrative (Thesis, Tax Lab);
-    # the momentum exhibits (ledger, tearsheet, dashboard, case studies) are relegated to an honestly
-    # labeled "Exploratory research" appendix — proof of work, not the deployed strategy.
+    # Architecture framing: the primary funnel is the flagship Structural Alpha + tax-location tools
+    # (Thesis, Tax Lab); the Core Alpha (momentum) hypothetical model portfolios sit in a labeled
+    # "Core Alpha Research" appendix — the tactical engine, not the deployed taxable-account strategy.
     state = build_hub(tmp_path)
     by_href = {e["href"]: e for e in state["exhibits"]}
     # primary funnel — NOT appendix
     assert by_href["thesis.html"]["appendix"] is False
     assert by_href["taxlab.html"]["appendix"] is False
-    # exploratory research — appendix
+    # Core Alpha research — appendix
     for h in ("ledger.html", "tearsheet.html", "equities.html", "equities_case_studies.html"):
-        assert by_href[h]["appendix"] is True, f"{h} should be in the exploratory-research appendix"
-    # the momentum exhibits are described as exploratory research, not the deployed book
-    assert "Exploratory research" in by_href["ledger.html"]["desc"]
-    assert "Exploratory research" in by_href["equities.html"]["desc"]
+        assert by_href[h]["appendix"] is True, f"{h} should be in the Core Alpha Research appendix"
+    # the momentum exhibits are described as Core Alpha Research, not the deployed book
+    assert "Core Alpha Research" in by_href["ledger.html"]["desc"]
+    assert "Core Alpha Research" in by_href["equities.html"]["desc"]
 
 
 def test_hero_leads_with_the_structural_alpha_before_after(tmp_path):
@@ -150,11 +151,11 @@ def test_raw_model_return_is_research_tagged_for_the_appendix(tmp_path):
     assert "data through 2026-06-29" in mp["sub"]                  # the figure is always dated
 
 
-def test_hub_template_renders_an_exploratory_research_appendix_and_does_not_lead_with_the_ledger():
+def test_hub_template_renders_a_core_alpha_research_appendix_and_does_not_lead_with_the_ledger():
     from drift.exhibit import HUB_TEMPLATE
     t = HUB_TEMPLATE.read_text()
     # a distinct, labeled appendix section exists, separate from the primary exhibit grid
-    assert "exhibits-appendix" in t and "Exploratory research" in t
+    assert "exhibits-appendix" in t and "Core Alpha Research" in t
     assert "Structural Alpha" in t
     # the hero no longer leads with the momentum "track record"
     assert "View the track record" not in t

@@ -32,6 +32,7 @@ class BacktestResult:
     turnover: float           # sum of |weight changes|
     avg_exposure: float       # mean |weight| while in a position
     equity_curve: list[float] = field(default_factory=list)
+    dates: list[str] = field(default_factory=list)   # per-bar dates parallel to equity_curve
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -133,6 +134,7 @@ def backtest(instrument: str, bars: Sequence[Bar], settings: Settings) -> Backte
     prev_weight = 0.0
     gross_eq, net_eq = 1.0, 1.0
     net_curve: list[float] = []
+    net_dates: list[str] = []
     net_rets: list[float] = []
     n_trades = 0
     turnover = 0.0
@@ -146,6 +148,7 @@ def backtest(instrument: str, bars: Sequence[Bar], settings: Settings) -> Backte
         gross_eq *= (1.0 + st.weight * st.asset_ret)
         net_eq *= (1.0 + st.net_ret)
         net_curve.append(net_eq)
+        net_dates.append(st.asof)
         net_rets.append(st.net_ret)
         if abs(st.weight) > 1e-9:
             active += 1
@@ -172,4 +175,5 @@ def backtest(instrument: str, bars: Sequence[Bar], settings: Settings) -> Backte
         turnover=turnover,
         avg_exposure=(sum(active_exposures) / len(active_exposures)) if active_exposures else 0.0,
         equity_curve=[round(v, 6) for v in net_curve],
+        dates=net_dates,
     )

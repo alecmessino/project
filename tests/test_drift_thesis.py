@@ -39,9 +39,11 @@ def test_build_thesis_degrades_without_files(tmp_path):
     json.dumps(s)
 
 
-def test_render_thesis_embeds_state_and_mentions_the_name(tmp_path):
+def test_render_thesis_embeds_state_and_frames_the_architecture(tmp_path):
     _write_tearsheet(tmp_path)
     html = render_thesis(build_thesis(tmp_path))
     assert "/*__STATE__*/null/*__END__*/" not in html
     assert html.lstrip().startswith("<!DOCTYPE html>")
-    assert "The name" in html and "geometric Brownian" in html  # naming section present
+    # the two-engine architecture spine + the (compressed) origin of the name
+    assert "The architecture" in html and "Core Alpha — the tactical engine" in html
+    assert "driftwood" in html.lower()

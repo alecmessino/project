@@ -48,15 +48,16 @@ jobs:
       - name: Advance forward ledger (docs/ledger.*)
         run: drift ledger --config config/drift.yaml
 
-      # Universe is the curated region × factor matrix (single source: drift.universes).
+      # Case studies pull the curated region × factor matrix (educational backtests). The operational
+      # dashboard does NOT pull — it projects the Model Portfolio ledger (built above), so its holdings,
+      # signals, rebalance and track can never contradict the ledger page (single source of truth).
       - name: Build equity exhibits (docs/equities*.html)
         run: |
           EQUITIES=$(python -c "from drift.universes import EQUITIES, csv; print(csv(EQUITIES))")
           echo "universe: $EQUITIES"
           drift studies --source yahoo --instrument "$EQUITIES" \
             --config config/drift.yaml --out docs/equities_case_studies.html
-          drift export --source yahoo --instrument "$EQUITIES" \
-            --config config/drift.yaml --out docs/equities.html
+          drift export --config config/drift.yaml --ledger docs/ledger.json --out docs/equities.html
 
       # Heaviest pull last (40y deep history); degrades gracefully (keeps prior tearsheet) if thin.
       - name: Build long-history tearsheet (docs/tearsheet.html)

@@ -15,18 +15,18 @@ from pathlib import Path
 from typing import Optional
 
 # (title, file, blurb, appendix) — order is the order shown on the hub. The primary funnel
-# (appendix=False) leads with Structural Alpha; the momentum exhibits are relegated to an honestly
-# labeled "Exploratory research" appendix (appendix=True) — proof-of-work, not the deployed strategy.
+# (appendix=False) is the flagship Structural Alpha + the tax-location tools; the Core Alpha (momentum)
+# engine's hypothetical model portfolios sit in a "Core Alpha Research" appendix (appendix=True).
 EXHIBITS = [
     ("Thesis & approach", "thesis.html",
-     "How Structural Alpha works — deliberate factor exposure (engineered beta) plus mechanical tax "
-     "management — and the honest research behind the name.", False),
+     "The architecture: two return engines (Structural Alpha for taxable wealth, Core Alpha for "
+     "tax-advantaged capital) routed by one tax-location engine into a single after-tax portfolio.", False),
     ("Tax Lab", "taxlab.html",
      "Holistic asset-location engine: after-tax return, three-account placement (taxable / Traditional / "
      "Roth), estate step-up, and tax-loss harvesting — personalized by bracket and state.", False),
     ("Tax-Leakage Diagnostic", "leakage.html",
-     "The one-page Before/After: where a concentrated, high-turnover book leaks return to tax, and how "
-     "Structural Alpha plugs it — the quantified tax edge on an identical exposure.", False),
+     "The one-page Before/After: where a concentrated, high-turnover book leaks return to tax, and how the "
+     "tax-location engine plugs it — the quantified tax edge on an identical exposure.", False),
     ("State Tax Map", "statemap.html",
      "Fifty states, seven dimensions — capital gains, marriage, estate, munis, QSBS, losses, and basis "
      "step-up — plus the Structural Alpha our engine recovers from each state's tax landscape.", False),
@@ -36,18 +36,18 @@ EXHIBITS = [
     ("Single asset risk", "concentration.html",
      "How to de-risk a concentrated stock position: 22 strategies across selling, harvesting, hedging, "
      "deferring, and giving — scored on liquidity, speed, fees, tax cost, customization, and simplicity.", False),
-    ("Model Portfolio (hypothetical)", "ledger.html",
-     "Exploratory research — a hypothetical, append-only momentum backtest marked daily, with alpha/beta "
-     "attribution. Not the deployed strategy, not actual trading or any client account.", True),
+    ("Core Alpha book (hypothetical)", "equities.html",
+     "Core Alpha Research — the current book: what the hypothetical Model Portfolio holds now, its signal "
+     "strength by sleeve, the last rebalance in and out, and the dated track.", True),
+    ("Model Portfolio ledger", "ledger.html",
+     "Core Alpha Research — the append-only historical record: every change, every mark, with alpha/beta "
+     "attribution. A hypothetical backtest, not actual trading or any client account.", True),
     ("Model Portfolio · long history", "tearsheet.html",
-     "Exploratory research — the momentum model across decades of daily history: strategy vs buy-and-hold, "
-     "fit in-sample and reported out-of-sample.", True),
-    ("Dashboard", "equities.html",
-     "Exploratory research — the momentum engine's signals, the relative-strength ranking, and per-name "
-     "backtests across the matrix.", True),
-    ("Case studies", "equities_case_studies.html",
-     "Exploratory research — five momentum backtests: time-series, cross-sectional, lookback & cost "
-     "sensitivity, and a control.", True),
+     "Core Alpha Research — the model across decades of daily history: strategy vs buy-and-hold, fit "
+     "in-sample and reported out-of-sample (it survived the fit nearly unchanged).", True),
+    ("Research studies", "equities_case_studies.html",
+     "Core Alpha Research — educational backtests on why the engine behaves as it does: time-series, "
+     "cross-sectional, lookback & cost sensitivity, and a no-trend control.", True),
 ]
 
 
@@ -140,57 +140,58 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
                 "tone": "neutral",
             })
 
-    # ── Value-adds: the few things an investor actually weighs, each sourced from real exhibit
-    # state and kept fair-and-balanced (every performance figure carries its risk and a hypothetical
-    # label). Cards degrade gracefully — absent when their source exhibit isn't built yet.
+    # ── Value-adds: the three pillars of the architecture, process-led. Each number appears ONCE across
+    # the whole hub (no repeated figures), and each performance figure carries its risk + a hypothetical
+    # label. Cards degrade gracefully — absent when their source exhibit isn't built yet.
     hdr = (led_state or {}).get("header", {})
     benches = (led_state or {}).get("benchmarks", [])
-    # 1 · Tax + fee optimization — lead with the RECOVERY (the edge), not the bare drag; the drag is
-    # the context inside the note, anchored to the model's own before/after.
-    if hdr.get("tax_drag") is not None and hdr.get("after_tax_total_return") is not None:
-        value_adds.append({
-            "tag": "Tax + fee optimization",
-            "title": "We recover the tax drag — not chase return.",
-            "stat": f"+{hero['alpha_low']:.1f}–{hero['alpha_high']:.1f}%/yr",
-            "stat_label": "illustrative after-tax return recovered (Structural Alpha) · no-tax states → California",
-            "note": f"The leak it plugs, on the model's own track: {hdr.get('total_return', 0)*100:.0f}% "
-                    f"pre-tax became {hdr['after_tax_total_return']*100:.0f}% after tax "
-                    f"(−{hdr['tax_drag']*100:.0f}%). Asset location across taxable / Traditional / Roth plus "
-                    "tax-loss harvesting recovers a share of exactly that. Illustrative — your figures "
-                    "depend on your situation.",
-        })
-    # 2 · Risk-managed — from the live track, paired with its drawdown (fair-and-balanced by construction).
-    if hdr.get("sharpe") is not None and benches and own_dd is not None:
-        bench_sh = " / ".join(f"{b.get('sharpe', 0):.2f}" for b in benches[:2])
-        bench_lbl = " / ".join(b.get("label", "") for b in benches[:2])
-        dd_self = own_dd
-        bench_dd = " / ".join(f"−{b.get('max_drawdown', 0)*100:.0f}%" for b in benches[:2])
-        value_adds.append({
-            "tag": "Risk-managed, not return-chasing",
-            "title": "Kept pace with equities — at a shallower drawdown.",
-            "stat": f"{hdr['sharpe']:.2f}",
-            "stat_label": f"Sharpe vs {bench_sh} for {bench_lbl} buy-and-hold",
-            "note": f"Worst drawdown −{dd_self*100:.0f}% vs {bench_dd} over the same window. "
-                    "Hypothetical model track, not a client account.",
-        })
-    # 3 · Out-of-sample honesty — the 0.65 means nothing bare; its story is the COMPARISON: the
-    # out-of-sample number held up against the in-sample fit (no flattery), with the drawdown disclosed.
+
+    # 1 · Structural Alpha — the flagship (taxable wealth). Lead with the process; the tax-location
+    # recovery is the supporting number.
+    value_adds.append({
+        "tag": "Structural Alpha · the flagship",
+        "title": "Engineered beta, mechanically tax-managed.",
+        "stat": f"+{hero['alpha_low']:.1f}–{hero['alpha_high']:.1f}%/yr",
+        "stat_label": "illustrative after-tax recovery, by state · no-tax states → California",
+        "note": "Diversified factor exposure (small / value / international), held on purpose and run "
+                "through lot protection, harvesting, and asset location — low turnover, built for "
+                "taxable accounts. Illustrative; your figure depends on your bracket and holdings.",
+    })
+
+    # 2 · Core Alpha — the tactical engine (tax-advantaged capital). The strongest honest stat is that
+    # it survived out-of-sample nearly unchanged (no overfit); the current hypothetical track is context.
     if ts and ts.get("books"):
         bk = ts["books"][0]
-        s, b, o = bk["strategy"], bk["benchmark"], bk["oos"]["test"]
+        o = bk["oos"]["test"]
         tr = (bk["oos"].get("train") or {}).get("sharpe")
-        stat = f"{o['sharpe']:.2f} ≈ {tr:.2f}" if tr is not None else f"{o['sharpe']:.2f}"
-        stat_label = ("out-of-sample vs in-sample Sharpe — the fit didn't flatter · multi-decade backtest"
-                      if tr is not None else "out-of-sample Sharpe · multi-decade backtest, after the fit")
+        robust = f"{o['sharpe']:.2f} ≈ {tr:.2f}" if tr is not None else f"{o['sharpe']:.2f}"
+        cur = ""
+        if hdr.get("sharpe") is not None and benches:
+            bench_sh = " / ".join(f"{b.get('sharpe', 0):.2f}" for b in benches[:2])
+            bench_lbl = " / ".join(b.get("label", "") for b in benches[:2])
+            cur = (f" The current hypothetical track runs at Sharpe {hdr['sharpe']:.2f} "
+                   f"(vs {bench_sh} for {bench_lbl}) — a separate, shorter window.")
         value_adds.append({
-            "tag": "Stress-tested across decades",
-            "title": "We report the number after the fit.",
-            "stat": stat,
-            "stat_label": stat_label,
-            "note": f"Through a worst-case −{s['max_drawdown']*100:.0f}% drawdown "
-                    f"(vs −{b['max_drawdown']*100:.0f}% buy-and-hold). We show the figure after the fit, "
-                    "including the worst loss — not just the in-sample curve.",
+            "tag": "Core Alpha · the tactical engine",
+            "title": "Built to persist, not to overfit.",
+            "stat": robust,
+            "stat_label": "out-of-sample ≈ in-sample Sharpe over decades — the fit didn't flatter",
+            "note": "We optimize for persistence, not peak historical Sharpe; out-of-sample stayed "
+                    "positive after decades of testing." + cur + " High-turnover — for tax-advantaged "
+                    "accounts. A hypothetical backtest, not a client account.",
         })
+
+    # 3 · Tax-location — the engine that routes them (the moat). The before/after is the same exposure,
+    # tax-naive vs tax-managed (NOT a jab at either return engine).
+    value_adds.append({
+        "tag": "Tax-location · where each dollar lives",
+        "title": "The account is the decision that compounds.",
+        "stat": f"{hero['keep_before']}% → {hero['keep_after']}%",
+        "stat_label": f"share of a {hero['horizon']}-year gain kept after tax — the same exposure, tax-naive vs tax-managed",
+        "note": "Routing the high-turnover engine to tax-advantaged capital and the diversified book to "
+                "taxable — then harvesting and protecting lots — is the part that's hard to copy. "
+                "Federal-only illustration; not a forecast.",
+    })
 
     exhibits = [{"title": t, "href": h, "desc": d, "present": (docs / h).exists(), "appendix": ap}
                 for t, h, d, ap in EXHIBITS]

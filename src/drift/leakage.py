@@ -105,7 +105,7 @@ def build_leakage() -> dict:
                      "pretax_before": 9.4, "pretax_after": 9.1},
         "before": {
             "label": "Concentrated · high-turnover",
-            "sub": "A legacy momentum / concentrated book in a taxable account, taxed naively.",
+            "sub": "A concentrated, high-turnover book in a taxable account, taxed naively.",
             "st_share": 96, "turnover": 371,
             "atc_low": 0.4, "atc_high": 2.7,         # after-tax CAGR, CA → federal-only
             "keep_pct": 9,                            # keeps 9% of the 30y pre-tax gain after tax

@@ -58,8 +58,8 @@ def test_leakage_template_carries_the_structural_alpha_and_compliance_framing():
 def test_leakage_is_in_the_primary_funnel_not_the_research_appendix(tmp_path):
     state = build_hub(tmp_path)
     lk = next(e for e in state["exhibits"] if e["href"] == "leakage.html")
-    assert lk["appendix"] is False                 # it leads with Structural Alpha, not proof-of-work
-    assert "Structural Alpha" in lk["desc"]
+    assert lk["appendix"] is False                 # it's a flagship tax tool, not Core Alpha research
+    assert "tax" in lk["desc"].lower()             # the quantified tax edge (the tax-location engine)
 
 
 def test_state_alpha_table_covers_states_and_matches_the_static_anchors():

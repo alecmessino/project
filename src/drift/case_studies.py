@@ -64,29 +64,39 @@ def _metric(label: str, value: str, tone: str = "neutral") -> dict:
     return {"label": label, "value": value, "tone": tone}
 
 
-def _equal_weight_equity(curves: list[list[float]]) -> list[float]:
-    """Equal-weight, rebalanced-each-bar portfolio equity from per-name curves."""
-    curves = [c for c in curves if len(c) > 1]
-    if not curves:
-        return []
-    length = min(len(c) for c in curves)
-    rets = [[(c[i] / c[i - 1] - 1.0) if c[i - 1] else 0.0 for i in range(1, length)] for c in curves]
+def _spark_pair(values: list, dates: list) -> dict:
+    """A dated sparkline payload: downsampled equity values + a parallel dated x-axis."""
+    return {"values": _spark(values), "dates": _spark(dates)}
+
+
+def _equal_weight_equity(curves: list[list[float]],
+                         date_lists: list[list[str]] | None = None) -> tuple[list[float], list[str]]:
+    """Equal-weight, rebalanced-each-bar portfolio equity from per-name curves, plus a dated x-axis
+    (the dates of the shortest curve, which defines the index-aligned window)."""
+    date_lists = date_lists or [[] for _ in curves]
+    pairs = [(c, d) for c, d in zip(curves, date_lists) if len(c) > 1]
+    if not pairs:
+        return [], []
+    length = min(len(c) for c, _ in pairs)
+    ref_dates = min((d for _, d in pairs if len(d) >= length), key=len, default=[])
+    rets = [[(c[i] / c[i - 1] - 1.0) if c[i - 1] else 0.0 for i in range(1, length)] for c, _ in pairs]
     eq = [1.0]
     for t in range(length - 1):
         avg = sum(r[t] for r in rets) / len(rets)
         eq.append(eq[-1] * (1.0 + avg))
-    return eq
+    return eq, list(ref_dates[:length])
 
 
 def study_timeseries(series: dict[str, list[Bar]], settings: Settings) -> dict:
-    rows, curves, nets = [], [], []
+    rows, curves, datelists, nets = [], [], [], []
     for inst, bars in sorted(series.items()):
         bt = backtest(inst, bars, settings)
         rows.append([inst, f"{bt.net_return*100:+.1f}%", f"{bt.sharpe:.2f}",
                      f"{bt.max_drawdown*100:.1f}%", str(bt.n_trades)])
         curves.append(bt.equity_curve)
+        datelists.append(bt.dates)
         nets.append(bt.net_return)
-    eq = _equal_weight_equity(curves)
+    eq, eq_dates = _equal_weight_equity(curves, datelists)
     agg_net = (eq[-1] - 1.0) if eq else 0.0
     win = sum(1 for n in nets if n > 0)
     return {
@@ -100,7 +110,7 @@ def study_timeseries(series: dict[str, list[Bar]], settings: Settings) -> dict:
             _metric("Worst name", f"{min(nets)*100:+.1f}%" if nets else "—", "neg"),
         ],
         "table": {"columns": ["Instrument", "Net", "Sharpe", "Max DD", "Trades"], "rows": rows},
-        "equity": _spark(eq),
+        "equity": _spark_pair(eq, eq_dates),
     }
 
 
@@ -118,7 +128,7 @@ def study_cross(series: dict[str, list[Bar]], settings: Settings) -> dict:
             _metric("Turnover", f"{xbt.turnover:.1f}"),
         ],
         "table": None,
-        "equity": _spark(xbt.equity_curve),
+        "equity": _spark_pair(xbt.equity_curve, xbt.dates),
     }
 
 
@@ -142,7 +152,7 @@ def study_cross_neutral(series: dict[str, list[Bar]], settings: Settings,
             _metric("Turnover", f"{xbt.turnover:.1f}"),
         ],
         "table": None,
-        "equity": _spark(xbt.equity_curve),
+        "equity": _spark_pair(xbt.equity_curve, xbt.dates),
     }
 
 
@@ -236,10 +246,11 @@ def build_report(series: dict[str, list[Bar]], settings: Settings, source: str =
     n_bars = max((len(b) for b in series.values()), default=0)
     return {
         "header": {
-            "title": "Driftwood — backtest case studies",
+            "title": "Driftwood — Core Alpha research studies",
             "source": source,
             "universe": ", ".join(sorted(series)) or "synthetic only",
             "n_instruments": len(series),
+            "n_studies": len(studies),
             "n_bars": n_bars,
             "generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
             "model": f"lookback {settings.signal.lookback} · vol {settings.signal.vol_window} "

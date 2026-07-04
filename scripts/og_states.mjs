@@ -1,4 +1,4 @@
-// Per-state Open-Graph share cards (1200x630) for the state landing pages.
+// Per-state Open-Graph share cards (1200x630) for the state landing pages. Erode = brand display face.
 // Reads a JSON array of {code,name,alpha,rate} (arg or default scratch path) and writes
 // docs/og/states/<code>.png. Re-run after a brand/copy change:  node scripts/og_states.mjs <data.json>
 import pkg from '/home/user/project/node_modules/playwright-core/index.js';
@@ -15,7 +15,7 @@ fs.mkdirSync(OUT, { recursive: true });
 const rows = JSON.parse(fs.readFileSync(DATA, 'utf8'));
 
 const card = (r) => `<!doctype html><html><head><meta charset="utf-8"><style>
-  @font-face{font-family:'Moret';font-weight:700;src:url("${FONTS}/moret-700.woff2") format("woff2")}
+  @font-face{font-family:'Erode';font-weight:700;src:url("${FONTS}/erode-700.woff2") format("woff2")}
   @font-face{font-family:'Inter';font-weight:400;src:url("${FONTS}/inter-400.woff2") format("woff2")}
   @font-face{font-family:'Inter';font-weight:600;src:url("${FONTS}/inter-600.woff2") format("woff2")}
   @font-face{font-family:'Inter';font-weight:700;src:url("${FONTS}/inter-700.woff2") format("woff2")}
@@ -27,7 +27,7 @@ const card = (r) => `<!doctype html><html><head><meta charset="utf-8"><style>
   .brand{font-family:'Inter';font-weight:700;font-size:30px;letter-spacing:-.01em}
   .brand .w{color:#15806a}
   .kicker{margin-top:50px;color:#9a7b3e;font-weight:700;font-size:21px;letter-spacing:.14em;text-transform:uppercase}
-  h1{font-family:'Moret','Georgia',serif;font-weight:700;font-size:70px;line-height:1.03;letter-spacing:-.02em;margin-top:16px;max-width:1010px}
+  h1{font-family:'Erode','Georgia',serif;font-weight:700;font-size:70px;line-height:1.03;letter-spacing:-.02em;margin-top:16px;max-width:1010px}
   .stat{margin-top:26px;display:flex;align-items:baseline;gap:16px}
   .stat .n{font-family:'Inter';font-weight:700;font-size:60px;color:#15806a;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
   .stat .l{font-size:23px;color:#41454c;max-width:560px;line-height:1.3}

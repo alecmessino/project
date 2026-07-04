@@ -19,7 +19,10 @@
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:22px; --s6:30px;
   --r1:7px; --r2:9px; --r3:10px; --r4:12px; --rfull:999px;
   --sh1:0 1px 3px rgba(20,20,26,.06); --sh2:0 8px 30px rgba(20,20,26,.12);
+  --sh-hover:0 10px 26px -12px rgba(20,18,12,.42);
   --t-fast:.12s ease; --t-mid:.2s ease;
+  /* Organic easing for tactile hover/lift micro-interactions. */
+  --ease-out:cubic-bezier(.2,.8,.2,1);
   /* Erode is the brand face: editorial display (H1–H3) AND body/prose. Inter (--sans) is retained
      ONLY for dense UI — nav, tables, tabular numbers, form controls — where a serif reads poorly. */
   --serif:'Erode','Georgia','Times New Roman',serif;   /* brand face — display + body/prose */
@@ -44,7 +47,12 @@ a{ color:var(--accent); }
    need a contrasting ring (e.g. SVG map tiles on a dark fill) can still override locally. */
 :focus-visible{ outline:2px solid var(--accent,#15806a); outline-offset:2px; }
 a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,
-input:focus-visible,[tabindex]:focus-visible{ outline:2px solid var(--accent,#15806a); outline-offset:2px; }
+input:focus-visible,textarea:focus-visible,[tabindex]:focus-visible,[role="tab"]:focus-visible,
+[role="button"]:focus-visible{ outline:2px solid var(--accent,#15806a); outline-offset:2px; }
+/* Keyboard users get the ring; mouse/touch clicks do NOT (no lingering outline after a tap). */
+a:focus:not(:focus-visible),button:focus:not(:focus-visible),summary:focus:not(:focus-visible),
+select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
+[role="tab"]:focus:not(:focus-visible){ outline:none; }
 
 /* ── Shared persistent nav (rendered on every page) ─────────────────────────────────────────
    The brand wordmark links home and the section links give lateral wayfinding, so no page is a
@@ -64,9 +72,56 @@ input:focus-visible,[tabindex]:focus-visible{ outline:2px solid var(--accent,#15
   border-bottom-color:var(--brass,#a9853f); }
 @media (max-width:620px){ .dwnav{ padding:11px 16px; gap:8px 14px; } .dwnav-links{ gap:6px 14px; } }
 
-/* Horizontal-scroll wrapper for wide data tables on narrow screens (keeps cell padding instead
-   of crushing columns to fit). */
-.tscroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+/* ── Mobile / cross-device consistency ──────────────────────────────────────────────────────
+   Stop iOS Safari from auto-inflating body text (so the type scale is identical in portrait,
+   landscape, and on desktop), keep long tokens/links from forcing horizontal page overflow, and
+   guard the viewport: html clips any stray horizontal overflow so the page can never scroll
+   sideways on a phone (applied to html, not body, so position:sticky keeps working). 100dvh keeps
+   the paper filling the screen under a mobile browser's collapsing URL bar. */
+html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; overflow-x:hidden; }
+body{ overflow-wrap:break-word; max-width:100%; min-height:100dvh; }
+
+/* Horizontal-scroll wrapper for wide data tables on narrow screens (keeps cell padding instead of
+   crushing columns to fit). It never forces the page wider than the viewport. `.table-wrapper` is
+   an alias so either class works. CSS-only scroll shadows (the classic local/scroll background
+   trick) fade in at whichever edge has more content, so a swipe affordance appears automatically —
+   --wrap-bg is the page/table background the "cover" layers paint (defaults to the page --bg). */
+.tscroll,.table-wrapper{
+  width:100%; max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;
+  background:
+    linear-gradient(to right, var(--wrap-bg,var(--bg,#fff)) 30%, rgba(255,255,255,0)) 0 0,
+    linear-gradient(to left,  var(--wrap-bg,var(--bg,#fff)) 30%, rgba(255,255,255,0)) 100% 0,
+    radial-gradient(farthest-side at 0 50%, rgba(20,18,12,.16), rgba(20,18,12,0)) 0 0,
+    radial-gradient(farthest-side at 100% 50%, rgba(20,18,12,.16), rgba(20,18,12,0)) 100% 0;
+  background-repeat:no-repeat;
+  background-size:34px 100%,34px 100%,14px 100%,14px 100%;
+  background-attachment:local,local,scroll,scroll;
+}
+
+/* Wide tables that must scroll on a phone: pin the first (label) column so a row's identity
+   stays visible while the metric columns scroll, and cast a soft right-edge shadow that signals
+   there is more content to the right. Opt in with class="stickcol"; the page sets --stick-bg to
+   its own table background so the pinned cell paints over the scrolled columns. Scoped to narrow
+   screens only — on desktop the table fits, so the column need not be pinned and hover styles
+   stay untouched. */
+@media (max-width:640px){
+  .stickcol thead th:first-child,
+  .stickcol tbody td:first-child,
+  .stickcol tbody th:first-child{ position:sticky; left:0; background:var(--stick-bg,#fff);
+    box-shadow:7px 0 7px -7px rgba(20,18,12,.28); }
+  .stickcol thead th:first-child{ z-index:3; }
+  .stickcol tbody td:first-child,
+  .stickcol tbody th:first-child{ z-index:2; }
+}
+
+/* Apple HIG: comfortable ≥44px touch targets for the primary interactive controls on touch
+   devices — nav links, buttons, selects, tabs — without changing their look for mouse users.
+   min-height (not height) leaves already-tall controls alone; range/checkbox inputs are excluded
+   so slider tracks aren't stretched. */
+@media (pointer:coarse){
+  .dwnav-links a{ min-height:44px; display:inline-flex; align-items:center; }
+  button,select,summary,[role="tab"],[role="button"]{ min-height:44px; }
+}
 
 /* Collapsible affordance: a rotating chevron so <details> summaries read as toggles, not static
    headers. We suppress the default disclosure triangle and append our own marker. */

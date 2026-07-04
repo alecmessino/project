@@ -45,7 +45,7 @@
     margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .hyp-pill{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9a7b3f;
     background:#f4ecda;border:1px solid #e7d9bd;padding:3px 8px;border-radius:4px}
-  header h1{font-family:var(--serif);font-size:38px;margin:0 0 6px;
+  header h1{font-family:var(--serif);font-size:clamp(28px, 2vw + 20px, 38px);margin:0 0 6px;
     font-weight:700;letter-spacing:-.018em;line-height:1.05;color:var(--ink)}
   header h1 .w{color:var(--slate)}
   #body{padding:0 44px}
@@ -379,8 +379,8 @@ function render(s){
   const toolsHTML=`<div class="tools">${periods.map(k=>`<button data-k="${k}">${k==="ALL"?"All":k}</button>`).join("")}</div>`;
   const perfHTML = benches.length ? `
     <h2 class="sec">Performance vs buy-and-hold · <span id="perlabel" style="text-transform:none;letter-spacing:0">full backtest</span></h2>
-    <table class="cmp"><thead><tr><th>Track</th><th>Return</th><th>Sharpe</th>
-      <th>Max DD</th><th>Edge</th></tr></thead><tbody id="cmpbody"></tbody></table>
+    <div class="tscroll"><table class="cmp stickcol" style="--stick-bg:var(--bg)"><thead><tr><th>Track</th><th>Return</th><th>Sharpe</th>
+      <th>Max DD</th><th>Edge</th></tr></thead><tbody id="cmpbody"></tbody></table></div>
     <div class="note-box"><b>How the book is built — a dual-engine system.</b> The model above is the
       <b>Unconstrained Core Alpha Strategy</b>: long-only and <b>always fully invested</b> (no cash, no leverage). Each month it ranks
       the global region/size/style ETF matrix by volatility-normalized momentum (~60-bar lookback) and holds the
@@ -539,9 +539,9 @@ function render(s){
     ${fitsHTML}
     ${exposureHTML}
     <h2 class="sec">Current book</h2>
-    <table><thead><tr><th>Instrument</th><th>Leg</th><th>Weight</th></tr></thead><tbody>${positions}</tbody></table>
+    <div class="table-wrapper"><table><thead><tr><th>Instrument</th><th>Leg</th><th>Weight</th></tr></thead><tbody>${positions}</tbody></table></div>
     <h2 class="sec">Recent sessions</h2>
-    <table><thead><tr><th>Date</th><th>Realized</th><th>Equity</th></tr></thead><tbody>${recent}</tbody></table>
+    <div class="table-wrapper"><table><thead><tr><th>Date</th><th>Realized</th><th>Equity</th></tr></thead><tbody>${recent}</tbody></table></div>
     ${glossHTML}
     ${disclaimerHTML}`;
   document.querySelectorAll(".tools button").forEach(btn=>btn.addEventListener("click",()=>applyPeriod(btn.dataset.k)));

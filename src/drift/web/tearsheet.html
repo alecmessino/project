@@ -34,7 +34,7 @@
     -webkit-font-smoothing:antialiased}
   .wrap{max-width:900px;margin:0 auto;padding:56px 28px 80px}
   header{border-top:3px solid var(--rule);padding-top:20px}
-  header h1{font-size:25px;margin:0 0 6px;font-weight:650;letter-spacing:-.2px}
+  header h1{font-size:clamp(22px, 1vw + 18px, 25px);margin:0 0 6px;font-weight:650;letter-spacing:-.2px}
   header h1 .w{color:var(--slate)}
   .method{color:var(--dim);font-size:13.5px;max-width:70ch;margin:6px 0 0}
   .book{padding:30px 0;border-top:1px solid var(--line);margin-top:8px}
@@ -221,8 +221,8 @@ function render(st){
           <div class="r"><span>Max DD</span><b>${pct(-o.test.max_drawdown)}</b></div></div>
       </div>
       <details><summary>Returns by year (strategy vs buy &amp; hold)</summary>
-        <table><thead><tr><th>Year</th><th>Strategy</th><th>Buy &amp; hold</th></tr></thead>
-        <tbody>${yr}</tbody></table></details>
+        <div class="table-wrapper"><table><thead><tr><th>Year</th><th>Strategy</th><th>Buy &amp; hold</th></tr></thead>
+        <tbody>${yr}</tbody></table></div></details>
     </section>`;
   }).join("");
   requestAnimationFrame(()=>st.books.forEach((bk,i)=>{

@@ -144,8 +144,8 @@ def test_thesis_leads_with_structural_alpha_not_market_timing():
     assert "not a forecast that these funds out-perform" in t
     # the page explicitly says it is engineered beta, not market timing
     assert "not market timing" in t.lower()
-    # the momentum work is present but demoted to an exploratory research section
-    assert "Exploratory research" in t
+    # the momentum work is present but framed as the complementary Core Alpha engine, not the flagship
+    assert "Core Alpha" in t
 
 
 def test_core_alpha_exhibits_carry_the_research_banner():

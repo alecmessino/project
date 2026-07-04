@@ -114,6 +114,11 @@ body{ overflow-wrap:break-word; max-width:100%; min-height:100dvh; }
   .stickcol tbody th:first-child{ z-index:2; }
 }
 
+/* Visually-hidden-but-vocalized utility: for text that only screen readers should get (e.g.
+   "positive signal" beside a value whose meaning sighted users take from its color). */
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0,0,0,0); white-space:nowrap; border-width:0; }
+
 /* Apple HIG: comfortable ≥44px touch targets for the primary interactive controls on touch
    devices — nav links, buttons, selects, tabs — without changing their look for mouse users.
    min-height (not height) leaves already-tall controls alone; range/checkbox inputs are excluded
@@ -138,11 +143,27 @@ details[open] > summary::after{ transform:rotate(90deg); }
 #printproposal,#printdisc,#printfoot{ display:none; }
 @media print{
   @page{ margin:16mm 14mm 20mm; }
-  *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
   body{ font-size:10.5px; color:var(--ink); }
-  /* strip all interactive chrome, the prospect funnel, and raw sliders (their values print in the cards) */
-  header,.modetog,.fab,.fabwrap,.controls,.toolbar,.trans-models,.tools,#transmodels,
-    input[type=range],.slider,#leadgen,.lead-cta,.foot a.back,.map-wrap h3 .hint,.methods>summary{ display:none!important; }
+  /* Strip all interactive chrome, navigation, filtering controls, and conversion CTAs — none of
+     them mean anything on paper. (`header` is NOT hidden here: the exhibits' <header> holds the
+     page title; the Tax Lab hides its own app header in its page-scoped print block.) */
+  .modetog,.fab,.fabwrap,.controls,.toolbar,.trans-models,.tools,#transmodels,
+    input[type=range],.slider,#leadgen,.lead-cta,.foot a.back,.map-wrap h3 .hint,.methods>summary,
+    .chrome,.dwnav,.ctas,.cta,.filters,.tabs,.legend .key{ display:none!important; }
+  /* The screen shell becomes the sheet: full width inside the @page margins, no web max-widths,
+     no browser-mock frame chrome. !important because each page's own <style> block loads AFTER
+     this shared sheet, and these print-only resets must beat those screen rules in the cascade. */
+  html{ overflow-x:visible; }
+  body,.wrap,.sheet{ max-width:none!important; }
+  .wrap,.sheet{ margin:0!important; padding-left:0!important; padding-right:0!important; }
+  .frame{ border:0!important; border-radius:0!important; box-shadow:none!important; }
+  /* Scroll containers can't scroll on paper — let their full content lay out, and drop the
+     scroll-shadow gradients (they'd print as smudges at the table edges). */
+  .tscroll,.table-wrapper{ overflow:visible!important; background:none!important; }
+  /* Never slice a data card, exhibit tile, or table across a page break. */
+  .vcard,.tscroll,.table-wrapper,.arch,.ex,a.step,.study,.detail,.trade,.statstrip,
+    .dcard,.lv,.attrib,.summary,.fits{ break-inside:avoid; }
   /* surface the proposal blocks */
   #printproposal,#printdisc{ display:block!important; break-inside:avoid;
     border:1px solid var(--line); border-radius:8px; padding:12px 15px; margin:14px 0; }

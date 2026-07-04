@@ -10,6 +10,7 @@
   plausible.init()
 </script>
 <link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
 <title>Driftwood — Model Portfolio (Hypothetical)</title>
 <meta name="description" content="A hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; its tax-efficient Tax-Managed Core Strategy companion is offline-validated) — benchmarked against VT (global) and VTI (US) buy-and-hold, with risk stats, regional and style-box exposure, and costs shown. Research only, not investment advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/ledger.html" />
@@ -226,9 +227,12 @@ const TIPS={
  "After-tax return":"What a taxable investor keeps after capital-gains tax on realized gains.",
  "Tax drag":"Pre-tax return minus after-tax return — the slice handed to taxes each year.",
 };
+let TERM_SEQ=0;   // unique id per rendered tooltip so aria-describedby always points at its own tip
 function term(label){
   const t=TIPS[label];
-  return t ? `<span class="term" tabindex="0">${label}<span class="tip">${t}</span></span>` : label;
+  if(!t) return label;
+  const id="dw-tip-"+(++TERM_SEQ);
+  return `<span class="term" tabindex="0" aria-describedby="${id}">${label}<span class="tip" id="${id}" role="tooltip">${t}</span></span>`;
 }
 function pct(x){ return (x>=0?"+":"")+(x*100).toFixed(2)+"%"; }
 function cls(x){ return x>0?"pos":x<0?"neg":""; }
@@ -379,8 +383,8 @@ function render(s){
   const toolsHTML=`<div class="tools">${periods.map(k=>`<button data-k="${k}">${k==="ALL"?"All":k}</button>`).join("")}</div>`;
   const perfHTML = benches.length ? `
     <h2 class="sec">Performance vs buy-and-hold · <span id="perlabel" style="text-transform:none;letter-spacing:0">full backtest</span></h2>
-    <div class="tscroll"><table class="cmp stickcol" style="--stick-bg:var(--bg)"><thead><tr><th>Track</th><th>Return</th><th>Sharpe</th>
-      <th>Max DD</th><th>Edge</th></tr></thead><tbody id="cmpbody"></tbody></table></div>
+    <div class="tscroll"><table class="cmp stickcol" style="--stick-bg:var(--bg)"><thead><tr><th scope="col">Track</th><th scope="col">Return</th><th scope="col">Sharpe</th>
+      <th scope="col">Max DD</th><th scope="col">Edge</th></tr></thead><tbody id="cmpbody"></tbody></table></div>
     <div class="note-box"><b>How the book is built — a dual-engine system.</b> The model above is the
       <b>Unconstrained Core Alpha Strategy</b>: long-only and <b>always fully invested</b> (no cash, no leverage). Each month it ranks
       the global region/size/style ETF matrix by volatility-normalized momentum (~60-bar lookback) and holds the
@@ -446,7 +450,7 @@ function render(s){
         <td class="${cls(b.after_tax_return)}">${pct(b.after_tax_return)}</td>
         <td class="neg">${pct(-(b.total_return-b.after_tax_return))}</td></tr>`; });
     atCmp=`<h2 class="sec">After-tax, in a taxable account · <span style="text-transform:none;letter-spacing:0">full backtest</span></h2>
-      <table class="cmp"><thead><tr><th>Track</th><th>Pre-tax</th><th>${term("After-tax return")}</th><th>${term("Tax drag")}</th></tr></thead><tbody>${rows}</tbody></table>
+      <table class="cmp"><thead><tr><th scope="col">Track</th><th scope="col">Pre-tax</th><th scope="col">${term("After-tax return")}</th><th scope="col">${term("Tax drag")}</th></tr></thead><tbody>${rows}</tbody></table>
       <p class="bcap" style="margin-top:8px">Same model portfolio, after capital-gains tax. The strategy's small pre-tax edge
       <b>inverts</b> after tax in a taxable account — a buy-and-hold index realizes almost nothing until it's sold, while this
       book turns over ~<b>${(h.annual_turnover*100).toFixed(0)}%</b> a year. That gap is the case for <b>asset location</b>:
@@ -532,16 +536,16 @@ function render(s){
     <div class="legend"><span><i style="background:${SCOLOR}"></i>strategy</span>
       ${benches.map(b=>`<span><i style="background:${b.color}"></i>${b.label} · ${BDESC[b.label]||""}</span>`).join("")}</div>
     ${toolsHTML}
-    <svg class="eq" id="eq"></svg>
+    <svg class="eq" id="eq" role="img" aria-label="Model Portfolio equity over time versus buy-and-hold benchmarks"></svg>
     ${perfHTML}
     ${attribHTML}
     ${atCmp}
     ${fitsHTML}
     ${exposureHTML}
     <h2 class="sec">Current book</h2>
-    <div class="table-wrapper"><table><thead><tr><th>Instrument</th><th>Leg</th><th>Weight</th></tr></thead><tbody>${positions}</tbody></table></div>
+    <div class="table-wrapper"><table><thead><tr><th scope="col">Instrument</th><th scope="col">Leg</th><th scope="col">Weight</th></tr></thead><tbody>${positions}</tbody></table></div>
     <h2 class="sec">Recent sessions</h2>
-    <div class="table-wrapper"><table><thead><tr><th>Date</th><th>Realized</th><th>Equity</th></tr></thead><tbody>${recent}</tbody></table></div>
+    <div class="table-wrapper"><table><thead><tr><th scope="col">Date</th><th scope="col">Realized</th><th scope="col">Equity</th></tr></thead><tbody>${recent}</tbody></table></div>
     ${glossHTML}
     ${disclaimerHTML}`;
   document.querySelectorAll(".tools button").forEach(btn=>btn.addEventListener("click",()=>applyPeriod(btn.dataset.k)));

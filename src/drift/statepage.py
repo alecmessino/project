@@ -472,6 +472,7 @@ def render_state_html(data: dict) -> str:
 <meta name="twitter:image" content="{og}" />
 {_jsonld(name, code, rec, faq)}
 <link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
 <style>{_HEAD_CSS}</style>
 </head>
 <body>
@@ -546,6 +547,7 @@ def render_states_index(pages: dict) -> str:
 <meta name="twitter:description" content="Capital-gains + Structural Alpha guide for every state." />
 <meta name="twitter:image" content="{BASE_URL}/og/statemap.png" />
 <link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
 <style>{_HEAD_CSS}
   table.st{{width:calc(100% - 80px);margin:6px 40px 0;border-collapse:collapse;font-size:13.5px}}
   table.st th,table.st td{{padding:8px 10px;border-bottom:1px solid var(--line2);text-align:right}}
@@ -567,7 +569,7 @@ def render_states_index(pages: dict) -> str:
         and the illustrative after-tax Structural Alpha our engine is built to recover there.</p>
     </div>
     <table class="st">
-      <thead><tr><th>State</th><th>Top LT rate</th><th>Structural Alpha</th></tr></thead>
+      <thead><tr><th scope="col">State</th><th scope="col">Top LT rate</th><th scope="col">Structural Alpha</th></tr></thead>
       <tbody>{body}</tbody>
     </table>
     {DISCLOSURE}

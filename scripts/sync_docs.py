@@ -48,9 +48,10 @@ def main() -> int:
         rendered = template.replace(PLACEHOLDER, data)
         out_p.write_text(rendered)
         print(f"   {tpl:16} -> docs/{out:30} ({len(rendered)} bytes, data {len(data)})")
-    # driftwood.css is a plain static asset (not templated) — copy it through.
-    (DOCS / "driftwood.css").write_text((WEB / "driftwood.css").read_text())
-    print("   driftwood.css   -> docs/driftwood.css (copied)")
+    # Plain static assets (not templated) — copy them through.
+    for asset in ("driftwood.css", "dw-context.js"):
+        (DOCS / asset).write_text((WEB / asset).read_text())
+        print(f"   {asset:15} -> docs/{asset} (copied)")
     if bad:
         print(f"FAILED: {bad} file(s) had problems")
         return 1

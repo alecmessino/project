@@ -68,6 +68,7 @@
   }
 </style>
 <link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -151,10 +152,10 @@ function render(s){
   document.getElementById("studies").innerHTML = s.studies.map((st,i)=>{
     const metrics = st.metrics.map(m=>
       `<div class="metric"><div class="v ${m.tone}">${m.value}</div><div class="l">${m.label}</div></div>`).join("");
-    const sparkEl = st.equity ? `<svg class="spark" id="sp${i}" preserveAspectRatio="none"></svg>` : "";
+    const sparkEl = st.equity ? `<svg class="spark" id="sp${i}" preserveAspectRatio="none" role="img" aria-label="${st.name} — equity curve"></svg>` : "";
     let table = "";
     if(st.table){
-      const head = st.table.columns.map(c=>`<th>${c}</th>`).join("");
+      const head = st.table.columns.map(c=>`<th scope="col">${c}</th>`).join("");
       const body = st.table.rows.map(r=>"<tr>"+r.map(c=>`<td>${c}</td>`).join("")+"</tr>").join("");
       table = `<div class="tscroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
     }

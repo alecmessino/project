@@ -43,7 +43,7 @@
   .chrome .url{margin-left:auto;font-size:11.5px;letter-spacing:.04em;color:var(--muted);font-family:ui-monospace,monospace}
   .article{padding:30px 40px 6px;max-width:760px}
   .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
-  h1{font-family:var(--serif);font-weight:700;font-size:34px;line-height:1.08;letter-spacing:-.02em;color:var(--ink);margin:0 0 12px}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px, 1.7vw + 21px, 34px);line-height:1.08;letter-spacing:-.02em;color:var(--ink);margin:0 0 12px}
   .lead{font-size:17px;line-height:1.5;color:#54545c;margin:0 0 18px}
   .article p.para{font-size:15px;line-height:1.7;color:var(--body);margin:0 0 14px}
   .tool-head{padding:20px 40px 2px}
@@ -63,7 +63,7 @@
   .legend .sw{width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,.08);display:inline-block}
   .legend .key{margin-left:auto;color:var(--muted);font-style:italic}
   .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  table.hm{border-collapse:separate;border-spacing:0;width:100%;min-width:720px;font-family:var(--sans)}
+  table.hm{border-collapse:separate;border-spacing:0;width:100%;min-width:720px;font-family:var(--sans);--stick-bg:var(--bg)}
   table.hm th,table.hm td{padding:0}
   table.hm thead th{position:sticky;top:0;background:var(--bg)}
   .th{font:inherit;font-size:11.5px;font-weight:600;color:var(--dim);background:transparent;border:0;cursor:pointer;
@@ -103,7 +103,23 @@
   .cta .ctxt{flex:1;min-width:240px} .cta .ch{font-family:var(--sans);font-weight:600;font-size:17px;color:var(--ink);margin-bottom:2px}
   .cta .cd{font-size:12.5px;color:var(--dim)}
   .cta a{font-family:var(--sans);text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;white-space:nowrap;padding:11px 18px;background:var(--teal);color:#f1ede3}
-  @media(max-width:760px){ .article,.tool-head,.filters,.heat,.detail,.cta,.foot{padding-left:20px;padding-right:20px;margin-left:0;margin-right:0} h1{font-size:28px} }
+  @media(max-width:760px){ .article,.tool-head,.filters,.heat,.detail,.cta,.foot{padding-left:20px;padding-right:20px;margin-left:0;margin-right:0} }
+  /* Phones: the 8-column heatmap can't fit, so it scrolls — but tighten the columns so several
+     show at once and keep the strategy name pinned (see .stickcol) so every row stays legible. */
+  @media(max-width:600px){
+    body{font-size:14px}
+    .heat{padding-left:16px;padding-right:16px}
+    .article,.tool-head,.filters,.detail,.cta,.foot{padding-left:16px;padding-right:16px}
+    table.hm{min-width:600px}
+    .th{width:72px;padding:8px 5px}
+    .th.name{min-width:116px}
+    td.cell{padding:5px 4px}
+    td.cell .box{height:28px;font-size:9px;line-height:1.1;text-align:center}
+    td.name{padding:9px 8px 9px 4px}
+    td.name .nm{font-size:12.5px;gap:7px}
+    td.name .bk{font-size:9.5px;margin-left:16px}
+    tbody tr.sel td.name{background:#eef2ee}
+  }
   @media print{ body{background:#fff} .frame{border:0;box-shadow:none} .chrome,.filters,.cta{display:none} }
 </style>
 </head>
@@ -159,7 +175,7 @@
     <div class="heat">
       <div class="legend" id="legend"></div>
       <div class="tscroll">
-        <table class="hm">
+        <table class="hm stickcol">
           <thead><tr id="thead"></tr></thead>
           <tbody id="rows"></tbody>
         </table>
@@ -204,7 +220,7 @@
   var leg=$("legend");
   LMAP.forEach(function(p){ var s=document.createElement("span"); s.className="li";
     s.innerHTML='<span class="sw '+p[0]+'" style="background:var(--h'+p[0].slice(-1)+')"></span>'+p[1]; leg.appendChild(s); });
-  var k=document.createElement("span"); k.className="key"; k.textContent="Tap a column to sort · tap a row to read"; leg.appendChild(k);
+  var k=document.createElement("span"); k.className="key"; k.textContent="Swipe columns · tap to sort · tap a row to read"; leg.appendChild(k);
 
   // header
   var thead=$("thead");

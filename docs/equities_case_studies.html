@@ -34,7 +34,7 @@
     -webkit-font-smoothing:antialiased}
   .wrap{max-width:880px;margin:0 auto;padding:56px 28px 80px}
   header{border-top:3px solid var(--rule);padding-top:20px;margin-bottom:8px}
-  header h1{font-size:25px;margin:0 0 6px;font-weight:650;letter-spacing:-.2px}
+  header h1{font-size:clamp(22px, 1vw + 18px, 25px);margin:0 0 6px;font-weight:650;letter-spacing:-.2px}
   header h1 .w{color:var(--slate)}
   .sub{color:var(--dim);font-size:13.5px;display:flex;flex-wrap:wrap;gap:6px 20px}
   .sub b{color:var(--ink);font-weight:600}
@@ -58,6 +58,14 @@
   .foot .note{color:var(--slate)}
   .pill{display:inline-block;font-size:11px;color:var(--dim);border:1px solid var(--line);
     border-radius:20px;padding:1px 10px;margin-left:8px;vertical-align:middle}
+  /* Phones: shrink the generous desktop gutters, wrap the metric rows to two-up, and let any
+     wide study table scroll inside its own container instead of pushing the page sideways. */
+  @media(max-width:620px){
+    .wrap{padding:34px 16px 60px}
+    .metrics{gap:14px 26px}
+    .metric .v{font-size:19px}
+    th,td{padding:7px 8px;font-size:12.5px}
+  }
 </style>
 <link rel="stylesheet" href="driftwood.css">
 </head>
@@ -148,7 +156,7 @@ function render(s){
     if(st.table){
       const head = st.table.columns.map(c=>`<th>${c}</th>`).join("");
       const body = st.table.rows.map(r=>"<tr>"+r.map(c=>`<td>${c}</td>`).join("")+"</tr>").join("");
-      table = `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+      table = `<div class="tscroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
     }
     return `<section class="study">
       <h2>${st.name}<span class="pill">study ${i+1}</span></h2>

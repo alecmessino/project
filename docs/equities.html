@@ -43,7 +43,7 @@
   .pad{padding:0 44px}
   .pad.top{padding-top:32px}
   .eyebrow{font-weight:600;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:12px}
-  h1.hero{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.05;
+  h1.hero{font-family:var(--serif);font-weight:700;font-size:clamp(29px, 1.8vw + 22px, 38px);line-height:1.05;
     letter-spacing:-.018em;color:var(--ink);margin:0 0 12px}
   .asof{font-size:14.5px;color:#54545c;line-height:1.5;margin:0}
   .asof b{color:var(--ink)}
@@ -59,8 +59,9 @@
   .rowhdr{display:flex;justify-content:space-between;align-items:baseline;margin:32px 0 12px}
   .sec{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
   .hint{font-size:12px;color:var(--muted)}
+  .tscroll{--wrap-bg:var(--paper)}
   table.book{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
-    border-radius:12px;overflow:hidden;font-variant-numeric:tabular-nums}
+    border-radius:12px;overflow:hidden;font-variant-numeric:tabular-nums;--stick-bg:var(--card)}
   table.book th{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;
     text-align:right;padding:14px 16px 10px;font-family:var(--sans)}
   table.book th:nth-child(1),table.book th:nth-child(2){text-align:left}
@@ -98,7 +99,15 @@
     color:var(--muted);font-size:12px;line-height:1.55}
   .foot .note{color:#5a5a62;font-weight:600}
   .pos{color:var(--teal2)} .neg{color:var(--neg)} .neutral{color:var(--ink)}
-  @media(max-width:720px){.statstrip{grid-template-columns:repeat(2,1fr)}.pad{padding:0 22px}.frame{margin:14px}h1.hero{font-size:29px}}
+  @media(max-width:720px){.statstrip{grid-template-columns:repeat(2,1fr)}.pad{padding:0 20px}.frame{margin:14px}}
+  /* Phones: the 5-column book scrolls inside its wrapper with the Sleeve column pinned (.stickcol);
+     tighten cells so Signal, Portfolio weight, and Status are reachable with minimal swipe. */
+  @media(max-width:620px){
+    table.book th{padding:12px 11px 9px;font-size:9.5px}
+    table.book td{padding:10px 11px;font-size:13px}
+    .reb .trade{padding:10px 12px}
+    .foot{padding-left:20px;padding-right:20px}
+  }
 </style>
 </head>
 <body>
@@ -139,9 +148,9 @@
       <div class="sec">Current book · what we hold now</div>
       <div class="hint">Signal strength (z) = trend vs. the sleeve's own normal noise</div>
     </div>
-    <table class="book"><thead><tr>
+    <div class="tscroll"><table class="book stickcol"><thead><tr>
       <th>Sleeve</th><th>What it is</th><th>Signal strength (z)</th><th>Portfolio weight</th><th>Status</th>
-    </tr></thead><tbody id="bookbody"></tbody></table>
+    </tr></thead><tbody id="bookbody"></tbody></table></div>
     <div class="blotnote">Held sleeves first (by portfolio weight), then the waiting list (universe members below the
       cut, by signal strength). <b>Status</b> is what the last rebalance did to each name — Buy / Increase / Reduce /
       Hold — or Waiting. One book, one date; nothing here is an executed order.</div>

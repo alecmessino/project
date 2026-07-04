@@ -38,7 +38,7 @@
   .bcrumb a{color:var(--brass);text-decoration:none} .bcrumb a:hover{text-decoration:underline}
   .hd{padding:22px 40px 6px}
   .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
-  h1{font-family:var(--serif);font-weight:700;font-size:36px;line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin:0 0 10px}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px, 2.4vw + 19px, 36px);line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin:0 0 10px}
   .lede{font-size:15px;color:#54545c;margin:0;max-width:76ch}
   .context{font-size:14px;line-height:1.65;color:var(--body);margin:14px 0 0;max-width:76ch;
     border-left:3px solid var(--gold);padding:2px 0 2px 16px}
@@ -84,6 +84,12 @@
   .disc{margin:16px 40px 6px;font-size:10.5px;line-height:1.55;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
   .disc a{color:var(--teal2)}
   .foot{margin:6px 40px 26px;color:var(--muted);font-size:11px}
+  /* Phones: pull the generous 40px editorial gutters in to a comfortable 18px so the prose column
+     isn't pinched, consistent with the other exhibits. */
+  @media(max-width:600px){
+    .bcrumb,.hd,.grid,.sec,.rel{padding-left:18px;padding-right:18px}
+    .hero,.cta,.capture,.disc,.foot{margin-left:18px;margin-right:18px}
+  }
   @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}
 
   table.st{width:calc(100% - 80px);margin:6px 40px 0;border-collapse:collapse;font-size:13.5px}

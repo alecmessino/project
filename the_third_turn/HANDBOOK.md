@@ -40,7 +40,8 @@ the_third_turn/
 ## How the pieces reference each other
 
 - Papers may cite safeguards by ID (e.g. "following S-05 and S-11"); `protocol/safeguards.md` defines
-  them and `decisions/RESEARCH_DECISIONS_LOG.md` records the failure each came from.
+  them and `decisions/RESEARCH_DECISIONS_LOG.md` records why each exists (a logged failure, a review
+  requirement, or a documented design risk).
 - The **Third Turn Protocol** (method) and the **Third Turn Benchmark Dataset** (data) are named
   and versioned apart on purpose — a benchmark implies a dataset; a protocol implies a method.
 

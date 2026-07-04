@@ -316,7 +316,8 @@ def fig6_calibration():
              color=fs.PALETTE[3], fontsize=9.5, fontweight="bold", va="top", bbox=HALO)
     axR.set_xlabel("book forecast error  (realized − implied)")
     axR.set_ylabel("half-inning snapshots")
-    axR.set_title("Error is symmetric & unpredictable (OOS R² ≈ 0)", fontsize=11)
+    axR.set_title("Error: right-skewed (mean +0.49, median 0); unpredictable (OOS R² ≈ 0)",
+                  fontsize=9.5)
     fig.suptitle(f"Remaining-runs calibration · {rr['n']:,} snapshots · model R² = {rr['r2_base']:.3f}",
                  fontsize=12.5, fontweight="bold")
     fig.savefig(FIGDIR / "market_calibration.png", bbox_inches="tight")

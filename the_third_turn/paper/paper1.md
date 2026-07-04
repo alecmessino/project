@@ -340,8 +340,8 @@ R² of 0.279; the market-implied remaining total alone achieves 0.304; and combi
 R² by −0.017 — adding the features to the market does not improve, and slightly degrades, the
 forecast. The right panel shows the per-feature version of the same test (E+): each variable's
 individual incremental R² beyond the market is at most +0.0018 (best case, bullpen); the rest are
-at or below zero, several materially so (park, temperature, and wind near −0.006), so no single
-variable hides behind the others. As the sharpest test, we regress the book's forecast error —
+near or below zero — the largest few are negative (park, temperature, and wind near −0.006) — so no
+single variable hides behind the others. As the sharpest test, we regress the book's forecast error —
 realized minus market-implied remaining runs — directly on the features: it is not predictable
 out-of-sample, R² = −0.037. This is the central empirical result of the study. The difference is
 small and its uncertainty is bounded: the encompassing gain of −0.017 has a 95% block-bootstrap

@@ -67,7 +67,7 @@ baseball enters in paragraph two, so the paper reads broad from the first line.
 
 ---
 
-## Abstract (DRAFTED — `draft_abstract.md`, ~190 words)
+## Abstract (FINAL in `paper1.md`, ~190 words)
 Spine = the research-question sentence, answered. Numbers committed. Boundary language, bound to
 the data; closes on the framework + benchmark with modest verbs. (The v2 prose that lived here is
 superseded by the drafted file.)
@@ -85,7 +85,7 @@ flowchart TD
     DB --> BP[Bullpen fatigue]
     BP --> F2[Fails: no multiplier]
     F2 --> RR[Remaining-runs model]
-    RR --> F3[Fails: fatigue ΔMAE −0.001]
+    RR --> F3[Fails: fatigue ΔMAE ≈ 0]
     F3 --> G[Forecast encompassing\nG + E+]
     G --> F4[Fails: book error\nnot predictable, R²≈0]
     F4 --> A[Transfer function]
@@ -94,7 +94,7 @@ flowchart TD
 ```
 *Start the paper with the process, not with baseball.*
 
-## 1. Introduction (DRAFTED — `draft_intro.md`)
+## 1. Introduction (FINAL in `paper1.md`)
 Opens on the live-betting handle statistic (not baseball); baseball enters paragraph two (RE24 /
 linear weights / pitch measurement / TTOP as the entry case study); paragraph three draws the
 prediction-vs-incremental distinction and previews the boundary result + scope; **boxed
@@ -108,7 +108,7 @@ TTOP as continuous familiarity (arXiv 2210.06724); relative-velocity ≈ 0.0006 
 (*Management Science* 2024); underreaction ~0.64:1 (arXiv 2606.07811). Gap: none combine
 pitch-level state, live totals, calibration, and encompassing vs a sharp book.
 
-## 3. Methods (DRAFTED — `draft_methods.md`; written as an experimental design, not a pipeline)
+## 3. Methods (FINAL in `paper1.md`; written as an experimental design, not a pipeline)
 Organized around the research question, forecasting terms over baseball terms, **no subsection
 named for a hypothesis** (TTOP/velocity are objects of study, not methods). Five subsections:
 - **3.1 Data** — what exists, non-interpretive. 163 games / June 2026; one-minute Pinnacle-grade
@@ -135,7 +135,7 @@ named for a hypothesis** (TTOP/velocity are objects of study, not methods). Five
 stance is split between Methods §3.3 (the ladder as design) and Discussion §7.4 (the burden-of-
 proof philosophy). Do not reintroduce it as its own section.
 
-## 6. Results (DRAFTED — `draft_results.md`; brief order: lead with the hardest evidence)
+## 6. Results (FINAL in `paper1.md`; brief order: lead with the hardest evidence)
 Ordered as a legal brief, not a chronicle. **One figure per paragraph**, opening from the
 evidence. Sequence:
 1. **Research Question** (one sentence) → "Figure 4 answers this question directly."
@@ -153,7 +153,7 @@ evidence. Sequence:
    "together with Figure 4, defines the empirical boundary."
 8. **Summary of Results:** one-paragraph bridge into the Discussion.
 
-## 7. Discussion (DRAFTED — `draft_discussion.md`; an essay, not a longer Results)
+## 7. Discussion (FINAL in `paper1.md`; an essay, not a longer Results)
 Answers the four questions the Results avoid — *what it means, why it happened, why it matters
 beyond baseball, what remains open* — and protects the methodological thread above all. Opens on
 the research-question sentence (the spine).
@@ -192,7 +192,7 @@ first-five-inning (starter-isolating) totals. Each is live-data-gated → Paper 
 The literary final paragraph: began as a search for an exploitable feature, ended by identifying
 the empirical boundary; the boundary is itself the result; the contribution is a reproducible
 framework for determining when an edge exists, not a betting strategy. (Verbatim in
-`draft_discussion.md`.)
+`paper1.md`.)
 
 ---
 
@@ -210,7 +210,7 @@ graphic faster than the table.)*
 | Alternate-line skew | Buy the fat upper tail at plus money | Empirical win% vs efficient-implied | Priced | Empirical < implied at every hook; tail priced fatter than realized |
 | Early-run anchoring | Live total under-reacts to a 1st-inning explosion | Post-1st Over, cause split | Priced | 49/50 explosions hit-driven (no fluky pop); market prices the climb |
 | Weather / park | Books under-price hitter-friendly context | Conditional split | Priced | Hitter-friendly Overs hit *less* (46%<50%): market over-adjusts |
-| Remaining-runs fatigue | Fatigue adds to a state model | Incremental MAE, LOGO | Refuted | Game state already contains the info; ΔMAE −0.001 |
+| Remaining-runs fatigue | Fatigue adds to a state model | Incremental MAE, LOGO | Refuted | Game state already contains the info; ΔMAE ≈ 0 (no improvement) |
 | **Forecast encompassing** | Does *anything* beat the market? | Y~B+X; (Y−B)~X; per-feature E+ | **Refuted** | Book error not predictable from any feature OOS (R²≈0) |
 
 ## Figures (BUILT — `make_figures.py` → `figures/*.png`; final order below)

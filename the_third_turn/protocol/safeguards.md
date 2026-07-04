@@ -4,8 +4,8 @@ Every safeguard in the Third Turn Protocol has an ID and a **provenance**: the l
 external-review requirement, or documented design-time risk that made it necessary. A safeguard
 exists because something concrete demanded it — never because "more checks sound safer." Papers may
 cite safeguards by ID
-("following S-03 and S-05…"); `../decisions/RESEARCH_DECISIONS_LOG.md` records the failure each one
-came from.
+("following S-03 and S-05…"); `../decisions/RESEARCH_DECISIONS_LOG.md` records the provenance each
+one came from.
 
 **Rule for adding a safeguard:** it must trace to one of exactly three kinds of provenance — (a) a
 real, logged failure; (b) a specific external-review requirement; or (c) a *documented design-time
@@ -43,7 +43,8 @@ were in force.
 
 ## How the registry stays honest
 
-- Every ID appears in `../decisions/RESEARCH_DECISIONS_LOG.md` against the failure that created it.
+- Every ID appears in `../decisions/RESEARCH_DECISIONS_LOG.md` against the failure, review
+  requirement, or documented design risk that created it.
 - A safeguard is retired (not deleted — struck through with a reason) only if the failure mode it
   guards is shown not to occur in this domain.
 - The registry is append-mostly and small on purpose; its size should track the number of *distinct

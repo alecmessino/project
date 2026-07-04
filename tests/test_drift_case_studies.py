@@ -84,6 +84,8 @@ def test_build_report_labels_are_asset_agnostic():
 
 
 def test_equal_weight_equity_aggregates():
-    eq = cs._equal_weight_equity([[1.0, 1.1, 1.21], [1.0, 0.9, 0.81]])
+    # returns (equity, dates); dates empty when no date lists are supplied
+    eq, dates = cs._equal_weight_equity([[1.0, 1.1, 1.21], [1.0, 0.9, 0.81]])
     assert len(eq) == 3
     assert eq[0] == 1.0
+    assert dates == []

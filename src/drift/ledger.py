@@ -85,24 +85,28 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
 
     # 2) New target = the long-only, fully-invested cross-sectional momentum rotation
     #    (unbiased — tilt multipliers ship neutral), re-ranked on the rebalance cadence
-    #    (held between rebalances so turnover stays low).
+    #    (held between rebalances so turnover stays low). The per-name trend z + vol are computed
+    #    EVERY session (not just on rebalances) so they can be persisted as the book's signal strength.
     cs = settings.cross_section
     n_prior = len(entries)
+    sg = settings.signal
+    scores, vols, closes_now = {}, {}, {}
+    for i in insts:
+        cl = [b.close for b in series[i]]
+        closes_now[i] = cl
+        scores[i] = sig.momentum_score(cl, sg.lookback, sg.vol_window)
+        vols[i] = sizing.annualize_vol(sig.realized_vol(cl, sg.vol_window),
+                                       settings.engine.bars_per_year)
     if prev and (n_prior % max(1, cs.rebalance_bars) != 0):
         new_w = {i: round(prev_w.get(i, 0.0), 4) for i in insts}
     else:
-        sg = settings.signal
-        scores, vols, closes_now = {}, {}, {}
-        for i in insts:
-            cl = [b.close for b in series[i]]
-            closes_now[i] = cl
-            scores[i] = sig.momentum_score(cl, sg.lookback, sg.vol_window)
-            vols[i] = sizing.annualize_vol(sig.realized_vol(cl, sg.vol_window),
-                                           settings.engine.bars_per_year)
         held = {i for i, w in prev_w.items() if w > 0}
         raw = rank_weights(scores, vols, cs, _groups_for(cs), _combined_tilt(closes_now, cs), held)
         raw = _tax_aware_weights(raw, prev_w, cs)   # no-trade band (taxable sleeve); no-op when off
         new_w = {i: round(raw.get(i, 0.0), 4) for i in insts}
+    # Signal strength (trend z) + annualized vol per name — persisted so the dashboard projects them
+    # over the book's exact universe/date with no independent fetch (single source of truth).
+    signals = {i: {"z": round(scores[i], 4), "vol": round(vols[i], 4)} for i in insts}
 
     # 3) Cost on rebalance turnover (weights are at portfolio scale).
     turnover = sum(abs(new_w[i] - prev_w.get(i, 0.0)) for i in insts)
@@ -128,6 +132,8 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
         "weights": new_w,
         # Per-name close used to mark this session — the lot basis for after-tax modeling.
         "prices": {i: round(series[i][-1].close, 6) for i in insts},
+        # Per-name signal strength (trend z) + annualized vol — the dashboard's Signal-strength column.
+        "signals": signals,
         "realized_return": round(net, 6),
         "equity": equity,
         "bench_equity": bench_equity,
@@ -371,10 +377,10 @@ def build_ledger_state(ledger: dict, bars_per_year: float = 252.0,
     idx = list(range(n)) if n <= 900 else list(range(0, n, max(1, n // 800)))
     last = entries[-1]
     positions = sorted(
-        ({"instrument": i, "weight": w,
+        ({"instrument": i, "portfolio_weight": w,
           "leg": "LONG" if w > 0 else "SHORT" if w < 0 else "—"}
          for i, w in last["weights"].items() if abs(w) > 1e-9),   # only active, non-zero allocations
-        key=lambda r: -r["weight"])
+        key=lambda r: -r["portfolio_weight"])
     live = sum(1 for e in entries if not e.get("seed"))
     cost_side = ledger.get("cost_bps_per_side")
     tax = tax or TaxSettings()

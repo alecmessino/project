@@ -180,10 +180,11 @@
     <div class="sub" id="sub"></div>
   </header>
   <div class="research-banner" style="margin:6px 0 18px;padding:12px 16px;border:1px solid #e0c98a;border-left:3px solid var(--brass,#a9853f);background:#faf3df;border-radius:8px;font-size:12.5px;line-height:1.55;color:#5a4a22">
-    <b>Exploratory research · proof of work.</b> This is an exploratory research model — not the strategy a
-    client deploys. The shipped firm engine prioritizes <b>Structural Alpha</b>: tax-engineering and
-    engineered factor exposure. This momentum / trend signal ships <b>neutral</b> in production. We keep
-    the full backtest here because rigor means showing what we tested, including what we set aside.
+    <b>Core Alpha Research — a hypothetical Model Portfolio.</b> This is the Core Alpha engine: the
+    high-turnover, opportunistic momentum book built for <b>tax-advantaged</b> accounts. The flagship
+    <b>Structural Alpha</b> book — diversified, low-turnover, tax-managed — is the taxable-account
+    strategy. This is a hypothetical backtest of one model portfolio, marked daily — not a client
+    account and not an executed order.
   </div>
   <div id="body"></div>
   <div class="foot">
@@ -412,7 +413,7 @@ function render(s){
       no state unless shown — set a client's actual rates. Not tax advice.</span></div>` : ""}` : "";
   const positions = s.positions.map(p=>`<tr><td>${p.instrument}</td>
     <td><span class="tag ${p.leg==='—'?'--':p.leg}">${p.leg}</span></td>
-    <td>${p.weight>=0?"+":""}${p.weight.toFixed(2)}</td></tr>`).join("");
+    <td>${p.portfolio_weight>=0?"+":""}${p.portfolio_weight.toFixed(2)}</td></tr>`).join("");
   const recent = s.recent.map(r=>`<tr><td>${r.date}</td>
     <td class="${cls(r.realized_return)}">${pct(r.realized_return)}</td>
     <td>${r.equity.toFixed(4)}</td></tr>`).join("");

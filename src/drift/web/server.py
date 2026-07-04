@@ -13,8 +13,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from ..config import Settings
-from ..exhibit import build_state
-from ..models import Bar
+from ..exhibit import build_dashboard_state
 
 HTML_PATH = Path(__file__).with_name("index.html")
 
@@ -43,13 +42,15 @@ def _make_handler(state_json: bytes):
 
 
 def serve(
-    series: dict[str, list[Bar]],
-    settings: Settings,
-    source: str = "—",
+    ledger_path: str = "docs/ledger.json",
+    settings: Settings | None = None,
     host: str = "127.0.0.1",
     port: int = 8000,
 ) -> None:
-    state = build_state(series, settings, source=source)
+    settings = settings or Settings.load("config/drift.yaml")
+    state = build_dashboard_state(ledger_path, settings)
+    if state is None:
+        raise ValueError(f"no Model Portfolio ledger at {ledger_path} — run `drift ledger` first")
     state_json = json.dumps(state).encode()
     httpd = ThreadingHTTPServer((host, port), _make_handler(state_json))
     print(f"Driftwood dashboard live at http://{host}:{port}  (Ctrl-C to stop)")

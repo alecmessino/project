@@ -8,9 +8,8 @@ entries (and says so); the fresh recomputation survives only as a labeled fallba
 
 import json
 
-from drift.exhibit import blotter_from_entries, ledger_blotter, build_state
+from drift.exhibit import blotter_from_entries, ledger_blotter, build_dashboard_state
 from drift.config import Settings
-from drift.models import Bar
 
 
 def _ledger_entries():
@@ -37,25 +36,22 @@ def test_blotter_matches_the_ledgers_own_last_weight_change(tmp_path):
     assert abs(b["since_return"] - (1.03 / 1.01 - 1.0)) < 5e-5   # P&L from the pre-rebalance mark (4dp rounding)
 
 
-def test_build_state_prefers_the_ledger_over_recomputation(tmp_path):
+def test_dashboard_projects_the_ledgers_own_blotter(tmp_path):
+    # The dashboard is now a pure projection of the ledger — there is no independent recomputation
+    # path to contradict it. The blotter it carries IS the ledger's last weight change.
     p = tmp_path / "ledger.json"
-    p.write_text(json.dumps({"entries": _ledger_entries()}))
-    # A tiny synthetic series so the recomputed path would produce a DIFFERENT (or no) blotter.
-    bars = [Bar(asof=f"2026-06-{d:02d}", close=100.0 + i) for i, d in enumerate(range(1, 29))]
-    series = {"VTI": bars, "VXUS": bars, "BND": bars}
-    st = build_state(series, Settings(), source="synthetic", ledger_path=p)
+    p.write_text(json.dumps({"entries": _ledger_entries(), "universe": ["VTI", "VXUS", "BND"]}))
+    st = build_dashboard_state(p, Settings())
     assert st["blotter"] is not None
-    assert st["blotter"]["book"] == "ledger"                      # ledger won, not the recomputation
+    assert st["blotter"]["book"] == "ledger"                      # single source of truth
     assert st["blotter"]["date"] == "2026-06-26"
 
 
-def test_recomputed_fallback_is_labeled(tmp_path):
-    # No ledger file -> fallback path must be explicit about what it is.
-    entries = _ledger_entries()
-    b = blotter_from_entries(entries)
+def test_blotter_core_diff_is_book_agnostic_and_missing_ledger_is_none(tmp_path):
+    b = blotter_from_entries(_ledger_entries())
     assert b and "book" not in b                                  # core diff is book-agnostic
-    st_missing = build_state({}, Settings(), ledger_path=tmp_path / "absent.json")
-    assert st_missing["blotter"] is None                          # nothing to show, nothing invented
+    # No ledger file -> the dashboard has nothing to project, and invents nothing.
+    assert build_dashboard_state(tmp_path / "absent.json", Settings()) is None
 
 
 def test_committed_dashboard_blotter_matches_committed_ledger():

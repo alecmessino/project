@@ -148,13 +148,14 @@ def test_thesis_leads_with_structural_alpha_not_market_timing():
     assert "Exploratory research" in t
 
 
-def test_momentum_exhibits_carry_the_exploratory_research_banner():
-    # The momentum dashboard, ledger, and long-history tearsheet are relegated to proof-of-work and
-    # must each carry the honest banner: exploratory research, the shipped engine is Structural Alpha,
-    # and this signal ships neutral in production.
+def test_core_alpha_exhibits_carry_the_research_banner():
+    # The Core Alpha (momentum) dashboard, ledger, and long-history tearsheet are hypothetical model
+    # portfolios, not client accounts. Each must carry the honest banner: labeled Core Alpha Research
+    # (a hypothetical Model Portfolio) AND name the flagship Structural Alpha as the deployed strategy —
+    # so the momentum track can never be mistaken for the shipped, tax-managed client book.
     for tmpl in (LEDGER_TEMPLATE, TEARSHEET_TEMPLATE, TEMPLATE):
         t = _read(tmpl)
-        assert "research-banner" in t, f"{tmpl.name}: missing the exploratory-research banner"
-        assert "Exploratory research" in t, f"{tmpl.name}: banner not labeled exploratory research"
-        assert "Structural Alpha" in t, f"{tmpl.name}: banner does not name the shipped strategy"
-        assert "neutral" in t, f"{tmpl.name}: banner must state the signal ships neutral"
+        assert "research-banner" in t, f"{tmpl.name}: missing the research banner"
+        assert "Core Alpha Research" in t, f"{tmpl.name}: banner not labeled Core Alpha Research"
+        assert "Structural Alpha" in t, f"{tmpl.name}: banner does not name the flagship strategy"
+        assert "hypothetical" in t.lower(), f"{tmpl.name}: banner must label the track hypothetical"

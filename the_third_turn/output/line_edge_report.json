@@ -1,0 +1,185 @@
+{
+  "n_games": 163,
+  "n_efficiency_games": 190,
+  "n_obs": 2056,
+  "section_a": {
+    "n": 190,
+    "mean_residual": 0.568,
+    "median_residual": -0.5,
+    "std_residual": 4.825,
+    "mae": 3.768,
+    "over": 88,
+    "under": 97,
+    "push": 5,
+    "over_pct": 46.3,
+    "within_1": 19.5,
+    "within_2": 40.0,
+    "within_3": 53.2
+  },
+  "section_b": {
+    "inn_ge_3": [
+      {
+        "bucket": "<= 0 (no drop / up)",
+        "n": 894,
+        "wins": 434,
+        "hit_pct": 48.5,
+        "ci_low": 45.3,
+        "ci_high": 51.8,
+        "roi_u": -0.073
+      },
+      {
+        "bucket": "(0, 0.5]",
+        "n": 152,
+        "wins": 71,
+        "hit_pct": 46.7,
+        "ci_low": 39.0,
+        "ci_high": 54.6,
+        "roi_u": -0.108
+      },
+      {
+        "bucket": "(0.5, 1.0]",
+        "n": 156,
+        "wins": 51,
+        "hit_pct": 32.7,
+        "ci_low": 25.8,
+        "ci_high": 40.4,
+        "roi_u": -0.376
+      },
+      {
+        "bucket": "(1.0, 1.5]",
+        "n": 151,
+        "wins": 61,
+        "hit_pct": 40.4,
+        "ci_low": 32.9,
+        "ci_high": 48.4,
+        "roi_u": -0.229
+      },
+      {
+        "bucket": "(1.5, 2.0]",
+        "n": 135,
+        "wins": 59,
+        "hit_pct": 43.7,
+        "ci_low": 35.6,
+        "ci_high": 52.1,
+        "roi_u": -0.166
+      },
+      {
+        "bucket": "> 2.0",
+        "n": 454,
+        "wins": 198,
+        "hit_pct": 43.6,
+        "ci_low": 39.1,
+        "ci_high": 48.2,
+        "roi_u": -0.167
+      }
+    ],
+    "inn_ge_5": [
+      {
+        "bucket": "<= 0 (no drop / up)",
+        "n": 600,
+        "wins": 290,
+        "hit_pct": 48.3,
+        "ci_low": 44.4,
+        "ci_high": 52.3,
+        "roi_u": -0.077
+      },
+      {
+        "bucket": "(0, 0.5]",
+        "n": 93,
+        "wins": 36,
+        "hit_pct": 38.7,
+        "ci_low": 29.4,
+        "ci_high": 48.9,
+        "roi_u": -0.261
+      },
+      {
+        "bucket": "(0.5, 1.0]",
+        "n": 97,
+        "wins": 31,
+        "hit_pct": 32.0,
+        "ci_low": 23.5,
+        "ci_high": 41.8,
+        "roi_u": -0.39
+      },
+      {
+        "bucket": "(1.0, 1.5]",
+        "n": 89,
+        "wins": 38,
+        "hit_pct": 42.7,
+        "ci_low": 32.9,
+        "ci_high": 53.1,
+        "roi_u": -0.185
+      },
+      {
+        "bucket": "(1.5, 2.0]",
+        "n": 82,
+        "wins": 33,
+        "hit_pct": 40.2,
+        "ci_low": 30.3,
+        "ci_high": 51.1,
+        "roi_u": -0.232
+      },
+      {
+        "bucket": "> 2.0",
+        "n": 371,
+        "wins": 164,
+        "hit_pct": 44.2,
+        "ci_low": 39.2,
+        "ci_high": 49.3,
+        "roi_u": -0.156
+      }
+    ]
+  },
+  "section_c": {
+    "n": 41,
+    "wins": 18,
+    "hit_pct": 43.9,
+    "ci_low": 29.9,
+    "ci_high": 59.0,
+    "units": -6.64,
+    "by_bucket": [
+      {
+        "bucket": "<= 0 (no drop / up)",
+        "fires": 12,
+        "wins": 6,
+        "hit_pct": 50.0,
+        "avg_edge": 1.42
+      },
+      {
+        "bucket": "(0, 0.5]",
+        "fires": 2,
+        "wins": 1,
+        "hit_pct": 50.0,
+        "avg_edge": 0.92
+      },
+      {
+        "bucket": "(0.5, 1.0]",
+        "fires": 4,
+        "wins": 1,
+        "hit_pct": 25.0,
+        "avg_edge": 0.87
+      },
+      {
+        "bucket": "(1.0, 1.5]",
+        "fires": 10,
+        "wins": 2,
+        "hit_pct": 20.0,
+        "avg_edge": 1.09
+      },
+      {
+        "bucket": "(1.5, 2.0]",
+        "fires": 5,
+        "wins": 3,
+        "hit_pct": 60.0,
+        "avg_edge": 1.05
+      },
+      {
+        "bucket": "> 2.0",
+        "fires": 8,
+        "wins": 5,
+        "hit_pct": 62.5,
+        "avg_edge": 1.0
+      }
+    ]
+  }
+}

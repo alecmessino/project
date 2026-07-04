@@ -1,0 +1,132 @@
+{
+  "context": {
+    "n": 564,
+    "wins": 261,
+    "hit_pct": 46.3,
+    "ci_low": 42.2,
+    "ci_high": 50.4,
+    "units": -65.73
+  },
+  "control": {
+    "n": 1383,
+    "wins": 611,
+    "hit_pct": 44.2,
+    "ci_low": 41.6,
+    "ci_high": 46.8,
+    "units": -216.55
+  },
+  "context_by_bucket": [
+    {
+      "bucket": "<= 0 (no drop / up)",
+      "n": 239,
+      "wins": 107,
+      "hit_pct": 44.8,
+      "ci_low": 38.6,
+      "ci_high": 51.1,
+      "roi_u": -0.145
+    },
+    {
+      "bucket": "(0, 0.5]",
+      "n": 54,
+      "wins": 27,
+      "hit_pct": 50.0,
+      "ci_low": 37.1,
+      "ci_high": 62.9,
+      "roi_u": -0.045
+    },
+    {
+      "bucket": "(0.5, 1.0]",
+      "n": 54,
+      "wins": 24,
+      "hit_pct": 44.4,
+      "ci_low": 32.0,
+      "ci_high": 57.6,
+      "roi_u": -0.152
+    },
+    {
+      "bucket": "(1.0, 1.5]",
+      "n": 59,
+      "wins": 27,
+      "hit_pct": 45.8,
+      "ci_low": 33.7,
+      "ci_high": 58.3,
+      "roi_u": -0.126
+    },
+    {
+      "bucket": "(1.5, 2.0]",
+      "n": 43,
+      "wins": 21,
+      "hit_pct": 48.8,
+      "ci_low": 34.6,
+      "ci_high": 63.2,
+      "roi_u": -0.068
+    },
+    {
+      "bucket": "> 2.0",
+      "n": 115,
+      "wins": 55,
+      "hit_pct": 47.8,
+      "ci_low": 38.9,
+      "ci_high": 56.9,
+      "roi_u": -0.087
+    }
+  ],
+  "control_by_bucket": [
+    {
+      "bucket": "<= 0 (no drop / up)",
+      "n": 672,
+      "wins": 337,
+      "hit_pct": 50.1,
+      "ci_low": 46.4,
+      "ci_high": 53.9,
+      "roi_u": -0.043
+    },
+    {
+      "bucket": "(0, 0.5]",
+      "n": 96,
+      "wins": 34,
+      "hit_pct": 35.4,
+      "ci_low": 26.6,
+      "ci_high": 45.4,
+      "roi_u": -0.324
+    },
+    {
+      "bucket": "(0.5, 1.0]",
+      "n": 94,
+      "wins": 27,
+      "hit_pct": 28.7,
+      "ci_low": 20.6,
+      "ci_high": 38.6,
+      "roi_u": -0.452
+    },
+    {
+      "bucket": "(1.0, 1.5]",
+      "n": 93,
+      "wins": 38,
+      "hit_pct": 40.9,
+      "ci_low": 31.4,
+      "ci_high": 51.0,
+      "roi_u": -0.22
+    },
+    {
+      "bucket": "(1.5, 2.0]",
+      "n": 85,
+      "wins": 36,
+      "hit_pct": 42.4,
+      "ci_low": 32.4,
+      "ci_high": 53.0,
+      "roi_u": -0.191
+    },
+    {
+      "bucket": "> 2.0",
+      "n": 343,
+      "wins": 139,
+      "hit_pct": 40.5,
+      "ci_low": 35.5,
+      "ci_high": 45.8,
+      "roi_u": -0.226
+    }
+  ],
+  "context_tto2": 360,
+  "context_tto3": 246
+}

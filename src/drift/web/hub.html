@@ -11,18 +11,18 @@
 </script>
 <link rel="stylesheet" href="driftwood.css">
 <title>Driftwood — private wealth architecture</title>
-<meta name="description" content="Driftwood — coordinating factor-tilted exposure, asset location, and mechanical tax management into one fee-only, after-tax plan. Illustrative modeling, not advice." />
+<meta name="description" content="Driftwood — after-tax wealth architecture: two return engines (Structural Alpha for taxable wealth, Core Alpha for tax-advantaged capital) routed by one tax-location engine into a single after-tax portfolio. Fee-only, fiduciary. Illustrative modeling, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/index.html" />
 <link rel="icon" href="favicon.svg" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
 <meta property="og:title" content="Driftwood — private wealth architecture" />
-<meta property="og:description" content="Driftwood — coordinating factor-tilted exposure, asset location, and mechanical tax management into one fee-only, after-tax plan. Illustrative modeling, not advice." />
+<meta property="og:description" content="Driftwood — after-tax wealth architecture: two return engines (Structural Alpha for taxable wealth, Core Alpha for tax-advantaged capital) routed by one tax-location engine into a single after-tax portfolio. Fee-only, fiduciary. Illustrative modeling, not advice." />
 <meta property="og:url" content="https://alecmessino.github.io/project/index.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Driftwood — private wealth architecture" />
-<meta name="twitter:description" content="Driftwood — coordinating factor-tilted exposure, asset location, and mechanical tax management into one fee-only, after-tax plan. Illustrative modeling, not advice." />
+<meta name="twitter:description" content="Driftwood — after-tax wealth architecture: two return engines (Structural Alpha for taxable wealth, Core Alpha for tax-advantaged capital) routed by one tax-location engine into a single after-tax portfolio. Fee-only, fiduciary. Illustrative modeling, not advice." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
 <script type="application/ld+json">
 {
@@ -82,14 +82,16 @@
   .trust{display:flex;gap:22px;border-top:1px solid var(--line);padding-top:18px;flex-wrap:wrap}
   .trust span{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--dim)}
   .trust b{color:var(--teal2);font-weight:700}
-  .ocard{background:var(--navy);border-radius:14px;padding:30px 32px;box-shadow:0 20px 50px -28px rgba(8,12,10,.7)}
-  .ocard .k{font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
-  .ocard .sub{font-size:12.5px;color:#8b94a0;margin-bottom:18px}
-  .ocard .big{font-family:var(--sans);font-variant-numeric:tabular-nums;font-size:58px;line-height:.92;color:#f1ede3;font-weight:700;letter-spacing:-.03em}
-  .ocard .cap{font-size:13.5px;color:var(--gold);font-weight:600;margin-top:8px}
-  .ocard .row{display:flex;gap:24px;border-top:1px solid #2c3848;margin-top:22px;padding-top:18px}
-  .ocard .row .v{font-weight:600;font-size:18px;color:#f1ede3;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
-  .ocard .row .l{font-size:11.5px;color:#8b94a0;margin-top:2px}
+  /* Hero architecture card — the product IS the routing: two return engines → one tax-location engine → one portfolio. */
+  .arch{background:var(--navy);border-radius:14px;padding:26px 28px;box-shadow:0 20px 50px -28px rgba(8,12,10,.7);color:#e7ecf2}
+  .arch .ah{font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+  .arch .engines{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .arch .eng{background:#243040;border:1px solid #33445a;border-radius:10px;padding:13px 15px}
+  .arch .eng .et{font-family:var(--sans);font-weight:700;font-size:14.5px;color:#f1ede3;letter-spacing:-.01em}
+  .arch .eng .ed{font-size:11px;color:#9aa3ae;margin-top:5px;line-height:1.45}
+  .arch .flow{text-align:center;color:var(--gold);font-size:12px;letter-spacing:.03em;margin:12px 0;font-weight:600}
+  .arch .port{background:var(--teal2);color:#f1ede3;border-radius:10px;padding:13px 15px;text-align:center;font-weight:700;font-family:var(--sans);font-size:15px;letter-spacing:-.01em}
+  .arch .cap{font-size:11.5px;color:#9aa3ae;margin-top:15px;line-height:1.5}
   .onote{font-size:11px;color:#949ba6;margin-top:10px;line-height:1.45}
   .pos{color:#9fd9c4} .neg{color:#e0a59b}
   .vsec{padding:8px 44px 30px}
@@ -149,13 +151,14 @@
 
     <div class="hero">
       <div>
-        <div class="eyebrow">Private wealth architecture</div>
+        <div class="eyebrow">After-tax wealth architecture</div>
         <h1>Keep more of<br />what you've earned.</h1>
-        <p class="lede">We coordinate your investments, taxes, and estate into one after-tax plan —
-          and show you the dollars before you commit a thing.</p>
+        <p class="lede">Two return engines — a tax-managed <b>Structural&nbsp;Alpha</b> book and a
+          return-seeking <b>Core&nbsp;Alpha</b> model — routed by one tax-location engine into a single
+          after-tax portfolio. The account each dollar lives in is the decision that compounds.</p>
         <div class="ctas">
           <a class="primary" href="taxlab.html?view=prospect">See what we'd save you →</a>
-          <a class="ghost" href="thesis.html">How Structural Alpha works</a>
+          <a class="ghost" href="thesis.html">How the architecture works</a>
         </div>
         <div class="trust">
           <span><b>✓</b> Fiduciary, fee-only</span>
@@ -163,21 +166,26 @@
         </div>
       </div>
       <div>
-        <div class="ocard" id="ocard"></div>
-        <div class="onote">Illustrative, hypothetical tax modeling on one 30-year market path — not a forecast, not a
-          client account, and not a promise about your account. Your own after-tax figures depend on your
-          holdings, basis, and bracket; compute them in the Tax&nbsp;Lab.</div>
-        <noscript><style>#ocard:empty{display:none}</style><div class="onote" style="border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:#fff;color:#5a5a62;margin-top:12px">
-          The live model figures on this page need JavaScript. Use the navigation above to explore the Tax&nbsp;Lab,
-          the State&nbsp;Map, and the research exhibits, or re-enable scripts to see the numbers.</div></noscript>
+        <div class="arch">
+          <div class="ah">The architecture</div>
+          <div class="engines">
+            <div class="eng"><div class="et">Structural Alpha</div><div class="ed">diversified · tax-managed<br>taxable accounts</div></div>
+            <div class="eng"><div class="et">Core Alpha</div><div class="ed">tactical · high-turnover<br>tax-advantaged accounts</div></div>
+          </div>
+          <div class="flow">↓ &nbsp; one tax-location engine &nbsp; ↓</div>
+          <div class="port">One after-tax portfolio</div>
+          <div class="cap">Two return engines, routed by tax into one portfolio. The routing — not either engine — is the product, and it's the hard part to copy.</div>
+        </div>
+        <div class="onote">Illustrative, hypothetical modeling — not a forecast, not a client account. Your own
+          after-tax figures depend on your holdings, basis, and bracket; compute them in the Tax&nbsp;Lab.</div>
       </div>
     </div>
 
     <div class="vsec" id="vsec" style="display:none">
-      <div class="h">Why investors choose Driftwood</div>
+      <div class="h">How the architecture works · three engines</div>
       <div class="vadds" id="vadds"></div>
-      <div class="cap">Hypothetical / illustrative model results — not a forecast and not advice. Each figure is drawn
-        from the exhibits below and shown with its own risk; <a href="#disclosures" style="color:var(--teal2)">see full disclosures</a>.</div>
+      <div class="cap">Hypothetical / illustrative model results — not a forecast and not advice. Each figure appears
+        once, carries its own risk, and traces to an exhibit below; <a href="#disclosures" style="color:var(--teal2)">see full disclosures</a>.</div>
     </div>
 
     <div class="path">
@@ -197,11 +205,11 @@
     </div>
 
     <div class="exsec" id="appendixsec" style="display:none">
-      <div class="h">Exploratory research · proof of work</div>
+      <div class="h">Core Alpha Research</div>
       <div style="margin:0 0 12px;padding:11px 15px;border:1px solid #e0c98a;border-left:3px solid var(--brass);background:#faf3df;border-radius:8px;font-size:12px;line-height:1.55;color:#5a4a22">
-        These are <b>exploratory research models</b>, not the strategy a client deploys. The shipped firm
-        engine prioritizes <b>Structural Alpha</b> — tax-engineering and engineered factor exposure; the
-        momentum / trend signal here ships <b>neutral</b> in production. Kept in full as proof of work.
+        The <b>Core Alpha</b> engine — the tactical, high-turnover book for tax-advantaged capital. These are
+        <b>hypothetical Model Portfolios</b> and research studies, marked daily; the flagship <b>Structural Alpha</b>
+        book (diversified, tax-managed) is the taxable-account strategy. Not a client account.
       </div>
       <div class="exhibits" id="exhibits-appendix"></div>
     </div>
@@ -224,31 +232,9 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
 
 function render(s){
   const head = s.headline || [];
-  // Outcome card — the firm's substantiated edge (Structural Alpha), framed as a before/after a
-  // reader can feel: the share of a 30-yr pre-tax gain KEPT after tax, tax-naive vs tax-managed.
-  // Never a bare hypothetical return — those live in the research appendix with their dates.
-  const hr = s.hero;
-  if(hr){
-    document.getElementById("ocard").innerHTML =
-      `<div class="k">The after-tax difference · illustrative</div>`+
-      `<div class="sub">share of a ${hr.horizon}-year pre-tax gain KEPT after tax — the same exposure, `+
-      `concentrated tax-naive vs tax-managed</div>`+
-      `<div class="big">${hr.keep_before}% → ${hr.keep_after}%</div>`+
-      `<div class="cap">federal-only illustration · not a forecast</div>`+
-      `<div class="row"><div><div class="v">+${hr.alpha_low.toFixed(1)}–${hr.alpha_high.toFixed(1)}%/yr</div>`+
-      `<div class="l">illustrative Structural Alpha (tax), by state — see yours below</div></div></div>`;
-  } else {
-    // Fallback for a bare checkout (no leakage figures): the labeled Model Portfolio card.
-    const mp = head.find(m => /Model Portfolio/i.test(m.label)) || head[0];
-    if(mp){
-      document.getElementById("ocard").innerHTML =
-        `<div class="k">The hypothetical Model Portfolio</div>`+
-        `<div class="sub">${mp.sub||""}</div>`+
-        `<div class="big">${mp.value}</div>`+
-        `<div class="cap">illustrative model return, net of cost</div>`+
-        (mp.dd ? `<div class="row"><div><div class="v">${mp.dd}</div><div class="l">${mp.dd_label||"max drawdown"}</div></div></div>` : "");
-    }
-  }
+  // The hero architecture card is static HTML — the product is the routing, not a single number.
+  // The three pillar cards below carry the figures (each appears once). Raw hypothetical Core Alpha
+  // returns render in the "Core Alpha Research" appendix, dated.
   const va = s.value_adds || [];
   if(va.length){
     document.getElementById("vsec").style.display = "";

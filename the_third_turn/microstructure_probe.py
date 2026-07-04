@@ -118,6 +118,31 @@ def main():
           f"pmf present: {all('probs' in r for r in tt)}")
     print("  (right-skewed as expected; full pmf every snapshot is the higher-moment substrate)")
 
+    # ── stopping-rule gate (leadership analysis is blocked until ALL pass) ────
+    pairs = 0; ov_games = set(); lags = []
+    for g in both:
+        fd, bv = s[g]["fanduel"], s[g]["bovada"]
+        for t in sorted({x[0] for x in fd} | {x[0] for x in bv}):
+            a, al, at = ff(fd, t); b, bl, bt = ff(bv, t)
+            if a is None or b is None or not (al and bl):
+                continue
+            pairs += 1; ov_games.add(g); lags.append(abs((at - bt).total_seconds()))
+    live_books = set()
+    for r in bp:
+        if r["live"]:
+            live_books.add(r["book"])
+    med_lag = float(np.median(lags)) if lags else float("inf")
+    gate = [
+        ("≥2000 simultaneous live quote pairs", pairs, pairs >= 2000),
+        ("≥100 games with live overlap", len(ov_games), len(ov_games) >= 100),
+        ("median sync lag <15s", f"{med_lag:.0f}s" if lags else "n/a", med_lag < 15),
+        ("≥3 books quoting live", len(live_books), len(live_books) >= 3),
+    ]
+    print("\nSTOPPING-RULE GATE (leadership analysis blocked until all PASS):")
+    for name, val, ok in gate:
+        print(f"  [{'PASS' if ok else 'FAIL'}] {name:38s} current: {val}")
+    print(f"  => {'CLEARED — analysis permitted' if all(g[2] for g in gate) else 'BLOCKED — keep collecting'}")
+
 
 if __name__ == "__main__":
     main()

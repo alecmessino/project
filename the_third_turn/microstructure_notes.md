@@ -51,16 +51,21 @@ frequencies; use equal-cadence resampling or an event study."* The lesson genera
   stronger paper than price leadership. (Note: the +0.14 implied skew here is the *full-game
   per-team* distribution, a different object from Paper 1's +1.23 *remaining-runs* skew.)
 
-## Daemon priority changes (why: tonight captured zero simultaneous live quotes)
+## Daemon priority changes (reordered: overlap is now the scarce resource)
 
-1. **Alternate-total strips (highest value).** Unlocks the implied CDF → implied mean → Paper 1
-   de-vig appendix and Paper 2 distribution work. Single highest-leverage feature.
-2. **Three–four books, not two.** Two books ask "who leads"; four ask "how does information
-   propagate through the market" — a network question, the better framing.
-3. **Suspension / resume timestamps.** Books vanish around key events; without this, latency work is
-   noise, and "zero simultaneous live quotes" tonight is likely partly a coverage/suspension gap.
-4. **Quote age / freshness flag.** Distinguishing fresh from stale removes many apparent
-   inefficiencies (see the 1-hour staleness above).
+Tonight captured **zero simultaneous live quotes**, so the binding constraint is not "more data,"
+it is *contemporaneous* data. Reordered accordingly:
+
+1. **Simultaneous live coverage (highest).** Without overlap there is no microstructure — full stop.
+   Achieve it however works: tighter live polling of both books in one window, prioritizing books
+   with real live coverage, and logging every live poll (not change-only) so overlap is measurable.
+2. **Alternate-total strips.** Now serves *both* papers — implied CDF → implied mean (Paper 1 de-vig
+   appendix) and distribution calibration (Paper 2). Excellent leverage once overlap exists.
+3. **Quote lifecycle.** Suspended / resumed / age / time-since-update. Indispensable the moment
+   overlap exists; also tells coverage gaps apart from genuine disagreement (see the 1-hour
+   staleness above).
+4. **Additional books.** Useful only if they overlap live — three asynchronous books are not better
+   than two synchronized ones. Add after 1–3 are working.
 
 ## Paper 2 reframing
 
@@ -68,6 +73,14 @@ Not "find inefficiencies" but **"how does information propagate through partiall
 forecasting systems?"** Sportsbooks are the observable laboratory; the transferable question is a
 forecasting one. Same evidentiary standard as Paper 1.
 
-**Stopping rule:** do not re-analyze leadership until the panel is ~10× larger (hundreds of games,
-thousands of live quote changes, with suspension + quote-age fields). Until then, collect, don't
-conclude.
+## Stopping rule (operational — not "wait," but an objective gate)
+
+Cross-book **leadership** will not be analyzed until *all* of the following hold:
+
+- **≥ 2,000 simultaneous live quote pairs** (both books live within the same tight window),
+- **≥ 100 independent games** with live overlap,
+- **median synchronization lag < 15 s** between the paired quotes (tonight: ~3,663 s),
+- **≥ 3 sportsbooks** quoting live concurrently.
+
+Until every criterion is met, the daemon **collects, it does not conclude.** The
+`microstructure_probe.py` coverage report is the checklist against these thresholds.

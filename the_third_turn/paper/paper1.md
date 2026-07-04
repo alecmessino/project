@@ -1,5 +1,5 @@
 <div class="titleblock">
-<h1>From Pitcher Fatigue to Market Efficiency: An Empirical Evaluation of Public Information in Live MLB Totals Markets</h1>
+<h1>Forecast Encompassing as a Test of Predictive Signals: Evidence from Live MLB Totals Markets</h1>
 <p class="epigraph">This paper asks whether publicly observable baseball information predicts outcomes, or merely predicts what the market already knows.</p>
 <p class="author">Alec Messino<br/><span class="affil">The Third Turn Research Initiative &middot; alec.messino@gmail.com</span></p>
 <p class="wp">Working paper &middot; Draft 0.9 &middot; July 2026 &middot; Comments welcome</p>
@@ -588,9 +588,10 @@ Referenced once from §4; Figure 2 is the main-text representation.
 ## Data and code availability
 
 The cleaned datasets, feature schema, and frozen result artifacts are released as the **Third Turn
-Benchmark Dataset (v1)**; reference implementations of the **Third Turn Protocol** accompany them,
-archived under a persistent DOI alongside the code repository and the research log. *(DOI +
-packaging pending.)*
+Benchmark Dataset (v1)**; the **Third Turn Protocol** is specified canonically in `benchmark/`
+(`evaluation.md`), with reference implementations that reproduce every reported number from the
+committed inputs. Both are archived alongside the code repository and the research log. *(Persistent
+DOI and packaged archive pending publication.)*
 
 ## References
 

@@ -1,22 +1,26 @@
 """The multi-dimension State Tax Map dataset — single source of truth for the cartogram.
 
-Five dimensions per state, each a *factual* regime classification colored on the map, with original
-detail copy written fresh from the facts (not copied from any third party's editorial prose or titles):
+Seven *factual* regime dimensions per state (each colored on the map, with original detail copy written
+fresh from the facts) plus a HIGHLIGHTED Structural-Alpha synthesis tab:
 
-  1. Income & gains  — how a state treats a HARVESTED LOSS (no-tax / conforming / non-conforming /
-                       expiring / long-term-only) + the top effective long-term rate. The TLH-relevant
-                       classification.
+  1. Income & gains  — top effective long-term rate + conformity (no-tax / conforming / non-conforming /
+                       expiring / long-term-only).
   2. Marriage        — filing-status regime (brackets double / partial penalty / one schedule /
                        flat / no income tax).
-  3. Estate (death)  — state estate / inheritance / both / none, with top rate + exemption (2025 law).
-  4. Basis step-up   — marital-property regime (community / opt-in trust / common law + UDCPRDA /
+  3. Death           — state estate / inheritance / both / none, with top rate + exemption (2025 law).
+  4. Munis           — municipal-bond interest: all exempt / in-state exempt only / taxes all / n/a.
+  5. QSBS            — IRC §1202 conformity: conforms / decoupled / n/a.
+  6. Losses          — capital-loss carryforward: federal §1212 / expires / none / no-tax / n/a.
+  7. Basis step-up   — marital-property regime (community / opt-in trust / common law + UDCPRDA /
                        common law) governing the IRC 1014 step-up.
-  5. Structural Alpha — the HIGHLIGHTED synthesis: `leakage.STATE_ALPHA`, the illustrative recoverable
+  ★ Structural Alpha — the HIGHLIGHTED synthesis: `leakage.STATE_ALPHA`, the illustrative recoverable
                        tax leakage our engine targets given everything above. Diagnostic-gated.
 
 Per-state classifications, effective rates, and exemptions are settled public-domain tax facts
-(tax year 2025); they are stated here in our own words. Structural-Alpha values trace to our own
-`STATE_ALPHA`. Nothing is a performance promise; the alpha dimension is illustrative/hypothetical.
+(tax year 2025); they are stated here in our own words. A per-dimension "Prove it" statutory citation
+is attached ONLY where the exact code section has been independently verified (Illinois today); every
+other state carries a generic source line until its statute is checked — we do not fabricate cites.
+Structural-Alpha values trace to our own `STATE_ALPHA`; that dimension is illustrative/hypothetical.
 """
 
 from __future__ import annotations
@@ -154,9 +158,11 @@ _ESTATE = {
     "MD": ("both", "16%", "$5M", ""),
 }
 _ESTATE_TAG = {"estate": "estate", "inheritance": "inher.", "both": "estate+inh", "none": ""}
-_ESTATE_NOTE_IL = ("Illinois estate tax: a $4,000,000 exemption (not indexed; SB 2970 to $6,000,000 is "
-                   "pending), a taxable threshold not a credit, top rate ~16% — with soft-cliff mechanics "
-                   "once the estate clears the exemption. No portability. Confirm the figure with counsel.")
+_ESTATE_NOTE_IL = ("Illinois estate tax: a $4,000,000 exemption (not indexed — a taxable threshold, not a "
+                   "credit; SB 2970 to $6,000,000 is pending, not enacted). Top rate ~16% (the tax equals the "
+                   "IRC 2011 state death-tax credit frozen at 12/31/2001, 0.8–16% over 21 brackets), with "
+                   "soft-cliff mechanics: once the estate clears $4M the table applies to the whole taxable "
+                   "estate. Administered by the Attorney General, not IDOR; no portability. Confirm with counsel.")
 
 
 def _estate(code):
@@ -201,7 +207,108 @@ _STEPUP_NOTE = {
                  "value at the first spouse's death (IRC 1014(b)(6)) — a major basis advantage.",
 }
 
-# ── 5 · Structural Alpha (highlighted) ───────────────────────────────────────────────────────────
+# ── 5 · Municipal-bond interest: home-state exemption regime ──────────────────────────────────────
+# regime ∈ allexempt (in- and out-of-state exempt) / instate (only in-state exempt) / taxall / na.
+_MUNI = {
+    "AK": "allexempt", "AL": "instate", "AR": "instate", "AZ": "instate", "CA": "instate", "CO": "instate", "CT": "instate", "DC": "instate",
+    "DE": "instate", "FL": "allexempt", "GA": "instate", "HI": "instate", "IA": "taxall", "ID": "instate", "IL": "taxall", "IN": "instate",
+    "KS": "instate", "KY": "instate", "LA": "instate", "MA": "instate", "MD": "instate", "ME": "instate", "MI": "instate", "MN": "instate",
+    "MO": "instate", "MS": "instate", "MT": "instate", "NC": "instate", "ND": "allexempt", "NE": "instate", "NH": "allexempt", "NJ": "instate",
+    "NM": "instate", "NV": "allexempt", "NY": "instate", "OH": "instate", "OK": "instate", "OR": "instate", "PA": "instate", "RI": "instate",
+    "SC": "instate", "SD": "allexempt", "TN": "allexempt", "TX": "allexempt", "UT": "instate", "VA": "instate", "VT": "instate", "WA": "allexempt",
+    "WI": "taxall", "WV": "instate", "WY": "allexempt", "AS": "na", "GU": "na", "MP": "na", "PR": "na", "VI": "na",
+}
+_MUNI_TAG = {"allexempt": "exempt", "instate": "in-state", "taxall": "taxed", "na": ""}
+_MUNI_NOTE = {
+    "allexempt": "Municipal-bond interest is exempt from state tax whether the issuer is in-state or out-of-state — the broadest muni preference (states with no tax on investment income, plus a few that exempt all munis by statute).",
+    "instate": "Only in-state municipal-bond interest escapes state tax; bonds from other states are taxed. The classic in-state muni preference that rewards a home-state ladder.",
+    "taxall": "Taxes municipal-bond interest from every issuer — in-state and out-of-state alike. One of the few states with no muni-interest preference at all.",
+    "na": "No separate state treatment applies here — the jurisdiction taxes under its own or a mirror-federal code.",
+}
+
+# ── 6 · QSBS (IRC §1202) conformity ───────────────────────────────────────────────────────────────
+# regime ∈ conforms (§1202 exclusion flows to the state return) / decoupled (state still taxes it) / na.
+_QSBS = {
+    "AK": "na", "AL": "decoupled", "AR": "conforms", "AZ": "conforms", "CA": "decoupled", "CO": "conforms", "CT": "conforms", "DC": "decoupled",
+    "DE": "conforms", "FL": "na", "GA": "conforms", "HI": "na", "IA": "conforms", "ID": "conforms", "IL": "conforms", "IN": "conforms",
+    "KS": "conforms", "KY": "conforms", "LA": "conforms", "MA": "conforms", "MD": "conforms", "ME": "na", "MI": "conforms", "MN": "na",
+    "MO": "conforms", "MS": "decoupled", "MT": "conforms", "NC": "conforms", "ND": "conforms", "NE": "conforms", "NH": "na", "NJ": "decoupled",
+    "NM": "conforms", "NV": "na", "NY": "conforms", "OH": "conforms", "OK": "conforms", "OR": "conforms", "PA": "decoupled", "RI": "conforms",
+    "SC": "conforms", "SD": "na", "TN": "na", "TX": "na", "UT": "conforms", "VA": "conforms", "VT": "conforms", "WA": "conforms",
+    "WI": "conforms", "WV": "conforms", "WY": "na", "AS": "na", "GU": "conforms", "MP": "conforms", "PR": "decoupled", "VI": "conforms",
+}
+_QSBS_TAG = {"conforms": "§1202 ok", "decoupled": "decoupled", "na": "no §1202"}
+_QSBS_NOTE = {
+    "conforms": "Conforms to IRC §1202 — the federal qualified small business stock gain exclusion carries through to the state return.",
+    "decoupled": "Decoupled from IRC §1202 — the state does not follow the federal QSBS exclusion, so gain excluded on the federal return can still be taxed by the state.",
+    "na": "No distinct state QSBS position applies here — either the jurisdiction levies no tax on the gain, or it does not separately recognize the §1202 exclusion. Confirm with a tax advisor.",
+}
+
+# ── 7 · Capital-loss carryforward ─────────────────────────────────────────────────────────────────
+# regime ∈ fed (federal §1212 carryforward) / expires (time-limited) / none (no carryforward) / notax / na.
+_LOSS = {
+    "AK": "notax", "AL": "none", "AR": "fed", "AZ": "fed", "CA": "fed", "CO": "fed", "CT": "fed", "DC": "fed",
+    "DE": "fed", "FL": "notax", "GA": "fed", "HI": "expires", "IA": "fed", "ID": "fed", "IL": "fed", "IN": "fed",
+    "KS": "fed", "KY": "fed", "LA": "fed", "MA": "fed", "MD": "fed", "ME": "fed", "MI": "fed", "MN": "fed",
+    "MO": "notax", "MS": "fed", "MT": "fed", "NC": "fed", "ND": "fed", "NE": "fed", "NH": "notax", "NJ": "none",
+    "NM": "fed", "NV": "notax", "NY": "fed", "OH": "fed", "OK": "fed", "OR": "fed", "PA": "none", "RI": "fed",
+    "SC": "fed", "SD": "notax", "TN": "notax", "TX": "notax", "UT": "fed", "VA": "fed", "VT": "fed", "WA": "fed",
+    "WI": "fed", "WV": "fed", "WY": "notax", "AS": "na", "GU": "na", "MP": "na", "PR": "expires", "VI": "na",
+}
+_LOSS_TAG = {"fed": "federal", "expires": "expires", "none": "none", "notax": "", "na": ""}
+_LOSS_QUIRK = {  # only where the regime has a state-specific caveat
+    "HI": "the Hawaii carryforward dies after 5 years", "PR": "Puerto Rico allows a 7-year carryforward, taxed as short-term and capped at 90%",
+    "AL": "Alabama allows a loss only against same-year income", "NJ": "New Jersey has no carryforward — banked losses never reach the NJ bill",
+    "PA": "Pennsylvania locks a loss to the year, the income class, and the spouse",
+}
+_LOSS_NOTE = {
+    "fed": "Capital losses carry forward under the federal Section 1212 rules — a harvested loss nets against gains and rolls forward until used.",
+    "expires": "Loss carryforward is time-limited and expires — {quirk}. Harvest before the clock runs out.",
+    "none": "No loss carryforward — a capital loss must be used the year it is realized or it is lost, so harvesting only helps against same-year gains ({quirk}).",
+    "notax": "No state tax on capital gains, so a harvested loss carries no state benefit; its value here is only the federal offset.",
+    "na": "Taxed under the jurisdiction's own or mirror-federal code; no separate state loss-carryforward rule applies.",
+}
+
+
+def _categorical(code, table, tags, notes, source, quirks=None):
+    """Build a record for a categorical dimension (muni/qsbs/loss) from its regime table."""
+    if code not in table:
+        return None
+    regime = table[code]
+    note = notes[regime]
+    if "{quirk}" in note:
+        note = note.format(quirk=(quirks or {}).get(code, "see the state's rule"))
+    return {"regime": regime, "tag": tags[regime], "note": note, "source": source}
+
+
+# ── Primary-source statutory citations ("Prove it") — ONLY where independently verified ───────────
+# Today that is Illinois; every other state shows the generic source line until its statute is checked.
+# NEVER add an entry here that has not been verified against the actual code section — a fabricated
+# legal citation on an RIA site is a real liability. (url, label) pairs; a dimension may cite several.
+_ILGA_ITA = "https://www.ilga.gov/legislation/ilcs/ilcs3.asp?ActID=591&ChapterID=8"
+_CITATIONS = {
+    ("IL", "cg"): [(_ILGA_ITA, "35 ILCS 5/201(b)(1) (Illinois Income Tax Act)")],
+    ("IL", "marriage"): [(_ILGA_ITA, "35 ILCS 5/201(b)(1) (Illinois Income Tax Act)")],
+    ("IL", "estate"): [
+        ("https://ilga.gov/Documents/legislation/ilcs/documents/003504050K3.htm", "35 ILCS 405/3 (Illinois Estate & GST Tax Act)"),
+        ("https://ilga.gov/Documents/legislation/ilcs/documents/003504050K2.htm", "35 ILCS 405/2 (Illinois Estate & GST Tax Act)"),
+    ],
+    ("IL", "muni"): [(_ILGA_ITA, "35 ILCS 5/203(a)(2)(A) and (N); 86 Ill. Adm. Code 100.2470")],
+    ("IL", "qsbs"): [(_ILGA_ITA, "35 ILCS 5/102 (Illinois Income Tax Act)")],
+    ("IL", "loss"): [(_ILGA_ITA, "35 ILCS 5/201(b)(1) (Illinois Income Tax Act)")],
+}
+
+
+def _attach_citations(code, rec):
+    """Add a `citation` list to any dimension record for which a verified statute exists."""
+    for dim, r in rec.items():
+        cites = _CITATIONS.get((code, dim))
+        if cites:
+            r["citation"] = [{"url": u, "label": l} for u, l in cites]
+    return rec
+
+
+# ── 8 · Structural Alpha (highlighted) ────────────────────────────────────────────────────────────
 _ALPHA_BUCKETS = [(3.8, "a"), (4.0, "b"), (4.3, "c"), (4.5, "d"), (99, "e")]
 
 
@@ -221,9 +328,19 @@ DIMENSIONS = [
      "legend": [("notax", "#d8cfbc", "No income tax"), ("double", "#15806a", "Brackets double"),
                 ("flat", "#7faa97", "Flat rate"), ("partial", "#c1a35b", "Partial penalty"),
                 ("one", "#9b4439", "One schedule")]},
-    {"key": "estate", "label": "Estate", "title": "Estate & inheritance tax at death",
+    {"key": "estate", "label": "Death", "title": "Estate & inheritance tax at death",
      "legend": [("none", "#d8cfbc", "None"), ("estate", "#15806a", "Estate tax"),
                 ("inheritance", "#c1a35b", "Inheritance tax"), ("both", "#9b4439", "Both")]},
+    {"key": "muni", "label": "Munis", "title": "How each state taxes municipal-bond interest",
+     "legend": [("allexempt", "#d8cfbc", "All munis exempt"), ("instate", "#7faa97", "In-state exempt only"),
+                ("taxall", "#9b4439", "Taxes all munis"), ("na", "#cdc7ba", "n/a")]},
+    {"key": "qsbs", "label": "QSBS", "title": "Does the state follow the §1202 QSBS exclusion?",
+     "legend": [("conforms", "#7faa97", "Conforms to §1202"), ("decoupled", "#9b4439", "Decoupled"),
+                ("na", "#cdc7ba", "n/a")]},
+    {"key": "loss", "label": "Losses", "title": "What happens to a capital loss you carry forward",
+     "legend": [("fed", "#7faa97", "Federal carryforward"), ("expires", "#c1a35b", "Expires"),
+                ("none", "#9b4439", "No carryforward"), ("notax", "#d8cfbc", "No tax on gains"),
+                ("na", "#cdc7ba", "n/a")]},
     {"key": "stepup", "label": "Basis step-up", "title": "Marital property & the basis step-up",
      "legend": [("common", "#d8cfbc", "Common law"), ("udcprda", "#7faa97", "Common law + UDCPRDA"),
                 ("optin", "#c1a35b", "Opt-in community trust"), ("community", "#15806a", "Community property")]},
@@ -242,6 +359,15 @@ def _state_record(code):
         rec["marriage"] = {"regime": r, "tag": _MARRIAGE_TAG[r], "note": _MARRIAGE_NOTE[r],
                            "source": "State income-tax filing schedules, tax year 2025 — verify with a tax advisor."}
     rec["estate"] = _estate(code)
+    rec["muni"] = _categorical(
+        code, _MUNI, _MUNI_TAG, _MUNI_NOTE,
+        "State income-tax statutes on municipal-bond interest, tax year 2025 — verify with a tax advisor.")
+    rec["qsbs"] = _categorical(
+        code, _QSBS, _QSBS_TAG, _QSBS_NOTE,
+        "State IRC-conformity statutes on §1202, tax year 2025 — verify with a tax advisor.")
+    rec["loss"] = _categorical(
+        code, _LOSS, _LOSS_TAG, _LOSS_NOTE,
+        "State capital-loss carryforward rules, tax year 2025 — verify with a tax advisor.", quirks=_LOSS_QUIRK)
     if code in _STEPUP:
         r = _STEPUP[code]
         rec["stepup"] = {"regime": r, "tag": _STEPUP_TAG[r], "note": _STEPUP_NOTE[r],
@@ -259,7 +385,7 @@ def _state_record(code):
             "source": "scripts/tax_alpha.py · 30y window (1996–2026). Illustrative, hypothetical — diagnostic-gated.",
             "deeplink": f"leakage.html?state={code}",
         }
-    return {k: v for k, v in rec.items() if v is not None}
+    return _attach_citations(code, {k: v for k, v in rec.items() if v is not None})
 
 
 def build_statemap() -> dict:

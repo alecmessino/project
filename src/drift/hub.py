@@ -150,12 +150,13 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
     # recovery is the supporting number.
     value_adds.append({
         "tag": "Structural Alpha · the flagship",
-        "title": "Engineered beta, mechanically tax-managed.",
+        "title": "A portfolio built to be held — and taxed lightly.",
         "stat": f"+{hero['alpha_low']:.1f}–{hero['alpha_high']:.1f}%/yr",
-        "stat_label": "illustrative after-tax recovery, by state · no-tax states → California",
-        "note": "Diversified factor exposure (small / value / international), held on purpose and run "
-                "through lot protection, harvesting, and asset location — low turnover, built for "
-                "taxable accounts. Illustrative; your figure depends on your bracket and holdings.",
+        "stat_label": "illustrative after-tax recovery, from no-tax states to California",
+        "note": "A diversified, low-turnover portfolio, tilted toward the sources of return that have "
+                "paid patient investors over time — and managed so that harvesting, lot selection, and "
+                "account placement quietly hand less of it to taxes. For taxable accounts. Illustrative; "
+                "your figure depends on your bracket and holdings.",
     })
 
     # 2 · Core Alpha — the tactical engine (tax-advantaged capital). The strongest honest stat is that
@@ -173,11 +174,12 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
                    f"(vs {bench_sh} for {bench_lbl}) — a separate, shorter window.")
         value_adds.append({
             "tag": "Core Alpha · the tactical engine",
-            "title": "Built to persist, not to overfit.",
+            "title": "Built to persist, not to impress.",
             "stat": robust,
-            "stat_label": "out-of-sample ≈ in-sample Sharpe over decades — the fit didn't flatter",
-            "note": "We optimize for persistence, not peak historical Sharpe; out-of-sample stayed "
-                    "positive after decades of testing." + cur + " High-turnover — for tax-advantaged "
+            "stat_label": "the out-of-sample result matched the in-sample one — the approach didn't flatter itself",
+            "note": "The research prioritizes persistence over historical optimization. Tested across "
+                    "decades, the out-of-sample result held up nearly unchanged — the sign of an approach "
+                    "that wasn't fit to the past." + cur + " Higher-turnover, and meant for tax-advantaged "
                     "accounts. A hypothetical backtest, not a client account.",
         })
 
@@ -187,10 +189,10 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
         "tag": "Tax-location · where each dollar lives",
         "title": "The account is the decision that compounds.",
         "stat": f"{hero['keep_before']}% → {hero['keep_after']}%",
-        "stat_label": f"share of a {hero['horizon']}-year gain kept after tax — the same exposure, tax-naive vs tax-managed",
-        "note": "Routing the high-turnover engine to tax-advantaged capital and the diversified book to "
-                "taxable — then harvesting and protecting lots — is the part that's hard to copy. "
-                "Federal-only illustration; not a forecast.",
+        "stat_label": f"share of a {hero['horizon']}-year gain kept after tax — the same holdings, taxed carelessly vs. deliberately",
+        "note": "Placing the tactical strategy in tax-advantaged accounts and the diversified one in "
+                "taxable — then harvesting losses along the way — is the quiet work that decides how much "
+                "a family keeps. Federal-only illustration; not a forecast.",
     })
 
     exhibits = [{"title": t, "href": h, "desc": d, "present": (docs / h).exists(), "appendix": ap}

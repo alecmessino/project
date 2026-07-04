@@ -52,6 +52,13 @@ def main() -> int:
     for asset in ("driftwood.css", "dw-context.js", "about.html"):
         (DOCS / asset).write_text((WEB / asset).read_text())
         print(f"   {asset:15} -> docs/{asset} (copied)")
+    # Binary assets (e.g. the founder headshot) — copy through only if present, so the About page's
+    # <img> resolves once the file is dropped in. Optional: absent is fine (the page hides it).
+    for asset in ("alec-messino.jpg",):
+        src = WEB / asset
+        if src.exists():
+            (DOCS / asset).write_bytes(src.read_bytes())
+            print(f"   {asset:15} -> docs/{asset} (copied, binary)")
     if bad:
         print(f"FAILED: {bad} file(s) had problems")
         return 1

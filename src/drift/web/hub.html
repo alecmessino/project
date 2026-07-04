@@ -96,6 +96,14 @@
   .arch .cap{font-size:11.5px;color:#9aa3ae;margin-top:15px;line-height:1.5}
   .onote{font-size:11px;color:#949ba6;margin-top:10px;line-height:1.45}
   .pos{color:#9fd9c4} .neg{color:#e0a59b}
+  /* Who Driftwood is built for — a calm answer to "is this for me?", high up the page. */
+  .audience{padding:6px 44px 30px}
+  .audience .h{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .audience .alede{font-size:16px;line-height:1.6;color:#4b4b53;margin:0 0 16px;max-width:62ch}
+  .aud-grid{display:flex;flex-wrap:wrap;gap:10px}
+  .aud-grid span{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 16px;
+    font-family:var(--sans);font-size:13.5px;color:var(--ink)}
+  @media(max-width:620px){.audience{padding-left:20px;padding-right:20px}}
   .vsec{padding:8px 44px 30px}
   .vsec .h{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
   .vadds{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
@@ -171,13 +179,14 @@
     <div class="hero">
       <div>
         <div class="eyebrow">After-tax wealth architecture</div>
-        <h1>Keep more of<br />what you've earned.</h1>
-        <p class="lede">Two return engines — a tax-managed <b>Structural&nbsp;Alpha</b> book and a
-          return-seeking <b>Core&nbsp;Alpha</b> model — routed by one tax-location engine into a single
-          after-tax portfolio. The account each dollar lives in is the decision that compounds.</p>
+        <h1>Most portfolios are optimized before taxes&nbsp;— even though you spend after&nbsp;them.</h1>
+        <p class="lede">Driftwood manages the after-tax outcome as deliberately as most firms manage the
+          return. Two strategies — a tax-managed core for taxable accounts, and a tactical one for
+          tax-advantaged accounts — placed where each does the most good, and coordinated into a single
+          portfolio. The account a holding sits in is often the decision that compounds.</p>
         <div class="ctas">
-          <a class="primary" href="taxlab.html?view=prospect">See what we'd save you →</a>
-          <a class="ghost" href="thesis.html">How the architecture works</a>
+          <a class="primary" href="taxlab.html?view=prospect">See your after-tax number →</a>
+          <a class="ghost" href="thesis.html">How it works</a>
         </div>
         <div class="trust">
           <span><b>✓</b> Fiduciary, fee-only</span>
@@ -191,24 +200,37 @@
             <div class="eng"><div class="et">Structural Alpha</div><div class="ed">diversified · tax-managed<br>taxable accounts</div></div>
             <div class="eng"><div class="et">Core Alpha</div><div class="ed">tactical · high-turnover<br>tax-advantaged accounts</div></div>
           </div>
-          <div class="flow">↓ &nbsp; one tax-location engine &nbsp; ↓</div>
+          <div class="flow">↓ &nbsp; one tax-location decision &nbsp; ↓</div>
           <div class="port">One after-tax portfolio</div>
-          <div class="cap">Two return engines, routed by tax into one portfolio. The routing — not either engine — is the product, and it's the hard part to copy.</div>
+          <div class="cap">Two strategies, placed by tax into one portfolio. Where each one belongs is the quiet decision that compounds over a lifetime.</div>
         </div>
         <div class="onote">Illustrative, hypothetical modeling — not a forecast, not a client account. Your own
           after-tax figures depend on your holdings, basis, and bracket; compute them in the Tax&nbsp;Lab.</div>
       </div>
     </div>
 
+    <div class="audience">
+      <div class="h">Who Driftwood is built for</div>
+      <p class="alede">Households where the pieces have to work together — where the tax return, the estate
+        plan, and the portfolio are one problem, not three.</p>
+      <div class="aud-grid">
+        <span>Business owners &amp; founders</span>
+        <span>Executives with equity compensation</span>
+        <span>Concentrated-stock households</span>
+        <span>Families in high-tax states</span>
+        <span>Clients coordinating with a CPA or attorney</span>
+      </div>
+    </div>
+
     <div class="vsec" id="vsec" style="display:none">
-      <div class="h">How the architecture works · three engines</div>
+      <div class="h">How it works</div>
       <div class="vadds" id="vadds"></div>
       <div class="cap">Hypothetical / illustrative model results — not a forecast and not advice. Each figure appears
         once, carries its own risk, and traces to an exhibit below; <a href="#disclosures" style="color:var(--teal2)">see full disclosures</a>.</div>
     </div>
 
     <div class="path">
-      <div class="h">Your path · five steps, in order</div>
+      <div class="h">Where to start</div>
       <div class="steps">
         <a class="step lead" href="taxlab.html?view=prospect"><div class="n">1</div><div class="t">Your situation</div><div class="d">Bracket, state, portfolio.</div></a>
         <a class="step" href="leakage.html"><div class="n">2</div><div class="t">The problem</div><div class="d">What tax &amp; fees cost now.</div></a>
@@ -219,7 +241,7 @@
     </div>
 
     <div class="exsec">
-      <div class="h">Explore the exhibits</div>
+      <div class="h">Tools &amp; research</div>
       <div class="exhibits" id="exhibits"></div>
     </div>
 

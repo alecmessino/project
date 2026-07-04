@@ -1,14 +1,15 @@
-/* Driftwood shared design system — self-hosted institutional type. Two families, strict roles:
-   Inter (global body / UI / tables / grids / metadata) + Moret (editorial H1/H2 only).
-   Linked LAST in each <head> to unify tokens/fonts across all pages. */
+/* Driftwood shared design system — self-hosted institutional type. Erode (Fontshare/ITF) is the brand
+   face for editorial display (H1–H3) AND body/prose; Inter is retained for dense UI ONLY — nav, tables,
+   tabular numbers, form controls. Linked LAST in each <head> to unify tokens across all pages. */
+@font-face{font-family:'Erode';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/erode-400.woff2") format("woff2")}
+@font-face{font-family:'Erode';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/erode-500.woff2") format("woff2")}
+@font-face{font-family:'Erode';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/erode-600.woff2") format("woff2")}
+@font-face{font-family:'Erode';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/erode-700.woff2") format("woff2")}
+/* Inter — UI only (tables/grids/tabular numbers/form controls), never body prose. */
 @font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/inter-400.woff2") format("woff2")}
 @font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/inter-500.woff2") format("woff2")}
 @font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/inter-600.woff2") format("woff2")}
 @font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/inter-700.woff2") format("woff2")}
-/* Moret — licensed commercial display face, self-hosted (Semibold=600, Bold=700) for the H1/H2 titles.
-   Georgia remains the fallback in --serif below if a weight is ever unavailable. */
-@font-face{font-family:'Moret';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/moret-600.woff2") format("woff2")}
-@font-face{font-family:'Moret';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/moret-700.woff2") format("woff2")}
 
 :root{
   --bg:#fff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#5f5f68;
@@ -19,16 +20,21 @@
   --r1:7px; --r2:9px; --r3:10px; --r4:12px; --rfull:999px;
   --sh1:0 1px 3px rgba(20,20,26,.06); --sh2:0 8px 30px rgba(20,20,26,.12);
   --t-fast:.12s ease; --t-mid:.2s ease;
-  --serif:'Moret','Georgia','Times New Roman',serif;   /* editorial display — H1/H2 only */
-  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  /* Erode is the brand face: editorial display (H1–H3) AND body/prose. Inter (--sans) is retained
+     ONLY for dense UI — nav, tables, tabular numbers, form controls — where a serif reads poorly. */
+  --serif:'Erode','Georgia','Times New Roman',serif;   /* brand face — display + body/prose */
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;  /* dense UI only */
   --fz-xs:11px; --fz-sm:12.5px; --fz-md:15px; --fz-lg:18px; --fz-hero:30px;
 }
-body{ font-family:var(--sans); -webkit-font-smoothing:antialiased; letter-spacing:-.004em; }
-/* Moret (var(--serif)) is restricted to the two editorial title levels + their print equivalents. */
+body{ font-family:var(--serif); -webkit-font-smoothing:antialiased; letter-spacing:-.004em; }
+/* Erode (var(--serif)) carries the editorial title levels + their print equivalents. */
 h1,h2,.ph-title,.es-h{ font-family:var(--serif); letter-spacing:-.02em; }
 h1{ font-weight:700; } h2,.ph-title,.es-h{ font-weight:600; }
-h3{ font-weight:600; letter-spacing:-.01em; }   /* H3 is an Inter subhead, not Moret */
-.num,.v,.big,output,.amt,.recovered{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
+h3{ font-weight:600; letter-spacing:-.01em; }   /* H3 now inherits the Erode body face */
+/* Dense UI stays on Inter (var(--sans)): nav, tables, form controls, code, and any tabular-number
+   atoms — a serif at small sizes / in aligned columns reads poorly and breaks numeric alignment. */
+.num,.v,.big,output,.amt,.recovered{ font-family:var(--sans); font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
+table,th,td,thead,tbody,tfoot,.dwnav,.dwnav-links,input,select,textarea,button,code,.mono{ font-family:var(--sans); }
 a{ color:var(--accent); }
 ::selection{ background:rgba(21,128,106,.16); }
 

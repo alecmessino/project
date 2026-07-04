@@ -28,11 +28,14 @@ EXHIBITS = [
      "The one-page Before/After: where a concentrated, high-turnover book leaks return to tax, and how "
      "Structural Alpha plugs it — the quantified tax edge on an identical exposure.", False),
     ("State Tax Map", "statemap.html",
-     "Fifty states, five dimensions — capital gains, marriage, estate, basis step-up, and the "
-     "Structural Alpha our engine recovers from each state's tax landscape.", False),
+     "Fifty states, seven dimensions — capital gains, marriage, estate, munis, QSBS, losses, and basis "
+     "step-up — plus the Structural Alpha our engine recovers from each state's tax landscape.", False),
     ("State tax guides (50 states + DC)", "states.html",
      "A capital-gains, estate, marriage, and basis-step-up profile for every state — each with the "
      "illustrative Structural Alpha our engine targets there and a one-click personalized diagnostic.", False),
+    ("Single asset risk", "concentration.html",
+     "How to de-risk a concentrated stock position: 22 strategies across selling, harvesting, hedging, "
+     "deferring, and giving — scored on liquidity, speed, fees, tax cost, customization, and simplicity.", False),
     ("Model Portfolio (hypothetical)", "ledger.html",
      "Exploratory research — a hypothetical, append-only momentum backtest marked daily, with alpha/beta "
      "attribution. Not the deployed strategy, not actual trading or any client account.", True),

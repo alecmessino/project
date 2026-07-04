@@ -10,18 +10,18 @@
   plausible.init()
 </script>
 <title>Driftwood — The State Tax Map</title>
-<meta name="description" content="Fifty states, five tax dimensions — capital gains, marriage, estate, basis step-up, and the after-tax Structural Alpha our engine recovers from each state's tax code. Illustrative modeling, not advice." />
+<meta name="description" content="Fifty states, seven tax dimensions — capital gains, marriage, estate, munis, QSBS, losses, and basis step-up — plus the after-tax Structural Alpha our engine recovers from each state's tax code. Illustrative modeling, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/statemap.html" />
 <link rel="icon" href="favicon.svg" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
 <meta property="og:title" content="Driftwood — The State Tax Map" />
-<meta property="og:description" content="Fifty states, five tax dimensions — capital gains, marriage, estate, basis step-up, and the after-tax Structural Alpha our engine recovers from each state's tax code. Illustrative modeling, not advice." />
+<meta property="og:description" content="Fifty states, seven tax dimensions — capital gains, marriage, estate, munis, QSBS, losses, and basis step-up — plus the after-tax Structural Alpha our engine recovers from each state's tax code. Illustrative modeling, not advice." />
 <meta property="og:url" content="https://alecmessino.github.io/project/statemap.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/statemap.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Driftwood — The State Tax Map" />
-<meta name="twitter:description" content="Fifty states, five tax dimensions — capital gains, marriage, estate, basis step-up, and the after-tax Structural Alpha our engine recovers from each state's tax code. Illustrative modeling, not advice." />
+<meta name="twitter:description" content="Fifty states, seven tax dimensions — capital gains, marriage, estate, munis, QSBS, losses, and basis step-up — plus the after-tax Structural Alpha our engine recovers from each state's tax code. Illustrative modeling, not advice." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/statemap.png" />
 <link rel="stylesheet" href="driftwood.css">
 <style>
@@ -32,7 +32,7 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--body);
-    font:14.5px/1.6 var(--sans);
+    font:14.5px/1.6 var(--serif);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .sheet{max-width:1100px;margin:30px auto;padding:0 20px 50px}
   .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;
@@ -101,11 +101,12 @@
       </div>
     </nav>
     <div class="hd">
-      <div class="eyebrow">Driftwood · the state tax map</div>
-      <h1>Fifty states. One after-tax plan.</h1>
-      <p class="lede">Every state has its own tax personality — on gains, on marriage, at death, and on
-        the basis your heirs inherit. Move across the dimensions to see where a state helps and where it
-        leaks; the last tab is what our engine is built to recover from all of it.</p>
+      <div class="eyebrow">America turns 250 · 1776 to 2026 🇺🇸</div>
+      <h1>Fifty states, fifty tax personalities</h1>
+      <p class="lede">How each state treats investment income, filing status, and estates, in one
+        interactive map — rates on gains, the marriage penalty, death taxes, municipal-bond interest,
+        the §1202 QSBS exclusion, and what happens to a harvested loss. The last tab is what our engine
+        is built to recover from all of it.</p>
     </div>
     <div class="tabs" id="tabs" role="tablist"></div>
     <div class="split">
@@ -211,7 +212,14 @@ function render(s){
     if(d.key==="alpha" && rec.deeplink){
       html += `<a class="cta" href="${rec.deeplink}">See ${nm}'s diagnostic →</a>`;
     }
-    html += `<div class="src">${rec.source||""}</div>`;
+    // "Prove it": a primary-source statute link where we've verified the exact code section (IL today);
+    // otherwise the generic source line. Citations are attached in statemap.py only when verified.
+    if(rec.citation && rec.citation.length){
+      const links = rec.citation.map(c=>`<a href="${c.url}" target="_blank" rel="noopener">${c.label}</a>`).join(" · ");
+      html += `<div class="src"><b>Prove it:</b> ${links}</div>`;
+    } else {
+      html += `<div class="src">${rec.source||""}</div>`;
+    }
     document.getElementById("detail").innerHTML = html;
   }
 

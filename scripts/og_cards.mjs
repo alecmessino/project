@@ -1,4 +1,5 @@
-// Generate Driftwood Open-Graph share cards (1200x630) with the self-hosted Moret/Inter fonts.
+// Generate Driftwood Open-Graph share cards (1200x630) with the self-hosted Erode/Inter fonts.
+// Erode is the brand display face (headline + prose); Inter is retained for dense UI (wordmark, kicker, pill).
 // Usage: node scripts/og_cards.mjs   (needs playwright-core + the bundled Chromium)
 // Renders one PNG per page into docs/og/. Re-run after a brand/copy change.
 import pkg from '/home/user/project/node_modules/playwright-core/index.js';
@@ -16,7 +17,8 @@ const CARDS = {
   index:     ['Keep more of what you’ve earned.', 'Private wealth architecture — engineered beta and mechanical tax management.'],
   taxlab:    ['The Tax Lab', 'After-tax return, asset location and tax-loss harvesting — by bracket and state.'],
   leakage:   ['Where your return leaks to tax', 'The Before / After on an identical exposure — your state’s illustrative number.'],
-  statemap:  ['Fifty states. One after-tax plan.', 'Capital gains · marriage · estate · step-up · Structural Alpha — by state.'],
+  statemap:  ['Fifty states, fifty tax personalities', 'Gains · marriage · death · munis · QSBS · losses · step-up — by state.'],
+  concentration: ['How to de-risk a concentrated position', 'Selling · harvesting · hedging · deferring · giving — scored on the tradeoffs.'],
   thesis:    ['Own the drift. Refuse the leakage.', 'How Structural Alpha works — and the honest research behind it.'],
   tearsheet: ['Model Portfolio · long history', 'A hypothetical multi-decade backtest — in-sample and out-of-sample.'],
   ledger:    ['An illustrative track record', 'A hypothetical Model Portfolio, marked daily. Not a live client account.'],
@@ -24,8 +26,9 @@ const CARDS = {
 };
 
 const card = (title, sub) => `<!doctype html><html><head><meta charset="utf-8"><style>
-  @font-face{font-family:'Moret';font-weight:700;src:url("${FONTS}/moret-700.woff2") format("woff2")}
-  @font-face{font-family:'Moret';font-weight:600;src:url("${FONTS}/moret-600.woff2") format("woff2")}
+  @font-face{font-family:'Erode';font-weight:400;src:url("${FONTS}/erode-400.woff2") format("woff2")}
+  @font-face{font-family:'Erode';font-weight:600;src:url("${FONTS}/erode-600.woff2") format("woff2")}
+  @font-face{font-family:'Erode';font-weight:700;src:url("${FONTS}/erode-700.woff2") format("woff2")}
   @font-face{font-family:'Inter';font-weight:400;src:url("${FONTS}/inter-400.woff2") format("woff2")}
   @font-face{font-family:'Inter';font-weight:600;src:url("${FONTS}/inter-600.woff2") format("woff2")}
   @font-face{font-family:'Inter';font-weight:700;src:url("${FONTS}/inter-700.woff2") format("woff2")}
@@ -37,8 +40,8 @@ const card = (title, sub) => `<!doctype html><html><head><meta charset="utf-8"><
   .brand{font-family:'Inter';font-weight:700;font-size:30px;letter-spacing:-.01em}
   .brand .w{color:#15806a}
   .kicker{margin-top:54px;color:#9a7b3e;font-weight:700;font-size:21px;letter-spacing:.14em;text-transform:uppercase}
-  h1{font-family:'Moret','Georgia',serif;font-weight:700;font-size:78px;line-height:1.04;letter-spacing:-.02em;margin-top:18px;max-width:1010px}
-  .sub{margin-top:26px;font-size:30px;line-height:1.4;color:#41454c;max-width:1000px}
+  h1{font-family:'Erode','Georgia',serif;font-weight:700;font-size:78px;line-height:1.04;letter-spacing:-.02em;margin-top:18px;max-width:1010px}
+  .sub{margin-top:26px;font-family:'Erode','Georgia',serif;font-size:30px;line-height:1.4;color:#41454c;max-width:1000px}
   .foot{margin-top:auto;display:flex;align-items:center;gap:14px;font-size:21px;color:#5f5f68}
   .pill{border:1px solid #c9b27e;color:#9a7b3e;border-radius:999px;padding:6px 16px;font-weight:600;font-size:18px}
 </style></head><body>

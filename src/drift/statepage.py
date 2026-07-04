@@ -36,7 +36,8 @@ STATE_PAGE_CODES = sorted(
 )
 
 _DIM_LABEL = {d["key"]: d["label"] for d in DIMENSIONS}
-_DIM_ORDER = ["cg", "marriage", "estate", "stepup"]   # alpha is rendered as the hero, not a plain card
+# alpha is rendered as the hero, not a plain card; the seven factual dimensions each get a card.
+_DIM_ORDER = ["cg", "marriage", "estate", "muni", "qsbs", "loss", "stepup"]
 
 
 def slug_for(code: str) -> str:
@@ -71,6 +72,57 @@ def _related(code: str) -> list[tuple[str, str]]:
     return [(c, STATE_NAMES[c]) for c in picks[:4]]
 
 
+# ── Hand-authored, factual per-state context ──────────────────────────────────────────────────────
+# The no-income-tax states (AK/FL/NV/NH/SD/TN/TX/WY) are IDENTICAL on every regime dimension — even the
+# new muni/QSBS/loss ones — so the dataset alone can't give their pages distinct body copy (a real SEO
+# duplicate-content risk). This is a genuinely unique, verifiable 1–2 sentence nugget per state
+# (relocation drivers, homestead/asset-protection, trust-jurisdiction notes) — no invented law, and the
+# "not advice" framing is preserved by the page's global disclosure. Every no-tax state MUST be covered.
+_STATE_CONTEXT = {
+    "AK": ("Alaska levies no state income tax and no statewide sales tax, and is the only no-income-tax "
+           "state that also pays residents an annual Permanent Fund Dividend. It offers an elective "
+           "community-property trust, so a couple can opt in to a full basis step-up at the first death."),
+    "FL": ("Florida has no state income tax and a constitutional bar against one, which — paired with an "
+           "unlimited-value homestead creditor exemption and tenancy-by-the-entireties protection for "
+           "married couples — makes it a leading inbound-migration state for retirees and high earners."),
+    "NV": ("Nevada has no state income tax and no corporate income tax, and is a well-known "
+           "asset-protection venue for its self-settled spendthrift (Nevada Asset Protection) trusts. "
+           "It is also a community-property state, so community assets get a full step-up at the first death."),
+    "NH": ("New Hampshire taxes neither wages nor capital gains, and its former Interest & Dividends tax "
+           "was fully repealed effective 2025 — so investment income is now untaxed at the state level. "
+           "There is no general sales tax either."),
+    "SD": ("South Dakota has no state income tax and is a premier trust jurisdiction: it allows perpetual "
+           "(dynasty) trusts, imposes no state tax on trust income, and offers strong privacy — which is "
+           "why a large volume of out-of-state trust assets is administered there."),
+    "TN": ("Tennessee has no state income tax on wages, and its Hall tax on interest and dividends was "
+           "fully repealed effective 2021 — so investment income is now untaxed at the state level. It "
+           "leans instead on one of the higher combined sales-tax rates in the country."),
+    "TX": ("Texas has no state income tax, constitutionally restricted, and pairs a strong homestead "
+           "exemption with a community-property regime — so community assets receive a full basis step-up "
+           "at the first spouse's death. Property and sales taxes carry more of the state's revenue."),
+    "WY": ("Wyoming has no state income tax and no corporate income tax, and is a highly regarded trust "
+           "and LLC jurisdiction — perpetual-trust statutes, strong privacy, and robust asset-protection "
+           "law draw significant out-of-state planning."),
+    # A few higher-traffic states with a genuinely distinctive regime note (not required for dedup):
+    "CA": ("California applies the nation's highest top marginal rate and taxes capital gains as ordinary "
+           "income, with no preferential long-term rate. It is a community-property state (full step-up at "
+           "the first death) but is decoupled from the federal §1202 QSBS exclusion."),
+    "WA": ("Washington has no tax on wages but, since 2022, levies a 7% (plus a 2.9% surcharge) excise on "
+           "long-term capital gains above an annual threshold — the newest and most unusual regime in the "
+           "country. It is a community-property state, so community assets get a full step-up."),
+    "NY": ("New York stacks a high state rate with a New York City surcharge for city residents, and its "
+           "estate tax has a notorious 'cliff': clear the exemption by more than 5% and the entire estate — "
+           "not just the excess — becomes taxable."),
+    "MA": ("Massachusetts applies a flat 5% rate plus a 4% surtax on income over ~$1.1 million, and has "
+           "one of the lowest state estate-tax exemptions (~$2 million), so estate exposure reaches well "
+           "into the merely-affluent."),
+}
+
+
+def _state_context(code: str) -> str:
+    return _STATE_CONTEXT.get(code, "")
+
+
 def _faq(code: str, name: str, rec: dict) -> list[dict]:
     """Factual Q&A drawn from the dataset — unique per state, eligible for FAQ rich snippets."""
     faq = []
@@ -83,6 +135,15 @@ def _faq(code: str, name: str, rec: dict) -> list[dict]:
     mar = rec.get("marriage")
     if mar:
         faq.append({"q": f"Is there a marriage penalty in {name}?", "a": mar["note"]})
+    muni = rec.get("muni")
+    if muni:
+        faq.append({"q": f"How does {name} tax municipal-bond interest?", "a": muni["note"]})
+    qsbs = rec.get("qsbs")
+    if qsbs:
+        faq.append({"q": f"Does {name} follow the federal QSBS (§1202) exclusion?", "a": qsbs["note"]})
+    loss = rec.get("loss")
+    if loss:
+        faq.append({"q": f"What happens to a capital loss you carry forward in {name}?", "a": loss["note"]})
     a = rec.get("alpha")
     if a:
         faq.append({"q": f"How much investment tax can tax-managed investing recover in {name}?",
@@ -103,6 +164,7 @@ def build_state_pages() -> dict:
             "levers": leak["levers"],
             "faq": _faq(code, name, rec),
             "related": _related(code),
+            "context": _state_context(code),
         }
     return out
 
@@ -229,7 +291,7 @@ _HEAD_CSS = """
     --ink:#1d242d;--body:#3a414b;--dim:#5f5d68;--muted:#6f675b;
     --brass:#a9853f;--gold:#c9b896;--teal:#15463a;--teal2:#15806a;--neg:#9b4439;--navy:#1a2330;}
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--body);font:14.5px/1.6 var(--sans);
+  body{margin:0;background:var(--bg);color:var(--body);font:14.5px/1.6 var(--serif);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .sheet{max-width:1040px;margin:30px auto;padding:0 20px 50px}
   .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;
@@ -240,6 +302,8 @@ _HEAD_CSS = """
   .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
   h1{font-family:var(--serif);font-weight:700;font-size:36px;line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin:0 0 10px}
   .lede{font-size:15px;color:#54545c;margin:0;max-width:76ch}
+  .context{font-size:14px;line-height:1.65;color:var(--body);margin:14px 0 0;max-width:76ch;
+    border-left:3px solid var(--gold);padding:2px 0 2px 16px}
   .hero{margin:18px 40px 4px;padding:18px 24px;background:var(--navy);border-radius:12px;display:flex;
     align-items:center;gap:20px;flex-wrap:wrap}
   .hero .big{font-variant-numeric:tabular-nums;font-size:44px;font-weight:700;color:#f1ede3;letter-spacing:-.02em;line-height:1}
@@ -372,12 +436,14 @@ def render_state_html(data: dict) -> str:
         f'<a href="{page_path(c)}">{_esc(nm)}</a>' for c, nm in data["related"])
     rate = (rec.get("cg") or {}).get("tag", "")
     capture = _capture(code, name, (a or {}).get("value"), rate)
-    lede = (f"Every state taxes gains, marriage, and death differently. Here is how {name} treats a "
-            f"harvested loss, capital gains at the top rate, estate and inheritance tax, and the basis "
-            f"step-up your heirs inherit — and the after-tax Structural Alpha our engine is built to "
-            f"recover from all of it.")
+    lede = (f"Every state taxes gains, marriage, and death differently. Here is how {name} treats "
+            f"capital gains at the top rate, the marriage penalty, estate and inheritance tax at death, "
+            f"municipal-bond interest, the §1202 QSBS exclusion, and a harvested loss — and the after-tax "
+            f"Structural Alpha our engine is built to recover from all of it.")
     summary = _summary(name, rec)
     summary_p = f'<p class="lede" style="margin-top:10px">{_esc(summary)}</p>' if summary else ""
+    context = data.get("context", "")
+    context_p = (f'<p class="context">{_esc(context)}</p>') if context else ""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -412,6 +478,7 @@ def render_state_html(data: dict) -> str:
       <h1>{_esc(name)}: where your portfolio leaks to tax</h1>
       <p class="lede">{_esc(lede)}</p>
       {summary_p}
+      {context_p}
     </div>
     {_alpha_hero(name, a)}
     <div class="grid">
@@ -525,6 +592,7 @@ def export_state_pages(out_dir: str | Path = "docs") -> list[str]:
 _CORE_SITEMAP = [
     ("index.html", "1.0", "weekly"), ("taxlab.html", "0.9", "weekly"),
     ("leakage.html", "0.9", "monthly"), ("statemap.html", "0.8", "monthly"),
+    ("concentration.html", "0.8", "monthly"),
     ("states.html", "0.8", "monthly"), ("thesis.html", "0.7", "monthly"),
     ("ledger.html", "0.5", "weekly"), ("tearsheet.html", "0.5", "weekly"),
     ("equities.html", "0.4", "weekly"), ("equities_case_studies.html", "0.4", "weekly"),

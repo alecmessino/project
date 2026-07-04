@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Privacy-first analytics (Plausible) -->
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<title>How to De-risk a Concentrated Stock Position | Driftwood</title>
+<meta name="description" content="Every way to de-risk a concentrated, low-basis stock position — selling, harvesting, hedging, deferring, and giving — scored across liquidity, speed, fees, tax cost, customization, and simplicity. Orientation, not advice." />
+<link rel="canonical" href="https://alecmessino.github.io/project/concentration.html" />
+<link rel="icon" href="favicon.svg" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="How to de-risk a concentrated stock position" />
+<meta property="og:description" content="Every way to de-risk a concentrated, low-basis position — scored on the tradeoffs that matter. Orientation, not advice." />
+<meta property="og:url" content="https://alecmessino.github.io/project/concentration.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/concentration.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="How to de-risk a concentrated stock position" />
+<meta name="twitter:description" content="Every way to de-risk a concentrated, low-basis position — scored on the tradeoffs that matter." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/concentration.png" />
+<link rel="stylesheet" href="driftwood.css">
+<style>
+  :root{
+    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
+    --ink:#1d242d; --body:#3a414b; --dim:#5f5d68; --muted:#6f675b;
+    --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
+    /* five-step heat ramp (weakest -> strongest fit), tuned to the cream paper */
+    --h1:#e7d7cf; --h2:#e4d4b6; --h3:#dfe0c6; --h4:#bcd3c2; --h5:#8ab99f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:14.5px/1.6 var(--serif);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .sheet{max-width:1100px;margin:30px auto;padding:0 20px 50px}
+  .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
+  .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #ddd5c6}
+  .chrome i{width:9px;height:9px;border-radius:999px;background:#cfc6b4;display:inline-block}
+  .chrome .url{margin-left:auto;font-size:11.5px;letter-spacing:.04em;color:var(--muted);font-family:ui-monospace,monospace}
+  .article{padding:30px 40px 6px;max-width:760px}
+  .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
+  h1{font-family:var(--serif);font-weight:700;font-size:34px;line-height:1.08;letter-spacing:-.02em;color:var(--ink);margin:0 0 12px}
+  .lead{font-size:17px;line-height:1.5;color:#54545c;margin:0 0 18px}
+  .article p.para{font-size:15px;line-height:1.7;color:var(--body);margin:0 0 14px}
+  .tool-head{padding:20px 40px 2px}
+  h2{font-family:var(--serif);font-weight:600;font-size:24px;letter-spacing:-.01em;color:var(--ink);margin:0}
+  /* filters */
+  .filters{display:flex;flex-wrap:wrap;gap:12px 16px;padding:14px 40px 6px;align-items:end}
+  .fg{display:flex;flex-direction:column;gap:5px}
+  .fg label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .fg select,.fg button{font:inherit;font-family:var(--sans);font-size:13px;color:var(--ink);background:#fff;
+    border:1px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer}
+  .fg select:focus,.fg button:focus{outline:2px solid var(--teal2);outline-offset:1px}
+  .fg--reset button{background:var(--soft);color:var(--dim)}
+  /* heat table */
+  .heat{padding:10px 40px 6px}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:12px;font-size:11.5px;color:var(--dim)}
+  .legend .li{display:flex;align-items:center;gap:6px}
+  .legend .sw{width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,.08);display:inline-block}
+  .legend .key{margin-left:auto;color:var(--muted);font-style:italic}
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table.hm{border-collapse:separate;border-spacing:0;width:100%;min-width:720px;font-family:var(--sans)}
+  table.hm th,table.hm td{padding:0}
+  table.hm thead th{position:sticky;top:0;background:var(--bg)}
+  .th{font:inherit;font-size:11.5px;font-weight:600;color:var(--dim);background:transparent;border:0;cursor:pointer;
+    padding:8px 8px;white-space:nowrap;text-align:center;width:96px}
+  .th.name{text-align:left;width:auto;min-width:210px;padding-left:4px}
+  .th:hover{color:var(--ink)}
+  .th.sorted{color:var(--teal2)}
+  .th.sorted::after{content:" \25BC";font-size:8px}
+  .th.asc.sorted::after{content:" \25B2"}
+  tbody tr{cursor:pointer;transition:background .1s}
+  tbody tr:hover{background:var(--soft)}
+  tbody tr.sel{background:#eef2ee}
+  td.name{padding:9px 4px;border-bottom:1px solid var(--line2)}
+  td.name .nm{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--ink);font-weight:600}
+  td.name .dot{width:9px;height:9px;border-radius:999px;flex:none}
+  td.name .bk{font-size:10.5px;color:var(--muted);font-weight:500;margin-left:18px;display:block;margin-top:1px}
+  td.cell{border-bottom:1px solid var(--line2);text-align:center;padding:6px 6px}
+  td.cell .box{width:100%;height:30px;border-radius:5px;display:flex;align-items:center;justify-content:center;
+    font-size:10px;font-weight:600;color:#3c3a33}
+  .heat-1 .box{background:var(--h1)} .heat-2 .box{background:var(--h2)} .heat-3 .box{background:var(--h3)}
+  .heat-4 .box{background:var(--h4)} .heat-5 .box{background:var(--h5)}
+  .nores{padding:22px 4px;color:var(--muted);font-size:13.5px;display:none}
+  /* detail */
+  .detail{margin:8px 40px 4px;border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:10px;
+    padding:16px 20px;background:#fff;display:none}
+  .detail.on{display:block}
+  .detail h3{font-family:var(--serif);font-size:19px;color:var(--ink);margin:0 0 4px;display:flex;align-items:center;gap:9px}
+  .detail .fam{font-size:11px;font-weight:600;font-family:var(--sans);color:#fff;border-radius:999px;padding:2px 9px}
+  .detail p{margin:8px 0 0;font-size:13.5px;line-height:1.6;color:var(--body)}
+  .detail .mini{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:12px;font-family:var(--sans)}
+  .detail .chip{font-size:11px;color:var(--dim);background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+  .detail .chip b{color:var(--ink);font-weight:600}
+  .foot{margin:16px 40px 28px;border-top:1px solid var(--line);padding-top:12px;color:var(--muted);font-size:11px;line-height:1.55}
+  .foot b{color:#5a5a62}
+  .cta{margin:12px 40px 4px;padding:18px 22px;background:var(--soft);border:1px solid var(--line);border-radius:12px;
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .cta .ctxt{flex:1;min-width:240px} .cta .ch{font-family:var(--sans);font-weight:600;font-size:17px;color:var(--ink);margin-bottom:2px}
+  .cta .cd{font-size:12.5px;color:var(--dim)}
+  .cta a{font-family:var(--sans);text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;white-space:nowrap;padding:11px 18px;background:var(--teal);color:#f1ede3}
+  @media(max-width:760px){ .article,.tool-head,.filters,.heat,.detail,.cta,.foot{padding-left:20px;padding-right:20px;margin-left:0;margin-right:0} h1{font-size:28px} }
+  @media print{ body{background:#fff} .frame{border:0;box-shadow:none} .chrome,.filters,.cta{display:none} }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="frame">
+    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — single asset risk</span></div>
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+      <div class="dwnav-links">
+        <a href="thesis.html">Approach</a>
+        <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+        <a href="leakage.html">Leakage</a>
+        <a href="statemap.html">State&nbsp;Map</a>
+        <a href="ledger.html">Research</a>
+      </div>
+    </nav>
+
+    <article class="article">
+      <div class="eyebrow">Too much of a good thing</div>
+      <h1>How to de-risk a concentrated stock position</h1>
+      <p class="lead">A concentrated, low-basis position is one of the hardest problems in taxable wealth.
+        Every way to de-risk it, scored on the tradeoffs that matter.</p>
+      <p class="para">A single stock that dominates your net worth is one of the hardest problems in
+        taxable wealth. Sell, and a low cost basis means a heavy tax bill. Hold, and you carry
+        idiosyncratic risk the market never compensates you for bearing.</p>
+      <p class="para">There is no clean answer, only tradeoffs. Every approach moves you along the same
+        handful of axes: how much liquidity it frees, how quickly it cuts the risk, what it costs in fees
+        and tax drag, how much you can tailor it, and how complex it is to run.</p>
+      <p class="para">The strategies sort into five families. Sell outright or in stages. Harvest losses
+        to fund a tax-neutral exit. Hedge the position with options or forwards. Defer the gain by
+        diversifying in-kind. Or give the shares away — to family, a foundation, or charity.</p>
+      <p class="para">The interactive guide below scores each strategy across those tradeoffs. Filter to
+        what matters to you, sort by any column, and tap a row to read how it works.</p>
+    </article>
+
+    <div class="tool-head"><div class="eyebrow">Too much of a good thing</div><h2>Single asset risk</h2></div>
+
+    <div class="filters" id="filters">
+      <div class="fg"><label for="f-goal">Primary goal</label>
+        <select id="f-goal"><option value="all">Any goal</option></select></div>
+      <div class="fg"><label for="f-time">Preferred timeline</label>
+        <select id="f-time"><option value="all">Any timeline</option></select></div>
+      <div class="fg"><label for="f-simp">Complexity</label>
+        <select id="f-simp"><option value="all">Any complexity</option><option value="simple">Simple &amp; turnkey only</option></select></div>
+      <div class="fg"><label for="f-ins">Current employee</label>
+        <select id="f-ins"><option value="no">No</option><option value="yes">Yes</option></select></div>
+      <div class="fg fg--reset"><label>&nbsp;</label><button type="button" id="f-reset">Reset</button></div>
+    </div>
+
+    <div class="detail" id="detail" aria-live="polite"></div>
+
+    <div class="heat">
+      <div class="legend" id="legend"></div>
+      <div class="tscroll">
+        <table class="hm">
+          <thead><tr id="thead"></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="nores" id="nores">No strategies match all selected filters. Try broadening them.</div>
+    </div>
+
+    <div class="cta">
+      <div class="ctxt">
+        <div class="ch">Have a concentrated position of your own?</div>
+        <div class="cd">We model the after-tax path of an exit — harvesting, hedging, and asset location — against your basis and bracket.</div>
+      </div>
+      <a href="leakage.html">See the Tax-Leakage Diagnostic →</a>
+    </div>
+
+    <div class="foot"><b>Basic orientation — not tax, legal, or investment advice.</b> The scores are one
+      analyst's read of <i>typical</i> tradeoffs across these strategies, not a statement about your
+      holding or your facts, and the right approach depends on your basis, bracket, goals, and any
+      insider/holding restrictions. Several of these structures are complex derivatives or irrevocable
+      gifts — review them with your tax advisor and counsel. Driftwood is the brand of CWS Planning, a
+      <b>registered investment adviser</b>; Form ADV and Form CRS are at
+      <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.</div>
+  </div>
+</div>
+
+<script>
+  window.__STATE__ = /*__STATE__*/null/*__END__*/;
+(function(){
+  var S = window.__STATE__; if(!S) return;
+  var axes = S.axes, strategies = S.strategies;
+  var bucket = {}; S.buckets.forEach(function(b){ bucket[b.key]=b; });
+  var $ = function(id){ return document.getElementById(id); };
+  var state = { sort:"bucket", asc:false, sel:null,
+                goal:"all", time:"all", simp:"all", ins:"no" };
+
+  // filter dropdown options from the data
+  var gsel=$("f-goal"); S.goals.forEach(function(g){ var o=document.createElement("option"); o.value=g.key; o.textContent=g.label; gsel.appendChild(o); });
+  var tsel=$("f-time"); S.timelines.forEach(function(t){ var o=document.createElement("option"); o.value=t.key; o.textContent=t.label; tsel.appendChild(o); });
+
+  // legend
+  var LMAP=[["heat-5","Strongest fit"],["heat-4","Strong fit"],["heat-3","Partial fit"],["heat-2","Weak fit"],["heat-1","Weakest fit"]];
+  var leg=$("legend");
+  LMAP.forEach(function(p){ var s=document.createElement("span"); s.className="li";
+    s.innerHTML='<span class="sw '+p[0]+'" style="background:var(--h'+p[0].slice(-1)+')"></span>'+p[1]; leg.appendChild(s); });
+  var k=document.createElement("span"); k.className="key"; k.textContent="Tap a column to sort · tap a row to read"; leg.appendChild(k);
+
+  // header
+  var thead=$("thead");
+  var thName=document.createElement("th"); thName.innerHTML='<button class="th name" data-sort="bucket">Strategy</button>'; thead.appendChild(thName);
+  axes.forEach(function(a){ var th=document.createElement("th");
+    th.innerHTML='<button class="th" data-sort="'+a.key+'" title="'+a.hint+'">'+a.label+'</button>'; thead.appendChild(th); });
+  thead.addEventListener("click", function(e){ var b=e.target.closest("button.th"); if(!b) return;
+    var key=b.getAttribute("data-sort");
+    if(state.sort===key){ state.asc=!state.asc; } else { state.sort=key; state.asc=(key==="bucket"); }
+    render();
+    if(window.plausible) plausible("conc_sort",{props:{col:key}}); });
+
+  function passes(s){
+    if(state.goal!=="all" && s.goals.indexOf(state.goal)<0) return false;
+    if(state.time!=="all" && s.timelines.indexOf(state.time)<0) return false;
+    if(state.simp==="simple" && !s.simple) return false;
+    if(state.ins==="yes" && !s.insider_ok) return false;
+    return true;
+  }
+  function sortVal(s){
+    if(state.sort==="bucket") return 0;  // bucket sort handled by index below
+    return s.scores[state.sort] ? s.scores[state.sort].n : 0;
+  }
+  var bucketOrder={}; S.buckets.forEach(function(b,i){ bucketOrder[b.key]=i; });
+
+  function render(){
+    // header sort indicators
+    Array.prototype.forEach.call(document.querySelectorAll(".th"), function(b){
+      b.classList.toggle("sorted", b.getAttribute("data-sort")===state.sort);
+      b.classList.toggle("asc", state.asc);
+    });
+    var list = strategies.filter(passes);
+    list.sort(function(a,b){
+      if(state.sort==="bucket"){
+        var d=bucketOrder[a.bucket]-bucketOrder[b.bucket]; if(d) return d;
+        return a.name<b.name?-1:1;
+      }
+      var d=sortVal(b)-sortVal(a); if(!state.asc) return d; return -d;
+    });
+    var rows=$("rows"); rows.innerHTML="";
+    list.forEach(function(s){
+      var tr=document.createElement("tr"); tr.setAttribute("data-key",s.key);
+      if(state.sel===s.key) tr.className="sel";
+      var bk=bucket[s.bucket];
+      var td='<td class="name"><span class="nm"><span class="dot" style="background:'+bk.color+'"></span>'+s.name+'</span>'+
+             '<span class="bk">'+bk.label+'</span></td>';
+      axes.forEach(function(a){ var c=s.scores[a.key];
+        td+='<td class="cell heat-'+c.n+'"><span class="box" title="'+a.label+': '+c.label+'">'+c.label+'</span></td>'; });
+      tr.innerHTML=td;
+      tr.addEventListener("click", function(){ state.sel=(state.sel===s.key?null:s.key); showDetail(); render(); });
+      rows.appendChild(tr);
+    });
+    $("nores").style.display = list.length? "none":"block";
+  }
+
+  function showDetail(){
+    var d=$("detail"); if(!state.sel){ d.className="detail"; d.innerHTML=""; return; }
+    var s=strategies.filter(function(x){return x.key===state.sel;})[0]; if(!s){ d.className="detail"; return; }
+    var bk=bucket[s.bucket];
+    var chips=axes.map(function(a){ return '<span class="chip">'+a.label+': <b>'+s.scores[a.key].label+'</b></span>'; }).join("");
+    d.className="detail on";
+    d.innerHTML='<h3>'+s.name+'<span class="fam" style="background:'+bk.color+'">'+bk.label+'</span></h3>'+
+      '<p>'+s.blurb+'</p><div class="mini">'+chips+'</div>';
+    if(window.plausible) plausible("conc_detail",{props:{strategy:s.key}});
+  }
+
+  ["goal","time","simp","ins"].forEach(function(k){
+    $("f-"+k).addEventListener("change", function(e){ state[k]=e.target.value; state.sel=null; showDetail(); render(); });
+  });
+  $("f-reset").addEventListener("click", function(){
+    state.goal="all"; state.time="all"; state.simp="all"; state.ins="no"; state.sel=null;
+    $("f-goal").value="all"; $("f-time").value="all"; $("f-simp").value="all"; $("f-ins").value="no";
+    state.sort="bucket"; state.asc=false; showDetail(); render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

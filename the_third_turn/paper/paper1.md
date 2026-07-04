@@ -82,22 +82,47 @@ a single sharp-book feed.
 > remaining runs once conditioned on the live market forecast, and we locate the point at which that
 > incremental value disappears.
 >
-> **2. Methodological.** We formalize an escalating validation protocol — signal, robustness,
-> out-of-sample, debiasing, conditional testing, forecast encompassing, transfer function — that
-> shifts the burden of proof from demonstrating *prediction* to demonstrating *incremental
-> information beyond an existing forecast*. The protocol is domain-general and applies to any market
-> with a sharp public forecast and observable state.
+> **2. Methodological.** We formalize an escalating validation protocol — the **Third Turn
+> Protocol**: signal, robustness, out-of-sample, debiasing, conditional testing, forecast
+> encompassing, transfer function — that shifts the burden of proof from demonstrating *prediction*
+> to demonstrating *incremental information beyond an existing forecast*. It is domain-general and
+> applies to any market with a sharp public forecast and observable state.
 >
-> **3. Infrastructure.** We release the cleaned datasets, the feature schema, the evaluation
-> protocol, and reference implementations of the market forecast, remaining-runs model, encompassing
-> tests, and transfer function as the initial release of the **Third Turn Benchmark**, so that future
-> hypotheses can be evaluated against the same reference rather than re-derived from scratch.
+> **3. Infrastructure.** We release the cleaned datasets and feature schema as the **Third Turn
+> Benchmark Dataset (v1)**, together with reference implementations of the market forecast,
+> remaining-runs model, encompassing tests, and transfer function that operationalize the protocol,
+> so that future hypotheses can be evaluated against the same reference rather than re-derived from
+> scratch.
 
 The remainder of the paper is organized around a single question, which every subsequent section
 serves:
 
 *Do publicly observable baseball state variables contain incremental predictive information about
 remaining runs beyond the forecast embedded in a sharp live betting market?*
+
+<div class="protocol-box">
+<div class="pb-title">Box 1 · The Third Turn Protocol, in brief</div>
+<pre>
+              candidate variable
+                     │
+   1.  predicts the outcome?         ──no──▶  discard
+                     │ yes
+   2.  survives robustness?          ──no──▶  discard
+                     │ yes
+   3.  survives debiasing?           ──no──▶  selection artifact
+                     │ yes
+   4.  improves the market's
+       own forecast?
+                ╱         ╲
+             yes           no
+              │             │
+        genuinely      already reflected
+     new information     in the price
+</pre>
+</div>
+
+Only a variable that clears the final gate carries information the price does not already hold.
+Every hypothesis in this study reaches that gate and stops.
 
 ---
 
@@ -266,11 +291,11 @@ as effects.
 
 Every quantity in this paper is recomputed from committed inputs by a fixed set of scripts;
 estimation is deterministic (leave-one-game-out folds and fixed seeds), so results regenerate
-exactly. To facilitate reproduction we release the cleaned datasets, the feature schema, the
-evaluation protocol of §3.3, and reference implementations of the market forecast, the
-remaining-runs model, the encompassing tests, and the transfer function as the initial release of
-the **Third Turn Benchmark**, archived under a persistent DOI alongside the code repository and the
-research log. The frozen result artifacts (`output/*.json`) and the scripts that produce them are
+exactly. To facilitate reproduction we release the cleaned datasets and feature schema as the
+**Third Turn Benchmark Dataset (v1)**, together with reference implementations of the market
+forecast, the remaining-runs model, the encompassing tests, and the transfer function — an
+executable form of the Third Turn Protocol (§3.3) — archived under a persistent DOI alongside the
+code repository and the research log. The frozen result artifacts (`output/*.json`) and the scripts that produce them are
 sufficient to reconstruct every figure and number without access to the original feeds.
 
 ---
@@ -290,7 +315,10 @@ individual incremental R² beyond the market falls inside a ±0.003 band (best c
 +0.0018; velocity, starter tier, temperature, wind, and park at or below zero), so no single
 variable hides behind the others. As the sharpest test, we regress the book's forecast error —
 realized minus market-implied remaining runs — directly on the features: it is not predictable
-out-of-sample, R² = −0.037. This is the central empirical result of the study.
+out-of-sample, R² = −0.037. This is the central empirical result of the study. Forecast
+encompassing is the highest evidentiary standard we apply, because it conditions on the market's
+own forecast rather than on realized outcomes alone: a variable clears it only by improving a
+forecast that already reflects the market's information.
 
 ![](figures/forecast_encompassing.png)
 
@@ -411,12 +439,12 @@ variables are informative about runs and redundant with the price. Prediction su
 does not.
 
 Why does this happen? Not because baseball theory is wrong, but because the forecast embedded in a
-sharp live market already reflects these variables. Such a forecast is produced by participants
-with strong incentives to price observable state correctly and quickly, and the transfer-function
-evidence is consistent with that: the line moves in the right direction and by a stable fraction of
-the true change in run expectancy after every event type, with no event class systematically under-
-or over-priced. A forecast that adjusts proportionately to information shocks is precisely the kind
-whose residual should carry no recoverable public-information signal — which is what we observe.
+sharp live market already reflects these variables — it is produced by participants with strong
+incentives to price observable state quickly. The transfer-function evidence is consistent with
+this: the line moves proportionately to the true change in run expectancy after every event type,
+with no class systematically mispriced. A forecast that adjusts proportionately to information
+shocks is precisely the kind whose residual carries no recoverable public-information signal —
+which is what we observe.
 
 ### 5.2 Prediction is not profit
 
@@ -432,13 +460,11 @@ would not automatically be *profitable*, because profitability additionally requ
 exceed transaction costs, survive the vig, and persist after the act of betting moves the line.
 Prediction, increment, and profit are three questions, not one.
 
-Forecast encompassing is valuable precisely because it isolates the middle link — the one betting
-papers most often skip. A naïve backtest measures something closer to prediction; a
-profit-and-loss simulation measures something closer to the third link and is easily flattered by
-overfitting and by using stale lines. Encompassing asks the hard question directly: *does this
-variable improve on what the price already reflects?* In our data, for every variable we measured,
-the answer is no — and because the test speaks to increment rather than to a particular staking
-scheme, that conclusion does not depend on how one would have bet.
+Forecast encompassing isolates the middle link — the one betting papers most often skip. A naïve
+backtest speaks to prediction; a profit-and-loss simulation speaks to the third link and is easily
+flattered by overfitting and stale lines. Encompassing asks the middle question directly — *does
+this variable improve on what the price already reflects?* — and because it speaks to increment
+rather than to a staking scheme, our negative answer does not depend on how one would have bet.
 
 ### 5.3 The efficient frontier of public information
 
@@ -480,13 +506,10 @@ That shift is a philosophy of evidence, not merely a workflow.
 The ladder transfers unchanged to any market with a sharp public forecast and observable state:
 NBA totals, NFL spreads, soccer in-play, tennis, racing. A researcher there can adopt the same
 sequence, report at which rung each candidate variable is eliminated, and compare results across
-domains. To facilitate reproducibility, we release the datasets, evaluation protocol, and
-reference implementations accompanying this study as the initial release of the **Third Turn
-Benchmark**, so that future hypotheses can be evaluated against the same reference rather than
-re-derived from scratch. Its guiding principle is the same sentence that organizes the protocol
-(§3.3), and over time a shared benchmark and a citable protocol may prove more durable than any
-single finding, because they let a field accumulate falsifications instead of scattered one-off
-backtests.
+domains. We name it the **Third Turn Protocol** and release its reference implementation with the
+accompanying data as the **Third Turn Benchmark Dataset (v1)**. A citable protocol and a shared
+dataset may prove more durable than any single finding, because they let a field accumulate
+falsifications instead of scattered one-off backtests.
 
 ---
 
@@ -537,7 +560,9 @@ incremental predictive value against a sharp live market. That boundary is itsel
 redirects future work away from discovering additional baseball variables and toward understanding
 how information propagates through live betting markets. The contribution of this study is
 therefore not a successful betting strategy, but a reproducible framework for determining when one
-does — and does not — exist.
+does — and does not — exist. The principal contribution is thus methodological: a reproducible
+procedure for distinguishing variables that predict outcomes from variables that carry information
+not already reflected in an existing forecast.
 
 ---
 
@@ -562,10 +587,10 @@ Referenced once from §4; Figure 2 is the main-text representation.
 
 ## Data and code availability
 
-Cleaned datasets, feature schema, evaluation protocol, reference implementations, and frozen result
-artifacts are released as the initial release of the Third Turn Benchmark, archived under a
-persistent DOI alongside the code repository and the research log. *(DOI + benchmark packaging
-pending.)*
+The cleaned datasets, feature schema, and frozen result artifacts are released as the **Third Turn
+Benchmark Dataset (v1)**; reference implementations of the **Third Turn Protocol** accompany them,
+archived under a persistent DOI alongside the code repository and the research log. *(DOI +
+packaging pending.)*
 
 ## References
 

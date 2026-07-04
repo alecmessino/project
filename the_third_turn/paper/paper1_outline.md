@@ -42,13 +42,21 @@ keep their original heading numbers; `paper1.md` is now canonical.
    debiasing → conditional testing → forecast encompassing → transfer function) shifts the burden
    of proof from *prediction* to *incremental information beyond a market forecast*. Domain-general;
    transfers to NBA/NFL/soccer/tennis/racing.
-3. **Infrastructure** (was "reproducibility" — it's bigger than that). The calibration engine,
-   encompassing tests, remaining-runs model, transfer-function code, feature schema, and cleaned
-   data, released as the **initial release of the Third Turn Benchmark** — a citable research
-   artifact others evaluate new hypotheses against (cf. GLUE / ImageNet / MMLU / HELM in their
-   fields), not just a reproducible appendix. *Modest verb: "we release," never "we introduce /
-   establish." "v1.0" waits until the paper is public + revised once — version numbers imply a
-   stability we're not at yet. Benchmark is documented BY Paper 1, not owned by it.*
+3. **Infrastructure** (was "reproducibility" — it's bigger than that). **Two distinct products,
+   deliberately named apart:** the **Third Turn Protocol** = the methodology/ladder (a scientific
+   method); the **Third Turn Benchmark Dataset (v1)** = the cleaned data + feature schema + frozen
+   result artifacts (a dataset). Reference implementations operationalize the Protocol over the
+   Dataset. Citable artifacts others evaluate new hypotheses against (cf. GLUE / ImageNet / MMLU /
+   HELM), not a reproducible appendix. *Modest verb: "we release," never "we introduce / establish."
+   Documented BY Paper 1, not owned by it.*
+
+**Three publishable outputs (keep them independent):** (1) **Paper 1** — this boundary paper
+(applied forecasting / market efficiency). (2) **Paper 2** — live market microstructure (price
+discovery, information propagation, cross-book leadership, distribution dynamics; finance/econ).
+(3) **Paper 3** — the methods paper, *Forecast Encompassing as a General Validation Framework for
+Predictive Signals* (almost no baseball; forecasting/stats-methods venue). The Protocol + Dataset
+are the shared infrastructure all three build on. Positioning shift to protect everywhere:
+*empirical forecasting using sports-betting markets as the laboratory*, not betting-strategy R&D.
 
 ## Two audiences (lean forecasting, not baseball, on every terminology fork)
 (1) *Sports analytics* — TTOP, Statcast, betting. (2) *Applied statistics / forecasting* —

@@ -50,6 +50,15 @@ th { border-top: 1pt solid #333; border-bottom: 0.5pt solid #333; padding: 3pt 5
 td { border-bottom: 0.25pt solid #ccc; padding: 3pt 5pt; vertical-align: top; }
 table { break-inside: auto; }
 tr { break-inside: avoid; }
+.protocol-box {
+  border: 1pt solid #999; background: #fafafa; padding: 8pt 10pt 4pt;
+  margin: 14pt auto; max-width: 78%; break-inside: avoid;
+}
+.protocol-box .pb-title { font-weight: bold; font-size: 9.5pt; margin-bottom: 2pt; }
+.protocol-box pre {
+  font-family: 'DejaVu Sans Mono', monospace; font-size: 8pt; line-height: 1.35;
+  margin: 0; background: none; white-space: pre; text-align: left;
+}
 """
 
 

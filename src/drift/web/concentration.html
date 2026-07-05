@@ -132,7 +132,7 @@
       <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
       <div class="dwnav-links">
         <a href="about.html">Our Story</a>
-        <a href="thesis.html">Approach</a>
+        <a href="thesis.html">How We Invest</a>
         <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
         <a href="leakage.html">Leakage</a>
         <a href="statemap.html">State Guide</a>
@@ -267,8 +267,8 @@
       var tr=document.createElement("tr"); tr.setAttribute("data-key",s.key);
       if(state.sel===s.key) tr.className="sel";
       var bk=bucket[s.bucket];
-      var td='<td class="name"><span class="nm"><span class="dot" aria-hidden="true" style="background:'+bk.color+'"></span>'+s.name+'</span>'+
-             '<span class="bk">'+bk.label+'</span></td>';
+      var td='<td class="name"><span class="nm"><span class="dot" aria-hidden="true" style="background:'+bk.color+'"></span>'+s.name+
+             '<span class="sr-only"> · '+bk.label+'</span></span></td>';
       axes.forEach(function(a){ var c=s.scores[a.key];
         td+='<td class="cell heat-'+c.n+'"><span class="box" title="'+a.label+': '+c.label+'">'+c.label+'</span></td>'; });
       tr.innerHTML=td;

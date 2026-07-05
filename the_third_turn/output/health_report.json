@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-05T19:54:36+00:00",
+  "generated": "2026-07-05T20:09:40+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 46586,
+    "rows": 46701,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -17,13 +17,13 @@
       "rows_total": 11671,
       "live_total": 5171,
       "live_today": 2433,
-      "last_row_age_min": 3.5
+      "last_row_age_min": 18.6
     },
     "fanduel": {
-      "rows_total": 34915,
-      "live_total": 381,
-      "live_today": 381,
-      "last_row_age_min": 0.5
+      "rows_total": 35030,
+      "live_total": 445,
+      "live_today": 445,
+      "last_row_age_min": 0.3
     }
   },
   "books_reporting_live": [
@@ -32,14 +32,14 @@
   ],
   "market_status": {
     "unset": 5171,
-    "OPEN": 351,
-    "SUSPENDED": 30
+    "OPEN": 411,
+    "SUSPENDED": 34
   },
   "overlap": {
-    "simultaneous_pairs_total": 372,
-    "simultaneous_pairs_today": 372,
+    "simultaneous_pairs_total": 434,
+    "simultaneous_pairs_today": 434,
     "overlap_games": 9,
-    "median_sync_lag_s": 794.0,
+    "median_sync_lag_s": 853.0,
     "games_by_books_live": {
       "0_books": 10,
       "1_books": 6,
@@ -79,10 +79,10 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 372,
+        "current": 434,
         "target": 2000,
         "pass": false,
-        "progress": 0.186
+        "progress": 0.217
       },
       {
         "criterion": "games with live overlap",
@@ -93,10 +93,10 @@
       },
       {
         "criterion": "median sync lag < 15s",
-        "current": 794.0,
+        "current": 853.0,
         "target": 15,
         "pass": false,
-        "progress": 0.019
+        "progress": 0.018
       },
       {
         "criterion": "books quoting live",
@@ -107,6 +107,6 @@
       }
     ],
     "cleared": false,
-    "overall_progress": 0.241
+    "overall_progress": 0.248
   }
 }

@@ -1,7 +1,13 @@
-# The Third Turn Protocol
+# The Third Turn Protocol · v1.0
 
 **A predictive signal should be evaluated against the market's own forecast, not merely against the
 outcome.**
+
+*Version 1.0 (2026-07-04): seven rungs; safeguards S-01–S-14 (see `safeguards.md`); stopping rules
+SR-1–SR-3 (see `stopping_rules.md`). Changes are versioned in `../benchmark/CHANGELOG.md` — a new
+safeguard or a modified rung bumps the minor version (v1.1, …); a structural change to the ladder
+bumps the major version. New safeguards are added only when a genuinely new failure mode appears;
+the registry is deliberately near-frozen at 14.*
 
 The Third Turn Protocol is a fixed sequence of tests of increasing stringency for deciding whether
 a candidate predictive signal carries information *beyond an existing forecast*. It is

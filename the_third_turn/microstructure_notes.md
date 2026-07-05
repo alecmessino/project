@@ -53,21 +53,31 @@ frequencies; use equal-cadence resampling or an event study."* The lesson genera
   the *full-game per-team* distribution, a different object from Paper 1's +1.23 *remaining-runs*
   skew.)
 
-## Daemon priority changes (reordered: overlap is now the scarce resource)
+## Root cause of "zero simultaneous live quotes" — FOUND & FIXED (2026-07-04)
 
-Tonight captured **zero simultaneous live quotes**, so the binding constraint is not "more data,"
-it is *contemporaneous* data. Reordered accordingly:
+Not a coverage gap: **FanDuel returns rows for every live game** (all 15 live-window games; often
+more rows than Bovada), but the adapter read the in-play flag off the *event* object
+(`ev.get("inPlay")`) where that key does not exist — so **every one of FanDuel's 32,085 rows was
+mislabelled `live: false`**, and the two books were never seen live together. The flag actually
+lives on the *market* object (`m["inPlay"]`, with `marketStatus` OPEN/SUSPENDED). Fixed in
+`sources/fanduel.py` to read `m.get("inPlay")` and also capture `status`. Verified live: a fetch
+during 7 in-progress games now returns 7 `live=True` quotes (was 0), including one `SUSPENDED`
+market. Takes effect on the runner's next re-arm. This unblocks 2-book simultaneous overlap; the
+change is prospective (does not relabel the already-banked rows).
 
-1. **Simultaneous live coverage (highest).** Without overlap there is no microstructure — full stop.
-   Achieve it however works: tighter live polling of both books in one window, prioritizing books
-   with real live coverage, and logging every live poll (not change-only) so overlap is measurable.
-2. **Alternate-total strips.** Now serves *both* papers — implied CDF → implied mean (Paper 1 de-vig
-   appendix) and distribution calibration (Paper 2). Excellent leverage once overlap exists.
-3. **Quote lifecycle.** Suspended / resumed / age / time-since-update. Indispensable the moment
-   overlap exists; also tells coverage gaps apart from genuine disagreement (see the 1-hour
-   staleness above).
-4. **Additional books.** Useful only if they overlap live — three asynchronous books are not better
-   than two synchronized ones. Add after 1–3 are working.
+## Daemon priority changes (overlap was the scarce resource — Priority 1 now fixed)
+
+1. **Simultaneous live coverage — ✅ fixed** (FanDuel live-flag bug above). Two books now observable
+   live together going forward. *Remaining:* SR-1 also requires ≥3 books, so a third live book is
+   still needed before leadership analysis (see 4).
+2. **Alternate-total strips.** Serves *both* papers (implied CDF → implied mean for the Paper 1
+   de-vig appendix; distribution calibration for Paper 2). **Not** in the `customPageId=mlb`
+   payload — only the main `TOTAL_POINTS_(OVER/UNDER)` (one per game) is there; alt totals require a
+   per-event detail endpoint (a separate call per game). Next concrete step.
+3. **Quote lifecycle.** Partly started: `status` (OPEN/SUSPENDED) is now captured on each FanDuel
+   row. Still want age / time-since-update / resume timestamps.
+4. **Additional books.** A third book that *overlaps live* — required for SR-1's ≥3-book criterion
+   and to turn "who leads" into a network question. Useful only if it quotes live concurrently.
 
 ## Paper 2 reframing
 

@@ -27,6 +27,8 @@ class Quote:
     ts: Optional[float] = None   # epoch seconds when observed (stamped by caller)
     live_game: Optional[bool] = None  # book flags the event in-play (guards vs the
                                       # same matchup listed pregame for TOMORROW)
+    status: Optional[str] = None      # market lifecycle: OPEN / SUSPENDED / ... (quote-lifecycle
+                                      # capture — distinguishes a live quote from a suspended one)
 
     @property
     def game_key(self) -> str:

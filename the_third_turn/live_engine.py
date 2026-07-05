@@ -416,7 +416,7 @@ class LiveEngine:
                 self._panel_last[key] = q.line
                 rows.append({"ts": ts, "game": q.game_key, "book": q.book, "line": q.line,
                              "over_odds": q.over_odds, "under_odds": q.under_odds,
-                             "live": bool(q.live_game)})
+                             "live": bool(q.live_game), "status": q.status})
         if rows:
             with self._panel_path.open("a") as f:
                 f.writelines(json.dumps(r) + "\n" for r in rows)

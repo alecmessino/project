@@ -18,21 +18,21 @@ from typing import Optional
 # (appendix=False) is the flagship Structural Alpha + the tax-location tools; the Core Alpha (momentum)
 # engine's hypothetical model portfolios sit in a "Core Alpha Research" appendix (appendix=True).
 EXHIBITS = [
-    ("Thesis & approach", "thesis.html",
-     "The architecture: two return engines (Structural Alpha for taxable wealth, Core Alpha for "
-     "tax-advantaged capital) routed by one tax-location engine into a single after-tax portfolio.", False),
+    ("How we invest", "thesis.html",
+     "How Driftwood invests: evidence over prediction, taxes treated as part of investing, and a "
+     "diversified core placed alongside a focused complement — one portfolio, measured after tax.", False),
     ("Tax Lab", "taxlab.html",
-     "Holistic asset-location engine: after-tax return, three-account placement (taxable / Traditional / "
-     "Roth), estate step-up, and tax-loss harvesting — personalized by bracket and state.", False),
+     "See your after-tax return, and where each holding belongs — taxable, Traditional, or Roth — with "
+     "estate step-up and tax-loss harvesting, by your bracket and state.", False),
     ("Tax-Leakage Diagnostic", "leakage.html",
-     "The one-page Before/After: where a concentrated, high-turnover book leaks return to tax, and how the "
-     "tax-location engine plugs it — the quantified tax edge on an identical exposure.", False),
+     "The one-page before/after: where a concentrated, high-turnover account quietly loses return to "
+     "tax, and how much careful placement puts back on an identical exposure.", False),
     ("State Tax Map", "statemap.html",
-     "Fifty states, seven dimensions — capital gains, marriage, estate, munis, QSBS, losses, and basis "
-     "step-up — plus the Structural Alpha our engine recovers from each state's tax landscape.", False),
+     "Fifty states across seven dimensions — capital gains, marriage, estate, munis, QSBS, losses, and "
+     "basis step-up — and what careful tax management can recover from each.", False),
     ("State tax guides (50 states + DC)", "states.html",
-     "A capital-gains, estate, marriage, and basis-step-up profile for every state — each with the "
-     "illustrative Structural Alpha our engine targets there and a one-click personalized diagnostic.", False),
+     "A capital-gains, estate, marriage, and basis-step-up profile for every state — each with what "
+     "careful tax management can recover there, and a one-click personalized diagnostic.", False),
     ("Single asset risk", "concentration.html",
      "How to de-risk a concentrated stock position: 22 strategies across selling, harvesting, hedging, "
      "deferring, and giving — scored on liquidity, speed, fees, tax cost, customization, and simplicity.", False),

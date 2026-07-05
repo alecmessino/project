@@ -11,19 +11,19 @@
 </script>
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
-<title>Driftwood — private wealth architecture</title>
-<meta name="description" content="Driftwood — after-tax wealth architecture: two return engines (Structural Alpha for taxable wealth, Core Alpha for tax-advantaged capital) routed by one tax-location engine into a single after-tax portfolio. Fee-only, fiduciary. Illustrative modeling, not advice." />
+<title>Driftwood — built around what you keep</title>
+<meta name="description" content="Most portfolios are built to maximize returns. Driftwood builds them to maximize what you keep — bringing the design large institutions use, around taxes, costs, and discipline, to individual investors. Fee-only, fiduciary. Illustrative modeling, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/index.html" />
 <link rel="icon" href="favicon.svg" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
-<meta property="og:title" content="Driftwood — private wealth architecture" />
-<meta property="og:description" content="Driftwood — after-tax wealth architecture: two return engines (Structural Alpha for taxable wealth, Core Alpha for tax-advantaged capital) routed by one tax-location engine into a single after-tax portfolio. Fee-only, fiduciary. Illustrative modeling, not advice." />
+<meta property="og:title" content="Driftwood — built around what you keep" />
+<meta property="og:description" content="The largest investors don't invest differently because they're smarter — they pay attention to different things: taxes, costs, diversification, discipline. Driftwood brings that attention to individual investors. Fee-only, fiduciary. Illustrative modeling, not advice." />
 <meta property="og:url" content="https://alecmessino.github.io/project/index.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Driftwood — private wealth architecture" />
-<meta name="twitter:description" content="Driftwood — after-tax wealth architecture: two return engines (Structural Alpha for taxable wealth, Core Alpha for tax-advantaged capital) routed by one tax-location engine into a single after-tax portfolio. Fee-only, fiduciary. Illustrative modeling, not advice." />
+<meta name="twitter:title" content="Driftwood — built around what you keep" />
+<meta name="twitter:description" content="Most portfolios are built to maximize returns. We think yours should maximize what you keep. Fee-only, fiduciary. Illustrative modeling, not advice." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
 <script type="application/ld+json">
 {
@@ -74,9 +74,17 @@
   .eyebrow{font-weight:600;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:18px}
   /* Fluid hero: scales smoothly from the 40px mobile floor to the 53px desktop cap (endpoints
      unchanged) so the display type breathes across widths instead of stepping at one breakpoint. */
-  h1{font-family:var(--serif);font-weight:700;font-size:clamp(40px, 4vw + 20px, 53px);line-height:1.0;
+  /* Belief-first hero: a quiet setup line, then the belief in display type, then the teaching lede. */
+  .kick{font-family:var(--serif);font-size:19px;line-height:1.5;color:#6f675b;margin:0 0 10px;max-width:26ch}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px, 3.6vw + 18px, 50px);line-height:1.04;
     letter-spacing:-.02em;color:var(--ink);margin:0 0 20px}
-  .lede{font-size:16px;line-height:1.6;color:#54545c;margin:0 0 30px;max-width:42ch}
+  .lede{font-size:16px;line-height:1.65;color:#54545c;margin:0 0 30px;max-width:46ch}
+  /* The sentence the firm rests on — its own calm moment between the hero and the page. */
+  .mission{margin:8px 44px 34px;padding:26px 30px;border-left:3px solid var(--brass);background:var(--soft);
+    border-radius:0 12px 12px 0}
+  .mission p{font-family:var(--serif);font-size:clamp(19px,1.1vw+15px,23px);line-height:1.5;color:var(--ink);margin:0;max-width:60ch}
+  .mission .who{font-size:15px;line-height:1.6;color:var(--muted);margin-top:12px;max-width:60ch}
+  @media(max-width:620px){.mission{margin-left:20px;margin-right:20px;padding:20px 22px}}
   .ctas{display:flex;gap:12px;margin-bottom:30px;flex-wrap:wrap}
   .ctas a{text-decoration:none;border-radius:8px;font-size:14.5px;font-weight:600;white-space:nowrap}
   .ctas .primary{background:var(--teal);color:#f1ede3;padding:14px 24px}
@@ -84,7 +92,7 @@
   .trust{display:flex;gap:22px;border-top:1px solid var(--line);padding-top:18px;flex-wrap:wrap}
   .trust span{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--dim)}
   .trust b{color:var(--teal2);font-weight:700}
-  /* Hero architecture card — the product IS the routing: two return engines → one tax-location engine → one portfolio. */
+  /* Hero card — shows the structure in plain English: a diversified core + a focused complement, placed by tax into one portfolio. */
   .arch{background:var(--navy);border-radius:14px;padding:26px 28px;box-shadow:0 20px 50px -28px rgba(8,12,10,.7);color:#e7ecf2}
   .arch .ah{font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
   .arch .engines{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -179,13 +187,14 @@
     <div class="hero">
       <div>
         <div class="eyebrow">Fee-only · fiduciary</div>
-        <h1>Institutional portfolio architecture, built for individual investors.</h1>
-        <p class="lede">Most portfolios are built one account at a time. Driftwood engineers the household
-          portfolio as one coordinated after-tax system — the discipline institutions have long used,
-          applied to your family's balance sheet.</p>
+        <p class="kick">Most portfolios are built to maximize returns.</p>
+        <h1>We think yours should maximize what you keep.</h1>
+        <p class="lede">Institutions have spent decades refining how portfolios are actually built —
+          around taxes, costs, and discipline, not returns alone. Driftwood brings that same design to
+          individual investors.</p>
         <div class="ctas">
           <a class="primary" href="taxlab.html?view=prospect">See your after-tax number →</a>
-          <a class="ghost" href="thesis.html">How it works</a>
+          <a class="ghost" href="thesis.html">How we invest</a>
         </div>
         <div class="trust">
           <span><b>✓</b> Fiduciary, fee-only</span>
@@ -194,18 +203,26 @@
       </div>
       <div>
         <div class="arch">
-          <div class="ah">The architecture</div>
+          <div class="ah">How it fits together</div>
           <div class="engines">
-            <div class="eng"><div class="et">Structural Alpha</div><div class="ed">diversified · tax-managed<br>taxable accounts</div></div>
-            <div class="eng"><div class="et">Core Alpha</div><div class="ed">tactical · high-turnover<br>tax-advantaged accounts</div></div>
+            <div class="eng"><div class="et">A diversified core</div><div class="ed">tax-managed · built to hold<br>for taxable accounts</div></div>
+            <div class="eng"><div class="et">A focused complement</div><div class="ed">active · opportunistic<br>for tax-advantaged accounts</div></div>
           </div>
-          <div class="flow">↓ &nbsp; one tax-location decision &nbsp; ↓</div>
-          <div class="port">One after-tax portfolio</div>
-          <div class="cap"><b style="color:#eef2f6">Great portfolios are engineered, not assembled.</b> Two approaches, placed by tax into one portfolio — where each belongs is the decision that compounds.</div>
+          <div class="flow">↓ &nbsp; placed where each belongs, by tax &nbsp; ↓</div>
+          <div class="port">One portfolio, measured after tax</div>
+          <div class="cap"><b style="color:#eef2f6">Great portfolios are engineered, not assembled.</b> Where each part belongs — which account, taxed how — is the decision that quietly compounds.</div>
         </div>
         <div class="onote">Illustrative, hypothetical modeling — not a forecast, not a client account. Your own
           after-tax figures depend on your holdings, basis, and bracket; compute them in the Tax&nbsp;Lab.</div>
       </div>
+    </div>
+
+    <div class="mission">
+      <p>The largest investors in the world don't manage portfolios differently because they're smarter.
+        They manage them differently because they pay attention to different things.</p>
+      <p class="who">Taxes. Asset location. Rebalancing. Diversification. Costs. Implementation. None of those
+        are features — they're the things that decide what you keep. That attention is what Driftwood brings
+        to individual investors.</p>
     </div>
 
     <div class="audience">
@@ -268,11 +285,11 @@
 </div>
 
 <script>
-window.__STATE__ = {"header": {"generated": "2026-07-04 22:54:30 UTC"}, "hero": {"keep_before": 9, "keep_after": 41, "alpha_low": 3.7, "alpha_high": 4.7, "horizon": 30}, "headline": [{"label": "Model Portfolio (hypothetical)", "value": "+41.4%", "sub": "449 sessions \u00b7 hypothetical backtest from 2024-09-16 \u00b7 data through 2026-07-02", "dd": "\u221216%", "dd_label": "max drawdown \u00b7 this track", "tone": "neutral", "research": true}, {"label": "Equities & ETFs \u00b7 max drawdown", "value": "58% vs 59%", "sub": "multi-decade backtest, strategy vs buy & hold \u00b7 OOS Sharpe 0.65", "tone": "neutral"}], "value_adds": [{"tag": "Structural Alpha \u00b7 the flagship", "title": "A portfolio built to be held \u2014 and taxed lightly.", "stat": "+3.7\u20134.7%/yr", "stat_label": "illustrative after-tax recovery, from no-tax states to California", "note": "A diversified, low-turnover portfolio, tilted toward the sources of return that have paid patient investors over time \u2014 and managed so that harvesting, lot selection, and account placement quietly hand less of it to taxes. For taxable accounts. Illustrative; your figure depends on your bracket and holdings."}, {"tag": "Core Alpha \u00b7 the tactical engine", "title": "Built to persist, not to impress.", "stat": "0.65 \u2248 0.65", "stat_label": "the out-of-sample result matched the in-sample one \u2014 the approach didn't flatter itself", "note": "The research prioritizes persistence over historical optimization. Tested across decades, the out-of-sample result held up nearly unchanged \u2014 the sign of an approach that wasn't fit to the past. The current hypothetical track runs at Sharpe 1.37 (vs 1.23 / 1.10 for VT / VTI) \u2014 a separate, shorter window. Higher-turnover, and meant for tax-advantaged accounts. A hypothetical backtest, not a client account."}, {"tag": "Tax-location \u00b7 where each dollar lives", "title": "The account is the decision that compounds.", "stat": "9% \u2192 41%", "stat_label": "share of a 30-year gain kept after tax \u2014 the same holdings, taxed carelessly vs. deliberately", "note": "Placing the tactical strategy in tax-advantaged accounts and the diversified one in taxable \u2014 then harvesting losses along the way \u2014 is the quiet work that decides how much a family keeps. Federal-only illustration; not a forecast."}], "exhibits": [{"title": "Thesis & approach", "href": "thesis.html", "desc": "The architecture: two return engines (Structural Alpha for taxable wealth, Core Alpha for tax-advantaged capital) routed by one tax-location engine into a single after-tax portfolio.", "present": true, "appendix": false}, {"title": "Tax Lab", "href": "taxlab.html", "desc": "Holistic asset-location engine: after-tax return, three-account placement (taxable / Traditional / Roth), estate step-up, and tax-loss harvesting \u2014 personalized by bracket and state.", "present": true, "appendix": false}, {"title": "Tax-Leakage Diagnostic", "href": "leakage.html", "desc": "The one-page Before/After: where a concentrated, high-turnover book leaks return to tax, and how the tax-location engine plugs it \u2014 the quantified tax edge on an identical exposure.", "present": true, "appendix": false}, {"title": "State Tax Map", "href": "statemap.html", "desc": "Fifty states, seven dimensions \u2014 capital gains, marriage, estate, munis, QSBS, losses, and basis step-up \u2014 plus the Structural Alpha our engine recovers from each state's tax landscape.", "present": true, "appendix": false}, {"title": "State tax guides (50 states + DC)", "href": "states.html", "desc": "A capital-gains, estate, marriage, and basis-step-up profile for every state \u2014 each with the illustrative Structural Alpha our engine targets there and a one-click personalized diagnostic.", "present": true, "appendix": false}, {"title": "Single asset risk", "href": "concentration.html", "desc": "How to de-risk a concentrated stock position: 22 strategies across selling, harvesting, hedging, deferring, and giving \u2014 scored on liquidity, speed, fees, tax cost, customization, and simplicity.", "present": true, "appendix": false}, {"title": "Core Alpha book (hypothetical)", "href": "equities.html", "desc": "Core Alpha Research \u2014 the current book: what the hypothetical Model Portfolio holds now, its signal strength by sleeve, the last rebalance in and out, and the dated track.", "present": true, "appendix": true}, {"title": "Model Portfolio ledger", "href": "ledger.html", "desc": "Core Alpha Research \u2014 the append-only historical record: every change, every mark, with alpha/beta attribution. A hypothetical backtest, not actual trading or any client account.", "present": true, "appendix": true}, {"title": "Model Portfolio \u00b7 long history", "href": "tearsheet.html", "desc": "Core Alpha Research \u2014 the model across decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample (it survived the fit nearly unchanged).", "present": true, "appendix": true}, {"title": "Research studies", "href": "equities_case_studies.html", "desc": "Core Alpha Research \u2014 educational backtests on why the engine behaves as it does: time-series, cross-sectional, lookback & cost sensitivity, and a no-trend control.", "present": true, "appendix": true}]};
+window.__STATE__ = {"header": {"generated": "2026-07-05 02:08:02 UTC"}, "hero": {"keep_before": 9, "keep_after": 41, "alpha_low": 3.7, "alpha_high": 4.7, "horizon": 30}, "headline": [{"label": "Model Portfolio (hypothetical)", "value": "+41.4%", "sub": "449 sessions \u00b7 hypothetical backtest from 2024-09-16 \u00b7 data through 2026-07-02", "dd": "\u221216%", "dd_label": "max drawdown \u00b7 this track", "tone": "neutral", "research": true}, {"label": "Equities & ETFs \u00b7 max drawdown", "value": "58% vs 59%", "sub": "multi-decade backtest, strategy vs buy & hold \u00b7 OOS Sharpe 0.65", "tone": "neutral"}], "value_adds": [{"tag": "Structural Alpha \u00b7 the flagship", "title": "A portfolio built to be held \u2014 and taxed lightly.", "stat": "+3.7\u20134.7%/yr", "stat_label": "illustrative after-tax recovery, from no-tax states to California", "note": "A diversified, low-turnover portfolio, tilted toward the sources of return that have paid patient investors over time \u2014 and managed so that harvesting, lot selection, and account placement quietly hand less of it to taxes. For taxable accounts. Illustrative; your figure depends on your bracket and holdings."}, {"tag": "Core Alpha \u00b7 a complementary engine", "title": "Built to persist, not to impress.", "stat": "0.65 \u2248 0.65", "stat_label": "the out-of-sample result matched the in-sample one \u2014 the approach didn't flatter itself", "note": "The research prioritizes persistence over historical optimization. Tested across decades, the out-of-sample result held up nearly unchanged \u2014 the sign of an approach that wasn't fit to the past. The current hypothetical track runs at Sharpe 1.37 (vs 1.23 / 1.10 for VT / VTI) \u2014 a separate, shorter window. Higher-turnover, and meant for tax-advantaged accounts. A hypothetical backtest, not a client account."}, {"tag": "Tax-location \u00b7 where each dollar lives", "title": "The account is the decision that compounds.", "stat": "9% \u2192 41%", "stat_label": "share of a 30-year gain kept after tax \u2014 the same holdings, taxed carelessly vs. deliberately", "note": "Placing the tactical strategy in tax-advantaged accounts and the diversified one in taxable \u2014 then harvesting losses along the way \u2014 is the quiet work that decides how much a family keeps. Federal-only illustration; not a forecast."}], "exhibits": [{"title": "How we invest", "href": "thesis.html", "desc": "How Driftwood invests: evidence over prediction, taxes treated as part of investing, and a diversified core placed alongside a focused complement \u2014 one portfolio, measured after tax.", "present": true, "appendix": false}, {"title": "Tax Lab", "href": "taxlab.html", "desc": "See your after-tax return, and where each holding belongs \u2014 taxable, Traditional, or Roth \u2014 with estate step-up and tax-loss harvesting, by your bracket and state.", "present": true, "appendix": false}, {"title": "Tax-Leakage Diagnostic", "href": "leakage.html", "desc": "The one-page before/after: where a concentrated, high-turnover account quietly loses return to tax, and how much careful placement puts back on an identical exposure.", "present": true, "appendix": false}, {"title": "State Tax Map", "href": "statemap.html", "desc": "Fifty states across seven dimensions \u2014 capital gains, marriage, estate, munis, QSBS, losses, and basis step-up \u2014 and what careful tax management can recover from each.", "present": true, "appendix": false}, {"title": "State tax guides (50 states + DC)", "href": "states.html", "desc": "A capital-gains, estate, marriage, and basis-step-up profile for every state \u2014 each with what careful tax management can recover there, and a one-click personalized diagnostic.", "present": true, "appendix": false}, {"title": "Single asset risk", "href": "concentration.html", "desc": "How to de-risk a concentrated stock position: 22 strategies across selling, harvesting, hedging, deferring, and giving \u2014 scored on liquidity, speed, fees, tax cost, customization, and simplicity.", "present": true, "appendix": false}, {"title": "Core Alpha book (hypothetical)", "href": "equities.html", "desc": "Core Alpha Research \u2014 the current book: what the hypothetical Model Portfolio holds now, its signal strength by sleeve, the last rebalance in and out, and the dated track.", "present": true, "appendix": true}, {"title": "Model Portfolio ledger", "href": "ledger.html", "desc": "Core Alpha Research \u2014 the append-only historical record: every change, every mark, with alpha/beta attribution. A hypothetical backtest, not actual trading or any client account.", "present": true, "appendix": true}, {"title": "Model Portfolio \u00b7 long history", "href": "tearsheet.html", "desc": "Core Alpha Research \u2014 the model across decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample (it survived the fit nearly unchanged).", "present": true, "appendix": true}, {"title": "Research studies", "href": "equities_case_studies.html", "desc": "Core Alpha Research \u2014 educational backtests on why the engine behaves as it does: time-series, cross-sectional, lookback & cost sensitivity, and a no-trend control.", "present": true, "appendix": true}]};
 
 function render(s){
   const head = s.headline || [];
-  // The hero architecture card is static HTML — the product is the routing, not a single number.
+  // The hero card is static HTML — it shows the structure, not a single number.
   // The three pillar cards below carry the figures (each appears once). Raw hypothetical Core Alpha
   // returns render in the "Core Alpha Research" appendix, dated.
   const va = s.value_adds || [];

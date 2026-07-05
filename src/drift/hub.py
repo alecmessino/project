@@ -24,9 +24,9 @@ EXHIBITS = [
     ("Tax Lab", "taxlab.html",
      "See your after-tax return, and where each holding belongs — taxable, Traditional, or Roth — with "
      "estate step-up and tax-loss harvesting, by your bracket and state.", False),
-    ("Tax-Leakage Diagnostic", "leakage.html",
-     "The one-page before/after: where a concentrated, high-turnover account quietly loses return to "
-     "tax, and how much careful placement puts back on an identical exposure.", False),
+    ("The Tax Diagnostic", "leakage.html",
+     "The one-page before/after: where a concentrated, high-turnover account loses return to tax, "
+     "and how much careful placement puts back on an identical exposure.", False),
     ("State Tax Map", "statemap.html",
      "Fifty states across seven dimensions — capital gains, marriage, estate, munis, QSBS, losses, and "
      "basis step-up — and what careful tax management can recover from each.", False),
@@ -146,21 +146,20 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
     hdr = (led_state or {}).get("header", {})
     benches = (led_state or {}).get("benchmarks", [])
 
-    # 1 · Structural Alpha — the flagship (taxable wealth). Lead with the process; the tax-location
-    # recovery is the supporting number.
+    # 1 · The taxable core (idea first; the implementation name sits in the note).
     value_adds.append({
-        "tag": "Structural Alpha · the flagship",
+        "tag": "The taxable core",
         "title": "A portfolio built to be held — and taxed lightly.",
         "stat": f"+{hero['alpha_low']:.1f}–{hero['alpha_high']:.1f}%/yr",
         "stat_label": "illustrative after-tax recovery, from no-tax states to California",
         "note": "A diversified, low-turnover portfolio, tilted toward the sources of return that have "
-                "paid patient investors over time — and managed so that harvesting, lot selection, and "
-                "account placement quietly hand less of it to taxes. For taxable accounts. Illustrative; "
-                "your figure depends on your bracket and holdings.",
+                "paid patient investors over time — with harvesting, lot selection, and account "
+                "placement handing less of it to taxes. For taxable accounts, implemented as "
+                "Structural Alpha. Illustrative; your figure depends on your bracket and holdings.",
     })
 
-    # 2 · Core Alpha — the tactical engine (tax-advantaged capital). The strongest honest stat is that
-    # it survived out-of-sample nearly unchanged (no overfit); the current hypothetical track is context.
+    # 2 · The complement (tax-advantaged capital). The strongest honest stat is that it survived
+    # out-of-sample nearly unchanged (no overfit); the current hypothetical track is context.
     if ts and ts.get("books"):
         bk = ts["books"][0]
         o = bk["oos"]["test"]
@@ -173,20 +172,20 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
             cur = (f" The current hypothetical track runs at Sharpe {hdr['sharpe']:.2f} "
                    f"(vs {bench_sh} for {bench_lbl}) — a separate, shorter window.")
         value_adds.append({
-            "tag": "Core Alpha · a complementary engine",
+            "tag": "The complement",
             "title": "Built to persist, not to impress.",
             "stat": robust,
             "stat_label": "the out-of-sample result matched the in-sample one — the approach didn't flatter itself",
-            "note": "The research prioritizes persistence over historical optimization. Tested across "
+            "note": "The evidence prioritizes persistence over historical optimization. Tested across "
                     "decades, the out-of-sample result held up nearly unchanged — the sign of an approach "
-                    "that wasn't fit to the past." + cur + " Higher-turnover, and meant for tax-advantaged "
-                    "accounts. A hypothetical backtest, not a client account.",
+                    "that wasn't fit to the past." + cur + " Higher-turnover, implemented as Core Alpha, "
+                    "and meant for tax-advantaged accounts. A hypothetical backtest, not a client account.",
         })
 
-    # 3 · Tax-location — the engine that routes them (the moat). The before/after is the same exposure,
-    # tax-naive vs tax-managed (NOT a jab at either return engine).
+    # 3 · Asset location — the decision that routes them (the moat). The before/after is the same
+    # exposure, tax-naive vs tax-managed (NOT a jab at either return strategy).
     value_adds.append({
-        "tag": "Tax-location · where each dollar lives",
+        "tag": "Asset location",
         "title": "The account is the decision that compounds.",
         "stat": f"{hero['keep_before']}% → {hero['keep_after']}%",
         "stat_label": f"share of a {hero['horizon']}-year gain kept after tax — the same holdings, taxed carelessly vs. deliberately",

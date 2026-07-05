@@ -70,11 +70,16 @@ jobs:
           GSPANEL="the_third_turn/output/game_state_panel.jsonl"
           START=$(date +%s)
 
+          HEALTH_TXT="the_third_turn/output/health_report.txt"
+          HEALTH_JSON="the_third_turn/output/health_report.json"
+
           checkpoint() {
+            # operational health report (integrity of the collection pipeline) every checkpoint
+            python3 the_third_turn/collection_health.py >/dev/null 2>&1 || true
             git add "$LEDGER" 2>/dev/null || true
-            git add -f "$PANEL" "$TTPANEL" "$GSPANEL" 2>/dev/null || true
+            git add -f "$PANEL" "$TTPANEL" "$GSPANEL" "$HEALTH_TXT" "$HEALTH_JSON" 2>/dev/null || true
             git diff --cached --quiet && return 0
-            git commit -q -m "ledger + odds/state panels checkpoint [skip ci]" || return 0
+            git commit -q -m "ledger + odds/state panels + health checkpoint [skip ci]" || return 0
             for a in 1 2 3; do
               git pull --rebase -q origin "$BR" && git push -q origin "HEAD:$BR" && return 0
               sleep 5
@@ -90,6 +95,11 @@ jobs:
           kill "$CK" 2>/dev/null || true
           checkpoint
 
+          # operational health report to the run log (early-warning; committed each checkpoint)
+          python3 the_third_turn/collection_health.py || true
+          HEALTH="$(python3 the_third_turn/collection_health.py --summary 2>/dev/null || true)"
+          echo "HEALTH: $HEALTH"
+
           # maintenance probe — ping Discord ONLY when the V3 sample is ripe or a stream broke
           REPORT="$(python3 the_third_turn/ripeness_check.py || true)"
           echo "$REPORT"
@@ -99,7 +109,7 @@ jobs:
             HLTH="$(echo "$REPORT" | grep '^HEALTH_OK' | head -1)"
             if [ -n "${DISCORD_WEBHOOK_URL:-}" ]; then
               curl -s -H "Content-Type: application/json" \
-                -d "{\"content\":\"🔔 The Third Turn maintenance — ${COV} · ${RIP} · ${HLTH}\"}" \
+                -d "{\"content\":\"🔔 The Third Turn maintenance — ${COV} · ${RIP} · ${HLTH} · ${HEALTH}\"}" \
                 "$DISCORD_WEBHOOK_URL" || true
             fi
           fi

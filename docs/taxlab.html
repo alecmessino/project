@@ -543,7 +543,7 @@
       <div class="opt-card res" id="rolloverres"></div>
     </div>
 
-    <h3 class="strat-h">2 · 2026 Roth conversion optimizer</h3>
+    <h3 class="strat-h">2 · 2026 Roth conversion</h3>
     <div class="optgrid">
       <div class="opt-card">
         <div class="slider"><div class="top"><label>Traditional IRA balance</label><output id="rothtradv"></output></div>
@@ -560,7 +560,7 @@
   </section>
 
   <section id="optim" class="advisor-only">
-    <h2>Asset Location Optimizer <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· three buckets, optimally placed</span></h2>
+    <h2>Asset Location <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· three buckets, optimally placed</span></h2>
     <div class="optgrid">
       <div class="opt-card">
         <div class="slider">
@@ -1023,7 +1023,7 @@ function renderTransition(){
      <div class="brk">Range <b>${fmt$(saLo)} – ${fmt$(saHi)}/yr</b> across the assumption band (effective tax rate · turnover · market return).
        Base ≈ ${fmt$(taxSaved)}/yr from asset-location placement + ${fmt$(feeSaved)}/yr from a lower all-in cost
        (legacy ${legBps} bps → ${(propRate*1e4).toFixed(0)} bps), on a ${fmt$big(W)} household.
-       <b>This is structural tax &amp; fee optimization — not a forecast that these funds out-perform.</b></div>`;
+       <b>This is structural tax &amp; fee management — not a forecast that these funds out-perform.</b></div>`;
   $("transnote").innerHTML=`<b>${m.note}</b> The Proposed Allocation is a Driftwood institutional model — a diversified,
     low-cost strategic allocation, <b>distinct from</b> the hypothetical Driftwood momentum backtest${m.structure?`, which enters only as the ${Math.round(m.structure.satellite*100)}% self-directed satellite sleeve`:""}.
     Estimated Structural Alpha is illustrative tax + fee modeling on the inputs shown; actual results depend on account structure,
@@ -1031,7 +1031,7 @@ function renderTransition(){
   // Feed the print-only proposal appendix so the generated PDF names the recommended structure.
   if($("printproposal")) $("printproposal").innerHTML=`<div class="es-h">Recommended structure</div>
     <p><b>${m.name}</b> — ${m.tagline} Blended fund cost ${(m.blended_er*1e4).toFixed(0)} bps. Estimated Structural Alpha
-      (Tax + Fee Optimization): <b>+${fmt$(structural)}/yr</b> (range ${fmt$(saLo)} – ${fmt$(saHi)}/yr across the tax-rate /
+      (Tax &amp; Fee savings): <b>+${fmt$(structural)}/yr</b> (range ${fmt$(saLo)} – ${fmt$(saHi)}/yr across the tax-rate /
       turnover / market-return band) on a ${fmt$big(W)} household — illustrative tax + fee modeling, not a performance forecast.</p>`;
 }
 // --- Feature 2: wealth-architecture decision tree (visualizes the existing placement + estate gate) ---

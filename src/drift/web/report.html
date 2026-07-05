@@ -10,18 +10,18 @@
   plausible.init()
 </script>
 <title>Driftwood — Core Alpha research studies</title>
-<meta name="description" content="Core Alpha research — momentum backtests across the global ETF matrix: time-series, cross-sectional, lookback and cost sensitivity, and a no-trend control. Why the engine behaves as it does. Research only, not advice." />
+<meta name="description" content="Core Alpha research — momentum backtests across the global ETF matrix: time-series, cross-sectional, lookback and cost sensitivity, and a no-trend control. Why the strategy behaves as it does. Research only, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/equities_case_studies.html" />
 <link rel="icon" href="favicon.svg" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
 <meta property="og:title" content="Driftwood — Core Alpha research studies" />
-<meta property="og:description" content="Core Alpha research — momentum backtests across the global ETF matrix: time-series, cross-sectional, lookback and cost sensitivity, and a no-trend control. Why the engine behaves as it does. Research only, not advice." />
+<meta property="og:description" content="Core Alpha research — momentum backtests across the global ETF matrix: time-series, cross-sectional, lookback and cost sensitivity, and a no-trend control. Why the strategy behaves as it does. Research only, not advice." />
 <meta property="og:url" content="https://alecmessino.github.io/project/equities_case_studies.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/equities.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Driftwood — Core Alpha research studies" />
-<meta name="twitter:description" content="Core Alpha research — momentum backtests across the global ETF matrix: time-series, cross-sectional, lookback and cost sensitivity, and a no-trend control. Why the engine behaves as it does. Research only, not advice." />
+<meta name="twitter:description" content="Core Alpha research — momentum backtests across the global ETF matrix: time-series, cross-sectional, lookback and cost sensitivity, and a no-trend control. Why the strategy behaves as it does. Research only, not advice." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/equities.png" />
 <style>
   :root{
@@ -78,8 +78,8 @@
       <a href="about.html">Our Story</a>
       <a href="thesis.html">How We Invest</a>
       <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
-      <a href="leakage.html">Leakage</a>
-      <a href="statemap.html">State Guide</a>
+      <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+      <a href="statemap.html">State Tax Guide</a>
       <a href="ledger.html" aria-current="page">Research</a>
     </div>
   </nav>
@@ -87,7 +87,7 @@
     <h1>Drift<span class="w">wood</span> · Core Alpha research studies</h1>
     <div class="sub" id="sub"></div>
     <div class="research-banner" style="margin-top:10px;font-size:11.5px;color:#5a4a22;border:1px solid #e0c98a;border-left:3px solid var(--brass,#a9853f);background:#faf3df;border-radius:7px;padding:8px 12px;line-height:1.5">
-      <b>Core Alpha Research.</b> These are educational studies of <i>why</i> the Core Alpha (momentum) engine
+      <b>Core Alpha Research.</b> These are educational studies of <i>why</i> the Core Alpha (momentum) strategy
       behaves as it does — not the deployed, tax-managed <b>Structural&nbsp;Alpha</b> book. Hypothetical
       backtests, not a client account. <a href="index.html" style="color:var(--slate,#4a4f57)">See the current book →</a>
     </div>
@@ -145,9 +145,9 @@ function render(s){
     `<span><b>${h.n_bars}</b> bars</span>`+
     `<span>${h.model}</span>`;
   document.getElementById("lede").textContent =
-    `${h.n_studies||s.studies.length} backtests chosen to show the Core Alpha engine honestly — across `+
+    `${h.n_studies||s.studies.length} backtests chosen to show the Core Alpha strategy honestly — across `+
     "instruments, across the lookback window, against transaction cost, and against a no-trend control. "+
-    "Each answers a research question about why the engine behaves as it does.";
+    "Each answers a research question about why the strategy behaves as it does.";
   document.getElementById("gen").textContent = "Generated "+h.generated+" · universe: "+h.universe;
 
   document.getElementById("studies").innerHTML = s.studies.map((st,i)=>{

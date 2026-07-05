@@ -75,16 +75,17 @@ def test_value_adds_sourced_and_fair_and_balanced(tmp_path):
         "x window.__STATE__ = " + json.dumps(ts_state) + ";\n y")
     va = build_hub(tmp_path)["value_adds"]
     tags = [v["tag"] for v in va]
-    # The three architecture pillars (process-led), each figure appearing once.
-    assert any("Structural Alpha" in t for t in tags)   # 1 · the flagship (taxable wealth)
-    assert any("Core Alpha" in t for t in tags)         # 2 · the tactical engine (tax-advantaged)
-    assert any("Tax-location" in t for t in tags)       # 3 · the moat that routes them
-    flag = next(v for v in va if "Structural Alpha" in v["tag"])
+    # The three pillars headline the idea; implementation names are demoted into the notes.
+    assert any("taxable core" in t.lower() for t in tags)   # 1 · the taxable core
+    assert any("complement" in t.lower() for t in tags)     # 2 · the complement (tax-advantaged)
+    assert any("Asset location" in t for t in tags)         # 3 · the decision that routes them
+    assert not any("Alpha" in t for t in tags)              # product names never headline a pillar
+    flag = next(v for v in va if "Structural Alpha" in v["note"])
     assert flag["stat"].startswith("+") and "%/yr" in flag["stat"]   # leads with the tax-recovery band
-    core = next(v for v in va if "Core Alpha" in v["tag"])
+    core = next(v for v in va if "Core Alpha" in v["note"])
     assert "persist" in core["note"].lower()            # persistence framing, not a Sharpe race
     assert "1.35" in core["note"]                       # the current hypothetical track is CONTEXT, in the note
-    loc = next(v for v in va if "Tax-location" in v["tag"])
+    loc = next(v for v in va if "Asset location" in v["tag"])
     assert "9% → 41%" in loc["stat"]                    # the de-villained tax-naive vs tax-managed before/after
 
 

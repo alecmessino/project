@@ -164,25 +164,25 @@
 <body>
 <div class="wrap">
   <div class="frame">
-  <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — the proof · model portfolio</span></div>
+  <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — model portfolio ledger</span></div>
   <nav class="dwnav" aria-label="Driftwood">
     <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
     <div class="dwnav-links">
       <a href="about.html">Our Story</a>
       <a href="thesis.html">How We Invest</a>
       <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
-      <a href="leakage.html">Leakage</a>
-      <a href="statemap.html">State Guide</a>
+      <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+      <a href="statemap.html">State Tax Guide</a>
       <a href="ledger.html" aria-current="page">Research</a>
     </div>
   </nav>
   <header>
-    <div class="eyebrow">Model Portfolio · the proof <span class="hyp-pill">HYPOTHETICAL</span></div>
-    <h1>The proof — an illustrative track record.</h1>
+    <div class="eyebrow">Model Portfolio · the ledger <span class="hyp-pill">HYPOTHETICAL</span></div>
+    <h1>An append-only record of a hypothetical portfolio.</h1>
     <div class="sub" id="sub"></div>
   </header>
   <div class="research-banner" style="margin:6px 0 18px;padding:12px 16px;border:1px solid #e0c98a;border-left:3px solid var(--brass,#a9853f);background:#faf3df;border-radius:8px;font-size:12.5px;line-height:1.55;color:#5a4a22">
-    <b>Core Alpha Research — a hypothetical Model Portfolio.</b> This is the Core Alpha engine: the
+    <b>Core Alpha Research — a hypothetical Model Portfolio.</b> This is the Core Alpha strategy: the
     high-turnover, opportunistic momentum book built for <b>tax-advantaged</b> accounts. The flagship
     <b>Structural Alpha</b> book — diversified, low-turnover, tax-managed — is the taxable-account
     strategy. This is a hypothetical backtest of one model portfolio, marked daily — not a client
@@ -386,7 +386,7 @@ function render(s){
     <h2 class="sec">Performance vs buy-and-hold · <span id="perlabel" style="text-transform:none;letter-spacing:0">full backtest</span></h2>
     <div class="tscroll"><table class="cmp stickcol" style="--stick-bg:var(--bg)"><thead><tr><th scope="col">Track</th><th scope="col">Return</th><th scope="col">Sharpe</th>
       <th scope="col">Max DD</th><th scope="col">Edge</th></tr></thead><tbody id="cmpbody"></tbody></table></div>
-    <div class="note-box"><b>How the book is built — a dual-engine system.</b> The model above is the
+    <div class="note-box"><b>How the book is built — two strategies, one system.</b> The model above is the
       <b>Unconstrained Core Alpha Strategy</b>: long-only and <b>always fully invested</b> (no cash, no leverage). Each month it ranks
       the global region/size/style ETF matrix by volatility-normalized momentum (~60-bar lookback) and holds the
       trending top half, inverse-volatility weighted — <b>unbiased cross-sectional momentum with no discretionary
@@ -398,7 +398,7 @@ function render(s){
       long-term treatment. In an <b>illustrative</b> 40-year validation sweep (<code>scripts/slow_sweep.py</code>,
       proxy-spliced or synthetic history) the Tax-Managed Core Strategy retained a meaningfully larger after-tax fraction than the
       Unconstrained Core Alpha Strategy (roughly <b>~2×</b> in that run) — a <b>mechanism demonstration, not a live or audited track
-      record</b> — making the case for unifying the two engines by <b>asset location</b>: fast where gains are
+      record</b> — making the case for unifying the two strategies by <b>asset location</b>: fast where gains are
       sheltered, slow where they are taxed. (The Tax-Managed Core Strategy is offline-validated and is not part of the
       Model Portfolio above; its figures are hypothetical.) <b>Diversification
       note:</b> the book holds the full global region×size×style matrix, so by construction it is far less

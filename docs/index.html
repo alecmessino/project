@@ -123,21 +123,6 @@
   .vcard .sl{font-size:12px;color:var(--dim);margin:6px 0 12px}
   .vcard .vn{font-size:12px;color:var(--body);line-height:1.5;border-top:1px solid var(--line2);padding-top:10px;margin-top:auto}
   .vsec .cap{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.5}
-  .path{padding:8px 44px 36px}
-  .path .h{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
-  .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
-  @media(max-width:820px){.steps{grid-template-columns:repeat(2,1fr)}}
-  a.step{display:block;text-decoration:none;border-radius:10px;padding:18px 18px 20px;border:1px solid var(--line);background:#fff;color:inherit;
-    transition:background-color var(--t-fast), transform .2s var(--ease-out), box-shadow .2s var(--ease-out)}
-  a.step:hover{background:var(--soft);transform:translateY(-2px);box-shadow:var(--sh-hover)}
-  @media (prefers-reduced-motion: reduce){ a.step{transition:background-color var(--t-fast)} a.step:hover{transform:none} }
-  a.step.lead{background:var(--teal);border-color:var(--teal);color:#eef3ef}
-  a.step .n{font-family:var(--sans);font-weight:600;font-size:18px;margin-bottom:10px}
-  a.step.lead .n{color:var(--gold)} a.step .n{color:var(--brass)}
-  a.step .t{font-weight:600;font-size:14.5px;margin-bottom:4px;color:var(--ink)}
-  a.step.lead .t{color:#fff}
-  a.step .d{font-size:12px;line-height:1.4;color:var(--dim)}
-  a.step.lead .d{color:#b6c5bd}
   .exsec{padding:4px 44px 30px}
   .exsec .h{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
   .exhibits{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -151,7 +136,7 @@
   a.ex .t{font-weight:600;font-size:14.5px;margin-bottom:3px;color:var(--ink)}
   a.ex .t .arrow{color:var(--brass);font-weight:400}
   a.ex .d{font-size:12.5px;color:var(--dim);line-height:1.5}
-  @media(max-width:620px){.exhibits{grid-template-columns:1fr}.nav{padding:14px 20px}.hero,.path,.exsec{padding-left:20px;padding-right:20px}}
+  @media(max-width:620px){.exhibits{grid-template-columns:1fr}.nav{padding:14px 20px}.hero,.exsec{padding-left:20px;padding-right:20px}}
   .foot{padding:18px 44px 36px;border-top:1px solid var(--line);background:var(--soft);color:var(--muted);font-size:12.5px;line-height:1.6}
   .foot .note{color:#5a5a62;font-weight:600}
   /* CLS guard: reserve height for the JS-injected blocks so filling them doesn't shove the page,
@@ -178,8 +163,8 @@
         <a href="about.html">Our Story</a>
         <a href="thesis.html">How We Invest</a>
         <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
-        <a href="leakage.html">Leakage</a>
-        <a href="statemap.html">State Guide</a>
+        <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+        <a href="statemap.html">State Tax Guide</a>
         <a href="ledger.html">Research</a>
       </div>
     </nav>
@@ -234,7 +219,7 @@
         <span>Executives with equity compensation</span>
         <span>Concentrated-stock households</span>
         <span>Families in high-tax states</span>
-        <span>Clients coordinating with a CPA or attorney</span>
+        <span>Families coordinating with a CPA or attorney</span>
       </div>
     </div>
 
@@ -245,17 +230,6 @@
         once, carries its own risk, and traces to an exhibit below; <a href="#disclosures" style="color:var(--teal2)">see full disclosures</a>.</div>
     </div>
 
-    <div class="path">
-      <div class="h">Where to start</div>
-      <div class="steps">
-        <a class="step lead" href="taxlab.html?view=prospect"><div class="n">1</div><div class="t">Your situation</div><div class="d">Bracket, state, portfolio.</div></a>
-        <a class="step" href="leakage.html"><div class="n">2</div><div class="t">The problem</div><div class="d">What tax &amp; fees cost now.</div></a>
-        <a class="step" href="taxlab.html?view=advisor"><div class="n">3</div><div class="t">The fix</div><div class="d">Asset location + harvesting.</div></a>
-        <a class="step" href="thesis.html"><div class="n">4</div><div class="t">The proof</div><div class="d">Approach, evidence &amp; method.</div></a>
-        <a class="step" href="taxlab.html?view=prospect"><div class="n">5</div><div class="t">Your proposal</div><div class="d">Brief + client PDF.</div></a>
-      </div>
-    </div>
-
     <div class="exsec">
       <div class="h">Tools &amp; research</div>
       <div class="exhibits" id="exhibits"></div>
@@ -264,7 +238,7 @@
     <div class="exsec" id="appendixsec" style="display:none">
       <div class="h">Core Alpha Research</div>
       <div style="margin:0 0 12px;padding:11px 15px;border:1px solid #e0c98a;border-left:3px solid var(--brass);background:#faf3df;border-radius:8px;font-size:12px;line-height:1.55;color:#5a4a22">
-        The <b>Core Alpha</b> engine — the tactical, high-turnover book for tax-advantaged capital. These are
+        <b>Core Alpha</b> — the tactical, high-turnover book for tax-advantaged capital. These are
         <b>hypothetical Model Portfolios</b> and research studies, marked daily; the flagship <b>Structural Alpha</b>
         book (diversified, tax-managed) is the taxable-account strategy. Not a client account.
       </div>
@@ -285,7 +259,7 @@
 </div>
 
 <script>
-window.__STATE__ = {"header": {"generated": "2026-07-05 02:59:27 UTC"}, "hero": {"keep_before": 9, "keep_after": 41, "alpha_low": 3.7, "alpha_high": 4.7, "horizon": 30}, "headline": [{"label": "Model Portfolio (hypothetical)", "value": "+41.4%", "sub": "449 sessions \u00b7 hypothetical backtest from 2024-09-16 \u00b7 data through 2026-07-02", "dd": "\u221216%", "dd_label": "max drawdown \u00b7 this track", "tone": "neutral", "research": true}, {"label": "Equities & ETFs \u00b7 max drawdown", "value": "58% vs 59%", "sub": "multi-decade backtest, strategy vs buy & hold \u00b7 OOS Sharpe 0.65", "tone": "neutral"}], "value_adds": [{"tag": "Structural Alpha \u00b7 the flagship", "title": "A portfolio built to be held \u2014 and taxed lightly.", "stat": "+3.7\u20134.7%/yr", "stat_label": "illustrative after-tax recovery, from no-tax states to California", "note": "A diversified, low-turnover portfolio, tilted toward the sources of return that have paid patient investors over time \u2014 and managed so that harvesting, lot selection, and account placement quietly hand less of it to taxes. For taxable accounts. Illustrative; your figure depends on your bracket and holdings."}, {"tag": "Core Alpha \u00b7 a complementary engine", "title": "Built to persist, not to impress.", "stat": "0.65 \u2248 0.65", "stat_label": "the out-of-sample result matched the in-sample one \u2014 the approach didn't flatter itself", "note": "The research prioritizes persistence over historical optimization. Tested across decades, the out-of-sample result held up nearly unchanged \u2014 the sign of an approach that wasn't fit to the past. The current hypothetical track runs at Sharpe 1.37 (vs 1.23 / 1.10 for VT / VTI) \u2014 a separate, shorter window. Higher-turnover, and meant for tax-advantaged accounts. A hypothetical backtest, not a client account."}, {"tag": "Tax-location \u00b7 where each dollar lives", "title": "The account is the decision that compounds.", "stat": "9% \u2192 41%", "stat_label": "share of a 30-year gain kept after tax \u2014 the same holdings, taxed carelessly vs. deliberately", "note": "Placing the tactical strategy in tax-advantaged accounts and the diversified one in taxable \u2014 then harvesting losses along the way \u2014 is the quiet work that decides how much a family keeps. Federal-only illustration; not a forecast."}], "exhibits": [{"title": "How we invest", "href": "thesis.html", "desc": "How Driftwood invests: evidence over prediction, taxes treated as part of investing, and a diversified core placed alongside a focused complement \u2014 one portfolio, measured after tax.", "present": true, "appendix": false}, {"title": "Tax Lab", "href": "taxlab.html", "desc": "See your after-tax return, and where each holding belongs \u2014 taxable, Traditional, or Roth \u2014 with estate step-up and tax-loss harvesting, by your bracket and state.", "present": true, "appendix": false}, {"title": "Tax-Leakage Diagnostic", "href": "leakage.html", "desc": "The one-page before/after: where a concentrated, high-turnover account quietly loses return to tax, and how much careful placement puts back on an identical exposure.", "present": true, "appendix": false}, {"title": "State Tax Map", "href": "statemap.html", "desc": "Fifty states across seven dimensions \u2014 capital gains, marriage, estate, munis, QSBS, losses, and basis step-up \u2014 and what careful tax management can recover from each.", "present": true, "appendix": false}, {"title": "State tax guides (50 states + DC)", "href": "states.html", "desc": "A capital-gains, estate, marriage, and basis-step-up profile for every state \u2014 each with what careful tax management can recover there, and a one-click personalized diagnostic.", "present": true, "appendix": false}, {"title": "Single asset risk", "href": "concentration.html", "desc": "How to de-risk a concentrated stock position: 22 strategies across selling, harvesting, hedging, deferring, and giving \u2014 scored on liquidity, speed, fees, tax cost, customization, and simplicity.", "present": true, "appendix": false}, {"title": "Core Alpha book (hypothetical)", "href": "equities.html", "desc": "Core Alpha Research \u2014 the current book: what the hypothetical Model Portfolio holds now, its signal strength by sleeve, the last rebalance in and out, and the dated track.", "present": true, "appendix": true}, {"title": "Model Portfolio ledger", "href": "ledger.html", "desc": "Core Alpha Research \u2014 the append-only historical record: every change, every mark, with alpha/beta attribution. A hypothetical backtest, not actual trading or any client account.", "present": true, "appendix": true}, {"title": "Model Portfolio \u00b7 long history", "href": "tearsheet.html", "desc": "Core Alpha Research \u2014 the model across decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample (it survived the fit nearly unchanged).", "present": true, "appendix": true}, {"title": "Research studies", "href": "equities_case_studies.html", "desc": "Core Alpha Research \u2014 educational backtests on why the engine behaves as it does: time-series, cross-sectional, lookback & cost sensitivity, and a no-trend control.", "present": true, "appendix": true}]};
+window.__STATE__ = {"header": {"generated": "2026-07-05 03:33:31 UTC"}, "hero": {"keep_before": 9, "keep_after": 41, "alpha_low": 3.7, "alpha_high": 4.7, "horizon": 30}, "headline": [{"label": "Model Portfolio (hypothetical)", "value": "+41.4%", "sub": "449 sessions \u00b7 hypothetical backtest from 2024-09-16 \u00b7 data through 2026-07-02", "dd": "\u221216%", "dd_label": "max drawdown \u00b7 this track", "tone": "neutral", "research": true}, {"label": "Equities & ETFs \u00b7 max drawdown", "value": "58% vs 59%", "sub": "multi-decade backtest, strategy vs buy & hold \u00b7 OOS Sharpe 0.65", "tone": "neutral"}], "value_adds": [{"tag": "The taxable core", "title": "A portfolio built to be held \u2014 and taxed lightly.", "stat": "+3.7\u20134.7%/yr", "stat_label": "illustrative after-tax recovery, from no-tax states to California", "note": "A diversified, low-turnover portfolio, tilted toward the sources of return that have paid patient investors over time \u2014 with harvesting, lot selection, and account placement handing less of it to taxes. For taxable accounts, implemented as Structural Alpha. Illustrative; your figure depends on your bracket and holdings."}, {"tag": "The complement", "title": "Built to persist, not to impress.", "stat": "0.65 \u2248 0.65", "stat_label": "the out-of-sample result matched the in-sample one \u2014 the approach didn't flatter itself", "note": "The evidence prioritizes persistence over historical optimization. Tested across decades, the out-of-sample result held up nearly unchanged \u2014 the sign of an approach that wasn't fit to the past. The current hypothetical track runs at Sharpe 1.37 (vs 1.23 / 1.10 for VT / VTI) \u2014 a separate, shorter window. Higher-turnover, implemented as Core Alpha, and meant for tax-advantaged accounts. A hypothetical backtest, not a client account."}, {"tag": "Asset location", "title": "The account is the decision that compounds.", "stat": "9% \u2192 41%", "stat_label": "share of a 30-year gain kept after tax \u2014 the same holdings, taxed carelessly vs. deliberately", "note": "Placing the tactical strategy in tax-advantaged accounts and the diversified one in taxable \u2014 then harvesting losses along the way \u2014 is the quiet work that decides how much a family keeps. Federal-only illustration; not a forecast."}], "exhibits": [{"title": "How we invest", "href": "thesis.html", "desc": "How Driftwood invests: evidence over prediction, taxes treated as part of investing, and a diversified core placed alongside a focused complement \u2014 one portfolio, measured after tax.", "present": true, "appendix": false}, {"title": "Tax Lab", "href": "taxlab.html", "desc": "See your after-tax return, and where each holding belongs \u2014 taxable, Traditional, or Roth \u2014 with estate step-up and tax-loss harvesting, by your bracket and state.", "present": true, "appendix": false}, {"title": "The Tax Diagnostic", "href": "leakage.html", "desc": "The one-page before/after: where a concentrated, high-turnover account loses return to tax, and how much careful placement puts back on an identical exposure.", "present": true, "appendix": false}, {"title": "State Tax Map", "href": "statemap.html", "desc": "Fifty states across seven dimensions \u2014 capital gains, marriage, estate, munis, QSBS, losses, and basis step-up \u2014 and what careful tax management can recover from each.", "present": true, "appendix": false}, {"title": "State tax guides (50 states + DC)", "href": "states.html", "desc": "A capital-gains, estate, marriage, and basis-step-up profile for every state \u2014 each with what careful tax management can recover there, and a one-click personalized diagnostic.", "present": true, "appendix": false}, {"title": "Single asset risk", "href": "concentration.html", "desc": "How to de-risk a concentrated stock position: 22 strategies across selling, harvesting, hedging, deferring, and giving \u2014 scored on liquidity, speed, fees, tax cost, customization, and simplicity.", "present": true, "appendix": false}, {"title": "Core Alpha book (hypothetical)", "href": "equities.html", "desc": "Core Alpha Research \u2014 the current book: what the hypothetical Model Portfolio holds now, its signal strength by sleeve, the last rebalance in and out, and the dated track.", "present": true, "appendix": true}, {"title": "Model Portfolio ledger", "href": "ledger.html", "desc": "Core Alpha Research \u2014 the append-only historical record: every change, every mark, with alpha/beta attribution. A hypothetical backtest, not actual trading or any client account.", "present": true, "appendix": true}, {"title": "Model Portfolio \u00b7 long history", "href": "tearsheet.html", "desc": "Core Alpha Research \u2014 the model across decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample (it survived the fit nearly unchanged).", "present": true, "appendix": true}, {"title": "Research studies", "href": "equities_case_studies.html", "desc": "Core Alpha Research \u2014 educational backtests on why the engine behaves as it does: time-series, cross-sectional, lookback & cost sensitivity, and a no-trend control.", "present": true, "appendix": true}]};
 
 function render(s){
   const head = s.headline || [];

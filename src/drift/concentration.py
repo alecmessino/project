@@ -310,7 +310,7 @@ ARTICLE = {
     "lead": "A concentrated, low-basis position is one of the hardest problems in taxable wealth. "
             "Every way to de-risk it, scored on the tradeoffs that matter.",
     "body": [
-        "A single stock that dominates your net worth is one of the hardest problems in taxable wealth. "
+        "A single stock that dominates your net worth puts you in a bind. "
         "Sell, and a low cost basis means a heavy tax bill. Hold, and you carry idiosyncratic risk the "
         "market never compensates you for bearing.",
         "There is no clean answer, only tradeoffs. Every approach moves you along the same handful of "

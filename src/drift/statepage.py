@@ -181,8 +181,8 @@ NAV = (
     '    <a href="about.html">Our Story</a>\n'
     '    <a href="thesis.html">How We Invest</a>\n'
     '    <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>\n'
-    '    <a href="leakage.html">Leakage</a>\n'
-    '    <a href="statemap.html">State Guide</a>\n'
+    '    <a href="leakage.html">Tax&nbsp;Diagnostic</a>\n'
+    '    <a href="statemap.html">State Tax Guide</a>\n'
     '    <a href="ledger.html">Research</a>\n'
     '  </div>\n'
     '</nav>'
@@ -599,7 +599,7 @@ def export_state_pages(out_dir: str | Path = "docs") -> list[str]:
 
 # Core (non-state) pages that also belong in the sitemap, with priorities.
 _CORE_SITEMAP = [
-    ("index.html", "1.0", "weekly"), ("philosophy.html", "0.9", "monthly"),
+    ("index.html", "1.0", "weekly"), ("principles.html", "0.9", "monthly"),
     ("about.html", "0.9", "monthly"),
     ("taxlab.html", "0.9", "weekly"),
     ("leakage.html", "0.9", "monthly"), ("statemap.html", "0.8", "monthly"),

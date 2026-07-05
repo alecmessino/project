@@ -70,9 +70,10 @@ def test_prove_it_citations_only_where_verified():
 
 def test_template_is_original_and_carries_compliance_framing():
     t = STATEMAP_TEMPLATE.read_text()
-    # Firm-approved editorial copy (the client's own headline/eyebrow for the 250th-anniversary framing).
+    # Firm-approved editorial copy; the dated 250th-anniversary eyebrow was retired for a timeless one.
     assert "Fifty states, fifty tax personalities" in t
-    assert "America turns 250" in t
+    assert "America turns 250" not in t
+    assert "The State Tax Guide" in t
     # ORIGINALITY: we still never reuse the third party's brand name or assets.
     assert "taxalphainsider" not in t.lower()
     # reads the deep-link params + routes Structural Alpha into the diagnostic

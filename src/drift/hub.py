@@ -94,6 +94,10 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
         "alpha_low": leak["headline"]["alpha_low"],      # illustrative Structural Alpha band (%/yr)
         "alpha_high": leak["headline"]["alpha_high"],
         "horizon": leak["header"]["horizon_years"],
+        # The honest inversion: the tax-managed book earns slightly LESS pre-tax and still ends
+        # wealthier after tax — the sentence sophisticated readers look for.
+        "pretax_before": leak["headline"]["pretax_before"],
+        "pretax_after": leak["headline"]["pretax_after"],
     }
 
     # Long-history tearsheet (the multi-decade backtest) and the live 445-session ledger are two
@@ -187,8 +191,11 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
     value_adds.append({
         "tag": "Asset location",
         "title": "The account is the decision that compounds.",
-        "stat": f"{hero['keep_before']}% → {hero['keep_after']}%",
-        "stat_label": f"share of a {hero['horizon']}-year gain kept after tax — the same holdings, taxed carelessly vs. deliberately",
+        # Dollars, not retained-gain percentages — families think in dollars. Derived from the same
+        # engine keep-rates (keep_pct% of a $1M realized gain), so the figure has one source of truth.
+        "stat": f"${hero['keep_before'] * 10_000:,.0f} → ${hero['keep_after'] * 10_000:,.0f}",
+        "stat_label": f"kept from $1 million of realized gains over {hero['horizon']} years — the same holdings, "
+                      "taxed carelessly vs. deliberately (modeled, federal-only)",
         "note": "Placing the tactical strategy in tax-advantaged accounts and the diversified one in "
                 "taxable — then harvesting losses along the way — is the quiet work that decides how much "
                 "a family keeps. Federal-only illustration; not a forecast.",

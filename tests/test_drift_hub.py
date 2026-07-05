@@ -86,7 +86,12 @@ def test_value_adds_sourced_and_fair_and_balanced(tmp_path):
     assert "persist" in core["note"].lower()            # persistence framing, not a Sharpe race
     assert "1.35" in core["note"]                       # the current hypothetical track is CONTEXT, in the note
     loc = next(v for v in va if "Asset location" in v["tag"])
-    assert "9% → 41%" in loc["stat"]                    # the de-villained tax-naive vs tax-managed before/after
+    # Dollars, not retained-gain percentages: keep_pct% of a $1M realized gain, one source of truth.
+    from drift.leakage import build_leakage
+    leak = build_leakage()
+    lo, hi = leak["before"]["keep_pct"] * 10_000, leak["after"]["keep_pct"] * 10_000
+    assert loc["stat"] == f"${lo:,.0f} → ${hi:,.0f}"
+    assert "$1 million of realized gains" in loc["stat_label"]
 
 
 def test_build_hub_reads_tearsheet_drawdown_headline(tmp_path):
@@ -133,6 +138,8 @@ def test_hero_leads_with_the_structural_alpha_before_after(tmp_path):
     state = build_hub(tmp_path)
     hr = state["hero"]
     assert hr["keep_before"] < hr["keep_after"]                    # a before/after, not a bare number
+    # the honest inversion: slightly LESS pre-tax, wealthier after tax
+    assert hr["pretax_after"] < hr["pretax_before"]
     assert 0 < hr["alpha_low"] <= hr["alpha_high"] < 10
     assert hr["horizon"] == 30
     from drift.leakage import build_leakage

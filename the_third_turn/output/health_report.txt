@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-07-05T17:08:48+00:00
+ THE THIRD TURN — collection health   2026-07-05T17:23:52+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,31 +12,31 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ██████████████████  live= 5142 (today 2404)  last 15.0m ago
-  fanduel   ··················  live=    2 (today    2)  last 0.3m ago
+  bovada    ██████████████████  live= 5143 (today 2405)  last 12.8m ago
+  fanduel   ··················  live=   10 (today   10)  last 0.1m ago
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
-  simultaneous live pairs :      2  (today 2)
+  simultaneous live pairs :      7  (today 7)
   overlap games           : 1
-  median sync lag         : 884.0 s
+  median sync lag         : 641.0 s
   games by #books live     : {'0_books': 6, '1_books': 14, '2_books': 1}
 
 QUOTE LIFECYCLE (live rows)
-  market status: {'unset': 5142, 'OPEN': 2}
+  market status: {'unset': 5143, 'OPEN': 9, 'SUSPENDED': 1}
 
 COVERAGE
-  live games seen: 15   book-panel games: 21   team-total rows: 2699
+  live games seen: 15   book-panel games: 21   team-total rows: 2701
   innings seen: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 INTEGRITY
-  rows=45685  malformed=0  missing-fields=0  duplicates=0  future-ts=0
+  rows=45695  malformed=0  missing-fields=0  duplicates=0  future-ts=0
   status: ✅ clean
 
 SR-1 GATE (leadership analysis — blocked until all pass)
-     ·················· simultaneous live quote pairs    2 / 2000
+     ·················· simultaneous live quote pairs    7 / 2000
      ·················· games with live overlap          1 / 100
-     ·················· median sync lag < 15s            884.0 / 15
+     ·················· median sync lag < 15s            641.0 / 15
      ████████████······ books quoting live               2 / 3
   overall: 17%  →  BLOCKED — keep collecting
 ══════════════════════════════════════════════════════════════════

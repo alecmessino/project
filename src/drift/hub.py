@@ -173,7 +173,7 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
             cur = (f" The current hypothetical track runs at Sharpe {hdr['sharpe']:.2f} "
                    f"(vs {bench_sh} for {bench_lbl}) — a separate, shorter window.")
         value_adds.append({
-            "tag": "Core Alpha · the tactical engine",
+            "tag": "Core Alpha · a complementary engine",
             "title": "Built to persist, not to impress.",
             "stat": robust,
             "stat_label": "the out-of-sample result matched the in-sample one — the approach didn't flatter itself",

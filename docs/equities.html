@@ -12,18 +12,18 @@
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
 <title>Driftwood — Core Alpha book (research)</title>
-<meta name="description" content="The Core Alpha book: what the hypothetical Model Portfolio holds now, its signal strength by sleeve, the last rebalance in and out, and the dated track. Research only, not investment advice." />
+<meta name="description" content="The Core Alpha book: what the hypothetical Model Portfolio holds now, its trend strength by sleeve, the last rebalance in and out, and the dated track. Research only, not investment advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/equities.html" />
 <link rel="icon" href="favicon.svg" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
 <meta property="og:title" content="Driftwood — Core Alpha book (research)" />
-<meta property="og:description" content="The Core Alpha book: current holdings, signal strength by sleeve, the last rebalance in and out, and the dated track. Research only, not investment advice." />
+<meta property="og:description" content="The Core Alpha book: current holdings, trend strength by sleeve, the last rebalance in and out, and the dated track. Research only, not investment advice." />
 <meta property="og:url" content="https://alecmessino.github.io/project/equities.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/equities.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Driftwood — Core Alpha book (research)" />
-<meta name="twitter:description" content="The Core Alpha book: current holdings, signal strength, last rebalance, and dated track. Research only, not investment advice." />
+<meta name="twitter:description" content="The Core Alpha book: current holdings, trend strength, last rebalance, and dated track. Research only, not investment advice." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/equities.png" />
 <style>
   /* Institutional Editorial — paper, ink, brass. An operational book view: one source of truth. */
@@ -121,13 +121,13 @@
       <a href="thesis.html">Approach</a>
       <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
       <a href="leakage.html">Leakage</a>
-      <a href="statemap.html">State&nbsp;Map</a>
+      <a href="statemap.html">State Guide</a>
       <a href="ledger.html" aria-current="page">Research</a>
     </div>
   </nav>
 
   <div class="pad top">
-    <div class="eyebrow">Core Alpha · the tactical engine</div>
+    <div class="eyebrow">Core Alpha · a complementary engine</div>
     <h1 class="hero">The current book — and what just changed.</h1>
     <p class="asof" id="asof"></p>
     <div class="research-banner">
@@ -149,13 +149,13 @@
   <div class="pad">
     <div class="rowhdr">
       <div class="sec">Current book · what we hold now</div>
-      <div class="hint">Signal strength (z) = trend vs. the sleeve's own normal noise</div>
+      <div class="hint">Trend strength = how strongly a sleeve is trending versus its own history</div>
     </div>
     <div class="tscroll"><table class="book stickcol"><thead><tr>
-      <th scope="col">Sleeve</th><th scope="col">What it is</th><th scope="col">Signal strength (z)</th><th scope="col">Portfolio weight</th><th scope="col">Status</th>
+      <th scope="col">Sleeve</th><th scope="col">What it is</th><th scope="col">Trend strength</th><th scope="col">Portfolio weight</th><th scope="col">Status</th>
     </tr></thead><tbody id="bookbody"></tbody></table></div>
     <div class="blotnote">Held sleeves first (by portfolio weight), then the waiting list (universe members below the
-      cut, by signal strength). <b>Status</b> is what the last rebalance did to each name — Buy / Increase / Reduce /
+      cut, by trend strength). <b>Status</b> is what the last rebalance did to each name — Buy / Increase / Reduce /
       Hold — or Waiting. One book, one date; nothing here is an executed order.</div>
   </div>
 
@@ -268,12 +268,12 @@ function render(s){
   (p.benchmarks||[]).forEach(b=> lines.push({label:b.label, values:b.equity, color:b.color||"#b8bcc2", width:1.3}));
   requestAnimationFrame(()=>drawChart(document.getElementById("chart"), p.dates||[], lines));
 
-  // One book, one table: held sleeves (by portfolio weight) then the waiting list (by signal strength).
+  // One book, one table: held sleeves (by portfolio weight) then the waiting list (by trend strength).
   const rows = (s.holdings||[]).concat(s.watch||[]);
   document.getElementById("bookbody").innerHTML = rows.map(r=>{
     const waiting = r.status==="Waiting";
     const z = (r.signal_strength>=0?"+":"")+(r.signal_strength||0).toFixed(2);
-    const zsr = (r.signal_strength||0)>=0 ? "positive signal" : "negative signal";
+    const zsr = (r.signal_strength||0)>=0 ? "positive trend" : "below-average trend";
     const pw = r.portfolio_weight>0 ? (r.portfolio_weight*100).toFixed(1)+"%" : "—";
     return `<tr class="${waiting?'waiting':''}">
       <td class="sym">${r.instrument}</td>

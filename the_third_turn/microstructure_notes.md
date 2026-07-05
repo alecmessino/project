@@ -67,9 +67,12 @@ change is prospective (does not relabel the already-banked rows).
 
 ## Daemon priority changes (overlap was the scarce resource — Priority 1 now fixed)
 
-1. **Simultaneous live coverage — ✅ fixed** (FanDuel live-flag bug above). Two books now observable
-   live together going forward. *Remaining:* SR-1 also requires ≥3 books, so a third live book is
-   still needed before leadership analysis (see 4).
+1. **Simultaneous live coverage — code fixed; awaiting production verification.** The fix is
+   prospective (next runner re-arm). Priority 1 is complete **by observed behaviour, not elapsed
+   time**: the `collection_health.py` *fix-verification* block flips to VERIFIED only once committed
+   checkpoints show all of — FanDuel live quotes > 0, simultaneous live pairs > 0, overlap games > 0,
+   marketStatus populated, and a non-null median sync lag. *Remaining after that:* SR-1 also requires
+   ≥3 books, so a third live book is still needed before leadership analysis (see 4).
 2. **Alternate-total strips.** Serves *both* papers (implied CDF → implied mean for the Paper 1
    de-vig appendix; distribution calibration for Paper 2). **Not** in the `customPageId=mlb`
    payload — only the main `TOTAL_POINTS_(OVER/UNDER)` (one per game) is there; alt totals require a

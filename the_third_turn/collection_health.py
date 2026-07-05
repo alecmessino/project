@@ -155,6 +155,20 @@ def analyse():
         "games_by_books_live": {f"{k}_books": v for k, v in sorted(dist.items())},
     }
 
+    # ── Priority-1 fix verification (behaviour, not elapsed time) ─────────────
+    # The collector v1.1 live-overlap fix is VERIFIED IN PRODUCTION only once the banked
+    # data itself demonstrates simultaneous live collection — not after N hours.
+    status_populated = any(s not in (None, "unset") for s in R["market_status"])
+    conds = {
+        "fanduel_live_quotes > 0": per.get("fanduel", {}).get("live_total", 0) > 0,
+        "simultaneous_live_pairs > 0": pairs > 0,
+        "overlap_games > 0": len(overlap_games) > 0,
+        "marketStatus populated": status_populated,
+        "median_sync_lag computed": med_lag is not None,
+    }
+    R["fix_verification"] = {"target": "collector v1.1 · live-overlap fix",
+                             "conditions": conds, "verified": all(conds.values())}
+
     # ── live coverage (game_state panel) ─────────────────────────────────────
     gs_clean = [r for r in gs if not r.get("__malformed__")]
     live_games = {r.get("game") for r in gs_clean}
@@ -199,6 +213,12 @@ def render(R):
     L.append(f" THE THIRD TURN — collection health   {R['generated']}")
     L.append(f" protocol v{v['protocol']} · collector v{v['collector']} · dataset {v['benchmark_dataset']}")
     L.append("═" * 66)
+
+    fv = R["fix_verification"]
+    L.append(f"\nFIX VERIFICATION — {fv['target']}")
+    L.append(f"  → {'✅ VERIFIED IN PRODUCTION' if fv['verified'] else '⏳ PENDING — awaiting live overlap'}")
+    for name, ok in fv["conditions"].items():
+        L.append(f"    [{'✅' if ok else '  '}] {name}")
 
     L.append("\nBOOKS (live quotes)")
     mx = max((b["live_total"] for b in R["by_book"].values()), default=1) or 1
@@ -248,7 +268,8 @@ def summary(R):
     g, ig, o = R["SR1_gate"], R["integrity"], R["overlap"]
     warn = [k for k, v in (("malformed", ig["malformed_json"]), ("missing", ig["missing_required_fields"]),
                            ("dupes", ig["duplicate_rows"]), ("future-ts", ig["future_timestamps"])) if v]
-    return (f"SR-1 {int(g['overall_progress']*100)}% · "
+    fv = "VERIFIED" if R["fix_verification"]["verified"] else "PENDING"
+    return (f"fix-v1.1 {fv} · SR-1 {int(g['overall_progress']*100)}% · "
             f"books-live {','.join(R['books_reporting_live']) or 'none'} · "
             f"pairs {o['simultaneous_pairs_total']} · "
             f"integrity {'clean' if not warn else '/'.join(warn)}")

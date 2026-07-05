@@ -97,6 +97,14 @@
   .detail .mini{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:12px;font-family:var(--sans)}
   .detail .chip{font-size:11px;color:var(--dim);background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
   .detail .chip b{color:var(--ink);font-weight:600}
+  /* Committee read — how a large, tax-aware holder frames the decision. Reads like a memo, not a widget. */
+  .detail .committee{margin-top:16px;border-top:1px solid var(--line);padding-top:14px;display:grid;gap:11px}
+  .detail .ci{display:grid;grid-template-columns:170px 1fr;gap:14px;align-items:baseline}
+  .detail .ci .cl{font-family:var(--sans);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;line-height:1.4}
+  .detail .ci .cv{font-size:13px;line-height:1.55;color:var(--body)}
+  .detail .ci.yes .cl{color:var(--teal)} .detail .ci.no .cl{color:var(--neg,#9b4439)}
+  @media(max-width:560px){ .detail .ci{grid-template-columns:1fr;gap:3px} }
   .foot{margin:16px 40px 28px;border-top:1px solid var(--line);padding-top:12px;color:var(--muted);font-size:11px;line-height:1.55}
   .foot b{color:#5a5a62}
   .cta{margin:12px 40px 4px;padding:18px 22px;background:var(--soft);border:1px solid var(--line);border-radius:12px;
@@ -131,10 +139,11 @@
     <nav class="dwnav" aria-label="Driftwood">
       <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
       <div class="dwnav-links">
-        <a href="thesis.html">Approach</a>
+        <a href="about.html">Our Story</a>
+        <a href="thesis.html">How We Invest</a>
         <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
         <a href="leakage.html">Leakage</a>
-        <a href="statemap.html">State&nbsp;Map</a>
+        <a href="statemap.html">State Guide</a>
         <a href="ledger.html">Research</a>
       </div>
     </nav>
@@ -266,8 +275,8 @@
       var tr=document.createElement("tr"); tr.setAttribute("data-key",s.key);
       if(state.sel===s.key) tr.className="sel";
       var bk=bucket[s.bucket];
-      var td='<td class="name"><span class="nm"><span class="dot" aria-hidden="true" style="background:'+bk.color+'"></span>'+s.name+'</span>'+
-             '<span class="bk">'+bk.label+'</span></td>';
+      var td='<td class="name"><span class="nm"><span class="dot" aria-hidden="true" style="background:'+bk.color+'"></span>'+s.name+
+             '<span class="sr-only"> · '+bk.label+'</span></span></td>';
       axes.forEach(function(a){ var c=s.scores[a.key];
         td+='<td class="cell heat-'+c.n+'"><span class="box" title="'+a.label+': '+c.label+'">'+c.label+'</span></td>'; });
       tr.innerHTML=td;
@@ -282,9 +291,15 @@
     var s=strategies.filter(function(x){return x.key===state.sel;})[0]; if(!s){ d.className="detail"; return; }
     var bk=bucket[s.bucket];
     var chips=axes.map(function(a){ return '<span class="chip">'+a.label+': <b>'+s.scores[a.key].label+'</b></span>'; }).join("");
+    var committee = s.fit ? (
+      '<div class="committee">'+
+        '<div class="ci"><span class="cl">When institutions consider this</span><span class="cv">'+s.fit.inst+'</span></div>'+
+        '<div class="ci yes"><span class="cl">Appropriate when</span><span class="cv">'+s.fit.when+'</span></div>'+
+        '<div class="ci no"><span class="cl">Less appropriate when</span><span class="cv">'+s.fit.less+'</span></div>'+
+      '</div>') : "";
     d.className="detail on";
     d.innerHTML='<h3>'+s.name+'<span class="fam" style="background:'+bk.color+'">'+bk.label+'</span></h3>'+
-      '<p>'+s.blurb+'</p><div class="mini">'+chips+'</div>';
+      '<p>'+s.blurb+'</p><div class="mini">'+chips+'</div>'+committee;
     if(window.plausible) plausible("conc_detail",{props:{strategy:s.key}});
   }
 

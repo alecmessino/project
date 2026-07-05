@@ -208,6 +208,101 @@ STRATEGIES = [
               "lifetime income, but little control and an irrevocable gift."},
 ]
 
+# Investment-committee "fit" notes — how a large, tax-aware holder would think about each approach:
+# when it's typically on the table, where it fits, and where it doesn't. Qualitative orientation drawn
+# from each strategy's mechanics (the same "one analyst's read" caveat as the scores) — not a
+# recommendation about any specific holding.
+FIT = {
+    "sellall": {
+        "inst": "Rarely — only when the position no longer fits the mandate at any tax cost.",
+        "when": "The risk has to be gone now and the basis is high, so little gain is taxed.",
+        "less": "The basis is low and realizing the whole gain in one year is punitive."},
+    "staged": {
+        "inst": "The default for winding down a large holding, usually under a written 10b5-1 plan.",
+        "when": "You can exit over several years and want to spread the gain across tax years.",
+        "less": "The single-stock risk is acute and can't wait for a multi-year exit."},
+    "lolh": {
+        "inst": "Standard practice inside tax-managed separate accounts for taxable investors.",
+        "when": "You want to stay invested while losses are banked to offset the exit.",
+        "less": "You need to be fully out quickly, or the account is too small to harvest efficiently."},
+    "tals": {
+        "inst": "Used by large taxable portfolios to manufacture offsetting losses at scale.",
+        "when": "The gain is large, the horizon is multi-year, and fees and complexity are acceptable.",
+        "less": "The position is small, or you want a simple, low-cost approach."},
+    "vpf": {
+        "inst": "A treasury tool for executives monetizing a restricted holding without selling.",
+        "when": "You want cash and downside protection now and can defer the sale.",
+        "less": "You're an insider or affiliate, or you want to keep the full upside."},
+    "collar": {
+        "inst": "Common for hedging a concentrated public position over a defined window.",
+        "when": "You want immediate, low-cost downside protection and can give up some upside.",
+        "less": "You're restricted from trading the stock's options, or want unlimited upside."},
+    "proxycollar": {
+        "inst": "Used when direct options are illiquid, restricted, or too costly.",
+        "when": "You want market-risk protection and the stock tracks a liquid index.",
+        "less": "The company-specific risk is the real worry — a proxy won't hedge it."},
+    "covcall": {
+        "inst": "An income overlay, not a primary de-risking tool, for large holders.",
+        "when": "You're comfortable being called away gradually and want premium income.",
+        "less": "You need real downside protection or a fast exit."},
+    "protput": {
+        "inst": "Straightforward insurance to cap downside ahead of a known event.",
+        "when": "You want to keep full upside and will pay a premium for downside cover.",
+        "less": "The recurring premium is too costly to carry for a long holding period."},
+    "exrep": {
+        "inst": "A bespoke derivative solution for very large, sophisticated holders.",
+        "when": "You want diversified exposure without selling and can handle the complexity.",
+        "less": "You want simplicity, low cost, or a clean, transparent structure."},
+    "collarls": {
+        "inst": "A combined overlay large taxable accounts use to hedge and harvest at once.",
+        "when": "You want both downside protection and offsetting losses to fund an exit.",
+        "less": "The position is modest, or fees and complexity outweigh the benefit."},
+    "collarbox": {
+        "inst": "A financing structure for borrowing against a hedged position.",
+        "when": "You want liquidity and gain deferral and can manage a complex trade.",
+        "less": "You want simplicity, or don't need to borrow against the position."},
+    "completion": {
+        "inst": "A core technique — build the rest of the book around the position's risk.",
+        "when": "You'll hold the stock a while and want to cut its marginal risk without selling.",
+        "less": "You need the underlying gain resolved, not just diluted."},
+    "351": {
+        "inst": "Used to seed a diversified fund tax-free from concentrated contributions.",
+        "when": "You want immediate diversification at low tax cost and accept little control.",
+        "less": "You need customization, or can't meet the strict qualification rules."},
+    "exfund": {
+        "inst": "A long-standing route for executives to diversify without a taxable sale.",
+        "when": "You can lock up capital for years to diversify with the gain deferred.",
+        "less": "You need liquidity, control, or a shorter horizon."},
+    "qof": {
+        "inst": "Used to defer a realized gain while funding designated long-horizon projects.",
+        "when": "You've realized a gain and want to defer it in a patient investment.",
+        "less": "You need liquidity, or don't want project-level real-asset risk."},
+    "margin": {
+        "inst": "Treasury-style borrowing against securities to raise cash without selling.",
+        "when": "You need liquidity now and intend to keep the position.",
+        "less": "You want the concentration reduced — this leaves it intact and adds leverage."},
+    "crut": {
+        "inst": "A classic planned-giving vehicle for appreciated, low-basis stock.",
+        "when": "You're charitably inclined and want lifetime income plus an upfront deduction.",
+        "less": "You may need the principal back — the gift is irrevocable."},
+    "daf": {
+        "inst": "The simplest institutional-grade way to donate appreciated shares.",
+        "when": "You plan to give and want the deduction now, with grants made over time.",
+        "less": "You might want the assets back — they're permanently earmarked for charity."},
+    "directgift": {
+        "inst": "The plainest charitable route — shares straight to a public charity.",
+        "when": "You want to give a set amount simply and avoid the gain entirely.",
+        "less": "You want income back or ongoing control of the gift."},
+    "famgift": {
+        "inst": "An estate technique to shift future appreciation out of the estate.",
+        "when": "You want to move concentration and future growth to heirs or a foundation.",
+        "less": "You need the value yourself, or gift and estate limits bind."},
+    "uslit": {
+        "inst": "A charity-run vehicle for lifetime income from donated appreciated stock.",
+        "when": "You want tax-efficient lifetime income and will give the remainder to charity.",
+        "less": "You want control of the assets, or a revocable arrangement."},
+}
+
 # Article lede shown above the interactive guide (our own copy).
 ARTICLE = {
     "eyebrow": "Too much of a good thing",
@@ -241,11 +336,13 @@ def build_concentration() -> dict:
     for s in sorted(STRATEGIES, key=lambda s: (_BUCKET_ORDER[s["bucket"]], s["name"])):
         assert s["bucket"] in bucket_keys, s["key"]
         assert set(s["scores"]) == set(axis_keys), f"{s['key']} missing an axis score"
+        fit = FIT.get(s["key"])
+        assert fit and {"inst", "when", "less"} <= set(fit), f"{s['key']} missing a fit note"
         strategies.append({
             "key": s["key"], "name": s["name"], "bucket": s["bucket"], "blurb": s["blurb"],
             "scores": {k: {"n": v[0], "label": v[1]} for k, v in s["scores"].items()},
             "goals": s["goals"], "timelines": s["timelines"],
-            "simple": s["simple"], "insider_ok": s["insider_ok"],
+            "simple": s["simple"], "insider_ok": s["insider_ok"], "fit": fit,
         })
     return {
         "axes": AXES, "buckets": BUCKETS, "goals": GOALS, "timelines": TIMELINES,

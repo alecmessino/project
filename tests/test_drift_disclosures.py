@@ -135,17 +135,18 @@ def test_ledger_attribution_states_alpha_significance_and_out_of_sample():
 # factor EXPOSURE ("engineered beta"), explicitly NOT a forecast that the funds out-perform, and NOT
 # momentum/market-timing. The momentum work is demoted to an honestly-labeled research satellite.
 
-def test_thesis_leads_with_structural_alpha_not_market_timing():
+def test_thesis_leads_with_the_investment_philosophy_not_product_names():
+    # The Approach page is now "How We Invest": an evidence-based philosophy, led by principles rather
+    # than product names or the retired drift / diffusion name story. Named strategies are demoted to a
+    # quiet implementation detail beneath the architecture (which is the product).
     t = _read(THESIS_TEMPLATE)
-    # leads with the structural value prop
-    assert "Structural Alpha" in t
-    assert "engineered beta" in t.lower()
-    # factor tilt framed as EXPOSURE, never as an outperformance forecast (Marketing-Rule guard)
-    assert "not a forecast that these funds out-perform" in t
-    # the page explicitly says it is engineered beta, not market timing
-    assert "not market timing" in t.lower()
-    # the momentum work is present but framed as the complementary Core Alpha engine, not the flagship
-    assert "Core Alpha" in t
+    assert "How we invest" in t
+    assert "Evidence over prediction" in t
+    assert "institutional portfolio architecture" in t.lower()
+    # the retired mathematical name-origin / factor-pitch framing is gone
+    assert "engineered beta" not in t.lower()
+    assert "not market timing" not in t.lower()
+    assert "random-walk null" not in t.lower()
 
 
 def test_core_alpha_exhibits_carry_the_research_banner():

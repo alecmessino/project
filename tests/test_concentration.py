@@ -33,6 +33,19 @@ def test_dataset_shape_is_complete():
         assert isinstance(st["simple"], bool) and isinstance(st["insider_ok"], bool)
 
 
+def test_every_strategy_carries_committee_fit_notes():
+    # The detail card reads like an investment committee, not a widget: for each strategy we say when
+    # institutions typically reach for it, and where it fits or doesn't. Every strategy must carry all three.
+    s = build_concentration()
+    for st in s["strategies"]:
+        fit = st.get("fit")
+        assert fit and all(fit.get(k) and len(fit[k]) > 15 for k in ("inst", "when", "less")), \
+            f"{st['key']} missing committee fit notes"
+    t = CONCENTRATION_TEMPLATE.read_text()
+    assert "When institutions consider this" in t
+    assert "Appropriate when" in t and "Less appropriate when" in t
+
+
 def test_every_bucket_is_represented():
     s = build_concentration()
     present = {st["bucket"] for st in s["strategies"]}

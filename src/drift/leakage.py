@@ -76,18 +76,18 @@ _DISPLAY = [("Federal only", "—"), ("Illinois", "IL"), ("New York", "NY"), ("C
 
 # The two engine levers that make up the assumption-free recovery (after-tax %/yr; ~federal→CA range).
 _LEVERS = [
-    {"name": "Lot protection + hysteresis",
+    {"name": "Patient trading and lot selection",
      "share": "≈ 60–65%",
-     "desc": "Holds positions through noise and protects unrealized lots, converting short-term churn "
-             "into long-term gains taxed ~17 points lower."},
-    {"name": "Harvesting + rate arbitrage",
+     "desc": "Holds positions through short-term noise and chooses which lots to sell, turning gains that "
+             "would be taxed as ordinary income into long-term gains taxed roughly 17 points lower."},
+    {"name": "Loss harvesting",
      "share": "≈ 35–40%",
-     "desc": "Realizes losses and nets them short-term-first against the highest-rate gains — banking "
-             "the spread a buy-and-hold ETF can't reach."},
+     "desc": "Realizes losses and applies them against the highest-taxed gains first — capturing a spread "
+             "a simple buy-and-hold fund never reaches."},
     {"name": "Asset location",
      "share": "household-specific",
-     "desc": "Stacks the high-turnover sleeve into Roth/Traditional so its short-term gains escape tax; "
-             "quantified per client in the Tax Lab."},
+     "desc": "Places the higher-turnover strategy in Roth and Traditional accounts, where its short-term "
+             "gains escape tax entirely; quantified for each household in the Tax Lab."},
 ]
 
 
@@ -112,7 +112,7 @@ def build_leakage() -> dict:
         },
         "after": {
             "label": "Structural Alpha · tax-managed",
-            "sub": "The same exposure, run through the engine: lot protection + hysteresis + harvesting.",
+            "sub": "The same holdings, managed for tax: careful lot selection, patient trading, and loss harvesting.",
             "st_share": 53, "turnover": 136,
             "atc_low": 5.1, "atc_high": 6.3,
             "keep_pct": 41,

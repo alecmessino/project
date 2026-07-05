@@ -9,278 +9,235 @@
   window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
   plausible.init()
 </script>
-<title>Driftwood — thesis &amp; findings</title>
-<meta name="description" content="How Structural Alpha works — deliberate factor exposure plus mechanical tax management — and the honest research behind the name. Research only, not investment advice." />
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>How We Invest — Driftwood</title>
+<meta name="description" content="How Driftwood invests: evidence over prediction, deliberate diversification, taxes as an investment decision, low cost, discipline, and careful implementation — institutional portfolio architecture, built for individual investors." />
 <link rel="canonical" href="https://alecmessino.github.io/project/thesis.html" />
 <link rel="icon" href="favicon.svg" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
-<meta property="og:title" content="Driftwood — thesis &amp; findings" />
-<meta property="og:description" content="How Structural Alpha works — deliberate factor exposure plus mechanical tax management — and the honest research behind the name. Research only, not investment advice." />
+<meta property="og:title" content="How We Invest — Driftwood" />
+<meta property="og:description" content="We don't predict markets. We build portfolios that keep making good decisions without us having to — grounded in evidence, engineered around taxes and cost, and held with discipline." />
 <meta property="og:url" content="https://alecmessino.github.io/project/thesis.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/thesis.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Driftwood — thesis &amp; findings" />
-<meta name="twitter:description" content="How Structural Alpha works — deliberate factor exposure plus mechanical tax management — and the honest research behind the name. Research only, not investment advice." />
+<meta name="twitter:title" content="How We Invest — Driftwood" />
+<meta name="twitter:description" content="Evidence over prediction. The principles behind how Driftwood builds portfolios." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/thesis.png" />
 <style>
   :root{
-    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --ink:#1b1b1f; --dim:#5f5d68;
-    --pos:#2f6f5b; --neg:#9b4439; --slate:#4a4f57; --rule:#222226;
+    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
+    --ink:#1d242d; --body:#3a414b; --dim:#5f5d68; --muted:#6f675b;
+    --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --teal2:#15806a; --navy:#1a2330;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);
-    font:16px/1.74 var(--serif);-webkit-font-smoothing:antialiased}
-  .wrap{max-width:720px;margin:0 auto;padding:64px 26px 96px}
-  header{border-top:3px solid var(--rule);padding-top:22px;margin-bottom:8px}
-  .kicker{color:var(--brass,#a9853f);font-size:11px;font-weight:600;font-family:var(--sans);
-    text-transform:uppercase;letter-spacing:.16em;margin-bottom:6px}
-  h1{font-size:clamp(25px, 1.6vw + 18px, 31px);line-height:1.16;margin:8px 0 0;font-weight:680;letter-spacing:-.5px;
-    font-family:var(--serif)}
-  h1 .w{color:var(--slate)}
-  .lede{font-size:18px;line-height:1.7;color:var(--ink);margin:20px 0 4px}
-  h2{font-size:13px;text-transform:uppercase;letter-spacing:1.1px;color:var(--dim);
-    margin:44px 0 6px;font-weight:700;font-family:var(--sans)}
-  h3{font-size:17px;margin:24px 0 2px;font-weight:640;
-    font-family:var(--serif)}
-  p{margin:14px 0}
-  .muted{color:var(--dim)}
-  b{font-weight:680}
-  .cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);
-    border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:26px 0;
-    font-family:var(--sans)}
-  .card{background:#fff;padding:16px 16px}
-  .card .v{font-size:21px;font-weight:680;font-variant-numeric:tabular-nums;letter-spacing:-.4px}
-  .card .l{font-size:11.5px;color:var(--dim);margin-top:3px;line-height:1.35}
-  .pos{color:var(--pos)} .neg{color:var(--neg)}
-  .pull{border-left:3px solid var(--slate);padding:2px 0 2px 18px;margin:26px 0;color:var(--ink);
-    font-size:19px;line-height:1.55;font-weight:500}
-  code{background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:0 5px;
-    font-size:14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-  .note{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:16px 18px;
-    margin:26px 0 0;font-size:14.5px;line-height:1.65;color:var(--ink)}
-  .foot{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);
-    font-size:13px;line-height:1.6;font-family:var(--sans)}
-  a.back{color:var(--slate);text-decoration:none;font-family:var(--sans);font-size:13px}
-  a.back:hover{text-decoration:underline}
-  .hero{margin:24px 0 6px;border-radius:12px;overflow:hidden;border:1px solid var(--line);
-    background:#fff;line-height:0}
-  .hero img{width:100%;height:262px;object-fit:contain;display:block}
-  .figdiv{margin:34px 0 2px;border-radius:12px;overflow:hidden;border:1px solid var(--line);
-    background:#fff;line-height:0}
-  .figdiv img{width:100%;height:230px;object-fit:contain;display:block}
-  .credit{font-size:11px;color:var(--dim);margin:6px 2px 0;
-    font-family:var(--sans)}
-  .refs{margin:14px 0 0;padding:0;list-style:none}
-  .refs li{padding:9px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.55}
-  .refs li:first-child{border-top:0}
-  .refs .au{font-weight:680}
-  .refs .ti{font-style:italic}
+  body{margin:0;background:var(--bg);color:var(--body);font:16px/1.7 var(--serif);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1080px;margin:40px auto;padding:0 20px 60px}
+  .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
+  .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #ddd5c6}
+  .chrome i{width:9px;height:9px;border-radius:999px;background:#cfc6b4;display:inline-block}
+  .chrome .url{margin-left:auto;font-size:11.5px;letter-spacing:.04em;color:var(--muted);font-family:ui-monospace,monospace}
+
+  .doc{max-width:720px;padding:0 44px}
+  .eyebrow{font-weight:600;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin:44px 0 16px}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(34px,3.4vw+16px,50px);line-height:1.04;
+    letter-spacing:-.02em;color:var(--ink);margin:0 0 22px}
+  .lead{font-size:19px;line-height:1.55;color:#43434b;margin:0 0 16px}
+  .lead b{color:var(--ink);font-weight:600}
+  .sec{padding:0 44px;max-width:720px}
+  .rule{height:1px;background:var(--line);margin:40px 44px;max-width:720px}
+  .sh{font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--muted);margin:0 0 16px}
+  p{font-size:16px;line-height:1.75;color:var(--body);margin:0 0 15px}
+  p b{color:var(--ink);font-weight:600}
+  .pull{font-family:var(--serif);font-weight:600;font-size:20px;line-height:1.45;color:var(--ink);
+    margin:4px 0 18px;padding-left:18px;border-left:3px solid var(--brass)}
+  a{color:var(--teal2)}
+
+  /* How we invest — numbered principles, one idea each. */
+  .principles{counter-reset:pr;margin:6px 0 0}
+  .pr{padding:24px 0;border-top:1px solid var(--line)}
+  .pr:first-child{border-top:0;padding-top:4px}
+  .pr .num{counter-increment:pr;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--brass)}
+  .pr .num::before{content:"0" counter(pr)}
+  .pr h2{font-family:var(--serif);font-weight:700;font-size:25px;line-height:1.15;letter-spacing:-.015em;
+    color:var(--ink);margin:7px 0 10px}
+  .pr p{font-size:16px;line-height:1.7;color:var(--body);margin:0;max-width:62ch}
+
+  .banner{max-width:720px;margin:6px 44px 0;font-family:var(--serif);font-size:21px;line-height:1.45;
+    color:var(--ink);padding-left:18px;border-left:3px solid var(--brass)}
+  .banner b{color:var(--teal)}
+
+  .cta{margin:36px 44px 0;max-width:720px;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:28px 30px}
+  .cta .ct{font-family:var(--serif);font-weight:700;font-size:22px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.01em}
+  .cta .cd{font-size:14.5px;line-height:1.6;color:var(--dim);margin:0 0 20px;max-width:48ch}
+  .cta .btns{display:flex;flex-wrap:wrap;gap:12px}
+  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:8px;
+    font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px}
+  .cta a.primary{background:var(--teal);color:#f1ede3}
+  .cta a.ghost{border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
+
+  .foot{margin-top:40px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
+    color:var(--muted);font-size:12.5px;line-height:1.65}
+  .foot .note{color:#5a5a62;font-weight:600}
+
+  @media(max-width:620px){
+    .doc,.sec,.cta,.banner{padding-left:20px;padding-right:20px}
+    .rule,.cta,.banner{margin-left:20px;margin-right:20px}
+    .foot{padding-left:20px;padding-right:20px}
+    .cta{padding:24px 22px}
+  }
 </style>
-<link rel="stylesheet" href="driftwood.css">
-<script src="dw-context.js"></script>
 </head>
 <body>
 <div class="wrap">
-  <nav class="dwnav" aria-label="Driftwood" style="border-radius:10px;margin-bottom:10px">
-    <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
-    <div class="dwnav-links">
-      <a href="thesis.html" aria-current="page">Approach</a>
-      <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
-      <a href="leakage.html">Leakage</a>
-      <a href="statemap.html">State&nbsp;Map</a>
-      <a href="ledger.html">Research</a>
+  <div class="frame">
+    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — how we invest</span></div>
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+      <div class="dwnav-links">
+        <a href="about.html">Our Story</a>
+        <a href="thesis.html" aria-current="page">How We Invest</a>
+        <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+        <a href="leakage.html">Leakage</a>
+        <a href="statemap.html">State Guide</a>
+        <a href="ledger.html">Research</a>
+      </div>
+    </nav>
+
+    <div class="doc">
+      <div class="eyebrow">How We Invest</div>
+      <h1>Evidence over prediction.</h1>
+      <p class="lead">We don't try to predict markets. We build portfolios that keep making good decisions
+        without us having to — grounded in evidence, engineered around taxes and cost, and held with
+        discipline. It is how large institutions have invested for decades.</p>
     </div>
-  </nav>
-  <header>
-    <div class="kicker">Driftwood · approach &amp; methodology</div>
-    <h1>Own the drift. Refuse the leakage.</h1>
-  </header>
 
-  <figure class="hero" style="margin-bottom:4px">
-    <img src="assets/sextant.png" loading="lazy"
-         alt="Hand-drawn sextant — the instrument of precise measurement, here standing for measuring the after-tax dollars before committing" />
-  </figure>
-  <div class="credit">The sextant — the instrument of precise measurement. Here it stands for the discipline the firm runs on: measure the after-tax dollars before committing a thing.</div>
+    <div class="rule"></div>
 
-  <p class="lede">
-    Driftwood is a registered investment adviser. The product is an <b>after-tax architecture</b>: two
-    return engines — a tax-managed <b>Structural&nbsp;Alpha</b> book and a return-seeking <b>Core&nbsp;Alpha</b>
-    model — routed by one tax-location engine into a single after-tax portfolio. Structural Alpha is
-    <b>engineered beta, not market timing</b>: deliberate factor exposure (small/value, emerging markets,
-    international, held on purpose through low-cost Avantis funds) run through active, <b>mechanical tax
-    management</b> — lot protection, tax-loss harvesting, and asset location. We model the after-tax
-    dollars first and show them before you commit.
-  </p>
+    <section class="sec">
+      <div class="sh">Why Driftwood exists</div>
+      <p>For most families, the distance between a good portfolio and a good outcome is mostly tax, cost, and
+        behavior — the parts that get the least attention. Institutions have refined this for decades.
+        Driftwood exists to bring the same thinking to individual investors.</p>
+      <p><a href="about.html">Read the fuller story →</a></p>
+    </section>
 
-  <div class="cards" id="cards"></div>
+    <div class="rule"></div>
 
-  <h2>What we deliver — Structural Alpha</h2>
-  <p>
-    Two edges, and we are precise about what each one is — and is not.
-  </p>
+    <section class="sec">
+      <div class="sh">How we invest</div>
+      <p>Investing is complicated because markets are uncertain. Building a portfolio shouldn't be. Over
+        decades, a handful of decisions consistently matter more than everything else — diversification,
+        costs, taxes, discipline, and how a portfolio is built. Our philosophy is simply an attempt to make
+        those decisions deliberately instead of accidentally.</p>
+      <p class="pull">Good investing is mostly good decisions, made calmly and repeated for decades.</p>
+      <div class="principles">
+        <div class="pr">
+          <div class="num"></div>
+          <h2>Evidence over prediction.</h2>
+          <p>Forecasting the market is a losing game for almost everyone, and the evidence has said so for
+            a long time. What holds up is unglamorous — broad ownership, low cost, and patience. Build around
+            those, and let time do the work.</p>
+        </div>
+        <div class="pr">
+          <div class="num"></div>
+          <h2>Diversification is a decision.</h2>
+          <p>Owning a lot of things isn't diversification. Real diversification is deliberately combining
+            different sources of return, so no single position decides the outcome. It's a choice, made on
+            purpose — not a byproduct of owning more.</p>
+        </div>
+        <div class="pr">
+          <div class="num"></div>
+          <h2>Taxes are part of investing.</h2>
+          <p>A dollar paid needlessly in tax is gone for good. Institutions treat tax as an investment
+            decision, not a year-end chore — in where each holding sits, when gains are taken, and how losses
+            are used. Individual portfolios rarely do, and it quietly costs them.</p>
+        </div>
+        <div class="pr">
+          <div class="num"></div>
+          <h2>Costs are certain; returns are not.</h2>
+          <p>Fees and turnover are among the few things an investor controls completely. Every dollar not
+            spent on them is a dollar still compounding. Keeping them low isn't frugality — it's one of the
+            few edges guaranteed to show up.</p>
+        </div>
+        <div class="pr">
+          <div class="num"></div>
+          <h2>Discipline compounds.</h2>
+          <p>Most of the damage happens after the portfolio is built — in the reaction to a headline. A
+            written process, followed calmly, is worth more than any forecast. The hardest part of investing
+            is usually sitting still.</p>
+        </div>
+        <div class="pr">
+          <div class="num"></div>
+          <h2>Implementation is the quiet edge.</h2>
+          <p>How a portfolio is built often matters as much as what it holds. Lot selection, account
+            placement, and rebalancing rarely make headlines, but they quietly decide how much a family
+            keeps.</p>
+        </div>
+      </div>
+    </section>
 
-  <h3>Engineered beta — deliberate factor exposure</h3>
-  <p>
-    We hold small-cap value, emerging-markets, and international exposure <i>on purpose</i>, expressed as
-    low-cost Avantis holdings in the firm's allocation models — a risk-premia <b>exposure</b> choice.
-    <b>This is not a forecast that these funds out-perform the market.</b> It is a deliberate, diversified
-    structure: far less US-mega-cap-concentrated than a cap-weighted "global" index, by construction
-    rather than by a tactical call.
-  </p>
+    <div class="rule"></div>
 
-  <h3>Mechanical tax management — the part we quantify</h3>
-  <p>
-    The measurable edge is structural and deterministic: tax-loss harvesting, lot- and holding-period
-    management that converts short-term gains into long-term, asset location across taxable / Traditional
-    / Roth, and a lower blended fund cost. A 40-year after-tax study shows the tax-managed implementation
-    keeps roughly <b>twice the after-tax fraction</b> of a tax-naive book of the same exposure. The Tax
-    Lab computes this — your <b>Estimated Structural Alpha</b> — on your own bracket and state, and labels
-    it for exactly what it is: illustrative tax + fee modeling, not a performance promise.
-  </p>
+    <section class="sec">
+      <div class="sh">How it comes together</div>
+      <p>These principles sit inside one system. Beneath it, two complementary approaches do the work — a
+        diversified, tax-managed core for taxable accounts, and a more active complement for tax-advantaged
+        accounts — each placed where it does the most good after tax.</p>
+      <p>The way they're coordinated matters more than either approach alone. The design is the point; the
+        strategies simply serve it. <b>Great portfolios are engineered, not assembled.</b></p>
+    </section>
 
-  <h2>The architecture — two engines, one tax plan</h2>
-  <p>
-    The real product isn't either engine; it's the <b>architecture</b> that decides where each one
-    belongs. Two return engines feed one tax-location engine and, from there, a single after-tax
-    portfolio. <b>Structural Alpha</b> — diversified, low-turnover, tax-managed — is built for taxable
-    wealth. <b>Core Alpha</b> — tactical, higher-turnover, research-intensive — is built for
-    tax-advantaged capital, where its turnover costs nothing after tax. Same household, different
-    accounts; the routing is the part that is hard to copy.
-  </p>
+    <div class="rule"></div>
 
-  <h2>Core Alpha — the tactical engine</h2>
-  <p>
-    Core Alpha is the return-seeking sleeve, and where the name comes from: like driftwood carried by
-    Lake Michigan's current, it goes <i>with</i> the prevailing move rather than fighting it. The signal
-    is a single, well-documented quantity — a <b>volatility-normalized trend score</b>: the cumulative
-    return over a lookback divided by the noise that could have produced it (a z-score under a
-    random-walk null). It rewards persistent drift and ignores undirected diffusion.
-  </p>
-  <h3>Selection &amp; sizing</h3>
-  <p>
-    Each month the engine ranks the whole region × size × style ETF universe by that score and holds the
-    strongest half — long-only, always fully invested, inverse-volatility weighted so a quiet drifter
-    earns more notional than a wild one. Monthly rebalancing keeps turnover (and the cost it carries)
-    low, and a trade is taken only when the expected edge clears the spread. Trend gates <i>which</i>
-    sleeves to own; a deliberately diversified, risk-balanced construction — far less
-    US-mega-cap-concentrated than a cap-weighted "global" index — does the rest. Scores can be demeaned
-    within region or factor to isolate <i>which style leads inside each region</i> (or which region
-    leads for a style), so the book takes only the specific exposure it intends.
-  </p>
+    <section class="sec">
+      <div class="sh">The evidence we build on</div>
+      <p>None of this is new. It rests on decades of work by others — Markowitz on diversification, Fama and
+        French on what drives returns, and a long line of research on cost, taxes, and investor behavior.</p>
+      <p>We didn't invent these ideas. We built a firm that applies them, with discipline, to individual
+        investors — the way institutions always have.</p>
+    </section>
 
-  <h2>What the evidence shows</h2>
-  <p>
-    Tested the honest way — walk-forward, net of cost, parameters fit <b>in-sample</b> on the early
-    history and reported <b>out-of-sample</b> on the held-out remainder, over <b id="eq-span">—</b> across
-    <b id="eq-n">—</b> region/size/style ETFs — Core Alpha earns a return <b>at least comparable</b> to
-    buying and holding the same universe (<b id="eq-scagr">—</b> a year versus <b id="eq-bcagr">—</b>), at
-    a shallower worst drawdown (<b id="eq-sdd" class="pos">—</b> against buy-and-hold's
-    <b id="eq-bdd" class="neg">—</b>, about <b id="eq-ddx">—</b> as deep).
-  </p>
-  <p>
-    The result we actually lead with is not a headline Sharpe — it is <b>persistence</b>. Out-of-sample
-    Sharpe (<b id="eq-oos">—</b>) came in essentially unchanged from the in-sample fit: the model did not
-    flatter itself when it met data it had never seen. We optimize for that durability, not for the peak
-    historical number, and a synthetic control confirms the engine harvests trend, not noise.
-  </p>
+    <div class="rule"></div>
 
-  <div class="pull">
-    Core Alpha is a real, return-seeking engine — but it earns its keep in tax-advantaged accounts, where
-    its turnover is free. For taxable wealth the durable, measurable edge is Structural Alpha: deliberate
-    diversified exposure plus the tax-aware, asset-located implementation (a 40-year after-tax sweep shows
-    the tax-managed book keeps roughly twice the after-tax fraction of a tax-naive one of the same
-    exposure). The architecture puts each engine where it belongs.
-  </div>
+    <section class="sec">
+      <div class="sh">Meet the founder</div>
+      <p>Driftwood was founded by <b>Alec Messino</b>, a CFA Level&nbsp;III candidate and fee-only fiduciary,
+        after six years at Dimensional Fund Advisors helping some of the country's largest advisory firms
+        build institutional portfolios. <a href="about.html">Read our story →</a></p>
+    </section>
 
-  <p class="muted" id="ledger-line"></p>
+    <div class="banner"><b>Institutional portfolio architecture, built for individual investors.</b>
+      Evidence, taxes, cost, and discipline — applied to your family's balance sheet.</div>
 
-  <h2>Research it builds on</h2>
-  <p>
-    Driftwood is an engineering synthesis of well-documented, peer-reviewed results, not a novel claim.
-    The selection engine is cross-sectional momentum; the allocation is mean-variance diversification with
-    volatility-normalized cross-sectional trend over a diversified universe (no factor tilt). The primary sources:
-  </p>
-  <ul class="refs">
-    <li><span class="au">Markowitz, H. (1952).</span> <span class="ti">Portfolio Selection.</span>
-      <i>Journal of Finance</i> 7(1). — diversification and the risk–return trade-off; the basis for
-      holding a broad region/size/style matrix and weighting by risk rather than by dollars.</li>
-    <li><span class="au">Jegadeesh, N. &amp; Titman, S. (1993).</span>
-      <span class="ti">Returns to Buying Winners and Selling Losers.</span> <i>Journal of Finance</i> 48(1).
-      — cross-sectional (relative-strength) momentum: the rank-and-hold-the-strongest selection rule at
-      the core of the book.</li>
-    <li><span class="au">Fama, E. &amp; French, K. (1992, 1993).</span>
-      <span class="ti">The Cross-Section of Expected Stock Returns</span> /
-      <span class="ti">Common Risk Factors in Stock and Bond Returns.</span> <i>Journal of Finance</i> /
-      <i>Journal of Financial Economics</i>. — the value and size premia the diversified structure holds
-      on purpose as deliberate exposure (engineered beta), not a tactical bet.</li>
-    <li><span class="au">Asness, C., Moskowitz, T. &amp; Pedersen, L. (2013).</span>
-      <span class="ti">Value and Momentum Everywhere.</span> <i>Journal of Finance</i> 68(3). — value and
-      momentum as complementary, pervasive premia across markets and regions, including international and
-      emerging — the context for a book that spans the full region/size/style matrix.</li>
-    <li><span class="au">Moskowitz, T., Ooi, Y. H. &amp; Pedersen, L. (2012).</span>
-      <span class="ti">Time Series Momentum.</span> <i>Journal of Financial Economics</i> 104(2). — the
-      volatility-scaled trend signal and constant-volatility sizing the system uses to measure and act on
-      drift.</li>
-  </ul>
+    <div class="cta">
+      <div class="ct">See how this applies to your own situation.</div>
+      <div class="cd">A short, private estimate of your after-tax picture by bracket, state, and portfolio.
+        No account, no commitment.</div>
+      <div class="btns">
+        <a class="primary" href="taxlab.html?view=prospect">See your after-tax number →</a>
+        <a class="ghost" href="about.html">Read our story</a>
+      </div>
+    </div>
 
-  <div class="note">
-    <b>Honesty.</b> The <code>continuation</code> coefficient that converts trend into expected edge is a
-    fitted-but-not-deeply-validated default; momentum is a public, partly-arbitraged anomaly; and the
-    equity windows are short relative to the claims. This is a signal system — it does not place trades —
-    and nothing here is investment advice. The figures are engineering validation, not expected returns.
-    Past performance does not predict future results.
-  </div>
-
-  <div class="foot">
-    <a class="back" href="index.html">← back to Driftwood</a>
-    <div style="margin-top:8px">Driftwood is a
-    <b>registered investment adviser</b>; Form ADV and Form CRS are available at
-    <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.</div>
-    <div id="gen" style="margin-top:8px"></div>
+    <div class="foot">
+      <span class="note">Educational — not investment, tax, or legal advice.</span>
+      This page describes how Driftwood thinks about building portfolios; it is not a recommendation or a
+      guarantee of any result. Figures shown elsewhere on this site are hypothetical and depend on your own
+      circumstances; past performance — hypothetical or actual — does not guarantee future results. Driftwood
+      is a <b>registered investment adviser</b>; Form ADV and Form CRS are available at
+      <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
   </div>
 </div>
 
 <script>
 window.__STATE__ = /*__STATE__*/null/*__END__*/;
-const pct=(x,d=1)=>x==null?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
-const apct=(x,d=0)=>x==null?"—":(x*100).toFixed(d)+"%";
-const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;};
-
-function render(s){
-  set("gen","Generated "+(s.header?s.header.generated:"")+" · figures pulled live from the tearsheet & ledger.");
-  const e=s.equities, l=s.ledger;
-  const cards=[];
-  if(e){
-    cards.push(["max drawdown", apct(e.strat_maxdd)+" vs "+apct(e.bench_maxdd), "strategy vs buy &amp; hold · ETF book", "pos"]);
-    cards.push(["out-of-sample Sharpe", e.oos_sharpe.toFixed(2), "held-out, net of cost", e.oos_sharpe>0?"pos":"neg"]);
-  }
-  if(l){
-    cards.push(["Model Portfolio", pct(l.total_return), l.sessions+" sessions · hypothetical backtest", l.total_return>=0?"pos":"neg"]);
-  }
-  document.getElementById("cards").innerHTML = cards.map(([lab,v,sub,t])=>
-    `<div class="card"><div class="v ${t||''}">${v}</div><div class="l"><b>${lab}</b><br>${sub}</div></div>`).join("");
-
-  if(e){
-    set("eq-span", e.span); set("eq-n", e.n_names);
-    set("eq-sdd", apct(e.strat_maxdd)); set("eq-bdd", apct(e.bench_maxdd));
-    set("eq-ddx", e.strat_maxdd>0 ? (e.bench_maxdd/e.strat_maxdd).toFixed(1)+"×" : "—");
-    set("eq-bcagr", pct(e.bench_cagr)); set("eq-scagr", pct(e.strat_cagr));
-    set("eq-oos", e.oos_sharpe.toFixed(2));
-  }
-  if(l){
-    document.getElementById("ledger-line").textContent =
-      `A hypothetical Model Portfolio backtest marks the book daily across `+
-      `${l.sessions} sessions and ${l.universe} instruments, modeled from ${l.inception} — the strategy applied `+
-      `retroactively to historical data, not actual trading or any client account.`;
-  }
-}
-async function load(){
-  let s=window.__STATE__;
-  if(!s){ try{ s=await (await fetch("/api/thesis")).json(); }catch(e){} }
-  if(s) render(s);
-}
-load();
+// How We Invest is our philosophy — there are no live figures to inject here.
 </script>
 </body>
 </html>

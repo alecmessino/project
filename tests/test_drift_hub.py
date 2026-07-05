@@ -151,6 +151,17 @@ def test_raw_model_return_is_research_tagged_for_the_appendix(tmp_path):
     assert "data through 2026-06-29" in mp["sub"]                  # the figure is always dated
 
 
+def test_hub_leads_with_belief_not_positioning():
+    # Belief-first hero: the front door states what we optimize for (what you keep), and the firm's
+    # central sentence appears quietly — the "institutional portfolio architecture" positioning is
+    # discovered later (on the thesis page's banner), not led with, and "architecture" is rationed here.
+    from drift.exhibit import HUB_TEMPLATE
+    t = HUB_TEMPLATE.read_text()
+    assert "maximize what you keep" in t
+    assert "pay attention to different things" in t          # the sentence the firm rests on
+    assert "The architecture" not in t                       # the old machinery-led header is gone
+
+
 def test_hub_template_renders_a_core_alpha_research_appendix_and_does_not_lead_with_the_ledger():
     from drift.exhibit import HUB_TEMPLATE
     t = HUB_TEMPLATE.read_text()

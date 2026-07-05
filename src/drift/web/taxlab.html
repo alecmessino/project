@@ -429,10 +429,11 @@
     <nav class="dwnav" aria-label="Driftwood">
       <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
       <div class="dwnav-links">
-        <a href="thesis.html">Approach</a>
+        <a href="about.html">Our Story</a>
+        <a href="thesis.html">How We Invest</a>
         <a href="taxlab.html?view=prospect" aria-current="page">Tax&nbsp;Lab</a>
         <a href="leakage.html">Leakage</a>
-        <a href="statemap.html">State&nbsp;Map</a>
+        <a href="statemap.html">State Guide</a>
         <a href="ledger.html">Research</a>
       </div>
     </nav>
@@ -495,7 +496,7 @@
   </section>
 
   <section id="estate" class="estate-only">
-    <h2>Estate Planning · Entity-Level Architecture <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· 2026 tax-law reference</span></h2>
+    <h2>Estate Planning · entity-level structure <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· 2026 tax-law reference</span></h2>
     <div class="est-params" id="estparams"></div>
     <div class="estgrid">
       <div class="opt-card entity">
@@ -524,12 +525,12 @@
   </section>
 
   <section id="decisiontree" class="adv-est">
-    <h2>Wealth Architecture · capital-flow map <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· where each dollar is located, and why</span></h2>
+    <h2>Asset location · capital-flow map <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· where each dollar is located, and why</span></h2>
     <div id="dtreebody"></div>
   </section>
 
   <section id="strategy" class="strategy-only">
-    <h2>Optimal Strategy &amp; Rollover Engine <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· move scattered accounts into the framework</span></h2>
+    <h2>Account Consolidation &amp; Rollover <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· move scattered accounts into one coordinated approach</span></h2>
 
     <h3 class="strat-h">1 · The 401(k) rollover escape hatch</h3>
     <div class="optgrid">
@@ -542,7 +543,7 @@
       <div class="opt-card res" id="rolloverres"></div>
     </div>
 
-    <h3 class="strat-h">2 · 2026 Roth conversion optimizer</h3>
+    <h3 class="strat-h">2 · 2026 Roth conversion</h3>
     <div class="optgrid">
       <div class="opt-card">
         <div class="slider"><div class="top"><label>Traditional IRA balance</label><output id="rothtradv"></output></div>
@@ -559,7 +560,7 @@
   </section>
 
   <section id="optim" class="advisor-only">
-    <h2>Asset Location Optimizer <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· three buckets, optimally placed</span></h2>
+    <h2>Asset Location <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· three buckets, optimally placed</span></h2>
     <div class="optgrid">
       <div class="opt-card">
         <div class="slider">
@@ -1022,7 +1023,7 @@ function renderTransition(){
      <div class="brk">Range <b>${fmt$(saLo)} – ${fmt$(saHi)}/yr</b> across the assumption band (effective tax rate · turnover · market return).
        Base ≈ ${fmt$(taxSaved)}/yr from asset-location placement + ${fmt$(feeSaved)}/yr from a lower all-in cost
        (legacy ${legBps} bps → ${(propRate*1e4).toFixed(0)} bps), on a ${fmt$big(W)} household.
-       <b>This is structural tax &amp; fee optimization — not a forecast that these funds out-perform.</b></div>`;
+       <b>This is structural tax &amp; fee management — not a forecast that these funds out-perform.</b></div>`;
   $("transnote").innerHTML=`<b>${m.note}</b> The Proposed Allocation is a Driftwood institutional model — a diversified,
     low-cost strategic allocation, <b>distinct from</b> the hypothetical Driftwood momentum backtest${m.structure?`, which enters only as the ${Math.round(m.structure.satellite*100)}% self-directed satellite sleeve`:""}.
     Estimated Structural Alpha is illustrative tax + fee modeling on the inputs shown; actual results depend on account structure,
@@ -1030,7 +1031,7 @@ function renderTransition(){
   // Feed the print-only proposal appendix so the generated PDF names the recommended structure.
   if($("printproposal")) $("printproposal").innerHTML=`<div class="es-h">Recommended structure</div>
     <p><b>${m.name}</b> — ${m.tagline} Blended fund cost ${(m.blended_er*1e4).toFixed(0)} bps. Estimated Structural Alpha
-      (Tax + Fee Optimization): <b>+${fmt$(structural)}/yr</b> (range ${fmt$(saLo)} – ${fmt$(saHi)}/yr across the tax-rate /
+      (Tax &amp; Fee savings): <b>+${fmt$(structural)}/yr</b> (range ${fmt$(saLo)} – ${fmt$(saHi)}/yr across the tax-rate /
       turnover / market-return band) on a ${fmt$big(W)} household — illustrative tax + fee modeling, not a performance forecast.</p>`;
 }
 // --- Feature 2: wealth-architecture decision tree (visualizes the existing placement + estate gate) ---
@@ -1434,10 +1435,10 @@ function applyMode(m){
   $("lede").innerHTML = MODE==="lead"
     ? `See the estimated capital-gains tax a high-turnover strategy generates in <b>your</b> state — and how much may be reducible through asset location. Click your state to begin.`
     : MODE==="estate"
-    ? `<b>Entity-Level Asset Architecture</b> — model the Illinois estate cliff, the credit-shelter-trust shelter, and the proposed HB2601 exemption against the 2026 tax-law reference. Illustrative; coordinate the filing figure with your estate attorney.`
+    ? `<b>Estate coordination</b> — model the Illinois estate cliff, the credit-shelter trust, and the proposed HB2601 exemption against 2026 law. Illustrative; confirm the filing figure with your estate attorney.`
     : MODE==="strategy"
-    ? `<b>Optimal Strategy &amp; Rollover Engine</b> — a roadmap moving scattered 401(k)/IRA balances into the optimized framework: the rollover escape hatch, the 2026 Roth-conversion arbitrage, and a personalized asset-location blueprint.`
-    : `A <b>Holistic Asset Location Engine</b> — quantitative wealth architecture that coordinates federal and state tax, account structure (taxable / Traditional / Roth), estate step-up, and tax-loss harvesting into one after-tax plan. Pick a bracket and state; everything recomputes from the book's real realized-gain profile.`;
+    ? `<b>Account consolidation &amp; rollover plan</b> — a roadmap for moving scattered 401(k)/IRA balances into one coordinated approach: the rollover decision, the 2026 Roth-conversion opportunity, and a personalized asset-location plan.`
+    : `One <b>coordinated after-tax plan</b> — bringing federal and state tax, account structure (taxable / Traditional / Roth), estate step-up, and tax-loss harvesting into a single decision about where each dollar belongs. Pick a bracket and state; every figure updates from a real realized-gain profile.`;
   $("maphdr").innerHTML = MODE==="lead"
     ? `Click your state <span class="hint">· see your estimated capital-gains tax</span>`
     : MODE==="estate"

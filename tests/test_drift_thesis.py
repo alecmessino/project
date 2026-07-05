@@ -39,11 +39,14 @@ def test_build_thesis_degrades_without_files(tmp_path):
     json.dumps(s)
 
 
-def test_render_thesis_embeds_state_and_frames_the_architecture(tmp_path):
+def test_render_thesis_embeds_state_and_leads_with_the_philosophy(tmp_path):
     _write_tearsheet(tmp_path)
     html = render_thesis(build_thesis(tmp_path))
     assert "/*__STATE__*/null/*__END__*/" not in html
     assert html.lstrip().startswith("<!DOCTYPE html>")
-    # the two-engine architecture spine + the (compressed) origin of the name
-    assert "The architecture" in html and "Core Alpha — the tactical engine" in html
+    # The Approach page is now "How We Invest" — an evidence-first philosophy, not the retired
+    # drift / diffusion name story.
+    assert "How we invest" in html
+    assert "Evidence over prediction" in html
+    assert "random-walk null" not in html.lower()
     assert "driftwood" in html.lower()

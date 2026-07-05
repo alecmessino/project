@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-05T17:38:57+00:00",
+  "generated": "2026-07-05T17:54:01+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 45708,
+    "rows": 45721,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,16 +14,16 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 11637,
-      "live_total": 5144,
-      "live_today": 2406,
-      "last_row_age_min": 7.6
+      "rows_total": 11641,
+      "live_total": 5147,
+      "live_today": 2409,
+      "last_row_age_min": 2.8
     },
     "fanduel": {
-      "rows_total": 34071,
-      "live_total": 21,
-      "live_today": 21,
-      "last_row_age_min": 0.4
+      "rows_total": 34080,
+      "live_total": 30,
+      "live_today": 30,
+      "last_row_age_min": 2.3
     }
   },
   "books_reporting_live": [
@@ -31,19 +31,19 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 5144,
-    "OPEN": 19,
-    "SUSPENDED": 2
+    "unset": 5147,
+    "OPEN": 27,
+    "SUSPENDED": 3
   },
   "overlap": {
-    "simultaneous_pairs_total": 17,
-    "simultaneous_pairs_today": 17,
-    "overlap_games": 2,
+    "simultaneous_pairs_total": 26,
+    "simultaneous_pairs_today": 26,
+    "overlap_games": 3,
     "median_sync_lag_s": 915.0,
     "games_by_books_live": {
       "0_books": 6,
-      "1_books": 13,
-      "2_books": 2
+      "1_books": 12,
+      "2_books": 3
     }
   },
   "fix_verification": {
@@ -79,17 +79,17 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 17,
+        "current": 26,
         "target": 2000,
         "pass": false,
-        "progress": 0.009
+        "progress": 0.013
       },
       {
         "criterion": "games with live overlap",
-        "current": 2,
+        "current": 3,
         "target": 100,
         "pass": false,
-        "progress": 0.02
+        "progress": 0.03
       },
       {
         "criterion": "median sync lag < 15s",
@@ -107,6 +107,6 @@
       }
     ],
     "cleared": false,
-    "overall_progress": 0.178
+    "overall_progress": 0.181
   }
 }

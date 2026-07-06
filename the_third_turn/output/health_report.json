@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-06T19:12:53+00:00",
+  "generated": "2026-07-06T19:27:57+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 48234,
+    "rows": 48294,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -17,19 +17,19 @@
       "rows_total": 11969,
       "live_total": 5341,
       "live_today": 24,
-      "last_row_age_min": 6.1
+      "last_row_age_min": 21.2
     },
     "fanduel": {
-      "rows_total": 36259,
-      "live_total": 1029,
-      "live_today": 80,
-      "last_row_age_min": 0.0
+      "rows_total": 36319,
+      "live_total": 1031,
+      "live_today": 82,
+      "last_row_age_min": 0.2
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 767.9
+      "last_row_age_min": 783.0
     }
   },
   "books_reporting_live": [
@@ -38,13 +38,13 @@
   ],
   "market_status": {
     "unset": 5341,
-    "OPEN": 948,
+    "OPEN": 950,
     "SUSPENDED": 79,
     "REMOVED": 2
   },
   "overlap": {
-    "simultaneous_pairs_total": 1078,
-    "simultaneous_pairs_today": 88,
+    "simultaneous_pairs_total": 1080,
+    "simultaneous_pairs_today": 90,
     "overlap_games": 15,
     "median_sync_lag_s": 640.0,
     "games_by_books_live": {
@@ -85,10 +85,10 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 1078,
+        "current": 1080,
         "target": 2000,
         "pass": false,
-        "progress": 0.539
+        "progress": 0.54
       },
       {
         "criterion": "games with live overlap",

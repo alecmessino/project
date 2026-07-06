@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-07-06T02:10:58+00:00
+ THE THIRD TURN — collection health   2026-07-06T02:26:03+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,31 +12,31 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ██████████████████  live= 5328 (today   11)  last 6.7m ago
-  fanduel   ███···············  live=  980 (today   31)  last 1.6m ago
+  bovada    ██████████████████  live= 5332 (today   15)  last 1.6m ago
+  fanduel   ███···············  live=  989 (today   40)  last 1.6m ago
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
-  simultaneous live pairs :   1030  (today 40)
+  simultaneous live pairs :   1042  (today 52)
   overlap games           : 15
-  median sync lag         : 670.0 s
+  median sync lag         : 641.0 s
   games by #books live     : {'0_books': 12, '2_books': 15}
 
 QUOTE LIFECYCLE (live rows)
-  market status: {'unset': 5328, 'OPEN': 906, 'SUSPENDED': 72, 'REMOVED': 2}
+  market status: {'unset': 5332, 'OPEN': 913, 'SUSPENDED': 74, 'REMOVED': 2}
 
 COVERAGE
   live games seen: 15   book-panel games: 27   team-total rows: 2739
   innings seen: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 INTEGRITY
-  rows=47766  malformed=0  missing-fields=0  duplicates=0  future-ts=0
+  rows=47779  malformed=0  missing-fields=0  duplicates=0  future-ts=0
   status: ✅ clean
 
 SR-1 GATE (leadership analysis — blocked until all pass)
-     █████████········· simultaneous live quote pairs    1030 / 2000
+     █████████········· simultaneous live quote pairs    1042 / 2000
      ███··············· games with live overlap          15 / 100
-     ·················· median sync lag < 15s            670.0 / 15
+     ·················· median sync lag < 15s            641.0 / 15
      ████████████······ books quoting live               2 / 3
-  overall: 33%  →  BLOCKED — keep collecting
+  overall: 34%  →  BLOCKED — keep collecting
 ══════════════════════════════════════════════════════════════════

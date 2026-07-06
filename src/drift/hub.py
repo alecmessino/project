@@ -134,15 +134,8 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
         except Exception:
             pass
 
-    if ts:
-        for bk in ts.get("books", []):
-            s, b, o = bk["strategy"], bk["benchmark"], bk["oos"]["test"]
-            headline.append({
-                "label": f"{bk['name']} · max drawdown",
-                "value": f"{s['max_drawdown']*100:.0f}% vs {b['max_drawdown']*100:.0f}%",
-                "sub": f"multi-decade backtest, strategy vs buy & hold · OOS Sharpe {o['sharpe']:.2f}",
-                "tone": "neutral",
-            })
+    # (The multi-decade "N% vs N% max drawdown" headline was retired from the hub — a low-signal, near-tie
+    # figure that communicated little to a prospect. The tearsheet still carries it in context.)
 
     # ── Value-adds: the three pillars of the architecture, process-led. Each number appears ONCE across
     # the whole hub (no repeated figures), and each performance figure carries its risk + a hypothetical

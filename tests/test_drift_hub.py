@@ -52,9 +52,9 @@ def test_model_portfolio_headline_carries_ITS_OWN_drawdown_not_the_long_backtest
     assert led["dd"] == "−15%"
     assert "59%" not in led["sub"]                 # the long-backtest DD is never stapled to this return
     assert "59%" not in led.get("dd", "")
-    # The multi-decade drawdown still appears — explicitly attributed to the long backtest.
-    dd = [h for h in state["headline"] if "max drawdown" in h["label"]][0]
-    assert dd["value"] == "59% vs 58%" and "multi-decade" in dd["sub"]
+    # The multi-decade "N% vs N%" drawdown headline was retired from the hub — it must not reappear
+    # stapled to (or near) this return.
+    assert not [h for h in state["headline"] if "max drawdown" in h["label"]]
 
 
 def test_value_adds_sourced_and_fair_and_balanced(tmp_path):
@@ -94,18 +94,19 @@ def test_value_adds_sourced_and_fair_and_balanced(tmp_path):
     assert "$1 million of realized gains" in loc["stat_label"]
 
 
-def test_build_hub_reads_tearsheet_drawdown_headline(tmp_path):
+def test_hub_does_not_surface_the_low_signal_drawdown_headline(tmp_path):
+    # The near-tie "N% vs N% max drawdown" figure was retired from the hub (it communicated little to a
+    # prospect); the tearsheet still carries it in context. The hub must no longer generate it.
     ts_state = {"books": [{
         "name": "Equities & ETFs",
         "strategy": {"max_drawdown": 0.068},
         "benchmark": {"max_drawdown": 0.507},
         "oos": {"test": {"sharpe": 0.49}},
     }]}
-    html = "x window.__STATE__ = " + json.dumps(ts_state) + ";\n y"
-    (tmp_path / "tearsheet.html").write_text(html)
+    (tmp_path / "tearsheet.html").write_text(
+        "x window.__STATE__ = " + json.dumps(ts_state) + ";\n y")
     state = build_hub(tmp_path)
-    dd = [h for h in state["headline"] if "max drawdown" in h["label"]]
-    assert dd and dd[0]["value"] == "7% vs 51%"
+    assert not [h for h in state["headline"] if "max drawdown" in h["label"]]
 
 
 def test_render_hub_embeds_state(tmp_path):

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Privacy-first analytics (Plausible) -->
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>Every Portfolio Has Two Returns — Driftwood</title>
+<meta name="description" content="Every portfolio has two returns: the one it earns, and the one you actually keep. The gap between them is the most expensive line on no statement." />
+<link rel="canonical" href="https://alecmessino.github.io/project/every-portfolio-has-two-returns.html" />
+<link rel="icon" href="favicon.svg" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="Every Portfolio Has Two Returns" />
+<meta property="og:description" content="The one it earns, and the one you actually keep. The gap between them is the most expensive line on no statement." />
+<meta property="og:url" content="https://alecmessino.github.io/project/every-portfolio-has-two-returns.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Every Portfolio Has Two Returns" />
+<meta name="twitter:description" content="The one it earns, and the one you actually keep." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
+<style>
+  :root{
+    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
+    --ink:#1d242d; --body:#3a414b; --dim:#5f5d68; --muted:#6f675b;
+    --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:18px/1.78 var(--serif);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1080px;margin:40px auto;padding:0 20px 60px}
+  .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
+  .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #ddd5c6}
+  .chrome i{width:9px;height:9px;border-radius:999px;background:#cfc6b4;display:inline-block}
+  .chrome .url{margin-left:auto;font-size:11.5px;letter-spacing:.04em;color:var(--muted);font-family:ui-monospace,monospace}
+
+  /* A single reading column — this is writing, not a page of widgets. */
+  .doc{max-width:648px;padding:0 44px;margin:0 auto}
+  .kicker{font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);margin:52px 0 18px}
+  .kicker a{color:var(--muted);text-decoration:none;border-bottom:1px solid transparent}
+  .kicker a:hover{border-bottom-color:var(--muted)}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(34px,3.2vw+18px,48px);line-height:1.06;
+    letter-spacing:-.02em;color:var(--ink);margin:0 0 12px}
+  .dek{font-size:19px;line-height:1.5;color:var(--muted);font-style:italic;margin:0 0 8px}
+  .lede-rule{height:1px;background:var(--line);margin:34px 0}
+  p{font-size:18px;line-height:1.8;color:var(--body);margin:0 0 22px}
+  p b{color:var(--ink);font-weight:600}
+  .lead-in{font-size:20px;line-height:1.65;color:var(--ink)}
+  .pull{font-family:var(--serif);font-weight:600;font-size:23px;line-height:1.4;color:var(--ink);
+    margin:34px 0;padding-left:20px;border-left:3px solid var(--brass)}
+  a{color:var(--teal2)}
+  .signoff{font-family:var(--sans);font-size:13px;letter-spacing:.02em;color:var(--muted);margin:36px 0 0}
+
+  /* ── The signature figure: "two returns." Self-contained, standalone-renderable, palette-only. ── */
+  .two-returns{margin:40px 0;padding:26px 26px 20px;background:#fff;border:1px solid var(--line);
+    border-radius:14px;box-shadow:0 18px 44px -34px rgba(20,18,12,.5)}
+  .two-returns .tr-title{font-family:var(--sans);font-weight:700;font-size:13px;letter-spacing:.02em;
+    color:var(--ink);margin:0 0 18px}
+  .two-returns .tr-row{margin:0 0 15px}
+  .two-returns .tr-label{font-family:var(--sans);font-size:12px;color:var(--dim);margin:0 0 6px;font-weight:500}
+  .two-returns .tr-bar{display:flex;height:34px;border-radius:7px;overflow:hidden;background:var(--soft);
+    border:1px solid var(--line)}
+  .two-returns .tr-earned{background:var(--navy)}
+  .two-returns .tr-kept{background:var(--teal2)}
+  .two-returns .tr-lost{background:
+    repeating-linear-gradient(-45deg,#c9a24a,#c9a24a 6px,#bd9740 6px,#bd9740 12px);
+    display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:10px;
+    font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#4a3a12;white-space:nowrap;overflow:hidden}
+  .two-returns .tr-cap{font-family:var(--sans);font-size:11.5px;color:var(--muted);line-height:1.5;
+    margin:16px 0 0;border-top:1px solid var(--line2);padding-top:12px}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+  .foot{margin-top:52px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
+    color:var(--muted);font-size:12.5px;line-height:1.65}
+  .foot .note{color:#5a5a62;font-weight:600}
+  @media(max-width:620px){
+    body{font-size:17px}
+    .doc{padding:0 22px} p{font-size:17px} .foot{padding-left:22px;padding-right:22px}
+    .two-returns{padding:20px 18px 16px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — every portfolio has two returns</span></div>
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+      <div class="dwnav-links">
+        <a href="about.html">Our Story</a>
+        <a href="thesis.html">How We Invest</a>
+        <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+        <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+        <a href="statemap.html">State Tax Guide</a>
+        <a href="insights.html" aria-current="page">Insights</a>
+      </div>
+    </nav>
+
+    <article class="doc">
+      <div class="kicker"><a href="insights.html">Insights</a> · July 2026</div>
+      <h1>Every Portfolio Has Two Returns</h1>
+      <p class="dek">The return you never get to keep.</p>
+
+      <div class="lede-rule"></div>
+
+      <p class="lead-in">Every portfolio has two returns. The one it earns, and the one you actually keep.
+        On a statement, only the first one is ever printed. The second — the one that pays for the house,
+        the tuition, the decades after work — is left for its owner to discover alone, years later, if at
+        all.</p>
+
+      <p>The distance between those two numbers may be the most important figure in investing that appears
+        on no report. It goes by a few names — taxes, turnover, trading costs, the price of reacting to bad
+        news at the wrong moment — but it behaves like a single thing: a slow, silent charge against
+        everything you own. Call it the <b>invisible expense ratio</b>.</p>
+
+      <p>A fund's expense ratio is printed to two decimal places because it is easy to measure and easy to
+        compete on. The invisible expense ratio is neither. It never appears on a statement. It is not
+        deducted on one dated line. It is paid in April, in fractions, in decisions no one writes down — a
+        gain taken a year too early, a fund that trades more than it needs to, a good holding sold in a bad
+        week. Because you never see it, you never manage it.</p>
+
+      <p class="pull">And what goes unmeasured, compounds.</p>
+
+      <p>That word — compounds — is doing more work than it appears to. Money does not grow in a straight
+        line; it grows in a chain, where every year is built on the one before it. A tax paid early is not
+        one dollar lost. It is that dollar, and every dollar it would have become, and every dollar
+        <i>those</i> would have become. Compounding is unforgiving of interruptions. The invisible expense
+        ratio is nothing but interruptions — small ones, ignored ones, repeated for thirty years.</p>
+
+      <p>Ask what the world's largest investors actually spend their days on, and the answer is rarely which
+        security to buy. It is where each dollar should sit, when a gain should be taken, how a loss can be
+        put to work, and what a decision will cost <i>after</i> tax rather than before it. They treat tax
+        not as a chore handled each spring but as an investment decision made all year — because at their
+        scale, the gap between the two returns is measured in buildings. The arithmetic is no different for
+        a family. Only the attention is.</p>
+
+      <figure class="two-returns" role="img"
+        aria-label="Three bars for one portfolio. The first, 'what it earned,' is full. The second, 'what
+        you keep, taxed carelessly,' is far shorter, with a large hatched wedge marked tax, turnover, and
+        reaction. The third, 'what you keep, taxed deliberately,' is much longer, with only a small wedge
+        lost. The market sets the first return; attention sets the second.">
+        <div class="tr-title">The same portfolio, two returns</div>
+        <div class="tr-row">
+          <div class="tr-label">What it earned</div>
+          <div class="tr-bar"><span class="tr-earned" style="width:100%"></span></div>
+        </div>
+        <div class="tr-row">
+          <div class="tr-label">What you keep — taxed carelessly</div>
+          <div class="tr-bar"><span class="tr-kept" style="width:38%"></span><span class="tr-lost" style="width:62%">tax · turnover · reaction</span></div>
+        </div>
+        <div class="tr-row">
+          <div class="tr-label">What you keep — taxed deliberately</div>
+          <div class="tr-bar"><span class="tr-kept" style="width:80%"></span><span class="tr-lost" style="width:20%"></span></div>
+        </div>
+        <figcaption class="tr-cap">Illustrative. Same portfolio, same market, same headline return — two
+          different fortunes. Nothing about the investments changed. Everything about the outcome did.</figcaption>
+      </figure>
+
+      <p>This is the quiet insight the industry has little reason to advertise. It is far easier to sell the
+        first return — it is bigger, it is exciting, it fits in a headline. The second return is dull. It is
+        made of patience and paperwork, of holdings left alone and losses harvested and accounts chosen with
+        care. It photographs badly. It also happens to be the only return you ever spend.</p>
+
+      <p>You cannot control what the market returns. You can control what it costs you to own it — and over a
+        lifetime, that turns out to be the return that was yours to keep all along.</p>
+
+      <p class="signoff">— Driftwood</p>
+    </article>
+
+    <div class="foot">
+      <span class="note">Educational — not investment, tax, or legal advice.</span>
+      This piece describes how Driftwood thinks about investing; it is not a recommendation or a guarantee
+      of any result. Illustrations are hypothetical and depend on individual circumstances. Driftwood is a
+      <b>registered investment adviser</b>; Form ADV and Form CRS are available at
+      <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
+  </div>
+</div>
+</body>
+</html>

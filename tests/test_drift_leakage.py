@@ -42,7 +42,7 @@ def test_leakage_states_show_tax_alpha_rising_with_the_rate():
 
 def test_leakage_template_carries_the_structural_alpha_and_compliance_framing():
     t = LEAKAGE_TEMPLATE.read_text()
-    assert "Tax-Leakage Diagnostic" in t
+    assert "Tax Diagnostic" in t
     assert "Structural Alpha" in t
     # honesty / Marketing-Rule guards
     assert "not a forecast that these funds out-perform" in t

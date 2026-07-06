@@ -153,6 +153,29 @@ Define a term the first time a reader meets it, then trust it.
 
 ---
 
+## The Canonical Sentences
+
+Where the Lexicon holds *compressed terms*, these are the firm's *principles* — whole sentences that
+carry Driftwood's worldview. Most firms have taglines; institutions accumulate principles. Once readers
+recognize these across essays, software, and presentations, they become intellectual landmarks.
+
+**Treat them as effectively immutable.** Do not revise, paraphrase, or "freshen" a canonical sentence
+without a compelling reason and a deliberate decision — their power comes from being repeated *verbatim*,
+for years, until they are recognized on sight. Quote them exactly; never ship a near-variant.
+
+| Sentence | What it holds | Where it lives |
+| --- | --- | --- |
+| **Every portfolio has two returns.** | The one it earns and the one you keep. | The flagship essay (title) — the founding principle. |
+| **Markets determine returns. Structure determines how much you keep.** | You can't control the market; you can control what it costs you to own it. | After-Tax Review (the Implementation thesis) — the applied form of *two returns*. |
+| **Every portfolio has a handful of structural decisions.** | A review is judgment over a small, finite set of decisions — not optimization. | After-Tax Review (masthead). |
+| **The best portfolio is one you're still glad to own in twenty years.** | The measure of a portfolio is durability, not last year's return. | *Enough Is a Number* (essay). |
+
+New canonical sentences are rare and earn their place the way Canon pieces do — by proving, over time,
+that they carry a whole idea in a line a reader will repeat. Add one only after it has begun to recur on
+its own.
+
+---
+
 ## Structure — how a page should open
 
 1. **A belief**, stated plainly, in the largest type on the page.

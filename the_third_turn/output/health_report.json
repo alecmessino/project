@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-06T21:13:03+00:00",
+  "generated": "2026-07-06T21:28:08+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 48773,
+    "rows": 48835,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -17,19 +17,19 @@
       "rows_total": 11998,
       "live_total": 5353,
       "live_today": 36,
-      "last_row_age_min": 6.6
+      "last_row_age_min": 21.7
     },
     "fanduel": {
-      "rows_total": 36769,
-      "live_total": 1062,
-      "live_today": 113,
-      "last_row_age_min": 0.5
+      "rows_total": 36831,
+      "live_total": 1064,
+      "live_today": 115,
+      "last_row_age_min": 0.4
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 888.1
+      "last_row_age_min": 903.1
     }
   },
   "books_reporting_live": [
@@ -38,13 +38,13 @@
   ],
   "market_status": {
     "unset": 5353,
-    "OPEN": 978,
-    "SUSPENDED": 82,
+    "OPEN": 979,
+    "SUSPENDED": 83,
     "REMOVED": 2
   },
   "overlap": {
-    "simultaneous_pairs_total": 1118,
-    "simultaneous_pairs_today": 128,
+    "simultaneous_pairs_total": 1120,
+    "simultaneous_pairs_today": 130,
     "overlap_games": 15,
     "median_sync_lag_s": 610.0,
     "games_by_books_live": {
@@ -66,7 +66,7 @@
   "coverage": {
     "live_games_seen": 15,
     "book_panel_games": 32,
-    "team_total_rows": 2801,
+    "team_total_rows": 2802,
     "innings_seen": [
       1,
       2,
@@ -85,10 +85,10 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 1118,
+        "current": 1120,
         "target": 2000,
         "pass": false,
-        "progress": 0.559
+        "progress": 0.56
       },
       {
         "criterion": "games with live overlap",
@@ -113,6 +113,6 @@
       }
     ],
     "cleared": false,
-    "overall_progress": 0.35
+    "overall_progress": 0.351
   }
 }

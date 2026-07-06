@@ -124,7 +124,7 @@ function staticFlow() {
     portfolio_tracked: t.includes('portfolio_adjusted'),                                          // lead-gen slider funnel event
     leadstate_markup: t.includes('id="leadstate"'),
     leadstate_wired: t.includes('buildLeadStates(') && t.includes('paintLeadSel('),   // chip grid wired via the shared handler
-    leadstate_mobile_css: t.includes('body.on-review .leadstate'),
+    leadstate_mobile_css: t.includes('body.on-implementation .leadstate'),
     ui_tokens: shim.cssText().includes('--s4:16px') && shim.cssText().includes('--t-mid'),   // tokens now live in driftwood.css
     reduced_motion: t.includes('prefers-reduced-motion'),
   };

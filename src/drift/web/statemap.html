@@ -63,7 +63,7 @@
      the wrapper scroll horizontally so tiles stay grabbable. */
   @media(max-width:620px){
     svg.cart{min-width:470px}
-    .hd,.tabs,.split,.asof,.foot{padding-left:18px;padding-right:18px}
+    .hd,.tabs,.split,.asof,.closing,.foot{padding-left:18px;padding-right:18px}
     .detail{padding:16px}
   }
   .tile rect{cursor:pointer;transition:filter .12s,stroke .12s}
@@ -88,6 +88,9 @@
   .foot{margin:14px 40px 30px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:11px;line-height:1.55}
   .foot b{color:#5a5a62}
   .asof{font-size:11px;color:var(--muted);padding:0 40px;margin:2px 0 0}
+  .closing{padding:16px 40px 0;margin:0;font-size:13px;color:var(--dim)}
+  .closing a{color:var(--teal2);font-weight:600;text-decoration:none}
+  .closing a:hover{text-decoration:underline}
   @media print{ body{background:#fff} .sheet{margin:0;max-width:none;padding:0} .frame{border:0;box-shadow:none} .chrome,.detail a.cta{display:none} }
 </style>
 </head>
@@ -124,6 +127,8 @@
       <div class="detail" id="detail"></div>
     </div>
     <p class="asof" id="asof"></p>
+    <p class="closing">Want to know what these rules mean for your portfolio?
+      <a href="taxlab.html">Run an After-Tax Review →</a></p>
     <div class="foot" id="foot"></div>
   </div>
 </div>

@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-06T22:43:34+00:00",
+  "generated": "2026-07-06T22:58:39+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 49219,
+    "rows": 49404,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 11999,
-      "live_total": 5353,
-      "live_today": 36,
-      "last_row_age_min": 37.2
+      "rows_total": 12004,
+      "live_total": 5357,
+      "live_today": 40,
+      "last_row_age_min": 2.5
     },
     "fanduel": {
-      "rows_total": 37214,
-      "live_total": 1070,
-      "live_today": 121,
-      "last_row_age_min": 0.2
+      "rows_total": 37394,
+      "live_total": 1124,
+      "live_today": 175,
+      "last_row_age_min": 0.0
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 978.6
+      "last_row_age_min": 993.7
     }
   },
   "books_reporting_live": [
@@ -37,20 +37,19 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 5353,
-    "OPEN": 985,
-    "SUSPENDED": 83,
+    "unset": 5357,
+    "OPEN": 1034,
+    "SUSPENDED": 88,
     "REMOVED": 2
   },
   "overlap": {
-    "simultaneous_pairs_total": 1120,
-    "simultaneous_pairs_today": 130,
-    "overlap_games": 15,
-    "median_sync_lag_s": 610.0,
+    "simultaneous_pairs_total": 1169,
+    "simultaneous_pairs_today": 179,
+    "overlap_games": 17,
+    "median_sync_lag_s": 579.0,
     "games_by_books_live": {
-      "0_books": 18,
-      "1_books": 1,
-      "2_books": 15
+      "0_books": 17,
+      "2_books": 17
     }
   },
   "fix_verification": {
@@ -67,7 +66,7 @@
   "coverage": {
     "live_games_seen": 17,
     "book_panel_games": 34,
-    "team_total_rows": 2806,
+    "team_total_rows": 2807,
     "innings_seen": [
       1,
       2,
@@ -86,24 +85,24 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 1120,
+        "current": 1169,
         "target": 2000,
         "pass": false,
-        "progress": 0.56
+        "progress": 0.585
       },
       {
         "criterion": "games with live overlap",
-        "current": 15,
+        "current": 17,
         "target": 100,
         "pass": false,
-        "progress": 0.15
+        "progress": 0.17
       },
       {
         "criterion": "median sync lag < 15s",
-        "current": 610.0,
+        "current": 579.0,
         "target": 15,
         "pass": false,
-        "progress": 0.025
+        "progress": 0.026
       },
       {
         "criterion": "books quoting live",
@@ -114,6 +113,6 @@
       }
     ],
     "cleared": false,
-    "overall_progress": 0.351
+    "overall_progress": 0.362
   }
 }

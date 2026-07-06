@@ -119,6 +119,30 @@ Two words earn special discipline:
 
 ---
 
+## The Driftwood Lexicon
+
+The best firms invent language — not jargon, *compression*: a few words that hold a complex idea
+and are easy to repeat. Over years these become "Driftwood language," more durable than any product
+name. Use them precisely and consistently; introduce one, where it fits, in every published piece.
+Define a term the first time a reader meets it, then trust it.
+
+| Term | What it means |
+| --- | --- |
+| **Every Portfolio Has Two Returns** | The one it earns and the one you keep. The gap between them is where most wealth is won or lost. |
+| **Portfolio Architecture** | The deliberate design of the whole — allocation, location, coordination — as opposed to a pile of good holdings. Rationed; see the "architecture" rule. |
+| **Institutional Attention** | The habit of attending to what actually decides outcomes — cost, taxes, implementation, discipline, time — rather than to what is easy to market. |
+| **The Attention Gap** | The distance between how institutions and individuals invest: not intelligence or access, but *what receives attention*. |
+| **The Attention Stack** | The order attention should follow: asset allocation → asset location → taxes → estate → behavior → time. Each layer decides more than the holdings inside it. |
+| **The Invisible Expense Ratio** | The unmeasured, unbilled drag of taxes, turnover, and reaction — never printed on a statement, paid a little each year. |
+| **After-Tax Return** | The only return you ever spend. When we say "return" without qualification on client-facing pages, we mean this. |
+| **Structural Friction** | Wealth lost to how a portfolio is built and run — the opposite of implementation done well. |
+| **Compounding Interruptions** | Small, repeated leaks (a tax taken early, a panic sale) that break the chain compounding depends on. |
+| **Decision Quality** | Judging a choice by the process and information behind it, not by a single year's outcome. |
+| **One Portfolio. One System.** | Every account works together, not apart — allocation, location, harvesting, withdrawals, estate, coordinated as one. |
+| **Stewardship** | *Internal concept only — not public positioning.* The care a great endowment takes with permanent capital. Keep the concrete "institutional portfolio architecture, built for individual investors" as the public line unless stewardship earns its way in through the writing over time. |
+
+---
+
 ## Structure — how a page should open
 
 1. **A belief**, stated plainly, in the largest type on the page.

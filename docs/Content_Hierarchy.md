@@ -129,14 +129,24 @@ diagnostics, research). Visitors should remember *Driftwood*, not a product name
 - **Related pages:** How We Invest (the philosophy these mechanics serve).
 - **Canonical quote:** *"Built to persist, not to impress."*
 
-## Insights (future — the publishing engine)
+## Insights (the publishing engine — governed by `Investment_Writing_Principles.md`)
 
-- **Purpose:** Teach durable investment principles. The page that makes Driftwood a publication that happens to be an advisory firm.
-- **One takeaway (per essay):** Exactly one; if an essay needs two, it's two essays.
-- **Primary CTA:** None inside essays. A quiet firm note at the foot. Trust is the CTA.
-- **Statistics allowed:** Sourced, evergreen facts (Evidence Register rules apply); no firm performance figures inside essays.
-- **Statistics prohibited:** Anything that turns an essay into a pitch.
-- **Tone:** The Housel test, philosophically: would this be worth reading with Driftwood's name removed? If no, keep editing.
-- **Words to avoid:** Driftwood, mostly. The firm is the publisher, not the subject.
-- **Related pages:** Essays link to Principles and How We Invest where natural — never to product pages mid-essay.
-- **Canonical quote:** To be earned, one essay at a time.
+- **Purpose:** Teach durable investment principles. The pages that make Driftwood a publication that
+  happens to be an advisory firm. A permanent collection, not a blog.
+- **The index (`insights.html`):** radically quiet — eyebrow, one dek, then a reverse-chronological list
+  of **date + title only**. No thumbnails, excerpts, per-item deks, categories, reading times, bios, or
+  social buttons. The restraint is the design.
+- **One takeaway (per piece):** Exactly one; if it needs two, it's two pieces.
+- **Primary CTA:** None inside a piece. A quiet firm note at the foot. Trust is the CTA.
+- **Statistics allowed:** Sourced, evergreen facts (Evidence Register rules apply); no firm performance
+  figures inside a piece.
+- **Statistics prohibited:** Anything that turns a piece into a pitch; anything timely.
+- **Publish because it's true, not because it's timely.** No market commentary, no news, no headline
+  reactions, no SEO- or acquisition-driven writing. If it dates in twelve months, don't publish it.
+- **Tone:** The Housel test — would this be worth reading with Driftwood's name removed?
+- **Words to avoid:** "essay" (never in public copy — present only the title) · "Driftwood" as subject
+  (the firm is the publisher, not the topic) · product names leading a piece.
+- **Related pages:** pieces link to Principles and How We Invest where natural — never to product pages
+  mid-piece; Research is the supporting evidence beneath them.
+- **Canonical quote (flagship):** *"Every portfolio has two returns. The one it earns, and the one you
+  actually keep."*

@@ -115,8 +115,8 @@ Two standing rules from the numbers audit:
 | Why it exists | Honesty (the strategy does not claim drawdown protection) — but it communicates little to prospects |
 | Owner | Alec Messino |
 | Last verified | 2026-07-05 |
-| Review | Flagged by the numbers audit as one of the five weakest; **candidate for removal from the hub appendix line** (keep on the tearsheet). Pending owner decision |
-| Automated guard | `test_build_hub_reads_tearsheet_drawdown_headline` |
+| Review | **Retired from the hub** (2026-07) — a low-signal near-tie that communicated little to a prospect. Still shown on the tearsheet in context |
+| Automated guard | `test_hub_does_not_surface_the_low_signal_drawdown_headline` (asserts the hub no longer generates it) |
 
 ## 8 · State tax dataset (rates · estate cliffs · QSBS · munis · basis step-up · per-state recovery)
 

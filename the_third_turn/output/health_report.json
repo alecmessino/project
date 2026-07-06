@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-06T20:13:08+00:00",
+  "generated": "2026-07-06T20:28:12+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 48487,
+    "rows": 48549,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 11974,
-      "live_total": 5345,
-      "live_today": 28,
-      "last_row_age_min": 5.7
+      "rows_total": 11975,
+      "live_total": 5346,
+      "live_today": 29,
+      "last_row_age_min": 10.1
     },
     "fanduel": {
-      "rows_total": 36507,
-      "live_total": 1041,
-      "live_today": 92,
-      "last_row_age_min": 0.1
+      "rows_total": 36568,
+      "live_total": 1044,
+      "live_today": 95,
+      "last_row_age_min": 0.4
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 828.1
+      "last_row_age_min": 843.2
     }
   },
   "books_reporting_live": [
@@ -37,14 +37,14 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 5345,
-    "OPEN": 959,
+    "unset": 5346,
+    "OPEN": 962,
     "SUSPENDED": 80,
     "REMOVED": 2
   },
   "overlap": {
-    "simultaneous_pairs_total": 1094,
-    "simultaneous_pairs_today": 104,
+    "simultaneous_pairs_total": 1098,
+    "simultaneous_pairs_today": 108,
     "overlap_games": 15,
     "median_sync_lag_s": 639.0,
     "games_by_books_live": {
@@ -66,7 +66,7 @@
   "coverage": {
     "live_games_seen": 15,
     "book_panel_games": 32,
-    "team_total_rows": 2786,
+    "team_total_rows": 2787,
     "innings_seen": [
       1,
       2,
@@ -85,10 +85,10 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 1094,
+        "current": 1098,
         "target": 2000,
         "pass": false,
-        "progress": 0.547
+        "progress": 0.549
       },
       {
         "criterion": "games with live overlap",

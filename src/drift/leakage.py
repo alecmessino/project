@@ -87,7 +87,7 @@ _LEVERS = [
     {"name": "Asset location",
      "share": "household-specific",
      "desc": "Places the higher-turnover strategy in Roth and Traditional accounts, where its short-term "
-             "gains escape tax entirely; quantified for each household in the Tax Lab."},
+             "gains escape tax entirely; quantified for each household in the After-Tax Review."},
 ]
 
 

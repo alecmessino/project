@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Driftwood — Tax Lab</title>
+<title>Driftwood — After-Tax Review</title>
 <meta name="description" content="After-tax return, tax-loss-harvesting value, and the asset-location benefit — Structural Alpha from mechanical tax management, personalized by federal bracket and state. Research only, not tax advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/taxlab.html" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Driftwood — Tax Lab" />
+<meta property="og:title" content="Driftwood — After-Tax Review" />
 <meta property="og:description" content="After-tax return, tax-loss-harvesting value, and the asset-location benefit — Structural Alpha from mechanical tax management, personalized by federal bracket and state. Research only, not tax advice." />
 <meta property="og:url" content="https://alecmessino.github.io/project/taxlab.html" />
 <meta property="og:site_name" content="Driftwood" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/taxlab.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Driftwood — Tax Lab" />
+<meta name="twitter:title" content="Driftwood — After-Tax Review" />
 <meta name="twitter:description" content="After-tax return, tax-loss-harvesting value, and the asset-location benefit — Structural Alpha from mechanical tax management, personalized by federal bracket and state. Research only, not tax advice." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/taxlab.png" />
 <link rel="icon" href="favicon.svg" />
@@ -425,15 +425,15 @@
 <body>
 <div class="wrap">
   <div class="frame">
-    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — tax lab</span></div>
+    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — after-tax review</span></div>
     <nav class="dwnav" aria-label="Driftwood">
       <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
       <div class="dwnav-links">
         <a href="about.html">Our Story</a>
         <a href="thesis.html">How We Invest</a>
-        <a href="taxlab.html?view=prospect" aria-current="page">Tax&nbsp;Lab</a>
+        <a href="taxlab.html?view=prospect" aria-current="page">After-Tax&nbsp;Review</a>
         <a href="leakage.html">Tax&nbsp;Diagnostic</a>
-        <a href="statemap.html">State Tax Guide</a>
+        <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         <a href="insights.html">Insights</a>
       </div>
     </nav>
@@ -441,7 +441,7 @@
   <header>
     <div class="eyebrow">Private wealth</div>
     <div class="masthead">
-      <h1>Drift<span class="w">wood</span> <span class="sep">·</span> <span class="sub">Tax Lab</span></h1>
+      <h1>Drift<span class="w">wood</span> <span class="sep">·</span> <span class="sub">After-Tax Review</span></h1>
       <span class="hyp-pill">Illustrative modeling</span>
     </div>
     <p class="lede" id="lede"></p>
@@ -1239,7 +1239,7 @@ function submitLead(ev){
     _leadBusy=true;
     const btn=$("leadsend"); if(btn){ btn.disabled=true; btn.textContent="Sending…"; }
     const payload={email, state:st, portfolio:b.P, state_tax_30y:Math.round(b.stateTotal), total_tax_30y:Math.round(b.totalTotal),
-      _subject:`New Tax Lab lead — ${where}`};
+      _subject:`New After-Tax Review lead — ${where}`};
     Object.assign(payload, LEAD_UTM);                                   // campaign attribution (utm_*) into the lead email
     if(CONFIG.firmName) payload.from_name=CONFIG.firmName;               // tags the inbound notification (Web3Forms)
     payload[CONFIG.formHoneypot]=($("leadhp")&&$("leadhp").value)||"";   // Formspree _gotcha / Web3Forms botcheck

@@ -9,19 +9,19 @@
   window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
   plausible.init()
 </script>
-<title>Driftwood — The State Tax Map</title>
-<meta name="description" content="Fifty states, seven tax dimensions — capital gains, marriage, estate, munis, QSBS, losses, and basis step-up — plus the after-tax Structural Alpha our engine recovers from each state's tax code. Illustrative modeling, not advice." />
+<title>Driftwood — State Tax Atlas</title>
+<meta name="description" content="Fifty states, seven tax dimensions — capital gains, marriage, estate, munis, QSBS, losses, and basis step-up — plus the after-tax leakage a tax-managed portfolio can recover from each state's tax code. An interactive reference. Illustrative modeling, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/statemap.html" />
 <link rel="icon" href="favicon.svg" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
-<meta property="og:title" content="Driftwood — The State Tax Map" />
-<meta property="og:description" content="Fifty states, seven tax dimensions — capital gains, marriage, estate, munis, QSBS, losses, and basis step-up — plus the after-tax Structural Alpha our engine recovers from each state's tax code. Illustrative modeling, not advice." />
+<meta property="og:title" content="Driftwood — State Tax Atlas" />
+<meta property="og:description" content="Fifty states, fifty tax personalities — capital gains, marriage, estate, munis, QSBS, losses, and basis step-up, mapped state by state. An interactive reference. Illustrative modeling, not advice." />
 <meta property="og:url" content="https://alecmessino.github.io/project/statemap.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/statemap.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Driftwood — The State Tax Map" />
-<meta name="twitter:description" content="Fifty states, seven tax dimensions — capital gains, marriage, estate, munis, QSBS, losses, and basis step-up — plus the after-tax Structural Alpha our engine recovers from each state's tax code. Illustrative modeling, not advice." />
+<meta name="twitter:title" content="Driftwood — State Tax Atlas" />
+<meta name="twitter:description" content="Fifty states, fifty tax personalities — mapped state by state. An interactive reference." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/statemap.png" />
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
@@ -98,25 +98,25 @@
 <body>
 <div class="sheet">
   <div class="frame" id="frame">
-    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — the state tax map</span></div>
+    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — state tax atlas</span></div>
     <nav class="dwnav" aria-label="Driftwood">
       <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
       <div class="dwnav-links">
         <a href="about.html">Our Story</a>
         <a href="thesis.html">How We Invest</a>
-        <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+        <a href="taxlab.html?view=prospect">After-Tax&nbsp;Review</a>
         <a href="leakage.html">Tax&nbsp;Diagnostic</a>
-        <a href="statemap.html" aria-current="page">State Tax Guide</a>
+        <a href="statemap.html" aria-current="page">State&nbsp;Tax&nbsp;Atlas</a>
         <a href="insights.html">Insights</a>
       </div>
     </nav>
     <div class="hd">
-      <div class="eyebrow">The State Tax Guide</div>
-      <h1>Fifty states, fifty tax personalities</h1>
-      <p class="lede">How each state treats investment income, filing status, and estates, in one
-        interactive map — rates on gains, the marriage penalty, death taxes, municipal-bond interest,
-        the §1202 QSBS exclusion, and what happens to a harvested loss. The last tab is what our engine
-        is built to recover from all of it.</p>
+      <div class="eyebrow">The Fifty States</div>
+      <h1>State Tax Atlas</h1>
+      <p class="lede">Fifty states. Fifty tax personalities. How each one treats investment income, filing
+        status, and estates — rates on gains, the marriage penalty, death taxes, municipal-bond interest,
+        the §1202 QSBS exclusion, and what happens to a harvested loss. The last tab estimates how much of
+        all that a tax-managed portfolio can recover.</p>
     </div>
     <div class="tabs" id="tabs" role="tablist"></div>
     <div class="split">
@@ -168,7 +168,7 @@ function render(s){
     document.getElementById("frame").className = "frame" + (d.highlight?" frame-hl":"");
     tabs.querySelectorAll("button").forEach((b,i)=>b.setAttribute("aria-selected", i===active));
     document.getElementById("maptitle").innerHTML = d.title +
-      (d.highlight ? `<span class="syn">Structural Alpha — the recoverable tax leakage our engine targets, illustrative.</span>`:"");
+      (d.highlight ? `<span class="syn">Illustrative recoverable tax leakage — what Driftwood calls <b>Structural Alpha</b> internally, applied state by state.</span>`:"");
     const cmap = colorMap(d);
     // cartogram
     let maxc=0,maxr=0; for(const k in tiles){ maxc=Math.max(maxc,tiles[k][0]); maxr=Math.max(maxr,tiles[k][1]); }
@@ -237,7 +237,7 @@ function render(s){
   document.getElementById("foot").innerHTML =
     `<b>Educational — not tax, legal, or investment advice.</b> State tax treatment is summarized at a high `+
     `level for tax year 2025 and changes with legislation; confirm any figure with your CPA or attorney. The `+
-    `Structural Alpha dimension is <b>illustrative / hypothetical</b> modeling (no client capital was invested; `+
+    `Recoverable Tax Leakage dimension is <b>illustrative / hypothetical</b> modeling (no client capital was invested; `+
     `past performance does not guarantee future results) and is <b>not a forecast that any fund out-performs</b>; `+
     `your figure requires the personalized diagnostic.`+
     `<div style="margin-top:7px">Driftwood is a `+

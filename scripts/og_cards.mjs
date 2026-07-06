@@ -15,7 +15,7 @@ fs.mkdirSync(OUT, { recursive: true });
 
 const CARDS = {
   index:     ['Keep more of what you’ve earned.', 'Private wealth architecture — engineered beta and mechanical tax management.'],
-  taxlab:    ['The Tax Lab', 'After-tax return, asset location and tax-loss harvesting — by bracket and state.'],
+  taxlab:    ['After-Tax Review', 'After-tax return, asset location and tax-loss harvesting — by bracket and state.'],
   leakage:   ['Where your return leaks to tax', 'The Before / After on an identical exposure — your state’s illustrative number.'],
   statemap:  ['Fifty states, fifty tax personalities', 'Gains · marriage · death · munis · QSBS · losses · step-up — by state.'],
   concentration: ['How to de-risk a concentrated position', 'Selling · harvesting · hedging · deferring · giving — scored on the tradeoffs.'],

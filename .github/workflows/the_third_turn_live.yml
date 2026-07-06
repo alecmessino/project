@@ -52,7 +52,7 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Run daemon + checkpoint ledger + re-arm
+      - name: Run daemon + checkpoint ledger
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           ODDS_PAPI_KEY: ${{ secrets.ODDS_PAPI_KEY }}
@@ -69,6 +69,7 @@ jobs:
           TTPANEL="the_third_turn/output/team_total_panel.jsonl"
           GSPANEL="the_third_turn/output/game_state_panel.jsonl"
           START=$(date +%s)
+          echo "START=$START" >> "$GITHUB_ENV"   # hand off to the always() re-arm step
 
           HEALTH_TXT="the_third_turn/output/health_report.txt"
           HEALTH_JSON="the_third_turn/output/health_report.json"
@@ -77,7 +78,8 @@ jobs:
             # operational health report (integrity of the collection pipeline) every checkpoint
             python3 the_third_turn/collection_health.py >/dev/null 2>&1 || true
             git add "$LEDGER" 2>/dev/null || true
-            git add -f "$PANEL" "$TTPANEL" "$GSPANEL" "$HEALTH_TXT" "$HEALTH_JSON" 2>/dev/null || true
+            git add -f "$PANEL" "$TTPANEL" "$GSPANEL" "$HEALTH_TXT" "$HEALTH_JSON" \
+                       "the_third_turn/output/metrics_history.jsonl" 2>/dev/null || true
             git diff --cached --quiet && return 0
             git commit -q -m "ledger + odds/state panels + health checkpoint [skip ci]" || return 0
             for a in 1 2 3; do
@@ -114,15 +116,31 @@ jobs:
             fi
           fi
 
-          # re-arm only after a meaningful run, so a fast crash can't storm dispatches
-          ELAPSED=$(( ($(date +%s) - START) / 60 ))
+          # (re-arm lives in its own always() step below so it survives a cancellation)
+
+      - name: Re-arm collector (survives platform cancellation)
+        # SPOF FIX (2026-07-06 postmortem): the re-arm used to be the tail of the daemon step,
+        # so a platform shutdown/cancellation killed the step before it could relaunch, and with
+        # cron disabled nothing recovered. Running it in an always() step means a cancelled run
+        # still re-arms (GitHub runs always() steps during cancellation cleanup, as the 07-06 log
+        # showed). The >=60-min guard keeps a fast crash from storming dispatches; the ttt-live
+        # concurrency group collapses any double-dispatch to a single runner.
+        if: ${{ always() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAX_MINUTES: ${{ github.event.inputs.max_minutes || '330' }}
+        run: |
+          set -uo pipefail
+          ST="${START:-0}"
+          if [ "$ST" -eq 0 ]; then echo "no START recorded — skipping re-arm"; exit 0; fi
+          ELAPSED=$(( ($(date +%s) - ST) / 60 ))
           if [ "$ELAPSED" -ge 60 ]; then
             curl -sX POST \
               -H "Authorization: Bearer $GITHUB_TOKEN" \
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/the_third_turn_live.yml/dispatches" \
-              -d "{\"ref\":\"${BR}\",\"inputs\":{\"max_minutes\":\"${MAX_MINUTES}\"}}" || true
-            echo "re-armed after ${ELAPSED} min"
+              -d "{\"ref\":\"${GITHUB_REF_NAME}\",\"inputs\":{\"max_minutes\":\"${MAX_MINUTES}\"}}" || true
+            echo "re-armed after ${ELAPSED} min (job.status=${{ job.status }})"
           else
-            echo "ran only ${ELAPSED} min — NOT re-arming (avoids crash-loop dispatch storm)"
+            echo "ran only ${ELAPSED} min — NOT re-arming (crash-loop guard)"
           fi

@@ -275,10 +275,112 @@ def summary(R):
             f"integrity {'clean' if not warn else '/'.join(warn)}")
 
 
+HISTORY = OUT / "metrics_history.jsonl"
+
+
+def update_history(R):
+    """Upsert one row per UTC date into metrics_history.jsonl (latest snapshot of the day wins).
+
+    This is the objective data source for the daily report's Trend Dashboard: a compact,
+    append-only-per-day series, cheap enough to rewrite every checkpoint. It records health
+    and gate-progress metrics, not research signals."""
+    ig, o, g, c = R["integrity"], R["overlap"], R["SR1_gate"], R["coverage"]
+    row = {
+        "date": R["generated"][:10], "generated": R["generated"],
+        "book_panel_rows": ig["rows"],
+        "live_games_seen": c["live_games_seen"],
+        "team_total_rows": c["team_total_rows"],
+        "sim_pairs": o["simultaneous_pairs_total"],
+        "overlap_games": o["overlap_games"],
+        "median_sync_lag_s": o["median_sync_lag_s"],
+        "books_live": len(R["books_reporting_live"]),
+        "sr1_pct": round(g["overall_progress"] * 100),
+        "integrity_clean": not any((ig["malformed_json"], ig["missing_required_fields"],
+                                    ig["duplicate_rows"], ig["future_timestamps"])),
+        "fix_verified": R["fix_verification"]["verified"],
+    }
+    rows = [json.loads(ln) for ln in HISTORY.open()] if HISTORY.exists() else []
+    rows = [r for r in rows if r.get("date") != row["date"]]  # replace today's row
+    rows.append(row)
+    rows.sort(key=lambda r: r.get("date", ""))
+    HISTORY.write_text("\n".join(json.dumps(r, default=str) for r in rows) + "\n")
+    return row
+
+
+def trend():
+    """Day-over-day Trend Dashboard + overall trajectory (Improving / Stable / Regressing).
+
+    Trajectory is driven by health and gate-progress, never by cumulative growth (raw counts
+    only ever rise, so they are shown but do not vote). A broken integrity check, a lost
+    fix-verification, or a stalled collection (no new rows since the prior day) forces
+    Regressing regardless of the counters."""
+    if not HISTORY.exists():
+        return "no metrics history yet — the Trend Dashboard needs at least two UTC days."
+    rows = sorted((json.loads(ln) for ln in HISTORY.open()), key=lambda r: r.get("date", ""))
+    if len(rows) < 2:
+        return f"only one day of metrics history ({rows[0]['date'] if rows else '—'}); need a second day for a trend."
+    cur, prev = rows[-1], rows[-2]
+
+    # up-is-good vs down-is-good; cumulative counters are shown but excluded from the vote
+    UP = [("sr1_pct", "SR-1 progress %"), ("books_live", "books quoting live"),
+          ("overlap_games", "overlap games"), ("live_games_seen", "live games seen")]
+    DOWN = [("median_sync_lag_s", "median sync lag (s)")]
+    GROWTH = [("book_panel_rows", "book-panel rows"), ("sim_pairs", "simultaneous pairs"),
+              ("team_total_rows", "team-total rows")]
+
+    def arrow(d):
+        return "→ flat" if d == 0 else (f"▲ +{d}" if d > 0 else f"▼ {d}")
+
+    L = [f"TREND DASHBOARD  {prev['date']} → {cur['date']}", "-" * 52]
+    votes = 0
+    for key, label in UP:
+        a, b = prev.get(key), cur.get(key)
+        if a is None or b is None:
+            continue
+        d = b - a
+        votes += (d > 0) - (d < 0)
+        L.append(f"  {label:24s} {a} → {b}   {arrow(d)}")
+    for key, label in DOWN:
+        a, b = prev.get(key), cur.get(key)
+        if a is None or b is None:
+            L.append(f"  {label:24s} {a} → {b}")
+            continue
+        d = b - a
+        votes += (d < 0) - (d > 0)  # down is good
+        L.append(f"  {label:24s} {a} → {b}   {arrow(d)}")
+    L.append("  " + "- " * 20)
+    for key, label in GROWTH:
+        a, b = prev.get(key), cur.get(key)
+        L.append(f"  {label:24s} {a} → {b}   (+{(b or 0) - (a or 0)})")
+    L.append(f"  {'integrity':24s} {'clean' if cur.get('integrity_clean') else 'BROKEN'}")
+    L.append(f"  {'fix v1.1 verification':24s} {'VERIFIED' if cur.get('fix_verified') else 'PENDING/LOST'}")
+
+    stalled = cur.get("book_panel_rows") == prev.get("book_panel_rows")
+    if not cur.get("integrity_clean"):
+        traj, why = "REGRESSING", "integrity check broke"
+    elif not cur.get("fix_verified"):
+        traj, why = "REGRESSING", "fix-verification lost"
+    elif stalled:
+        traj, why = "REGRESSING", "collection stalled (no new rows since prior day)"
+    elif votes > 0:
+        traj, why = "IMPROVING", f"gate/health net +{votes}"
+    elif votes < 0:
+        traj, why = "REGRESSING", f"gate/health net {votes}"
+    else:
+        traj, why = "STABLE", "no net gate/health movement"
+    L.append("-" * 52)
+    L.append(f"  TRAJECTORY: {traj}  ({why})")
+    return "\n".join(L)
+
+
 def main():
+    if "--trend" in sys.argv:
+        print(trend())
+        return 0
     R = analyse()
     (OUT / "health_report.json").write_text(json.dumps(R, indent=2, default=str))
     (OUT / "health_report.txt").write_text(render(R) + "\n")
+    update_history(R)
     print(summary(R) if "--summary" in sys.argv else render(R))
     return 0
 

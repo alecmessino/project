@@ -1,8 +1,8 @@
 """Guards for the multi-dimension State Tax Map (statemap.py + statemap.html).
 
 Seven FACTUAL regime dimensions per state (income & gains · marriage · death · munis · QSBS · losses ·
-basis step-up) plus a highlighted Structural-Alpha synthesis tab. These tests lock dataset coverage +
-correctness, the no-fabrication boundaries (Structural Alpha only where we own the figure; a "Prove it"
+basis step-up) plus a descriptive Tax Management Impact dimension. These tests lock dataset coverage +
+correctness, the no-fabrication boundaries (the impact figure only where we own it; a "Prove it"
 statutory citation only where the exact code section is verified), and the compliance framing. The site
 copy/design is our own; we still refuse to reuse the third party's brand name or assets.
 """
@@ -20,7 +20,9 @@ def test_dataset_shape_and_dimension_order():
     json.dumps(s)                                              # JSON-able for embedding
     assert [d["key"] for d in s["dimensions"]] == \
         ["cg", "marriage", "estate", "muni", "qsbs", "loss", "stepup", "alpha"]
-    assert s["dimensions"][-1]["key"] == "alpha" and s["dimensions"][-1].get("highlight") is True
+    # the 8th is a peer reference dimension now (Tax Management Impact) — no longer a highlighted synthesis
+    assert s["dimensions"][-1]["key"] == "alpha"
+    assert not any(d.get("highlight") for d in s["dimensions"])
     assert len(s["states"]) == 56                             # 50 + DC + 5 territories
 
 

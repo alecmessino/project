@@ -100,7 +100,7 @@ globalThis.__run = async () => {
   document.getElementById('state').value = 'IL';
   buildSmTabs();
   const tabs = document.getElementById('smtabs').innerHTML;
-  out.tabs_built = /data-k="estate"/.test(tabs) && /data-k="alpha"/.test(tabs) && /class="hl"/.test(tabs);
+  out.tabs_built = /data-k="estate"/.test(tabs) && /data-k="alpha"/.test(tabs);
   MAPDIM = 'estate'; buildMap();
   out.map_recolors = document.getElementById('usmap').innerHTML.includes('fill="#15806a"');   // IL estate -> teal
   renderDisc(rates());
@@ -124,7 +124,7 @@ function staticFlow() {
     portfolio_tracked: t.includes('portfolio_adjusted'),                                          // lead-gen slider funnel event
     leadstate_markup: t.includes('id="leadstate"'),
     leadstate_wired: t.includes('buildLeadStates(') && t.includes('paintLeadSel('),   // chip grid wired via the shared handler
-    leadstate_mobile_css: t.includes('body.lead .leadstate'),
+    leadstate_mobile_css: t.includes('body.on-review .leadstate'),
     ui_tokens: shim.cssText().includes('--s4:16px') && shim.cssText().includes('--t-mid'),   // tokens now live in driftwood.css
     reduced_motion: t.includes('prefers-reduced-motion'),
   };

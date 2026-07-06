@@ -14,12 +14,12 @@ ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 OUT = ROOT / "artifacts" / "shots"
 
-# (label, file, query) — taxlab is captured at all four views with populated state.
+# (label, file, query) — the After-Tax Review is captured at its working-paper sections with populated state.
 PAGES = [
-    ("taxlab-advisor", "taxlab.html", "?view=advisor&state=IL"),
-    ("taxlab-estate", "taxlab.html", "?view=estate&state=IL"),
-    ("taxlab-strategy", "taxlab.html", "?view=strategy&state=IL"),
-    ("taxlab-lead", "taxlab.html", "?view=lead&state=IL&port=2000000"),
+    ("taxlab-portfolio", "taxlab.html", "?view=portfolio&state=IL"),
+    ("taxlab-recs", "taxlab.html", "?view=recs&state=IL"),
+    ("taxlab-state", "taxlab.html", "?view=state&state=IL"),
+    ("taxlab-review", "taxlab.html", "?view=review&state=IL&port=2000000"),
     ("leakage", "leakage.html", ""),
     ("ledger", "ledger.html", ""),
     ("thesis", "thesis.html", ""),

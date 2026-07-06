@@ -124,7 +124,7 @@
       <div class="dwnav-links">
         <a href="about.html">Our Story</a>
         <a href="thesis.html">How We Invest</a>
-        <a href="taxlab.html?view=prospect">After-Tax&nbsp;Review</a>
+        <a href="taxlab.html">After-Tax&nbsp;Review</a>
         <a href="leakage.html" aria-current="page">Tax&nbsp;Diagnostic</a>
         <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         <a href="insights.html">Insights</a>
@@ -174,8 +174,8 @@
         <div class="cd">The full After-Tax&nbsp;Review computes your after-tax, asset-location, and harvesting picture — personalized by bracket and state.</div>
       </div>
       <div class="btns">
-        <a class="primary" id="cta-analysis" href="taxlab.html?view=prospect">Run my analysis →</a>
-        <a class="ghost" id="cta-book" href="taxlab.html?view=prospect">Book a 15-min intro</a>
+        <a class="primary" id="cta-analysis" href="taxlab.html?view=review">Run my analysis →</a>
+        <a class="ghost" id="cta-book" href="taxlab.html?view=review">Book a 15-min intro</a>
       </div>
     </div>
 
@@ -247,7 +247,7 @@ function render(s){
   const fwd = new URLSearchParams();
   ["state","port","portfolio","utm_source","utm_medium","utm_campaign","utm_term","utm_content"]
     .forEach(k=>{ const v=qp.get(k); if(v) fwd.set(k,v); });
-  const tl = "taxlab.html?view=prospect" + (fwd.toString()?("&"+fwd.toString()):"");
+  const tl = "taxlab.html?view=review" + (fwd.toString()?("&"+fwd.toString()):"");
   const ca = document.getElementById("cta-analysis"); if(ca) ca.href = tl;
   const cb = document.getElementById("cta-book"); if(cb) cb.href = tl;
   // Funnel continuity: count click-throughs from the diagnostic into the After-Tax Review prospect flow.

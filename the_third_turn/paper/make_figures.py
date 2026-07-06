@@ -110,9 +110,9 @@ def fig2_graveyard():
     for s in ax.spines.values():
         s.set_visible(False)
     ax.grid(False)
-    ax.set_title("Sequential elimination of candidate public-information hypotheses",
+    ax.set_title("Each public-information candidate, tested against the market forecast",
                  pad=26, fontsize=12)
-    legend = [Patch(facecolor=fs.PASS, label="cleared this gate"),
+    legend = [Patch(facecolor=fs.PASS, label="cleared this test"),
               Patch(facecolor=fs.FAIL, label="failed here"),
               Patch(facecolor=fs.GRID, label="not reached")]
     ax.legend(handles=legend, loc="upper center", bbox_to_anchor=(0.5, -0.04),

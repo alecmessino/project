@@ -1,5 +1,5 @@
 <div class="titleblock">
-<h1>Forecast Encompassing as a Test of Predictive Signals: Evidence from Live MLB Totals Markets</h1>
+<h1>The Efficient Frontier of Public Information: Evidence from High-Frequency Sports Betting Markets</h1>
 <p class="epigraph">This paper asks whether publicly observable baseball information predicts outcomes, or merely predicts what the market already knows.</p>
 <p class="author">Alec Messino<br/><span class="affil">The Third Turn Research Initiative &middot; alec.messino@gmail.com</span></p>
 <p class="wp">Working Paper &middot; July 2026 &middot; Comments welcome</p>
@@ -10,27 +10,33 @@ committed caches. Build the PDF with python3 paper/build_pdf.py. -->
 
 ## Abstract
 
-Live, in-play wagering is a large and growing share of sports betting volume, yet the market
-efficiency literature remains concentrated on pregame prices. The calibration of live markets, and
-their incorporation of in-game information, are comparatively unstudied. We ask a single question:
-do publicly observable baseball state variables contain incremental predictive information about
-remaining runs, beyond the forecast embedded in a sharp live betting market? Using 163 Major League
-Baseball games from June 2026, with one-minute live total trajectories from a sharp book,
-pitch-level measurement, and full play-by-play, we subject a battery of popular hypotheses (times
-through the order, velocity decline, bullpen fatigue, line-drop reversion, alternate-line skew,
-early-run anchoring, weather, and park effects) to a sequence of increasingly demanding tests,
-ending in a forecast encompassing test against the market itself. No variable survives. The
-market's forecast error is not predictable from any variable we measure (out-of-sample R² of
-−0.037; a Clark-West nested comparison does not favor the augmented model), and the design has
-enough power to rule out moderate incremental information. An apparent velocity signal turns out to
-be selection bias. An event-level transfer function shows the line responding to information shocks
-by an approximately uniform magnitude. At the one-minute, single-book resolution of our data, we
-find no evidence of exploitable public-information inefficiency, and we characterize that boundary
-precisely. We release the Third Turn Protocol, a sequential validation ladder assembled from
-standard forecast evaluation tools, and an accompanying benchmark dataset.
+How completely does a high-frequency market capitalize public information? Live, in-play sports
+betting offers an unusually clean setting in which to ask, because information arrives as discrete,
+well-valued events, prices update continuously, and every contract reaches a known terminal payoff
+within hours. Yet the market efficiency literature remains concentrated on pregame prices, leaving
+the calibration of live markets and their incorporation of in-game information comparatively
+unstudied. We treat a sharp live betting line as an incumbent forecast and apply the Chong and
+Hendry (1986) forecast encompassing framework: a public variable earns its place only if it
+improves on the market's own forecast of remaining runs, not merely if it predicts the outcome.
+Using 163 Major League Baseball games from June 2026, with one-minute live total trajectories,
+pitch-level measurement, and full play-by-play, we test whether any publicly observable baseball
+state variable (times through the order, velocity decline, bullpen fatigue, line-drop reversion,
+alternate-line skew, early-run anchoring, weather, park) carries information the market has not
+already priced. None does. The market's forecast error is not predictable out of sample from any
+variable we measure (R² of −0.037; a Clark-West nested comparison does not favor the augmented
+model), and the design has power to rule out moderate incremental information. The one variable
+that appears to beat the market, a starter's velocity decline, is shown to be post-treatment
+selection bias: its apparent predictive power collapses to a coin flip once measured before the
+outcome selects the sample. An event-level transfer function shows the line absorbing each
+information shock by an approximately uniform magnitude, consistent with proportional
+capitalization. We name the resulting boundary the efficient frontier of public information, the
+point at which additional public variables stop improving on the market forecast, and we
+characterize it precisely at the one-minute, single-book resolution of our data. We release the
+Third Turn Protocol, a sequential validation ladder built from standard forecast-evaluation tools,
+and an accompanying benchmark dataset.
 
-*Keywords:* market efficiency; in-play betting; forecast encompassing; calibration; incremental
-information; reproducible benchmark.
+*Keywords:* market efficiency; high-frequency betting markets; forecast encompassing; incremental
+information; public-information capitalization; calibration; reproducible benchmark.
 *JEL codes:* C53 (forecasting), G14 (information and market efficiency), Z23 (sports economics).
 
 ---
@@ -48,15 +54,20 @@ incorporation rather than a one-shot verdict. Whether live markets efficiently a
 observable information generated during a game, and how one would even test such a claim, remains
 largely open.
 
-Baseball is an unusually good laboratory for the question. The game unfolds as a sequence of
-discrete events with well-established run values (the RE24 base-out run expectancy table and
-linear weights), so the informational content of each event can be quantified rather than
-estimated. Pitch-level measurement makes within-game state observable in fine detail: velocity,
-pitch count, times through the order. And the sport carries a rich stock of public prior belief,
-most prominently the times-through-order penalty (Tango, Lichtman, and Dolphin, 2007), the widely
-held view that a starting pitcher degrades sharply the third time he faces a lineup. If the live
-market underprices that deterioration, the live Over is a profitable bet. This belief is our
-entry point: concrete, popular, and plausible.[^1]
+Baseball is an unusually clean laboratory for the question, and for much the same reasons that have
+long drawn financial economists to betting markets (Thaler and Ziemba, 1988; Sauer, 1998). Each
+contract reaches an unambiguous terminal payoff within hours, so there is a ground truth against
+which every forecast can be scored, without the discounting, horizon, and never-realized-fundamental
+problems that complicate the same test in equities. The game unfolds as a sequence of discrete
+events with well-established run values (the RE24 base-out run expectancy table and linear weights),
+so the informational content of each event can be quantified rather than estimated. Pitch-level
+measurement makes within-game state observable in fine detail: velocity, pitch count, times through
+the order. In this setting the efficiency question sharpens to a concrete one, how completely and
+how quickly a live price capitalizes the public information the game generates. The sport also
+carries a rich stock of public prior belief, most prominently the times-through-order penalty
+(Tango, Lichtman, and Dolphin, 2007), the widely held view that a starting pitcher degrades sharply
+the third time he faces a lineup. If the live market underprices that deterioration, the live Over
+is a profitable bet. This belief is our entry point: concrete, popular, and plausible.[^1]
 
 [^1]: We came to the question honestly. The project began as an attempt to trade the
 times-through-order penalty, and the data infrastructure behind this paper was originally built to
@@ -77,20 +88,23 @@ boundary at which publicly observable baseball information stops adding value be
 We map that boundary and bind it to the conditions under which it was measured: 163 games in a
 single month, at one-minute cadence, from a single sharp-book feed.
 
-This paper makes three contributions. First, an empirical one: for a battery of publicly
-observable baseball variables (times through the order, velocity decline, bullpen fatigue,
-line-drop reversion, alternate-line skew, early-run anchoring, weather, and park), we show that
-none provides incremental predictive information about remaining runs once conditioned on the
-live market forecast, and we locate the point at which each candidate is eliminated. Second, a
-methodological one: the individual tools are standard, and our contribution is their integration
-into a single escalating protocol, the Third Turn Protocol (signal, robustness, out of sample,
-debiasing, conditional testing, forecast encompassing, transfer function), which shifts the burden
-of proof from demonstrating prediction to demonstrating incremental information beyond an existing
-forecast. The protocol applies to any market with a sharp public forecast and observable state.
-Third, an infrastructure contribution: we release the cleaned data and feature schema as the Third
-Turn Benchmark Dataset (v1), with reference implementations that operationalize the protocol, so
-that future hypotheses can be evaluated against the same yardstick rather than rebuilt from
-scratch.
+This paper makes three contributions. The first is empirical: using forecast encompassing to
+condition on the market's own forecast, we map the efficient frontier of public information for
+live baseball totals and find that it binds tightly. No publicly observable baseball variable we
+test (times through the order, velocity decline, bullpen fatigue, line-drop reversion,
+alternate-line skew, early-run anchoring, weather, park) improves on the sharp live forecast of
+remaining runs; the market's forecast error is not predictable from any of them out of sample. The
+most instructive case is velocity decline, the one variable that appears to beat the market until
+it is exposed as an artifact of post-treatment selection, a result we develop in detail because it
+shows precisely how raw prediction misleads. The second contribution is methodological: the
+individual tools are standard, and our contribution is their integration into a single escalating
+protocol, the Third Turn Protocol (signal, robustness, out of sample, debiasing, conditional
+testing, forecast encompassing, transfer function), which shifts the burden of proof from
+demonstrating prediction to demonstrating incremental information beyond an existing forecast. The
+protocol applies to any market with a sharp public forecast and observable state. The third is
+infrastructure: we release the cleaned data and feature schema as the Third Turn Benchmark Dataset
+(v1), with reference implementations that operationalize the protocol, so that future hypotheses
+can be evaluated against the same yardstick rather than rebuilt from scratch.
 
 The remainder of the paper is organized around one question, which every section serves: do
 publicly observable baseball state variables contain incremental predictive information about
@@ -303,8 +317,11 @@ the original feeds.
 
 ## 4. Results
 
-Figure 4 answers the research question directly. The remaining figures explain why the answer
-takes the form it does.
+The result is organized around a single test. We treat the sharp live line as the incumbent
+forecast and ask, following Chong and Hendry (1986), whether any public variable improves on it.
+Figure 4 answers that question directly; the remaining figures explain why the answer takes the
+form it does, and one of them, the velocity case in Figure 5, shows in miniature how a variable can
+predict the outcome and still add nothing to the price.
 
 Figure 4 shows that publicly observable baseball variables provide no measurable incremental
 predictive information beyond the live market. Across 2,505 half-inning snapshots, a
@@ -331,49 +348,55 @@ improving a forecast that already reflects everything the market knows.
 out-of-sample R² by −0.017. Right: each feature's individual incremental R² beyond the market;
 bars inside the 0.003 band are drawn in neutral gray.
 
-Figure 2 shows that this boundary is a property of the entire battery, not of one unlucky
-variable. The figure arranges ten candidate hypotheses from the public handicapping tradition
-(times through the order, velocity decline, bullpen fatigue multipliers, drop reversion in both
-directions, alternate-line skew, early-run anchoring, weather and park context, a remaining-runs
-fatigue term, and the joint encompassing test) against five escalating gates: initial signal,
-robustness, out of sample, market test, verdict. The pattern of elimination is the finding.
-Several hypotheses clear an in-sample signal, fewer survive robustness, fewer still survive
-out-of-sample validation, and none clears the market test. Because the fatal gate varies by row
-(times through the order and the velocity signal die at robustness, drop reversion and the joint
-test at out of sample, the context hypotheses at the market test), no single artifact, whether a
-coding error, one anomalous month, or one misspecified model, is a plausible common cause. The
-complete battery, with each hypothesis's motivation and mode of elimination, appears in Appendix
-Table A1.
+Figure 2 shows that this boundary is a property of the whole class of public variables, not an
+accident of one unlucky choice. It arranges the candidate hypotheses from the public handicapping
+tradition (times through the order, velocity decline, bullpen fatigue multipliers, drop reversion
+in both directions, alternate-line skew, early-run anchoring, weather and park context, a
+remaining-runs fatigue term, and the joint encompassing test) against the successive tests each was
+put to: initial signal, robustness, out of sample, and the market test, with the verdict in the
+final column. What matters is not the tally but where the candidates fall. The fatal test varies by
+row, times through the order and the velocity signal at robustness, drop reversion and the joint
+model out of sample, the context variables at the market test, so that no single artifact, whether
+a coding error, one anomalous month, or one misspecified model, can be the common cause. The
+encompassing boundary is reached by many independent routes, which is the sense in which it is a
+property of the market rather than of any one variable. The full list, with each hypothesis's
+motivation and mode of elimination, appears in Appendix Table A1.
 
 ![](figures/hypothesis_elimination.png)
 
-**Figure 2.** Sequential elimination of candidate public-information hypotheses across five
-escalating gates. Green: cleared this gate. Red: failed here. Gray: not reached.
+**Figure 2.** Where each public-information candidate fails relative to the market forecast, across
+successive tests. Green: cleared this test. Red: failed here. Gray: not reached.
 
-Figure 3 states the attrition as a funnel. Of ten hypotheses tested, nine produce a detectable
-in-sample association with runs, three survive out-of-sample validation, and zero add information
-beyond the market or clear a profitability threshold. The collapse between three and zero is the
-pivot of the paper: predicting runs is common, and predicting the market's error is the wall.[^2]
-The funnel counts are derived directly from the Figure 2 matrix, so the two figures cannot
-disagree.
+Figure 3 restates the same evidence as a funnel, and isolates the one transition that carries the
+paper's economic content. Nine of the ten candidates produce a detectable in-sample association
+with runs, three survive out-of-sample validation, and none adds information beyond the market. The
+collapse at the final step, from variables that predict runs to variables that improve the price,
+is the distinction the encompassing test exists to draw: predicting runs is common, predicting a
+sharp market's error is the wall.[^2] The counts derive directly from the Figure 2 classification,
+so the two figures cannot disagree.
 
 [^2]: Predicting runs is not hard. Predicting runs better than a firm that prices them for a
 living, and doing so after the vig, is a different occupation.
 
 ![](figures/incremental_information_funnel.png)
 
-**Figure 3.** The incremental information funnel. Counts derive from the Figure 2 matrix.
+**Figure 3.** The incremental-information funnel: from predicting runs to improving the price.
+Counts derive from the Figure 2 classification.
 
-Figure 5 explains why one hypothesis looked alive longer than the others, and in doing so
-illustrates a general statistical principle. A model that adds the starter's velocity decline,
-measured from the first to the third time through the order, raises the out-of-sample AUC for the
-event "team scores more than 4.5 runs" from a baseline of 0.420 to 0.610. That looks like a large
-gain. But the velocity-drop variable is post-treatment: it is defined only for starters who
-survived long enough to face the order a third time, which is to say, precisely the starters
-already being hit. Re-measuring velocity decline in a pre-treatment window (the first twenty
-pitches versus the next twenty) collapses the AUC to 0.524, and its confidence interval straddles
-the 0.500 coin-flip line. The apparent signal was survivorship, not fatigue. This is exactly the
-class of artifact the debiasing rung exists to catch.
+Figure 5 develops the velocity case at length, because it is the clearest illustration in the
+study of how a variable can predict an outcome and still be worthless against the market, and
+because catching it is the single most important thing the protocol does. A model that adds the
+starter's velocity decline, measured from the first to the third time through the order, raises the
+out-of-sample AUC for the event "team scores more than 4.5 runs" from a baseline of 0.420 to 0.610.
+Taken at face value that is a large edge, and a study that stopped at out-of-sample prediction, as
+much betting research does, would report it as one. But the velocity-drop variable is
+post-treatment: it is defined only for starters who survived long enough to face the order a third
+time, which is to say, precisely the starters already being hit. Re-measuring velocity decline in a
+pre-treatment window (the first twenty pitches versus the next twenty) collapses the AUC to 0.524,
+with a confidence interval that straddles the 0.500 coin-flip line. The apparent signal was
+survivorship, not fatigue. This is exactly the class of artifact the debiasing rung exists to
+catch, and it is why the protocol places debiasing before the market test rather than after: a
+variable disqualified as a selection artifact never reaches the encompassing stage at all.
 
 ![](figures/velocity_post_treatment_bias.png)
 
@@ -488,7 +511,10 @@ discipline whatsoever.
 
 We give the boundary a name: the efficient frontier of public information, the point at which
 additional publicly observable variables stop improving prediction once the market forecast is
-conditioned on. Inside the frontier lie the observable baseball variables, pitch count, starter
+conditioned on. It is the live-market analogue of the classical statement of semi-strong
+efficiency, that price already reflects all public information, made operational as a forecast
+comparison rather than an event study and measured at the frequency at which the information
+actually arrives. Inside the frontier lie the observable baseball variables, pitch count, starter
 quality, bullpen, park, weather, velocity, times through the order, all of which the market
 encompasses. Outside it lie the dimensions our data cannot reach: the timing of price formation,
 disagreement across books, and the evolution of the full implied distribution rather than its
@@ -588,7 +614,7 @@ the boundary has proved the more useful.
 
 ---
 
-## Appendix A. The full hypothesis battery
+## Appendix A. The full list of candidate hypotheses
 
 Referenced from Section 4; Figure 2 is the main-text representation.
 
@@ -709,6 +735,9 @@ Sutton-Brown, S. (2023). "The Value of Relative Velocity." *Baseball Prospectus*
 
 Tango, T., M. Lichtman, and A. Dolphin (2007). *The Book: Playing the Percentages in Baseball.*
 Potomac Books.
+
+Thaler, R. H., and W. T. Ziemba (1988). "Anomalies: Parimutuel Betting Markets: Racetracks and
+Lotteries." *Journal of Economic Perspectives* 2(2): 161-174.
 
 West, K. D. (1996). "Asymptotic Inference About Predictive Ability." *Econometrica* 64(5):
 1067-1084.

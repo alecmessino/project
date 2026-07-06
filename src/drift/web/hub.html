@@ -171,7 +171,7 @@
       <div class="dwnav-links">
         <a href="about.html">Our Story</a>
         <a href="thesis.html">How We Invest</a>
-        <a href="taxlab.html?view=prospect">After-Tax&nbsp;Review</a>
+        <a href="taxlab.html">After-Tax&nbsp;Review</a>
         <a href="leakage.html">Tax&nbsp;Diagnostic</a>
         <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         <a href="insights.html">Insights</a>
@@ -189,7 +189,7 @@
         <p class="cta-lead">Before we ever recommend an investment, we answer a simpler one: where is your
           wealth leaking today?</p>
         <div class="ctas">
-          <a class="primary" href="taxlab.html?view=prospect">See your after-tax number →</a>
+          <a class="primary" href="taxlab.html">See your after-tax number →</a>
           <a class="ghost" href="thesis.html">How we invest</a>
         </div>
         <div class="trust">
@@ -298,7 +298,7 @@ function render(s){
       <div class="t">${e.title} <span class="arrow" aria-hidden="true">→</span></div>
       <div class="d">${e.desc}</div></a>`;
   document.getElementById("exhibits").innerHTML = exs.filter(e=>!e.appendix).map(exHTML).join("")
-    + `<a class="ex" href="taxlab.html?view=prospect" style="grid-column:1 / -1">
+    + `<a class="ex" href="taxlab.html" style="grid-column:1 / -1">
         <div class="t">Book a 15-min diagnostic <span class="arrow" aria-hidden="true">→</span></div>
         <div class="d">See your own after-tax number — by bracket, state, and portfolio. The fastest path from the research to your plan.</div></a>`;
   const appendix = exs.filter(e=>e.appendix);
@@ -317,7 +317,7 @@ async function load(){
   if(s){ render(s); return; }
   // Visible failure instead of a silent blank hub — the static nav above still works.
   var ex=document.getElementById("exhibits");
-  if(ex) ex.innerHTML='<a class="ex" href="taxlab.html?view=prospect" style="grid-column:1 / -1">'+
+  if(ex) ex.innerHTML='<a class="ex" href="taxlab.html" style="grid-column:1 / -1">'+
     '<div class="t">Couldn’t load the model figures <span class="arrow" aria-hidden="true">→</span></div>'+
     '<div class="d">Refresh the page, or open the After-Tax Review to compute your own after-tax number. '+
     'Use the navigation above to explore the rest of Driftwood.</div></a>';

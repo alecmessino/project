@@ -1,7 +1,8 @@
 """The multi-dimension State Tax Map dataset — single source of truth for the cartogram.
 
 Seven *factual* regime dimensions per state (each colored on the map, with original detail copy written
-fresh from the facts) plus a HIGHLIGHTED Structural-Alpha synthesis tab:
+fresh from the facts) plus a descriptive eighth dimension — how much a state's tax rules can affect a
+tax-managed portfolio:
 
   1. Income & gains  — top effective long-term rate + conformity (no-tax / conforming / non-conforming /
                        expiring / long-term-only).
@@ -13,14 +14,15 @@ fresh from the facts) plus a HIGHLIGHTED Structural-Alpha synthesis tab:
   6. Losses          — capital-loss carryforward: federal §1212 / expires / none / no-tax / n/a.
   7. Basis step-up   — marital-property regime (community / opt-in trust / common law + UDCPRDA /
                        common law) governing the IRC 1014 step-up.
-  ★ Structural Alpha — the HIGHLIGHTED synthesis: `leakage.STATE_ALPHA`, the illustrative recoverable
-                       tax leakage our engine targets given everything above. Diagnostic-gated.
+  8. Tax mgmt impact — a descriptive estimate (from `leakage.STATE_ALPHA`) of how much a state's tax
+                       rules can affect a tax-managed portfolio, given everything above. Illustrative,
+                       diagnostic-gated; a reference dimension, not a product claim.
 
 Per-state classifications, effective rates, and exemptions are settled public-domain tax facts
 (tax year 2025); they are stated here in our own words. A per-dimension "Prove it" statutory citation
 is attached ONLY where the exact code section has been independently verified (Illinois today); every
 other state carries a generic source line until its statute is checked — we do not fabricate cites.
-Structural-Alpha values trace to our own `STATE_ALPHA`; that dimension is illustrative/hypothetical.
+The Tax Management Impact values trace to our own `STATE_ALPHA`; that dimension is illustrative/hypothetical.
 """
 
 from __future__ import annotations
@@ -308,7 +310,7 @@ def _attach_citations(code, rec):
     return rec
 
 
-# ── 8 · Structural Alpha (highlighted) ────────────────────────────────────────────────────────────
+# ── 8 · Tax Management Impact (descriptive reference dimension) ─────────────────────────────────────
 _ALPHA_BUCKETS = [(3.8, "a"), (4.0, "b"), (4.3, "c"), (4.5, "d"), (99, "e")]
 
 
@@ -344,11 +346,10 @@ DIMENSIONS = [
     {"key": "stepup", "label": "Basis step-up", "title": "Marital property & the basis step-up",
      "legend": [("common", "#d8cfbc", "Common law"), ("udcprda", "#7faa97", "Common law + UDCPRDA"),
                 ("optin", "#c1a35b", "Opt-in community trust"), ("community", "#15806a", "Community property")]},
-    {"key": "alpha", "label": "Recoverable Tax Leakage",
-     "title": "What a tax-managed portfolio can recover from all of it",
-     "highlight": True,
+    {"key": "alpha", "label": "Tax Management Impact",
+     "title": "How much a state's tax rules can affect a tax-managed portfolio",
      "legend": [("a", "#cfe0d6", "lower"), ("b", "#9ec9b6", ""), ("c", "#5ea98c", ""),
-                ("d", "#2f8467", ""), ("e", "#15604a", "higher recovery")]},
+                ("d", "#2f8467", ""), ("e", "#15604a", "higher impact")]},
 ]
 
 
@@ -379,10 +380,10 @@ def _state_record(code):
         rec["alpha"] = {
             "regime": _alpha_bucket(a["alpha"]), "tag": f"+{a['alpha']:.1f}",
             "value": a["alpha"], "before": a["before"], "after": a["after"],
-            "note": (f"Illustrative recoverable tax leakage for a portfolio in {nm}: up to ~+{a['alpha']:.1f}%/yr "
-                     f"after tax in our modeling (a concentrated, naive book keeps ~{a['before']:.1f}%/yr vs "
-                     f"~{a['after']:.1f}%/yr tax-managed). Your actual figure depends on your holdings — the "
-                     f"diagnostic computes it."),
+            "note": (f"Illustrative estimate of how much {nm}'s tax rules can affect a tax-managed portfolio: "
+                     f"about ~{a['alpha']:.1f}%/yr after tax in our modeling (a concentrated, naive book keeps "
+                     f"~{a['before']:.1f}%/yr vs ~{a['after']:.1f}%/yr tax-managed). Your actual figure depends "
+                     f"on your holdings — the diagnostic computes it."),
             "source": "scripts/tax_alpha.py · 30y window (1996–2026). Illustrative, hypothetical — diagnostic-gated.",
             "deeplink": f"leakage.html?state={code}",
         }

@@ -57,6 +57,23 @@ Its two corollaries:
 - Never quote a firm performance figure inside a piece — that belongs to the research layer, under the
   Evidence Register.
 
+## Canonical definitions
+
+A firm's vocabulary is only as strong as its consistency. A term defined twice is a term defined never.
+The definitions below are canonical: every page, essay, and tool *references* them and never restates or
+re-scopes them.
+
+- **Structural Alpha** is the cumulative benefit of implementation decisions — *not* market prediction —
+  including asset location, tax-loss harvesting, withdrawal sequencing, lot management, and similar
+  structural choices. It has one home for each job: named once on the homepage, **calculated** in the
+  After-Tax Review, **explained** in How We Invest, and kept off The State Atlas (which is reference, and
+  describes state-tax *impact*, not a product).
+
+Named works — **The State Atlas**, *Every Portfolio Has Two Returns*, and the pieces of the Canon — are
+capitalized and read as titles. The Atlas keeps its literal handle in nav and browser title ("State Tax
+Atlas") for context and search; in prose it is always **The State Atlas**. See the Style Guide for the
+full naming discipline.
+
 ## The tests every piece must pass before it ships
 
 1. **The Housel test.** Would this be worth reading with Driftwood's name removed? If yes, keep it. If it

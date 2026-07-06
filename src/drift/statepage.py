@@ -1,16 +1,18 @@
 """Per-state SEO landing pages — the organic-search front door to the funnel.
 
 Each of the 50 states + DC gets its own **server-side-rendered** page (content baked into the HTML,
-not JS-rendered like the interactive exhibits) so search engines index the state's real tax facts and
-the illustrative Structural-Alpha number. The content is assembled entirely from existing sources of
-truth — `statemap._state_record` (the 5-dimension dataset) and `leakage.STATE_ALPHA` — so a state page
-can never disagree with the map or the diagnostic.
+not JS-rendered like the interactive exhibits) so search engines index the state's real tax facts.
+These are reference pages — they answer "how does this state tax investors?" — and the Driftwood
+modeling is demoted to a quiet secondary section, not the hero. The content is assembled entirely from
+existing sources of truth — `statemap._state_record` and `leakage.STATE_ALPHA` — so a state page can
+never disagree with the map or the diagnostic.
 
 Every page carries: a keyword title/H1/meta, canonical + Open Graph, FAQPage + BreadcrumbList +
-FinancialService JSON-LD, the five tax dimensions, the illustrative before/after alpha, a CTA into the
-personalized diagnostic (`leakage.html?state=XX`) and booking, related-state internal links, and the
-full RIA + hypothetical-performance disclosure. Output is flat `<slug>-tax.html` at the docs root so all
-asset paths (driftwood.css, og/, favicon) resolve exactly like the other pages.
+FinancialService JSON-LD, the seven factual tax dimensions, a secondary "what careful tax management
+can change" section (the illustrative before/after impact), a link into the personalized diagnostic
+(`leakage.html?state=XX`), related-state internal links, and the full RIA + hypothetical-performance
+disclosure. Output is flat `<slug>-tax.html` at the docs root so all asset paths (driftwood.css, og/,
+favicon) resolve exactly like the other pages.
 
     drift states --out-dir docs        # writes <slug>-tax.html for every state + states.html index
 """
@@ -146,7 +148,7 @@ def _faq(code: str, name: str, rec: dict) -> list[dict]:
         faq.append({"q": f"What happens to a capital loss you carry forward in {name}?", "a": loss["note"]})
     a = rec.get("alpha")
     if a:
-        faq.append({"q": f"How much investment tax can tax-managed investing recover in {name}?",
+        faq.append({"q": f"How much can careful tax management affect after-tax returns in {name}?",
                     "a": a["note"]})
     return faq
 
@@ -180,7 +182,7 @@ NAV = (
     '  <div class="dwnav-links">\n'
     '    <a href="about.html">Our Story</a>\n'
     '    <a href="thesis.html">How We Invest</a>\n'
-    '    <a href="taxlab.html?view=prospect">After-Tax&nbsp;Review</a>\n'
+    '    <a href="taxlab.html">After-Tax&nbsp;Review</a>\n'
     '    <a href="leakage.html">Tax&nbsp;Diagnostic</a>\n'
     '    <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>\n'
     '    <a href="insights.html">Insights</a>\n'
@@ -200,8 +202,8 @@ PLAUSIBLE = (
 
 DISCLOSURE = (
     '<div class="disc">'
-    '<b>Illustrative / hypothetical — not a real track record and not advice.</b> The Structural Alpha '
-    'figure is a hypothetical, after-tax result from the <b>retroactive application</b> of a '
+    '<b>Illustrative / hypothetical — not a real track record and not advice.</b> The tax-management '
+    'impact figure is a hypothetical, after-tax result from the <b>retroactive application</b> of a '
     'tax-management model to ~30 years of proxy-spliced market data on a single illustrative path; '
     '<b>no client capital was invested</b>, and hypothetical performance <b>does not guarantee future '
     'results</b>. Intended for sophisticated investors; it may not be relevant to your situation, and '
@@ -219,10 +221,11 @@ def _meta_description(name: str, rec: dict) -> str:
     rate = f" Top effective long-term rate {cg['tag']}." if (cg and cg["tag"] not in ("0%", "")) else ""
     if cg and cg["tag"] == "0%":
         rate = " No state tax on capital gains."
-    alpha = (f" A tax-managed book of the same exposure recovers up to ~+{a['value']:.1f}%/yr after tax "
-             f"in our illustrative modeling.") if a else ""
-    return (f"{name} capital-gains, estate, marriage, and basis-step-up taxes — and where a "
-            f"concentrated portfolio leaks return to tax.{rate}{alpha} Illustrative, not advice.")[:300]
+    impact = (f" Careful tax management can affect after-tax outcomes by ~+{a['value']:.1f}%/yr "
+              f"in our illustrative modeling.") if a else ""
+    return (f"How {name} taxes investors: capital gains, estate and inheritance tax, the marriage "
+            f"penalty, municipal-bond interest, QSBS, and basis step-up.{rate}{impact} A state tax "
+            f"reference. Illustrative, not advice.")[:300]
 
 
 def _dim_cards(rec: dict) -> str:
@@ -240,7 +243,9 @@ def _dim_cards(rec: dict) -> str:
     return "\n".join(cards)
 
 
-def _alpha_hero(name: str, a: dict | None) -> str:
+def _impact_block(name: str, a: dict | None) -> str:
+    """The demoted (secondary-section) illustrative modeling figure — reference, not hero.
+    Renders the three source-of-truth numbers (impact, before, after) the state-page tests require."""
     if not a:
         return ""
     before, after, alpha = a["before"], a["after"], a["value"]
@@ -248,8 +253,8 @@ def _alpha_hero(name: str, a: dict | None) -> str:
     return (
         f'<div class="hero">'
         f'<div class="big">+{alpha:.1f}<span class="u">%/yr</span></div>'
-        f'<div class="hlab">Illustrative Structural&nbsp;Alpha (tax) recovered in {_esc(name)}<br>'
-        f'<span class="hsub">the tax-managed book keeps ~{after:.1f}%/yr after tax vs ~{before:.1f}%/yr '
+        f'<div class="hlab">Illustrative tax-management impact in {_esc(name)}<br>'
+        f'<span class="hsub">a tax-managed book keeps ~{after:.1f}%/yr after tax vs ~{before:.1f}%/yr '
         f'for a concentrated, naive one — illustrative, over ~30 years, figures rounded to 0.1%/yr</span></div>'
         f'<div class="hbar" aria-hidden="true">'
         f'<span class="kept" style="width:{kept_before}%"></span></div>'
@@ -376,7 +381,7 @@ def _capture(code: str, name: str, alpha, rate: str) -> str:
         <input type="text" id="caphp" name="{_FORM_HP}" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <button type="submit" id="capsend">Email me {nm}'s 1-pager →</button>
       </form>
-      <div class="capnote" id="capnote">A one-page, {nm}-specific tax-leakage breakdown — we'll follow up by email, usually within a business day. We never share your address.</div>
+      <div class="capnote" id="capnote">A one-page, {nm}-specific after-tax breakdown — we'll follow up by email, usually within a business day. We never share your address.</div>
     </div>
     <script>
     (function(){{
@@ -389,13 +394,13 @@ def _capture(code: str, name: str, alpha, rate: str) -> str:
         var btn=document.getElementById("capsend"); btn.disabled=true; btn.textContent="Sending…";
         var p={{email:email, access_key:"{_FORM_KEY}", from_name:"Driftwood",
           _subject:"New {nm} state-page lead", state:"{code}", state_name:"{nm}",
-          structural_alpha_pct:"{a}", top_lt_rate:"{_esc(rate)}", source:"state_page",
+          tax_impact_pct:"{a}", top_lt_rate:"{_esc(rate)}", source:"state_page",
           lead_quality:({a or 0}>=4.5?"high":"standard")}};
         ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(function(k){{var v=qp.get(k); if(v)p[k]=v;}});
         p["{_FORM_HP}"]=(document.getElementById("caphp").value||"");
         fetch("{_FORM_EP}",{{method:"POST",headers:{{"Content-Type":"application/json",Accept:"application/json"}},body:JSON.stringify(p)}})
           .then(function(r){{ if(!r.ok) throw 0;
-            document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Thanks — we\\'ll email your {nm} tax-leakage breakdown, usually within a business day.</div>';
+            document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Thanks — we\\'ll email your {nm} after-tax breakdown, usually within a business day.</div>';
             if(window.plausible) plausible("lead_submitted",{{props:{{source:"state_page",state:"{code}"}}}}); }})
           .catch(function(){{ btn.disabled=false; btn.textContent="Email me {nm}'s 1-pager →";
             document.getElementById("capnote").innerHTML='Sorry — that didn\\'t send. Email us at <a href="mailto:{_CONTACT}">{_CONTACT}</a>.'; }});
@@ -443,10 +448,9 @@ def render_state_html(data: dict) -> str:
         f'<a href="{page_path(c)}">{_esc(nm)}</a>' for c, nm in data["related"])
     rate = (rec.get("cg") or {}).get("tag", "")
     capture = _capture(code, name, (a or {}).get("value"), rate)
-    lede = (f"Every state taxes gains, marriage, and death differently. Here is how {name} treats "
-            f"capital gains at the top rate, the marriage penalty, estate and inheritance tax at death, "
-            f"municipal-bond interest, the §1202 QSBS exclusion, and a harvested loss — and the after-tax "
-            f"Structural Alpha our engine is built to recover from all of it.")
+    lede = (f"Every state taxes investors differently. Here is how {name} treats capital gains at the top "
+            f"rate, the marriage penalty, estate and inheritance tax at death, municipal-bond interest, "
+            f"the §1202 QSBS exclusion, and a harvested loss — a plain reference to the state's tax code.")
     summary = _summary(name, rec)
     summary_p = f'<p class="lede" style="margin-top:10px">{_esc(summary)}</p>' if summary else ""
     context = data.get("context", "")
@@ -480,28 +484,31 @@ def render_state_html(data: dict) -> str:
 <div class="sheet">
   <div class="frame">
     {NAV}
-    <div class="bcrumb"><a href="index.html">Driftwood</a> › <a href="statemap.html">State Tax Map</a> › {_esc(name)}</div>
+    <div class="bcrumb"><a href="index.html">Driftwood</a> › <a href="statemap.html">The State Atlas</a> › {_esc(name)}</div>
     <div class="hd">
-      <div class="eyebrow">Driftwood · {_esc(name)} tax profile</div>
-      <h1>{_esc(name)}: where your portfolio leaks to tax</h1>
+      <div class="eyebrow">The State Atlas · {_esc(name)}</div>
+      <h1>How {_esc(name)} taxes investors</h1>
       <p class="lede">{_esc(lede)}</p>
       {summary_p}
       {context_p}
     </div>
-    {_alpha_hero(name, a)}
     <div class="grid">
       {_dim_cards(rec)}
     </div>
-    <div class="sec"><div class="sh">How the engine plugs the leak</div>
-      <div class="levers">{levers}</div></div>
     {faq_html}
+    <div class="sec"><div class="sh">What careful tax management can change</div>
+      <p class="lede" style="margin:2px 0 14px">Tax law is only half the picture. How a portfolio is
+        built and run — where each holding sits, how losses are used, how gains are timed — decides how
+        much of {_esc(name)}'s tax code you actually pay. An illustrative estimate for a portfolio here:</p>
+      {_impact_block(name, a)}
+      <div class="levers">{levers}</div></div>
     <div class="cta">
       <div class="ctxt">
-        <div class="ch">See the number on your own {_esc(name)} portfolio.</div>
+        <div class="ch">See the figure on your own {_esc(name)} portfolio.</div>
         <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture — by bracket and holdings.</div>
       </div>
       <a class="primary" href="leakage.html?state={code}">Run my {_esc(name)} diagnostic →</a>
-      <a class="ghost" href="taxlab.html?view=prospect&state={code}">Book a 15-min intro</a>
+      <a class="ghost" href="taxlab.html?view=review&state={code}">Book a 15-min intro</a>
     </div>
 {capture}
     <div class="rel">Compare nearby regimes: {related} · <a href="states.html">all 50 states + DC →</a></div>
@@ -533,19 +540,19 @@ def render_states_index(pages: dict) -> str:
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 {PLAUSIBLE}
-<title>State Capital Gains & Tax-Leakage Guides — all 50 states + DC | Driftwood</title>
-<meta name="description" content="Tax-leakage and capital-gains guides for all 50 states and DC — top long-term rate and the illustrative after-tax Structural Alpha our engine targets in each. Illustrative, not advice." />
+<title>State Capital Gains & Estate Tax — all 50 states + DC | Driftwood</title>
+<meta name="description" content="How every state taxes investors — top long-term capital-gains rate, estate and inheritance tax, munis, QSBS, and basis step-up for all 50 states and DC. A state tax reference. Illustrative, not advice." />
 <link rel="canonical" href="{url}" />
 <link rel="icon" href="favicon.svg" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
-<meta property="og:title" content="State Capital Gains & Tax-Leakage Guides — Driftwood" />
-<meta property="og:description" content="Guides for all 50 states + DC: top long-term capital-gains rate and the illustrative after-tax Structural Alpha in each." />
+<meta property="og:title" content="State Capital Gains & Estate Tax — Driftwood" />
+<meta property="og:description" content="A tax reference for all 50 states + DC: top long-term capital-gains rate and how each state taxes investors." />
 <meta property="og:url" content="{url}" />
 <meta property="og:image" content="{BASE_URL}/og/statemap.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="State Tax-Leakage Guides — Driftwood" />
-<meta name="twitter:description" content="Capital-gains + Structural Alpha guide for every state." />
+<meta name="twitter:title" content="State Tax Reference — Driftwood" />
+<meta name="twitter:description" content="How every state taxes investors — capital gains, estate, and more." />
 <meta name="twitter:image" content="{BASE_URL}/og/statemap.png" />
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
@@ -564,13 +571,13 @@ def render_states_index(pages: dict) -> str:
   <div class="frame">
     {NAV}
     <div class="hd">
-      <div class="eyebrow">Driftwood · state tax guides</div>
-      <h1>Capital-gains &amp; tax-leakage, state by state</h1>
+      <div class="eyebrow">The State Atlas · state tax reference</div>
+      <h1>How every state taxes investors</h1>
       <p class="lede">Pick your state for its capital-gains, estate, marriage, and basis-step-up profile —
-        and the illustrative after-tax Structural Alpha our engine is built to recover there.</p>
+        and an illustrative estimate of how much its tax rules can affect a tax-managed portfolio.</p>
     </div>
     <table class="st">
-      <thead><tr><th scope="col">State</th><th scope="col">Top LT rate</th><th scope="col">Structural Alpha</th></tr></thead>
+      <thead><tr><th scope="col">State</th><th scope="col">Top LT rate</th><th scope="col">Tax Management Impact</th></tr></thead>
       <tbody>{body}</tbody>
     </table>
     {DISCLOSURE}

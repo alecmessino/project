@@ -56,7 +56,7 @@
   .leadstate button.sel{outline:2.5px solid var(--ink);outline-offset:1px}
   .leadstate .lgd{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:11.5px;color:var(--dim);margin:11px 2px 0}
   .leadstate .lgd i{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:4px}
-  @media screen and (max-width:620px){ body.lead .leadstate{display:block} }
+  @media screen and (max-width:620px){ body.on-review .leadstate{display:block} }
   /* Motion: fade the lead success block in; reduced-motion users get no animation. */
   @media (prefers-reduced-motion: no-preference){
     @keyframes leadIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -244,19 +244,21 @@
   .fab.brief{background:var(--slate);box-shadow:0 6px 22px rgba(74,79,87,.32);font-size:12.5px;padding:11px 17px}
   .fab.brief:hover{box-shadow:0 9px 26px rgba(74,79,87,.4)}
   #cpabrief{display:none}
-  /* --- Phase B: mode toggle + lead-gen funnel --- */
-  .modetog{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-top:18px;background:#fff}
-  .modetog button{font:inherit;font-size:12px;font-weight:600;color:var(--dim);background:#fff;border:none;
-    padding:6px 15px;cursor:pointer;letter-spacing:.2px}
-  .modetog button.on{background:var(--teal);color:#f1ede3}
-  /* four views: advisor (default) / estate / strategy / prospect. */
-  body.lead .advisor-only, body.estate .advisor-only, body.strategy .advisor-only{display:none!important}
-  body.lead .no-lead{display:none!important}            /* controls/state map: advisor + estate + strategy, not lead */
-  .lead-only,.estate-only,.strategy-only{display:none}
-  body.lead .lead-only{display:block}
-  body.estate .estate-only{display:block}
-  body.strategy .strategy-only{display:block}
-  body.lead .geo,body.estate .geo,body.strategy .geo{grid-template-columns:1fr}
+  /* --- Working-paper section nav + section gating --- */
+  .modetog{display:inline-flex;flex-wrap:wrap;gap:6px;margin-top:18px;background:transparent;border:0}
+  .modetog button{font:inherit;font-size:12px;font-weight:600;color:var(--dim);background:#fff;
+    border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer;letter-spacing:.2px}
+  .modetog button.on{background:var(--teal);color:#f1ede3;border-color:var(--teal)}
+  /* Six sections: portfolio · taxes · state · holdings · recs · review. One shows at a time on screen;
+     print reveals the whole working paper (see the @media print block below). */
+  @media screen{
+    body:not(.on-portfolio) .sec-portfolio,
+    body:not(.on-taxes) .sec-taxes,
+    body:not(.on-state) .sec-state,
+    body:not(.on-holdings) .sec-holdings,
+    body:not(.on-recs) .sec-recs,
+    body:not(.on-review) .sec-review{display:none!important}
+  }
   /* --- Strategy view: rollover / Roth / blueprint --- */
   .strat-h{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);font-weight:700;margin:26px 0 4px}
   .blueprint{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:8px}
@@ -327,9 +329,7 @@
   .struct-alpha .big{font-size:26px;font-weight:680;color:var(--pos);letter-spacing:-.4px}
   .struct-alpha .lbl{font-size:13px;font-weight:600;color:var(--ink);margin-top:2px}
   .struct-alpha .brk{font-size:12px;color:var(--slate);margin-top:8px;line-height:1.6}
-  /* F2: wealth-architecture decision tree (shown in advisor + estate views) */
-  .adv-est{display:block}
-  body.lead .adv-est, body.strategy .adv-est{display:none!important}
+  /* F2: wealth-architecture decision tree — lives in the Holdings section */
   .dtree{margin:14px 0 2px}
   .dtree .root{display:inline-block;background:var(--ink);color:#fff;border-radius:8px;padding:9px 16px;font-weight:600;font-size:13px}
   .dtree .flow{font-size:11px;color:var(--dim);margin:8px 0 4px}
@@ -404,7 +404,7 @@
     .wrap{max-width:none;margin:0;padding:0}
     .frame{border:none!important;box-shadow:none!important;border-radius:0!important;margin:0!important}
     .fbody{padding:0!important}
-    header,.chrome,.controls,.toolbar,.fab,.fabwrap,.modetog,.foot a.back,.map-wrap h3 .hint,input[type=range]{display:none!important}
+    header,.chrome,.controls,.toolbar,.fab,.fabwrap,.modetog,.foot a.back,.map-wrap h3 .hint,.sec-review,input[type=range]{display:none!important}
     #printhead{display:block}
     #execsummary{display:block}
     body.brief #execsummary{display:none}            /* CPA/attorney brief replaces the client exec summary */
@@ -431,7 +431,7 @@
       <div class="dwnav-links">
         <a href="about.html">Our Story</a>
         <a href="thesis.html">How We Invest</a>
-        <a href="taxlab.html?view=prospect" aria-current="page">After-Tax&nbsp;Review</a>
+        <a href="taxlab.html" aria-current="page">After-Tax&nbsp;Review</a>
         <a href="leakage.html">Tax&nbsp;Diagnostic</a>
         <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         <a href="insights.html">Insights</a>
@@ -445,12 +445,13 @@
       <span class="hyp-pill">Illustrative modeling</span>
     </div>
     <p class="lede" id="lede"></p>
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);font-weight:600;margin:16px 0 7px">Choose your view</div>
-    <div class="modetog" id="modetog" role="group" aria-label="Choose your view" style="margin-top:0">
-      <button type="button" data-mode="advisor">Advisor view</button>
-      <button type="button" data-mode="estate">Estate planning</button>
-      <button type="button" data-mode="strategy">Strategy</button>
-      <button type="button" data-mode="lead">Prospect view</button>
+    <div class="modetog" id="secnav" role="tablist" aria-label="Sections of your after-tax review" style="margin-top:18px;flex-wrap:wrap">
+      <button type="button" data-sec="portfolio">Portfolio</button>
+      <button type="button" data-sec="taxes">Taxes</button>
+      <button type="button" data-sec="state">State</button>
+      <button type="button" data-sec="holdings">Holdings</button>
+      <button type="button" data-sec="recs">Recommendations</button>
+      <button type="button" data-sec="review">Review Summary</button>
     </div>
     <button type="button" id="resetbtn" class="resetbtn" onclick="resetDefaults()">↺ Reset inputs to defaults</button>
   </header>
@@ -462,7 +463,7 @@
   <div id="execsummary"></div>
   <div id="cpabrief"></div>
 
-  <div class="controls no-lead" id="controls">
+  <div class="controls" id="controls">
     <div class="ctl"><label>Federal bracket</label><select id="bracket"></select></div>
     <div class="ctl"><label>State of residence</label><select id="state"></select></div>
     <div class="ctl"><label>Account</label><select id="account">
@@ -470,22 +471,22 @@
       <option value="advantaged">Tax-advantaged (IRA / Roth)</option>
     </select></div>
   </div>
-  <div id="periodnote" class="lede advisor-only" style="margin:8px 0 4px"></div>
+  <div id="periodnote" class="lede sec-taxes" style="margin:8px 0 4px"></div>
 
-  <div class="geo">
+  <div class="geo sec-state">
     <div class="map-wrap">
       <div class="smtabs" id="smtabs" role="tablist"></div>
-      <h3 id="maphdr">Tax severity by state <span class="hint">· click a state to localize the model</span></h3>
+      <h3 id="maphdr">Which state do you pay taxes in? <span class="hint">· click your state to localize the review</span></h3>
       <svg id="usmap" viewBox="0 0 110 80" role="group" aria-label="US state tax map — select your state"></svg>
       <div class="legend" id="legend"></div>
     </div>
-    <aside class="disc advisor-only" id="disc">
+    <aside class="disc" id="disc">
       <h3>Local Disclosure Ledger</h3>
       <div id="discbody"></div>
     </aside>
   </div>
 
-  <section id="leadgen" class="lead-only">
+  <section id="leadgen" class="sec-review">
     <div class="lead-port">
       <div class="top"><label>Your portfolio</label><output id="leadportv"></output></div>
       <input type="range" id="leadport" min="100000" step="50000" aria-label="Your portfolio size" />
@@ -495,7 +496,7 @@
     <div class="lead-cta" id="leadcta"></div>
   </section>
 
-  <section id="estate" class="estate-only">
+  <section id="estate" class="sec-recs">
     <h2>Estate Planning · entity-level structure <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· 2026 tax-law reference</span></h2>
     <div class="est-params" id="estparams"></div>
     <div class="estgrid">
@@ -524,12 +525,12 @@
     <div class="note" id="estnote" style="margin-top:16px"></div>
   </section>
 
-  <section id="decisiontree" class="adv-est">
+  <section id="decisiontree" class="sec-holdings">
     <h2>Asset location · capital-flow map <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· where each dollar is located, and why</span></h2>
     <div id="dtreebody"></div>
   </section>
 
-  <section id="strategy" class="strategy-only">
+  <section id="strategy" class="sec-recs">
     <h2>Account Consolidation &amp; Rollover <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· move scattered accounts into one coordinated approach</span></h2>
 
     <h3 class="strat-h">1 · The 401(k) rollover escape hatch</h3>
@@ -559,8 +560,8 @@
     <div class="blueprint" id="blueprint"></div>
   </section>
 
-  <section id="optim" class="advisor-only">
-    <h2>Asset Location <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· three buckets, optimally placed</span></h2>
+  <section id="optim" class="sec-portfolio">
+    <h2>Your Portfolio <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· taxable, Traditional, and Roth — and where each dollar belongs</span></h2>
     <div class="optgrid">
       <div class="opt-card">
         <div class="slider">
@@ -591,7 +592,7 @@
     <p class="dix" id="dixnote"></p>
   </section>
 
-  <section id="transition" class="advisor-only">
+  <section id="transition" class="sec-recs">
     <h2>Portfolio Transition <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· current legacy → Driftwood institutional model</span></h2>
     <div class="trans-models" id="transmodels" role="tablist" aria-label="Institutional model"></div>
     <div class="slider" style="max-width:420px;margin:6px 0 4px">
@@ -603,7 +604,7 @@
     <p class="note" id="transnote" style="margin-top:14px"></p>
   </section>
 
-  <details id="frontier" class="fold advisor-only">
+  <details id="frontier" class="fold sec-holdings">
     <summary>Alpha-Turnover Frontier <span class="sub">· when turnover eats the alpha</span></summary>
     <div class="frontgrid">
       <div class="opt-card">
@@ -624,12 +625,12 @@
     </div>
   </details>
 
-  <div class="cards advisor-only" id="cards"></div>
+  <div class="cards sec-portfolio" id="cards"></div>
 
-  <h2 class="advisor-only">Where the tax goes (over the track)</h2>
-  <div class="wf advisor-only" id="waterfall"></div>
+  <h2 class="sec-taxes">Where the tax goes (over the track)</h2>
+  <div class="wf sec-taxes" id="waterfall"></div>
 
-  <details id="tlhtable-wrap" class="fold advisor-only"><summary>Tax-loss-harvesting value by state <span class="sub">· at the selected bracket</span></summary>
+  <details id="tlhtable-wrap" class="fold sec-taxes"><summary>Tax-loss-harvesting value by state <span class="sub">· at the selected bracket</span></summary>
   <div class="table-wrapper"><table id="tlhtable"><thead><tr><th scope="col">State</th><th scope="col">LT rate</th><th scope="col">ST rate</th><th scope="col">TLH value (total)</th><th scope="col">per year</th></tr></thead><tbody></tbody></table></div></details>
 
   <div class="note" id="note"></div>
@@ -662,7 +663,7 @@
   </div><!-- .frame -->
 </div>
 <div id="printfoot">Driftwood · a registered investment adviser · adviserinfo.sec.gov — Illustrative; not investment, tax, or legal advice</div>
-<div class="fabwrap advisor-only">
+<div class="fabwrap sec-recs">
   <button class="fabx" type="button" aria-label="Hide the export buttons" title="Hide">×</button>
   <button id="genbrief" type="button" class="fab brief" title="Generate a CPA / attorney execution brief">
     <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 2h6l3 3v9H4z M10 2v3h3" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>Generate CPA / Attorney Brief</button>
@@ -707,10 +708,17 @@ function track(name, props){
     else if(window.fathom && window.fathom.trackEvent) window.fathom.trackEvent(name);  // name only (Fathom drops props)
   }catch(e){}
 }
-// Default to the guided Prospect view; the dense Advisor console is reachable only via ?view=advisor
-// (the hub's "The fix" step) or the in-page toggle — so a prospect arriving from the hub isn't dumped
-// into the expert surface.
-let MODE = (v=>(v==="prospect"||v==="lead"||!v)?"lead":v==="advisor"?"advisor":(v==="estate"||v==="strategy")?v:"lead")(new URLSearchParams(location.search).get("view"));
+// The review opens as an advisor's working paper: sections, not a wizard. New links use ?view=<section>.
+// Legacy campaign links (?view=prospect|lead) still land on the funnel, now the Review Summary; estate/
+// strategy → Recommendations; everything else opens on the Portfolio, so a visitor begins with their own
+// portfolio rather than the map.
+let SEC = (v=>{
+  const S6=["portfolio","taxes","state","holdings","recs","review"];
+  if(S6.indexOf(v)>=0) return v;
+  if(v==="prospect"||v==="lead") return "review";
+  if(v==="estate"||v==="strategy") return "recs";
+  return "portfolio";
+})(new URLSearchParams(location.search).get("view"));
 const pct=(x,d=1)=>(x==null||!Number.isFinite(x))?"—":(x>=0?"+":"")+(x*100).toFixed(d)+"%";
 const apct=(x,d=1)=>(x==null||!Number.isFinite(x))?"—":(x*100).toFixed(d)+"%";
 // a11y: mirror each slider's friendly <output> (id = sliderId+"v") into aria-valuetext, so a screen reader
@@ -782,7 +790,7 @@ function wireRovingTablist(host){
 }
 // Feedback: a brief highlight pulse so a recompute is visibly registered (on discrete change, not every drag tick).
 function pulse(el){ if(!el) return; el.classList.remove("dw-pulse"); void el.offsetWidth; el.classList.add("dw-pulse"); }
-function pulseResult(){ pulse(MODE==="lead" ? document.getElementById("leadhero") : document.getElementById("cards")); }
+function pulseResult(){ pulse(SEC==="review" ? document.getElementById("leadhero") : document.getElementById("cards")); }
 // Restore every control to the values captured at load.
 function resetDefaults(){
   const d=window.__DEFAULTS__||{};
@@ -866,7 +874,7 @@ function advisory(code,slt,sst,bi){
   if(bi>=4) return `${nm} taxes capital gains as ordinary income at up to <b>${apct(slt)}</b> — among the steepest in the nation. Asset location (hold the fast book tax-advantaged) and harvesting deliver their largest dollar value in high-rate states like this one.`;
   return `${nm} taxes capital gains at <b>${apct(slt)}</b> (as ordinary income). A harvested loss here is worth that rate on every dollar of gain it offsets, stacked on top of the federal rate.`;
 }
-function selectState(code){ $("state").value=code; paintLeadSel(code); render(); flashDisc(); track("state_selected",{state:code,view:MODE});
+function selectState(code){ $("state").value=code; paintLeadSel(code); render(); flashDisc(); track("state_selected",{state:code,view:SEC});
   if(window.dwTaxContext) dwTaxContext.save({state:code}); }
 // F1 · mobile state picker: a tappable severity-coloured chip grid, built from the same BUCKETS /
 // bucketOf heat-map the desktop map uses, wired to the one selectState handler (no desync path).
@@ -1425,31 +1433,24 @@ function renderStrategy(){
      <div class="bp"><span class="bt roth">Roth IRA / Roth 401(k)</span><div class="bh">High-turnover Driftwood momentum</div>
        <p>The high-turnover sleeve — <b>designed to grow free of annual capital-gains tax under current law</b>, with no RMDs for heirs.</p></div>`;
 }
-function applyMode(m){
-  MODE=(m==="lead"||m==="estate"||m==="strategy")?m:"advisor";
-  document.body.classList.toggle("lead", MODE==="lead");
-  document.body.classList.toggle("estate", MODE==="estate");
-  document.body.classList.toggle("strategy", MODE==="strategy");
-  try{ const u=new URL(location.href); u.searchParams.set("view",MODE); history.replaceState(null,"",u); }catch(e){}
-  $("modetog").querySelectorAll("button").forEach(btn=>{ const on=btn.dataset.mode===MODE; btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", on?"true":"false"); });
-  $("lede").innerHTML = MODE==="lead"
-    ? `See the estimated capital-gains tax a high-turnover strategy generates in <b>your</b> state — and how much may be reducible through asset location. Click your state to begin.`
-    : MODE==="estate"
-    ? `<b>Estate coordination</b> — model the Illinois estate cliff, the credit-shelter trust, and the proposed HB2601 exemption against 2026 law. Illustrative; confirm the filing figure with your estate attorney.`
-    : MODE==="strategy"
-    ? `<b>Account consolidation &amp; rollover plan</b> — a roadmap for moving scattered 401(k)/IRA balances into one coordinated approach: the rollover decision, the 2026 Roth-conversion opportunity, and a personalized asset-location plan.`
-    : `One <b>coordinated after-tax plan</b> — bringing federal and state tax, account structure (taxable / Traditional / Roth), estate step-up, and tax-loss harvesting into a single decision about where each dollar belongs. Pick a bracket and state; every figure updates from a real realized-gain profile.`;
-  $("maphdr").innerHTML = MODE==="lead"
-    ? `Click your state <span class="hint">· see your estimated capital-gains tax</span>`
-    : MODE==="estate"
-    ? `Set the state <span class="hint">· Illinois triggers the estate cliff</span>`
-    : MODE==="strategy"
-    ? `Set the state <span class="hint">· Illinois unlocks the Roth-conversion arbitrage</span>`
-    : `Tax severity by state <span class="hint">· click a state to localize the model</span>`;
-  if(MODE==="lead") renderLead();
-  if(MODE==="estate") renderEstate();
-  if(MODE==="strategy") renderStrategy();
-  track("mode_view",{view:MODE});
+// Per-section lede — the page reads like an advisor working through a review, not a wizard with steps.
+const LEDES={
+  portfolio:`Let's review how your portfolio is built after taxes. Start with what you hold and where — <b>taxable, Traditional, and Roth</b> — then move through taxes, your state, your holdings, and the recommendations.`,
+  taxes:`Your federal bracket sets the price of every realized gain. Here is <b>where the tax actually goes</b> across the track, and what tax-loss harvesting is worth at your bracket, state by state.`,
+  state:`Which state do you pay taxes in? Your state is <b>one input</b> into the review — it changes the rates, the harvesting math, and the estate picture. Click your state to localize every figure.`,
+  holdings:`What you own, and how often it turns over. Where each dollar is <b>located</b>, and the point at which turnover starts to eat the return.`,
+  recs:`The <b>recommendations</b> — asset location, tax-loss harvesting, withdrawal sequencing, lot management, and estate step-up — and the <b>estimated after-tax improvement</b> they add up to. Illustrative; confirm figures with your CPA and estate attorney.`,
+  review:`A short summary of your after-tax picture. If you'd like it run on your <b>actual</b> portfolio, we can prepare a personalized diagnosis.`
+};
+function showSection(sec){
+  const S6=["portfolio","taxes","state","holdings","recs","review"];
+  SEC=(S6.indexOf(sec)>=0)?sec:"portfolio";
+  S6.forEach(s=>document.body.classList.toggle("on-"+s, s===SEC));
+  try{ const u=new URL(location.href); u.searchParams.set("view",SEC); history.replaceState(null,"",u); }catch(e){}
+  $("secnav").querySelectorAll("button").forEach(btn=>{ const on=btn.dataset.sec===SEC; btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", on?"true":"false"); });
+  $("lede").innerHTML = LEDES[SEC]||LEDES.portfolio;
+  if(SEC==="review") renderLead();
+  track("section_view",{section:SEC});
 }
 
 // --- Layer 3: alpha-turnover frontier -------------------------------------
@@ -1614,12 +1615,10 @@ function render(){
   renderDecisionTree();
   // Layer 3: redraw the frontier (breakeven lines depend on the selected rates).
   drawFrontier();
-  // Phase B: in prospect mode, refresh the dollar-bleed hook on every state change.
-  if(MODE==="lead") renderLead();
-  // Estate view: the IL cliff depends on the selected state — refresh on state change.
-  if(MODE==="estate") renderEstate();
-  // Strategy view: the Roth-conversion arbitrage depends on the selected state.
-  if(MODE==="strategy") renderStrategy();
+  // Working paper: populate every section on each change so all are complete regardless of which is open.
+  renderLead();      // Review Summary — the dollar-bleed hook + funnel
+  renderEstate();    // Recommendations — the IL cliff depends on the selected state
+  renderStrategy();  // Recommendations — the Roth-conversion arbitrage depends on the selected state
 }
 function init(){
   S=window.__STATE__;
@@ -1718,10 +1717,10 @@ function init(){
   buildSmTabs();
   buildMap();
   render();
-  // Phase B: dual-mode — wire the toggle, seed the lead funnel, apply the current view.
+  // Working paper — seed the funnel, wire the section nav, open on the current section.
   ctaInitial();
-  $("modetog").querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>applyMode(btn.dataset.mode)));
-  applyMode(MODE);
+  $("secnav").querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>showSection(btn.dataset.sec)));
+  showSection(SEC);
   // a11y: keep aria-valuetext in sync on every slider drag (runs after each render handler sets the output).
   document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener("input",syncValueText));
   document.querySelectorAll('input[type=range]').forEach(enableTypeIn);

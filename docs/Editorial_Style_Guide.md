@@ -88,13 +88,13 @@ Run every page through this filter. Consistency is what turns a website into a b
 | Return maximization | After-tax outcomes / what you keep |
 | Dashboard | Current portfolio |
 | Signal | Trend |
-| State map | State guide |
+| State map / State guide | The State Atlas *(the named reference work)* |
 | Generate alpha | Improve what you keep |
 | Client | Investor / family *(context dependent)* |
 | Leverage (as a verb) | Use |
 | Solution / offering | *(name the actual thing)* |
 
-Two words earn special discipline:
+A few names earn special discipline:
 
 - **"Architecture."** Powerful once, weak the twelfth time. Think of how Apple says
   "Retina display" — once, then shows it. Use *architecture* **three or four times across
@@ -104,6 +104,15 @@ Two words earn special discipline:
   implementation details. A reader should understand the philosophy first, and discover
   the machinery only underneath it. Keep the names to the research, methodology, and tool
   pages where they belong; keep them out of the philosophy and the front door.
+- **"Structural Alpha" has one home for each job.** It is *defined* once, in the constitution
+  (`Investment_Writing_Principles.md`); *named* once on the homepage; *calculated* in the
+  After-Tax Review; *explained* in How We Invest. It stays **off The State Atlas** — the Atlas
+  is reference, and describes state-tax *impact*, not a Driftwood product. Never re-define or
+  re-scope the term anywhere else; reference the canonical definition and move on.
+- **Named works are capitalized, with the article.** Driftwood's flagship properties and pieces
+  are named works — **"The State Atlas,"** "Every Portfolio Has Two Returns" — and read as titles,
+  not descriptions. Note the split for the Atlas: nav and browser title stay **"State Tax Atlas"**
+  (context and search); the page and all prose call it **"The State Atlas."**
 
 ---
 
@@ -139,6 +148,7 @@ Define a term the first time a reader meets it, then trust it.
 | **Compounding Interruptions** | Small, repeated leaks (a tax taken early, a panic sale) that break the chain compounding depends on. |
 | **Decision Quality** | Judging a choice by the process and information behind it, not by a single year's outcome. |
 | **One Portfolio. One System.** | Every account works together, not apart — allocation, location, harvesting, withdrawals, estate, coordinated as one. |
+| **Structural Alpha** | The cumulative benefit of implementation decisions — *not* market prediction — including asset location, tax-loss harvesting, withdrawal sequencing, and lot management. Canonically defined in the constitution; named once on the homepage, calculated in the After-Tax Review, explained in How We Invest, and kept off The State Atlas. |
 | **Stewardship** | *Internal concept only — not public positioning.* The care a great endowment takes with permanent capital. Keep the concrete "institutional portfolio architecture, built for individual investors" as the public line unless stewardship earns its way in through the writing over time. |
 
 ---

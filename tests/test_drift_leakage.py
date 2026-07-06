@@ -88,6 +88,6 @@ def test_leakage_template_personalizes_and_carries_a_booking_cta():
     # compliant reframe (Marketing-Rule): "up to ... in our illustrative modeling", diagnostic-gated
     assert "up to +" in t and "illustrative modeling" in t
     assert "Your actual figure depends on your" in t
-    # booking / conversion CTA into the Tax Lab prospect funnel, forwarding params + utm attribution
-    assert 'id="cta-analysis"' in t and "view=prospect" in t
+    # booking / conversion CTA into the After-Tax Review's Review Summary, forwarding params + utm attribution
+    assert 'id="cta-analysis"' in t and "view=review" in t
     assert "utm_campaign" in t                       # campaign params forwarded for attribution

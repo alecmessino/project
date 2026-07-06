@@ -57,20 +57,24 @@ td { border-bottom: 0.25pt solid #ccc; padding: 3pt 5pt; vertical-align: top; }
 table { break-inside: auto; }
 tr { break-inside: avoid; }
 .protocol-box {
-  border: 1pt solid #999; background: #fafafa; padding: 8pt 10pt 4pt;
-  margin: 14pt auto; max-width: 78%; break-inside: avoid;
+  border: 1pt solid #999; background: #fafafa; padding: 9pt 12pt 6pt;
+  margin: 14pt auto; max-width: 82%; break-inside: avoid;
 }
-.protocol-box .pb-title { font-weight: bold; font-size: 9.5pt; margin-bottom: 2pt; }
-.protocol-box pre {
-  font-family: 'DejaVu Sans Mono', monospace; font-size: 8pt; line-height: 1.35;
-  margin: 0; background: none; white-space: pre; text-align: left;
-}
+.protocol-box .pb-title { font-weight: bold; font-size: 9.5pt; margin-bottom: 4pt; }
+.protocol-box p { font-size: 9.5pt; margin: 0 0 3pt; text-align: left; }
+.footnote { font-size: 8.5pt; color: #222; margin-top: 14pt; }
+.footnote hr { margin: 10pt 0 6pt; width: 30%; margin-left: 0; border-top: 0.5pt solid #666; }
+.footnote ol { margin: 0 0 0 14pt; padding: 0; }
+.footnote li p { margin: 0 0 5pt; text-align: justify; }
+sup { font-size: 7.5pt; }
+.footnote-backref { display: none; }
+a { color: inherit; text-decoration: none; }
 """
 
 
 def main() -> int:
     src = (HERE / "paper1.md").read_text()
-    body = markdown.markdown(src, extensions=["tables"])
+    body = markdown.markdown(src, extensions=["tables", "footnotes"])
     html = f"<!doctype html><html><head><meta charset='utf-8'><style>{CSS}</style></head><body>{body}</body></html>"
     out_html = HERE / "paper1.html"
     out_html.write_text(html)

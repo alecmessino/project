@@ -376,17 +376,17 @@ def fig1_process():
     # (stage, outcome, killed?)  — the study's actual course through the protocol
     steps = [
         ("Initial hypothesis:\ntimes-through-order penalty",
-         "naïve backtest: at/below breakeven", True),
+         "naive backtest: at or below breakeven", True),
         ("Velocity-decline signal",
-         "debiasing: AUC 0.61 → 0.52 (selection)", True),
+         "debiasing: AUC 0.61 to 0.52 (selection)", True),
         ("Bullpen-fatigue multiplier",
          "no effect: fatigued pens concede no more", True),
         ("Remaining-runs model\n+ fatigue terms",
-         "ΔMAE = −0.001 — game state already suffices", True),
+         "MAE unchanged; game state already suffices", True),
         ("Forecast encompassing\n(joint + per-feature)",
-         "book error unpredictable, OOS R² ≈ 0", True),
+         "book error unpredictable, OOS R² near 0", True),
         ("Transfer function\n(ΔBook vs ΔRE)",
-         "one common slope ≈ 0.74 — priced ≈ correctly", False),
+         "one common slope near 0.74, priced about right", False),
         ("Boundary identified",
          "open frontier: live market microstructure", False),
     ]

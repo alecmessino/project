@@ -256,9 +256,9 @@ def thesis(
 @app.command()
 def taxlab(
     docs: str = typer.Option("docs", "--docs", help="directory holding the exhibits"),
-    out: str = typer.Option("docs/taxlab.html", "--out", help="Tax Lab page"),
+    out: str = typer.Option("docs/taxlab.html", "--out", help="After-Tax Review page"),
 ):
-    """Build the interactive Tax Lab (after-tax / TLH / asset location) from the ledger."""
+    """Build the interactive After-Tax Review (after-tax / TLH / asset location) from the ledger."""
     from .taxlab import build_taxlab
     from .exhibit import export_taxlab
     state = build_taxlab(docs)

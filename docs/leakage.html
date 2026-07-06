@@ -124,9 +124,9 @@
       <div class="dwnav-links">
         <a href="about.html">Our Story</a>
         <a href="thesis.html">How We Invest</a>
-        <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+        <a href="taxlab.html?view=prospect">After-Tax&nbsp;Review</a>
         <a href="leakage.html" aria-current="page">Tax&nbsp;Diagnostic</a>
-        <a href="statemap.html">State Tax Guide</a>
+        <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         <a href="insights.html">Insights</a>
       </div>
     </nav>
@@ -171,7 +171,7 @@
     <div class="cta" id="cta">
       <div class="ctxt">
         <div class="ch">See the number on your own portfolio.</div>
-        <div class="cd">The full Tax&nbsp;Lab computes your after-tax, asset-location, and harvesting picture — personalized by bracket and state.</div>
+        <div class="cd">The full After-Tax&nbsp;Review computes your after-tax, asset-location, and harvesting picture — personalized by bracket and state.</div>
       </div>
       <div class="btns">
         <a class="primary" id="cta-analysis" href="taxlab.html?view=prospect">Run my analysis →</a>
@@ -193,7 +193,7 @@ function render(s){
   const hd = s.headline||{}, b = s.before||{}, a = s.after||{};
   // --- Personalization: a cold-outreach link (?state=IL&port=2000000) localizes the diagnostic to the
   // prospect's own state + portfolio, off the per-state STATE_ALPHA table. Defaults to the illustrative
-  // figures when absent. Forwards state/port/utm into the Tax Lab funnel for continuity + attribution.
+  // figures when absent. Forwards state/port/utm into the After-Tax Review funnel for continuity + attribution.
   const qp = new URLSearchParams(location.search);
   const sa = s.state_alpha||{}, names = s.state_names||{};
   const qState = qp.get("state");
@@ -220,7 +220,7 @@ function render(s){
       `modeling, a concentrated, high-turnover book in ${nm} keeps ~<b>${row.before.toFixed(1)}%/yr</b> after tax `+
       `versus ~<b>${row.after.toFixed(1)}%/yr</b> tax-managed — up to <b>~+${row.alpha.toFixed(1)}%/yr</b> recovered`+
       `${qPort>0?` (≈ <b>${fmt$(annual)}/yr</b> on this portfolio)`:''}. Your actual figure depends on your `+
-      `holdings; the full Tax Lab computes it.`;
+      `holdings; the full After-Tax Review computes it.`;
   } else { pband.style.display = "none"; }
 
   // When personalized, the cards show this state's single before/after CAGR (not the cross-state range).
@@ -243,14 +243,14 @@ function render(s){
   document.getElementById("c-before").innerHTML = sideHTML(bd, true);
   document.getElementById("c-after").innerHTML = sideHTML(ad, false);
 
-  // CTA: forward state/port/utm into the Tax Lab prospect funnel (continuity + campaign attribution).
+  // CTA: forward state/port/utm into the After-Tax Review prospect funnel (continuity + campaign attribution).
   const fwd = new URLSearchParams();
   ["state","port","portfolio","utm_source","utm_medium","utm_campaign","utm_term","utm_content"]
     .forEach(k=>{ const v=qp.get(k); if(v) fwd.set(k,v); });
   const tl = "taxlab.html?view=prospect" + (fwd.toString()?("&"+fwd.toString()):"");
   const ca = document.getElementById("cta-analysis"); if(ca) ca.href = tl;
   const cb = document.getElementById("cta-book"); if(cb) cb.href = tl;
-  // Funnel continuity: count click-throughs from the diagnostic into the Tax Lab prospect flow.
+  // Funnel continuity: count click-throughs from the diagnostic into the After-Tax Review prospect flow.
   const st0 = qp.get("state") || "—";
   if(ca) ca.addEventListener("click", ()=>{ if(window.plausible) plausible("diagnostic_to_taxlab",{props:{state:st0,target:"analysis"}}); });
   if(cb) cb.addEventListener("click", ()=>{ if(window.plausible) plausible("diagnostic_to_taxlab",{props:{state:st0,target:"book"}}); });

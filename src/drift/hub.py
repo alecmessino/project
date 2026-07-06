@@ -21,13 +21,13 @@ EXHIBITS = [
     ("How we invest", "thesis.html",
      "How Driftwood invests: evidence over prediction, taxes treated as part of investing, and a "
      "diversified core placed alongside a focused complement — one portfolio, measured after tax.", False),
-    ("Tax Lab", "taxlab.html",
+    ("After-Tax Review", "taxlab.html",
      "See your after-tax return, and where each holding belongs — taxable, Traditional, or Roth — with "
      "estate step-up and tax-loss harvesting, by your bracket and state.", False),
     ("The Tax Diagnostic", "leakage.html",
      "The one-page before/after: where a concentrated, high-turnover account loses return to tax, "
      "and how much careful placement puts back on an identical exposure.", False),
-    ("State Tax Map", "statemap.html",
+    ("State Tax Atlas", "statemap.html",
      "Fifty states across seven dimensions — capital gains, marriage, estate, munis, QSBS, losses, and "
      "basis step-up — and what careful tax management can recover from each.", False),
     ("State tax guides (50 states + DC)", "states.html",
@@ -36,18 +36,18 @@ EXHIBITS = [
     ("Single asset risk", "concentration.html",
      "How to de-risk a concentrated stock position: 22 strategies across selling, harvesting, hedging, "
      "deferring, and giving — scored on liquidity, speed, fees, tax cost, customization, and simplicity.", False),
-    ("Core Alpha book (hypothetical)", "equities.html",
-     "Core Alpha Research — the current book: what the hypothetical Model Portfolio holds now, its signal "
-     "strength by sleeve, the last rebalance in and out, and the dated track.", True),
-    ("Model Portfolio ledger", "ledger.html",
-     "Core Alpha Research — the append-only historical record: every change, every mark, with alpha/beta "
-     "attribution. A hypothetical backtest, not actual trading or any client account.", True),
-    ("Model Portfolio · long history", "tearsheet.html",
-     "Core Alpha Research — the model across decades of daily history: strategy vs buy-and-hold, fit "
-     "in-sample and reported out-of-sample (it survived the fit nearly unchanged).", True),
+    ("Current model portfolio", "equities.html",
+     "What the hypothetical model portfolio holds now — its sleeves, the last rebalance in and out, and "
+     "the dated track. A research model, not a client account.", True),
+    ("Model portfolio ledger", "ledger.html",
+     "The append-only historical record: every change, every mark, with attribution. A hypothetical "
+     "backtest, not actual trading or any client account.", True),
+    ("Model portfolio · long history", "tearsheet.html",
+     "The model across decades of daily history: strategy vs buy-and-hold, fit in-sample and reported "
+     "out-of-sample. Hypothetical.", True),
     ("Research studies", "equities_case_studies.html",
-     "Core Alpha Research — educational backtests on why the engine behaves as it does: time-series, "
-     "cross-sectional, lookback & cost sensitivity, and a no-trend control.", True),
+     "Educational backtests on why the approach behaves as it does: time-series, cross-sectional, "
+     "lookback & cost sensitivity, and a no-trend control.", True),
 ]
 
 
@@ -100,98 +100,47 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
         "pretax_after": leak["headline"]["pretax_after"],
     }
 
-    # Long-history tearsheet (the multi-decade backtest) and the live 445-session ledger are two
-    # DISTINCT tracks. Keep their risk figures attributed to their own track — pairing one's return
-    # with the other's drawdown is exactly the imbalanced framing the Marketing Rule targets.
-    ts = _embedded_state(docs / "tearsheet.html")
-    led_state = _embedded_state(docs / "ledger.html")
+    # The homepage carries NO performance numbers — not the model return, not Sharpe, not drawdown. Those
+    # figures live one click deeper, on the research pages themselves (linked from the "Research" appendix).
+    # `headline` stays empty by design; the hero + the single tax pillar are the only figures on the page.
 
-    # This track's OWN max drawdown, computed from its own equity curve — never borrowed from the
-    # multi-decade backtest. Shared by the headline card and the risk value-add.
-    own_dd = None
-    led = docs / "ledger.json"
-    if led.exists():
-        try:
-            j = json.loads(led.read_text())
-            entries = j.get("entries", [])
-            if entries:
-                tr = entries[-1]["equity"] - 1.0
-                own_dd = _max_drawdown([e["equity"] for e in entries if "equity" in e])
-                headline.append({
-                    "label": "Model Portfolio (hypothetical)",
-                    "value": f"{tr*100:+.1f}%",
-                    # Always date the data: an undated figure reads as current the day it goes stale.
-                    "sub": f"{len(entries)} sessions · hypothetical backtest from {j.get('inception', '')} "
-                           f"· data through {entries[-1].get('date', '?')}",
-                    "dd": f"−{own_dd*100:.0f}%",
-                    "dd_label": "max drawdown · this track",
-                    # Deliberately neutral: a hypothetical return is not a win to colour green.
-                    "tone": "neutral",
-                    # A raw hypothetical return is research context, not the pitch — the template
-                    # renders research-tagged headlines in the exploratory-research appendix.
-                    "research": True,
-                })
-        except Exception:
-            pass
+    # Three DISTINCT dimensions of value — tax efficiency, implementation quality, behavioral durability.
+    # The homepage makes NO expected-return claim: only the tax pillar carries a number (the firm's
+    # substantiated edge). All performance figures — Sharpe, the model track — live in Research.
 
-    # (The multi-decade "N% vs N% max drawdown" headline was retired from the hub — a low-signal, near-tie
-    # figure that communicated little to a prospect. The tearsheet still carries it in context.)
-
-    # ── Value-adds: the three pillars of the architecture, process-led. Each number appears ONCE across
-    # the whole hub (no repeated figures), and each performance figure carries its risk + a hypothetical
-    # label. Cards degrade gracefully — absent when their source exhibit isn't built yet.
-    hdr = (led_state or {}).get("header", {})
-    benches = (led_state or {}).get("benchmarks", [])
-
-    # 1 · The taxable core (idea first; the implementation name sits in the note).
+    # 1 · Keep more (taxes) — the one number. Dollars lead (families think in dollars); the annualized
+    # band is the supporting frame. "Structural Alpha" is named once, small, in the note.
     value_adds.append({
-        "tag": "The taxable core",
+        "tag": "Keep more",
         "title": "A portfolio built to be held — and taxed lightly.",
-        "stat": f"+{hero['alpha_low']:.1f}–{hero['alpha_high']:.1f}%/yr",
-        "stat_label": "illustrative after-tax recovery, from no-tax states to California",
-        "note": "A diversified, low-turnover portfolio, tilted toward the sources of return that have "
-                "paid patient investors over time — with harvesting, lot selection, and account "
+        "stat": f"${hero['keep_before'] * 10_000:,.0f} → ${hero['keep_after'] * 10_000:,.0f}",
+        "stat_label": f"kept from $1 million of realized gains over {hero['horizon']} years, after tax — an "
+                      f"illustrative +{hero['alpha_low']:.1f}–{hero['alpha_high']:.1f}%/yr (modeled, federal-only)",
+        "note": "A diversified, low-turnover portfolio, with harvesting, lot selection, and account "
                 "placement handing less of it to taxes. For taxable accounts, implemented as "
                 "Structural Alpha. Illustrative; your figure depends on your bracket and holdings.",
     })
 
-    # 2 · The complement (tax-advantaged capital). The strongest honest stat is that it survived
-    # out-of-sample nearly unchanged (no overfit); the current hypothetical track is context.
-    if ts and ts.get("books"):
-        bk = ts["books"][0]
-        o = bk["oos"]["test"]
-        tr = (bk["oos"].get("train") or {}).get("sharpe")
-        robust = f"{o['sharpe']:.2f} ≈ {tr:.2f}" if tr is not None else f"{o['sharpe']:.2f}"
-        cur = ""
-        if hdr.get("sharpe") is not None and benches:
-            bench_sh = " / ".join(f"{b.get('sharpe', 0):.2f}" for b in benches[:2])
-            bench_lbl = " / ".join(b.get("label", "") for b in benches[:2])
-            cur = (f" The current hypothetical track runs at Sharpe {hdr['sharpe']:.2f} "
-                   f"(vs {bench_sh} for {bench_lbl}) — a separate, shorter window.")
-        value_adds.append({
-            "tag": "The complement",
-            "title": "Built to persist, not to impress.",
-            "stat": robust,
-            "stat_label": "the out-of-sample result matched the in-sample one — the approach didn't flatter itself",
-            "note": "The evidence prioritizes persistence over historical optimization. Tested across "
-                    "decades, the out-of-sample result held up nearly unchanged — the sign of an approach "
-                    "that wasn't fit to the past." + cur + " Higher-turnover, implemented as Core Alpha, "
-                    "and meant for tax-advantaged accounts. A hypothetical backtest, not a client account.",
-        })
-
-    # 3 · Asset location — the decision that routes them (the moat). The before/after is the same
-    # exposure, tax-naive vs tax-managed (NOT a jab at either return strategy).
+    # 2 · Build better (architecture) — no number. A process advantage, not a forecast.
     value_adds.append({
-        "tag": "Asset location",
-        "title": "The account is the decision that compounds.",
-        # Dollars, not retained-gain percentages — families think in dollars. Derived from the same
-        # engine keep-rates (keep_pct% of a $1M realized gain), so the figure has one source of truth.
-        "stat": f"${hero['keep_before'] * 10_000:,.0f} → ${hero['keep_after'] * 10_000:,.0f}",
-        "stat_label": f"kept from $1 million of realized gains over {hero['horizon']} years — the same holdings, "
-                      "taxed carelessly vs. deliberately (modeled, federal-only)",
-        "note": "Placing the tactical strategy in tax-advantaged accounts and the diversified one in "
-                "taxable — then harvesting losses along the way — is the quiet work that decides how much "
-                "a family keeps. Federal-only illustration; not a forecast.",
+        "tag": "Build better",
+        "title": "One portfolio, built as a system.",
+        "stat": "",
+        "stat_label": "",
+        "note": "A diversified, low-turnover core, placed by account and coordinated across taxable, "
+                "Traditional, and Roth — so allocation, location, harvesting, and withdrawals work "
+                "together, not apart. Implementation, not prediction.",
+    })
+
+    # 3 · Stay invested (behavior) — no number. The durability that lets compounding finish.
+    value_adds.append({
+        "tag": "Stay invested",
+        "title": "The best portfolio is one you're glad to own in twenty years.",
+        "stat": "",
+        "stat_label": "",
+        "note": "Most of the damage in investing is done by leaving at the wrong time. A portfolio built "
+                "to be held — diversified, low-cost, and understood — is one you can stay with long enough "
+                "for compounding to do its work.",
     })
 
     exhibits = [{"title": t, "href": h, "desc": d, "present": (docs / h).exists(), "appendix": ap}

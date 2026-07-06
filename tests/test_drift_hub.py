@@ -12,101 +12,71 @@ def test_build_hub_empty_docs_lists_all_exhibits_absent(tmp_path):
     json.dumps(state)
 
 
-def test_build_hub_reads_ledger_headline(tmp_path):
+def test_build_hub_marks_ledger_present_without_a_performance_headline(tmp_path):
     (tmp_path / "ledger.json").write_text(json.dumps({
         "inception": "2026-02-17",
         "entries": [{"equity": 1.0}, {"equity": 1.085}],
     }))
     (tmp_path / "ledger.html").write_text("<html></html>")
     state = build_hub(tmp_path)
-    led = [h for h in state["headline"] if h["label"] == "Model Portfolio (hypothetical)"]
-    assert led and led[0]["value"] == "+8.5%"
-    # A hypothetical return is never coloured as a win (fair-and-balanced framing).
-    assert led[0]["tone"] == "neutral"
-    assert "hypothetical" in led[0]["sub"]
-    # the present file is marked linkable
+    # the ledger exhibit is linkable (appears in the Research appendix) …
     assert any(e["href"] == "ledger.html" and e["present"] for e in state["exhibits"])
+    # … but its return never becomes a homepage headline — performance figures live in Research only.
+    assert state["headline"] == []
 
 
-def test_model_portfolio_headline_carries_ITS_OWN_drawdown_not_the_long_backtests(tmp_path):
-    # Corrected P0-3: the 445-session track's return must be paired with the 445-session track's
-    # OWN drawdown — never the multi-decade backtest's. A peak-to-trough dip mid-series proves the
-    # headline drawdown is computed from this ledger's equity, not borrowed from the tearsheet.
+def test_homepage_carries_no_performance_headline(tmp_path):
+    # The homepage carries NO performance figure — not the model return, not drawdown. Even when a
+    # ledger and tearsheet are present, `headline` stays empty; those figures live in Research only.
     (tmp_path / "ledger.json").write_text(json.dumps({
         "inception": "2024-09-16",
         "entries": [{"equity": 1.0}, {"equity": 1.20}, {"equity": 1.02}, {"equity": 1.406}],
     }))
-    ts_state = {"books": [{
-        "name": "Equities & ETFs",
-        "strategy": {"max_drawdown": 0.59},
-        "benchmark": {"max_drawdown": 0.58},
-        "oos": {"test": {"sharpe": 0.77}},
-    }]}
-    (tmp_path / "tearsheet.html").write_text(
-        "x window.__STATE__ = " + json.dumps(ts_state) + ";\n y")
-    state = build_hub(tmp_path)
-    led = [h for h in state["headline"] if h["label"] == "Model Portfolio (hypothetical)"][0]
-    assert led["value"] == "+40.6%"
-    assert led["tone"] == "neutral"
-    # Its own drawdown: 1.20 -> 1.02 is a 15% peak-to-trough dip, NOT the backtest's 59%.
-    assert led["dd"] == "−15%"
-    assert "59%" not in led["sub"]                 # the long-backtest DD is never stapled to this return
-    assert "59%" not in led.get("dd", "")
-    # The multi-decade "N% vs N%" drawdown headline was retired from the hub — it must not reappear
-    # stapled to (or near) this return.
-    assert not [h for h in state["headline"] if "max drawdown" in h["label"]]
-
-
-def test_value_adds_sourced_and_fair_and_balanced(tmp_path):
-    # The three investor value-adds are built from real exhibit state, each paired with its risk.
-    (tmp_path / "ledger.json").write_text(json.dumps({
-        "inception": "2024-09-16",
-        "entries": [{"equity": 1.0}, {"equity": 1.20}, {"equity": 1.02}, {"equity": 1.406}],
-    }))
-    led_state = {"header": {"total_return": 0.406, "after_tax_total_return": 0.267,
-                            "tax_drag": 0.139, "sharpe": 1.35},
-                 "benchmarks": [{"label": "VT", "sharpe": 1.21, "max_drawdown": 0.165},
-                                {"label": "VTI", "sharpe": 1.05, "max_drawdown": 0.193}]}
-    (tmp_path / "ledger.html").write_text(
-        "x window.__STATE__ = " + json.dumps(led_state) + ";\n y")
     ts_state = {"books": [{"name": "Equities & ETFs", "strategy": {"max_drawdown": 0.59},
                            "benchmark": {"max_drawdown": 0.58}, "oos": {"test": {"sharpe": 0.77}}}]}
     (tmp_path / "tearsheet.html").write_text(
         "x window.__STATE__ = " + json.dumps(ts_state) + ";\n y")
+    state = build_hub(tmp_path)
+    assert state["headline"] == []
+
+
+def test_value_adds_three_distinct_dimensions_no_performance_numbers(tmp_path):
+    # The homepage sells three DISTINCT dimensions of value — tax efficiency, implementation quality,
+    # behavioral durability — and makes NO expected-return claim. Only the tax pillar carries a number
+    # (dollars); no Sharpe, no ratio, no Core Alpha performance figure leaks onto the homepage.
+    (tmp_path / "ledger.json").write_text(json.dumps({
+        "inception": "2024-09-16",
+        "entries": [{"equity": 1.0}, {"equity": 1.20}, {"equity": 1.02}, {"equity": 1.406}],
+    }))
+    led_state = {"header": {"sharpe": 1.35},
+                 "benchmarks": [{"label": "VT", "sharpe": 1.21}, {"label": "VTI", "sharpe": 1.05}]}
+    (tmp_path / "ledger.html").write_text(
+        "x window.__STATE__ = " + json.dumps(led_state) + ";\n y")
+    ts_state = {"books": [{"name": "Equities & ETFs", "strategy": {"max_drawdown": 0.59},
+                           "benchmark": {"max_drawdown": 0.58},
+                           "oos": {"test": {"sharpe": 0.65}, "train": {"sharpe": 0.65}}}]}
+    (tmp_path / "tearsheet.html").write_text(
+        "x window.__STATE__ = " + json.dumps(ts_state) + ";\n y")
     va = build_hub(tmp_path)["value_adds"]
     tags = [v["tag"] for v in va]
-    # The three pillars headline the idea; implementation names are demoted into the notes.
-    assert any("taxable core" in t.lower() for t in tags)   # 1 · the taxable core
-    assert any("complement" in t.lower() for t in tags)     # 2 · the complement (tax-advantaged)
-    assert any("Asset location" in t for t in tags)         # 3 · the decision that routes them
-    assert not any("Alpha" in t for t in tags)              # product names never headline a pillar
-    flag = next(v for v in va if "Structural Alpha" in v["note"])
-    assert flag["stat"].startswith("+") and "%/yr" in flag["stat"]   # leads with the tax-recovery band
-    core = next(v for v in va if "Core Alpha" in v["note"])
-    assert "persist" in core["note"].lower()            # persistence framing, not a Sharpe race
-    assert "1.35" in core["note"]                       # the current hypothetical track is CONTEXT, in the note
-    loc = next(v for v in va if "Asset location" in v["tag"])
-    # Dollars, not retained-gain percentages: keep_pct% of a $1M realized gain, one source of truth.
+    assert len(va) == 3
+    assert any("keep" in t.lower() for t in tags)      # 1 · taxes
+    assert any("build" in t.lower() for t in tags)     # 2 · implementation / architecture
+    assert any("stay" in t.lower() for t in tags)      # 3 · behavior
+    assert not any("Alpha" in t for t in tags)         # product names never headline a pillar
+    # Only ONE pillar carries a number, and it's dollars (families think in dollars).
+    with_stat = [v for v in va if v.get("stat")]
+    assert len(with_stat) == 1 and with_stat[0]["stat"].startswith("$")
     from drift.leakage import build_leakage
     leak = build_leakage()
     lo, hi = leak["before"]["keep_pct"] * 10_000, leak["after"]["keep_pct"] * 10_000
-    assert loc["stat"] == f"${lo:,.0f} → ${hi:,.0f}"
-    assert "$1 million of realized gains" in loc["stat_label"]
-
-
-def test_hub_does_not_surface_the_low_signal_drawdown_headline(tmp_path):
-    # The near-tie "N% vs N% max drawdown" figure was retired from the hub (it communicated little to a
-    # prospect); the tearsheet still carries it in context. The hub must no longer generate it.
-    ts_state = {"books": [{
-        "name": "Equities & ETFs",
-        "strategy": {"max_drawdown": 0.068},
-        "benchmark": {"max_drawdown": 0.507},
-        "oos": {"test": {"sharpe": 0.49}},
-    }]}
-    (tmp_path / "tearsheet.html").write_text(
-        "x window.__STATE__ = " + json.dumps(ts_state) + ";\n y")
-    state = build_hub(tmp_path)
-    assert not [h for h in state["headline"] if "max drawdown" in h["label"]]
+    assert with_stat[0]["stat"] == f"${lo:,.0f} → ${hi:,.0f}"
+    # NO performance/Sharpe/ratio/Core-Alpha figure anywhere in the pillars — those live in Research.
+    blob = " ".join(v.get("stat", "") + " " + v.get("stat_label", "") + " " + v.get("note", "") for v in va)
+    for banned in ("Sharpe", "≈", "1.35", "0.65", "Core Alpha"):
+        assert banned not in blob, f"{banned!r} must not appear on the homepage pillars"
+    # Structural Alpha may be named once, small, in the tax pillar's note (honest implementation detail).
+    assert "Structural Alpha" in blob
 
 
 def test_render_hub_embeds_state(tmp_path):
@@ -125,12 +95,13 @@ def test_hub_funnel_leads_with_structural_alpha_and_demotes_momentum_to_appendix
     # primary funnel — NOT appendix
     assert by_href["thesis.html"]["appendix"] is False
     assert by_href["taxlab.html"]["appendix"] is False
-    # Core Alpha research — appendix
+    # the research model portfolios — appendix (labeled "Research", no product names on the homepage)
     for h in ("ledger.html", "tearsheet.html", "equities.html", "equities_case_studies.html"):
-        assert by_href[h]["appendix"] is True, f"{h} should be in the Core Alpha Research appendix"
-    # the momentum exhibits are described as Core Alpha Research, not the deployed book
-    assert "Core Alpha Research" in by_href["ledger.html"]["desc"]
-    assert "Core Alpha Research" in by_href["equities.html"]["desc"]
+        assert by_href[h]["appendix"] is True, f"{h} should be in the Research appendix"
+    # the appendix blurbs are honest (hypothetical/model) and no longer lead with the "Core Alpha" name
+    assert "hypothetical" in by_href["ledger.html"]["desc"].lower()
+    assert "model portfolio" in by_href["equities.html"]["desc"].lower()
+    assert "Core Alpha" not in by_href["ledger.html"]["desc"]
 
 
 def test_hero_leads_with_the_structural_alpha_before_after(tmp_path):
@@ -149,16 +120,6 @@ def test_hero_leads_with_the_structural_alpha_before_after(tmp_path):
     assert hr["keep_after"] == leak["after"]["keep_pct"]
 
 
-def test_raw_model_return_is_research_tagged_for_the_appendix(tmp_path):
-    (tmp_path / "ledger.json").write_text(json.dumps({
-        "inception": "2024-09-16",
-        "entries": [{"equity": 1.0, "date": "2026-06-26"}, {"equity": 1.41, "date": "2026-06-29"}],
-    }))
-    state = build_hub(tmp_path)
-    mp = next(h for h in state["headline"] if h["label"] == "Model Portfolio (hypothetical)")
-    assert mp.get("research") is True                              # renders in the appendix, not the hero
-    assert "data through 2026-06-29" in mp["sub"]                  # the figure is always dated
-
 
 def test_hub_leads_with_belief_not_positioning():
     # Belief-first hero: the front door states what we optimize for (what you keep), and the firm's
@@ -171,11 +132,13 @@ def test_hub_leads_with_belief_not_positioning():
     assert "The architecture" not in t                       # the old machinery-led header is gone
 
 
-def test_hub_template_renders_a_core_alpha_research_appendix_and_does_not_lead_with_the_ledger():
+def test_hub_template_renders_a_research_appendix_and_does_not_lead_with_the_ledger():
     from drift.exhibit import HUB_TEMPLATE
     t = HUB_TEMPLATE.read_text()
-    # a distinct, labeled appendix section exists, separate from the primary exhibit grid
-    assert "exhibits-appendix" in t and "Core Alpha Research" in t
-    assert "Structural Alpha" in t
+    # a distinct appendix section exists, separate from the primary grid, labeled plainly "Research"
+    assert "exhibits-appendix" in t and '<div class="h">Research</div>' in t
+    # the homepage no longer names the internal products in the appendix, nor renders any perf number
+    assert "Core Alpha Research" not in t
+    assert 'class="rstat"' not in t                          # no performance figure line on the homepage
     # the hero no longer leads with the momentum "track record"
     assert "View the track record" not in t

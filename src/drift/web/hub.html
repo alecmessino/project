@@ -127,7 +127,11 @@
   .vcard .stat{font-variant-numeric:tabular-nums;font-size:30px;font-weight:700;color:var(--teal);letter-spacing:-.02em;line-height:1}
   .vcard .sl{font-size:12px;color:var(--dim);margin:6px 0 12px}
   .vcard .vn{font-size:12px;color:var(--body);line-height:1.5;border-top:1px solid var(--line2);padding-top:10px;margin-top:auto}
+  /* Number-less pillars (Build better / Stay invested): the note is the content, so it reads a touch
+     larger and sits right under the title instead of being pushed to the card foot. */
+  .vcard-q .vn{border-top:none;padding-top:0;margin-top:12px;font-size:13.5px;color:var(--body)}
   .vsec .cap{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.5}
+  .exsec .rnote{font-size:12.5px;color:var(--muted);line-height:1.6;margin:0 0 14px;max-width:72ch}
   .exsec{padding:4px 44px 30px}
   .exsec .h{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
   .exhibits{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -167,9 +171,9 @@
       <div class="dwnav-links">
         <a href="about.html">Our Story</a>
         <a href="thesis.html">How We Invest</a>
-        <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+        <a href="taxlab.html?view=prospect">After-Tax&nbsp;Review</a>
         <a href="leakage.html">Tax&nbsp;Diagnostic</a>
-        <a href="statemap.html">State Tax Guide</a>
+        <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         <a href="insights.html">Insights</a>
       </div>
     </nav>
@@ -205,7 +209,7 @@
           <div class="cap"><b style="color:#eef2f6">Great portfolios are engineered, not assembled.</b> Where each part belongs — which account, taxed how — is the decision that quietly compounds.</div>
         </div>
         <div class="onote">Illustrative, hypothetical modeling — not a forecast, not a client account. Your own
-          after-tax figures depend on your holdings, basis, and bracket; compute them in the Tax&nbsp;Lab.</div>
+          after-tax figures depend on your holdings, basis, and bracket; compute them in the After-Tax&nbsp;Review.</div>
       </div>
     </div>
 
@@ -244,12 +248,9 @@
     </div>
 
     <div class="exsec" id="appendixsec" style="display:none">
-      <div class="h">Core Alpha Research</div>
-      <div style="margin:0 0 12px;padding:11px 15px;border:1px solid #e0c98a;border-left:3px solid var(--brass);background:#faf3df;border-radius:8px;font-size:12px;line-height:1.55;color:#5a4a22">
-        <b>Core Alpha</b> — the tactical, high-turnover book for tax-advantaged capital. These are
-        <b>hypothetical Model Portfolios</b> and research studies, marked daily; the flagship <b>Structural Alpha</b>
-        book (diversified, tax-managed) is the taxable-account strategy. Not a client account.
-      </div>
+      <div class="h">Research</div>
+      <div class="rnote">The current model portfolio, its historical ledger, and the research behind the
+        approach — hypothetical, and one step deeper for readers who want the evidence.</div>
       <div class="exhibits" id="exhibits-appendix"></div>
     </div>
 
@@ -270,10 +271,8 @@
 window.__STATE__ = /*__STATE__*/null/*__END__*/;
 
 function render(s){
-  const head = s.headline || [];
-  // The hero card is static HTML — it shows the structure, not a single number.
-  // The three pillar cards below carry the figures (each appears once). Raw hypothetical Core Alpha
-  // returns render in the "Core Alpha Research" appendix, dated.
+  // The homepage carries no performance numbers — only the tax pillar shows a figure. The research
+  // the model's figures live one click deeper, on the research pages themselves.
   const va = s.value_adds || [];
   if(va.length){
     document.getElementById("vsec").style.display = "";
@@ -286,10 +285,12 @@ function render(s){
         `in the model, <b>${hr.pretax_after}% pre-tax produced more wealth than ${hr.pretax_before}%</b>, `+
         `because less was lost to taxes along the way.`;
     }
-    document.getElementById("vadds").innerHTML = va.map(v =>
-      `<div class="vcard"><div class="tag">${v.tag}</div><div class="vt">${v.title}</div>`+
-      `<div class="stat">${v.stat}</div><div class="sl">${v.stat_label}</div>`+
-      `<div class="vn">${v.note}</div></div>`).join("");
+    document.getElementById("vadds").innerHTML = va.map(v => {
+      // Only the tax pillar carries a number; the architecture and behavior pillars are stat-less.
+      const stat = v.stat ? `<div class="stat">${v.stat}</div><div class="sl">${v.stat_label}</div>` : "";
+      return `<div class="vcard${v.stat?'':' vcard-q'}"><div class="tag">${v.tag}</div><div class="vt">${v.title}</div>`+
+        stat + `<div class="vn">${v.note}</div></div>`;
+    }).join("");
   }
   const exs = s.exhibits||[];
   const exHTML = e =>
@@ -303,13 +304,9 @@ function render(s){
   const appendix = exs.filter(e=>e.appendix);
   if(appendix.length){
     document.getElementById("appendixsec").style.display = "";
-    // Research-tagged headlines (the raw hypothetical model figures) render HERE, dated, beside the
-    // exhibits they come from — context first, number second.
-    const rh = head.filter(m=>m.research);
-    const rline = rh.length ? `<div class="rstat">`+rh.map(m=>
-        `<b>${m.value}</b> ${m.label.toLowerCase()} · ${m.sub||""}`+
-        (m.dd?` · <b>${m.dd}</b> ${m.dd_label||""}`:"")).join("<br>")+`</div>` : "";
-    document.getElementById("exhibits-appendix").innerHTML = rline + appendix.map(exHTML).join("");
+    // No performance numbers on the homepage — the appendix is labeled links only. The figures
+    // the figures live one click deeper, on the research pages themselves.
+    document.getElementById("exhibits-appendix").innerHTML = appendix.map(exHTML).join("");
   }
   document.getElementById("gen").textContent = "Generated "+(s.header? s.header.generated : "");
 }
@@ -322,7 +319,7 @@ async function load(){
   var ex=document.getElementById("exhibits");
   if(ex) ex.innerHTML='<a class="ex" href="taxlab.html?view=prospect" style="grid-column:1 / -1">'+
     '<div class="t">Couldn’t load the model figures <span class="arrow" aria-hidden="true">→</span></div>'+
-    '<div class="d">Refresh the page, or open the Tax Lab to compute your own after-tax number. '+
+    '<div class="d">Refresh the page, or open the After-Tax Review to compute your own after-tax number. '+
     'Use the navigation above to explore the rest of Driftwood.</div></a>';
 }
 load();

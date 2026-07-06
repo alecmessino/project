@@ -39,7 +39,12 @@ Its two corollaries:
 - **Prefer ideas over opinions, and first principles over forecasts.** We explain how investing works, not
   what will happen next.
 - **One sentence from every piece should be quotable.** Write toward the line a reader will repeat.
-- **Every piece should introduce one piece of vocabulary** from (or into) the Driftwood Lexicon.
+- **Every piece must leave the reader with one memorable mental model** they can repeat in conversation —
+  *Two Returns*, *the Invisible Expense Ratio*, *the Attention Gap*. If a draft doesn't hand the reader a
+  new way to *see* investing, it isn't finished. This is the single strongest test of whether a piece
+  belongs in the Canon.
+- **Every piece should introduce one piece of vocabulary** from (or into) the Driftwood Lexicon — the
+  words that make the mental model repeatable.
 - **End with reflection, not persuasion.** Close on a thought, never a pitch or a CTA.
 
 ## What we never do

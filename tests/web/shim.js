@@ -117,7 +117,7 @@ const FIXTURE = {
       { key: 'estate', label: 'Estate', title: 'Estate & inheritance tax at death',
         legend: [['none', '#d8cfbc', 'None'], ['estate', '#15806a', 'Estate tax'],
                  ['inheritance', '#c1a35b', 'Inheritance tax'], ['both', '#9b4439', 'Both']] },
-      { key: 'alpha', label: 'Structural Alpha', title: 'What our engine recovers from all of it',
+      { key: 'alpha', label: 'Recoverable Tax Leakage', title: 'What a tax-managed portfolio can recover from all of it',
         highlight: true,
         legend: [['a', '#cfe0d6', 'lower'], ['b', '#9ec9b6', ''], ['c', '#5ea98c', ''],
                  ['d', '#2f8467', ''], ['e', '#15604a', 'higher recovery']] },

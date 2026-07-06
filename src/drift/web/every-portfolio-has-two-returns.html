@@ -54,6 +54,7 @@
   p{font-size:18px;line-height:1.8;color:var(--body);margin:0 0 22px}
   p b{color:var(--ink);font-weight:600}
   .lead-in{font-size:20px;line-height:1.65;color:var(--ink)}
+  .sec-h{font-family:var(--serif);font-weight:700;font-size:26px;line-height:1.15;letter-spacing:-.015em;color:var(--ink);margin:40px 0 14px}
   .pull{font-family:var(--serif);font-weight:600;font-size:23px;line-height:1.4;color:var(--ink);
     margin:34px 0;padding-left:20px;border-left:3px solid var(--brass)}
   a{color:var(--teal2)}
@@ -97,9 +98,9 @@
       <div class="dwnav-links">
         <a href="about.html">Our Story</a>
         <a href="thesis.html">How We Invest</a>
-        <a href="taxlab.html?view=prospect">Tax&nbsp;Lab</a>
+        <a href="taxlab.html?view=prospect">After-Tax&nbsp;Review</a>
         <a href="leakage.html">Tax&nbsp;Diagnostic</a>
-        <a href="statemap.html">State Tax Guide</a>
+        <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         <a href="insights.html" aria-current="page">Insights</a>
       </div>
     </nav>
@@ -107,7 +108,6 @@
     <article class="doc">
       <div class="kicker"><a href="insights.html">Insights</a> · July 2026</div>
       <h1>Every Portfolio Has Two Returns</h1>
-      <p class="dek">The return you never get to keep.</p>
 
       <div class="lede-rule"></div>
 
@@ -115,6 +115,28 @@
         On a statement, only the first one is ever printed. The second — the one that pays for the house,
         the tuition, the decades after work — is left for its owner to discover alone, years later, if at
         all.</p>
+
+      <figure class="two-returns" role="img"
+        aria-label="Three bars for one portfolio. The first, 'what it earned,' is full. The second, 'what
+        you keep, taxed carelessly,' is far shorter, with a large hatched wedge marked tax, turnover, and
+        reaction. The third, 'what you keep, taxed deliberately,' is much longer, with only a small wedge
+        lost. The market sets the first return; attention sets the second.">
+        <div class="tr-title">The same portfolio, two returns</div>
+        <div class="tr-row">
+          <div class="tr-label">What it earned</div>
+          <div class="tr-bar"><span class="tr-earned" style="width:100%"></span></div>
+        </div>
+        <div class="tr-row">
+          <div class="tr-label">What you keep — taxed carelessly</div>
+          <div class="tr-bar"><span class="tr-kept" style="width:38%"></span><span class="tr-lost" style="width:62%">tax · turnover · reaction</span></div>
+        </div>
+        <div class="tr-row">
+          <div class="tr-label">What you keep — taxed deliberately</div>
+          <div class="tr-bar"><span class="tr-kept" style="width:80%"></span><span class="tr-lost" style="width:20%"></span></div>
+        </div>
+        <figcaption class="tr-cap">Illustrative. Same portfolio, same market, same headline return — two
+          different fortunes. Nothing about the investments changed. Everything about the outcome did.</figcaption>
+      </figure>
 
       <p>The distance between those two numbers may be the most important figure in investing that appears
         on no report. It goes by a few names — taxes, turnover, trading costs, the price of reacting to bad
@@ -142,28 +164,8 @@
         scale, the gap between the two returns is measured in buildings. The arithmetic is no different for
         a family. Only the attention is.</p>
 
-      <figure class="two-returns" role="img"
-        aria-label="Three bars for one portfolio. The first, 'what it earned,' is full. The second, 'what
-        you keep, taxed carelessly,' is far shorter, with a large hatched wedge marked tax, turnover, and
-        reaction. The third, 'what you keep, taxed deliberately,' is much longer, with only a small wedge
-        lost. The market sets the first return; attention sets the second.">
-        <div class="tr-title">The same portfolio, two returns</div>
-        <div class="tr-row">
-          <div class="tr-label">What it earned</div>
-          <div class="tr-bar"><span class="tr-earned" style="width:100%"></span></div>
-        </div>
-        <div class="tr-row">
-          <div class="tr-label">What you keep — taxed carelessly</div>
-          <div class="tr-bar"><span class="tr-kept" style="width:38%"></span><span class="tr-lost" style="width:62%">tax · turnover · reaction</span></div>
-        </div>
-        <div class="tr-row">
-          <div class="tr-label">What you keep — taxed deliberately</div>
-          <div class="tr-bar"><span class="tr-kept" style="width:80%"></span><span class="tr-lost" style="width:20%"></span></div>
-        </div>
-        <figcaption class="tr-cap">Illustrative. Same portfolio, same market, same headline return — two
-          different fortunes. Nothing about the investments changed. Everything about the outcome did.</figcaption>
-      </figure>
 
+      <h2 class="sec-h">The return you never get to keep</h2>
       <p>This is the quiet insight the industry has little reason to advertise. It is far easier to sell the
         first return — it is bigger, it is exciting, it fits in a headline. The second return is dull. It is
         made of patience and paperwork, of holdings left alone and losses harvested and accounts chosen with

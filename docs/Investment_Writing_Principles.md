@@ -1,8 +1,9 @@
 # Investment Writing Principles
 
-*The constitution for everything Driftwood publishes. Companion to `Editorial_Style_Guide.md` (voice),
-`Content_Hierarchy.md` (where each page's ideas and numbers belong), and `Evidence_Register.md` (which
-facts exist and why). When a draft and this document disagree, fix the draft.*
+*The constitution for everything Driftwood publishes. Companion to `Editorial_Style_Guide.md` (voice +
+the Lexicon and Canonical Sentences), `Content_Hierarchy.md` (where each page's ideas and numbers belong),
+`Evidence_Register.md` (which facts exist and why), and `Architecture_Register.md` (what each property is
+for and must never become). When a draft and this document disagree, fix the draft.*
 
 Insights is not a blog. It is a permanent body of writing, in the lineage of Howard Marks's memos, Morgan
 Housel, Farnam Street, and the Berkshire letters. We publish rarely, and only what will still be true in

@@ -27,9 +27,9 @@
 <script src="dw-context.js"></script>
 <style>
   :root{
-    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
-    --ink:#1d242d; --body:#3a414b; --dim:#5f5d68; --muted:#6f675b;
-    --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6; --chrome:#e9e5da;
+    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
+    --brass:#2c5878; --gold:#a9c2d6; --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
     /* five-step heat ramp (weakest -> strongest fit), tuned to the cream paper */
     --h1:#e7d7cf; --h2:#e4d4b6; --h3:#dfe0c6; --h4:#bcd3c2; --h5:#8ab99f;
   }
@@ -37,15 +37,15 @@
   body{margin:0;background:var(--bg);color:var(--body);font:14.5px/1.6 var(--serif);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .sheet{max-width:1100px;margin:30px auto;padding:0 20px 50px}
-  .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;
+  .frame{background:var(--bg);border:1px solid #c3bcab;border-radius:12px;overflow:hidden;
     box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
-  .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #ddd5c6}
-  .chrome i{width:9px;height:9px;border-radius:999px;background:#cfc6b4;display:inline-block}
+  .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #c3bcab}
+  .chrome i{width:9px;height:9px;border-radius:999px;background:#c3bcab;display:inline-block}
   .chrome .url{margin-left:auto;font-size:11.5px;letter-spacing:.04em;color:var(--muted);font-family:ui-monospace,monospace}
   .article{padding:30px 40px 6px;max-width:760px}
   .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
   h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px, 1.7vw + 21px, 34px);line-height:1.08;letter-spacing:-.02em;color:var(--ink);margin:0 0 12px}
-  .lead{font-size:17px;line-height:1.5;color:#54545c;margin:0 0 18px}
+  .lead{font-size:17px;line-height:1.5;color:#5c6470;margin:0 0 18px}
   .article p.para{font-size:15px;line-height:1.7;color:var(--body);margin:0 0 14px}
   .tool-head{padding:20px 40px 2px}
   h2{font-family:var(--serif);font-weight:600;font-size:24px;letter-spacing:-.01em;color:var(--ink);margin:0}
@@ -130,12 +130,24 @@
     tbody tr.sel td.name{background:#eef2ee}
   }
   @media print{ body{background:#fff} .frame{border:0;box-shadow:none} .chrome,.filters,.cta{display:none} }
+
+  /* ── Rebrand: plate frame + running head (matches the front door), in place of the browser chrome. */
+  .frame{border:1px solid var(--frame-line);border-radius:3px;
+    box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line),
+      0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
+  .chrome{background:transparent;justify-content:space-between;gap:12px;
+    padding:12px 24px;margin:7px 7px 0;border-bottom:3px double var(--frame-line)}
+  .chrome i{display:none}
+  .chrome::before{content:"Driftwood · Private Wealth Architecture";font-family:var(--sans);
+    font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .chrome .url{margin-left:auto;font-family:var(--sans);font-weight:700;font-size:10px;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
 </style>
 </head>
 <body>
 <div class="sheet">
   <div class="frame">
-    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — single asset risk</span></div>
+    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">Single-Asset Risk</span></div>
     <nav class="dwnav" aria-label="Driftwood">
       <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
       <div class="dwnav-links">

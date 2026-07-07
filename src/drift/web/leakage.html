@@ -142,6 +142,7 @@
         <a href="insights.html">Insights</a>
       </div>
     </nav>
+    <div id="dw-household" data-page="leakage"></div>
 
     <div class="hd">
       <div class="eyebrow">The Tax Diagnostic</div>
@@ -208,9 +209,11 @@ function render(s){
   // figures when absent. Forwards state/port/utm into the After-Tax Review funnel for continuity + attribution.
   const qp = new URLSearchParams(location.search);
   const sa = s.state_alpha||{}, names = s.state_names||{};
-  const qState = qp.get("state");
+  // Personalize from the URL, else from the saved household (dw-context.js) — URL always wins.
+  const dwc = (window.dwTaxContext&&dwTaxContext.get())||{};
+  const qState = qp.get("state") || dwc.state || null;
   const row = (qState && sa[qState]) ? sa[qState] : null;
-  const qPort = parseFloat(qp.get("portfolio")||qp.get("port"));
+  const qPort = parseFloat(qp.get("portfolio")||qp.get("port")|| (dwc.portfolio>0?dwc.portfolio:""));
   const annual = (row && qPort>0) ? qPort * row.alpha/100 : 0;
 
   if(row){

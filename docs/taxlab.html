@@ -480,6 +480,7 @@
         <a href="insights.html">Insights</a>
       </div>
     </nav>
+    <div id="dw-household" data-page="taxlab"></div>
     <div class="fbody">
   <header>
     <div class="eyebrow">Private wealth</div>
@@ -1745,6 +1746,8 @@ function init(){
     $("taxbal").value=A.default_taxable; $("tradbal").value=A.default_traditional; $("rothbal").value=A.default_roth;
     // Slider drags only touch the optimizer, not the whole page (streamlined interaction path).
     ["taxbal","tradbal","rothbal"].forEach(id=>$(id).addEventListener("input",renderLocation));
+    // Household: the taxable book is the shared "portfolio" — save it so the Atlas & Diagnostic follow.
+    $("taxbal").addEventListener("input",()=>window.dwTaxContext&&dwTaxContext.save({portfolio:+$("taxbal").value}));
     // Prospect-view portfolio slider — drives the lead-gen bleed off the prospect's OWN number.
     $("leadport").max=A.wealth_max; $("leadport").step=A.wealth_step; $("leadport").value=CONFIG.leadPortfolio;
     $("leadport").addEventListener("input",renderLead);
@@ -1807,11 +1810,13 @@ function init(){
     const bi=S.brackets.findIndex(b=>Math.round(b.ord*100)===wantBracket);
     if(bi>=0) $("bracket").value=bi;
   }
-  if(qPort>0){
-    setClamped("leadport",qPort);                                    // prospect dollar-bleed hook
-    setClamped("taxbal",qPort);                                      // advisor optimizer (taxable seed)
-    if($("estind")){ setClamped("estind",qPort); $("estjoint").value=0; $("esttrust").value=0; }  // estate cliff (unmitigated)
+  // Seed the taxable book from the URL ?port OR the saved household portfolio (URL wins).
+  const wantPort = qPort>0 ? qPort : (dwc.portfolio>0 ? dwc.portfolio : 0);
+  if(wantPort>0){
+    setClamped("leadport",wantPort);                                 // prospect dollar-bleed hook
+    setClamped("taxbal",wantPort);                                   // advisor optimizer (taxable seed)
   }
+  if(qPort>0 && $("estind")){ setClamped("estind",qPort); $("estjoint").value=0; $("esttrust").value=0; }  // estate cliff (unmitigated) — explicit deep-links only
   // Illiquid / true-net-worth params feed the estate cliff directly (home equity, policies, business).
   setClamped("estre",qHome); setClamped("estli",qLi); setClamped("estbiz",qBiz);
   buildSmTabs();

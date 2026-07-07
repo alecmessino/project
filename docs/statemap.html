@@ -125,6 +125,7 @@
         <a href="insights.html">Insights</a>
       </div>
     </nav>
+    <div id="dw-household" data-page="statemap"></div>
     <div class="hd">
       <div class="eyebrow">The Fifty States</div>
       <h1>The State Atlas</h1>
@@ -158,7 +159,9 @@ function render(s){
   let active = 0;
   // optional ?state= / ?dim= preselect
   const qp = new URLSearchParams(location.search);
-  let sel = (qp.get("state")||"").toUpperCase(); if(!(sel in tiles)) sel = "IL" in tiles ? "IL" : Object.keys(tiles)[0];
+  let sel = (qp.get("state")||"").toUpperCase();
+  if(!(sel in tiles)){ var _dw=(window.dwTaxContext&&dwTaxContext.get())||{}; if(_dw.state && (_dw.state in tiles)) sel=_dw.state; }  // fall back to the saved household state
+  if(!(sel in tiles)) sel = "IL" in tiles ? "IL" : Object.keys(tiles)[0];
   const qdim = qp.get("dim"); const di = dims.findIndex(d=>d.key===qdim); if(di>=0) active = di;
 
   const colorMap = d => Object.fromEntries(d.legend.map(([r,c])=>[r,c]));
@@ -210,7 +213,7 @@ function render(s){
     svg.setAttribute("viewBox", `-2 -2 ${(maxc+1)*CELL+2} ${(maxr+1)*CELL}`);
     svg.innerHTML = parts;
     svg.querySelectorAll("g.tile").forEach(g=>{
-      const pick=()=>{ sel=g.dataset.code; paint(); if(window.plausible) plausible("map_state_clicked",{props:{state:sel}}); };
+      const pick=()=>{ sel=g.dataset.code; paint(); if(window.dwTaxContext) dwTaxContext.save({state:sel}); if(window.plausible) plausible("map_state_clicked",{props:{state:sel}}); };
       g.addEventListener("click",pick);
       g.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });
     });

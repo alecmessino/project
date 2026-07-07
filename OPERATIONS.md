@@ -1,7 +1,7 @@
 # Driftwood — Operations Runbook
 
 Continuity guide for the Driftwood site. The architecture lives in
-`README_DRIFT.md`; the compliance posture in `docs/Structural_Alpha_Methodology.md`. This is the
+`src/drift/README.md`; the compliance posture in `docs/Structural_Alpha_Methodology.md`. This is the
 **how-to-run-it** so the site survives a maintainer handoff.
 
 ## What it is

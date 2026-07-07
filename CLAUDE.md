@@ -4,40 +4,65 @@ Guidance for working in this repo.
 
 ## What this is
 
-`mrbet` is a mean-reversion **signal** system for live NBA totals / team totals. It flags
-+EV opportunities (with desktop/push alerts) when the live line over-drops vs the pregame
-baseline relative to a reversion model. It does **not** place bets.
+A **monorepo of three independent "signal systems" that share one design** (feed protocol →
+streaming engine → conjunctive trigger gate → signals + cost-aware backtest). They do **not**
+share business logic. Start from the [README](README.md) for the full map.
+
+| Project | Scope | Code | Docs |
+|---|---|---|---|
+| **🪵 Driftwood** (headline) | equity-ETF momentum engine **+** the wealth-management website | `src/drift/`, site in `src/drift/web/` → `docs/` | [src/drift/README.md](src/drift/README.md), [OPERATIONS.md](OPERATIONS.md) |
+| 🏀 mrbet | live NBA totals mean-reversion betting signals | `src/mrbet/` | [src/mrbet/README.md](src/mrbet/README.md) |
+| ⚾ the_third_turn | live MLB pitcher-fatigue betting signals (isolated) | `the_third_turn/` | [the_third_turn/README.md](the_third_turn/README.md) |
+
+**Figure out which project you're in before editing.** `config/`, `scripts/`, and
+`.github/workflows/` mix all three — each of those dirs has a README labeling its files by
+project. `docs/` is the shared GitHub Pages build (Driftwood pages **and** the mrbet betting
+dashboard `docs/mrbet.html`).
 
 ## Commands
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"          # add ,desktop for native notifications
-pytest -q                        # run all tests
-mrbet simulate --game config/games/okc_sas_2026-05-28.yaml --replay tests/data/replay_okc_sas.json
+pip install -e ".[dev]"          # installs both `drift` and `mrbet` CLIs; add ,desktop for mrbet native notifications
+pytest -q                        # full suite; drift-only: pytest -q tests/test_drift_*.py
 ```
 
-## Architecture (data flow)
+- **🪵 Driftwood site:** edit templates in `src/drift/web/*.html` + `driftwood.css`, then
+  `python scripts/sync_docs.py` to re-render `docs/` (preserves the injected
+  `window.__STATE__` data) — or run the `drift` CLI (`drift hub/export/taxlab/thesis/leakage/statemap`)
+  to rebuild from live data. Never hand-edit `docs/*.html`; they are generated.
+- **🪵 Driftwood engine:** `drift rank | xbacktest | tearsheet | ledger --config config/drift.yaml`
+- **🏀 mrbet:** `mrbet simulate --game config/games/okc_sas_2026-05-28.yaml --replay tests/data/replay_okc_sas.json`
+- **⚾ the_third_turn:** runs from its own folder with its own `requirements.txt`.
 
-`odds/<provider>` yields `Snapshot(state, lines)` → `engine.Engine.process_snapshot`
-matches each live `MarketLine` to its pregame `Baseline`, derives the per-period
-`GameState`, and calls `triggers.evaluate_market` → `Evaluation`; `triggers.to_signal`
-applies the thresholds → `Signal`. The engine logs every evaluation (`storage`) and
-notifies on new/strengthened signals (`notify`).
+## Architecture (the shared harness)
+
+`feed/provider` yields a `Snapshot` → `Engine.process_snapshot` maintains rolling per-entity
+history and calls the trigger gate → an `Evaluation`; a conjunctive `to_signal` applies the
+thresholds → a `Signal`. The engine logs every evaluation and notifies on new/strengthened
+signals. Driftwood mirrors this for prices (`feed/base.py`, `signal.py`, `sizing.py`,
+`backtest.py`); mrbet for odds (`odds/base.py`, `reversion.py`, `probability.py`,
+`triggers.py`, `engine.py`).
 
 ## Conventions
 
-- **Math modules stay pure** (`reversion.py`, `probability.py`) — no I/O, fully unit-tested.
-- **Runtime objects are dataclasses** (`models.py`); **config is pydantic** (`config.py`).
-- **Providers are interchangeable** behind the `OddsProvider` protocol (`odds/base.py`);
-  add new sources there, don't special-case them in the engine.
-- All thresholds/params live in `config/settings.yaml` — don't hardcode them.
-- Away/home mapping for team totals comes from the game YAML (`away_key`/`home_key`).
+- **Math modules stay pure** (drift `signal.py`/`sizing.py`, mrbet `reversion.py`/`probability.py`) —
+  no I/O, fully unit-tested.
+- **Runtime objects are dataclasses**; **config is pydantic**. All thresholds/params live in
+  the project's `config/*.yaml` — don't hardcode them.
+- **Providers/feeds are interchangeable** behind their protocol (`odds/base.py`,
+  `feed/base.py`); add new sources there, don't special-case them in the engine.
+- Keep the three projects **decoupled** — no cross-imports between `drift`, `mrbet`, and
+  `the_third_turn`.
 
 ## Gotchas
 
-- The Odds API has no game clock; the live clock/score comes from ESPN's scoreboard.
-- Live derivation only supports FULL/H1 and team totals from a cumulative score; per-quarter
-  markets need explicit per-period snapshots (replay/manual path).
-- `β`, `σ_full`, `σ_team`, and the trigger thresholds are unvalidated defaults — tune them
-  against logged data before trusting live output.
+- **Driftwood:** `docs/` is the deployed Pages build; the `drift-pages.yml` nightly job
+  regenerates exhibits and `pages.yml` deploys. `driftwood.css` + `docs/fonts/` are committed
+  static assets (not regenerated by the nightly job) — edit `src/drift/web/driftwood.css` and
+  copy across (`sync_docs.py` does this). Compliance gates are in `OPERATIONS.md`.
+- **mrbet:** The Odds API has no game clock; the live clock/score comes from ESPN. `β`, `σ`,
+  and trigger thresholds are unvalidated defaults — tune against logged data before trusting
+  live output.
+- **the_third_turn:** intentionally isolated (own deps/runtime); don't wire it into the
+  root package.

@@ -73,4 +73,4 @@ refreshes the clock/score for free.
 
 For querying a historical endpoint by wall-clock (paid plans only), game-clock
 minutes are stretched to real time with a ~**2.2×** broadcast multiplier from
-tip-off (timeouts, reviews, halftime). See `efficient_backtest.py`.
+tip-off (timeouts, reviews, halftime). See `../../efficient_backtest.py`.

@@ -1,15 +1,17 @@
-/* Driftwood shared design system — self-hosted institutional type. Erode (Fontshare/ITF) is the brand
-   face for editorial display (H1–H3) AND body/prose; Inter is retained for dense UI ONLY — nav, tables,
-   tabular numbers, form controls. Linked LAST in each <head> to unify tokens across all pages. */
+/* Driftwood shared design system — self-hosted institutional type. THREE STRICT ROLES:
+   • Satoshi (--sans): headings (H1–H3), body prose, and all UI (nav, tables, buttons, forms) —
+     modern authority + maximum legibility for financial data and long-form insights.
+   • Erode (--serif): editorial callouts ONLY — ledes, value statements, philosophy pull-quotes,
+     introductory paragraphs — where the serif evokes emotional trust and prestige.
+   Linked LAST in each <head> to unify tokens across all pages. */
+@font-face{font-family:'Satoshi';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/satoshi-400.woff2") format("woff2")}
+@font-face{font-family:'Satoshi';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/satoshi-500.woff2") format("woff2")}
+@font-face{font-family:'Satoshi';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/satoshi-700.woff2") format("woff2")}
+/* Erode — editorial callouts / ledes / pull-quotes only, never headings or dense UI. */
 @font-face{font-family:'Erode';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/erode-400.woff2") format("woff2")}
 @font-face{font-family:'Erode';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/erode-500.woff2") format("woff2")}
 @font-face{font-family:'Erode';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/erode-600.woff2") format("woff2")}
 @font-face{font-family:'Erode';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/erode-700.woff2") format("woff2")}
-/* Inter — UI only (tables/grids/tabular numbers/form controls), never body prose. */
-@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/inter-400.woff2") format("woff2")}
-@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/inter-500.woff2") format("woff2")}
-@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/inter-600.woff2") format("woff2")}
-@font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/inter-700.woff2") format("woff2")}
 
 :root{
   /* Rebrand (July 2026): limestone paper, slate-navy ink, editorial blue for identity/wayfinding.
@@ -27,17 +29,17 @@
   --t-fast:.12s ease; --t-mid:.2s ease;
   /* Organic easing for tactile hover/lift micro-interactions. */
   --ease-out:cubic-bezier(.2,.8,.2,1);
-  /* Erode is the brand face: editorial display (H1–H3) AND body/prose. Inter (--sans) is retained
-     ONLY for dense UI — nav, tables, tabular numbers, form controls — where a serif reads poorly. */
-  --serif:'Erode','Georgia','Times New Roman',serif;   /* brand face — display + body/prose */
-  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;  /* dense UI only */
+  /* Satoshi (--sans) is the workhorse: headings, body prose, and all UI. Erode (--serif) is reserved
+     for editorial callouts — ledes, value statements, pull-quotes — where a serif adds prestige. */
+  --sans:'Satoshi','Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;  /* headings + body + UI */
+  --serif:'Erode','Georgia','Times New Roman',serif;   /* editorial callouts / ledes / pull-quotes only */
   --fz-xs:11px; --fz-sm:12.5px; --fz-md:15px; --fz-lg:18px; --fz-hero:30px;
 }
-body{ font-family:var(--serif); -webkit-font-smoothing:antialiased; letter-spacing:-.004em; }
-/* Erode (var(--serif)) carries the editorial title levels + their print equivalents. */
-h1,h2,.ph-title,.es-h{ font-family:var(--serif); letter-spacing:-.02em; }
-h1{ font-weight:700; } h2,.ph-title,.es-h{ font-weight:600; }
-h3{ font-weight:600; letter-spacing:-.01em; }   /* H3 now inherits the Erode body face */
+body{ font-family:var(--sans); -webkit-font-smoothing:antialiased; letter-spacing:-.004em; }
+/* Satoshi carries all heading levels (sentence case, tight tracking) + their print equivalents. */
+h1,h2,h3,.ph-title,.es-h{ font-family:var(--sans); letter-spacing:-.02em; }
+h1{ font-weight:700; } h2,.ph-title,.es-h{ font-weight:700; }
+h3{ font-weight:500; }   /* Medium for a sleeker subhead */
 /* Dense UI stays on Inter (var(--sans)): nav, tables, form controls, code, and any tabular-number
    atoms — a serif at small sizes / in aligned columns reads poorly and breaks numeric alignment. */
 .num,.v,.big,output,.amt,.recovered{ font-family:var(--sans); font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }

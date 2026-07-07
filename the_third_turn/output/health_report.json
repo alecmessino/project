@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-06T23:59:00+00:00",
+  "generated": "2026-07-07T00:14:05+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 50093,
+    "rows": 50251,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -16,20 +16,20 @@
     "bovada": {
       "rows_total": 12014,
       "live_total": 5367,
-      "live_today": 50,
-      "last_row_age_min": 2.9
+      "live_today": 0,
+      "last_row_age_min": 18.0
     },
     "fanduel": {
-      "rows_total": 38073,
-      "live_total": 1377,
-      "live_today": 428,
-      "last_row_age_min": 0.4
+      "rows_total": 38231,
+      "live_total": 1457,
+      "live_today": 74,
+      "last_row_age_min": 0.2
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 1054.0
+      "last_row_age_min": 1069.1
     }
   },
   "books_reporting_live": [
@@ -38,15 +38,15 @@
   ],
   "market_status": {
     "unset": 5367,
-    "OPEN": 1245,
-    "SUSPENDED": 130,
+    "OPEN": 1305,
+    "SUSPENDED": 150,
     "REMOVED": 2
   },
   "overlap": {
-    "simultaneous_pairs_total": 1419,
-    "simultaneous_pairs_today": 429,
+    "simultaneous_pairs_total": 1499,
+    "simultaneous_pairs_today": 74,
     "overlap_games": 18,
-    "median_sync_lag_s": 579.0,
+    "median_sync_lag_s": 580.0,
     "games_by_books_live": {
       "0_books": 17,
       "2_books": 18
@@ -85,10 +85,10 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 1419,
+        "current": 1499,
         "target": 2000,
         "pass": false,
-        "progress": 0.71
+        "progress": 0.75
       },
       {
         "criterion": "games with live overlap",
@@ -99,7 +99,7 @@
       },
       {
         "criterion": "median sync lag < 15s",
-        "current": 579.0,
+        "current": 580.0,
         "target": 15,
         "pass": false,
         "progress": 0.026
@@ -113,6 +113,6 @@
       }
     ],
     "cleared": false,
-    "overall_progress": 0.396
+    "overall_progress": 0.406
   }
 }

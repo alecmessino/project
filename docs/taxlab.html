@@ -49,11 +49,8 @@
   .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
-  /* Nav — the Nameplate (single-ink tracked caps) + a running index of tracked-caps links. */
-  .dwnav .brand{font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);text-decoration:none}
-  .dwnav-links a{font-family:var(--sans);font-weight:600;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:3px 1px;border-bottom:2px solid transparent}
-  .dwnav-links a:hover{color:var(--ink)}
-  .dwnav-links a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent-strike)}
+  /* Nav (the Nameplate + running-index links) is defined once in driftwood.css so every page
+     matches; --accent-strike in this page's :root drives the active-link rule. */
   /* Crisp, printerly register — square the primary card/panel/control surfaces in this frame to match
      the plate frame (which stays at 3px); pills and toggles keep their shape. */
   .cards,.loc,.note,.struct-alpha,.opt-card,.disc,.blueprint,.acct,.opt-result,.ctl select{border-radius:0}

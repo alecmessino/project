@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-07T23:19:28+00:00",
+  "generated": "2026-07-07T23:34:34+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 66425,
+    "rows": 66938,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -17,19 +17,19 @@
       "rows_total": 14599,
       "live_total": 6038,
       "live_today": 671,
-      "last_row_age_min": 3.8
+      "last_row_age_min": 18.9
     },
     "fanduel": {
-      "rows_total": 51820,
-      "live_total": 3138,
-      "live_today": 1755,
-      "last_row_age_min": 0.3
+      "rows_total": 52333,
+      "live_total": 3279,
+      "live_today": 1896,
+      "last_row_age_min": 0.1
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 2454.5
+      "last_row_age_min": 2469.6
     }
   },
   "books_reporting_live": [
@@ -38,15 +38,15 @@
   ],
   "market_status": {
     "unset": 6038,
-    "OPEN": 2743,
-    "SUSPENDED": 386,
+    "OPEN": 2877,
+    "SUSPENDED": 393,
     "REMOVED": 9
   },
   "overlap": {
-    "simultaneous_pairs_total": 3156,
-    "simultaneous_pairs_today": 1731,
+    "simultaneous_pairs_total": 3289,
+    "simultaneous_pairs_today": 1864,
     "overlap_games": 25,
-    "median_sync_lag_s": 487.0,
+    "median_sync_lag_s": 516.0,
     "games_by_books_live": {
       "0_books": 10,
       "1_books": 1,
@@ -86,7 +86,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 3156,
+        "current": 3289,
         "target": 2000,
         "pass": true,
         "progress": 1.0
@@ -100,10 +100,10 @@
       },
       {
         "criterion": "median sync lag < 15s",
-        "current": 487.0,
+        "current": 516.0,
         "target": 15,
         "pass": false,
-        "progress": 0.031
+        "progress": 0.029
       },
       {
         "criterion": "books quoting live",
@@ -114,6 +114,6 @@
       }
     ],
     "cleared": false,
-    "overall_progress": 0.487
+    "overall_progress": 0.486
   }
 }

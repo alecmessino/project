@@ -1898,6 +1898,17 @@ function init(){
   $("secnav").querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>showSection(btn.dataset.sec)));
   showSection(SEC);
   reviewLead();   // fill the outcome banner on load
+  // The editable "Your household" bar drives the tool's own controls live (and vice-versa).
+  if(window.dwTaxContext){
+    dwTaxContext.subscribe(function(c){
+      if(!c) return;
+      if(c.state && S.states && (c.state in S.states)) $("state").value=c.state;
+      else if(c.state==="—") $("state").value="—";
+      if(c.bracket!=null && S.brackets){ var bi=S.brackets.findIndex(function(b){return Math.round(b.ord*100)===c.bracket;}); if(bi>=0)$("bracket").value=bi; }
+      if(c.portfolio>0) setClamped("taxbal",c.portfolio);
+      if(c.state!=null||c.bracket!=null||c.portfolio!=null){ paintLeadSel($("state").value); render(); reviewLead(); }
+    });
+  }
   // a11y: keep aria-valuetext in sync on every slider drag (runs after each render handler sets the output).
   document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener("input",syncValueText));
   document.querySelectorAll('input[type=range]').forEach(enableTypeIn);

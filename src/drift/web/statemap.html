@@ -275,6 +275,9 @@ function render(s){
     `<a href="https://adviserinfo.sec.gov/" style="color:var(--teal)">adviserinfo.sec.gov</a>.</div>`+
     `<div style="margin-top:5px" id="gen">Generated ${(s.header||{}).generated||""}</div>`;
   paint();
+  // The editable "Your household" bar selects the state here too (set once, carried everywhere).
+  if(window.dwTaxContext && !window.__dwMapSub){ window.__dwMapSub=true;
+    dwTaxContext.subscribe(function(c){ if(c && c.state && (c.state in tiles)){ sel=c.state; paint(); } }); }
 }
 
 async function load(){

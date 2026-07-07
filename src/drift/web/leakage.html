@@ -296,6 +296,8 @@ async function load(){
   if(s) render(s);
 }
 load();
+// The editable "Your household" bar re-personalizes the diagnostic when state/portfolio change.
+if(window.dwTaxContext) dwTaxContext.subscribe(function(){ if(window.__STATE__) render(window.__STATE__); });
 </script>
 </body>
 </html>

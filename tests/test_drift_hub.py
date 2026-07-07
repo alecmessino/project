@@ -137,10 +137,12 @@ def test_hub_leads_with_coordination_not_taxes():
 def test_hub_demotes_research_below_the_primary_path():
     from drift.exhibit import HUB_TEMPLATE
     t = HUB_TEMPLATE.read_text()
-    # the primary path is the capability sequence; model-portfolio research is demoted to a labeled
-    # "Research & reference" block near the foot — no internal product names, no perf figure on the homepage.
+    # the primary path is the capability sequence; secondary/reference material (Atlas, Principles,
+    # Insights, Our Story) is demoted to a restrained one-line resources row BELOW the capability
+    # path — no internal product names, no perf figure on the homepage.
     assert 'id="capabilities"' in t
-    assert "Research &amp; reference" in t
+    assert 'class="res"' in t                                # a compact resources row, not a card wall
+    assert t.index('id="capabilities"') < t.index('class="res"')  # demoted below the primary path
     assert "Core Alpha Research" not in t
     assert 'class="rstat"' not in t                          # no performance figure line on the homepage
     assert "View the track record" not in t

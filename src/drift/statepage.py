@@ -111,7 +111,10 @@ _STATE_CONTEXT = {
            "the first death) but is decoupled from the federal §1202 QSBS exclusion."),
     "WA": ("Washington has no tax on wages but, since 2022, levies a 7% (plus a 2.9% surcharge) excise on "
            "long-term capital gains above an annual threshold — the newest and most unusual regime in the "
-           "country. It is a community-property state, so community assets get a full step-up."),
+           "country. Because that excise falls on long-term gains only, while short-term gains go untaxed, "
+           "careful tax management — which works largely by turning short-term gains into long-term — helps "
+           "less here than almost anywhere: Washington is the rare state where the usual playbook partly "
+           "reverses. It is a community-property state, so community assets get a full step-up."),
     "NY": ("New York stacks a high state rate with a New York City surcharge for city residents, and its "
            "estate tax has a notorious 'cliff': clear the exemption by more than 5% and the entire estate — "
            "not just the excess — becomes taxable."),

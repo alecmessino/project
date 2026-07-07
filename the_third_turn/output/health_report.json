@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-07T03:14:20+00:00",
+  "generated": "2026-07-07T03:29:25+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 52445,
+    "rows": 52615,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 12600,
-      "live_total": 5547,
-      "live_today": 180,
-      "last_row_age_min": 0.1
+      "rows_total": 12608,
+      "live_total": 5552,
+      "live_today": 185,
+      "last_row_age_min": 13.2
     },
     "fanduel": {
-      "rows_total": 39839,
-      "live_total": 2268,
-      "live_today": 885,
-      "last_row_age_min": 0.1
+      "rows_total": 40001,
+      "live_total": 2349,
+      "live_today": 966,
+      "last_row_age_min": 0.5
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 1249.3
+      "last_row_age_min": 1264.4
     }
   },
   "books_reporting_live": [
@@ -37,16 +37,16 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 5547,
-    "OPEN": 1931,
-    "SUSPENDED": 332,
+    "unset": 5552,
+    "OPEN": 2006,
+    "SUSPENDED": 338,
     "REMOVED": 5
   },
   "overlap": {
-    "simultaneous_pairs_total": 2290,
-    "simultaneous_pairs_today": 865,
+    "simultaneous_pairs_total": 2371,
+    "simultaneous_pairs_today": 946,
     "overlap_games": 21,
-    "median_sync_lag_s": 639.0,
+    "median_sync_lag_s": 610.0,
     "games_by_books_live": {
       "0_books": 14,
       "2_books": 21
@@ -85,7 +85,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 2290,
+        "current": 2371,
         "target": 2000,
         "pass": true,
         "progress": 1.0
@@ -99,10 +99,10 @@
       },
       {
         "criterion": "median sync lag < 15s",
-        "current": 639.0,
+        "current": 610.0,
         "target": 15,
         "pass": false,
-        "progress": 0.023
+        "progress": 0.025
       },
       {
         "criterion": "books quoting live",

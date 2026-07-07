@@ -51,11 +51,16 @@
 
   .list{margin:40px 0 8px;border-top:1px solid var(--line)}
   .item{display:block;text-decoration:none;color:inherit;padding:22px 0;border-bottom:1px solid var(--line)}
-  .item .date{font-family:var(--sans);font-size:12px;letter-spacing:.06em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:6px}
+  .item .meta{font-family:var(--sans);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:7px;font-variant-numeric:tabular-nums}
+  .item .meta .rt{color:var(--dim)}
   .item .t{font-family:var(--serif);font-weight:600;font-size:24px;line-height:1.2;letter-spacing:-.015em;
     color:var(--ink);transition:color .12s ease}
+  .item .t .arw{color:var(--accent-strike);font-weight:400;opacity:0;transition:opacity .12s ease}
   .item:hover .t{color:var(--teal2)}
+  .item:hover .t .arw{opacity:1}
+  .item .dek{font-family:var(--serif);font-size:15.5px;line-height:1.55;color:var(--body);margin:6px 0 0;max-width:60ch}
+  @media(max-width:620px){ .item .t{font-size:21px} }
 
   .after{margin:30px 0 0;font-size:14.5px;line-height:1.6;color:var(--muted)}
   .after a{color:var(--teal2)}
@@ -101,14 +106,34 @@
 
       <div class="list">
         <a class="item" href="every-portfolio-has-two-returns.html">
-          <div class="date">July 2026</div>
-          <div class="t">Every Portfolio Has Two Returns</div>
+          <div class="meta">July 2026 · <span class="rt">4 min read</span></div>
+          <div class="t">Every Portfolio Has Two Returns <span class="arw" aria-hidden="true">→</span></div>
+          <p class="dek">The one it earns, and the one you keep. The gap between them is the most expensive line on no statement.</p>
+        </a>
+        <a class="item" href="the-worlds-largest-investors.html">
+          <div class="meta">July 2026 · <span class="rt">3 min read</span></div>
+          <div class="t">The World's Largest Investors Pay Attention Differently <span class="arw" aria-hidden="true">→</span></div>
+          <p class="dek">They don't have access to different markets — they pay attention to different things. What an endowment actually discusses, and why it compounds.</p>
+        </a>
+        <a class="item" href="enough-is-a-number.html">
+          <div class="meta">July 2026 · <span class="rt">2 min read</span></div>
+          <div class="t">Enough Is a Number <span class="arw" aria-hidden="true">→</span></div>
+          <p class="dek">A portfolio exists to fund a life, so enough can be calculated. Once it can, winning every year stops being the point.</p>
+        </a>
+        <a class="item" href="concentration.html">
+          <div class="meta">Guide · <span class="rt">5 min read</span></div>
+          <div class="t">How to De-risk a Concentrated Stock Position <span class="arw" aria-hidden="true">→</span></div>
+          <p class="dek">Every way to unwind a concentrated, low-basis position — selling, harvesting, hedging, deferring, and giving — scored across liquidity, speed, and tax.</p>
+        </a>
+        <a class="item" href="principles.html">
+          <div class="meta">Reference · <span class="rt">2 min read</span></div>
+          <div class="t">The Driftwood Principles <span class="arw" aria-hidden="true">→</span></div>
+          <p class="dek">Five beliefs about money, markets, and time. Return is not wealth. Compounding hates interruptions. Behavior is the multiplier.</p>
         </a>
       </div>
 
       <p class="after">The evidence behind the ideas lives in the
-        <a href="ledger.html">research</a>. The principles beneath them, in
-        <a href="principles.html">The Driftwood Principles</a>.</p>
+        <a href="ledger.html">research ledger</a> and the <a href="tearsheet.html">tearsheet</a>.</p>
     </div>
 
     <div class="foot">

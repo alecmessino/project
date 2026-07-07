@@ -12,10 +12,14 @@
 @font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/inter-700.woff2") format("woff2")}
 
 :root{
-  --bg:#fff; --soft:#fafafa; --line:#e8e8ea; --ink:#1b1b1f; --dim:#5f5f68;
-  --pos:#2f6f5b; --neg:#9b4439; --slate:#4a4f57; --rule:#222226; --accent:#15806a; --bench:#b8bcc2;
-  /* One brand-teal system: --teal for solid CTAs/active states, --teal2 (=--accent) for links/accents. */
-  --teal:#15463a; --teal2:#15806a; --brass:#a9853f;
+  /* Rebrand (July 2026): limestone paper, slate-navy ink, editorial blue for identity/wayfinding.
+     This shared sheet is the source of truth — pages that link it LAST inherit the rebrand here. */
+  --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4;
+  --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a; --navy:#1a2330;
+  --pos:#2f6f5b; --neg:#9b4439; --slate:#3d4650; --rule:#1e2833; --accent:#15806a; --bench:#b8bcc2;
+  --teal:#15463a; --teal2:#15806a;
+  /* Editorial blue takes every identity/wayfinding role; --brass/--gold are retired aliases of it. */
+  --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6; --brass:#2c5878; --gold:#a9c2d6;
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:22px; --s6:30px;
   --r1:7px; --r2:9px; --r3:10px; --r4:12px; --rfull:999px;
   --sh1:0 1px 3px rgba(20,20,26,.06); --sh2:0 8px 30px rgba(20,20,26,.12);
@@ -140,6 +144,15 @@ details > summary::-webkit-details-marker{ display:none; }
 details > summary::after{ content:"\25B8"; display:inline-block; margin-left:.5em;
   color:var(--brass,#a9853f); font-size:.85em; transition:transform .15s ease; }
 details[open] > summary::after{ transform:rotate(90deg); }
+
+/* ── Crisp register ──────────────────────────────────────────────────────────────────────────
+   Square the card/panel/table/control surfaces site-wide so every page reads with the same
+   printerly, hard-edged register as the front door's plate frame. Pills (999px status chips,
+   badges) and the plate frame itself (.frame, 3px) deliberately keep their shape. */
+.card,.cards,.cell,.vcard,.statstrip,.exhibits,a.ex,.arch,.note,.loc,.disc,.map-wrap,
+.opt-card,.opt-result,.blueprint,.acct,.struct-alpha,.cta,.dcard,.lv,.reb,.trade,.est-cliff,
+.research-banner,.fold,.smtabs button,.leadstate button,table.book,.statcard,.kpi,.tile-card,
+select{ border-radius:0; }
 
 /* ── One-click PDF proposal / CPA brief (window.print → Save as PDF) ─────────────────────────
    A clean, multi-page print template: strip the app chrome and interactive controls, keep the

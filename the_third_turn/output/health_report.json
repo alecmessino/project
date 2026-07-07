@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-07T19:02:21+00:00",
+  "generated": "2026-07-07T19:17:26+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 57217,
+    "rows": 57757,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 14098,
-      "live_total": 5786,
-      "live_today": 419,
+      "rows_total": 14158,
+      "live_total": 5816,
+      "live_today": 449,
       "last_row_age_min": 0.3
     },
     "fanduel": {
-      "rows_total": 43113,
-      "live_total": 2676,
-      "live_today": 1293,
+      "rows_total": 43593,
+      "live_total": 2706,
+      "live_today": 1323,
       "last_row_age_min": 0.3
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 2197.4
+      "last_row_age_min": 2212.4
     }
   },
   "books_reporting_live": [
@@ -37,16 +37,16 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 5786,
-    "OPEN": 2303,
+    "unset": 5816,
+    "OPEN": 2333,
     "SUSPENDED": 365,
     "REMOVED": 8
   },
   "overlap": {
-    "simultaneous_pairs_total": 2728,
-    "simultaneous_pairs_today": 1303,
+    "simultaneous_pairs_total": 2758,
+    "simultaneous_pairs_today": 1333,
     "overlap_games": 21,
-    "median_sync_lag_s": 577.0,
+    "median_sync_lag_s": 549.0,
     "games_by_books_live": {
       "0_books": 15,
       "2_books": 21
@@ -85,7 +85,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 2728,
+        "current": 2758,
         "target": 2000,
         "pass": true,
         "progress": 1.0
@@ -99,10 +99,10 @@
       },
       {
         "criterion": "median sync lag < 15s",
-        "current": 577.0,
+        "current": 549.0,
         "target": 15,
         "pass": false,
-        "progress": 0.026
+        "progress": 0.027
       },
       {
         "criterion": "books quoting live",

@@ -1244,12 +1244,14 @@ function renderLead(){
       strategy pay an estimated <span class="num">${fmt$big(b.totalTotal)}</span> in capital-gains tax over ${b.horizon} years
       (${fmt$big(b.fedTotal)} federal + ${fmt$big(b.stateTotal)} to ${name}) — about
       ${fmt$(b.totalAnnual)}/year in estimated capital-gains tax.
-      <span class="small">The federal base is the same in every state — ${name} just stacks its layer on top.
-      Most of it is addressable: asset location and tax-loss harvesting are the two levers — we'll quantify exactly how much.</span>`;
+      <span class="small"><b>Illustrative</b> — the annual drag at today's balance, projected flat over
+      ${b.horizon} years (no growth assumed); not a forecast. The federal base is the same in every state —
+      ${name} just stacks its layer on top. Most of it is addressable through asset location and tax-loss harvesting.</span>`;
   } else {
     $("leadhero").innerHTML=`A ${fmt$big(b.P)} taxable portfolio in a high-turnover strategy pays an estimated
       <span class="num">${fmt$big(b.totalTotal)}</span> in <b>federal</b> capital-gains tax over ${b.horizon} years.
-      <span class="small">${st==="—"?"Tap your state above to add your local layer — then":"About "+fmt$(b.totalAnnual)+"/yr."} we'll quantify how much is recoverable through asset location and harvesting.</span>`;
+      <span class="small"><b>Illustrative</b> — the annual drag at today's balance, projected flat over ${b.horizon} years
+      (no growth assumed); not a forecast. ${st==="—"?"Tap your state above to add your local layer — then":"About "+fmt$(b.totalAnnual)+"/yr."} we'll quantify how much is recoverable through asset location and harvesting.</span>`;
   }
 }
 function ctaInitial(){
@@ -1654,6 +1656,7 @@ function render(){
     <dt>Gain-per-turn (calibrated)</dt><dd>~${apct(gpt,1)} of NAV realized as short-term gain per 1.0× of annual turnover — calibrated from the model portfolio, not assumed.</dd>
     <dt>Tax rates (top-bracket)</dt><dd>At the selected bracket/state: <b>${apct(r.r_st)}</b> short-term / ordinary and <b>${apct(r.r_lt)}</b> long-term (federal + NIIT + state).</dd>
     <dt>Real realized-gain profile</dt><dd>From the model ledger: ${pct(p.pretax_return)} pre-tax over ~${p.years}y, ${apct(S.header.annual_turnover)} annual turnover, ${apct(S.header.short_term_share)} short-term (~${S.header.avg_holding_days}-day holds), ${apct(p.harvested_st+p.harvested_lt)} of NAV harvested as losses.</dd>
+    <dt>Two distinct illustrations</dt><dd>This After-Tax Review models a live, aggressive sleeve (the ${pct(p.pretax_return)}/~${p.years}y ledger above) to size the tax drag; the <a href="leakage.html">Leakage Diagnostic</a> uses a separate long-horizon proxy series (≈9.4% pretax over 30y) to isolate lifetime after-tax alpha. Two different datasets and horizons — not one history quoted two ways.</dd>
     <dt>Illinois estate tax</dt><dd>Calibrated to the Illinois AG calculator (single estate) on the amount over the exclusion; the HB2601 sandbox shifts the baseline to $8M. Illustrative — QTIP elections/deductions are the attorney's to file.</dd>
     <dt>Simplifications</dt><dd>After-tax applies the selected rates to the book's realized-gain decomposition and ignores second-order tax-on-tax compounding; estate/fee/growth figures are illustrative projections, not guarantees.</dd>
   </dl>`;

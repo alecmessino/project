@@ -9,7 +9,7 @@ copy/design is our own; we still refuse to reuse the third party's brand name or
 
 import json
 
-from drift.statemap import build_statemap, DIMENSIONS, STATE_ALPHA
+from drift.statemap import build_statemap, DIMENSIONS, STATE_ALPHA, _CITATIONS
 from drift.exhibit import STATEMAP_TEMPLATE, render_statemap
 from drift.taxlab import build_taxlab
 from drift.hub import build_hub
@@ -59,12 +59,14 @@ def test_prove_it_citations_only_where_verified():
         cites = st["IL"][dim].get("citation")
         assert cites and all(c["url"].startswith("http") and c["label"] for c in cites), dim
     assert any("35 ILCS 405/3" in c["label"] for c in st["IL"]["estate"]["citation"])
-    # NO OTHER state carries a fabricated citation — they show the generic source line instead.
+    # Every rendered citation must trace to the verified `_CITATIONS` whitelist and nowhere else — no
+    # fabricated citations leak in, and every whitelist entry renders. (The seed batch adds the income-
+    # &-gains imposing statute for CA/NY/TX/FL; the rest show the honest "summary" line.)
+    verified = set(_CITATIONS.keys())
+    assert {(s, "cg") for s in ("CA", "NY", "TX", "FL")} <= verified
     for c, rec in st.items():
-        if c == "IL":
-            continue
         for dim, r in rec.items():
-            assert "citation" not in r, f"{c}/{dim} has an unverified citation"
+            assert ("citation" in r) == ((c, dim) in verified), f"{c}/{dim} citation mismatch"
     # the template renders the Prove-it link and keeps the no-fabrication note
     t = STATEMAP_TEMPLATE.read_text()
     assert "Prove it:" in t

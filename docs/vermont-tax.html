@@ -67,6 +67,14 @@
   .dcard .dtag{font-size:10.5px;font-weight:700;color:var(--brass);border:1px solid var(--gold);border-radius:999px;padding:1px 8px}
   .dcard p{margin:0;font-size:12.5px;color:var(--body);line-height:1.5}
   .dcard .dsrc{font-size:10px;color:var(--muted);margin-top:8px}
+  .dcard .dsrc a{color:var(--teal2)}
+  .asofline{font-size:11.5px;color:var(--muted);margin:16px 40px 0;line-height:1.55}
+  .asofline b{color:#5a5a62}
+  .mnote{font-size:11.5px;color:var(--muted);margin:10px 0 0;line-height:1.55;max-width:70ch}
+  .chlog{margin:8px 40px 0;font-size:11.5px;color:var(--muted)}
+  .chlog summary{cursor:pointer;color:var(--teal2);font-weight:600;width:max-content}
+  .chlog ul{margin:8px 0 0;padding-left:18px;line-height:1.55} .chlog li{margin:3px 0}
+  .chlog b{color:#5a5a62}
   .sec{padding:14px 40px 4px}
   .sec .sh{font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
   .levers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
@@ -98,7 +106,7 @@
      isn't pinched, consistent with the other exhibits. */
   @media(max-width:600px){
     .bcrumb,.hd,.grid,.sec,.rel{padding-left:18px;padding-right:18px}
-    .hero,.cta,.capture,.disc,.foot{margin-left:18px;margin-right:18px}
+    .hero,.cta,.capture,.disc,.foot,.asofline,.chlog{margin-left:18px;margin-right:18px}
   }
   @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}
 </style>
@@ -126,13 +134,13 @@
       
     </div>
     <div class="grid">
-      <div class="dcard"><div class="dh">Income &amp; gains<span class="dtag">8.75%</span></div><p>Loss treatment conforms to federal: capital losses net against gains and carry forward. Top effective long-term rate 8.75%. Quirk: listed securities get only a $5K exclusion; a 3%-of-AGI floor.</p><div class="dsrc">State revenue departments, tax year 2025 — verify with a tax advisor.</div></div>
-<div class="dcard"><div class="dh">Marriage<span class="dtag">~2x</span></div><p>Joint brackets widen for couples, but by less than 2× — a partial marriage penalty that bites on higher incomes.</p><div class="dsrc">State income-tax filing schedules, tax year 2025 — verify with a tax advisor.</div></div>
-<div class="dcard"><div class="dh">Death<span class="dtag">estate</span></div><p>State estate tax (paid by the estate): top rate ~16%, exemption ~$5M. Confirm the figure with counsel.</p><div class="dsrc">State estate/inheritance statutes, tax year 2025 — confirm with counsel.</div></div>
-<div class="dcard"><div class="dh">Munis<span class="dtag">in-state</span></div><p>Only in-state municipal-bond interest escapes state tax; bonds from other states are taxed. The classic in-state muni preference that rewards a home-state ladder.</p><div class="dsrc">State income-tax statutes on municipal-bond interest, tax year 2025 — verify with a tax advisor.</div></div>
-<div class="dcard"><div class="dh">QSBS<span class="dtag">§1202 ok</span></div><p>Conforms to IRC §1202 — the federal qualified small business stock gain exclusion carries through to the state return.</p><div class="dsrc">State IRC-conformity statutes on §1202, tax year 2025 — verify with a tax advisor.</div></div>
-<div class="dcard"><div class="dh">Losses<span class="dtag">federal</span></div><p>Capital losses carry forward under the federal Section 1212 rules — a harvested loss nets against gains and rolls forward until used.</p><div class="dsrc">State capital-loss carryforward rules, tax year 2025 — verify with a tax advisor.</div></div>
-<div class="dcard"><div class="dh">Basis step-up</div><p>Common-law (separate-property) state: at the first spouse&#x27;s death only the decedent&#x27;s half of jointly-held property steps up; the survivor keeps carryover basis on their half (IRC 1014(b)(9), 2040(b)).</p><div class="dsrc">State marital-property law / IRS Pub. 555; IRC 1014 — verify with counsel.</div></div>
+      <div class="dcard"><div class="dh">Income &amp; gains<span class="dtag">8.75%</span></div><p>Loss treatment conforms to federal: capital losses net against gains and carry forward. Top effective long-term rate 8.75%. Quirk: listed securities get only a $5K exclusion; a 3%-of-AGI floor.</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State revenue departments, tax year 2025 — verify with a tax advisor.</div></div>
+<div class="dcard"><div class="dh">Marriage<span class="dtag">~2x</span></div><p>Joint brackets widen for couples, but by less than 2× — a partial marriage penalty that bites on higher incomes.</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State income-tax filing schedules, tax year 2025 — verify with a tax advisor.</div></div>
+<div class="dcard"><div class="dh">Death<span class="dtag">estate</span></div><p>State estate tax (paid by the estate): top rate ~16%, exemption ~$5M. Confirm the figure with counsel.</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State estate/inheritance statutes, tax year 2025 — confirm with counsel.</div></div>
+<div class="dcard"><div class="dh">Munis<span class="dtag">in-state</span></div><p>Only in-state municipal-bond interest escapes state tax; bonds from other states are taxed. The classic in-state muni preference that rewards a home-state ladder.</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State income-tax statutes on municipal-bond interest, tax year 2025 — verify with a tax advisor.</div></div>
+<div class="dcard"><div class="dh">QSBS<span class="dtag">§1202 ok</span></div><p>Conforms to IRC §1202 — the federal qualified small business stock gain exclusion carries through to the state return.</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State IRC-conformity statutes on §1202, tax year 2025 — verify with a tax advisor.</div></div>
+<div class="dcard"><div class="dh">Losses<span class="dtag">federal</span></div><p>Capital losses carry forward under the federal Section 1212 rules — a harvested loss nets against gains and rolls forward until used.</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State capital-loss carryforward rules, tax year 2025 — verify with a tax advisor.</div></div>
+<div class="dcard"><div class="dh">Basis step-up</div><p>Common-law (separate-property) state: at the first spouse&#x27;s death only the decedent&#x27;s half of jointly-held property steps up; the survivor keeps carryover basis on their half (IRC 1014(b)(9), 2040(b)).</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State marital-property law / IRS Pub. 555; IRC 1014 — verify with counsel.</div></div>
     </div>
     <div class="sec"><div class="sh">Frequently asked — 7 on Vermont</div><details class="faq"><summary>How are capital gains taxed in Vermont?</summary><p>Loss treatment conforms to federal: capital losses net against gains and carry forward. Top effective long-term rate 8.75%. Quirk: listed securities get only a $5K exclusion; a 3%-of-AGI floor.</p></details>
 <details class="faq"><summary>Does Vermont have a state estate or inheritance tax?</summary><p>State estate tax (paid by the estate): top rate ~16%, exemption ~$5M. Confirm the figure with counsel.</p></details>
@@ -146,6 +154,9 @@
         built and run — where each holding sits, how losses are used, how gains are timed — decides how
         much of Vermont's tax code you actually pay. An illustrative estimate for a portfolio here:</p>
       <div class="hero"><div class="big">+4.5<span class="u">%/yr</span></div><div class="hlab">Illustrative tax-management impact in Vermont<br><span class="hsub">a tax-managed book keeps ~5.7%/yr after tax vs ~1.2%/yr for a concentrated, naive one — illustrative, over ~30 years, figures rounded to 0.1%/yr</span></div><div class="hbar" aria-hidden="true"><span class="kept" style="width:21%"></span></div></div>
+      <p class="mnote">How this is modeled: a single 30-year proxy-spliced path (1996–2026), comparing a
+        concentrated, high-turnover book with a tax-managed one — illustrative and coarse; treat it as
+        directional, not a precise figure.</p>
       <div class="levers"><div class="lv"><div class="n">Patient trading and lot selection</div><div class="d">Holds positions through short-term noise and chooses which lots to sell, turning gains that would be taxed as ordinary income into long-term gains taxed roughly 17 points lower.</div></div>
 <div class="lv"><div class="n">Loss harvesting</div><div class="d">Realizes losses and applies them against the highest-taxed gains first — capturing a spread a simple buy-and-hold fund never reaches.</div></div>
 <div class="lv"><div class="n">Asset location</div><div class="d">Places the higher-turnover strategy in Roth and Traditional accounts, where its short-term gains escape tax entirely; quantified for each household in the After-Tax Review.</div></div></div></div>
@@ -191,8 +202,12 @@
     })();
     </script>
     <div class="rel">Compare nearby regimes: <a href="california-tax.html">California</a> · <a href="texas-tax.html">Texas</a> · <a href="new-york-tax.html">New York</a> · <a href="new-jersey-tax.html">New Jersey</a> · <a href="states.html">all 50 states + DC →</a></div>
+    <p class="asofline">State law reflects <b>2025 tax-year law</b>; last reviewed <b>2026-07-07</b>. Every classification is a summary of state law; where a primary-source citation has been verified, it is linked on the card.</p><details class="chlog"><summary>What changed</summary><ul><li><b>2026-07-07</b> — First law-review date and honest per-cell source labeling; primary-source citations verified for Illinois, California, New York, Texas, and Florida (more in progress).</li>
+<li><b>2025</b> — Washington&#x27;s 7% (+2.9%) excise on long-term capital gains reflected (enacted 2022).</li>
+<li><b>2025</b> — New Hampshire&#x27;s Interest &amp; Dividends tax reflected as fully repealed, effective 2025.</li>
+<li><b>2025</b> — Illinois estate-tax detail tracks the pending SB 2970 as of the review date.</li></ul></details>
     <div class="disc"><b>Illustrative / hypothetical — not a real track record and not advice.</b> The tax-management impact figure is a hypothetical, after-tax result from the <b>retroactive application</b> of a tax-management model to ~30 years of proxy-spliced market data on a single illustrative path; <b>no client capital was invested</b>, and hypothetical performance <b>does not guarantee future results</b>. Intended for sophisticated investors; it may not be relevant to your situation, and your actual figure depends on your own holdings, basis, and bracket. State tax facts reflect tax year 2025 and can change — confirm with a tax advisor. Driftwood is a <b>registered investment adviser</b>; <b>Form ADV</b> and <b>Form CRS</b> are available at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.</div>
-    <div class="foot">Driftwood. Tax facts compiled from state statutes, tax year 2025.</div>
+    <div class="foot">Driftwood. State tax law reflects 2025 tax-year law; last reviewed 2026-07-07.</div>
   </div>
 </div>
 </body>

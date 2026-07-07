@@ -79,6 +79,13 @@
   .map th:nth-child(1),.map td:nth-child(1){width:20%}
   .map th:nth-child(2),.map td:nth-child(2){width:15%}
   .map th:nth-child(4),.map td:nth-child(4){width:19%}
+  /* Operational variant — "When this happens · Driftwood coordinates · So the outcome is". 3 columns. */
+  .map.op th:nth-child(1),.map.op td:nth-child(1){width:24%}
+  .map.op th:nth-child(2),.map.op td:nth-child(2){width:26%}
+  .map.op th:nth-child(3),.map.op td:nth-child(3){width:50%}
+  .map.op .area{font-size:14.5px}
+  .map.op .lead{white-space:normal}
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
   @media(max-width:720px){.map,.map thead,.map tbody,.map tr,.map th,.map td{display:block}
     .map thead{display:none} .map tr{border-bottom:1px solid var(--line);padding:12px 0}
     .map td{border:none;padding:2px 0;width:auto!important} .map .area{font-size:15px;margin-bottom:2px}
@@ -128,12 +135,19 @@
     <nav class="dwnav" aria-label="Driftwood">
       <a class="brand" href="index.html">Driftwood</a>
       <div class="dwnav-links">
-        <a href="about.html">Our Story</a>
-        <a href="thesis.html">How We Invest</a>
-        <a href="taxlab.html">After-Tax&nbsp;Review</a>
-        <a href="leakage.html">Tax&nbsp;Diagnostic</a>
-        <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
-        <a href="insights.html">Insights</a>
+        <span class="dwnav-group">
+          <span class="dwnav-label">Understand</span>
+          <a href="howitworks.html">How Driftwood&nbsp;Works</a>
+          <a href="thesis.html">How We Invest</a>
+          <a href="about.html">Our Story</a>
+          <a href="insights.html">Insights</a>
+        </span>
+        <span class="dwnav-group">
+          <span class="dwnav-label">Discover</span>
+          <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+          <a href="statemap.html">State&nbsp;Atlas</a>
+          <a href="taxlab.html">After-Tax&nbsp;Review</a>
+        </span>
       </div>
     </nav>
 
@@ -178,31 +192,29 @@
     </div>
 
     <div class="sec">
-      <div class="h">The coordination map</div>
-      <p class="sh">Every area of your financial life, who leads it, what we keep coordinated across it — and the
-        rhythm we do it on.</p>
+      <div class="h">Coordination in real life</div>
+      <p class="sh">Coordination isn't an org chart — it's what happens when something changes. These are the moments
+        where the pieces have to move together, and who Driftwood pulls into the room:</p>
       <div class="tscroll">
-      <table class="map">
-        <thead><tr><th>Area of your financial life</th><th>Led by</th><th>What we coordinate</th><th>When</th></tr></thead>
+      <table class="map op">
+        <thead><tr><th>When this happens…</th><th>Driftwood coordinates…</th><th>So the outcome is…</th></tr></thead>
         <tbody>
-          <tr><td class="area">Portfolio &amp; asset location</td><td class="lead us">Driftwood</td>
-            <td>Allocation, and where each holding sits — taxable, Traditional, or Roth — placed where it is taxed least.</td>
-            <td class="when">Continuously · rebalanced on drift</td></tr>
-          <tr><td class="area">Taxes &amp; realized gains</td><td class="lead">Your CPA</td>
-            <td>Harvesting, lot selection, and bracket timing, reconciled to the return you'll actually file.</td>
-            <td class="when">Quarterly + year-end</td></tr>
-          <tr><td class="area">Estate &amp; gifting</td><td class="lead">Your attorney</td>
-            <td>Step-up, gifting, and titling — so the estate plan and the portfolio never contradict each other.</td>
-            <td class="when">Annually + at each life event</td></tr>
-          <tr><td class="area">Business &amp; equity comp</td><td class="lead">You &amp; counsel</td>
-            <td>Concentrated stock, QSBS, and liquidity events — modeled before they're taxed, not after.</td>
-            <td class="when">Ahead of every event</td></tr>
-          <tr><td class="area">Cash &amp; liquidity</td><td class="lead us">Driftwood</td>
-            <td>What's held back, and where, so nothing is sold at the wrong time to raise cash.</td>
-            <td class="when">Continuously</td></tr>
+          <tr><td class="area">Annual tax planning</td><td class="lead us">Portfolio + your CPA</td>
+            <td>Fewer unnecessary realized gains — harvesting and bracket-fill decided before year-end, not after.</td></tr>
+          <tr><td class="area">A business sale</td><td class="lead us">CPA + attorney + portfolio</td>
+            <td>Liquidity without avoidable tax drag — the sale, the proceeds, and where they land, planned as one move.</td></tr>
+          <tr><td class="area">Equity compensation</td><td class="lead us">Employer + CPA + investment plan</td>
+            <td>Concentration reduced over time, deliberately — not all at once, and not by accident.</td></tr>
+          <tr><td class="area">Retirement withdrawals</td><td class="lead us">Asset location + taxes</td>
+            <td>A lower lifetime tax burden — which account funds which year, sequenced for what you keep.</td></tr>
+          <tr><td class="area">Estate changes</td><td class="lead us">Attorney + portfolio</td>
+            <td>Estate documents and investments stay aligned — titling and beneficiaries never drift from the plan.</td></tr>
         </tbody>
       </table>
       </div>
+      <p class="built" style="margin-top:18px">Behind each of these is the same standing arrangement — Driftwood on
+        portfolio, asset location, and cash; your CPA on taxes; your attorney on estate — coordinated so no decision
+        in one room quietly breaks another.</p>
     </div>
 
     <div class="sec">

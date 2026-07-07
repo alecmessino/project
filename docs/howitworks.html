@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>How Driftwood Works — Driftwood</title>
+<meta name="description" content="How Driftwood works, in four steps: diagnose where your wealth leaks, measure what coordination is worth, coordinate every part of your financial life, and manage the portfolio that carries it out — as one after-tax system." />
+<link rel="canonical" href="https://alecmessino.github.io/project/howitworks.html" />
+<link rel="icon" href="favicon.svg" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="How Driftwood Works — Driftwood" />
+<meta property="og:description" content="Diagnose → Measure → Coordinate → Manage. The four capabilities that run your financial life as one after-tax system." />
+<meta property="og:url" content="https://alecmessino.github.io/project/howitworks.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="How Driftwood Works — Driftwood" />
+<meta name="twitter:description" content="Diagnose → Measure → Coordinate → Manage — one after-tax system." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
+<style>
+  :root{
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4;
+    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
+    --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6;
+    --teal:#15463a; --teal2:#15806a; --accent:#15806a; --neg:#9b4439; --navy:#1a2330;
+    --brass:#2c5878; --gold:#a9c2d6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:15px/1.65 var(--serif);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1080px;margin:36px auto;padding:0 20px 60px}
+  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;
+    box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
+  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
+    border-bottom:3px double var(--frame-line);font-family:var(--sans)}
+  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .inner{margin:0 7px 7px}
+
+  .doc{padding:44px 44px 4px}
+  .eyebrow{font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:14px}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(34px,3.2vw+16px,46px);line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin:0 0 18px;max-width:18ch}
+  .lede{font-family:var(--serif);font-size:18px;line-height:1.6;color:var(--body);margin:0;max-width:62ch}
+  .lede b{color:var(--ink);font-weight:600}
+
+  /* The four steps — one capability each. Numbered, sequential, each ending in a handoff. */
+  .steps{padding:16px 44px 20px}
+  .step{display:grid;grid-template-columns:64px 1fr;gap:22px;padding:26px 0;border-top:1px solid var(--line)}
+  .step:first-child{border-top:none}
+  @media(max-width:620px){.steps{padding-left:20px;padding-right:20px}.step{grid-template-columns:1fr;gap:8px}}
+  .step .n{font-family:var(--sans);font-variant-numeric:tabular-nums;font-size:28px;font-weight:700;color:var(--accent-strike);letter-spacing:-.02em;line-height:1}
+  .step .cap{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .step h2{font-family:var(--serif);font-weight:700;font-size:23px;line-height:1.15;letter-spacing:-.01em;color:var(--ink);margin:0 0 10px}
+  .step p{font-size:15px;line-height:1.65;color:var(--body);margin:0 0 12px;max-width:64ch}
+  .step .go{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--teal2);text-decoration:none}
+  .step .go:hover{color:var(--teal)}
+  .step .hand{font-family:var(--sans);font-size:12.5px;color:var(--muted);margin-top:10px;font-style:italic}
+
+  .cta{margin:8px 44px 8px;padding:24px 30px;background:var(--navy);color:var(--on-dark);display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .cta .ct{flex:1;min-width:260px}
+  .cta .ch{font-family:var(--serif);font-weight:600;font-size:21px;color:#f1ede3;margin-bottom:4px;letter-spacing:-.01em}
+  .cta .cs{font-family:var(--sans);font-size:13px;color:var(--accent-strike-soft);line-height:1.5}
+  .cta a{text-decoration:none;font-family:var(--sans);font-size:14px;font-weight:600;white-space:nowrap;padding:12px 20px}
+  .cta a.primary{background:var(--teal2);color:#f1ede3}
+  .cta a.primary:hover{filter:brightness(1.08)}
+  @media(max-width:620px){.doc,.steps{padding-left:20px;padding-right:20px}.cta{margin-left:20px;margin-right:20px}}
+
+  .foot{margin-top:8px;padding:20px 44px 36px;border-top:1px solid var(--line);background:var(--soft);color:var(--muted);font-size:12.5px;line-height:1.65}
+  .foot .note{color:var(--dim);font-weight:600}
+  .foot a{color:var(--teal)} .foot b{color:var(--dim)}
+  @media(max-width:620px){.foot{padding-left:20px;padding-right:20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <div class="run">
+      <span class="inst">Driftwood · Private Wealth Architecture</span>
+      <span class="marker">How Driftwood Works</span>
+    </div>
+    <div class="inner">
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Driftwood</a>
+      <div class="dwnav-links">
+        <span class="dwnav-group">
+          <span class="dwnav-label">Understand</span>
+          <a href="howitworks.html" aria-current="page">How Driftwood&nbsp;Works</a>
+          <a href="thesis.html">How We Invest</a>
+          <a href="about.html">Our Story</a>
+          <a href="insights.html">Insights</a>
+        </span>
+        <span class="dwnav-group">
+          <span class="dwnav-label">Discover</span>
+          <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+          <a href="statemap.html">State&nbsp;Atlas</a>
+          <a href="taxlab.html">After-Tax&nbsp;Review</a>
+        </span>
+      </div>
+    </nav>
+
+    <div class="doc">
+      <div class="eyebrow">The four capabilities</div>
+      <h1>How Driftwood works.</h1>
+      <p class="lede">One system, four capabilities, always in the same order. Each answers a single question, and
+        hands you to the next — so your financial life is run as <b>one after-tax plan</b>, not five separate ones.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="n">01</div>
+        <div>
+          <div class="cap">Diagnose</div>
+          <h2>Where is your wealth leaking today?</h2>
+          <p>We start with the problem, not a pitch. The Tax Diagnostic shows the same holdings taxed two ways —
+            naively, the way most portfolios run, versus deliberately — so you can see, by your state and bracket,
+            how much return is quietly handed to taxes each year.</p>
+          <a class="go" href="leakage.html">Run the Tax Diagnostic →</a>
+          <div class="hand">Then: how large is the opportunity?</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">02</div>
+        <div>
+          <div class="cap">Measure</div>
+          <h2>How much can you actually keep?</h2>
+          <p>The After-Tax Review computes your after-tax return and where each holding belongs — taxable,
+            Traditional, or Roth — for your household. It quantifies what coordination is worth in dollars per year,
+            so the opportunity is a number, not a claim.</p>
+          <a class="go" href="taxlab.html">Open the After-Tax Review →</a>
+          <div class="hand">Then: how do the pieces work together?</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">03</div>
+        <div>
+          <div class="cap">Coordinate</div>
+          <h2>How does it all work as one plan?</h2>
+          <p>This is the core of the firm. We hold the seat that keeps the portfolio, taxes, estate, and business
+            events consistent — working with your CPA and attorney on a deliberate cadence, so a decision in one
+            place never quietly breaks another. When something happens in your life, the whole system responds.</p>
+          <a class="go" href="coordinate.html">See how we coordinate →</a>
+          <div class="hand">Then: what actually holds it all — the portfolio?</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">04</div>
+        <div>
+          <div class="cap">Manage</div>
+          <h2>Who builds and holds the portfolio?</h2>
+          <p>The plan needs a portfolio built to fit it: a diversified, low-turnover core placed by tax, a focused
+            complement for tax-advantaged accounts, and disciplined rebalancing. Evidence over prediction — and
+            engineered so every holding sits where it's taxed least.</p>
+          <a class="go" href="thesis.html">How we invest →</a>
+          <div class="hand">Continuously, as your life changes.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <div class="ct">
+        <div class="ch">Start where it starts — with the leak.</div>
+        <div class="cs">See where your wealth is leaking today, personalized to your state and bracket in about two minutes.</div>
+      </div>
+      <div><a class="primary" href="leakage.html">Run the Tax Diagnostic →</a></div>
+    </div>
+
+    <div class="foot">
+      <span class="note">Educational — not investment, tax, or legal advice.</span>
+      Driftwood coordinates with your CPA and attorney; it does not provide tax or legal advice. Driftwood is a
+      <b>registered investment adviser</b>; Form ADV and Form CRS are available at
+      <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

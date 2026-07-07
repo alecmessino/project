@@ -30,6 +30,7 @@
     --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6; --chrome:#e9e5da;
     --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
     --brass:#2c5878; --gold:#a9c2d6; --teal:#15463a; --teal2:#15806a; --navy:#1a2330;
+    --on-dark:#e7ecf2; --on-dark-dim:#9aa3ae;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--body);font:16px/1.7 var(--serif);
@@ -71,6 +72,23 @@
     color:var(--ink);padding-left:18px;border-left:3px solid var(--brass)}
   .banner b{color:var(--teal)}
 
+  /* Portfolio architecture panel — the two-engine diagram, shown here (not on the homepage) once the
+     reader has accepted the premise. Navy plate: two engines → one after-tax portfolio. */
+  .arch{background:var(--navy);padding:24px 26px;color:var(--on-dark);margin:22px 0 6px;max-width:620px}
+  .arch .ah{font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent-strike-soft);margin-bottom:16px}
+  .arch .engines{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:520px){.arch .engines{grid-template-columns:1fr}}
+  .arch .eng{background:#243040;border:1px solid #33445a;padding:13px 15px}
+  .arch .eng .et{font-family:var(--sans);font-weight:700;font-size:15.5px;color:#f1ede3;letter-spacing:-.01em}
+  .arch .eng .ed{font-family:var(--sans);font-size:12.5px;color:var(--on-dark-dim);margin-top:5px;line-height:1.5}
+  .arch .flow{text-align:center;color:var(--accent-strike-soft);font-size:12px;letter-spacing:.03em;margin:12px 0;font-weight:600;font-family:var(--sans)}
+  .arch .port{background:transparent;border:1px solid #34455c;border-top:2px solid var(--teal2);
+    padding:16px 18px;text-align:left;font-weight:700;font-family:var(--sans);font-size:17.5px;color:#f1ede3;letter-spacing:-.01em}
+  .arch .cap{font-family:var(--sans);font-size:12.5px;color:var(--on-dark-dim);margin-top:15px;line-height:1.55}
+  .arch .cap b{color:#eef2f6}
+  @media(max-width:620px){.arch{margin-left:20px;margin-right:20px}}
+
   .cta{margin:36px 44px 0;max-width:720px;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:28px 30px}
   .cta .ct{font-family:var(--serif);font-weight:700;font-size:22px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.01em}
   .cta .cd{font-size:14.5px;line-height:1.6;color:var(--dim);margin:0 0 20px;max-width:48ch}
@@ -111,12 +129,19 @@
     <nav class="dwnav" aria-label="Driftwood">
       <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
       <div class="dwnav-links">
-        <a href="about.html">Our Story</a>
-        <a href="thesis.html" aria-current="page">How We Invest</a>
-        <a href="taxlab.html">After-Tax&nbsp;Review</a>
-        <a href="leakage.html">Tax&nbsp;Diagnostic</a>
-        <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
-        <a href="insights.html">Insights</a>
+        <span class="dwnav-group">
+          <span class="dwnav-label">Understand</span>
+          <a href="howitworks.html">How Driftwood&nbsp;Works</a>
+          <a href="thesis.html" aria-current="page">How We Invest</a>
+          <a href="about.html">Our Story</a>
+          <a href="insights.html">Insights</a>
+        </span>
+        <span class="dwnav-group">
+          <span class="dwnav-label">Discover</span>
+          <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+          <a href="statemap.html">State&nbsp;Atlas</a>
+          <a href="taxlab.html">After-Tax&nbsp;Review</a>
+        </span>
       </div>
     </nav>
 
@@ -193,6 +218,17 @@
         location, tax-loss harvesting, withdrawal sequencing, concentrated stock, and estate decisions
         don't operate as six separate problems — they work as one system. <b>Great portfolios are
         engineered, not assembled.</b></p>
+
+      <div class="arch">
+        <div class="ah">How it fits together</div>
+        <div class="engines">
+          <div class="eng"><div class="et">A diversified core</div><div class="ed">tax-managed · built to hold<br>for taxable accounts</div></div>
+          <div class="eng"><div class="et">A focused complement</div><div class="ed">active · opportunistic<br>for tax-advantaged accounts</div></div>
+        </div>
+        <div class="flow">↓ &nbsp; placed where each belongs, by tax &nbsp; ↓</div>
+        <div class="port">One portfolio, measured after tax</div>
+        <div class="cap"><b>Great portfolios are engineered, not assembled.</b> Where each part belongs — which account, taxed how — is the decision that quietly compounds.</div>
+      </div>
       <p>Those implementation choices add up to something we can measure. The cumulative benefit of building
         and running a portfolio well — where each holding sits, how losses are used, how gains are timed, how
         withdrawals are sequenced — is what we call <b>Structural Alpha</b>. It is not a market forecast and

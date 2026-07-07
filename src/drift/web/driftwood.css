@@ -71,15 +71,24 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
   letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; }
 .dwnav .brand .w{ color:inherit; }
 .dwnav .brand:hover{ opacity:.85; }
-/* A running index of tracked-caps links; the current page carries a 2px editorial-blue rule. */
+/* A running index of tracked-caps links, split into two labelled families: Understand (who we are
+   and how we think) and Discover (the interactive tools). The current page carries a 2px
+   editorial-blue rule. */
 .dwnav-links{ display:flex; gap:8px 22px; align-items:center; flex-wrap:wrap; }
+.dwnav-group{ display:inline-flex; align-items:center; gap:8px 18px; flex-wrap:wrap; }
+.dwnav-label{ font-size:9px; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted,#8a8577); white-space:nowrap; }
+.dwnav-group + .dwnav-group{ margin-left:4px; padding-left:22px;
+  border-left:1px solid var(--line,#e3dccd); }
 .dwnav-links a{ font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
   color:var(--dim,#5f5f68); text-decoration:none; padding:4px 0; white-space:nowrap;
   border-bottom:2px solid transparent; }
 .dwnav-links a:hover{ color:var(--ink,#1d242d); }
 .dwnav-links a[aria-current="page"]{ color:var(--ink,#1d242d);
   border-bottom-color:var(--accent-strike,#2c5878); }
-@media (max-width:620px){ .dwnav{ padding:11px 16px; gap:8px 18px; } .dwnav-links{ gap:8px 18px; } }
+@media (max-width:620px){ .dwnav{ padding:11px 16px; gap:8px 18px; } .dwnav-links{ gap:8px 18px; }
+  .dwnav-group{ gap:8px 16px; } .dwnav-group + .dwnav-group{ margin-left:0; padding-left:0;
+    border-left:none; } .dwnav-label{ font-size:8.5px; opacity:.8; } }
 
 /* ── Mobile / cross-device consistency ──────────────────────────────────────────────────────
    Stop iOS Safari from auto-inflating body text (so the type scale is identical in portrait,

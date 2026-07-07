@@ -121,24 +121,26 @@ def test_hero_leads_with_the_structural_alpha_before_after(tmp_path):
 
 
 
-def test_hub_leads_with_belief_not_positioning():
-    # Belief-first hero: the front door states what we optimize for (what you keep), and the firm's
-    # central sentence appears quietly — the "institutional portfolio architecture" positioning is
-    # discovered later (on the thesis page's banner), not led with, and "architecture" is rationed here.
+def test_hub_leads_with_coordination_not_taxes():
+    # Coordination-first hero: the front door's one sentence is that Driftwood manages the whole
+    # after-tax SYSTEM (taxes are just the proof), and the spine of the page is the four-capability
+    # path — Diagnose -> Measure -> Coordinate -> Manage — in that deliberate order.
     from drift.exhibit import HUB_TEMPLATE
     t = HUB_TEMPLATE.read_text()
-    assert "maximize what you keep" in t
-    assert "pay attention to different things" in t          # the sentence the firm rests on
-    assert "The architecture" not in t                       # the old machinery-led header is gone
+    assert "after-tax system" in t                           # sells coordination of the whole system, not a bare tax pitch
+    assert "coordinate" in t.lower()
+    assert "The architecture" not in t                       # no machinery-led header
+    for cap in ("Diagnose", "Measure", "Coordinate", "Manage"):
+        assert cap in t, f"the {cap} capability should anchor the guided path"
 
 
-def test_hub_template_renders_a_research_appendix_and_does_not_lead_with_the_ledger():
+def test_hub_demotes_research_below_the_primary_path():
     from drift.exhibit import HUB_TEMPLATE
     t = HUB_TEMPLATE.read_text()
-    # a distinct appendix section exists, separate from the primary grid, labeled plainly "Research"
-    assert "exhibits-appendix" in t and '<div class="h">Research</div>' in t
-    # the homepage no longer names the internal products in the appendix, nor renders any perf number
+    # the primary path is the capability sequence; model-portfolio research is demoted to a labeled
+    # "Research & reference" block near the foot — no internal product names, no perf figure on the homepage.
+    assert 'id="capabilities"' in t
+    assert "Research &amp; reference" in t
     assert "Core Alpha Research" not in t
     assert 'class="rstat"' not in t                          # no performance figure line on the homepage
-    # the hero no longer leads with the momentum "track record"
     assert "View the track record" not in t

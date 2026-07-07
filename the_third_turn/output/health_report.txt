@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-07-07T04:59:55+00:00
+ THE THIRD TURN — collection health   2026-07-07T05:15:00+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,30 +12,30 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ██████████████████  live= 5637 (today  270)  last 23.9m ago
-  fanduel   ████████··········  live= 2550 (today 1167)  last 0.1m ago
-  pinnacle  ··················  live=    0 (today    0)  last 1354.9m ago ⚠STALE
+  bovada    ██████████████████  live= 5654 (today  287)  last 0.5m ago
+  fanduel   ████████··········  live= 2579 (today 1196)  last 0.5m ago
+  pinnacle  ··················  live=    0 (today    0)  last 1370.0m ago ⚠STALE
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
-  simultaneous live pairs :   2573  (today 1148)
+  simultaneous live pairs :   2602  (today 1177)
   overlap games           : 21
   median sync lag         : 609.0 s
   games by #books live     : {'0_books': 15, '2_books': 21}
 
 QUOTE LIFECYCLE (live rows)
-  market status: {'unset': 5637, 'OPEN': 2183, 'SUSPENDED': 361, 'REMOVED': 6}
+  market status: {'unset': 5654, 'OPEN': 2211, 'SUSPENDED': 362, 'REMOVED': 6}
 
 COVERAGE
   live games seen: 21   book-panel games: 36   team-total rows: 3134
   innings seen: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 INTEGRITY
-  rows=53196  malformed=0  missing-fields=0  duplicates=0  future-ts=0
+  rows=53288  malformed=0  missing-fields=0  duplicates=0  future-ts=0
   status: ✅ clean
 
 SR-1 GATE (leadership analysis — blocked until all pass)
-  ✅ ██████████████████ simultaneous live quote pairs    2573 / 2000
+  ✅ ██████████████████ simultaneous live quote pairs    2602 / 2000
      ████·············· games with live overlap          21 / 100
      ·················· median sync lag < 15s            609.0 / 15
      ████████████······ books quoting live               2 / 3

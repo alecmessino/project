@@ -31,6 +31,19 @@ import time
 
 from .leakage import STATE_ALPHA, STATE_NAMES
 
+# ── Provenance: what makes the Atlas a citable reference rather than a pretty page ─────────────────
+# The law year the content reflects, the date a human last reviewed it, and a short changelog of what
+# moved. The build timestamp (below) is a code artifact and is NOT a legal-currency claim — these are.
+AS_OF_LAW = "2025 tax-year law"
+LAST_REVIEWED = "2026-07-07"
+_CHANGELOG = [
+    ("2026-07-07", "First law-review date and honest per-cell source labeling; primary-source citations "
+                   "verified for Illinois, California, New York, Texas, and Florida (more in progress)."),
+    ("2025", "Washington's 7% (+2.9%) excise on long-term capital gains reflected (enacted 2022)."),
+    ("2025", "New Hampshire's Interest & Dividends tax reflected as fully repealed, effective 2025."),
+    ("2025", "Illinois estate-tax detail tracks the pending SB 2970 as of the review date."),
+]
+
 # ── Cartogram layout (our own tile grid; 50 states + DC + a territories strip) ───────────────────
 TILES = {
     "AK": [0, 0], "ME": [11, 0],
@@ -288,6 +301,13 @@ def _categorical(code, table, tags, notes, source, quirks=None):
 # NEVER add an entry here that has not been verified against the actual code section — a fabricated
 # legal citation on an RIA site is a real liability. (url, label) pairs; a dimension may cite several.
 _ILGA_ITA = "https://www.ilga.gov/legislation/ilcs/ilcs3.asp?ActID=591&ChapterID=8"
+# The imposing statute / constitutional provision for the income-&-gains dimension in the four
+# highest-traffic states — each independently verified. (Broader per-dimension coverage is in progress;
+# uncited cells are labeled honestly rather than dressed as sourced.)
+_CA_RTC_17041 = "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=RTC&sectionNum=17041"
+_NY_TAX_601 = "https://www.nysenate.gov/legislation/laws/TAX/601"
+_TX_CONST_8 = "https://statutes.capitol.texas.gov/Docs/CN/htm/CN.8.htm"
+_FL_CONST_7 = "https://www.flsenate.gov/Laws/Constitution#A7S05"
 _CITATIONS = {
     ("IL", "cg"): [(_ILGA_ITA, "35 ILCS 5/201(b)(1) (Illinois Income Tax Act)")],
     ("IL", "marriage"): [(_ILGA_ITA, "35 ILCS 5/201(b)(1) (Illinois Income Tax Act)")],
@@ -298,6 +318,10 @@ _CITATIONS = {
     ("IL", "muni"): [(_ILGA_ITA, "35 ILCS 5/203(a)(2)(A) and (N); 86 Ill. Adm. Code 100.2470")],
     ("IL", "qsbs"): [(_ILGA_ITA, "35 ILCS 5/102 (Illinois Income Tax Act)")],
     ("IL", "loss"): [(_ILGA_ITA, "35 ILCS 5/201(b)(1) (Illinois Income Tax Act)")],
+    ("CA", "cg"): [(_CA_RTC_17041, "Cal. Rev. & Tax. Code §17041 (personal income tax; capital gains taxed as ordinary income)")],
+    ("NY", "cg"): [(_NY_TAX_601, "N.Y. Tax Law §601 (personal income tax on residents)")],
+    ("TX", "cg"): [(_TX_CONST_8, "Tex. Const. art. VIII, §24 (a personal income tax requires voter approval — Texas levies none)")],
+    ("FL", "cg"): [(_FL_CONST_7, "Fla. Const. art. VII, §5(a) (no state income tax on natural persons)")],
 }
 
 
@@ -397,7 +421,9 @@ def build_statemap() -> dict:
     return {
         "header": {
             "generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
-            "asof": "Tax year 2025 · compiled from state statutes and revenue-department sources.",
+            "asof": f"Reflects {AS_OF_LAW}; last reviewed {LAST_REVIEWED}. Compiled from state statutes "
+                    f"and revenue-department sources.",
+            "as_of_law": AS_OF_LAW, "last_reviewed": LAST_REVIEWED, "changelog": _CHANGELOG,
         },
         "dimensions": DIMENSIONS,
         "tiles": TILES,

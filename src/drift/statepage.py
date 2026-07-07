@@ -26,7 +26,7 @@ import time
 from pathlib import Path
 
 from .leakage import STATE_ALPHA, STATE_NAMES, build_leakage
-from .statemap import DIMENSIONS, _state_record
+from .statemap import DIMENSIONS, _state_record, AS_OF_LAW, LAST_REVIEWED, _CHANGELOG
 
 # Single source of truth for the public base URL lives in drift.site (re-exported here for callers
 # and tests); flip it with scripts/set_domain.py when the custom domain goes live.
@@ -231,6 +231,19 @@ def _meta_description(name: str, rec: dict) -> str:
             f"reference. Illustrative, not advice.")[:300]
 
 
+def _src_line(d: dict) -> str:
+    """Citation-aware provenance for a dimension card, making the evidence hierarchy visible: a verified
+    statute renders 'Prove it' with the primary source; an as-yet-uncited fact is labeled honestly as a
+    summary — never dressed as a citation it doesn't have."""
+    cites = d.get("citation")
+    if cites:
+        links = " · ".join(
+            f'<a href="{_esc(c["url"])}" target="_blank" rel="noopener">{_esc(c["label"])}</a>' for c in cites)
+        return f'<div class="dsrc"><b>Prove it:</b> {links}</div>'
+    return (f'<div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. '
+            f'{_esc(d.get("source", ""))}</div>')
+
+
 def _dim_cards(rec: dict) -> str:
     cards = []
     for key in _DIM_ORDER:
@@ -241,9 +254,21 @@ def _dim_cards(rec: dict) -> str:
         cards.append(
             f'<div class="dcard"><div class="dh">{_esc(_DIM_LABEL[key])}{tag}</div>'
             f'<p>{_esc(d["note"])}</p>'
-            f'<div class="dsrc">{_esc(d.get("source", ""))}</div></div>'
+            f'{_src_line(d)}</div>'
         )
     return "\n".join(cards)
+
+
+def _provenance_block() -> str:
+    """The 'as of / last reviewed' stamp + a short 'what changed' log — the freshness signals a citable
+    reference lives on. State-agnostic: every page carries the currency of the whole Atlas."""
+    items = "\n".join(f'<li><b>{_esc(d)}</b> — {_esc(t)}</li>' for d, t in _CHANGELOG)
+    return (
+        f'<p class="asofline">State law reflects <b>{_esc(AS_OF_LAW)}</b>; last reviewed '
+        f'<b>{_esc(LAST_REVIEWED)}</b>. Every classification is a summary of state law; where a '
+        f'primary-source citation has been verified, it is linked on the card.</p>'
+        f'<details class="chlog"><summary>What changed</summary><ul>{items}</ul></details>'
+    )
 
 
 def _impact_block(name: str, a: dict | None) -> str:
@@ -328,6 +353,14 @@ _HEAD_CSS = """
   .dcard .dtag{font-size:10.5px;font-weight:700;color:var(--brass);border:1px solid var(--gold);border-radius:999px;padding:1px 8px}
   .dcard p{margin:0;font-size:12.5px;color:var(--body);line-height:1.5}
   .dcard .dsrc{font-size:10px;color:var(--muted);margin-top:8px}
+  .dcard .dsrc a{color:var(--teal2)}
+  .asofline{font-size:11.5px;color:var(--muted);margin:16px 40px 0;line-height:1.55}
+  .asofline b{color:#5a5a62}
+  .mnote{font-size:11.5px;color:var(--muted);margin:10px 0 0;line-height:1.55;max-width:70ch}
+  .chlog{margin:8px 40px 0;font-size:11.5px;color:var(--muted)}
+  .chlog summary{cursor:pointer;color:var(--teal2);font-weight:600;width:max-content}
+  .chlog ul{margin:8px 0 0;padding-left:18px;line-height:1.55} .chlog li{margin:3px 0}
+  .chlog b{color:#5a5a62}
   .sec{padding:14px 40px 4px}
   .sec .sh{font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
   .levers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
@@ -359,7 +392,7 @@ _HEAD_CSS = """
      isn't pinched, consistent with the other exhibits. */
   @media(max-width:600px){
     .bcrumb,.hd,.grid,.sec,.rel{padding-left:18px;padding-right:18px}
-    .hero,.cta,.capture,.disc,.foot{margin-left:18px;margin-right:18px}
+    .hero,.cta,.capture,.disc,.foot,.asofline,.chlog{margin-left:18px;margin-right:18px}
   }
   @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}
 """
@@ -504,6 +537,9 @@ def render_state_html(data: dict) -> str:
         built and run — where each holding sits, how losses are used, how gains are timed — decides how
         much of {_esc(name)}'s tax code you actually pay. An illustrative estimate for a portfolio here:</p>
       {_impact_block(name, a)}
+      <p class="mnote">How this is modeled: a single 30-year proxy-spliced path (1996–2026), comparing a
+        concentrated, high-turnover book with a tax-managed one — illustrative and coarse; treat it as
+        directional, not a precise figure.</p>
       <div class="levers">{levers}</div></div>
     <div class="cta">
       <div class="ctxt">
@@ -515,8 +551,9 @@ def render_state_html(data: dict) -> str:
     </div>
 {capture}
     <div class="rel">Compare nearby regimes: {related} · <a href="states.html">all 50 states + DC →</a></div>
+    {_provenance_block()}
     {DISCLOSURE}
-    <div class="foot">Driftwood. Tax facts compiled from state statutes, tax year 2025.</div>
+    <div class="foot">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}.</div>
   </div>
 </div>
 </body>
@@ -583,8 +620,9 @@ def render_states_index(pages: dict) -> str:
       <thead><tr><th scope="col">State</th><th scope="col">Top LT rate</th><th scope="col">Tax Management Impact</th></tr></thead>
       <tbody>{body}</tbody>
     </table>
+    {_provenance_block()}
     {DISCLOSURE}
-    <div class="foot">Driftwood. Tax facts compiled from state statutes, tax year 2025.</div>
+    <div class="foot">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}.</div>
   </div>
 </div>
 </body>

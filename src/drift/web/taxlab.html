@@ -273,6 +273,26 @@
   .checklist button.on .ck{color:var(--teal)}
   /* "N of 6 sections reviewed" — the checklist tracks which sections you've opened. */
   .secprog{font-family:var(--sans);font-size:11px;color:var(--muted);margin:2px 0 0;letter-spacing:.02em}
+  /* Guided review — the outcome leads: a live one-line summary + coordinated-vs-naive comparison. */
+  .rev-lead{border:1px solid var(--line);border-top:2px solid var(--ink);background:#fff;padding:16px 18px 18px;margin:24px 0 6px}
+  .rl-sum{font-family:var(--serif);font-size:16px;line-height:1.55;color:var(--body);margin:0 0 16px;max-width:76ch}
+  .rl-sum b{color:var(--ink);font-weight:600}
+  .rl-row{display:grid;grid-template-columns:230px 1fr 64px;align-items:center;gap:14px;margin:10px 0}
+  .rl-lab{font-family:var(--sans);font-size:13px;color:var(--body);line-height:1.3}
+  .rl-track{height:26px;background:var(--soft);border:1px solid var(--line);overflow:hidden}
+  .rl-fill{display:block;height:100%;background:#c4c9cc}
+  .rl-fill.us{background:var(--teal2)}
+  .rl-val{font-family:var(--sans);font-variant-numeric:tabular-nums;font-size:18px;font-weight:700;text-align:right;color:var(--dim);letter-spacing:-.02em;white-space:nowrap}
+  .rl-val.us{color:var(--teal2)}
+  .rl-delta{font-family:var(--sans);font-size:12.5px;color:var(--body);margin-top:13px;padding-top:12px;border-top:1px solid var(--line2);line-height:1.55}
+  .rl-delta b{color:var(--teal2);font-weight:700}
+  @media(max-width:620px){ .rl-row{grid-template-columns:1fr;gap:3px} .rl-track{height:20px} .rl-val{text-align:left} }
+  /* Guided flow — a pager under the visible section that walks through the six in order. */
+  .rev-pager{display:flex;align-items:center;gap:12px;margin:30px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
+  .rev-pager button{font:inherit;font-family:var(--sans);font-size:13px;font-weight:600;background:none;border:0;cursor:pointer;color:var(--dim);padding:6px 0}
+  .rev-pager button:hover{color:var(--ink)}
+  .rev-pager .spacer{flex:1}
+  .rev-pager .next{color:var(--teal2)} .rev-pager .next:hover{color:var(--teal)}
   /* Six sections: portfolio · taxes · state · holdings · recs · review. One shows at a time on screen;
      print reveals the whole working paper (see the @media print block below). */
   @media screen{
@@ -502,6 +522,10 @@
     <button type="button" id="resetbtn" class="resetbtn" onclick="resetDefaults()">↺ Reset inputs to defaults</button>
   </header>
 
+  <!-- Guided review: lead with the outcome — a plain-English summary + coordinated-vs-naive comparison
+       that recompute live from the household controls below. Filled by reviewLead(). -->
+  <div class="rev-lead" id="rev-lead" aria-live="polite"></div>
+
   <div id="printhead">
     <div class="ph-title" id="phtitle">Asset Location &amp; Tax-Efficiency Analysis</div>
     <div class="ph-sub" id="phsub"></div>
@@ -712,6 +736,8 @@
       actual trading or any client account, and <b>past performance — hypothetical or actual — does not guarantee future
       results.</b> Tax and estate figures are illustrative, not a filing computation; coordinate with your CPA and estate attorney.</p>
   </div>
+
+  <div class="rev-pager" id="secpager"></div>
 
   <div class="foot">
     <a class="back" href="index.html">← back to Driftwood</a>
@@ -933,7 +959,7 @@ function advisory(code,slt,sst,bi){
   if(bi>=4) return `${nm} taxes capital gains as ordinary income at up to <b>${apct(slt)}</b> — among the steepest in the nation. Asset location (hold the fast book tax-advantaged) and harvesting deliver their largest dollar value in high-rate states like this one.`;
   return `${nm} taxes capital gains at <b>${apct(slt)}</b> (as ordinary income). A harvested loss here is worth that rate on every dollar of gain it offsets, stacked on top of the federal rate.`;
 }
-function selectState(code){ $("state").value=code; paintLeadSel(code); render(); flashDisc(); track("state_selected",{state:code,view:SEC});
+function selectState(code){ $("state").value=code; paintLeadSel(code); render(); reviewLead(); flashDisc(); track("state_selected",{state:code,view:SEC});
   if(window.dwTaxContext) dwTaxContext.save({state:code}); }
 // F1 · mobile state picker: a tappable severity-coloured chip grid, built from the same BUCKETS /
 // bucketOf heat-map the desktop map uses, wired to the one selectState handler (no desync path).
@@ -1503,6 +1529,38 @@ const LEDES={
   estate:`What happens at death — the state estate cliff, the credit-shelter trust, and the basis step-up. Illustrative; confirm the filing figure with your estate attorney.`,
   implementation:`The handful of <b>structural decisions</b> a review comes down to — and the <b>estimated after-tax improvement</b> they add up to. Illustrative; confirm figures with your CPA and estate attorney.`
 };
+// Guided review — the outcome banner: a plain-English summary + a coordinated-vs-naive comparison,
+// computed live from the household controls using the tool's own model (rates/calc/locAlpha3), so the
+// headline figure always matches the working paper below. Data-ink only; teal = coordinated.
+function reviewLead(){
+  const host=document.getElementById("rev-lead");
+  if(!host || typeof S==="undefined" || !S.assumptions || !S.profile) return;
+  const A=S.assumptions, p=S.profile, yrs=p.years||1, r=rates(), c=calc(r);
+  const T=+$("taxbal").value||0, Tr=+$("tradbal").value||0, Ro=+$("rothbal").value||0, W=(T+Tr+Ro)||1;
+  const mdr=c.drag/yrs, pdr=A.passive_div_yield*r.r_lt;
+  let taxSaved=0; try{ taxSaved=locAlpha3(T,Tr,Ro,mdr,pdr,A.growth_rate,A.horizon_years).annual||0; }catch(e){}
+  const alphaFrac=W>0?Math.max(0,taxSaved/W):0;
+  const pre=c.pretax, coord=c.after_tax, naive=Math.max(0,coord-alphaFrac);
+  const stCode=$("state").value;
+  const stName=(stCode && stCode!=="—") ? ((S.state_names&&S.state_names[stCode])||stCode) : null;
+  const bLabel=(((S.brackets&&S.brackets[+$("bracket").value])||{}).label||"").split("·")[0].trim()||"your";
+  const where=stName ? `In <b>${stName}</b> at the <b>${bLabel}</b> bracket` : `At the <b>${bLabel}</b> federal bracket`;
+  const wC=pre>0?Math.min(100,coord/pre*100):0, wN=pre>0?Math.min(100,naive/pre*100):0;
+  host.innerHTML =
+    `<div class="rl-sum">${where}, coordinating where this `+
+      `<b>${fmt$big(T)}</b> taxable book is held and how its gains are realized is worth about `+
+      `<b>${fmt$(taxSaved)}/yr</b> after tax — the same holdings, handled deliberately.</div>`+
+    `<div class="rl-row"><span class="rl-lab">Coordinated with Driftwood</span>`+
+      `<span class="rl-track"><span class="rl-fill us" style="width:${wC.toFixed(1)}%"></span></span>`+
+      `<span class="rl-val us">${apct(coord)}</span></div>`+
+    `<div class="rl-row"><span class="rl-lab">The same holdings, taxed naively</span>`+
+      `<span class="rl-track"><span class="rl-fill" style="width:${wN.toFixed(1)}%"></span></span>`+
+      `<span class="rl-val">${apct(naive)}</span></div>`+
+    `<div class="rl-delta">The gap is an illustrative <b>+${apct(alphaFrac)}/yr</b> after-tax edge — about `+
+      `<b>${fmt$(taxSaved)}/yr</b> on this book. Pre-tax was ${apct(pre)}/yr; the point isn't the highest `+
+      `pre-tax return — it's what you keep. Illustrative modeling, not advice.</div>`;
+}
+
 const VISITED=new Set();
 function showSection(sec){
   const S6=["portfolio","taxes","state","holdings","estate","implementation"];
@@ -1518,6 +1576,16 @@ function showSection(sec){
   });
   // The checklist tracks progress: how many of the six sections you've opened so far.
   const prog=$("secprog"); if(prog) prog.textContent=VISITED.size+" of "+S6.length+" sections reviewed";
+  // Guided pager — walk the six sections in order (prev left, next right).
+  const pgr=$("secpager");
+  if(pgr){ const LBL={portfolio:"Portfolio",taxes:"Taxes",state:"State",holdings:"Holdings",estate:"Estate",implementation:"Implementation"};
+    const i=S6.indexOf(SEC);
+    pgr.innerHTML = (i>0?`<button type="button" data-go="${S6[i-1]}">‹ ${LBL[S6[i-1]]}</button>`:"")
+      + `<span class="spacer"></span>`
+      + (i<S6.length-1?`<button type="button" class="next" data-go="${S6[i+1]}">Next · ${LBL[S6[i+1]]} →</button>`
+                      :`<button type="button" class="next" data-go="portfolio">↺ Start over</button>`);
+    pgr.querySelectorAll("button[data-go]").forEach(btn=>btn.addEventListener("click",()=>showSection(btn.dataset.go)));
+  }
   $("lede").innerHTML = LEDES[SEC]||LEDES.portfolio;
   if(SEC==="implementation"){ renderLead(); renderDecisions(); }
   track("section_view",{section:SEC});
@@ -1728,6 +1796,7 @@ function init(){
   $("state").innerHTML=Object.keys(S.states).map(s=>`<option value="${s}">${NAMES[s]||SLABEL[s]||s}</option>`).join("");
   buildLeadStates();   // F1: the mobile severity chip grid (reads the same S.states the map does)
   ["bracket","state","account"].forEach(id=>$(id).addEventListener("change",render));
+  ["bracket","state","account"].forEach(id=>$(id).addEventListener("change",reviewLead));  // keep the outcome banner live
   // Persist the visitor's context (this browser only) so it follows them site-wide via nav links.
   $("state").addEventListener("change",()=>window.dwTaxContext&&dwTaxContext.save({state:$("state").value}));
   $("bracket").addEventListener("change",()=>{ const b=S.brackets[+$("bracket").value];
@@ -1746,6 +1815,7 @@ function init(){
     $("taxbal").value=A.default_taxable; $("tradbal").value=A.default_traditional; $("rothbal").value=A.default_roth;
     // Slider drags only touch the optimizer, not the whole page (streamlined interaction path).
     ["taxbal","tradbal","rothbal"].forEach(id=>$(id).addEventListener("input",renderLocation));
+    ["taxbal","tradbal","rothbal"].forEach(id=>$(id).addEventListener("input",reviewLead));  // keep the outcome banner live
     // Household: the taxable book is the shared "portfolio" — save it so the Atlas & Diagnostic follow.
     $("taxbal").addEventListener("input",()=>window.dwTaxContext&&dwTaxContext.save({portfolio:+$("taxbal").value}));
     // Prospect-view portfolio slider — drives the lead-gen bleed off the prospect's OWN number.
@@ -1826,6 +1896,7 @@ function init(){
   ctaInitial();
   $("secnav").querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>showSection(btn.dataset.sec)));
   showSection(SEC);
+  reviewLead();   // fill the outcome banner on load
   // a11y: keep aria-valuetext in sync on every slider drag (runs after each render handler sets the output).
   document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener("input",syncValueText));
   document.querySelectorAll('input[type=range]').forEach(enableTypeIn);

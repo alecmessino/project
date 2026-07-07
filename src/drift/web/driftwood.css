@@ -149,10 +149,12 @@ details[open] > summary::after{ transform:rotate(90deg); }
    Square the card/panel/table/control surfaces site-wide so every page reads with the same
    printerly, hard-edged register as the front door's plate frame. Pills (999px status chips,
    badges) and the plate frame itself (.frame, 3px) deliberately keep their shape. */
+/* !important so it wins over the tool pages' own local card radii (they link this sheet first). The
+   selector list is card/panel/control classes only — pills (999px) and .frame (3px) are never listed. */
 .card,.cards,.cell,.vcard,.statstrip,.exhibits,a.ex,.arch,.note,.loc,.disc,.map-wrap,
 .opt-card,.opt-result,.blueprint,.acct,.struct-alpha,.cta,.dcard,.lv,.reb,.trade,.est-cliff,
-.research-banner,.fold,.smtabs button,.leadstate button,table.book,.statcard,.kpi,.tile-card,
-select{ border-radius:0; }
+.research-banner,.fold,.smtabs button,.leadstate button,table.book,
+.rev-lead,.rl-track,.savings,.flexcard,select{ border-radius:0 !important; }
 
 /* ── One-click PDF proposal / CPA brief (window.print → Save as PDF) ─────────────────────────
    A clean, multi-page print template: strip the app chrome and interactive controls, keep the

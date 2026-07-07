@@ -32,14 +32,31 @@
      tokens here cascades the warm palette through every token-driven component below; the framed
      browser-chrome card matches the other Driftwood surfaces. */
   :root{
-    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --ink:#1d242d; --dim:#5f5d68; --slate:#3a414b;
-    --rule:#1d242d; --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --navy:#1a2330; --chrome:#ece6da;
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4;
+    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --slate:#3d4650; --muted:#6b6e6a;
+    --rule:#1e2833; --teal:#15463a; --teal2:#15806a; --accent:#15806a; --navy:#1a2330; --chrome:#e9e5da;
+    --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6;
+    /* Retired brass/gold names alias to editorial blue so legacy selectors inherit the rebrand. */
+    --brass:#2c5878; --gold:#a9c2d6;
   }
-  .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;margin-top:6px;
-    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
-  .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #ddd5c6}
-  .chrome i{width:9px;height:9px;border-radius:999px;background:#cfc6b4;display:inline-block}
-  .chrome .url{margin-left:auto;font-size:11.5px;letter-spacing:.04em;color:var(--dim);font-family:ui-monospace,monospace}
+  /* The plate frame: a bound plate — 1px edge, near-square corners, an inset double rule, a flat desk
+     shadow. Replaces the traffic-light browser chrome, matching the front door. */
+  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;margin-top:6px;
+    box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line),
+      0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
+  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
+    border-bottom:3px double var(--frame-line);font-family:var(--sans)}
+  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .inner{margin:0 7px 7px}
+  /* Nav — the Nameplate (single-ink tracked caps) + a running index of tracked-caps links. */
+  .dwnav .brand{font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);text-decoration:none}
+  .dwnav-links a{font-family:var(--sans);font-weight:600;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:3px 1px;border-bottom:2px solid transparent}
+  .dwnav-links a:hover{color:var(--ink)}
+  .dwnav-links a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent-strike)}
+  /* Crisp, printerly register — square the primary card/panel/control surfaces in this frame to match
+     the plate frame (which stays at 3px); pills and toggles keep their shape. */
+  .cards,.loc,.note,.struct-alpha,.opt-card,.disc,.blueprint,.acct,.opt-result,.ctl select{border-radius:0}
   .fbody{padding:34px 38px 30px}
   .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:13px}
   .masthead{display:flex;align-items:center;gap:13px;flex-wrap:wrap}
@@ -250,11 +267,15 @@
     border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .checklist button{font:inherit;font-size:14px;font-weight:600;color:var(--dim);background:none;border:0;
     padding:4px 0;cursor:pointer;display:inline-flex;align-items:center;gap:7px;letter-spacing:.1px}
-  .checklist button .ck{color:#b8c4bc;font-size:12px;transition:color .12s}
+  .checklist button .ck{color:var(--line);font-size:12px;width:13px;display:inline-flex;justify-content:center;transition:color .12s}
+  .checklist button .ck.done{color:var(--teal2)}
+  .checklist button .ck.pend{color:var(--line)}
   .checklist button:hover{color:var(--ink)}
   .checklist button.on{color:var(--ink);text-decoration:underline;text-underline-offset:6px;
     text-decoration-thickness:2px;text-decoration-color:var(--teal)}
   .checklist button.on .ck{color:var(--teal)}
+  /* "N of 6 sections reviewed" — the checklist tracks which sections you've opened. */
+  .secprog{font-family:var(--sans);font-size:11px;color:var(--muted);margin:2px 0 0;letter-spacing:.02em}
   /* Six sections: portfolio · taxes · state · holdings · recs · review. One shows at a time on screen;
      print reveals the whole working paper (see the @media print block below). */
   @media screen{
@@ -446,9 +467,13 @@
 <body>
 <div class="wrap">
   <div class="frame">
-    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — after-tax review</span></div>
+    <div class="run">
+      <span class="inst">Driftwood · Private Wealth Architecture</span>
+      <span class="marker">After-Tax Review</span>
+    </div>
+    <div class="inner">
     <nav class="dwnav" aria-label="Driftwood">
-      <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+      <a class="brand" href="index.html">Driftwood</a>
       <div class="dwnav-links">
         <a href="about.html">Our Story</a>
         <a href="thesis.html">How We Invest</a>
@@ -462,18 +487,19 @@
   <header>
     <div class="eyebrow">Private wealth</div>
     <div class="masthead">
-      <h1>Drift<span class="w">wood</span> <span class="sep">·</span> <span class="sub">After-Tax Review</span></h1>
+      <h1>Driftwood <span class="sep">·</span> <span class="sub">After-Tax Review</span></h1>
       <span class="hyp-pill">Illustrative modeling</span>
     </div>
     <p class="notebook-intro">Every portfolio has a handful of structural decisions. Let's review yours.</p>
     <div class="checklist" id="secnav" role="tablist" aria-label="What this review covers">
-      <button type="button" data-sec="portfolio"><span class="ck" aria-hidden="true">✓</span> Portfolio</button>
-      <button type="button" data-sec="taxes"><span class="ck" aria-hidden="true">✓</span> Taxes</button>
-      <button type="button" data-sec="state"><span class="ck" aria-hidden="true">✓</span> State</button>
-      <button type="button" data-sec="holdings"><span class="ck" aria-hidden="true">✓</span> Holdings</button>
-      <button type="button" data-sec="estate"><span class="ck" aria-hidden="true">✓</span> Estate</button>
-      <button type="button" data-sec="implementation"><span class="ck" aria-hidden="true">✓</span> Implementation</button>
+      <button type="button" data-sec="portfolio"><span class="ck pend" aria-hidden="true">○</span> Portfolio</button>
+      <button type="button" data-sec="taxes"><span class="ck pend" aria-hidden="true">○</span> Taxes</button>
+      <button type="button" data-sec="state"><span class="ck pend" aria-hidden="true">○</span> State</button>
+      <button type="button" data-sec="holdings"><span class="ck pend" aria-hidden="true">○</span> Holdings</button>
+      <button type="button" data-sec="estate"><span class="ck pend" aria-hidden="true">○</span> Estate</button>
+      <button type="button" data-sec="implementation"><span class="ck pend" aria-hidden="true">○</span> Implementation</button>
     </div>
+    <p class="secprog" id="secprog"></p>
     <p class="lede" id="lede"></p>
     <button type="button" id="resetbtn" class="resetbtn" onclick="resetDefaults()">↺ Reset inputs to defaults</button>
   </header>
@@ -695,6 +721,7 @@
     <div id="gen" style="margin-top:8px"></div>
   </div>
     </div><!-- .fbody -->
+    </div><!-- .inner -->
   </div><!-- .frame -->
 </div>
 <div id="printfoot">Driftwood · a registered investment adviser · adviserinfo.sec.gov — Illustrative; not investment, tax, or legal advice</div>
@@ -1478,12 +1505,21 @@ const LEDES={
   estate:`What happens at death — the state estate cliff, the credit-shelter trust, and the basis step-up. Illustrative; confirm the filing figure with your estate attorney.`,
   implementation:`The handful of <b>structural decisions</b> a review comes down to — and the <b>estimated after-tax improvement</b> they add up to. Illustrative; confirm figures with your CPA and estate attorney.`
 };
+const VISITED=new Set();
 function showSection(sec){
   const S6=["portfolio","taxes","state","holdings","estate","implementation"];
   SEC=(S6.indexOf(sec)>=0)?sec:"portfolio";
+  VISITED.add(SEC);
   S6.forEach(s=>document.body.classList.toggle("on-"+s, s===SEC));
   try{ const u=new URL(location.href); u.searchParams.set("view",SEC); history.replaceState(null,"",u); }catch(e){}
-  $("secnav").querySelectorAll("button").forEach(btn=>{ const on=btn.dataset.sec===SEC; btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", on?"true":"false"); });
+  $("secnav").querySelectorAll("button").forEach(btn=>{
+    const on=btn.dataset.sec===SEC, seen=VISITED.has(btn.dataset.sec);
+    btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", on?"true":"false");
+    const ck=btn.querySelector(".ck");
+    if(ck){ ck.textContent=seen?"✓":"○"; ck.classList.toggle("done",seen); ck.classList.toggle("pend",!seen); }
+  });
+  // The checklist tracks progress: how many of the six sections you've opened so far.
+  const prog=$("secprog"); if(prog) prog.textContent=VISITED.size+" of "+S6.length+" sections reviewed";
   $("lede").innerHTML = LEDES[SEC]||LEDES.portfolio;
   if(SEC==="implementation"){ renderLead(); renderDecisions(); }
   track("section_view",{section:SEC});

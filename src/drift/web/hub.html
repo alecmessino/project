@@ -31,7 +31,7 @@
   "@type": "FinancialService",
   "name": "Driftwood",
   "legalName": "Driftwood",
-  "description": "Fee-only, fiduciary private wealth management \u2014 evidence-based, tax-aware portfolio management and asset location coordinated into one after-tax plan.",
+  "description": "Fee-only, fiduciary private wealth management — evidence-based, tax-aware portfolio management and asset location coordinated into one after-tax plan.",
   "url": "https://alecmessino.github.io/project/index.html",
   "areaServed": "US",
   "serviceType": [
@@ -47,94 +47,140 @@
 }
 </script>
 <style>
-  /* Institutional Editorial — paper, ink, brass. The front door: outcome-led, one guided path. */
+  /* Institutional Editorial — limestone, ink, editorial blue (rebrand, July 2026). The front door:
+     outcome-led, one guided path, bound like a numbered plate in a reference volume rather than a
+     browser mock. Editorial blue owns identity & wayfinding; teal stays action-only. Scoped to this
+     page's <style> so the shared sheet (and the other properties) are untouched. */
   :root{
-    --bg:#f6f3ec; --soft:#fbf9f4; --line:#e3dccd; --line2:#f0ece2; --chrome:#ece6da;
-    --ink:#1d242d; --body:#3a414b; --dim:#5f5d68; --muted:#6f675b;
-    --brass:#a9853f; --gold:#c9b896; --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
+    --bg:#f1efe9; --soft:#f7f5f0; --card:#fff; --line:#d8d3c6; --line2:#e9e5db;
+    --frame-line:#c3bcab; --ghost-line:#b8b2a4;
+    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
+    --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6;
+    --teal:#15463a; --teal2:#15806a; --accent:#15806a; --neg:#9b4439; --navy:#1a2330;
+    /* Retired brass/gold names alias to the blues so any legacy selector inherits the rebrand. */
+    --brass:#2c5878; --gold:#a9c2d6;
+    --on-dark:#e7ecf2; --on-dark-strong:#f1ede3; --on-dark-dim:#9aa3ae;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--body);
     font:15px/1.65 var(--serif);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  .wrap{max-width:1180px;margin:40px auto;padding:0 20px 60px}
-  .frame{background:var(--bg);border:1px solid #d9d2c4;border-radius:12px;overflow:hidden;
-    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
-  .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #ddd5c6}
-  .chrome i{width:9px;height:9px;border-radius:999px;background:#cfc6b4;display:inline-block}
-  .chrome .url{margin-left:auto;font-size:11.5px;letter-spacing:.04em;color:var(--muted);font-family:ui-monospace,monospace}
-  .nav{display:flex;justify-content:space-between;align-items:center;padding:18px 44px;border-bottom:1px solid var(--line);background:var(--soft)}
-  .brand{font-family:var(--sans);font-size:23px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
-  .brand .w{color:var(--brass)}
-  .nav .links{display:flex;gap:20px;align-items:center}
-  .nav .links a{font-size:13px;color:var(--dim);text-decoration:none}
-  .nav .pill{font-size:11px;color:#7a6f5a;border:1px solid #ddd0b6;background:#f4ecda;padding:5px 11px;border-radius:999px;letter-spacing:.02em}
-  .hero{display:grid;grid-template-columns:1.08fr .92fr;gap:44px;padding:52px 44px 40px}
+  .wrap{max-width:1180px;margin:36px auto;padding:0 20px 60px}
+
+  /* The plate frame: a bound plate — 1px edge, near-square corners, an inset double rule, and a flat
+     desk shadow. Replaces the traffic-light browser chrome. */
+  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;
+    box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line),
+      0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
+  /* Running head — institution line left, section marker right, over a 3px double rule. */
+  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;
+    padding:12px 24px;margin:7px 7px 0;border-bottom:3px double var(--frame-line);font-family:var(--sans)}
+  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .inner{margin:0 7px 7px}
+
+  /* Nav — the Nameplate (single-ink tracked caps) + a running index of tracked-caps links. */
+  .dwnav{background:var(--soft);border-bottom:1px solid var(--line);padding:14px 24px}
+  .dwnav .brand{font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink);text-decoration:none}
+  .dwnav .brand:hover{opacity:.85}
+  .dwnav-links a{font-family:var(--sans);font-weight:600;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--dim);text-decoration:none;padding:3px 1px;border-bottom:2px solid transparent}
+  .dwnav-links a:hover{color:var(--ink)}
+  .dwnav-links a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent-strike)}
+
+  .hero{display:grid;grid-template-columns:1.08fr .92fr;gap:44px;padding:44px 44px 34px}
   @media(max-width:820px){.hero{grid-template-columns:1fr;gap:30px}}
-  .eyebrow{font-weight:600;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:18px}
-  /* Fluid hero: scales smoothly from the 40px mobile floor to the 53px desktop cap (endpoints
-     unchanged) so the display type breathes across widths instead of stepping at one breakpoint. */
-  /* Belief-first hero: a quiet setup line, then the belief in display type, then the teaching lede. */
-  .kick{font-family:var(--serif);font-size:19px;line-height:1.5;color:#6f675b;margin:0 0 10px;max-width:26ch}
+  .eyebrow{font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--accent-strike);margin-bottom:18px}
+  .kick{font-family:var(--serif);font-size:19px;line-height:1.5;color:var(--muted);margin:0 0 10px;max-width:26ch}
   h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px, 3.6vw + 18px, 50px);line-height:1.04;
     letter-spacing:-.02em;color:var(--ink);margin:0 0 20px}
-  .lede{font-size:16px;line-height:1.65;color:#54545c;margin:0 0 18px;max-width:46ch}
-  /* The human bridge to the tool — a question before a feature. */
+  .lede{font-size:16px;line-height:1.65;color:var(--dim);margin:0 0 18px;max-width:46ch}
   .cta-lead{font-family:var(--serif);font-size:16.5px;line-height:1.55;color:var(--ink);margin:0 0 24px;max-width:44ch}
-  /* The sentence the firm rests on — its own calm moment between the hero and the page. */
-  .mission{margin:8px 44px 34px;padding:26px 30px;border-left:3px solid var(--brass);background:var(--soft);
-    border-radius:0 12px 12px 0}
-  .mission p{font-family:var(--serif);font-size:clamp(19px,1.1vw+15px,23px);line-height:1.5;color:var(--ink);margin:0;max-width:60ch}
-  .mission .who{font-size:15px;line-height:1.6;color:var(--muted);margin-top:12px;max-width:60ch}
-  @media(max-width:620px){.mission{margin-left:20px;margin-right:20px;padding:20px 22px}}
   .ctas{display:flex;gap:12px;margin-bottom:30px;flex-wrap:wrap}
-  .ctas a{text-decoration:none;border-radius:8px;font-size:14.5px;font-weight:600;white-space:nowrap}
+  .ctas a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:600;white-space:nowrap;
+    transition:filter var(--t-fast),transform var(--t-fast),background var(--t-fast),border-color var(--t-fast)}
   .ctas .primary{background:var(--teal);color:#f1ede3;padding:14px 24px}
-  .ctas .ghost{border:1px solid #cdc4b2;color:var(--ink);padding:14px 22px;font-weight:500}
-  .trust{display:flex;gap:22px;border-top:1px solid var(--line);padding-top:18px;flex-wrap:wrap}
-  .trust span{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--dim)}
+  .ctas .primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .ctas .ghost{border:1px solid var(--ghost-line);color:var(--ink);padding:14px 22px;font-weight:500}
+  .ctas .ghost:hover{background:var(--soft);border-color:var(--teal)}
+  .trust{display:flex;gap:22px;border-top:1px solid var(--line);padding-top:18px;flex-wrap:wrap;margin-top:28px}
+  .trust span{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-size:12.5px;color:var(--dim)}
   .trust b{color:var(--teal2);font-weight:700}
-  /* Hero card — shows the structure in plain English: a diversified core + a focused complement, placed by tax into one portfolio. */
-  .arch{background:var(--navy);border-radius:14px;padding:26px 28px;box-shadow:0 20px 50px -28px rgba(8,12,10,.7);color:#e7ecf2}
-  .arch .ah{font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+
+  /* Navy architecture panel — squared in the crisp register; blue mist heading; a result band
+     (teal top keyline, no fill) rather than a fake teal CTA pill. */
+  .arch{background:var(--navy);padding:26px 28px;color:var(--on-dark)}
+  .arch .ah{font-family:var(--sans);font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent-strike-soft);margin-bottom:18px}
   .arch .engines{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .arch .eng{background:#243040;border:1px solid #33445a;border-radius:10px;padding:13px 15px}
-  .arch .eng .et{font-family:var(--sans);font-weight:700;font-size:14.5px;color:#f1ede3;letter-spacing:-.01em}
-  .arch .eng .ed{font-size:11px;color:#9aa3ae;margin-top:5px;line-height:1.45}
-  .arch .flow{text-align:center;color:var(--gold);font-size:12px;letter-spacing:.03em;margin:12px 0;font-weight:600}
-  .arch .port{background:var(--teal2);color:#f1ede3;border-radius:10px;padding:13px 15px;text-align:center;font-weight:700;font-family:var(--sans);font-size:15px;letter-spacing:-.01em}
-  .arch .cap{font-size:11.5px;color:#9aa3ae;margin-top:15px;line-height:1.5}
-  .onote{font-size:11px;color:#949ba6;margin-top:10px;line-height:1.45}
-  .pos{color:#9fd9c4} .neg{color:#e0a59b}
-  /* Who Driftwood is built for — a calm answer to "is this for me?", high up the page. */
-  .audience{padding:6px 44px 30px}
-  .audience .h{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-  .audience .alede{font-size:16px;line-height:1.6;color:#4b4b53;margin:0 0 16px;max-width:62ch}
-  .aud-grid{display:flex;flex-wrap:wrap;gap:10px}
-  .aud-grid span{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 16px;
-    font-family:var(--sans);font-size:13.5px;color:var(--ink)}
-  @media(max-width:620px){.audience{padding-left:20px;padding-right:20px}}
-  .vsec{padding:8px 44px 30px}
-  .vsec .h{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-  /* The inversion sentence — earning slightly less pre-tax and ending wealthier after tax. */
-  .vlede{font-family:var(--serif);font-size:16.5px;line-height:1.6;color:#4b4b53;margin:0 0 18px;max-width:64ch}
+  .arch .eng{background:#243040;border:1px solid #33445a;padding:13px 15px}
+  .arch .eng .et{font-family:var(--sans);font-weight:700;font-size:15.5px;color:#f1ede3;letter-spacing:-.01em}
+  .arch .eng .ed{font-size:12.5px;color:var(--on-dark-dim);margin-top:5px;line-height:1.5}
+  .arch .flow{text-align:center;color:var(--accent-strike-soft);font-size:12px;letter-spacing:.03em;margin:12px 0;font-weight:600;font-family:var(--sans)}
+  .arch .port{background:transparent;border:1px solid #34455c;border-top:2px solid var(--teal2);
+    padding:16px 18px;text-align:left;font-weight:700;font-family:var(--sans);font-size:17.5px;color:#f1ede3;letter-spacing:-.01em}
+  .arch .cap{font-family:var(--sans);font-size:13px;color:var(--on-dark-dim);margin-top:15px;line-height:1.55}
+  .arch .cap b{color:#eef2f6}
+  .onote{font-size:12px;color:#949ba6;margin-top:10px;line-height:1.45}
+
+  /* "Our thesis" — an outlined editorial callout: squared box, soft limestone fill, hairline border,
+     a caps eyebrow with a rule under it. Not a tinted left-accent highlight box. */
+  .mission{margin:20px 44px 32px;padding:22px 30px 28px;background:var(--soft);border:1px solid var(--frame-line)}
+  .mission .k{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent-strike);margin-bottom:16px;padding-bottom:13px;border-bottom:1px solid var(--line)}
+  .mission p{font-family:var(--serif);font-size:23px;line-height:1.5;color:var(--ink);margin:0;max-width:74ch}
+  .mission .who{font-size:15.5px;line-height:1.65;color:var(--body);margin-top:14px;max-width:74ch}
+  @media(max-width:620px){.mission{margin-left:20px;margin-right:20px;padding:20px 22px}.mission p{font-size:20px}}
+
+  .sec{padding:6px 44px 30px}
+  .sec .h{font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .alede{font-family:var(--serif);font-size:16px;line-height:1.6;color:var(--body);margin:0 0 16px;max-width:62ch}
+
+  /* One household, coordinated — the family-office coordination table. */
+  .coord{width:100%;border-collapse:collapse;margin:6px 0 0;font-family:var(--sans)}
+  .coord th{text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);padding:0 20px 11px 0;border-bottom:2px solid var(--ink)}
+  .coord th:last-child,.coord td:last-child{padding-right:0}
+  .coord td{padding:15px 20px 15px 0;border-bottom:1px solid var(--line);vertical-align:top;font-size:14px;line-height:1.55;color:var(--body)}
+  .coord tr:last-child td{border-bottom:none}
+  .coord th:nth-child(1),.coord td:nth-child(1){width:27%}
+  .coord th:nth-child(2),.coord td:nth-child(2){width:16%}
+  .coord .area{font-weight:700;color:var(--ink);font-size:14.5px}
+  .coord .lead{font-weight:600;color:var(--dim);white-space:nowrap}
+  .coord .lead.us{color:var(--teal2)}
+  .built{font-family:var(--serif);font-size:15px;line-height:1.62;color:var(--muted);margin:20px 0 0;max-width:80ch}
+  @media(max-width:620px){.sec{padding-left:20px;padding-right:20px}.coord .lead{white-space:normal}}
+
+  /* How it works — the inversion lede, then the Keep-more proof figure, then differentiated pillars. */
+  .vlede{font-family:var(--serif);font-size:16.5px;line-height:1.6;color:var(--body);margin:0 0 18px;max-width:64ch}
   .vlede b{color:var(--ink);font-weight:600}
+
+  /* Keep-more figure — a research exhibit: white, hairline, a 2px ink top rule, a dollar-scaled
+     compounding curve. Data-ink only: teal = coordinated, grey = naive. */
+  .kf{border:1px solid var(--frame-line);border-top:2px solid var(--ink);background:#fff;padding:22px 26px 22px;margin-bottom:22px}
+  .kf-k{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:12px}
+  .kf-lead{font-family:var(--serif);font-size:16.5px;line-height:1.55;color:var(--body);margin:0 0 22px;max-width:72ch}
+  .kf-lead b{color:var(--ink);font-weight:600}
+  .kf-svg{width:100%;height:auto;display:block}
+  .kf-num{font-family:var(--sans);font-variant-numeric:tabular-nums}
+  .kf-sans{font-family:var(--sans)}
+  .kf-cap{font-family:var(--sans);font-size:11.5px;color:var(--muted);margin-top:20px;padding-top:14px;border-top:1px solid var(--line2);line-height:1.55;max-width:80ch}
+  .kf-cap b{color:var(--dim);font-weight:600}
+
   .vadds{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
   @media(max-width:820px){.vadds{grid-template-columns:1fr}}
-  .vcard{border:1px solid var(--line);border-radius:10px;padding:20px;background:#fff;display:flex;flex-direction:column}
-  .vcard .tag{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);font-weight:600;margin-bottom:10px}
-  .vcard .vt{font-family:var(--sans);font-weight:600;font-size:18px;color:var(--ink);line-height:1.2;margin-bottom:14px}
-  .vcard .stat{font-variant-numeric:tabular-nums;font-size:30px;font-weight:700;color:var(--teal);letter-spacing:-.02em;line-height:1}
-  .vcard .sl{font-size:12px;color:var(--dim);margin:6px 0 12px}
-  .vcard .vn{font-size:12px;color:var(--body);line-height:1.5;border-top:1px solid var(--line2);padding-top:10px;margin-top:auto}
-  /* Number-less pillars (Build better / Stay invested): the note is the content, so it reads a touch
-     larger and sits right under the title instead of being pushed to the card foot. */
-  .vcard-q .vn{border-top:none;padding-top:0;margin-top:12px;font-size:13.5px;color:var(--body)}
-  .vsec .cap{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.5}
+  .vcard{border:1px solid var(--line);padding:22px;background:#fff;display:flex;flex-direction:column}
+  .vcard .tag{font-family:var(--sans);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-strike);font-weight:600;margin-bottom:10px}
+  .vcard .vt{font-family:var(--sans);font-weight:600;font-size:18.5px;color:var(--ink);line-height:1.2;margin-bottom:14px}
+  .vcard .vn{font-size:14px;color:var(--body);line-height:1.6;margin-top:12px}
+  .sec .cap{font-family:var(--sans);font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5}
+
   .exsec .rnote{font-size:12.5px;color:var(--muted);line-height:1.6;margin:0 0 14px;max-width:72ch}
   .exsec{padding:4px 44px 30px}
-  .exsec .h{font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-  .exhibits{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .exsec .h{font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .exhibits{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);overflow:hidden}
   .rstat{grid-column:1 / -1;background:var(--soft);padding:13px 18px;font-size:12px;color:var(--dim);line-height:1.7}
   .rstat b{color:var(--ink);font-variant-numeric:tabular-nums}
   a.ex{display:block;background:#fff;padding:16px 20px;text-decoration:none;color:inherit;position:relative;
@@ -142,32 +188,34 @@
   a.ex:hover{background:var(--soft);transform:translateY(-2px);box-shadow:var(--sh-hover);z-index:2}
   @media (prefers-reduced-motion: reduce){ a.ex{transition:background-color var(--t-fast)} a.ex:hover{transform:none} }
   a.ex.absent{opacity:.5;pointer-events:none}
-  a.ex .t{font-weight:600;font-size:14.5px;margin-bottom:3px;color:var(--ink)}
-  a.ex .t .arrow{color:var(--brass);font-weight:400}
+  a.ex .t{font-family:var(--serif);font-weight:600;font-size:14.5px;margin-bottom:3px;color:var(--ink)}
+  a.ex .t .arrow{color:var(--accent-strike);font-weight:400}
   a.ex .d{font-size:12.5px;color:var(--dim);line-height:1.5}
-  @media(max-width:620px){.exhibits{grid-template-columns:1fr}.nav{padding:14px 20px}.hero,.exsec{padding-left:20px;padding-right:20px}}
-  .foot{padding:18px 44px 36px;border-top:1px solid var(--line);background:var(--soft);color:var(--muted);font-size:12.5px;line-height:1.6}
-  .foot .note{color:#5a5a62;font-weight:600}
-  /* CLS guard: reserve height for the JS-injected blocks so filling them doesn't shove the page,
-     and paint a calm skeleton shimmer (built only from --soft/--line2) while a container is still
-     :empty. The moment JS injects children it stops matching :empty and the shimmer disappears —
-     no JS toggling required. Reserved heights sit below the real content, so no gap once filled. */
-  #vadds,#exhibits,#exhibits-appendix{min-height:184px}
-  @media(max-width:820px){#vadds{min-height:200px}}
-  #vadds:empty,#exhibits:empty,#exhibits-appendix:empty{
-    border-radius:10px;
+  @media(max-width:620px){.exhibits{grid-template-columns:1fr}.hero,.exsec{padding-left:20px;padding-right:20px}}
+  .foot{padding:20px 44px 36px;border-top:1px solid var(--line);background:var(--soft);color:var(--muted);font-size:12.5px;line-height:1.65}
+  .foot .note{color:var(--dim);font-weight:600}
+  .foot a{color:var(--teal)}
+  .foot b{color:var(--dim)}
+  /* CLS guard: reserve height for the JS-injected exhibits so filling them doesn't shove the page,
+     and paint a calm skeleton shimmer while a container is still :empty. */
+  #exhibits,#exhibits-appendix{min-height:184px}
+  #exhibits:empty,#exhibits-appendix:empty{
     background:linear-gradient(100deg,var(--soft) 30%,var(--line2) 50%,var(--soft) 70%);
     background-size:200% 100%;animation:dw-skel 1.3s ease-in-out infinite}
   @keyframes dw-skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
-  @media (prefers-reduced-motion: reduce){#vadds:empty,#exhibits:empty,#exhibits-appendix:empty{animation:none}}
+  @media (prefers-reduced-motion: reduce){#exhibits:empty,#exhibits-appendix:empty{animation:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="frame">
-    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">driftwood — welcome</span></div>
+    <div class="run">
+      <span class="inst">Driftwood · Private Wealth Architecture</span>
+      <span class="marker">Welcome</span>
+    </div>
+    <div class="inner">
     <nav class="dwnav" aria-label="Driftwood">
-      <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+      <a class="brand" href="index.html">Driftwood</a>
       <div class="dwnav-links">
         <a href="about.html">Our Story</a>
         <a href="thesis.html">How We Invest</a>
@@ -206,7 +254,7 @@
           </div>
           <div class="flow">↓ &nbsp; placed where each belongs, by tax &nbsp; ↓</div>
           <div class="port">One portfolio, measured after tax</div>
-          <div class="cap"><b style="color:#eef2f6">Great portfolios are engineered, not assembled.</b> Where each part belongs — which account, taxed how — is the decision that quietly compounds.</div>
+          <div class="cap"><b>Great portfolios are engineered, not assembled.</b> Where each part belongs — which account, taxed how — is the decision that quietly compounds.</div>
         </div>
         <div class="onote">Illustrative, hypothetical modeling — not a forecast, not a client account. Your own
           after-tax figures depend on your holdings, basis, and bracket; compute them in the After-Tax&nbsp;Review.</div>
@@ -214,30 +262,92 @@
     </div>
 
     <div class="mission">
+      <div class="k">Our thesis</div>
       <p>The largest investors in the world don't manage portfolios differently because they're smarter.
         They manage them differently because they pay attention to different things.</p>
       <p class="who">Taxes. Asset location. Rebalancing. Diversification. Costs. Implementation. None of those
-        are features — they're the things that decide what you keep. That attention is what Driftwood brings
-        to individual investors.</p>
+        are features — they're the things that decide what you keep. That attention — coordinated across everyone
+        who touches your wealth — is what Driftwood brings to individual investors.</p>
     </div>
 
-    <div class="audience">
-      <div class="h">Who Driftwood is built for</div>
-      <p class="alede">Households where the pieces have to work together — where the tax return, the estate
-        plan, and the portfolio are one problem, not three.</p>
-      <div class="aud-grid">
-        <span>Business owners &amp; founders</span>
-        <span>Executives with equity compensation</span>
-        <span>Concentrated-stock households</span>
-        <span>Families in high-tax states</span>
-        <span>Families coordinating with a CPA or attorney</span>
+    <div class="sec">
+      <div class="h">One household, coordinated</div>
+      <p class="alede">Most families' wealth is run in pieces — the portfolio in one place, the tax return
+        in another, the estate plan in a third. We work the way a family office does: the seat at the table that
+        keeps every piece coordinated, and methodical, as one after-tax plan.</p>
+      <div class="tscroll">
+      <table class="coord">
+        <thead><tr><th>Area of your financial life</th><th>Led by</th><th>What we coordinate</th></tr></thead>
+        <tbody>
+          <tr><td class="area">Portfolio &amp; asset location</td><td class="lead us">Driftwood</td><td>Allocation, and where each holding sits — taxable, Traditional, or Roth.</td></tr>
+          <tr><td class="area">Taxes &amp; realized gains</td><td class="lead">Your CPA</td><td>Harvesting, lot selection, and bracket timing, reconciled to the return you'll actually file.</td></tr>
+          <tr><td class="area">Estate &amp; gifting</td><td class="lead">Your attorney</td><td>Step-up, gifting, and titling — so the estate plan and the portfolio never contradict each other.</td></tr>
+          <tr><td class="area">Business &amp; equity comp</td><td class="lead">You &amp; counsel</td><td>Concentrated stock, QSBS, and liquidity events — planned before they're taxed, not after.</td></tr>
+          <tr><td class="area">Cash &amp; liquidity</td><td class="lead us">Driftwood</td><td>What's held back, and where, so nothing is sold at the wrong time.</td></tr>
+        </tbody>
+      </table>
       </div>
+      <p class="built">Built for households where these pieces have to work together — business owners and
+        founders, executives with equity compensation, concentrated-stock families, and those in high-tax states.</p>
     </div>
 
-    <div class="vsec" id="vsec" style="display:none">
+    <div class="sec">
       <div class="h">How it works</div>
-      <p class="vlede" id="vlede"></p>
-      <div class="vadds" id="vadds"></div>
+      <p class="vlede">Our objective isn't the highest pre-tax return. It's helping you keep more after
+        taxes — in the model, <b>9.1% pre-tax produced more wealth than 9.4%</b>, because less was lost to
+        taxes along the way.</p>
+
+      <div class="kf">
+        <div class="kf-k">The case for keeping more</div>
+        <p class="kf-lead">On <b>$1 million</b> of realized gains, the difference between a naive and a coordinated
+          approach compounds. Over <b>30 years</b>, an illustrative <b>$410k</b> stays working for you —
+          against <b>$90k</b> when the same gains are handed to taxes as they go.</p>
+        <svg class="kf-svg" viewBox="0 0 760 274" preserveAspectRatio="xMidYMid meet" role="img"
+          aria-label="The coordinated after-tax advantage compounding over the horizon, in dollars: about $410k kept by coordinating versus $90k taxed naively, over 30 years.">
+          <line x1="58" y1="240" x2="626" y2="240" stroke="#d8d3c6" stroke-width="1"/>
+          <text x="48" y="243.5" class="kf-num" font-size="10" fill="#6b6e6a" text-anchor="end">$0</text>
+          <line x1="58" y1="168" x2="626" y2="168" stroke="#ece8df" stroke-width="1"/>
+          <text x="48" y="171.5" class="kf-num" font-size="10" fill="#6b6e6a" text-anchor="end">$200k</text>
+          <line x1="58" y1="96" x2="626" y2="96" stroke="#ece8df" stroke-width="1"/>
+          <text x="48" y="99.5" class="kf-num" font-size="10" fill="#6b6e6a" text-anchor="end">$400k</text>
+          <line x1="58" y1="24" x2="626" y2="24" stroke="#ece8df" stroke-width="1"/>
+          <text x="48" y="27.5" class="kf-num" font-size="10" fill="#6b6e6a" text-anchor="end">$600k</text>
+          <path d="M58.0 240.0 L76.9 238.0 L95.9 235.8 L114.8 233.5 L133.7 231.2 L152.7 228.6 L171.6 226.0 L190.5 223.2 L209.5 220.2 L228.4 217.1 L247.3 213.8 L266.3 210.3 L285.2 206.6 L304.1 202.7 L323.1 198.7 L342.0 194.3 L360.9 189.8 L379.9 185.0 L398.8 179.9 L417.7 174.6 L436.7 168.9 L455.6 163.0 L474.5 156.7 L493.5 150.1 L512.4 143.1 L531.3 135.8 L550.3 128.0 L569.2 119.8 L588.1 111.2 L607.1 102.0 L626.0 92.4 L626.0 207.6 L607.1 209.7 L588.1 211.7 L569.2 213.6 L550.3 215.4 L531.3 217.1 L512.4 218.7 L493.5 220.3 L474.5 221.7 L455.6 223.1 L436.7 224.4 L417.7 225.6 L398.8 226.8 L379.9 227.9 L360.9 229.0 L342.0 230.0 L323.1 230.9 L304.1 231.8 L285.2 232.7 L266.3 233.5 L247.3 234.2 L228.4 235.0 L209.5 235.7 L190.5 236.3 L171.6 236.9 L152.7 237.5 L133.7 238.1 L114.8 238.6 L95.9 239.1 L76.9 239.6 L58.0 240.0 Z" fill="rgba(21,128,106,.13)"/>
+          <path d="M58.0 240.0 L76.9 239.6 L95.9 239.1 L114.8 238.6 L133.7 238.1 L152.7 237.5 L171.6 236.9 L190.5 236.3 L209.5 235.7 L228.4 235.0 L247.3 234.2 L266.3 233.5 L285.2 232.7 L304.1 231.8 L323.1 230.9 L342.0 230.0 L360.9 229.0 L379.9 227.9 L398.8 226.8 L417.7 225.6 L436.7 224.4 L455.6 223.1 L474.5 221.7 L493.5 220.3 L512.4 218.7 L531.3 217.1 L550.3 215.4 L569.2 213.6 L588.1 211.7 L607.1 209.7 L626.0 207.6" fill="none" stroke="#b7bcbf" stroke-width="2"/>
+          <path d="M58.0 240.0 L76.9 238.0 L95.9 235.8 L114.8 233.5 L133.7 231.2 L152.7 228.6 L171.6 226.0 L190.5 223.2 L209.5 220.2 L228.4 217.1 L247.3 213.8 L266.3 210.3 L285.2 206.6 L304.1 202.7 L323.1 198.7 L342.0 194.3 L360.9 189.8 L379.9 185.0 L398.8 179.9 L417.7 174.6 L436.7 168.9 L455.6 163.0 L474.5 156.7 L493.5 150.1 L512.4 143.1 L531.3 135.8 L550.3 128.0 L569.2 119.8 L588.1 111.2 L607.1 102.0 L626.0 92.4" fill="none" stroke="#15806a" stroke-width="2.5"/>
+          <text x="379.9" y="210" class="kf-sans" font-size="10.5" font-weight="600" fill="#15806a" text-anchor="middle" letter-spacing=".03em">kept by coordinating</text>
+          <circle cx="626" cy="92.4" r="3.5" fill="#15806a"/>
+          <circle cx="626" cy="207.6" r="3.5" fill="#b7bcbf"/>
+          <text x="636" y="95.4" class="kf-num" font-size="18" font-weight="700" fill="#15463a">$410k</text>
+          <text x="636" y="110.4" class="kf-sans" font-size="10" fill="#5c6470">coordinated</text>
+          <text x="636" y="210.6" class="kf-num" font-size="13.5" font-weight="700" fill="#6b6e6a">$90k</text>
+          <text x="636" y="224.6" class="kf-sans" font-size="10" fill="#6b6e6a">naive</text>
+          <text x="58" y="259" class="kf-sans" font-size="10.5" fill="#6b6e6a" text-anchor="start">today</text>
+          <text x="342" y="259" class="kf-sans" font-size="10.5" fill="#6b6e6a" text-anchor="middle">year 15</text>
+          <text x="626" y="259" class="kf-sans" font-size="10.5" fill="#6b6e6a" text-anchor="middle">year 30</text>
+        </svg>
+        <div class="kf-cap"><b>Hypothetical / illustrative</b> — an illustrative +3.7–4.7%/yr after-tax edge on identical
+          holdings, modeled federal-only. Not a forecast, not advice; your figure depends on your bracket, basis, and
+          holdings. Driftwood is a registered investment adviser; Form ADV and Form CRS are at adviserinfo.sec.gov.</div>
+      </div>
+
+      <div class="vadds">
+        <div class="vcard">
+          <div class="tag">Keep more</div>
+          <div class="vt">A portfolio built to be held — and taxed lightly.</div>
+          <div class="vn">Harvesting, lot selection, and account placement hand less of every realized gain to taxes — so you compound on your money, not on what's left after the IRS. Illustrative; your figure depends on your bracket and holdings.</div>
+        </div>
+        <div class="vcard">
+          <div class="tag">Build better</div>
+          <div class="vt">One portfolio, built as a system.</div>
+          <div class="vn">Allocation, asset location, rebalancing, and withdrawals decided together, not in separate rooms — each holding sits in the account where it is taxed least, across taxable, Traditional, and Roth. Implementation, not prediction.</div>
+        </div>
+        <div class="vcard">
+          <div class="tag">Stay invested</div>
+          <div class="vt">The best portfolio is one you're glad to own in twenty years.</div>
+          <div class="vn">Most of the damage in investing is self-inflicted — selling in a downturn, chasing a run. A portfolio you understand is one you can hold through both, long enough for compounding to finish its work.</div>
+        </div>
+      </div>
       <div class="cap">Hypothetical / illustrative model results — not a forecast and not advice. Each figure appears
         once, carries its own risk, and traces to an exhibit below; <a href="#disclosures" style="color:var(--teal2)">see full disclosures</a>.</div>
     </div>
@@ -261,8 +371,9 @@
       does not guarantee future results. Data: Yahoo Finance daily bars, keyless.
       <div style="margin-top:8px">Driftwood is a
       <b>registered investment adviser</b>; Form ADV and Form CRS are available at
-      <a href="https://adviserinfo.sec.gov/" style="color:var(--teal)">adviserinfo.sec.gov</a>.</div>
+      <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.</div>
       <div id="gen" style="margin-top:6px"></div>
+    </div>
     </div>
   </div>
 </div>
@@ -271,27 +382,9 @@
 window.__STATE__ = /*__STATE__*/null/*__END__*/;
 
 function render(s){
-  // The homepage carries no performance numbers — only the tax pillar shows a figure. The research
-  // the model's figures live one click deeper, on the research pages themselves.
-  const va = s.value_adds || [];
-  if(va.length){
-    document.getElementById("vsec").style.display = "";
-    // The inversion sentence: the modeled tax-managed book earns slightly LESS pre-tax and still
-    // ends wealthier after tax. Rendered from the engine state so the figures share one source.
-    const hr = s.hero || {};
-    if(hr.pretax_before != null && hr.pretax_after != null && hr.pretax_after < hr.pretax_before){
-      document.getElementById("vlede").innerHTML =
-        `Our objective isn't the highest pre-tax return. It's helping you keep more after taxes — `+
-        `in the model, <b>${hr.pretax_after}% pre-tax produced more wealth than ${hr.pretax_before}%</b>, `+
-        `because less was lost to taxes along the way.`;
-    }
-    document.getElementById("vadds").innerHTML = va.map(v => {
-      // Only the tax pillar carries a number; the architecture and behavior pillars are stat-less.
-      const stat = v.stat ? `<div class="stat">${v.stat}</div><div class="sl">${v.stat_label}</div>` : "";
-      return `<div class="vcard${v.stat?'':' vcard-q'}"><div class="tag">${v.tag}</div><div class="vt">${v.title}</div>`+
-        stat + `<div class="vn">${v.note}</div></div>`;
-    }).join("");
-  }
+  // The refined front door carries its "how it works" pillars and the Keep-more proof figure as
+  // static, differentiated content (each pillar owns a distinct argument; the headline number lives
+  // in the figure, not duplicated across cards). Only the Tools & research grid stays data-driven.
   const exs = s.exhibits||[];
   const exHTML = e =>
     `<a class="ex ${e.present?'':'absent'}" href="${e.href}">
@@ -304,8 +397,6 @@ function render(s){
   const appendix = exs.filter(e=>e.appendix);
   if(appendix.length){
     document.getElementById("appendixsec").style.display = "";
-    // No performance numbers on the homepage — the appendix is labeled links only. The figures
-    // the figures live one click deeper, on the research pages themselves.
     document.getElementById("exhibits-appendix").innerHTML = appendix.map(exHTML).join("");
   }
   document.getElementById("gen").textContent = "Generated "+(s.header? s.header.generated : "");

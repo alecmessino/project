@@ -28,8 +28,8 @@ EXHIBITS = [
      "The one-page before/after: where a concentrated, high-turnover account loses return to tax, "
      "and how much careful placement puts back on an identical exposure.", False),
     ("State Tax Atlas", "statemap.html",
-     "Fifty states across seven dimensions — capital gains, marriage, estate, munis, QSBS, losses, and "
-     "basis step-up — and what careful tax management can recover from each.", False),
+     "Fifty states across eight dimensions — capital gains, marriage, estate, munis, QSBS, losses, and "
+     "basis step-up, plus what careful tax management can change in each.", False),
     ("State tax guides (50 states + DC)", "states.html",
      "A capital-gains, estate, marriage, and basis-step-up profile for every state — each with what "
      "careful tax management can recover there, and a one-click personalized diagnostic.", False),
@@ -115,10 +115,11 @@ def build_hub(docs_dir: str | Path = "docs") -> dict:
         "title": "A portfolio built to be held — and taxed lightly.",
         "stat": f"${hero['keep_before'] * 10_000:,.0f} → ${hero['keep_after'] * 10_000:,.0f}",
         "stat_label": f"kept from $1 million of realized gains over {hero['horizon']} years, after tax — an "
-                      f"illustrative +{hero['alpha_low']:.1f}–{hero['alpha_high']:.1f}%/yr (modeled, federal-only)",
+                      f"illustrative +{hero['alpha_low']:.1f}–{hero['alpha_high']:.1f}%/yr (modeled; federal to a high-tax state)",
         "note": "A diversified, low-turnover portfolio, with harvesting, lot selection, and account "
-                "placement handing less of it to taxes. For taxable accounts, implemented as "
-                "Structural Alpha. Illustrative; your figure depends on your bracket and holdings.",
+                "placement handing less of it to taxes. Driftwood calls the cumulative benefit of those "
+                "implementation decisions Structural Alpha. Illustrative; your figure depends on your "
+                "bracket and holdings.",
     })
 
     # 2 · Build better (architecture) — no number. A process advantage, not a forecast.

@@ -1573,8 +1573,10 @@ function calc(r){
 function renderDecisions(){
   const host=$("decisions"); if(!host) return;
   const r=rates(), c=calc(r), nm=NAMES[r.state]||r.state;
+  const yrs=(S.profile&&S.profile.years)||1;
   const sa=((document.querySelector("#structalpha .big")||{}).textContent||"").trim();
-  const tlh=c.tlh>0?`≈${apct(c.tlh)}/yr`:null;
+  // c.tlh is the cumulative track total; annualize it (÷ years) so the card matches the Portfolio panel's per-year figure.
+  const tlh=c.tlh>0?`≈${apct(c.tlh/yrs)}/yr`:null;
   const D=[
     ["Asset Location", null,
      `Which account each holding lives in — bonds and high-turnover sleeves sheltered, the buy-and-hold index left to step up. Set in <a data-goto="portfolio">Portfolio</a>.`],

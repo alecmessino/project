@@ -10,13 +10,27 @@ from the site, mark its entry *Retired* rather than deleting it — the history 
 record. Owner of the register: **Alec Messino** (firm principal). Companion documents:
 `Editorial_Style_Guide.md` (voice), `Content_Hierarchy.md` (where numbers are allowed to appear).
 
-Two standing rules from the numbers audit:
+Standing rules from the numbers audit:
 
 1. **One number per page.** Home → the recovery band. Our Story → $400M. Diagnostic → dollars
    recovered. Tax Lab → the visitor's own dollars. Research → 0.65 ≈ 0.65. Everything else is
    supporting cast.
 2. **Dollars beat percentages** for family-facing pages; percentages and ratios belong to the
    research layer.
+3. **Three levels of evidence — label the tier, never blur them.** Every factual or quantitative
+   claim sits at one of three levels, and the presentation must match the level's certainty:
+   - **Level 1 — Authority.** A statute, IRS guidance, an SEC filing, a peer-reviewed paper. Cite it
+     *at the point of claim*. Every State Atlas **fact** is Level 1 and must carry a locating citation
+     (statute section or revenue-department URL), not "State revenue departments."
+   - **Level 2 — Internal modeling.** Driftwood's own illustrative computations — Structural Alpha,
+     the Tax-Management-Impact figure, the diagnostic band. Always labeled illustrative/hypothetical,
+     with the assumptions reachable in one click.
+   - **Level 3 — Opinion / judgment.** How we think — the essays, the philosophy. Persuasion by
+     reasoning, never dressed as Level 1 or 2.
+   The recurring failure the credibility audit found is **blurring**: asserting a Level-1 fact with only
+   Level-2 hedging (the Atlas source lines), or presenting a Level-2 model figure with Level-1
+   confidence (the impact column seated beside a statutory rate). The rule: *match the confidence of the
+   presentation to the level of the evidence — and when the level isn't obvious, state it.*
 
 ---
 

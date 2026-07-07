@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-07T22:49:16+00:00",
+  "generated": "2026-07-07T23:04:22+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 65395,
+    "rows": 65904,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -17,19 +17,19 @@
       "rows_total": 14589,
       "live_total": 6029,
       "live_today": 662,
-      "last_row_age_min": 4.0
+      "last_row_age_min": 19.1
     },
     "fanduel": {
-      "rows_total": 50800,
-      "live_total": 2867,
-      "live_today": 1484,
+      "rows_total": 51309,
+      "live_total": 3002,
+      "live_today": 1619,
       "last_row_age_min": 0.4
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 2424.3
+      "last_row_age_min": 2439.4
     }
   },
   "books_reporting_live": [
@@ -38,15 +38,15 @@
   ],
   "market_status": {
     "unset": 6029,
-    "OPEN": 2484,
-    "SUSPENDED": 374,
+    "OPEN": 2614,
+    "SUSPENDED": 379,
     "REMOVED": 9
   },
   "overlap": {
-    "simultaneous_pairs_total": 2985,
-    "simultaneous_pairs_today": 1560,
+    "simultaneous_pairs_total": 3045,
+    "simultaneous_pairs_today": 1620,
     "overlap_games": 23,
-    "median_sync_lag_s": 490.0,
+    "median_sync_lag_s": 517.0,
     "games_by_books_live": {
       "0_books": 12,
       "1_books": 1,
@@ -65,7 +65,7 @@
     "verified": true
   },
   "coverage": {
-    "live_games_seen": 26,
+    "live_games_seen": 27,
     "book_panel_games": 36,
     "team_total_rows": 3817,
     "innings_seen": [
@@ -86,7 +86,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 2985,
+        "current": 3045,
         "target": 2000,
         "pass": true,
         "progress": 1.0
@@ -100,10 +100,10 @@
       },
       {
         "criterion": "median sync lag < 15s",
-        "current": 490.0,
+        "current": 517.0,
         "target": 15,
         "pass": false,
-        "progress": 0.031
+        "progress": 0.029
       },
       {
         "criterion": "books quoting live",
@@ -114,6 +114,6 @@
       }
     ],
     "cleared": false,
-    "overall_progress": 0.482
+    "overall_progress": 0.481
   }
 }

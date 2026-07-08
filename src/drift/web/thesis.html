@@ -120,6 +120,21 @@
     font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .chrome .url{margin-left:auto;font-family:var(--sans);font-weight:700;font-size:10px;
     letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  /* The Ripple — one decision, its downstream consequences (shared visual language). */
+  .ripplesec{padding:8px 44px 26px}
+  .ripplesec .rsh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 8px}
+  .ripplesec .rsi{font-size:15.5px;line-height:1.65;color:var(--body);margin:0 0 18px;max-width:60ch}
+  .ripplesec .rsi b{color:var(--ink);font-weight:600}
+  .ripple{margin:6px auto 0;max-width:560px;display:flex;flex-direction:column;align-items:stretch}
+  .ripple .rstep{background:#fff;border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:9px;padding:12px 16px;font-size:14px;line-height:1.45;color:var(--body);text-align:left}
+  .ripple .rstep b{color:var(--ink);font-weight:700}
+  .ripple .rstep.start{background:#eaf0f4;border-color:var(--brass);font-family:var(--sans);font-weight:600;color:var(--ink);font-size:15px}
+  .ripple .rstep.end{background:var(--teal);border-color:var(--teal);border-left-color:var(--teal);color:#f1ede3;font-family:var(--sans);font-weight:700;font-size:16px;text-align:center;letter-spacing:-.01em}
+  .ripple .rarrow{align-self:center;width:1px;height:15px;background:var(--frame-line);position:relative}
+  .ripple .rarrow::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--frame-line)}
+  .ripplesec .rsn{font-size:12.5px;line-height:1.6;color:var(--muted);margin:16px auto 0;max-width:560px;text-align:center}
+  .ripplesec .rsn a{color:var(--teal2)}
+  @media(max-width:620px){.ripplesec{padding-left:22px;padding-right:22px}}
 </style>
 </head>
 <body>
@@ -258,6 +273,29 @@
         after six years at Dimensional Fund Advisors helping some of the country's largest advisory firms
         build institutional portfolios. <a href="about.html">Read our story →</a></p>
     </section>
+
+    <div class="ripplesec">
+      <div class="rsh">Every investment decision has an after-tax tail</div>
+      <p class="rsi">A good portfolio decision and a good <b>after-tax</b> decision are not the same thing. One
+        rebalancing trade shows why we manage the two together.</p>
+      <div class="ripple">
+        <div class="rstep start">We decide to trim a position that has run up</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">Selling realizes a capital gain, so the lot and the holding period matter</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">Which account we trim in changes the tax entirely</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">Losses elsewhere are harvested to offset the gain</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">What's bought back respects the wash-sale rule and asset location</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">The gain lands in a bracket we chose, not one we stumbled into</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep end">What you keep</div>
+      </div>
+      <p class="rsn">The portfolio is one input to the system, never the whole of it. See the full picture in
+        <a href="coordination.html">The $600,000 conversation</a>.</p>
+    </div>
 
     <div class="banner"><b>Institutional portfolio architecture, built for individual investors.</b>
       Evidence, taxes, cost, and discipline — applied to your family's balance sheet.</div>

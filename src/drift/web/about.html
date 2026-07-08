@@ -88,9 +88,14 @@
   .obs .n .num{color:var(--brass);font-weight:700;font-variant-numeric:tabular-nums}
   .obs .n::after{content:"";flex:1;height:1px;background:var(--line)}
   .obs p{margin:0}
-  .creed-band{margin:38px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
+  .creed-band{margin:58px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
     font-size:clamp(22px,2vw+14px,30px);letter-spacing:-.022em;color:var(--ink);line-height:1.16}
   @media(max-width:620px){.creed-band{margin-left:22px;margin-right:22px}}
+  .onward{margin:22px 44px 0;text-align:center;font-family:var(--sans);font-size:13px;letter-spacing:.01em;color:var(--muted)}
+  .onward a{color:var(--teal2);text-decoration:none;font-weight:600}
+  .onward a:hover{text-decoration:underline}
+  .onward .d{color:var(--ghost-line);margin:0 6px}
+  @media(max-width:620px){.onward{margin-left:22px;margin-right:22px}}
 
   /* Founder — the photo commands the space; the bio and a quiet trust strip sit beside it. */
   .founder{display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:start;margin:6px 0 0}
@@ -103,11 +108,14 @@
   .founder-name{font-family:var(--sans);font-weight:700;font-size:24px;letter-spacing:-.02em;color:var(--ink);margin:0}
   .founder-role{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);margin:5px 0 18px}
   .founder-bio p{font-size:16px;line-height:1.72;color:var(--body);margin:0 0 14px}
+  .founder-bio p.founder-credo{font-family:var(--serif);font-size:16.5px;line-height:1.5;color:var(--ink);
+    font-style:italic;margin:16px 0 0;padding-left:16px;border-left:2px solid var(--frame-line)}
   .founder-bio p:last-of-type{margin-bottom:0}
   .trust-strip{margin-top:22px;padding-top:15px;border-top:1px solid var(--line);
-    font-family:var(--sans);font-size:12.5px;line-height:1.75;color:var(--muted)}
+    font-family:var(--sans);font-size:12.5px;line-height:1.9;color:var(--muted)}
+  .trust-strip .c{white-space:normal}
   .trust-strip b{color:var(--dim);font-weight:600}
-  .trust-strip .d{color:var(--ghost-line);margin:0 9px}
+  .trust-strip .d{color:var(--ghost-line);margin:0 9px;white-space:nowrap}
   .trust-strip a{color:var(--muted)}
 
   /* Our Philosophy — the calm closing, one idea per line. */
@@ -268,10 +276,13 @@
           <p>The same conclusion kept emerging. Financial decisions rarely break down because individual
             professionals lack expertise. They break down because important decisions aren't connected. Driftwood
             was built to solve that problem.</p>
+          <p class="founder-credo">"I didn't want to be one more specialist at the table. I wanted to be the one
+            accountable for how the whole table fits together."</p>
           <div class="trust-strip">
-            <b>Fee-only fiduciary</b><span class="d">·</span>CFA® Level&nbsp;III Candidate<span class="d">·</span>B.S.
-            Finance &amp; Economic Consulting, with Distinction, Indiana University Kelley<span class="d">·</span>Form
-            ADV &amp; Form CRS at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>
+            <span class="c"><b>Fee-only fiduciary</b></span><span class="d">·</span><span class="c">CFA®
+            Level&nbsp;III Candidate</span><span class="d">·</span><span class="c">B.S.&nbsp;Finance &amp; Economic
+            Consulting, with Distinction, Indiana University&nbsp;Kelley</span><span class="d">·</span><span class="c">Form&nbsp;ADV
+            &amp; Form&nbsp;CRS at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a></span>
           </div>
         </div>
       </div>
@@ -284,6 +295,9 @@
     </div>
 
     <div class="creed-band">Financial decisions should not surprise one another.</div>
+
+    <div class="onward">Keep reading: <a href="principles.html">First Principles</a> <span class="d">·</span>
+      <a href="coordination.html">What Coordination Is Worth</a></div>
 
     <div class="foot">
       <span class="note">Illustrative modeling — not investment, tax, or legal advice.</span>

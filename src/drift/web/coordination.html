@@ -144,6 +144,39 @@
   .btbl .tx{color:var(--body)}
   .tscroll{overflow-x:auto}
 
+  /* The missing role — balance sheet, the question, the ownership matrix. */
+  .missing{padding:16px 44px 20px}
+  .missing .ask{font-family:var(--serif);font-size:20px;line-height:1.4;color:var(--ink);margin:24px 0 10px;font-weight:500}
+  .missing .ans{font-size:16px;line-height:1.7;color:var(--body);margin:0 0 26px;max-width:64ch}
+  .missing .ans em{font-style:italic;color:var(--ink)}
+  .missing .cat{font-family:var(--serif);font-size:18px;line-height:1.55;color:var(--ink);margin:24px 0 0;
+    padding-left:18px;border-left:3px solid var(--brass);max-width:62ch}
+  .missing .cat b{color:var(--ink);font-weight:700}
+  .owns{width:100%;border-collapse:collapse;font-size:13.5px;margin:2px 0 0}
+  .owns caption{text-align:left;font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--muted);padding-bottom:10px}
+  .owns th,.owns td{padding:11px 12px;border-bottom:1px solid var(--line2);text-align:center;white-space:nowrap}
+  .owns thead th{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.04em;color:var(--muted);
+    border-bottom:1px solid var(--frame-line)}
+  .owns thead th:last-child{color:var(--brass)}
+  .owns td:first-child,.owns th:first-child{text-align:left;font-weight:600;color:var(--ink);white-space:normal}
+  .owns td.y{color:var(--dim);font-weight:700}
+  .owns tr.hl td{background:var(--wash);font-weight:700;color:var(--ink)}
+  .owns tr.hl td.y{color:var(--brass)}
+  .owns th:last-child,.owns td:last-child{border-left:1px solid var(--frame-line)}
+
+  /* The ripple — signature visual: one decision, N consequences, ending in what you keep. */
+  .ripple{margin:8px auto 0;max-width:560px;display:flex;flex-direction:column;align-items:stretch}
+  .rstep{background:#fff;border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:9px;
+    padding:12px 16px;font-size:14px;line-height:1.45;color:var(--body);text-align:left}
+  .rstep b{color:var(--ink);font-weight:700}
+  .rstep.start{background:var(--wash);border-color:var(--brass);font-family:var(--sans);font-weight:600;color:var(--ink);font-size:15px}
+  .rstep.end{background:var(--teal);border-color:var(--teal);border-left-color:var(--teal);color:#f1ede3;
+    font-family:var(--sans);font-weight:700;font-size:16px;text-align:center;letter-spacing:-.01em}
+  .rarrow{align-self:center;width:1px;height:15px;background:var(--frame-line);position:relative}
+  .rarrow::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+    border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--frame-line)}
+
   /* Close */
   .through{padding:34px 44px 6px}
   .through p{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--ink);margin:0;max-width:60ch}
@@ -165,7 +198,7 @@
   .foot .note{color:#5a5a62;font-weight:600}
   .foot b{color:var(--dim)}
   @media(max-width:620px){
-    .doc,.why,.lab,.cases,.border,.through{padding-left:22px;padding-right:22px}
+    .doc,.why,.lab,.missing,.cases,.border,.through{padding-left:22px;padding-right:22px}
     .creed-band,.cta{margin-left:22px;margin-right:22px}
     .foot{padding-left:22px;padding-right:22px}
   }
@@ -201,10 +234,11 @@
     <div class="doc">
       <div class="eyebrow">A Worked Example</div>
       <h1>What coordination is actually worth.</h1>
-      <p class="lede">Ask a medical student and they'll tell you a doctor's best decisions are rarely made alone. The
-        hard cases go to a room full of specialists, because a meeting of the minds beats the smartest person working
-        in isolation. <b>Money is no different.</b> Here is what happens when the pieces of a financial life talk to
-        one another, and what it quietly costs when they don't.</p>
+      <p class="lede">Before a hard cancer case is treated, the most important decision isn't made by a single doctor.
+        It's made by a room. Surgeons, oncologists, radiologists, and pathologists review the same patient together,
+        because every recommendation changes the others. <b>Complex wealth deserves the same operating model.</b>
+        Here is what it looks like when the pieces of a financial life are run together, and what it quietly costs
+        when they aren't.</p>
     </div>
 
     <div class="why">
@@ -229,11 +263,11 @@
             safety system. Great individuals, in silos, still crash.</p>
         </div>
         <div class="an">
-          <div class="ak">The kitchen</div>
-          <div class="at">Calling the pass</div>
-          <p>Every station in a great kitchen is excellent on its own. What keeps the steak from arriving cold and
-            the dessert from landing with the entrées is one person calling the pass, sequencing the whole table.
-            The timing is the product.</p>
+          <div class="ak">Construction</div>
+          <div class="at">The general contractor</div>
+          <p>Nobody lets the architect, the structural engineer, the electrician, and the plumber build a house on
+            their own schedules. You hire a general contractor. Not because they're the best electrician, but because
+            one person is accountable for the whole project, in the right order.</p>
         </div>
       </div>
       <p class="whyclose">Your CPA, your attorney, your insurance agent, your banker: each is a gifted specialist.
@@ -242,9 +276,60 @@
 
     <div class="rule"></div>
 
+    <!-- ── The missing role ────────────────────────────────────────── -->
+    <div class="missing">
+      <div class="sh"><span class="sn">01</span>The missing role</div>
+      <p class="lab-intro">Meet the Harris family. Their balance sheet is not unusual for a successful household: a
+        business, a couple of homes, a concentrated equity position, retirement accounts of every flavor, a life
+        insurance policy. Real, hard-won, and spread across a half-dozen specialists.</p>
+
+      <table class="household">
+        <caption>The Harris family · illustrative</caption>
+        <thead><tr><th>Asset</th><th>What it is</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Taxable brokerage</td><td class="tag">After-tax, low basis</td><td>$1,000,000</td></tr>
+          <tr><td>Equity comp (RSUs)</td><td class="tag">Vested + unvested, one employer</td><td>$700,000</td></tr>
+          <tr><td>Traditional 401(k)</td><td class="tag">Pre-tax</td><td>$1,000,000</td></tr>
+          <tr><td>Rollover IRA</td><td class="tag">Pre-tax</td><td>$400,000</td></tr>
+          <tr><td>Roth 401(k) + Roth IRA</td><td class="tag">Tax-free</td><td>$400,000</td></tr>
+          <tr><td>HSA</td><td class="tag">Triple-tax-advantaged</td><td>$100,000</td></tr>
+          <tr><td>Primary residence</td><td class="tag">Real estate</td><td>$900,000</td></tr>
+          <tr><td>Investment property + land</td><td class="tag">Real estate</td><td>$500,000</td></tr>
+          <tr><td>Closely-held business</td><td class="tag">S-corp, illiquid</td><td>$1,000,000</td></tr>
+          <tr><td>Life insurance</td><td class="tag">Death benefit, personally owned</td><td>$2,000,000</td></tr>
+          <tr class="tot"><td>Estate at death</td><td class="tag">Everything above, untouched</td><td>$8,000,000</td></tr>
+        </tbody>
+      </table>
+
+      <p class="ask">Now one question. Who wakes up every morning responsible for how all of these interact?</p>
+      <p class="ans">Usually, no one. The CPA owns the tax return. The attorney owns the documents. The insurance
+        agent owns the policy. Even the investment advisor usually owns only the portfolio. Each is excellent inside
+        their own lane. The space <em>between</em> the lanes, where most of the money is quietly won or lost, belongs
+        to no one.</p>
+
+      <div class="tscroll">
+      <table class="owns">
+        <caption>Who owns this decision?</caption>
+        <thead><tr><th>The decision</th><th>CPA</th><th>Attorney</th><th>Advisor</th><th>Driftwood</th></tr></thead>
+        <tbody>
+          <tr><td>File the tax return</td><td class="y">✓</td><td></td><td></td><td></td></tr>
+          <tr><td>Draft the trust &amp; documents</td><td></td><td class="y">✓</td><td></td><td></td></tr>
+          <tr><td>Implement the portfolio</td><td></td><td></td><td class="y">✓</td><td></td></tr>
+          <tr class="hl"><td>How all of them interact</td><td></td><td></td><td></td><td class="y">✓</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p class="cat">That space is the product. Institutions have a name for filling it. They call it an operating
+        framework, and it is why every important decision at a large institution is made in the context of every
+        other one. <b>Driftwood brings that operating model to a single household.</b></p>
+    </div>
+
+    <div class="rule"></div>
+
     <!-- ── Interactive map ─────────────────────────────────────────── -->
     <div class="lab">
-      <div class="sh"><span class="sn">01</span>One move is never one move</div>
+      <div class="sh"><span class="sn">02</span>One move is never one move</div>
       <p class="lab-intro">The reason a household needs an attending is simple: <b>no financial decision stays in its
         own lane.</b> Pick a move below and watch which parts of the system it actually touches. Every one of them is
         a place a decision can be made well, or made in isolation and paid for later.</p>
@@ -280,32 +365,43 @@
 
     <div class="rule"></div>
 
-    <!-- ── Worked example ──────────────────────────────────────────── -->
+    <!-- ── The ripple ──────────────────────────────────────────────── -->
     <div class="cases">
-      <div class="sh"><span class="sn">02</span>One household, two state lines</div>
-      <p class="lab-intro">Now put real numbers on it. Below is one illustrative household: the same people, the same
-        balance sheet. The only thing we'll change is which side of a state line they live on. Watch how completely
-        that redraws the plan.</p>
+      <div class="sh"><span class="sn">03</span>One decision, seven consequences</div>
+      <p class="lab-intro">This is the pattern behind every case Driftwood works. Watch one ordinary decision, the
+        Harrises pulling some income this year, travel through the system. Nothing about the investments changed.
+        Everything downstream did.</p>
+      <div class="ripple">
+        <div class="rstep start">The Harrises need <b>$180,000</b> this year</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">Which accounts fund it: taxable, IRA, Roth, or cash, and in what order</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">Their taxable income for the year moves</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">So does their capital-gains rate, and the 3.8% surtax</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">Two years later, an IRMAA Medicare surcharge appears, or doesn't</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">The room for a low-tax Roth conversion shrinks, or is preserved</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">The estate's composition shifts, and with it what steps up at death</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">The portfolio drifts from its target, unless the draw was chosen with that in mind</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep end">What you keep</div>
+      </div>
+      <p class="labnote">One withdrawal decision. Seven downstream consequences. Coordinated, each arrow is an
+        opportunity. Uncoordinated, each is a quiet leak.</p>
+    </div>
 
-      <table class="household">
-        <caption>The household · illustrative</caption>
-        <thead><tr><th>Asset</th><th>What it is</th><th>Value</th></tr></thead>
-        <tbody>
-          <tr><td>Taxable brokerage</td><td class="tag">After-tax, low basis</td><td>$1,000,000</td></tr>
-          <tr><td>Equity comp (RSUs)</td><td class="tag">Vested + unvested, one employer</td><td>$700,000</td></tr>
-          <tr><td>Traditional 401(k)</td><td class="tag">Pre-tax</td><td>$1,000,000</td></tr>
-          <tr><td>Rollover IRA</td><td class="tag">Pre-tax</td><td>$400,000</td></tr>
-          <tr><td>Roth 401(k) + Roth IRA</td><td class="tag">Tax-free</td><td>$400,000</td></tr>
-          <tr><td>HSA</td><td class="tag">Triple-tax-advantaged</td><td>$100,000</td></tr>
-          <tr><td>Primary residence</td><td class="tag">Real estate</td><td>$900,000</td></tr>
-          <tr><td>Investment property + land</td><td class="tag">Real estate</td><td>$500,000</td></tr>
-          <tr><td>Closely-held business</td><td class="tag">S-corp, illiquid</td><td>$1,000,000</td></tr>
-          <tr><td>Life insurance</td><td class="tag">Death benefit, personally owned</td><td>$2,000,000</td></tr>
-          <tr class="tot"><td>Estate at death</td><td class="tag">Everything above, untouched</td><td>$8,000,000</td></tr>
-        </tbody>
-      </table>
-      <p class="hnote">$6.0M of living assets, plus a $2.0M life-insurance death benefit that lands in the estate when
-        it isn't planned around.</p>
+    <div class="rule"></div>
+
+    <!-- ── Worked example: the $600,000 conversation ───────────────── -->
+    <div class="cases">
+      <div class="sh"><span class="sn">04</span>The $600,000 conversation nobody had</div>
+      <p class="lab-intro">Now draw a state line through the Harrises' balance sheet. Same people, the same $8 million,
+        the same specialists all doing good work. The only variable is where they live, and it changes almost
+        everything.</p>
 
       <div class="split">
         <!-- Illinois -->
@@ -381,7 +477,7 @@
     </div>
 
     <div class="border">
-      <div class="sh"><span class="sn">03</span>What changed at the border</div>
+      <div class="sh"><span class="sn">05</span>What changed at the border</div>
       <div class="tscroll">
       <table class="btbl">
         <thead><tr><th>The lever</th><th>Illinois</th><th>Texas</th></tr></thead>

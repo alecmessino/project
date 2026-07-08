@@ -42,7 +42,7 @@
       "@type": "Person",
       "name": "Alec Messino",
       "jobTitle": "Founder",
-      "alumniOf": ["Dimensional Fund Advisors", "J.P. Morgan"]
+      "alumniOf": ["Dimensional Fund Advisors", "Indiana University, Kelley School of Business"]
     },
     "sameAs": [ "https://adviserinfo.sec.gov/" ]
   }
@@ -78,8 +78,19 @@
   p{font-size:16px;line-height:1.75;color:var(--body);margin:0 0 16px}
   p b{color:var(--ink);font-weight:600}
   .pull{font-family:var(--serif);font-weight:600;font-size:20px;line-height:1.45;color:var(--ink);
-    margin:4px 0 18px;padding-left:18px;border-left:3px solid var(--brass)}
+    margin:22px 0 8px;padding-left:18px;border-left:3px solid var(--brass)}
   a{color:var(--teal2)}
+  /* Three observations — a named lesson from each seat. */
+  .obs{margin:0 0 26px}
+  .obs .n{font-family:var(--sans);font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:8px}
+  .creds-list{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:9px;font-family:var(--sans);font-size:14px;color:var(--body);line-height:1.4}
+  .creds-list li{padding-left:18px;position:relative}
+  .creds-list li::before{content:"";position:absolute;left:0;top:.55em;width:5px;height:5px;border-radius:50%;background:var(--teal2)}
+  .creds-list b{color:var(--ink);font-weight:600}
+  .creds-list a{color:var(--muted)}
+  .creed-band{margin:34px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
+    font-size:clamp(22px,2vw+14px,29px);letter-spacing:-.022em;color:var(--ink);line-height:1.18}
+  @media(max-width:620px){.creed-band{margin-left:22px;margin-right:22px}}
 
   /* Founder — photo + bio, collapses to one column on phones. */
   .founder-card{display:flex;gap:26px;align-items:flex-start;margin:6px 0 2px}
@@ -165,33 +176,69 @@
 
     <div class="doc">
       <div class="eyebrow">Our story</div>
-      <h1>Why we built Driftwood.</h1>
-      <p class="lead">The world's largest investors have spent decades refining how portfolios are built.
-        Individual investors deserve the same level of thinking. That idea became Driftwood.</p>
+      <h1>Why Driftwood exists.</h1>
+      <p class="lead">After nearly a decade working with some of the world's largest investment managers and
+        advisory firms, one difference kept standing out. It wasn't the investments. It was how decisions were made.</p>
     </div>
 
     <div class="rule"></div>
 
     <section class="sec">
-      <div class="sh">Why Driftwood exists</div>
-      <p>I spent six years at Dimensional Fund Advisors, helping some of the country's largest advisory
-        firms build institutional investment portfolios.</p>
-      <p>One project focused on something most investors never see. We found portfolios quietly losing wealth
-        to tax-inefficient funds. Once advisors saw the numbers, they moved more than <b>$400&nbsp;million</b>.</p>
-      <p>Then something stopped making sense.</p>
-      <p>Institutions received this level of attention every day. Families rarely did.</p>
-      <p>The tools already existed. The discipline already existed. The architecture already existed.</p>
-      <p>It simply wasn't reaching the people who needed it most.</p>
-      <p><b>Driftwood was built to change that.</b></p>
+      <div class="sh">The difference</div>
+      <p>Large institutions rarely make important financial decisions in isolation. Investment teams, tax
+        specialists, legal counsel, and operations work from a common operating framework — important decisions
+        are expected to consider one another before they're made.</p>
+      <p>Individual families often have equally capable professionals. They simply aren't organized the same way.</p>
+      <p><b>That realization became Driftwood.</b></p>
+      <p>Over my career I had the chance to see wealth from several very different vantage points: inside a global
+        asset manager, alongside some of the country's largest advisory firms, and eventually across the table from
+        families making real decisions. Each seat showed me a different part of the system. Together, they revealed
+        the same pattern.</p>
     </section>
 
     <div class="rule"></div>
 
     <section class="sec">
-      <div class="sh">What we believe</div>
-      <p class="pull">The goal isn't the most exciting portfolio. It's one you're glad to own in twenty years.</p>
-      <p>How that belief becomes a portfolio is set out in <a href="thesis.html">How We Invest</a>. The
-        longer worldview behind it lives in <a href="principles.html">The Driftwood Principles</a>.</p>
+      <div class="sh">Three observations</div>
+      <div class="obs">
+        <div class="n">01 · Systems over philosophies</div>
+        <p>At Dimensional Fund Advisors, I expected to spend most of my time thinking about portfolios and
+          markets. Instead, I found myself paying attention to something else. The strongest firms weren't
+          distinguished only by their investment philosophy — they were distinguished by how consistently
+          decisions moved across the organization. Investments, taxes, operations, and planning weren't separate
+          conversations. They were parts of the same system.</p>
+      </div>
+      <div class="obs">
+        <div class="n">02 · Isolation over expertise</div>
+        <p>Later, working directly with families, the conversations became less about investment theory and more
+          about real life — retirement, concentrated stock, trusts, business sales, estate plans, and the
+          decisions that connected them. The professionals were rarely the problem; most were thoughtful and
+          genuinely cared. Each was responsible for a discipline. Almost nobody was responsible for the connections
+          between them.</p>
+      </div>
+      <div class="obs">
+        <div class="n">03 · Structure over performance</div>
+        <p>Early in my career, I worked on a project identifying tax-inefficient funds held in taxable portfolios.
+          The lesson wasn't about taxes — it was about visibility: once people could see the consequence of a
+          structural decision, changing course became obvious. <b>Small structural decisions, repeated consistently
+          over decades, often matter more than dramatic investment ones.</b> Over time I saw the same pattern
+          everywhere: important financial decisions interact, and very few people are responsible for making sure
+          they interact well.</p>
+      </div>
+      <p class="pull">I didn't set out to build a different investment firm. I set out to solve a problem I kept
+        seeing from every seat I occupied.</p>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="sec">
+      <div class="sh">What families actually need</div>
+      <p>The families we work with aren't looking for more complexity. They're looking for confidence — that when
+        something important happens (a retirement, the sale of a business, a move, a new child, the loss of a
+        parent, a change in the tax law) someone has already thought through how each decision affects the others.
+        Someone has already connected the dots. That's the work.</p>
+      <p class="pull">Our job isn't to make every financial decision for you. It's to make sure your important
+        financial decisions make sense together.</p>
     </section>
 
     <div class="rule"></div>
@@ -208,43 +255,32 @@
           <div class="cap">Alec Messino<br>Founder</div>
         </div>
         <div class="founder-bio">
-          <p>Alec Messino founded Driftwood after six years at Dimensional Fund Advisors, helping some of the
-            country's largest advisory firms build institutional portfolios.</p>
-          <p>Today he works with individuals and families, using many of those same principles.</p>
-          <div class="creds">Alec is a <b>CFA Level&nbsp;III candidate</b> and a <b>fee-only fiduciary</b>.</div>
+          <p>Alec Messino founded Driftwood after working across both institutional investment management and
+            private wealth advisory. Over nearly a decade he saw wealth from two very different perspectives —
+            helping many of the country's leading advisory firms build evidence-based investment programs, then
+            working directly with families navigating the practical realities of investing, taxes, estate planning,
+            and long-term decisions.</p>
+          <p>The same conclusion kept emerging: <b>financial decisions rarely break down because individual
+            professionals lack expertise. They break down because important decisions aren't connected.</b>
+            Driftwood was built to solve that problem.</p>
+          <ul class="creds-list">
+            <li><b>Fee-only fiduciary</b></li>
+            <li>CFA® Level&nbsp;III Candidate</li>
+            <li>B.S. in Finance &amp; Economic Consulting (with Distinction), Indiana University Kelley School of Business</li>
+            <li>Series&nbsp;7, Series&nbsp;66, and SIE</li>
+            <li>Form ADV &amp; Form CRS — public at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a></li>
+          </ul>
         </div>
       </div>
     </section>
 
-    <div class="rule"></div>
-
-    <section class="sec">
-      <div class="sh">Registered, and public about it</div>
-      <p>Driftwood is a <b>registered investment adviser</b>. Our Form ADV and Form CRS — the plain-language
-        documents describing how we operate, what we charge, and any conflicts we carry — are public. Read
-        them before we ever speak.</p>
-      <div class="idlinks">
-        <a href="https://adviserinfo.sec.gov/">Adviser record · adviserinfo.sec.gov</a>
-        <a href="https://adviserinfo.sec.gov/">Form ADV</a>
-        <a href="https://adviserinfo.sec.gov/">Form CRS</a>
-      </div>
-    </section>
-
     <div class="philosophy">
-      <p>Markets will always be uncertain.</p>
-      <p>Costs are not. Taxes are not. Discipline is not.</p>
-      <p class="soft">Those are the things we can control. They're also the things that compound.</p>
+      <p>Markets will always be uncertain. No advisor can eliminate that.</p>
+      <p class="soft">But a well-designed financial system can make sure your most important decisions reinforce
+        one another — instead of quietly working against one another.</p>
     </div>
 
-    <div class="cta">
-      <div class="ct">The clearest way to understand how we think is to see it on your own numbers.</div>
-      <div class="cd">A short, private diagnostic estimates what coordination would keep — by bracket, state, and
-        portfolio. No account, no commitment — just the number most portfolios never show you.</div>
-      <div class="btns">
-        <a class="primary" href="taxlab.html">See what you'd keep →</a>
-        <a class="ghost" href="thesis.html">Read our approach</a>
-      </div>
-    </div>
+    <div class="creed-band">Financial decisions should not surprise one another.</div>
 
     <div class="foot">
       <span class="note">Illustrative modeling — not investment, tax, or legal advice.</span>

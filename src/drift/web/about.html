@@ -80,30 +80,35 @@
   .pull{font-family:var(--serif);font-weight:600;font-size:20px;line-height:1.45;color:var(--ink);
     margin:22px 0 8px;padding-left:18px;border-left:3px solid var(--brass)}
   a{color:var(--teal2)}
-  /* Three observations — a named lesson from each seat. */
-  .obs{margin:0 0 26px}
-  .obs .n{font-family:var(--sans);font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:8px}
-  .creds-list{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:9px;font-family:var(--sans);font-size:14px;color:var(--body);line-height:1.4}
-  .creds-list li{padding-left:18px;position:relative}
-  .creds-list li::before{content:"";position:absolute;left:0;top:.55em;width:5px;height:5px;border-radius:50%;background:var(--teal2)}
-  .creds-list b{color:var(--ink);font-weight:600}
-  .creds-list a{color:var(--muted)}
-  .creed-band{margin:34px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
-    font-size:clamp(22px,2vw+14px,29px);letter-spacing:-.022em;color:var(--ink);line-height:1.18}
+  /* Three observations — a named lesson from each seat. Marker: number, tracked caps, a hairline rule. */
+  .obs{margin:0 0 30px}
+  .obs:last-of-type{margin-bottom:14px}
+  .obs .n{display:flex;align-items:center;gap:14px;margin-bottom:13px;font-family:var(--sans);
+    font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .obs .n .num{color:var(--brass);font-weight:700;font-variant-numeric:tabular-nums}
+  .obs .n::after{content:"";flex:1;height:1px;background:var(--line)}
+  .obs p{margin:0}
+  .creed-band{margin:38px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
+    font-size:clamp(22px,2vw+14px,30px);letter-spacing:-.022em;color:var(--ink);line-height:1.16}
   @media(max-width:620px){.creed-band{margin-left:22px;margin-right:22px}}
 
-  /* Founder — photo + bio, collapses to one column on phones. */
-  .founder-card{display:flex;gap:26px;align-items:flex-start;margin:6px 0 2px}
-  .founder-photo{flex:none;width:132px}
-  .founder-photo img{width:132px;height:132px;border-radius:14px;object-fit:cover;display:block;
-    border:1px solid var(--line);box-shadow:0 12px 30px -18px rgba(20,18,12,.5)}
-  .founder-photo .cap{font-family:var(--sans);font-size:11px;color:var(--muted);margin-top:8px;line-height:1.4}
-  .founder-bio{flex:1;min-width:0}
-  .founder-bio p:first-child{margin-top:0}
-  .creds{font-family:var(--sans);font-size:13px;color:var(--dim);border-top:1px solid var(--line2);
-    padding-top:12px;margin-top:4px;line-height:1.6}
-  .creds b{color:var(--ink)}
-  @media(max-width:560px){ .founder-card{flex-direction:column;gap:16px} .founder-photo{width:112px} .founder-photo img{width:112px;height:112px} }
+  /* Founder — the photo commands the space; the bio and a quiet trust strip sit beside it. */
+  .founder{display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:start;margin:6px 0 0}
+  @media(max-width:680px){.founder{grid-template-columns:1fr;gap:26px}}
+  .founder-photo{margin:0}
+  .founder-photo img{width:100%;max-width:300px;height:auto;aspect-ratio:1/1;object-fit:cover;object-position:center 30%;
+    border-radius:16px;border:1px solid var(--frame-line);display:block;
+    box-shadow:0 24px 52px -26px rgba(20,18,12,.55)}
+  @media(max-width:680px){.founder-photo img{max-width:264px}}
+  .founder-name{font-family:var(--sans);font-weight:700;font-size:24px;letter-spacing:-.02em;color:var(--ink);margin:0}
+  .founder-role{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);margin:5px 0 18px}
+  .founder-bio p{font-size:16px;line-height:1.72;color:var(--body);margin:0 0 14px}
+  .founder-bio p:last-of-type{margin-bottom:0}
+  .trust-strip{margin-top:22px;padding-top:15px;border-top:1px solid var(--line);
+    font-family:var(--sans);font-size:12.5px;line-height:1.75;color:var(--muted)}
+  .trust-strip b{color:var(--dim);font-weight:600}
+  .trust-strip .d{color:var(--ghost-line);margin:0 9px}
+  .trust-strip a{color:var(--muted)}
 
   /* Our Philosophy — the calm closing, one idea per line. */
   .philosophy{max-width:720px;margin:6px 44px 0;padding:26px 30px;background:var(--navy);border-radius:14px;
@@ -186,14 +191,13 @@
     <section class="sec">
       <div class="sh">The difference</div>
       <p>Large institutions rarely make important financial decisions in isolation. Investment teams, tax
-        specialists, legal counsel, and operations work from a common operating framework — important decisions
-        are expected to consider one another before they're made.</p>
+        specialists, legal counsel, and operations all work from a common framework. Important decisions are
+        expected to consider one another before they're made.</p>
       <p>Individual families often have equally capable professionals. They simply aren't organized the same way.</p>
-      <p><b>That realization became Driftwood.</b></p>
-      <p>Over my career I had the chance to see wealth from several very different vantage points: inside a global
-        asset manager, alongside some of the country's largest advisory firms, and eventually across the table from
-        families making real decisions. Each seat showed me a different part of the system. Together, they revealed
-        the same pattern.</p>
+      <p>That realization became Driftwood.</p>
+      <p>Over my career I saw wealth from several very different vantage points: inside a global asset manager,
+        alongside some of the country's largest advisory firms, and across the table from families making real
+        decisions. Each seat showed a different part of the system. Together, they revealed the same pattern.</p>
     </section>
 
     <div class="rule"></div>
@@ -201,27 +205,27 @@
     <section class="sec">
       <div class="sh">Three observations</div>
       <div class="obs">
-        <div class="n">01 · Systems over philosophies</div>
+        <div class="n"><span class="num">01</span>Systems over philosophies</div>
         <p>At Dimensional Fund Advisors, I expected to spend most of my time thinking about portfolios and
           markets. Instead, I found myself paying attention to something else. The strongest firms weren't
-          distinguished only by their investment philosophy — they were distinguished by how consistently
+          distinguished only by their investment philosophy. They were distinguished by how consistently
           decisions moved across the organization. Investments, taxes, operations, and planning weren't separate
           conversations. They were parts of the same system.</p>
       </div>
       <div class="obs">
-        <div class="n">02 · Isolation over expertise</div>
+        <div class="n"><span class="num">02</span>Isolation over expertise</div>
         <p>Later, working directly with families, the conversations became less about investment theory and more
-          about real life — retirement, concentrated stock, trusts, business sales, estate plans, and the
-          decisions that connected them. The professionals were rarely the problem; most were thoughtful and
+          about real life: retirement, concentrated stock, trusts, business sales, estate plans, and the
+          decisions that connected them. The professionals were rarely the problem. Most were thoughtful and
           genuinely cared. Each was responsible for a discipline. Almost nobody was responsible for the connections
           between them.</p>
       </div>
       <div class="obs">
-        <div class="n">03 · Structure over performance</div>
+        <div class="n"><span class="num">03</span>Structure over performance</div>
         <p>Early in my career, I worked on a project identifying tax-inefficient funds held in taxable portfolios.
-          The lesson wasn't about taxes — it was about visibility: once people could see the consequence of a
-          structural decision, changing course became obvious. <b>Small structural decisions, repeated consistently
-          over decades, often matter more than dramatic investment ones.</b> Over time I saw the same pattern
+          The lesson wasn't really about taxes. It was about visibility. Once people could see the consequence of a
+          structural decision, changing course became obvious. Small structural decisions, repeated consistently
+          over decades, often matter more than dramatic investment ones. Over time I saw the same pattern
           everywhere: important financial decisions interact, and very few people are responsible for making sure
           they interact well.</p>
       </div>
@@ -233,10 +237,10 @@
 
     <section class="sec">
       <div class="sh">What families actually need</div>
-      <p>The families we work with aren't looking for more complexity. They're looking for confidence — that when
-        something important happens (a retirement, the sale of a business, a move, a new child, the loss of a
-        parent, a change in the tax law) someone has already thought through how each decision affects the others.
-        Someone has already connected the dots. That's the work.</p>
+      <p>The families we work with aren't looking for more complexity. They're looking for confidence. Confidence
+        that when something important happens (a retirement, the sale of a business, a move, a new child, the loss
+        of a parent, a change in the tax law) someone has already thought through how each decision affects the
+        others. Someone has already connected the dots. That's the work.</p>
       <p class="pull">Our job isn't to make every financial decision for you. It's to make sure your important
         financial decisions make sense together.</p>
     </section>
@@ -245,31 +249,30 @@
 
     <section class="sec">
       <div class="sh">Meet the founder</div>
-      <div class="founder-card">
-        <div class="founder-photo">
+      <div class="founder">
+        <figure class="founder-photo">
           <!-- HEADSHOT: drop the file at docs/Headshot.jpg (and src/drift/web/Headshot.jpg for
                regeneration). Until then this block hides cleanly — no broken image. -->
-          <img src="Headshot.jpg" width="132" height="132"
+          <img src="Headshot.jpg" width="300" height="300"
                alt="Alec Messino, Founder of Driftwood"
                onerror="this.closest('.founder-photo').style.display='none'">
-          <div class="cap">Alec Messino<br>Founder</div>
-        </div>
+        </figure>
         <div class="founder-bio">
-          <p>Alec Messino founded Driftwood after working across both institutional investment management and
-            private wealth advisory. Over nearly a decade he saw wealth from two very different perspectives —
-            helping many of the country's leading advisory firms build evidence-based investment programs, then
-            working directly with families navigating the practical realities of investing, taxes, estate planning,
-            and long-term decisions.</p>
-          <p>The same conclusion kept emerging: <b>financial decisions rarely break down because individual
-            professionals lack expertise. They break down because important decisions aren't connected.</b>
-            Driftwood was built to solve that problem.</p>
-          <ul class="creds-list">
-            <li><b>Fee-only fiduciary</b></li>
-            <li>CFA® Level&nbsp;III Candidate</li>
-            <li>B.S. in Finance &amp; Economic Consulting (with Distinction), Indiana University Kelley School of Business</li>
-            <li>Series&nbsp;7, Series&nbsp;66, and SIE</li>
-            <li>Form ADV &amp; Form CRS — public at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a></li>
-          </ul>
+          <p class="founder-name">Alec Messino</p>
+          <p class="founder-role">Founder</p>
+          <p>Alec founded Driftwood after working across both institutional investment management and
+            private wealth advisory. He saw wealth from two very different vantage points. First, helping many of
+            the country's leading advisory firms build evidence-based investment programs. Then, working directly
+            with families navigating the practical realities of investing, taxes, estate planning, and long-term
+            decisions.</p>
+          <p>The same conclusion kept emerging. Financial decisions rarely break down because individual
+            professionals lack expertise. They break down because important decisions aren't connected. Driftwood
+            was built to solve that problem.</p>
+          <div class="trust-strip">
+            <b>Fee-only fiduciary</b><span class="d">·</span>CFA® Level&nbsp;III Candidate<span class="d">·</span>B.S.
+            Finance &amp; Economic Consulting, with Distinction, Indiana University Kelley<span class="d">·</span>Form
+            ADV &amp; Form CRS at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>
+          </div>
         </div>
       </div>
     </section>
@@ -277,7 +280,7 @@
     <div class="philosophy">
       <p>Markets will always be uncertain. No advisor can eliminate that.</p>
       <p class="soft">But a well-designed financial system can make sure your most important decisions reinforce
-        one another — instead of quietly working against one another.</p>
+        one another, instead of quietly working against one another.</p>
     </div>
 
     <div class="creed-band">Financial decisions should not surprise one another.</div>

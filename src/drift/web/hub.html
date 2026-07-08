@@ -116,11 +116,25 @@
   .cap-go{margin-top:auto;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--teal2)}
   a.cap-card:hover .cap-go{color:var(--teal)}
 
-  /* The defining visual — the systems diagram, given the room it earns. */
-  .sys{margin:6px 0 0;background:#fff;border:1px solid var(--frame-line);border-radius:14px;padding:38px 40px 26px}
-  .sys-svg{width:100%;height:auto;display:block;max-width:860px;margin:0 auto}
-  .sys-svg text{font-family:var(--sans)}
-  .sys-cap{font-family:var(--sans);font-size:12px;color:var(--muted);margin:22px auto 0;padding-top:16px;border-top:1px solid var(--line2);line-height:1.55;max-width:64ch;text-align:center}
+  /* The defining visual — a full-screen editorial statement: five parts converging on one outcome.
+     The signature moment of the page, in the calm limestone palette. Connecting lines draw in on
+     scroll. A whisper-soft band (hairline-ruled) sets it apart without shouting. */
+  .sysband{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:62px 44px 56px;margin:12px 0 0}
+  .sysband-in{max-width:920px;margin:0 auto;text-align:center}
+  .sb-eye{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:20px}
+  .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(30px,3vw+16px,46px);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:0 0 14px}
+  .sb-sub{font-family:var(--serif);font-size:19px;line-height:1.5;color:var(--dim);margin:0 auto 42px;max-width:48ch}
+  .sb-diagram svg{width:100%;height:auto;display:block;max-width:840px;margin:0 auto}
+  .sb-diagram text{font-family:var(--sans)}
+  .sb-cap{font-family:var(--sans);font-size:13.5px;line-height:1.62;color:var(--muted);margin:38px auto 0;max-width:62ch}
+  .sb-cap b{color:var(--ink);font-weight:600}
+  /* Coordination, happening: the five lines draw from the parts toward the outcome on scroll-in. */
+  .sb-diagram line.flow{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .62s var(--ease-out)}
+  .sysband.in .sb-diagram line.flow{stroke-dashoffset:0}
+  .sb-dot{opacity:0;transition:opacity .3s ease .5s}
+  .sysband.in .sb-dot{opacity:1}
+  @media(prefers-reduced-motion:reduce){.sb-diagram line.flow{stroke-dashoffset:0;transition:none}.sb-dot{opacity:1;transition:none}}
+  @media(max-width:620px){.sysband{padding:44px 22px}.sb-sub{margin-bottom:30px}}
 
   /* Evidence — the surprise is the headline; the chart is the exhibit; methodology is a footnote. */
   .ev-head{font-family:var(--sans);font-weight:700;font-size:clamp(26px,2.4vw+15px,36px);line-height:1.08;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
@@ -241,48 +255,40 @@
       </div>
     </div>
 
-    <!-- ── WHY IT WORKS — systems thinking + the defining visual ── -->
-    <div class="sec">
-      <div class="h">Why it works</div>
-      <p class="lede2">Most households already have a system. It just isn't coordinated.</p>
-      <p class="sysbody">A tax decision changes withdrawals. A withdrawal changes where investments are held.
-        An estate decision changes portfolio design. Each choice is reasonable by itself — together, they
-        <b>decide how much wealth stays in the family</b>.</p>
-      <div class="sys">
-        <svg class="sys-svg" viewBox="0 0 720 300" preserveAspectRatio="xMidYMid meet" role="img"
-          aria-label="Two ways to run a household's wealth. Run separately: portfolio, taxes, estate, liquidity, and professionals sit as five disconnected parts. Coordinated as one system: the same five parts all connect to a single after-tax outcome.">
-          <text x="100" y="34" font-size="11" font-weight="700" letter-spacing="1.6" fill="#8a857a">RUN SEPARATELY</text>
-          <g fill="#fff" stroke="#cfc9ba" stroke-width="1">
-            <rect x="100" y="58" width="150" height="30" rx="6"/><rect x="100" y="100" width="150" height="30" rx="6"/>
-            <rect x="100" y="142" width="150" height="30" rx="6"/><rect x="100" y="184" width="150" height="30" rx="6"/>
-            <rect x="100" y="226" width="150" height="30" rx="6"/>
-          </g>
-          <g font-size="12.5" fill="#8a857a" text-anchor="middle">
-            <text x="175" y="77">Portfolio</text><text x="175" y="119">Taxes</text><text x="175" y="161">Estate</text>
-            <text x="175" y="203">Liquidity</text><text x="175" y="245">Professionals</text>
-          </g>
-          <line x1="360" y1="46" x2="360" y2="270" stroke="#e9e5db" stroke-width="1"/>
-          <text x="384" y="34" font-size="11" font-weight="700" letter-spacing="1.6" fill="#2c5878">AS ONE SYSTEM</text>
-          <g stroke="#15806a" stroke-width="1.5" opacity=".8">
-            <line x1="502" y1="68" x2="590" y2="144"/><line x1="502" y1="106" x2="590" y2="144"/>
-            <line x1="502" y1="144" x2="590" y2="144"/><line x1="502" y1="182" x2="590" y2="144"/>
-            <line x1="502" y1="220" x2="590" y2="144"/>
-          </g>
-          <g fill="#fff" stroke="#c3bcab" stroke-width="1">
-            <rect x="384" y="54" width="118" height="28" rx="6"/><rect x="384" y="92" width="118" height="28" rx="6"/>
-            <rect x="384" y="130" width="118" height="28" rx="6"/><rect x="384" y="168" width="118" height="28" rx="6"/>
-            <rect x="384" y="206" width="118" height="28" rx="6"/>
-          </g>
-          <g font-size="12" fill="#3d4650" text-anchor="middle">
-            <text x="443" y="72">Portfolio</text><text x="443" y="110">Taxes</text><text x="443" y="148">Estate</text>
-            <text x="443" y="186">Liquidity</text><text x="443" y="224">Professionals</text>
-          </g>
-          <circle cx="590" cy="144" r="3.5" fill="#15806a"/>
-          <rect x="588" y="114" width="116" height="60" rx="9" fill="#fff" stroke="#15806a" stroke-width="1.6"/>
-          <text x="646" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#1e2833">After-tax</text>
-          <text x="646" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#1e2833">outcome</text>
-        </svg>
-        <div class="sys-cap">Five parts, one result. Run as one system, every decision is made with the others in view.</div>
+    <!-- ── WHY IT WORKS — the defining visual, full-bleed, as the signature moment ── -->
+    <div class="sysband" id="sysband">
+      <div class="sysband-in">
+        <div class="sb-eye">Why it works</div>
+        <h2 class="sb-h">Five parts. One outcome.</h2>
+        <p class="sb-sub">Most households already have a system. It just isn't coordinated.</p>
+        <div class="sb-diagram">
+          <svg viewBox="0 0 940 420" preserveAspectRatio="xMidYMid meet" role="img"
+            aria-label="Portfolio, taxes, estate, liquidity, and the professionals you already trust, all converging on one after-tax outcome.">
+            <g stroke="#15806a" stroke-width="2.2" fill="none" stroke-linecap="round">
+              <line class="flow" pathLength="1" x1="300" y1="67"  x2="612" y2="210" style="transition-delay:.05s"/>
+              <line class="flow" pathLength="1" x1="300" y1="133" x2="612" y2="210" style="transition-delay:.13s"/>
+              <line class="flow" pathLength="1" x1="300" y1="199" x2="612" y2="210" style="transition-delay:.21s"/>
+              <line class="flow" pathLength="1" x1="300" y1="265" x2="612" y2="210" style="transition-delay:.29s"/>
+              <line class="flow" pathLength="1" x1="300" y1="331" x2="612" y2="210" style="transition-delay:.37s"/>
+            </g>
+            <g fill="#fff" stroke="#c3bcab" stroke-width="1.2">
+              <rect x="70" y="44" width="230" height="46" rx="10"/><rect x="70" y="110" width="230" height="46" rx="10"/>
+              <rect x="70" y="176" width="230" height="46" rx="10"/><rect x="70" y="242" width="230" height="46" rx="10"/>
+              <rect x="70" y="308" width="230" height="46" rx="10"/>
+            </g>
+            <g font-size="16" fill="#3d4650" text-anchor="middle">
+              <text x="185" y="73">Portfolio</text><text x="185" y="139">Taxes</text><text x="185" y="205">Estate</text>
+              <text x="185" y="271">Liquidity</text><text x="185" y="337">Professionals</text>
+            </g>
+            <circle class="sb-dot" cx="612" cy="210" r="5.5" fill="#15806a"/>
+            <rect x="612" y="156" width="256" height="108" rx="14" fill="#fff" stroke="#15806a" stroke-width="2.2"/>
+            <text x="740" y="198" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="1.6" fill="#15806a">WHAT YOU KEEP</text>
+            <text x="740" y="232" text-anchor="middle" font-size="23" font-weight="700" letter-spacing="-.01em" fill="#1e2833">After-tax outcome</text>
+          </svg>
+        </div>
+        <p class="sb-cap">A tax decision changes withdrawals. A withdrawal changes where investments are held. An
+          estate decision changes portfolio design. Each choice is reasonable alone; <b>together, they decide how
+          much wealth stays in the family</b>.</p>
       </div>
     </div>
 
@@ -373,6 +379,16 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
 (function(){
   var s = window.__STATE__, gen = document.getElementById("gen");
   if(s && s.header && gen) gen.textContent = "Generated " + s.header.generated;
+  // The systems diagram: draw the connecting lines in as it scrolls into view (once).
+  var sb = document.getElementById("sysband");
+  if (sb) {
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if (e.isIntersecting){ sb.classList.add("in"); io.disconnect(); } });
+      }, { threshold: 0.35 });
+      io.observe(sb);
+    } else { sb.classList.add("in"); }
+  }
 })();
 </script>
 </body>

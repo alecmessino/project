@@ -52,7 +52,8 @@ def main() -> int:
     for asset in ("driftwood.css", "dw-context.js", "about.html", "principles.html", "philosophy.html",
                   "insights.html", "every-portfolio-has-two-returns.html",
                   "the-worlds-largest-investors.html", "enough-is-a-number.html", "howitworks.html",
-                  "coordination.html"):
+                  "coordination.html", "library.html", "case-business-sale.html",
+                  "case-vacation-home.html", "case-inheritance.html"):
         (DOCS / asset).write_text((WEB / asset).read_text())
         print(f"   {asset:15} -> docs/{asset} (copied)")
     # Binary assets (e.g. the founder headshot) — copy through only if present, so the About page's

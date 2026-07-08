@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>The Coordination Library — Driftwood</title>
+<meta name="description" content="Short, real scenarios that show how a single financial decision cascades across investments, taxes, estate planning, liquidity, and insurance. Most advisors write about products and markets. Driftwood writes about the interactions between decisions." />
+<link rel="canonical" href="https://alecmessino.github.io/project/library.html" />
+<link rel="icon" href="favicon.svg" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="The Coordination Library — Driftwood" />
+<meta property="og:description" content="One decision, many consequences. Real scenarios showing how coordination itself creates value." />
+<meta property="og:url" content="https://alecmessino.github.io/project/library.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="The Coordination Library — Driftwood" />
+<meta name="twitter:description" content="One decision, many consequences. How coordination itself creates value." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
+<style>
+  :root{
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --chrome:#e9e5da; --wash:#eaf0f4;
+    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
+    --brass:#2c5878; --accent-strike:#2c5878; --gold:#a9c2d6; --teal:#15463a; --teal2:#15806a; --navy:#1a2330;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:18px/1.75 var(--sans);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1080px;margin:40px auto;padding:0 20px 60px}
+  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;
+    box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
+  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
+    border-bottom:3px double var(--frame-line);font-family:var(--sans)}
+  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .inner{margin:0 7px 7px}
+
+  .doc{max-width:680px;padding:0 44px;margin:0 auto}
+  .eyebrow{font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--brass);margin:56px 0 14px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(32px,3vw+16px,44px);line-height:1.05;
+    letter-spacing:-.02em;color:var(--ink);margin:0 0 14px}
+  .dek{font-family:var(--serif);font-size:18.5px;line-height:1.55;color:var(--dim);margin:0 0 8px;max-width:58ch}
+  .dek b{color:var(--ink);font-weight:600}
+  .premise{margin:26px 0 0;padding:16px 20px;background:var(--wash);border:1px solid var(--line);border-radius:11px;
+    font-family:var(--sans);font-size:14px;line-height:1.6;color:var(--dim)}
+  .premise b{color:var(--brass);font-weight:700;letter-spacing:.02em}
+
+  .grp{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);margin:44px 0 4px;padding-bottom:10px;border-bottom:1px solid var(--frame-line)}
+  .list{margin:0 0 8px}
+  .item{display:block;text-decoration:none;color:inherit;padding:22px 0;border-bottom:1px solid var(--line)}
+  .item .meta{font-family:var(--sans);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--brass);margin-bottom:8px;font-weight:700}
+  .item .t{font-family:var(--sans);font-weight:600;font-size:24px;line-height:1.2;letter-spacing:-.015em;
+    color:var(--ink);transition:color .12s ease}
+  .item .t .arw{color:var(--accent-strike);font-weight:400;opacity:0;transition:opacity .12s ease}
+  .item:hover .t{color:var(--teal2)}
+  .item:hover .t .arw{opacity:1}
+  .item .d{font-family:var(--serif);font-size:15.5px;line-height:1.55;color:var(--body);margin:6px 0 0;max-width:64ch}
+  .item.feat{background:var(--soft);border:1px solid var(--frame-line);border-radius:13px;padding:24px 26px;margin-bottom:14px}
+  .item.feat .t{font-size:26px}
+  @media(max-width:620px){ .item .t{font-size:21px} .item.feat .t{font-size:22px} }
+
+  .coming{margin:30px 0 0;font-size:14px;line-height:1.65;color:var(--muted)}
+  .coming b{color:var(--dim);font-weight:600}
+
+  .foot{margin-top:52px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
+    color:var(--muted);font-size:12.5px;line-height:1.65}
+  .foot .note{color:#5a5a62;font-weight:600}
+  .foot b{color:var(--dim)}
+  @media(max-width:620px){ .doc{padding:0 22px} .foot{padding-left:22px;padding-right:22px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <div class="run">
+      <span class="inst">Driftwood · Private Wealth Architecture</span>
+      <span class="marker">Coordination Library</span>
+    </div>
+    <div class="inner">
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Driftwood</a>
+      <div class="dwnav-links">
+        <span class="dwnav-group">
+          <span class="dwnav-label">Understand</span>
+          <a href="howitworks.html">How Driftwood&nbsp;Works</a>
+          <a href="thesis.html">How We Invest</a>
+          <a href="library.html" aria-current="page">Coordination&nbsp;Library</a>
+          <a href="insights.html">Insights</a>
+          <a href="about.html">Our Story</a>
+        </span>
+        <span class="dwnav-group">
+          <span class="dwnav-label">Discover</span>
+          <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+          <a href="statemap.html">State Tax&nbsp;Atlas</a>
+          <a href="taxlab.html">After-Tax&nbsp;Review</a>
+        </span>
+      </div>
+    </nav>
+
+    <div class="doc">
+      <div class="eyebrow">Coordination Library</div>
+      <h1>One decision, many consequences.</h1>
+      <p class="dek">Most advisors write about products and markets. Driftwood writes about the <b>interactions
+        between decisions</b>. Each entry here takes a single, ordinary financial moment and follows it as it
+        cascades across investments, taxes, estate planning, liquidity, and insurance.</p>
+      <div class="premise">Every case begins the same way: <b>one decision. Several downstream consequences.</b>
+        The lesson is never the specific strategy. It's that no financial decision is ever really made alone.</div>
+
+      <div class="grp">The flagship worked example</div>
+      <div class="list">
+        <a class="item feat" href="coordination.html">
+          <div class="meta">Worked example · one household, two states</div>
+          <div class="t">The $600,000 Conversation Nobody Had <span class="arw" aria-hidden="true">→</span></div>
+          <p class="d">Meet the Harris family. The same $8 million balance sheet in Illinois and in Texas, an
+            interactive map of the ripple every move sets off, and the "who owns this decision?" question that
+            explains why Driftwood exists.</p>
+        </a>
+      </div>
+
+      <div class="grp">Case studies</div>
+      <div class="list">
+        <a class="item" href="case-business-sale.html">
+          <div class="meta">One decision · seven consequences</div>
+          <div class="t">Selling a Business <span class="arw" aria-hidden="true">→</span></div>
+          <p class="d">Four professionals, each doing excellent work. Only coordination sequences the sale, the tax,
+            the trust, and the proceeds into one plan, before the ink dries.</p>
+        </a>
+        <a class="item" href="case-vacation-home.html">
+          <div class="meta">One decision · many funding paths</div>
+          <div class="t">Buying a Second Home <span class="arw" aria-hidden="true">→</span></div>
+          <p class="d">The question isn't whether you can afford it. It's where the money should come from, cash, a
+            securities-backed line, or a mortgage, each with a different after-tax cost.</p>
+        </a>
+        <a class="item" href="case-inheritance.html">
+          <div class="meta">One event · a ten-year decision</div>
+          <div class="t">Inheriting $3 Million <span class="arw" aria-hidden="true">→</span></div>
+          <p class="d">An inheritance feels like a windfall. It's really a decade-long tax decision, inherited IRAs,
+            the step-up, and Roth timing, that starts the day it lands.</p>
+        </a>
+      </div>
+
+      <p class="coming"><b>More cases are added over time</b> — exercising stock options, retiring early, moving
+        states, required minimum distributions, charitable giving, and becoming widowed among them. Each one, the
+        same lesson from a different angle.</p>
+    </div>
+
+    <div class="foot">
+      <span class="note">Illustrative and educational — not investment, tax, or legal advice.</span>
+      Every scenario here is hypothetical; outcomes depend on your own facts and on current law, and the strategies
+      described require individualized tax and legal advice. Driftwood coordinates with your CPA and attorney; it
+      does not provide tax or legal advice. Driftwood is a <b>registered investment adviser</b>; Form ADV and Form
+      CRS are available at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

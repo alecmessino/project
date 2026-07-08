@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>Inheriting $3 Million — Coordination Library — Driftwood</title>
+<meta name="description" content="One decision, many consequences. An inheritance feels like a windfall; it's actually a ten-year tax decision that starts the day it lands. Inherited IRAs, the step-up, and Roth timing, coordinated. A Driftwood coordination case study. Illustrative, not advice." />
+<link rel="canonical" href="https://alecmessino.github.io/project/case-inheritance.html" />
+<link rel="icon" href="favicon.svg" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="Inheriting $3 Million — a coordination case study" />
+<meta property="og:description" content="An inheritance isn't a windfall. It's a ten-year tax decision that starts the day it lands." />
+<meta property="og:url" content="https://alecmessino.github.io/project/case-inheritance.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Inheriting $3 Million — a coordination case study" />
+<meta name="twitter:description" content="An inheritance isn't a windfall. It's a ten-year tax decision that starts the day it lands." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
+<style>
+  :root{
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4;
+    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a; --wash:#eaf0f4;
+    --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
+    --brass:#2c5878; --gold:#a9c2d6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.62 var(--sans);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:920px;margin:36px auto;padding:0 20px 60px}
+  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;
+    box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
+  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
+    border-bottom:3px double var(--frame-line);font-family:var(--sans)}
+  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .inner{margin:0 7px 7px}
+
+  .doc{padding:48px 44px 6px;max-width:680px}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:15px}
+  .eyebrow a{color:var(--brass);text-decoration:none}
+  .eyebrow a:hover{text-decoration:underline}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(32px,3vw+16px,44px);line-height:1.06;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px}
+  .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:60ch}
+  .lede b{color:var(--ink);font-weight:600}
+  .rule{height:1px;background:var(--line);margin:34px 44px}
+  .sh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .sec{padding:6px 44px}
+  .sec .intro{font-size:16px;line-height:1.7;color:var(--body);margin:0 0 22px;max-width:64ch}
+  .sec .intro b{color:var(--ink);font-weight:600}
+
+  .ripple{margin:8px auto 0;max-width:560px;display:flex;flex-direction:column;align-items:stretch}
+  .rstep{background:#fff;border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:9px;
+    padding:12px 16px;font-size:14px;line-height:1.45;color:var(--body);text-align:left}
+  .rstep b{color:var(--ink);font-weight:700}
+  .rstep.start{background:var(--wash);border-color:var(--brass);font-family:var(--sans);font-weight:600;color:var(--ink);font-size:15px}
+  .rstep.end{background:var(--teal);border-color:var(--teal);border-left-color:var(--teal);color:#f1ede3;
+    font-family:var(--sans);font-weight:700;font-size:16px;text-align:center;letter-spacing:-.01em}
+  .rarrow{align-self:center;width:1px;height:15px;background:var(--frame-line);position:relative}
+  .rarrow::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+    border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--frame-line)}
+  .labnote{font-size:12.5px;line-height:1.6;color:var(--muted);margin:18px auto 0;max-width:560px;text-align:center}
+
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:26px 0 4px}
+  @media(max-width:720px){.split{grid-template-columns:1fr;gap:16px}}
+  .st{border:1px solid var(--line);border-radius:13px;background:var(--soft);padding:20px 22px 22px}
+  .st.co{background:#fff;border-color:var(--frame-line)}
+  .st .lbl{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin:0 0 13px}
+  .st.co .lbl{color:var(--brass)}
+  .plan{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+  .plan li{position:relative;padding-left:20px;font-size:14px;line-height:1.5;color:var(--body)}
+  .plan li::before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--ghost-line)}
+  .st.co .plan li::before{border-radius:2px;background:var(--brass)}
+  .plan li b{color:var(--ink);font-weight:600}
+
+  .outcome{margin:30px 44px 0;text-align:center;font-family:var(--serif);font-size:20px;line-height:1.4;color:var(--ink)}
+  .outcome b{font-weight:600}
+  .whos{margin:16px 44px 0;font-size:13px;line-height:1.6;color:var(--muted);text-align:center}
+  .whos b{color:var(--dim);font-weight:600}
+
+  .creed-band{margin:40px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
+    font-size:clamp(21px,2vw+13px,28px);letter-spacing:-.022em;color:var(--ink);line-height:1.16}
+  .onward{margin:20px 44px 0;text-align:center;font-family:var(--sans);font-size:13px;color:var(--muted)}
+  .onward a{color:var(--teal2);text-decoration:none;font-weight:600}
+  .onward a:hover{text-decoration:underline}
+  .onward .d{color:var(--ghost-line);margin:0 6px}
+
+  .cta{margin:34px 44px 0;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:26px 28px}
+  .cta .ct{font-family:var(--sans);font-weight:700;font-size:20px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.02em}
+  .cta .cd{font-size:14px;line-height:1.6;color:var(--dim);margin:0 0 18px;max-width:56ch}
+  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:8px;
+    font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px;background:var(--teal);color:#f1ede3}
+
+  .foot{margin-top:42px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
+    color:var(--muted);font-size:12px;line-height:1.65}
+  .foot .note{color:#5a5a62;font-weight:600}
+  .foot b{color:var(--dim)}
+  @media(max-width:620px){
+    .doc,.sec{padding-left:22px;padding-right:22px}
+    .rule,.outcome,.whos,.creed-band,.onward,.cta,.foot{margin-left:22px;margin-right:22px}
+    .foot{padding-left:22px;padding-right:22px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <div class="run">
+      <span class="inst">Driftwood · Coordination Library</span>
+      <span class="marker">One decision, many consequences</span>
+    </div>
+    <div class="inner">
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Driftwood</a>
+      <div class="dwnav-links">
+        <span class="dwnav-group">
+          <span class="dwnav-label">Understand</span>
+          <a href="howitworks.html">How Driftwood&nbsp;Works</a>
+          <a href="thesis.html">How We Invest</a>
+          <a href="library.html" aria-current="page">Coordination&nbsp;Library</a>
+          <a href="insights.html">Insights</a>
+          <a href="about.html">Our Story</a>
+        </span>
+        <span class="dwnav-group">
+          <span class="dwnav-label">Discover</span>
+          <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+          <a href="statemap.html">State Tax&nbsp;Atlas</a>
+          <a href="taxlab.html">After-Tax&nbsp;Review</a>
+        </span>
+      </div>
+    </nav>
+
+    <div class="doc">
+      <div class="eyebrow"><a href="library.html">Coordination Library</a></div>
+      <h1>Inheriting $3 million.</h1>
+      <p class="lede">A parent passes, and $3 million arrives: an IRA, a taxable brokerage account, and a home. It
+        feels like a windfall. <b>It's actually a ten-year tax decision that starts the day it lands.</b></p>
+    </div>
+
+    <div class="rule"></div>
+
+    <div class="sec">
+      <div class="sh">The ripple</div>
+      <p class="intro">An inheritance is one event. What it becomes depends on decisions made over the decade that
+        follows, not the week it arrives.</p>
+      <div class="ripple">
+        <div class="rstep start">A parent leaves <b>$3 million</b>: an IRA, a brokerage account, a home</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">The inherited IRA must be emptied within 10 years (the SECURE Act rule)</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">Each withdrawal stacks on top of the heir's own income for that year</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">The taxable account and home get a basis step-up, so their gains are erased</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">Which dollars to spend first becomes a tax decision, not a preference</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">Low-income years open room for Roth conversions; high-income years close it</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep">Beneficiaries, titling, and the heir's own estate plan all need updating</div>
+        <div class="rarrow" aria-hidden="true"></div>
+        <div class="rstep end">What you keep</div>
+      </div>
+      <p class="labnote">One inheritance. A decade of decisions, each one changing the next.</p>
+    </div>
+
+    <div class="sec">
+      <div class="sh">Same inheritance, two outcomes</div>
+      <div class="split">
+        <div class="st">
+          <div class="lbl">Uncoordinated</div>
+          <ul class="plan">
+            <li>The inherited IRA is left to sit, then emptied in year ten, a single punishing tax spike.</li>
+            <li>The stepped-up brokerage account is sold first, wasting the very step-up that made it tax-free.</li>
+            <li>The low-income years that were open for Roth conversions pass unused.</li>
+            <li>Beneficiary forms and the heir's estate plan go untouched for years.</li>
+          </ul>
+        </div>
+        <div class="st co">
+          <div class="lbl">Coordinated</div>
+          <ul class="plan">
+            <li>The <b>10-year drawdown</b> is smoothed to fill brackets rather than spike them.</li>
+            <li>Stepped-up assets are used thoughtfully; the tax-heavy IRA is drawn with intent.</li>
+            <li>Low-income years are used for <b>Roth conversions</b> while the door is open.</li>
+            <li>Beneficiaries and the estate plan are updated the same season, not someday.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="outcome">Same inheritance. <b>Years of difference in what it becomes.</b></p>
+    <p class="whos">In the room, across a decade rather than a single April: <b>CPA</b>, <b>estate attorney</b>,
+      and the <b>investment plan</b>.</p>
+
+    <div class="creed-band">Financial decisions should not surprise one another.</div>
+
+    <div class="onward">More from the library: <a href="case-business-sale.html">Selling a business</a>
+      <span class="d">·</span> <a href="case-vacation-home.html">Buying a second home</a>
+      <span class="d">·</span> <a href="coordination.html">The $600,000 conversation</a></div>
+
+    <div class="cta">
+      <div class="ct">See the ripple on your own numbers.</div>
+      <div class="cd">The Tax Diagnostic starts with your state and bracket and shows what a coordinated approach
+        could be worth for you, in about two minutes.</div>
+      <a href="leakage.html">Run the Tax Diagnostic →</a>
+    </div>
+
+    <div class="foot">
+      <span class="note">Illustrative and educational — not investment, tax, or legal advice.</span>
+      This is a hypothetical scenario. Outcomes depend on your own facts and on current law; the SECURE Act
+      inherited-account rules, basis step-up, and Roth conversions carry their own conditions and require
+      individualized tax and legal advice. Driftwood coordinates with your CPA and attorney; it does not provide tax
+      or legal advice. Driftwood is a <b>registered investment adviser</b>; Form ADV and Form CRS are available at
+      <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

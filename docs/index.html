@@ -11,19 +11,19 @@
 </script>
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
-<title>Driftwood — coordinated as one after-tax system</title>
-<meta name="description" content="Most advisors manage investments. Driftwood coordinates your whole financial life — portfolio, taxes, account structure, estate, and the advisors you already trust — as one after-tax system, so your wealth compounds after tax, not just before it. Fee-only, fiduciary." />
+<title>Driftwood — your financial life, run as one system</title>
+<meta name="description" content="Most households already have the pieces of a good plan — a portfolio, a CPA, an estate attorney. What's missing is someone coordinating them as one system. Driftwood manages that system; what you keep after tax is the result. Fee-only, fiduciary." />
 <link rel="canonical" href="https://alecmessino.github.io/project/index.html" />
 <link rel="icon" href="favicon.svg" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
-<meta property="og:title" content="Driftwood — coordinated as one after-tax system" />
-<meta property="og:description" content="Most advisors manage investments. Driftwood coordinates your whole financial life as one after-tax system — so your wealth compounds after tax, not just before it. Fee-only, fiduciary." />
+<meta property="og:title" content="Driftwood — your financial life, run as one system" />
+<meta property="og:description" content="Most advisors manage investments. Driftwood manages the system those investments live in — coordinating taxes, accounts, estate, and cash flow as one after-tax system. Fee-only, fiduciary." />
 <meta property="og:url" content="https://alecmessino.github.io/project/index.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Driftwood — coordinated as one after-tax system" />
-<meta name="twitter:description" content="Most advisors manage investments. We coordinate your whole financial life as one after-tax system. Fee-only, fiduciary." />
+<meta name="twitter:title" content="Driftwood — your financial life, run as one system" />
+<meta name="twitter:description" content="Most advisors manage investments. Driftwood manages the system those investments live in. Fee-only, fiduciary." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
 <script type="application/ld+json">
 {
@@ -47,18 +47,16 @@
 }
 </script>
 <style>
-  /* Institutional Editorial — limestone, ink, editorial blue (rebrand, July 2026). The front door:
-     outcome-led, one guided path, bound like a numbered plate in a reference volume. Editorial blue
-     owns identity & wayfinding; teal stays action-only. Structure follows the Claude Design handoff
-     (HomeScreen): contrast hero → four capabilities → why coordination (real-life matrix) → one
-     proof figure → next step. Restraint over completeness — the homepage orients, it doesn't teach. */
+  /* Institutional Editorial — limestone, ink, editorial blue (rebrand, July 2026). One argument, in
+     order: problem → category → how → why → evidence → act. The systems diagram is the emotional
+     centre; the tax chart is evidence for it, not the claim itself. Coordination is the product;
+     what you keep is the result. Restraint over completeness. */
   :root{
     --bg:#f1efe9; --soft:#f7f5f0; --card:#fff; --line:#d8d3c6; --line2:#e9e5db;
     --frame-line:#c3bcab; --ghost-line:#b8b2a4;
     --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
     --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6;
     --teal:#15463a; --teal2:#15806a; --accent:#15806a; --neg:#9b4439; --navy:#1a2330;
-    /* Retired brass/gold names alias to the blues so any legacy selector inherits the rebrand. */
     --brass:#2c5878; --gold:#a9c2d6;
     --on-dark:#e7ecf2; --on-dark-strong:#f1ede3; --on-dark-dim:#9aa3ae;
   }
@@ -68,108 +66,102 @@
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{max-width:1060px;margin:36px auto;padding:0 20px 60px}
 
-  /* The plate frame: a bound plate — 1px edge, near-square corners, an inset double rule, and a flat
-     desk shadow. Replaces the traffic-light browser chrome. */
   .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;
     box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line),
       0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
-  /* Running head — institution line left, section marker right, over a 3px double rule. */
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;
     padding:12px 24px;margin:7px 7px 0;border-bottom:3px double var(--frame-line);font-family:var(--sans)}
   .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
-  /* ── Hero — the memorable contrast, single column (no diagram competing for attention). ──────── */
-  .hero{display:block;padding:60px 44px 30px;max-width:82ch}
+  /* ── Hero — problem + category, in one memorable line. ───────────────────────────────────────── */
+  .hero{display:block;padding:64px 44px 34px;max-width:82ch}
   .eyebrow{font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.16em;
     text-transform:uppercase;color:var(--accent-strike);margin-bottom:20px}
   .kick{font-family:var(--serif);font-size:clamp(18px,.7vw+15px,21px);line-height:1.5;color:var(--muted);margin:0 0 12px;max-width:52ch}
-  h1{font-family:var(--sans);font-weight:700;font-size:clamp(40px,3.4vw + 18px,52px);line-height:1.07;
-    letter-spacing:-.021em;color:var(--ink);margin:0 0 22px;max-width:19ch}
-  .lede{font-family:var(--serif);font-size:18px;line-height:1.6;color:var(--dim);margin:0 0 28px;max-width:54ch}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(40px,3.6vw + 18px,55px);line-height:1.05;
+    letter-spacing:-.022em;color:var(--ink);margin:0 0 24px;max-width:18ch}
+  .lede{font-family:var(--serif);font-size:18.5px;line-height:1.58;color:var(--dim);margin:0 0 30px;max-width:56ch}
   .lede b{color:var(--ink);font-weight:600}
-  .ctas{display:flex;gap:12px;flex-wrap:wrap}
+  .ctas{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
   .ctas a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:600;white-space:nowrap;
     transition:filter var(--t-fast),transform var(--t-fast),background var(--t-fast),border-color var(--t-fast)}
-  .ctas .primary{background:var(--teal);color:#f1ede3;padding:14px 24px;border-radius:9px}
+  .ctas .primary{background:var(--teal);color:#f1ede3;padding:15px 26px;border-radius:9px}
   .ctas .primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
-  .ctas .ghost{border:1px solid var(--ghost-line);color:var(--ink);padding:14px 22px;font-weight:500;border-radius:9px}
-  .ctas .ghost:hover{background:var(--soft);border-color:var(--teal)}
-  .trust{display:flex;gap:22px;border-top:1px solid var(--line);padding-top:16px;flex-wrap:wrap;margin-top:28px}
-  .trust span{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-size:12.5px;color:var(--dim)}
-  .trust b{color:var(--teal2);font-weight:700}
+  .ctas .ghost{color:var(--ink);padding:15px 10px;font-weight:600;border-bottom:2px solid transparent}
+  .ctas .ghost:hover{border-bottom-color:var(--teal)}
 
-  /* ── Section scaffold ───────────────────────────────────────────────────────────────────────── */
-  .sec{padding:14px 44px 42px}
-  .sec .h{font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
-  .lede2{font-family:var(--serif);font-size:clamp(18px,.9vw+14px,21px);line-height:1.5;color:var(--body);margin:0 0 24px;max-width:60ch}
-  .lede2 b{color:var(--ink);font-weight:600}
+  /* ── Section scaffold — strong hierarchy: tiny label, medium statement, generous air. ────────── */
+  .sec{padding:20px 44px 44px}
+  .sec .h{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:18px}
+  .lede2{font-family:var(--serif);font-size:clamp(19px,1vw+15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
+  .lede2 b{font-weight:600}
+  .sysbody{font-family:var(--sans);font-size:15.5px;line-height:1.65;color:var(--body);margin:0 0 26px;max-width:60ch}
+  .sysbody b{color:var(--ink);font-weight:600}
 
-  /* Four capabilities — the single mental model (Diagnose → Measure → Coordinate → Manage). */
-  .caps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:4px}
+  /* Four capabilities — icon · title · question · one line · CTA. Separated cards, room to breathe. */
+  .caps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px}
   @media(max-width:900px){.caps{grid-template-columns:1fr 1fr}}
-  @media(max-width:560px){.caps{grid-template-columns:1fr}}
-  a.cap-card{background:#fff;padding:20px 20px 18px;display:flex;flex-direction:column;text-decoration:none;color:inherit;
-    transition:background .12s,transform .18s var(--ease-out),box-shadow .18s;position:relative}
-  a.cap-card:hover{background:var(--soft);transform:translateY(-2px);box-shadow:0 12px 26px -14px rgba(20,18,12,.4);z-index:2}
+  @media(max-width:540px){.caps{grid-template-columns:1fr}}
+  a.cap-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px 22px 22px;display:flex;flex-direction:column;text-decoration:none;color:inherit;
+    transition:border-color .15s,transform .18s var(--ease-out),box-shadow .18s}
+  a.cap-card:hover{border-color:var(--ghost-line);transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(20,18,12,.4)}
   @media(prefers-reduced-motion:reduce){a.cap-card:hover{transform:none}}
-  .cap-n{font-family:var(--sans);font-variant-numeric:tabular-nums;font-weight:700;font-size:11.5px;letter-spacing:.14em;color:var(--accent-strike)}
-  .cap-t{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:12px 0 8px}
-  .cap-q{font-family:var(--sans);font-weight:600;font-size:18px;line-height:1.2;color:var(--ink);margin:0 0 8px}
-  .cap-d{font-family:var(--sans);font-size:13.5px;color:var(--dim);line-height:1.55;margin-bottom:18px}
-  .cap-go{margin-top:auto;font-family:var(--sans);font-size:11.5px;font-weight:700;letter-spacing:.03em;color:var(--teal2)}
+  .cap-ic{width:24px;height:24px;color:var(--accent-strike);margin-bottom:16px}
+  .cap-ic svg{width:24px;height:24px;display:block}
+  .cap-t{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+  .cap-q{font-family:var(--sans);font-weight:600;font-size:18.5px;line-height:1.2;color:var(--ink);margin:0 0 9px;letter-spacing:-.01em}
+  .cap-d{font-family:var(--sans);font-size:14px;color:var(--dim);line-height:1.5;margin-bottom:18px}
+  .cap-go{margin-top:auto;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--teal2)}
   a.cap-card:hover .cap-go{color:var(--teal)}
 
-  /* The argument — systems thinking. A declarative statement, the cascade, then the defining visual:
-     five parts run separately vs. coordinated into one after-tax outcome. */
-  .sysbody{font-family:var(--sans);font-size:15.5px;line-height:1.64;color:var(--body);margin:0 0 24px;max-width:66ch}
-  .sysbody b{color:var(--ink);font-weight:600}
-  .sys{margin:6px 0 0;background:#fff;border:1px solid var(--frame-line);border-radius:12px;padding:26px 28px 20px}
-  .sys-svg{width:100%;height:auto;display:block}
+  /* The defining visual — the systems diagram, given the room it earns. */
+  .sys{margin:6px 0 0;background:#fff;border:1px solid var(--frame-line);border-radius:14px;padding:38px 40px 26px}
+  .sys-svg{width:100%;height:auto;display:block;max-width:860px;margin:0 auto}
   .sys-svg text{font-family:var(--sans)}
-  .sys-cap{font-family:var(--sans);font-size:12px;color:var(--muted);margin-top:16px;padding-top:14px;border-top:1px solid var(--line2);line-height:1.55;max-width:78ch}
-  .sys-cap b{color:var(--dim);font-weight:600}
+  .sys-cap{font-family:var(--sans);font-size:12px;color:var(--muted);margin:22px auto 0;padding-top:16px;border-top:1px solid var(--line2);line-height:1.55;max-width:64ch;text-align:center}
 
-  /* The proof — one figure. A research exhibit: white, hairline, a 2px ink top rule, a dollar-scaled
-     compounding curve. Data-ink only: teal = coordinated, grey = naive. */
-  .kf{border:1px solid var(--frame-line);border-top:2px solid var(--ink);background:#fff;padding:22px 26px 22px;border-radius:12px}
-  .kf-k{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:12px}
-  .kf-lead{font-family:var(--serif);font-size:16.5px;line-height:1.55;color:var(--body);margin:0 0 22px;max-width:72ch}
-  .kf-lead b{color:var(--ink);font-weight:600}
-  .kf-svg{width:100%;height:auto;display:block}
+  /* Evidence — the surprise is the headline; the chart is the exhibit; methodology is a footnote. */
+  .ev-head{font-family:var(--sans);font-weight:700;font-size:clamp(26px,2.4vw+15px,36px);line-height:1.08;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
+  .kf{border:1px solid var(--frame-line);border-top:2px solid var(--ink);background:#fff;padding:26px 28px 20px;border-radius:12px;margin-top:6px}
+  .exhibit{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:22px;margin-bottom:6px;border-bottom:1px solid var(--line2)}
+  .ex-stat{font-family:var(--sans);font-variant-numeric:tabular-nums;font-weight:700;font-size:clamp(38px,4vw+18px,52px);line-height:1;letter-spacing:-.03em;color:var(--teal2)}
+  .ex-lab{font-family:var(--sans);font-size:14.5px;line-height:1.4;color:var(--body);max-width:34ch}
+  .ex-lab .ill{color:var(--muted);font-size:12px}
+  .kf-svg{width:100%;height:auto;display:block;margin-top:8px}
   .kf-num{font-family:var(--sans);font-variant-numeric:tabular-nums}
   .kf-sans{font-family:var(--sans)}
-  .kf-cap{font-family:var(--sans);font-size:11.5px;color:var(--muted);margin-top:20px;padding-top:14px;border-top:1px solid var(--line2);line-height:1.55;max-width:80ch}
-  .kf-cap b{color:var(--dim);font-weight:600}
-  /* One institutional nod — evidence, not a headline. */
-  .evidence{font-family:var(--serif);font-size:14.5px;line-height:1.62;color:var(--muted);margin:18px 0 0;max-width:66ch}
-  .evidence b{color:var(--dim);font-weight:600}
+  .kf-cap{font-family:var(--sans);font-size:10.5px;color:#9a978f;margin-top:16px;padding-top:12px;border-top:1px solid var(--line2);line-height:1.5;max-width:82ch}
+  .kf-cap b{color:var(--muted);font-weight:600}
 
-  /* One closing call-to-action — the single next step. */
-  .finale{margin:10px 44px 8px;padding:26px 30px;background:var(--navy);color:var(--on-dark);display:flex;
+  /* Credibility strip — trust signals, not marketing. One quiet band. */
+  .cred{margin:6px 44px 0;padding:20px 8px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    display:flex;flex-wrap:wrap;justify-content:center;gap:10px 14px;font-family:var(--sans);font-size:12px;color:var(--dim)}
+  .cred b{display:inline-flex;align-items:center;font-weight:600;color:var(--dim)}
+  .cred b::before{content:"✓";color:var(--teal2);font-weight:700;margin-right:7px}
+  .cred .dot{color:var(--ghost-line)}
+  @media(max-width:620px){.cred .dot{display:none}}
+
+  /* One closing call-to-action — a single obvious action. */
+  .finale{margin:22px 44px 8px;padding:28px 32px;background:var(--navy);color:var(--on-dark);display:flex;
     align-items:center;gap:20px;flex-wrap:wrap;border-radius:12px}
   .finale .ft{flex:1;min-width:260px}
-  .finale .fh{font-family:var(--sans);font-weight:600;font-size:22px;color:#f1ede3;margin-bottom:5px;letter-spacing:-.01em}
-  .finale .fs{font-family:var(--sans);font-size:13px;color:var(--accent-strike-soft);line-height:1.55;max-width:52ch}
-  .finale .fb{display:flex;gap:10px;flex-wrap:wrap}
-  .finale a{text-decoration:none;font-family:var(--sans);font-size:14px;font-weight:600;white-space:nowrap;padding:13px 22px;border-radius:9px}
-  .finale a.primary{background:var(--teal2);color:#f1ede3}
-  .finale a.primary:hover{filter:brightness(1.08)}
-  .finale a.ghost{border:1px solid #34455c;color:var(--on-dark)}
-  .finale a.ghost:hover{border-color:var(--teal2)}
+  .finale .fh{font-family:var(--sans);font-weight:700;font-size:23px;color:#f1ede3;margin-bottom:6px;letter-spacing:-.02em}
+  .finale .fs{font-family:var(--sans);font-size:13.5px;color:var(--accent-strike-soft);line-height:1.55;max-width:48ch}
+  .finale a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:700;white-space:nowrap;padding:15px 26px;border-radius:9px;background:var(--teal2);color:#f1ede3}
+  .finale a:hover{filter:brightness(1.08)}
   @media(max-width:620px){.finale{margin-left:22px;margin-right:22px}}
 
-  /* Secondary resources — one restrained row, not a card wall. */
-  .res{display:flex;gap:8px 26px;flex-wrap:wrap;margin-top:18px}
-  .res a{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--dim);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:1px}
+  .res{display:flex;gap:8px 26px;flex-wrap:wrap;margin-top:20px;justify-content:center}
+  .res a{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:1px}
   .res a:hover{color:var(--ink);border-bottom-color:var(--accent-strike)}
 
-  .foot{padding:20px 44px 36px;border-top:1px solid var(--line);background:var(--soft);color:var(--muted);font-size:12.5px;line-height:1.65}
-  .foot .note{color:var(--dim);font-weight:600}
-  .foot a{color:var(--teal)}
-  .foot b{color:var(--dim)}
-  @media(max-width:620px){.hero,.sec{padding-left:22px;padding-right:22px}.foot{padding-left:22px;padding-right:22px}}
+  .foot{margin-top:26px;padding:18px 44px 34px;border-top:1px solid var(--line);background:var(--soft);color:#9a978f;font-size:11px;line-height:1.6}
+  .foot .note{color:var(--muted);font-weight:600}
+  .foot a{color:var(--muted)}
+  .foot b{color:var(--muted)}
+  @media(max-width:620px){.hero,.sec{padding-left:22px;padding-right:22px}.foot,.cred{padding-left:22px;padding-right:22px}.cred{margin-left:0;margin-right:0}}
 </style>
 </head>
 <body>
@@ -199,68 +191,66 @@
       </div>
     </nav>
 
-    <!-- ── HERO — the memorable contrast ── -->
+    <!-- ── HERO — problem + category ── -->
     <div class="hero">
       <div class="eyebrow">Fee-only · fiduciary</div>
       <p class="kick">Most advisors manage investments.</p>
-      <h1>Driftwood coordinates your whole financial life as one after-tax system.</h1>
-      <p class="lede">Portfolio, taxes, account structure, estate, and the advisors you already trust —
-        coordinated as one system, <b>so your wealth compounds after tax, not just before it.</b></p>
+      <h1>Driftwood manages the system those investments live in.</h1>
+      <p class="lede">Most households already have the pieces of a good plan — a portfolio, a CPA, an estate
+        attorney. What's missing is <b>someone running them as one system</b>. That coordination is the
+        product; what you keep is the result.</p>
       <div class="ctas">
         <a class="primary" href="leakage.html">See where your wealth is leaking →</a>
         <a class="ghost" href="howitworks.html">How it works</a>
       </div>
-      <div class="trust">
-        <span><b>✓</b> Fiduciary, fee-only</span>
-        <span><b>✓</b> Coordinated with your CPA &amp; attorney</span>
-      </div>
     </div>
 
-    <!-- ── FOUR CAPABILITIES — one mental model ── -->
+    <!-- ── HOW IT WORKS — four capabilities, one sequence ── -->
     <div class="sec" id="capabilities">
-      <div class="h">How Driftwood works with you</div>
-      <p class="lede2">Four capabilities, always in the same order — <b>diagnose</b> the problem,
-        <b>measure</b> the opportunity, <b>coordinate</b> the plan, then <b>manage</b> the portfolio that
-        carries it out.</p>
+      <div class="h">How it works</div>
+      <p class="lede2">Every client relationship follows the same sequence.</p>
       <div class="caps">
         <a class="cap-card" href="leakage.html">
-          <div class="cap-n">01</div><div class="cap-t">Diagnose</div>
+          <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.6" y1="15.6" x2="21" y2="21"/></svg></div>
+          <div class="cap-t">Diagnose</div>
           <div class="cap-q">Where is your wealth leaking today?</div>
-          <div class="cap-d">A personalized before/after of the same holdings — taxed naively versus deliberately — by your state and bracket.</div>
+          <div class="cap-d">See what taxes quietly take from the same holdings — by your state and bracket.</div>
           <div class="cap-go">Tax Diagnostic →</div>
         </a>
         <a class="cap-card" href="taxlab.html">
-          <div class="cap-n">02</div><div class="cap-t">Measure</div>
-          <div class="cap-q">How much can you actually keep?</div>
-          <div class="cap-d">Your after-tax return, and where each holding belongs — taxable, Traditional, or Roth — computed for your household.</div>
+          <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 17a8.5 8.5 0 0 1 17 0"/><line x1="12" y1="17" x2="16.2" y2="10.8"/><circle cx="12" cy="17" r="1.4" fill="currentColor" stroke="none"/></svg></div>
+          <div class="cap-t">Measure</div>
+          <div class="cap-q">What is coordination worth?</div>
+          <div class="cap-d">Put a dollar figure on it — for your bracket, state, and portfolio.</div>
           <div class="cap-go">After-Tax Review →</div>
         </a>
         <a class="cap-card" href="coordinate.html">
-          <div class="cap-n">03</div><div class="cap-t">Coordinate</div>
+          <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="5" cy="6" r="2.1"/><circle cx="5" cy="18" r="2.1"/><circle cx="19" cy="12" r="2.1"/><line x1="7" y1="6.9" x2="17" y2="11.2"/><line x1="7" y1="17.1" x2="17" y2="12.8"/></svg></div>
+          <div class="cap-t">Coordinate</div>
           <div class="cap-q">How do the pieces work as one plan?</div>
-          <div class="cap-d">Taxes, accounts, estate, and your CPA and attorney — kept consistent on a deliberate cadence, the way a family office runs.</div>
+          <div class="cap-d">Taxes, accounts, and estate kept consistent — the way a family office runs.</div>
           <div class="cap-go">How we coordinate →</div>
         </a>
         <a class="cap-card" href="thesis.html">
-          <div class="cap-n">04</div><div class="cap-t">Manage</div>
-          <div class="cap-q">Who builds and holds the portfolio?</div>
-          <div class="cap-d">A diversified, low-turnover core, placed by tax and rebalanced with discipline — evidence over prediction.</div>
-          <div class="cap-go">How We Invest →</div>
+          <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3l8.5 4.7L12 12.4 3.5 7.7 12 3z"/><path d="M3.5 12.3L12 17l8.5-4.7"/></svg></div>
+          <div class="cap-t">Manage</div>
+          <div class="cap-q">Who builds the portfolio?</div>
+          <div class="cap-d">A low-turnover core, placed by tax and held with discipline.</div>
+          <div class="cap-go">How we invest →</div>
         </a>
       </div>
     </div>
 
-    <!-- ── WHY COORDINATION COMPOUNDS — systems thinking, then the defining visual ── -->
+    <!-- ── WHY IT WORKS — systems thinking + the defining visual ── -->
     <div class="sec">
-      <div class="h">Why coordination compounds</div>
-      <p class="lede2">Your wealth already behaves like one system. Most firms manage it as five.</p>
-      <p class="sysbody">A portfolio decision creates a tax bill. A tax decision reshapes the withdrawal plan.
-        An estate decision changes how the portfolio is built. Handled separately, each one is reasonable —
-        handled together, they <b>compound, quietly, in either direction</b>. That gap, between decisions made
-        alone and decisions made in view of each other, is where long-term wealth is kept or lost.</p>
+      <div class="h">Why it works</div>
+      <p class="lede2">Most households already have a system. It just isn't coordinated.</p>
+      <p class="sysbody">A tax decision changes withdrawals. A withdrawal changes where investments are held.
+        An estate decision changes portfolio design. Each choice is reasonable by itself — together, they
+        <b>decide how much wealth stays in the family</b>.</p>
       <div class="sys">
         <svg class="sys-svg" viewBox="0 0 720 300" preserveAspectRatio="xMidYMid meet" role="img"
-          aria-label="Two ways to run a household's wealth. Run separately: portfolio, taxes, estate, cash flow, and advisors sit as five disconnected parts. Coordinated as one system: the same five parts all connect to a single after-tax outcome.">
+          aria-label="Two ways to run a household's wealth. Run separately: portfolio, taxes, estate, liquidity, and professionals sit as five disconnected parts. Coordinated as one system: the same five parts all connect to a single after-tax outcome.">
           <text x="100" y="34" font-size="11" font-weight="700" letter-spacing="1.6" fill="#8a857a">RUN SEPARATELY</text>
           <g fill="#fff" stroke="#cfc9ba" stroke-width="1">
             <rect x="100" y="58" width="150" height="30" rx="6"/><rect x="100" y="100" width="150" height="30" rx="6"/>
@@ -269,7 +259,7 @@
           </g>
           <g font-size="12.5" fill="#8a857a" text-anchor="middle">
             <text x="175" y="77">Portfolio</text><text x="175" y="119">Taxes</text><text x="175" y="161">Estate</text>
-            <text x="175" y="203">Cash flow</text><text x="175" y="245">Advisors</text>
+            <text x="175" y="203">Liquidity</text><text x="175" y="245">Professionals</text>
           </g>
           <line x1="360" y1="46" x2="360" y2="270" stroke="#e9e5db" stroke-width="1"/>
           <text x="384" y="34" font-size="11" font-weight="700" letter-spacing="1.6" fill="#2c5878">AS ONE SYSTEM</text>
@@ -285,32 +275,28 @@
           </g>
           <g font-size="12" fill="#3d4650" text-anchor="middle">
             <text x="443" y="72">Portfolio</text><text x="443" y="110">Taxes</text><text x="443" y="148">Estate</text>
-            <text x="443" y="186">Cash flow</text><text x="443" y="224">Advisors</text>
+            <text x="443" y="186">Liquidity</text><text x="443" y="224">Professionals</text>
           </g>
           <circle cx="590" cy="144" r="3.5" fill="#15806a"/>
-          <rect x="588" y="112" width="116" height="64" rx="9" fill="#fff" stroke="#15806a" stroke-width="1.6"/>
-          <rect x="588" y="112" width="116" height="3.5" rx="1.5" fill="#15806a"/>
+          <rect x="588" y="114" width="116" height="60" rx="9" fill="#fff" stroke="#15806a" stroke-width="1.6"/>
           <text x="646" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#1e2833">After-tax</text>
           <text x="646" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#1e2833">outcome</text>
         </svg>
-        <div class="sys-cap">Five parts, one result. Run as one system, every decision is made with the others in
-          view — which is exactly where wealth is quietly kept, or quietly lost.</div>
+        <div class="sys-cap">Five parts, one result. Run as one system, every decision is made with the others in view.</div>
       </div>
     </div>
 
-    <!-- ── THE EVIDENCE — the chart, reframed conceptually; taxes as the first observable instance ── -->
+    <!-- ── EVIDENCE — the surprise is the headline; the chart is the exhibit ── -->
     <div class="sec">
       <div class="h">The evidence</div>
-      <p class="lede2">Same holdings. Same markets. Different outcome.</p>
-      <p class="sysbody">Taxes are simply the easiest place to watch coordination compound. Below are two
-        identical portfolios — the same holdings, the same returns, held through the same markets. The only
-        difference is whether the decisions around them are coordinated. <b>Nothing about the investments
-        changed.</b></p>
+      <p class="ev-head">Nothing about the investments changed.</p>
+      <p class="sysbody">Same portfolio. Same markets. Same return. The only difference was whether taxes,
+        account location, and timing were coordinated — and over thirty years, that alone is the gap below.</p>
       <div class="kf">
-        <div class="kf-k">Same holdings, coordinated vs. not</div>
-        <p class="kf-lead">Held through the same markets, the same gains taxed two ways — deliberately, versus as
-          they come. That single difference in <b>coordination</b>, not in the investments, is what separates
-          the two lines below over a working lifetime.</p>
+        <div class="exhibit">
+          <div class="ex-stat">$320,000</div>
+          <div class="ex-lab">more wealth kept working for you — same holdings, coordinated.<span class="ill"> Illustrative.</span></div>
+        </div>
         <svg class="kf-svg" viewBox="0 0 760 274" preserveAspectRatio="xMidYMid meet" role="img"
           aria-label="The coordinated after-tax advantage compounding over the horizon, in dollars: about $410k kept by coordinating versus $90k taxed naively, over 30 years.">
           <line x1="58" y1="240" x2="626" y2="240" stroke="#d8d3c6" stroke-width="1"/>
@@ -337,25 +323,28 @@
         </svg>
         <div class="kf-cap"><b>Hypothetical / illustrative</b> — $1M of realized gains, an illustrative +3.7–4.7%/yr
           after-tax edge on identical holdings, modeled federal-only. Not a forecast, not advice; your figure depends
-          on your bracket, basis, and holdings. Driftwood is a registered investment adviser; Form ADV and Form CRS
-          are at adviserinfo.sec.gov.</div>
+          on your bracket, basis, and holdings.</div>
       </div>
-      <p class="evidence">The largest institutions have always run money as one coordinated system — taxes,
-        location, and structure treated as part of investing, <b>not an afterthought</b>. Driftwood brings that
-        discipline to households.</p>
     </div>
 
-    <!-- ── NEXT STEP + secondary resources ── -->
-    <div class="sec">
+    <!-- ── CREDIBILITY — trust signals, not marketing ── -->
+    <div class="cred">
+      <b>Fee-only fiduciary</b><span class="dot">·</span>
+      <b>Evidence-based</b><span class="dot">·</span>
+      <b>Works with your CPA &amp; attorney</b><span class="dot">·</span>
+      <b>No commissions</b><span class="dot">·</span>
+      <b>Low-turnover</b><span class="dot">·</span>
+      <b>Registered investment adviser</b>
+    </div>
+
+    <!-- ── ACT — one obvious next step ── -->
+    <div class="sec" style="padding-bottom:34px">
       <div class="finale">
         <div class="ft">
-          <div class="fh">Start where it pays to start — find the leak.</div>
-          <div class="fs">Two inputs, a minute of your time: see what a coordinated, after-tax system could keep on your own portfolio.</div>
+          <div class="fh">See it on your own numbers.</div>
+          <div class="fs">Two inputs, about two minutes — where your wealth leaks today, by your state and bracket. No account, no commitment.</div>
         </div>
-        <div class="fb">
-          <a class="primary" href="leakage.html">Run the diagnostic →</a>
-          <a class="ghost" href="taxlab.html">See your after-tax number</a>
-        </div>
+        <div><a href="leakage.html">Run the Tax Diagnostic →</a></div>
       </div>
       <div class="res">
         <a href="statemap.html">State Tax Atlas →</a>
@@ -367,12 +356,10 @@
 
     <div class="foot" id="disclosures">
       <span class="note">Research &amp; illustrative modeling — not investment, tax, or legal advice.</span>
-      The Model Portfolio referenced across this site is a hypothetical, append-only backtest — the retroactive
-      application of the model to historical data, not actual trading or any client account. Past performance —
-      hypothetical or actual — does not guarantee future results.
-      <div style="margin-top:8px">Driftwood is a
+      The Model Portfolio referenced across this site is a hypothetical, append-only backtest — not actual trading or
+      any client account. Past performance — hypothetical or actual — does not guarantee future results. Driftwood is a
       <b>registered investment adviser</b>; Form ADV and Form CRS are available at
-      <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.</div>
+      <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
       <div id="gen" style="margin-top:6px"></div>
     </div>
     </div>
@@ -381,8 +368,8 @@
 
 <script>
 window.__STATE__ = {"header": {"generated": "2026-07-07 23:17:46 UTC"}, "hero": {"keep_before": 9, "keep_after": 41, "alpha_low": 3.7, "alpha_high": 4.7, "horizon": 30, "pretax_before": 9.4, "pretax_after": 9.1}, "headline": [], "value_adds": [{"tag": "Keep more", "title": "A portfolio built to be held \u2014 and taxed lightly.", "stat": "$90,000 \u2192 $410,000", "stat_label": "kept from $1 million of realized gains over 30 years, after tax \u2014 an illustrative +3.7\u20134.7%/yr (modeled; federal to a high-tax state)", "note": "A diversified, low-turnover portfolio, with harvesting, lot selection, and account placement handing less of it to taxes. Driftwood calls the cumulative benefit of those implementation decisions Structural Alpha. Illustrative; your figure depends on your bracket and holdings."}, {"tag": "Build better", "title": "One portfolio, built as a system.", "stat": "", "stat_label": "", "note": "A diversified, low-turnover core, placed by account and coordinated across taxable, Traditional, and Roth \u2014 so allocation, location, harvesting, and withdrawals work together, not apart. Implementation, not prediction."}, {"tag": "Stay invested", "title": "The best portfolio is one you're glad to own in twenty years.", "stat": "", "stat_label": "", "note": "Most of the damage in investing is done by leaving at the wrong time. A portfolio built to be held \u2014 diversified, low-cost, and understood \u2014 is one you can stay with long enough for compounding to do its work."}], "exhibits": [{"title": "How we invest", "href": "thesis.html", "desc": "How Driftwood invests: evidence over prediction, taxes treated as part of investing, and a diversified core placed alongside a focused complement \u2014 one portfolio, measured after tax.", "present": true, "appendix": false}, {"title": "After-Tax Review", "href": "taxlab.html", "desc": "See your after-tax return, and where each holding belongs \u2014 taxable, Traditional, or Roth \u2014 with estate step-up and tax-loss harvesting, by your bracket and state.", "present": true, "appendix": false}, {"title": "The Tax Diagnostic", "href": "leakage.html", "desc": "The one-page before/after: where a concentrated, high-turnover account loses return to tax, and how much careful placement puts back on an identical exposure.", "present": true, "appendix": false}, {"title": "State Tax Atlas", "href": "statemap.html", "desc": "Fifty states across eight dimensions \u2014 capital gains, marriage, estate, munis, QSBS, losses, and basis step-up, plus what careful tax management can change in each.", "present": true, "appendix": false}, {"title": "State tax guides (50 states + DC)", "href": "states.html", "desc": "A capital-gains, estate, marriage, and basis-step-up profile for every state \u2014 each with what careful tax management can recover there, and a one-click personalized diagnostic.", "present": true, "appendix": false}, {"title": "Single asset risk", "href": "concentration.html", "desc": "How to de-risk a concentrated stock position: 22 strategies across selling, harvesting, hedging, deferring, and giving \u2014 scored on liquidity, speed, fees, tax cost, customization, and simplicity.", "present": true, "appendix": false}, {"title": "Current model portfolio", "href": "equities.html", "desc": "What the hypothetical model portfolio holds now \u2014 its sleeves, the last rebalance in and out, and the dated track. A research model, not a client account.", "present": true, "appendix": true}, {"title": "Model portfolio ledger", "href": "ledger.html", "desc": "The append-only historical record: every change, every mark, with attribution. A hypothetical backtest, not actual trading or any client account.", "present": true, "appendix": true}, {"title": "Model portfolio \u00b7 long history", "href": "tearsheet.html", "desc": "The model across decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample. Hypothetical.", "present": true, "appendix": true}, {"title": "Research studies", "href": "equities_case_studies.html", "desc": "Educational backtests on why the approach behaves as it does: time-series, cross-sectional, lookback & cost sensitivity, and a no-trend control.", "present": true, "appendix": true}]};
-// The refined front door is a static narrative — one story, one guided path (Diagnose → Measure →
-// Coordinate → Manage). Only the "generated on" stamp is data-driven, when a build injects state.
+// The refined front door is a static narrative — one argument, one guided path. Only the "generated
+// on" stamp is data-driven, when a build injects state.
 (function(){
   var s = window.__STATE__, gen = document.getElementById("gen");
   if(s && s.header && gen) gen.textContent = "Generated " + s.header.generated;

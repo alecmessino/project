@@ -76,7 +76,7 @@
   .inner{margin:0 7px 7px}
 
   /* ── Hero — problem + category, in one memorable line. ───────────────────────────────────────── */
-  .hero{display:block;padding:64px 44px 34px;max-width:82ch}
+  .hero{display:block;padding:40px 44px 34px;max-width:82ch}
   .eyebrow{font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.16em;
     text-transform:uppercase;color:var(--accent-strike);margin-bottom:20px}
   .kick{font-family:var(--serif);font-size:clamp(18px,.7vw+15px,21px);line-height:1.5;color:var(--muted);margin:0 0 12px;max-width:52ch}
@@ -140,8 +140,8 @@
   .ev-head{font-family:var(--sans);font-weight:700;font-size:clamp(26px,2.4vw+15px,36px);line-height:1.08;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
   .kf{border:1px solid var(--frame-line);border-top:2px solid var(--ink);background:#fff;padding:26px 28px 20px;border-radius:12px;margin-top:6px}
   .exhibit{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:22px;margin-bottom:6px;border-bottom:1px solid var(--line2)}
-  .ex-stat{font-family:var(--sans);font-variant-numeric:tabular-nums;font-weight:700;font-size:clamp(38px,4vw+18px,52px);line-height:1;letter-spacing:-.03em;color:var(--teal2)}
-  .ex-lab{font-family:var(--sans);font-size:14.5px;line-height:1.4;color:var(--body);max-width:34ch}
+  .ex-stat{font-family:var(--sans);font-variant-numeric:tabular-nums;font-weight:700;font-size:clamp(48px, 6vw + 20px, 76px);line-height:.95;letter-spacing:-.035em;color:var(--teal2)}
+  .ex-lab{font-family:var(--sans);font-size:15px;line-height:1.45;color:var(--body);max-width:30ch}
   .ex-lab .ill{color:var(--muted);font-size:12px}
   .kf-svg{width:100%;height:auto;display:block;margin-top:8px}
   .kf-num{font-family:var(--sans);font-variant-numeric:tabular-nums}
@@ -167,7 +167,8 @@
   .finale a:hover{filter:brightness(1.08)}
   @media(max-width:620px){.finale{margin-left:22px;margin-right:22px}}
 
-  .res{display:flex;gap:8px 26px;flex-wrap:wrap;margin-top:20px;justify-content:center}
+  .res-h{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ghost-line);text-align:center;margin-top:26px}
+  .res{display:flex;gap:8px 26px;flex-wrap:wrap;margin-top:10px;justify-content:center}
   .res a{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:1px}
   .res a:hover{color:var(--ink);border-bottom-color:var(--accent-strike)}
 
@@ -183,7 +184,6 @@
   <div class="frame">
     <div class="run">
       <span class="inst">Driftwood · Private Wealth Architecture</span>
-      <span class="marker">Welcome</span>
     </div>
     <div class="inner">
     <nav class="dwnav" aria-label="Driftwood">
@@ -210,8 +210,8 @@
       <div class="eyebrow">Fee-only · fiduciary</div>
       <p class="kick">Most advisors manage investments.</p>
       <h1>Driftwood coordinates your financial life as one system.</h1>
-      <p class="lede">Most households already have the right professionals — a CPA, an attorney, a portfolio.
-        What they lack is <b>someone coordinating them</b>. Coordination is the product; what you keep is the result.</p>
+      <p class="lede">Most households already have the right pieces — a portfolio, a CPA, and an attorney. What they
+        usually lack is <b>someone coordinating them as one system</b>. Coordination is the product. What you keep is the result.</p>
       <div class="ctas">
         <a class="primary" href="leakage.html">See where your wealth is leaking →</a>
         <a class="ghost" href="howitworks.html">How it works</a>
@@ -285,23 +285,22 @@
             <text x="740" y="232" text-anchor="middle" font-size="24" font-weight="700" letter-spacing="-.01em" fill="#1e2833">What you keep</text>
           </svg>
         </div>
-        <p class="sb-cap">A tax decision changes withdrawals. A withdrawal changes where investments are held. An
-          estate decision changes portfolio design. Each choice is reasonable alone; <b>together, they decide how
-          much wealth stays in the family</b>.</p>
+        <p class="sb-cap">Every financial decision affects another. A tax decision changes withdrawals. Withdrawals
+          change asset location. Estate decisions change portfolio design. Managed together, they determine
+          <b>what you keep</b>.</p>
       </div>
     </div>
 
     <!-- ── EVIDENCE — the surprise is the headline; the chart is the exhibit ── -->
     <div class="sec">
       <div class="h">The evidence</div>
-      <p class="ev-head">Here's one place coordination becomes visible.</p>
-      <p class="sysbody">The diagram above explains the idea; the illustration below isolates one piece of it —
-        two identical portfolios, the same markets, the same return. <b>Nothing about the investments changed.
-        Only the coordination did.</b></p>
+      <p class="ev-head">Here's one place coordination becomes measurable.</p>
+      <p class="sysbody">Two identical portfolios. Same markets. Same return. <b>Nothing about the investments
+        changed. Only the coordination did.</b></p>
       <div class="kf">
         <div class="exhibit">
           <div class="ex-stat">$320,000</div>
-          <div class="ex-lab">more wealth kept working for you — same holdings, coordinated.<span class="ill"> Illustrative.</span></div>
+          <div class="ex-lab">stayed working for you — the same holdings, coordinated.<span class="ill"> Illustrative.</span></div>
         </div>
         <svg class="kf-svg" viewBox="0 0 760 274" preserveAspectRatio="xMidYMid meet" role="img"
           aria-label="The coordinated after-tax advantage compounding over the horizon, in dollars: about $410k kept by coordinating versus $90k taxed naively, over 30 years.">
@@ -337,7 +336,7 @@
     <div class="cred">
       <b>Fee-only fiduciary</b><span class="dot">·</span>
       <b>Evidence-based</b><span class="dot">·</span>
-      <b>Works with your CPA &amp; attorney</b><span class="dot">·</span>
+      <b>Coordinates with your CPA &amp; attorney</b><span class="dot">·</span>
       <b>No commissions</b><span class="dot">·</span>
       <b>Low-turnover</b><span class="dot">·</span>
       <b>Registered investment adviser</b>
@@ -352,6 +351,7 @@
         </div>
         <div><a href="leakage.html">Run the Tax Diagnostic →</a></div>
       </div>
+      <div class="res-h">Learn more</div>
       <div class="res">
         <a href="statemap.html">State Tax Atlas →</a>
         <a href="principles.html">The Driftwood Principles →</a>

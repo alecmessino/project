@@ -177,6 +177,22 @@
   .foot a{color:var(--muted)}
   .foot b{color:var(--muted)}
   @media(max-width:620px){.hero,.sec{padding-left:22px;padding-right:22px}.foot,.cred{padding-left:22px;padding-right:22px}.cred{margin-left:0;margin-right:0}}
+  /* Coordination in real life — worked example + library cards. */
+  .rl-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  @media(max-width:700px){.rl-cards{grid-template-columns:1fr}}
+  a.rl-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px 24px 22px;
+    display:flex;flex-direction:column;text-decoration:none;color:inherit;
+    transition:border-color .13s ease,transform .13s ease,box-shadow .13s ease}
+  a.rl-card:hover{border-color:var(--ghost-line);transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(20,18,12,.4)}
+  @media(prefers-reduced-motion:reduce){a.rl-card:hover{transform:none}}
+  a.rl-card.feat{border-color:var(--frame-line);background:var(--soft)}
+  .rl-meta{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
+  .rl-t{font-family:var(--sans);font-size:20px;font-weight:700;letter-spacing:-.02em;color:var(--ink);line-height:1.2;margin-bottom:9px}
+  .rl-d{font-family:var(--sans);font-size:14px;color:var(--dim);line-height:1.55;margin-bottom:18px}
+  .rl-go{margin-top:auto;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--teal2)}
+  a.rl-card:hover .rl-go{color:var(--teal)}
+  .sb-link{display:inline-block;margin-top:12px;font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--teal2);text-decoration:none}
+  .sb-link:hover{color:var(--teal);text-decoration:underline}
 </style>
 </head>
 <body>
@@ -211,11 +227,12 @@
       <div class="eyebrow">Fee-only · fiduciary</div>
       <p class="kick">Most advisors manage investments.</p>
       <h1>Driftwood coordinates your financial life as one system.</h1>
-      <p class="lede">Most households already have the right pieces — a portfolio, a CPA, and an attorney. What they
-        usually lack is <b>someone coordinating them as one system</b>. Coordination is the product. What you keep is the result.</p>
+      <p class="lede">You already have the pieces: a portfolio, a CPA, an attorney, each excellent at their part.
+        What almost no household has is <b>the one role responsible for how they fit together</b>, so that every
+        important decision is made in view of the others. Coordination is the product. What you keep is the result.</p>
       <div class="ctas">
         <a class="primary" href="leakage.html">See where your wealth is leaking →</a>
-        <a class="ghost" href="howitworks.html">How it works</a>
+        <a class="ghost" href="coordination.html">See a worked example</a>
       </div>
     </div>
 
@@ -286,9 +303,10 @@
             <text x="740" y="232" text-anchor="middle" font-size="24" font-weight="700" letter-spacing="-.01em" fill="#1e2833">What you keep</text>
           </svg>
         </div>
-        <p class="sb-cap">Every financial decision affects another. A tax decision changes withdrawals. Withdrawals
-          change asset location. Estate decisions change portfolio design. Managed together, they determine
-          <b>what you keep</b>.</p>
+        <p class="sb-cap">Every important financial decision changes at least five others. A tax decision changes
+          withdrawals. Withdrawals change asset location. Estate decisions change portfolio design. Managed together,
+          they determine <b>what you keep</b>.
+          <a class="sb-link" href="coordination.html">See it in one household →</a></p>
       </div>
     </div>
 
@@ -333,6 +351,28 @@
       </div>
     </div>
 
+    <!-- ── REAL LIFE — route to the worked example + library ── -->
+    <div class="sec">
+      <div class="h">Coordination in real life</div>
+      <p class="lede2">The abstraction, made concrete — one decision at a time.</p>
+      <div class="rl-cards">
+        <a class="rl-card feat" href="coordination.html">
+          <div class="rl-meta">Worked example · one household, two states</div>
+          <div class="rl-t">The $600,000 conversation nobody had</div>
+          <div class="rl-d">The same $8M balance sheet in Illinois and Texas, an interactive map of the ripple every
+            move sets off, and the question that explains why Driftwood exists.</div>
+          <div class="rl-go">See the worked example →</div>
+        </a>
+        <a class="rl-card" href="library.html">
+          <div class="rl-meta">The Coordination Library</div>
+          <div class="rl-t">One decision, many consequences</div>
+          <div class="rl-d">Short, real scenarios, selling a business, buying a second home, inheriting $3 million,
+            that show how a single move cascades across the whole system.</div>
+          <div class="rl-go">Browse the library →</div>
+        </a>
+      </div>
+    </div>
+
     <!-- ── CREDIBILITY — trust signals, not marketing ── -->
     <div class="cred">
       <b>Fee-only fiduciary</b><span class="dot">·</span>
@@ -354,6 +394,7 @@
       </div>
       <div class="res-h">Learn more</div>
       <div class="res">
+        <a href="library.html">Coordination Library →</a>
         <a href="statemap.html">State Tax Atlas →</a>
         <a href="principles.html">First Principles →</a>
         <a href="insights.html">Insights →</a>

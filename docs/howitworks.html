@@ -81,6 +81,18 @@
   .handoffs td:first-child.us{color:var(--teal2)}
   @media(max-width:620px){.roles{padding-left:22px;padding-right:22px}.handoffs td{display:block;padding:2px 0;width:auto!important}.handoffs td:first-child{margin-top:10px}}
 
+  /* Coordination in real life — the event table: situation → who moves → outcome. */
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .evtable{width:100%;border-collapse:collapse;font-family:var(--sans);margin-top:4px}
+  .evtable th{text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:0 18px 11px 0;border-bottom:2px solid var(--ink)}
+  .evtable th:last-child,.evtable td:last-child{padding-right:0}
+  .evtable td{padding:15px 18px 15px 0;border-bottom:1px solid var(--line2);vertical-align:top;font-size:14px;line-height:1.55;color:var(--body)}
+  .evtable tr:last-child td{border-bottom:none}
+  .evtable .ev-when{font-family:var(--serif);font-weight:600;font-size:15.5px;color:var(--ink);width:22%}
+  .evtable .ev-who{font-weight:600;color:var(--teal2);width:26%}
+  .evtable th:nth-child(3),.evtable td:nth-child(3){width:52%}
+  @media(max-width:680px){.evtable,.evtable thead,.evtable tbody,.evtable tr,.evtable th,.evtable td{display:block;width:auto!important}.evtable thead{display:none}.evtable tr{border-bottom:1px solid var(--line);padding:12px 0}.evtable td{border:none;padding:2px 0}.evtable .ev-who{margin-bottom:2px}}
+
   .cta{margin:8px 44px 8px;padding:26px 30px;background:var(--navy);color:var(--on-dark);display:flex;align-items:center;gap:20px;flex-wrap:wrap;border-radius:12px}
   .cta .ct{flex:1;min-width:260px}
   .cta .ch{font-family:var(--sans);font-weight:700;font-size:22px;color:#f1ede3;margin-bottom:6px;letter-spacing:-.02em}
@@ -110,8 +122,8 @@
           <span class="dwnav-label">Understand</span>
           <a href="howitworks.html" aria-current="page">How Driftwood&nbsp;Works</a>
           <a href="thesis.html">How We Invest</a>
-          <a href="about.html">Our Story</a>
           <a href="insights.html">Insights</a>
+          <a href="about.html">Our Story</a>
         </span>
         <span class="dwnav-group">
           <span class="dwnav-label">Discover</span>
@@ -159,18 +171,19 @@
           <p>One plan, written down: <b>asset location</b> (which account holds what), the order gains are realized and
             accounts are drawn, loss-harvesting rules, and the specific hand-offs to your CPA and attorney. Every piece
             is chosen with the others in view. You sign off before a single trade happens.</p>
-          <div class="out"><b>You get</b> the plan itself — the household's operating document, in plain language.</div>
+          <div class="out"><b>You get</b> a written plan that coordinates every moving part of your financial life — in plain language.</div>
         </div>
       </div>
 
       <div class="phase">
         <div class="side"><div class="pn">Step 03</div><div class="pt">Next ~30–60 days · implementation</div></div>
         <div>
-          <h2>We build the portfolio to fit the plan — deliberately.</h2>
-          <p>A diversified, low-turnover core placed by tax, a focused complement in tax-advantaged accounts. Where you
-            already hold positions, we <b>transition them on purpose</b> — controlling the tax cost of getting from
-            where you are to where the plan says you should be, rather than selling it all on day one.</p>
-          <div class="out"><b>You get</b> a portfolio that matches the plan, transitioned at a tax cost you agreed to in advance.</div>
+          <h2>We implement the plan — deliberately.</h2>
+          <p>Everything in the plan gets set in motion: the portfolio built to fit — a diversified, low-turnover core
+            placed by tax, a focused complement in tax-advantaged accounts — existing positions
+            <b>transitioned on purpose</b> to control the tax cost of getting there, and cash put where it belongs.
+            Nothing sold all at once, nothing by accident.</p>
+          <div class="out"><b>You get</b> the plan in place — portfolio, location, and cash — transitioned at a tax cost you agreed to in advance.</div>
         </div>
       </div>
 
@@ -191,7 +204,7 @@
     </div>
 
     <div class="roles">
-      <div class="rh">Who does what</div>
+      <div class="rh">Who's at the table</div>
       <p class="rl">You keep the CPA and attorney you trust. Driftwood is the one seat whose job is the whole picture —
         keeping their work, and your portfolio, consistent as one plan.</p>
       <table class="handoffs">
@@ -199,10 +212,32 @@
           <tr><td class="us">Driftwood</td><td>Builds and places the portfolio, holds the plan, and coordinates every moving part — the standing seat at the table.</td></tr>
           <tr><td>Your CPA</td><td>Files the return. We bring the working paper and the realized-gain picture; same numbers, one direction.</td></tr>
           <tr><td>Your attorney</td><td>Drafts the documents. We keep titling, beneficiaries, and asset location consistent with them.</td></tr>
-          <tr><td>You</td><td>Make the decisions — with the after-tax consequence modeled in front of you, before each one.</td></tr>
+          <tr><td>You</td><td>Make the decisions — with the consequence modeled in front of you, before each one.</td></tr>
         </tbody>
       </table>
-      <p class="rl" style="margin-top:20px">Want the model behind that seat? See <a href="coordinate.html" style="color:var(--teal2);font-weight:600;text-decoration:none">how we coordinate →</a></p>
+    </div>
+
+    <div class="roles" style="padding-top:0">
+      <div class="rh">Coordination in real life</div>
+      <p class="rl">Coordination isn't an org chart — it's what happens when something changes. These are the moments
+        where the pieces have to move together, and who Driftwood pulls into the room:</p>
+      <div class="tscroll">
+      <table class="evtable">
+        <thead><tr><th>When this happens…</th><th>Driftwood coordinates…</th><th>So the outcome is…</th></tr></thead>
+        <tbody>
+          <tr><td class="ev-when">Annual tax planning</td><td class="ev-who">Portfolio + your CPA</td>
+            <td>Fewer unnecessary realized gains — harvesting and bracket-fill decided before year-end, not after.</td></tr>
+          <tr><td class="ev-when">A business sale</td><td class="ev-who">CPA + attorney + portfolio</td>
+            <td>Liquidity without avoidable tax drag — the sale, the proceeds, and where they land, planned as one move.</td></tr>
+          <tr><td class="ev-when">Equity compensation</td><td class="ev-who">Employer + CPA + investment plan</td>
+            <td>Concentration reduced over time, deliberately — not all at once, and not by accident.</td></tr>
+          <tr><td class="ev-when">Retirement withdrawals</td><td class="ev-who">Asset location + taxes</td>
+            <td>A lower lifetime tax burden — which account funds which year, sequenced for what you keep.</td></tr>
+          <tr><td class="ev-when">Estate changes</td><td class="ev-who">Attorney + portfolio</td>
+            <td>Estate documents and investments stay aligned — titling and beneficiaries never drift from the plan.</td></tr>
+        </tbody>
+      </table>
+      </div>
     </div>
 
     <div class="cta">

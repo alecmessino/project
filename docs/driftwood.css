@@ -209,3 +209,10 @@ details[open] > summary::after{ transform:rotate(90deg); }
   #printfoot{ display:block!important; position:fixed; bottom:0; left:0; right:0;
     font-size:8px; color:var(--slate); text-align:center; padding-top:4px; border-top:.5px solid var(--line); }
 }
+
+/* Question hook — story-first case openings (Coordination Library) */
+.qhook{ margin:0 0 4px; }
+.qhook .qq{ display:block; font-family:var(--serif); font-weight:600;
+  font-size:clamp(21px, 1.6vw + 14px, 28px); line-height:1.2; letter-spacing:-.015em; color:var(--ink,#1e2833); }
+.qhook .qa{ display:block; font-family:var(--sans); font-size:15px; line-height:1.5; font-weight:600;
+  color:var(--brass,#2c5878); margin-top:8px; }

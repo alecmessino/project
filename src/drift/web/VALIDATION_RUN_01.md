@@ -466,3 +466,36 @@ frozen schema/lifecycle and therefore need your explicit sign-off — would take
 "executable by its author" to "consistently executable by any advisor," which is the real bar. No new
 philosophy is required; the discoveries are all at the level of fields, states, and prompts, exactly
 where a validation exercise should leave them.
+
+---
+
+## Resolution status — updated after founder authorization (v1.1)
+
+The findings were triaged into a bounded amendment. This section keeps the register a living record.
+
+**Resolved in Governance Architecture v1.1** (folded into the frozen spec + the 90-day procedure + the
+Decision Record form):
+- **F-08** — a first-class **Dependencies** field (depends-on / blocks; acyclic decision graph).
+- **F-17** — every **Trigger** now carries an **owner** and a **cadence** (continuous / periodic /
+  client-surfaced).
+- **F-14** — the **Opportunity/Risk registers are filtered views over the Decision Log**, not parallel
+  lists; **F-13** and **F-12** are resolved as a consequence (a noticed-but-undecided item is an Open
+  record in *Identified* status).
+- **F-18** — partially picked up by F-17: client-surfaced triggers are the ones the AWOR must actively
+  ask about.
+
+**Held under design — deliberately NOT frozen** (would change the ontology; each reframed by the
+founder to a better primitive than the raw finding proposed):
+- **F-01** → *stakeholder objectives with an explicit household reconciliation*, not `Intent(s)`.
+- **F-05 / F-16** → separate *operational validity* from *historical certainty* via metadata
+  (*Evidence Level*, *Assumption Status*), not new lifecycle states.
+
+**Open — procedure-level, not yet actioned** (prompts/guidance in THE_FIRST_90_DAYS, no architecture
+impact; awaiting direction): F-02 (Intent Brief's own lifecycle), F-04 (scale meeting time to the
+Coordination tier), F-06 (a step to commission re-reading an opaque instrument), F-09 (forward /
+probabilistic assumptions + confidence), F-10 (scheduled-maturation triggers), F-11 (values/governance
+decisions explicitly in-scope), F-15 (precise Owner semantics).
+
+**Gate before any v1.2:** a **repeatability run** — a second competent advisor, working only from the
+frozen documents, executes the *same* household from scratch. Every materially different artifact is a
+residual ambiguity in the spec. Repeatability, not correctness, is the bar at this stage.

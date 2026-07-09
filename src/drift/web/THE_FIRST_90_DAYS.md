@@ -1,8 +1,10 @@
 # The First 90 Days — Driftwood Onboarding Operating Procedure
 
 *A runbook, not a brochure. This designs the first client experience so that it produces the
-governance system defined in [GOVERNANCE_ARCHITECTURE.md](GOVERNANCE_ARCHITECTURE.md) as a natural
-by-product. The architecture is a fixed specification here; this document works one layer below it.*
+governance system defined in [GOVERNANCE_ARCHITECTURE.md](GOVERNANCE_ARCHITECTURE.md) (v1.1) as a
+natural by-product. The architecture is a fixed specification here; this document works one layer
+below it. Aligned to Governance Architecture v1.1 — the Decision Record now carries Dependencies and
+an owned/cadenced Trigger, and the registers are views over the Decision Log.*
 
 **The milestone this serves.** The next milestone is not a screen. It is proving that a real
 household can complete this process using only a **PDF worksheet, a few working documents, and three
@@ -156,7 +158,7 @@ nothing. Each section is a projection of records:
 | Coordination Index | The household's structural drivers (a qualifier, not a fee) |
 | Operating calendar | The triggers and review dates across all records |
 | Decision dashboard (forward) | The forward decisions opened for the next 12–36 months |
-| Opportunity & Risk registers | Findings from Phase 2, each with a Basis → a record |
+| Opportunity & Risk registers | **Filtered views over the Decision Log** (v1.1) — never a parallel list. Each line *is* a record: an opportunity/risk noticed but not yet decided is an Open record in *Identified* status. |
 
 Before M3, the advisor also **opens the forward decisions** — the next 12–36 months of choices (a
 sale, a move, a conversion ladder) — each as an Open record with a rationale, assumptions, and a
@@ -187,7 +189,10 @@ opened; placeholders owned.
 1. **Publish Manual v1** — dated and versioned (`v1`, with a stamped issue date). It is a point-in-time
    authored document, not a live feed.
 2. Stand up the **operating calendar** (the annual rhythm) and the **trigger-watch list** (the union
-   of every open record's trigger — the things that, if they happen, reopen a decision).
+   of every open record's trigger — the things that, if they happen, reopen a decision). Per v1.1,
+   **each trigger names its owner and cadence** — Driftwood-continuous, periodic, or client-surfaced —
+   so the list is an enforceable control, not a wish; client-surfaced triggers are the ones the AWOR
+   must actively *ask* about.
 3. Schedule the cadence: quarterly touchpoints and the annual **AWOR**, whose job is to re-read every
    open record and ask *did its assumption hold, did its trigger fire?* — a review measured against
    recorded intent, never a recap of the year.
@@ -245,7 +250,7 @@ in the client's own words:
 ### Instrument B · The Decision Record *(the atomic form — one per structure/decision)*
 
 A one-page fill-in form. The three starred fields are non-negotiable; a form missing any of them is
-not yet a record.
+not yet a record. (v1.1 added **Dependencies**, and an **owner + cadence** on the Trigger.)
 
 ```
 DECISION RECORD  ·  DR-____                         State: ○ Open  ○ Confirmed  ○ Superseded  ○ Archived
@@ -267,6 +272,9 @@ WHAT WAS DECIDED
 
 ★ TRIGGER  (the condition that would reopen this decision)
   ______________________________________________________________________________________
+     Watched by: ○ Driftwood  ○ Client  ○ ______________     Cadence: ○ continuous  ○ periodic ____  ○ client-surfaced
+
+  DEPENDENCIES   Depends on: DR-____, DR-____        Blocks: DR-____, DR-____   (execution order — keep acyclic)
 
 ★ LINEAGE   Supersedes: DR-____        Superseded by: DR-____        Last confirmed: __________
 ```
@@ -327,6 +335,9 @@ WHAT WAS DECIDED
 ★ TRIGGER
   Reopen if the federal exemption is materially cut, the benefit no longer covers projected estate
   tax as the estate grows, or Tom's insurability changes.
+     Watched by: Driftwood (exemption law · coverage ratio) + Client (insurability)   Cadence: continuous + annual AWOR
+
+  DEPENDENCIES   Depends on: —        Blocks: — (the estate-liquidity plan reads from this record)
 
 ★ LINEAGE   Supersedes: —     Superseded by: —     Last confirmed: Yr 0 Charter Session
 ```

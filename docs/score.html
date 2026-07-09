@@ -11,18 +11,18 @@
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
 <title>Your Coordination Score — Driftwood</title>
-<meta name="description" content="Complexity isn't a problem to hide — it's where coordination creates the most value. Check what's true for your household and see your Household Complexity Index, and the coordination opportunities it implies. Educational self-assessment, not advice." />
+<meta name="description" content="Complexity isn't a problem to hide — it's where coordination creates the most value. Check what's true for your household and see your Coordination Index, and the coordination opportunities it implies. Educational self-assessment, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/score.html" />
 <link rel="icon" href="favicon.svg" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood" />
 <meta property="og:title" content="Your Coordination Score — Driftwood" />
-<meta property="og:description" content="See your Household Complexity Index — and where coordination would create the most value." />
+<meta property="og:description" content="See your Coordination Index — and where coordination would create the most value." />
 <meta property="og:url" content="https://alecmessino.github.io/project/score.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Your Coordination Score — Driftwood" />
-<meta name="twitter:description" content="See your Household Complexity Index — and where coordination would create the most value." />
+<meta name="twitter:description" content="See your Coordination Index — and where coordination would create the most value." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
 <style>
   :root{
@@ -144,7 +144,7 @@
       <div class="eyebrow">Coordination Score</div>
       <h1>How coordinated does your financial life need to be?</h1>
       <p class="lede">Complexity isn't a problem to hide. It's <b>where coordination creates the most value</b>. Check
-        what's true for your household and see your Household Complexity Index, and the opportunities it points to.</p>
+        what's true for your household and see your Coordination Index, and the opportunities it points to.</p>
     </div>
 
     <div class="tool">
@@ -217,7 +217,7 @@
 
     <div class="foot">
       <span class="note">Educational self-assessment — not investment, tax, or legal advice, and not a fee quote.</span>
-      The Household Complexity Index is an illustrative tool to prompt a conversation; it does not set fees, measure
+      The Coordination Index is an illustrative tool to prompt a conversation; it does not set fees, measure
       results, or account for your full situation, and it is not saved or transmitted. Any strategy referenced requires
       individualized tax and legal advice. Driftwood coordinates with your CPA and attorney and does not provide tax or
       legal advice. Driftwood is a <b>registered investment adviser</b>; Form ADV and Form CRS are available at
@@ -241,9 +241,9 @@
 
     function tierFor(n){
       if(n <= 2) return ['Tier I · Foundational','Coordination still matters, but the moving parts are few.'];
-      if(n <= 5) return ['Tier II · Complex','Enough moving parts that they need to be watched together.'];
-      if(n <= 9) return ['Tier III · Highly complex','Many interacting decisions. This is where coordination earns its keep.'];
-      return ['Tier IV · Family-office-equivalent','Family-office-level complexity. The interactions are the whole game.'];
+      if(n <= 5) return ['Tier II · Active','Enough moving parts that they need to be watched together.'];
+      if(n <= 9) return ['Tier III · Intensive','Many interacting decisions. This is where coordination earns its keep.'];
+      return ['Tier IV · Family-office-grade','Family-office-level coordination. The interactions are the whole game.'];
     }
 
     function paint(){

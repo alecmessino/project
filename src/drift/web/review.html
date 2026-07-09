@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>The Annual Wealth Operating Review — Driftwood</title>
+<meta name="description" content="Every institution runs on a cadence — the physical, the board meeting, the investment committee. Driftwood's is the Annual Wealth Operating Review: one yearly pass across wealth, tax, estate, liquidity, and family, so every decision ahead is a better decision. Illustrative, not advice." />
+<link rel="canonical" href="https://alecmessino.github.io/project/review.html" />
+<link rel="icon" href="favicon.svg" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="The Annual Wealth Operating Review — Driftwood" />
+<meta property="og:description" content="The cadence institutions run on, brought to a household. One yearly pass across the whole system, so the decisions ahead are better ones." />
+<meta property="og:url" content="https://alecmessino.github.io/project/review.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="The Annual Wealth Operating Review — Driftwood" />
+<meta name="twitter:description" content="The cadence institutions run on, brought to a household. One yearly pass, so the decisions ahead are better ones." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
+<style>
+  :root{
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --wash:#eaf0f4;
+    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
+    --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330; --on-dark:#e7ecf2;
+    --brass:#2c5878; --gold:#a9c2d6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.62 var(--sans);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1000px;margin:36px auto;padding:0 20px 60px}
+  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;
+    box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
+  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
+    border-bottom:3px double var(--frame-line);font-family:var(--sans)}
+  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .inner{margin:0 7px 7px}
+
+  .doc{padding:50px 44px 6px;max-width:720px}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:15px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(31px,3vw+15px,44px);line-height:1.06;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:20ch}
+  .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:62ch}
+  .lede b{color:var(--ink);font-weight:600}
+  .rule{height:1px;background:var(--line);margin:0 44px}
+  .sh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .sec{padding:40px 44px 6px}
+  .sec .intro{font-size:16.5px;line-height:1.7;color:var(--body);margin:0 0 8px;max-width:64ch}
+  .sec .intro b{color:var(--ink);font-weight:600}
+  .lead-in{font-family:var(--serif);font-size:19px;line-height:1.5;color:var(--ink);margin:8px 0 0;padding-left:18px;border-left:3px solid var(--brass);max-width:60ch}
+  .lead-in b{font-weight:600}
+
+  /* Cadence strip */
+  .cadence{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0 6px}
+  @media(max-width:720px){.cadence{grid-template-columns:1fr}}
+  .cad{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+  .cad.hero{background:var(--wash);border-color:var(--frame-line)}
+  .cad .cw{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:8px}
+  .cad .ct{font-family:var(--sans);font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink);margin:0 0 6px}
+  .cad p{font-size:13px;line-height:1.55;color:var(--body);margin:0}
+
+  /* Six domains */
+  .domains{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0 6px}
+  @media(max-width:820px){.domains{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.domains{grid-template-columns:1fr}}
+  .dom{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 20px 22px}
+  .dom.opp{background:var(--soft);border-color:var(--frame-line)}
+  .dom .dn{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);margin-bottom:12px}
+  .dom ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+  .dom li{position:relative;padding-left:18px;font-size:13.5px;line-height:1.45;color:var(--body)}
+  .dom li::before{content:"";position:absolute;left:0;top:.5em;width:6px;height:6px;border-radius:2px;background:var(--ghost-line)}
+  .dom.opp li::before{background:var(--brass)}
+  .dom .link{margin-top:13px;font-family:var(--sans);font-weight:700;font-size:12px;color:var(--teal2);text-decoration:none;display:inline-block}
+  .dom .link:hover{text-decoration:underline}
+
+  .creed-band{margin:40px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
+    font-size:clamp(20px,2vw+12px,28px);letter-spacing:-.022em;color:var(--ink);line-height:1.18;max-width:none}
+  .cta{margin:28px 44px 0;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:26px 28px}
+  .cta .ct{font-family:var(--sans);font-weight:700;font-size:20px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.02em}
+  .cta .cd{font-size:14px;line-height:1.6;color:var(--dim);margin:0 0 18px;max-width:58ch}
+  .cta .btns{display:flex;flex-wrap:wrap;gap:12px}
+  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:8px;font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px}
+  .cta a.primary{background:var(--teal);color:#f1ede3}
+  .cta a.ghost{border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
+
+  .foot{margin-top:42px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
+    color:var(--muted);font-size:12px;line-height:1.65}
+  .foot .note{color:#5a5a62;font-weight:600}
+  .foot b{color:var(--dim)}
+  @media(max-width:620px){
+    .doc,.sec{padding-left:22px;padding-right:22px}
+    .rule,.creed-band,.cta,.foot{margin-left:22px;margin-right:22px}
+    .foot{padding-left:22px;padding-right:22px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <div class="run">
+      <span class="inst">Driftwood · Private Wealth Architecture</span>
+      <span class="marker">The Annual Wealth Operating Review</span>
+    </div>
+    <div class="inner">
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Driftwood</a>
+      <div class="dwnav-links">
+        <span class="dwnav-group">
+          <span class="dwnav-label">Understand</span>
+          <a href="howitworks.html">How Driftwood&nbsp;Works</a>
+          <a href="thesis.html">How We Invest</a>
+          <a href="familyoffice.html">Family&nbsp;Offices</a>
+          <a href="library.html">Coordination&nbsp;Library</a>
+          <a href="insights.html">Insights</a>
+          <a href="about.html">Our Story</a>
+        </span>
+        <span class="dwnav-group">
+          <span class="dwnav-label">Discover</span>
+          <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+          <a href="statemap.html">State Tax&nbsp;Atlas</a>
+          <a href="taxlab.html">After-Tax&nbsp;Review</a>
+        </span>
+      </div>
+    </nav>
+
+    <div class="doc">
+      <div class="eyebrow">The Annual Wealth Operating Review</div>
+      <h1>Once a year, we review the whole system.</h1>
+      <p class="lede">Every institution runs on a cadence. Medicine has the annual physical. A company has its board
+        meeting. A family office has its investment committee. Driftwood has the Wealth Operating Review, and its job
+        isn't a performance update. <b>It's to make sure every decision ahead is a better decision.</b></p>
+    </div>
+
+    <div class="rule" style="margin-top:34px"></div>
+
+    <div class="sec">
+      <div class="sh">How the relationship runs</div>
+      <p class="intro">Coordination isn't an event; it's a rhythm. A designed one, so nothing waits for a crisis to
+        get attention.</p>
+      <div class="cadence">
+        <div class="cad">
+          <div class="cw">First 60 days</div>
+          <div class="ct">Onboarding</div>
+          <p>The balance sheet, the professionals, the goals, and the Coordination Index, assembled into your first
+            operating map and architecture memo.</p>
+        </div>
+        <div class="cad">
+          <div class="cw">Every quarter</div>
+          <div class="ct">Operating Review</div>
+          <p>New decisions, an updated map, and the hand-offs to your CPA and attorney as things change through the
+            year.</p>
+        </div>
+        <div class="cad hero">
+          <div class="cw">Every year</div>
+          <div class="ct">Wealth Operating Review</div>
+          <p>One deliberate pass across the entire system, below. The centerpiece of the year.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sh">What we review, every year</div>
+      <p class="intro">Six lenses on one financial life. The point isn't to check boxes. It's to surface the
+        interactions and the decisions coming, <b>before</b> they arrive.</p>
+      <div class="domains">
+        <div class="dom">
+          <div class="dn">Wealth</div>
+          <ul><li>Investment allocation</li><li>Asset location</li><li>Concentrated positions</li><li>Cash reserves</li></ul>
+        </div>
+        <div class="dom">
+          <div class="dn">Tax</div>
+          <ul><li>Bracket management</li><li>Capital-gains budget</li><li>Roth strategy</li><li>Estimated payments</li><li>Carryforwards</li></ul>
+        </div>
+        <div class="dom">
+          <div class="dn">Estate</div>
+          <ul><li>Beneficiaries</li><li>Trust funding</li><li>Entity ownership</li><li>Insurance ownership</li><li>Exemption exposure</li></ul>
+        </div>
+        <div class="dom">
+          <div class="dn">Liquidity</div>
+          <ul><li>Upcoming purchases</li><li>Business distributions</li><li>Credit facilities</li><li>Emergency reserve</li><li>Withdrawal sequencing</li></ul>
+        </div>
+        <div class="dom">
+          <div class="dn">Family</div>
+          <ul><li>Aging parents</li><li>Children</li><li>Education</li><li>Inheritance</li><li>Decision-makers</li></ul>
+        </div>
+        <div class="dom opp">
+          <div class="dn">Opportunities</div>
+          <ul><li>What's changed this year?</li><li>What conversations need to happen?</li><li>What decisions are coming?</li></ul>
+          <a class="link" href="manual.html">See the Opportunity Register →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sh">Why it's the product, not a formality</div>
+      <p class="intro">Ask most advisors "should we buy the lake house?" and the answer is "yes" or "let's see if it
+        fits the plan." The Review is what lets the answer be a real one.</p>
+      <p class="lead-in">"Let's look at the liquidity, the taxes, the leverage, the opportunity cost, the estate
+        implications, the insurance, and the business cash flow, then decide." <b>The product is better decisions.
+        Everything else is the infrastructure that makes them possible.</b></p>
+    </div>
+
+    <div class="creed-band">We don't just manage wealth. We improve how a family makes decisions together.</div>
+
+    <div class="cta">
+      <div class="ct">See the review, in full.</div>
+      <div class="cd">It's the centerpiece of the relationship. Here's a complete, illustrative sample, and a
+        two-minute way to start your own map.</div>
+      <div class="btns">
+        <a class="primary" href="awor.html">See a sample review →</a>
+        <a class="ghost" href="score.html">Find your Coordination Score</a>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span class="note">Illustrative and educational — not investment, tax, or legal advice.</span>
+      The review framework shown is illustrative of Driftwood's process; the specifics of any engagement depend on
+      your own facts and on current law, and the strategies referenced require individualized tax and legal advice.
+      Driftwood coordinates with your CPA and attorney and does not provide tax or legal advice. Driftwood is a
+      <b>registered investment adviser</b>; Form ADV and Form CRS are available at
+      <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

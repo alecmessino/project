@@ -56,7 +56,7 @@ def main() -> int:
                   "case-vacation-home.html", "case-inheritance.html", "familyoffice.html",
                   "case-moving-states.html", "case-stock-options.html", "case-rmds.html",
                   "case-widowed.html", "case-charitable-giving.html", "fees.html", "manual.html",
-                  "score.html"):
+                  "score.html", "review.html", "awor.html"):
         (DOCS / asset).write_text((WEB / asset).read_text())
         print(f"   {asset:15} -> docs/{asset} (copied)")
     # Binary assets (e.g. the founder headshot) — copy through only if present, so the About page's

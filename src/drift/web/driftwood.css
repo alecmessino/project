@@ -216,3 +216,14 @@ details[open] > summary::after{ transform:rotate(90deg); }
   font-size:clamp(21px, 1.6vw + 14px, 28px); line-height:1.2; letter-spacing:-.015em; color:var(--ink,#1e2833); }
 .qhook .qa{ display:block; font-family:var(--sans); font-size:15px; line-height:1.5; font-weight:600;
   color:var(--brass,#2c5878); margin-top:8px; }
+
+/* ── Craft pass — set like a printed sheet, not a web page ──────────────────────────────
+   Execution only: balance the rag, hang the opening marks, and honour reduced-motion. No
+   copy, colour, or positioning touched. */
+h1,h2,h3,h4{ text-wrap:balance }
+p,li,figcaption,blockquote,dd{ text-wrap:pretty }
+body{ hanging-punctuation:first last }
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important;
+    transition-duration:.001ms!important; scroll-behavior:auto!important }
+}

@@ -88,7 +88,7 @@
   .ctas a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:600;white-space:nowrap;
     transition:filter var(--t-fast),transform var(--t-fast),background var(--t-fast),border-color var(--t-fast)}
   .ctas .primary{background:var(--teal);color:#f1ede3;padding:15px 26px;border-radius:9px}
-  .ctas .primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .ctas .primary:hover{filter:brightness(1.06)}
   .ctas .ghost{color:var(--ink);padding:15px 10px;font-weight:600;border-bottom:2px solid transparent}
   .ctas .ghost:hover{border-bottom-color:var(--teal)}
 
@@ -104,17 +104,18 @@
   .caps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px}
   @media(max-width:900px){.caps{grid-template-columns:1fr 1fr}}
   @media(max-width:540px){.caps{grid-template-columns:1fr}}
-  a.cap-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px 22px 22px;display:flex;flex-direction:column;text-decoration:none;color:inherit;
-    transition:border-color .15s,transform .18s var(--ease-out),box-shadow .18s}
-  a.cap-card:hover{border-color:var(--ghost-line);transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(20,18,12,.4)}
-  @media(prefers-reduced-motion:reduce){a.cap-card:hover{transform:none}}
+  a.cap-card{background:#fff;border:1px solid var(--line);border-radius:0;padding:24px 22px 22px;display:flex;flex-direction:column;text-decoration:none;color:inherit;
+    transition:border-color .2s ease,background-color .2s ease}
+  a.cap-card:hover{border-color:var(--ghost-line);background:var(--soft)}
   .cap-ic{width:24px;height:24px;color:var(--accent-strike);margin-bottom:16px}
   .cap-ic svg{width:24px;height:24px;display:block}
   .cap-t{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
   .cap-q{font-family:var(--sans);font-weight:600;font-size:18.5px;line-height:1.2;color:var(--ink);margin:0 0 9px;letter-spacing:-.01em}
   .cap-d{font-family:var(--sans);font-size:14px;color:var(--dim);line-height:1.5;margin-bottom:18px}
   .cap-go{margin-top:auto;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--teal2)}
+  .cap-go::after{content:"\00a0→";display:inline-block;transition:transform .2s var(--ease-out)}
   a.cap-card:hover .cap-go{color:var(--teal)}
+  a.cap-card:hover .cap-go::after{transform:translateX(4px)}
 
   /* The defining visual — a full-screen editorial statement: five parts converging on one outcome.
      The signature moment of the page, in the calm limestone palette. Connecting lines draw in on
@@ -138,7 +139,7 @@
 
   /* Evidence — the surprise is the headline; the chart is the exhibit; methodology is a footnote. */
   .ev-head{font-family:var(--sans);font-weight:700;font-size:clamp(26px,2.4vw+15px,36px);line-height:1.08;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
-  .kf{border:1px solid var(--frame-line);border-top:2px solid var(--ink);background:#fff;padding:26px 28px 20px;border-radius:12px;margin-top:6px}
+  .kf{border:1px solid var(--frame-line);border-top:2px solid var(--ink);background:#fff;padding:26px 28px 20px;border-radius:0;margin-top:6px}
   .exhibit{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:22px;margin-bottom:6px;border-bottom:1px solid var(--line2)}
   .ex-stat{font-family:var(--sans);font-variant-numeric:tabular-nums;font-weight:700;font-size:clamp(48px, 6vw + 20px, 76px);line-height:.95;letter-spacing:-.035em;color:var(--teal2)}
   .ex-lab{font-family:var(--sans);font-size:15px;line-height:1.45;color:var(--body);max-width:30ch}
@@ -180,11 +181,10 @@
   /* Coordination in real life — worked example + library cards. */
   .rl-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
   @media(max-width:700px){.rl-cards{grid-template-columns:1fr}}
-  a.rl-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px 24px 22px;
+  a.rl-card{background:var(--card);border:1px solid var(--line);border-radius:0;padding:24px 24px 22px;
     display:flex;flex-direction:column;text-decoration:none;color:inherit;
-    transition:border-color .13s ease,transform .13s ease,box-shadow .13s ease}
-  a.rl-card:hover{border-color:var(--ghost-line);transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(20,18,12,.4)}
-  @media(prefers-reduced-motion:reduce){a.rl-card:hover{transform:none}}
+    transition:border-color .2s ease,background-color .2s ease}
+  a.rl-card:hover{border-color:var(--ghost-line);background:var(--soft)}
   a.rl-card.feat{border-color:var(--frame-line);background:var(--soft)}
   .rl-meta{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
   .rl-t{font-family:var(--sans);font-size:20px;font-weight:700;letter-spacing:-.02em;color:var(--ink);line-height:1.2;margin-bottom:9px}
@@ -247,28 +247,28 @@
           <div class="cap-t">Diagnose</div>
           <div class="cap-q">Where is your wealth leaking today?</div>
           <div class="cap-d">See what taxes quietly take from the same holdings — by your state and bracket.</div>
-          <div class="cap-go">Tax Diagnostic →</div>
+          <div class="cap-go">Tax Diagnostic</div>
         </a>
         <a class="cap-card" href="taxlab.html">
           <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 17a8.5 8.5 0 0 1 17 0"/><line x1="12" y1="17" x2="16.2" y2="10.8"/><circle cx="12" cy="17" r="1.4" fill="currentColor" stroke="none"/></svg></div>
           <div class="cap-t">Measure</div>
           <div class="cap-q">What is coordination worth?</div>
           <div class="cap-d">Put a dollar figure on it — for your bracket, state, and portfolio.</div>
-          <div class="cap-go">After-Tax Review →</div>
+          <div class="cap-go">After-Tax Review</div>
         </a>
         <a class="cap-card" href="howitworks.html">
           <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="5" cy="6" r="2.1"/><circle cx="5" cy="18" r="2.1"/><circle cx="19" cy="12" r="2.1"/><line x1="7" y1="6.9" x2="17" y2="11.2"/><line x1="7" y1="17.1" x2="17" y2="12.8"/></svg></div>
           <div class="cap-t">Coordinate</div>
           <div class="cap-q">How do the pieces work as one plan?</div>
           <div class="cap-d">Taxes, accounts, and estate kept consistent — the way a family office runs.</div>
-          <div class="cap-go">How it works →</div>
+          <div class="cap-go">How it works</div>
         </a>
         <a class="cap-card" href="thesis.html">
           <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3l8.5 4.7L12 12.4 3.5 7.7 12 3z"/><path d="M3.5 12.3L12 17l8.5-4.7"/></svg></div>
           <div class="cap-t">Manage</div>
           <div class="cap-q">Who builds the portfolio?</div>
           <div class="cap-d">A low-turnover core, placed by tax and held with discipline.</div>
-          <div class="cap-go">How we invest →</div>
+          <div class="cap-go">How we invest</div>
         </a>
       </div>
     </div>

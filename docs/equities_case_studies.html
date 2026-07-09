@@ -57,7 +57,7 @@
     color:var(--dim);font-size:12.5px}
   .foot .note{color:var(--slate)}
   .pill{display:inline-block;font-size:11px;color:var(--dim);border:1px solid var(--line);
-    border-radius:20px;padding:1px 10px;margin-left:8px;vertical-align:middle}
+    border-radius:var(--surface-radius);padding:1px 10px;margin-left:8px;vertical-align:middle}
   /* Phones: shrink the generous desktop gutters, wrap the metric rows to two-up, and let any
      wide study table scroll inside its own container instead of pushing the page sideways. */
   @media(max-width:620px){
@@ -72,7 +72,7 @@
 </head>
 <body>
 <div class="wrap">
-  <nav class="dwnav" aria-label="Driftwood" style="border-radius:10px;margin-bottom:10px">
+  <nav class="dwnav" aria-label="Driftwood" style="border-radius:var(--surface-radius);margin-bottom:10px">
     <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
     <div class="dwnav-links">
         <span class="dwnav-group">
@@ -95,7 +95,7 @@
   <header>
     <h1>Drift<span class="w">wood</span> · Core Alpha research studies</h1>
     <div class="sub" id="sub"></div>
-    <div class="research-banner" style="margin-top:10px;font-size:11.5px;color:#5a4a22;border:1px solid #e0c98a;border-left:3px solid var(--brass,#2c5878);background:#faf3df;border-radius:7px;padding:8px 12px;line-height:1.5">
+    <div class="research-banner" style="margin-top:10px;font-size:11.5px;color:#5a4a22;border:1px solid #e0c98a;border-left:3px solid var(--brass,#2c5878);background:#faf3df;border-radius:var(--surface-radius);padding:8px 12px;line-height:1.5">
       <b>Core Alpha Research.</b> These are educational studies of <i>why</i> the Core Alpha (momentum) strategy
       behaves as it does — not the deployed, tax-managed <b>Structural&nbsp;Alpha</b> book. Hypothetical
       backtests, not a client account. <a href="index.html" style="color:var(--slate,#4a4f57)">See the current book →</a>

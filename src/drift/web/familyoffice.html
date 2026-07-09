@@ -35,7 +35,7 @@
   body{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.62 var(--sans);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{max-width:1000px;margin:36px auto;padding:0 20px 60px}
-  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;
+  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:var(--surface-radius);overflow:hidden;
     box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:3px double var(--frame-line);font-family:var(--sans)}
@@ -61,7 +61,7 @@
   /* What a family office actually is — three principles. */
   .three{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:26px 0 6px}
   @media(max-width:720px){.three{grid-template-columns:1fr;gap:14px}}
-  .pr{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:20px 20px 22px}
+  .pr{background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);padding:20px 20px 22px}
   .pr .prn{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.02em;color:var(--brass);font-variant-numeric:tabular-nums;margin-bottom:9px}
   .pr .prt{font-family:var(--sans);font-weight:700;font-size:16px;line-height:1.25;letter-spacing:-.01em;color:var(--ink);margin:0 0 8px}
   .pr p{font-size:14px;line-height:1.6;color:var(--body);margin:0}
@@ -77,7 +77,7 @@
   .orcap{font-family:var(--serif);font-size:18px;line-height:1.5;color:var(--ink);text-align:center;margin:26px auto 0;max-width:52ch}
 
   /* ── What Changed? — same assets, different coordination ── */
-  .wc{margin:12px 0 0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+  .wc{margin:12px 0 0;border:1px solid var(--line);border-radius:var(--surface-radius);overflow:hidden;background:#fff}
   .wc-top{display:grid;grid-template-columns:1fr;gap:0}
   .wc-assets{padding:16px 20px;background:var(--soft);border-bottom:1px solid var(--line)}
   .wc-lab{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
@@ -85,7 +85,7 @@
   .wc-assets .v b{color:var(--ink);font-weight:600}
   .wc-levers{padding:18px 20px 8px}
   .wc-lever{display:block;width:100%;text-align:left;appearance:none;cursor:pointer;background:var(--soft);
-    border:1px solid var(--line);border-left:3px solid var(--ghost-line);border-radius:9px;padding:12px 15px;margin:0 0 10px;
+    border:1px solid var(--line);border-left:3px solid var(--ghost-line);border-radius:var(--surface-radius);padding:12px 15px;margin:0 0 10px;
     transition:background-color .13s ease,border-color .13s ease}
   .wc-lever:hover{border-color:var(--brass)}
   .wc-lever:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
@@ -114,10 +114,10 @@
   .onward a{color:var(--teal2);text-decoration:none;font-weight:600}
   .onward a:hover{text-decoration:underline}
   .onward .d{color:var(--ghost-line);margin:0 6px}
-  .cta{margin:34px 44px 0;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:26px 28px}
+  .cta{margin:34px 44px 0;background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);padding:26px 28px}
   .cta .ct{font-family:var(--sans);font-weight:700;font-size:20px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.02em}
   .cta .cd{font-size:14px;line-height:1.6;color:var(--dim);margin:0 0 18px;max-width:56ch}
-  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:8px;
+  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:var(--surface-radius);
     font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px;background:var(--teal);color:#f1ede3}
   .foot{margin-top:42px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
     color:var(--muted);font-size:12px;line-height:1.65}

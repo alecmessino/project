@@ -36,7 +36,7 @@
   body{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.66 var(--sans);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{max-width:1080px;margin:40px auto;padding:0 20px 60px}
-  .frame{background:var(--bg);border:1px solid #c3bcab;border-radius:12px;overflow:hidden;
+  .frame{background:var(--bg);border:1px solid #c3bcab;border-radius:var(--surface-radius);overflow:hidden;
     box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
   .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #c3bcab}
   .chrome i{width:9px;height:9px;border-radius:999px;background:#c3bcab;display:inline-block}
@@ -89,11 +89,11 @@
   .arch .cap b{color:#eef2f6}
   @media(max-width:620px){.arch{margin-left:20px;margin-right:20px}}
 
-  .cta{margin:36px 44px 0;max-width:720px;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:28px 30px}
+  .cta{margin:36px 44px 0;max-width:720px;background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);padding:28px 30px}
   .cta .ct{font-family:var(--sans);font-weight:700;font-size:22px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.02em}
   .cta .cd{font-size:14.5px;line-height:1.6;color:var(--dim);margin:0 0 20px;max-width:48ch}
   .cta .btns{display:flex;flex-wrap:wrap;gap:12px}
-  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:8px;
+  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:var(--surface-radius);
     font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px}
   .cta a.primary{background:var(--teal);color:#f1ede3}
   .cta a.ghost{border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
@@ -110,7 +110,7 @@
   }
 
   /* ── Rebrand: plate frame + running head (matches the front door), in place of the browser chrome. */
-  .frame{border:1px solid var(--frame-line);border-radius:3px;
+  .frame{border:1px solid var(--frame-line);border-radius:var(--surface-radius);
     box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line),
       0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
   .chrome{background:transparent;justify-content:space-between;gap:12px;
@@ -126,7 +126,7 @@
   .ripplesec .rsi{font-size:15.5px;line-height:1.65;color:var(--body);margin:0 0 18px;max-width:60ch}
   .ripplesec .rsi b{color:var(--ink);font-weight:600}
   .ripple{margin:6px auto 0;max-width:560px;display:flex;flex-direction:column;align-items:stretch}
-  .ripple .rstep{background:#fff;border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:9px;padding:12px 16px;font-size:14px;line-height:1.45;color:var(--body);text-align:left}
+  .ripple .rstep{background:#fff;border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:var(--surface-radius);padding:12px 16px;font-size:14px;line-height:1.45;color:var(--body);text-align:left}
   .ripple .rstep b{color:var(--ink);font-weight:700}
   .ripple .rstep.start{background:#eaf0f4;border-color:var(--brass);font-family:var(--sans);font-weight:600;color:var(--ink);font-size:15px}
   .ripple .rstep.end{background:var(--teal);border-color:var(--teal);border-left-color:var(--teal);color:#f1ede3;font-family:var(--sans);font-weight:700;font-size:16px;text-align:center;letter-spacing:-.01em}

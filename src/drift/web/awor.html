@@ -37,7 +37,7 @@
   body{margin:0;background:var(--bg);color:var(--body);font:16px/1.6 var(--sans);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{max-width:960px;margin:36px auto;padding:0 20px 60px}
-  .frame{background:var(--paper);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;
+  .frame{background:var(--paper);border:1px solid var(--frame-line);border-radius:var(--surface-radius);overflow:hidden;
     box-shadow:inset 0 0 0 6px var(--paper), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 16px 40px -28px rgba(26,32,38,.5)}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:3px double var(--frame-line)}
@@ -62,7 +62,7 @@
   p b{color:var(--ink);font-weight:600}
 
   /* Executive summary band */
-  .exec{background:var(--navy);color:#e7ecf2;border-radius:14px;padding:24px 26px}
+  .exec{background:var(--navy);color:#e7ecf2;border-radius:var(--surface-radius);padding:24px 26px}
   .exec .el{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#9aa3ae;margin-bottom:14px}
   .exec .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
   @media(max-width:620px){.exec .stats{grid-template-columns:1fr 1fr;gap:16px}}
@@ -74,7 +74,7 @@
   /* Dashboard tiles */
   .dash{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   @media(max-width:640px){.dash{grid-template-columns:1fr 1fr}}
-  .tile{background:var(--soft);border:1px solid var(--line);border-radius:11px;padding:15px 16px}
+  .tile{background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);padding:15px 16px}
   .tile .tk{font-family:var(--sans);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
   .tile .tv{font-family:var(--sans);font-weight:700;font-size:19px;letter-spacing:-.01em;color:var(--ink);font-variant-numeric:tabular-nums}
   .tile .ts{font-size:11.5px;color:var(--dim);margin-top:3px}
@@ -105,7 +105,7 @@
   .tl ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
   .tl li{position:relative;padding-left:16px;font-size:13.5px;line-height:1.45;color:var(--body)}
   .tl li::before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--ghost-line)}
-  .tl .next li::before{border-radius:2px;background:var(--brass)}
+  .tl .next li::before{border-radius:var(--surface-radius);background:var(--brass)}
   .tl li b{color:var(--ink);font-weight:600}
 
   /* Health checklist */
@@ -116,7 +116,7 @@
 
   /* Risks */
   .risks{display:flex;flex-direction:column;gap:8px}
-  .rk{display:flex;justify-content:space-between;align-items:center;gap:14px;background:var(--soft);border:1px solid var(--line);border-radius:9px;padding:12px 15px}
+  .rk{display:flex;justify-content:space-between;align-items:center;gap:14px;background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);padding:12px 15px}
   .rk .rq{font-size:14px;color:var(--ink);font-weight:500}
   .sev{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;white-space:nowrap}
   .sev.low{color:var(--st-done);background:var(--st-done-bg)}
@@ -124,7 +124,7 @@
   .sev.watch{color:var(--st-prog);background:var(--st-prog-bg)}
 
   /* The letter */
-  .letter{background:var(--paper);border:1px solid var(--frame-line);border-radius:14px;padding:30px clamp(22px,4vw,40px);
+  .letter{background:var(--paper);border:1px solid var(--frame-line);border-radius:var(--surface-radius);padding:30px clamp(22px,4vw,40px);
     box-shadow:0 1px 0 rgba(26,32,38,.05)}
   .letter .lh{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:16px}
   .letter p{font-family:var(--serif);font-size:16.5px;line-height:1.66;color:var(--ink);margin:0 0 14px;max-width:62ch}
@@ -132,10 +132,10 @@
   .letter .lt{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.02em;color:var(--brass);text-transform:uppercase;display:block;margin:2px 0 3px}
   .letter .sign{font-family:var(--serif);font-style:italic;color:var(--dim);margin-top:20px}
 
-  .cta{margin:34px 0 0;background:var(--wash);border:1px solid var(--frame-line);border-radius:14px;padding:24px 26px}
+  .cta{margin:34px 0 0;background:var(--wash);border:1px solid var(--frame-line);border-radius:var(--surface-radius);padding:24px 26px}
   .cta .ct{font-family:var(--sans);font-weight:700;font-size:19px;color:var(--ink);margin:0 0 7px;letter-spacing:-.01em}
   .cta .cd{font-size:13.5px;line-height:1.6;color:var(--dim);margin:0 0 16px;max-width:60ch}
-  .cta a{display:inline-flex;align-items:center;min-height:42px;text-decoration:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:600;padding:11px 20px;background:var(--teal);color:#f1ede3;margin-right:10px}
+  .cta a{display:inline-flex;align-items:center;min-height:42px;text-decoration:none;border-radius:var(--surface-radius);font-family:var(--sans);font-size:14px;font-weight:600;padding:11px 20px;background:var(--teal);color:#f1ede3;margin-right:10px}
   .cta a.ghost{background:transparent;border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
 
   .foot{margin:34px -0 0;padding:20px 0 8px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.65}

@@ -36,7 +36,7 @@
   body{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.62 var(--sans);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{max-width:1060px;margin:36px auto;padding:0 20px 60px}
-  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;
+  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:var(--surface-radius);overflow:hidden;
     box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:3px double var(--frame-line);font-family:var(--sans)}
@@ -66,7 +66,7 @@
   /* The ongoing rhythm inside the last phase. */
   .cadence{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:62ch}
   @media(max-width:560px){.cadence{grid-template-columns:1fr}}
-  .cadence .c{border:1px solid var(--line);border-radius:10px;padding:15px 17px;background:#fff}
+  .cadence .c{border:1px solid var(--line);border-radius:var(--surface-radius);padding:15px 17px;background:#fff}
   .cadence .cw{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:7px}
   .cadence .cd{font-size:13.5px;color:var(--body);line-height:1.5}
 
@@ -93,11 +93,11 @@
   .evtable th:nth-child(3),.evtable td:nth-child(3){width:52%}
   @media(max-width:680px){.evtable,.evtable thead,.evtable tbody,.evtable tr,.evtable th,.evtable td{display:block;width:auto!important}.evtable thead{display:none}.evtable tr{border-bottom:1px solid var(--line);padding:12px 0}.evtable td{border:none;padding:2px 0}.evtable .ev-who{margin-bottom:2px}}
 
-  .cta{margin:8px 44px 8px;padding:26px 30px;background:var(--navy);color:var(--on-dark);display:flex;align-items:center;gap:20px;flex-wrap:wrap;border-radius:12px}
+  .cta{margin:8px 44px 8px;padding:26px 30px;background:var(--navy);color:var(--on-dark);display:flex;align-items:center;gap:20px;flex-wrap:wrap;border-radius:var(--surface-radius)}
   .cta .ct{flex:1;min-width:260px}
   .cta .ch{font-family:var(--sans);font-weight:700;font-size:22px;color:#f1ede3;margin-bottom:6px;letter-spacing:-.02em}
   .cta .cs{font-family:var(--sans);font-size:13.5px;color:var(--accent-strike-soft);line-height:1.55;max-width:46ch}
-  .cta a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:700;white-space:nowrap;padding:15px 26px;border-radius:9px;background:var(--teal2);color:#f1ede3}
+  .cta a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:700;white-space:nowrap;padding:15px 26px;border-radius:var(--surface-radius);background:var(--teal2);color:#f1ede3}
   .cta a:hover{filter:brightness(1.08)}
   @media(max-width:620px){.doc{padding-left:22px;padding-right:22px}.cta{margin-left:22px;margin-right:22px}}
 
@@ -111,7 +111,7 @@
   .ripplesec .rsi{font-size:15.5px;line-height:1.65;color:var(--body);margin:0 0 18px;max-width:60ch}
   .ripplesec .rsi b{color:var(--ink);font-weight:600}
   .ripple{margin:6px auto 0;max-width:560px;display:flex;flex-direction:column;align-items:stretch}
-  .ripple .rstep{background:#fff;border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:9px;padding:12px 16px;font-size:14px;line-height:1.45;color:var(--body);text-align:left}
+  .ripple .rstep{background:#fff;border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:var(--surface-radius);padding:12px 16px;font-size:14px;line-height:1.45;color:var(--body);text-align:left}
   .ripple .rstep b{color:var(--ink);font-weight:700}
   .ripple .rstep.start{background:#eaf0f4;border-color:var(--brass);font-family:var(--sans);font-weight:600;color:var(--ink);font-size:15px}
   .ripple .rstep.end{background:var(--teal);border-color:var(--teal);border-left-color:var(--teal);color:#f1ede3;font-family:var(--sans);font-weight:700;font-size:16px;text-align:center;letter-spacing:-.01em}

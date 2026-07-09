@@ -35,7 +35,7 @@
   body{margin:0;background:var(--bg);color:var(--body);font:17px/1.7 var(--sans);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{max-width:960px;margin:38px auto;padding:0 20px 60px}
-  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;
+  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:var(--surface-radius);overflow:hidden;
     box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:3px double var(--frame-line)}
@@ -57,7 +57,7 @@
   .because{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;margin:0 0 18px}
   .conseq{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
   @media(max-width:680px){.conseq{grid-template-columns:1fr;gap:12px}}
-  .con{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:20px 20px 22px;text-align:center}
+  .con{background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);padding:20px 20px 22px;text-align:center}
   .con .cn{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
   .con .ct{font-family:var(--sans);font-weight:700;font-size:18px;line-height:1.2;letter-spacing:-.015em;color:var(--ink);margin:0 0 8px}
   .con p{font-size:13.5px;line-height:1.55;color:var(--body);margin:0}
@@ -66,7 +66,7 @@
 
   /* ── The Architecture — the iconic diagram. Purpose at top, specialists at base, the
         operating system in the middle, translating one into the other. ── */
-  .arch{border:1px solid var(--frame-line);border-radius:12px;overflow:hidden;background:#fff;margin:8px 0 0}
+  .arch{border:1px solid var(--frame-line);border-radius:var(--surface-radius);overflow:hidden;background:#fff;margin:8px 0 0}
   .band{display:grid;grid-template-columns:210px 1fr;gap:20px;align-items:center;padding:16px 22px;border-top:1px solid var(--line2)}
   .band:first-child{border-top:none}
   @media(max-width:640px){.band{grid-template-columns:1fr;gap:5px;padding:14px 18px}}
@@ -88,7 +88,7 @@
   h2sec{display:block}
   .stmt{text-align:center;margin:0}
   .stmt .k{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:12px}
-  .creed{background:var(--navy);color:#e7ecf2;border-radius:14px;padding:30px 34px;text-align:center;margin:8px 0 0}
+  .creed{background:var(--navy);color:#e7ecf2;border-radius:var(--surface-radius);padding:30px 34px;text-align:center;margin:8px 0 0}
   .creed .k{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike-soft);margin-bottom:14px}
   .creed p{font-family:var(--serif);font-weight:500;font-size:clamp(22px,2vw+14px,30px);line-height:1.22;color:#f1ede3;margin:0;letter-spacing:-.012em}
 

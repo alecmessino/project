@@ -23,7 +23,18 @@
   /* Editorial blue takes every identity/wayfinding role; --brass/--gold are retired aliases of it. */
   --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6; --brass:#2c5878; --gold:#a9c2d6;
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:22px; --s6:30px;
-  --r1:7px; --r2:9px; --r3:10px; --r4:12px; --rfull:999px;
+  /* ── Institutional surface system — single source of truth, frozen 2026-07 ──────────────────
+     Surfaces behave like paper, not floating software. One token squares every card, plate,
+     table, callout, and panel site-wide; change it here and the whole site follows.
+     Pills (--rfull) and circles (50%) are a different component class and stay round. */
+  --surface-radius:0px;
+  --surface-border:1px solid var(--line);
+  --surface-shadow:none;
+  --transition-standard:180ms ease;
+  --content-max-width:720px;   /* the content column */
+  --reading-measure:62ch;      /* prose line length */
+  /* Legacy radius scale retained as aliases so older usages square automatically. */
+  --r1:var(--surface-radius); --r2:var(--surface-radius); --r3:var(--surface-radius); --r4:var(--surface-radius); --rfull:999px;
   --sh1:0 1px 3px rgba(20,20,26,.06); --sh2:0 8px 30px rgba(20,20,26,.12);
   --sh-hover:0 10px 26px -12px rgba(20,18,12,.42);
   --t-fast:.12s ease; --t-mid:.2s ease;
@@ -165,7 +176,7 @@ details[open] > summary::after{ transform:rotate(90deg); }
 .card,.cards,.cell,.vcard,.statstrip,.exhibits,a.ex,.arch,.note,.loc,.disc,.map-wrap,
 .opt-card,.opt-result,.blueprint,.acct,.struct-alpha,.cta,.dcard,.lv,.reb,.trade,.est-cliff,
 .research-banner,.fold,.smtabs button,.leadstate button,table.book,
-.rev-lead,.rl-track,.savings,.flexcard,select{ border-radius:0 !important; }
+.rev-lead,.rl-track,.savings,.flexcard,select{ border-radius:var(--surface-radius)!important; }
 
 /* ── One-click PDF proposal / CPA brief (window.print → Save as PDF) ─────────────────────────
    A clean, multi-page print template: strip the app chrome and interactive controls, keep the
@@ -188,7 +199,7 @@ details[open] > summary::after{ transform:rotate(90deg); }
   html{ overflow-x:visible; }
   body,.wrap,.sheet{ max-width:none!important; }
   .wrap,.sheet{ margin:0!important; padding-left:0!important; padding-right:0!important; }
-  .frame{ border:0!important; border-radius:0!important; box-shadow:none!important; }
+  .frame{ border:0!important; border-radius:var(--surface-radius)!important; box-shadow:none!important; }
   /* Scroll containers can't scroll on paper — let their full content lay out, and drop the
      scroll-shadow gradients (they'd print as smudges at the table edges). */
   .tscroll,.table-wrapper{ overflow:visible!important; background:none!important; }
@@ -197,7 +208,7 @@ details[open] > summary::after{ transform:rotate(90deg); }
     .dcard,.lv,.attrib,.summary,.fits{ break-inside:avoid; }
   /* surface the proposal blocks */
   #printproposal,#printdisc{ display:block!important; break-inside:avoid;
-    border:1px solid var(--line); border-radius:8px; padding:12px 15px; margin:14px 0; }
+    border:1px solid var(--line); border-radius:var(--surface-radius); padding:12px 15px; margin:14px 0; }
   #printdisc{ border-color:var(--slate); }
   #printproposal p,#printdisc p{ font-size:10px; line-height:1.5; margin:0 0 6px; }
   .es-h{ font-family:var(--serif); font-size:12px; font-weight:600; margin-bottom:5px; }

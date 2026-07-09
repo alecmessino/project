@@ -84,6 +84,15 @@
   tbody td:first-child{font-weight:600;color:var(--ink)}
   tr.tot td{border-top:2px solid var(--frame-line);border-bottom:none;font-weight:700;color:var(--ink);padding-top:12px}
   .sub{color:var(--muted);font-weight:400;font-size:12px}
+  /* Provenance — every governed line item traces to a Decision Record, or is flagged as not-yet-recorded. */
+  .drref{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.02em;color:var(--teal2);
+    text-decoration:none;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .drref:hover{text-decoration:underline}
+  td .drref{font-weight:700}
+  .norec{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--ghost-line);white-space:nowrap}
+  .held-dr{color:var(--ghost-line);font-weight:400}
+  .prov-note{font-size:12px;line-height:1.55;color:var(--muted);margin:12px 0 0}
+  .prov-note .drref{font-size:11px}
 
   /* Complexity index */
   .cx{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;align-items:center}
@@ -240,25 +249,29 @@
     </div>
 
     <div class="sec">
-      <div class="sech"><span class="n">02</span><h2>Balance sheet &amp; ownership</h2><span class="note">What's owned, and how it's held.</span></div>
+      <div class="sech"><span class="n">02</span><h2>Balance sheet &amp; ownership</h2><span class="note">What's owned, how it's held — and what governs it.</span></div>
       <div class="tbl-scroll">
       <table>
         <thead><tr><th>Asset</th><th>Held as</th><th class="num">Value</th></tr></thead>
         <tbody>
           <tr><td>Taxable brokerage</td><td>Joint <span class="sub">· low basis</span></td><td class="num">$1,000,000</td></tr>
-          <tr><td>Equity comp (RSUs)</td><td>Tom, one employer</td><td class="num">$700,000</td></tr>
+          <tr><td>Equity comp (RSUs)</td><td>Tom, one employer <span class="held-dr">· <a class="drref" href="decision-log.html#dr-003">DR&#8209;003</a></span></td><td class="num">$700,000</td></tr>
           <tr><td>Traditional 401(k)</td><td>Tom</td><td class="num">$1,000,000</td></tr>
           <tr><td>Rollover IRA</td><td>Dana</td><td class="num">$400,000</td></tr>
           <tr><td>Roth 401(k) + Roth IRA</td><td>Tom &amp; Dana</td><td class="num">$400,000</td></tr>
           <tr><td>HSA</td><td>Tom</td><td class="num">$100,000</td></tr>
           <tr><td>Primary residence</td><td>Joint</td><td class="num">$900,000</td></tr>
           <tr><td>Investment property + land</td><td>Harris Holdings LLC</td><td class="num">$500,000</td></tr>
-          <tr><td>Closely-held business</td><td>Harris Co. (S-corp)</td><td class="num">$1,000,000</td></tr>
-          <tr><td>Life insurance</td><td class="sub" style="color:var(--ink);font-weight:600">Moving to ILIT</td><td class="num">$2,000,000</td></tr>
+          <tr><td>Closely-held business</td><td>Harris Co. (S-corp) <span class="held-dr">· <a class="drref" href="decision-log.html#dr-002">DR&#8209;002</a></span></td><td class="num">$1,000,000</td></tr>
+          <tr><td>Life insurance</td><td class="sub" style="color:var(--ink);font-weight:600">Moving to ILIT <span class="held-dr" style="font-weight:400">· <a class="drref" href="decision-log.html#dr-001">DR&#8209;001</a></span></td><td class="num">$2,000,000</td></tr>
           <tr class="tot"><td>Estate at death</td><td class="sub">before coordination</td><td class="num">$8,000,000</td></tr>
         </tbody>
       </table>
       </div>
+      <p class="prov-note">A reference like <a class="drref" href="decision-log.html#dr-001">DR&#8209;001</a> links a
+        holding to the recorded decision that governs it, in the <a href="decision-log.html" style="color:var(--teal2);font-weight:600;text-decoration:none">Decision&nbsp;Log</a>.
+        <span class="norec">Next session</span> marks an item whose rationale hasn't been recorded yet — captured at
+        the next Operating Session.</p>
     </div>
 
     <div class="sec">
@@ -342,18 +355,18 @@
       </div>
       <div class="tbl-scroll">
       <table>
-        <thead><tr><th>Opportunity</th><th>Owner</th><th>Status</th><th class="num">Illustrative impact</th></tr></thead>
+        <thead><tr><th>Opportunity</th><th>Basis</th><th>Owner</th><th>Status</th><th class="num">Illustrative impact</th></tr></thead>
         <tbody>
-          <tr><td>Move life policy into an ILIT</td><td>Attorney + Driftwood</td><td><span class="pill done">Implemented</span></td><td class="num">≈ $2.0M out of estate</td></tr>
-          <tr><td>Asset location (bonds → IRA)</td><td>Driftwood</td><td><span class="pill done">Implemented</span></td><td class="num">Annual tax drag</td></tr>
-          <tr><td>Tax-loss harvest (this year)</td><td>Driftwood</td><td><span class="pill done">Implemented</span></td><td class="num">Current-year tax</td></tr>
-          <tr><td>Roth conversions, low-bracket years</td><td>Driftwood + CPA</td><td><span class="pill prog">In progress</span></td><td class="num">Lifetime tax</td></tr>
-          <tr><td>Business succession &amp; buy-sell</td><td>Business counsel</td><td><span class="pill prog">In progress</span></td><td class="num">Forced-sale risk</td></tr>
-          <tr><td>RSU concentration sell-down</td><td>Driftwood</td><td><span class="pill prog">In progress</span></td><td class="num">Single-stock risk</td></tr>
-          <tr><td>§162 bonus to fund the premium</td><td>CPA + Driftwood</td><td><span class="pill id">Identified</span></td><td class="num">Annual tax</td></tr>
-          <tr><td>Sequence sale/conversions after the move</td><td>Driftwood</td><td><span class="pill id">Identified</span></td><td class="num">Six-figure timing</td></tr>
-          <tr><td>Gift discounted business interests</td><td>Attorney</td><td><span class="pill defer">Deferred</span></td><td class="num">Est. tax reduction</td></tr>
-          <tr><td>Document domicile for the move</td><td>Household + Driftwood</td><td><span class="pill open">Needs action</span></td><td class="num">Audit protection</td></tr>
+          <tr><td>Move life policy into an ILIT</td><td><a class="drref" href="decision-log.html#dr-001">DR&#8209;001</a></td><td>Attorney + Driftwood</td><td><span class="pill done">Implemented</span></td><td class="num">≈ $2.0M out of estate</td></tr>
+          <tr><td>Asset location (bonds → IRA)</td><td><span class="norec">Next session</span></td><td>Driftwood</td><td><span class="pill done">Implemented</span></td><td class="num">Annual tax drag</td></tr>
+          <tr><td>Tax-loss harvest (this year)</td><td><span class="norec">Next session</span></td><td>Driftwood</td><td><span class="pill done">Implemented</span></td><td class="num">Current-year tax</td></tr>
+          <tr><td>Roth conversions, low-bracket years</td><td><a class="drref" href="decision-log.html#dr-004">DR&#8209;004</a></td><td>Driftwood + CPA</td><td><span class="pill prog">In progress</span></td><td class="num">Lifetime tax</td></tr>
+          <tr><td>Business succession &amp; buy-sell</td><td><span class="norec">Next session</span></td><td>Business counsel</td><td><span class="pill prog">In progress</span></td><td class="num">Forced-sale risk</td></tr>
+          <tr><td>RSU concentration sell-down</td><td><a class="drref" href="decision-log.html#dr-003">DR&#8209;003</a></td><td>Driftwood</td><td><span class="pill prog">In progress</span></td><td class="num">Single-stock risk</td></tr>
+          <tr><td>§162 bonus to fund the premium</td><td><span class="norec">Next session</span></td><td>CPA + Driftwood</td><td><span class="pill id">Identified</span></td><td class="num">Annual tax</td></tr>
+          <tr><td>Sequence sale/conversions after the move</td><td><a class="drref" href="decision-log.html#dr-002">DR&#8209;002</a></td><td>Driftwood</td><td><span class="pill id">Identified</span></td><td class="num">Six-figure timing</td></tr>
+          <tr><td>Gift discounted business interests</td><td><a class="drref" href="decision-log.html#dr-005">DR&#8209;005</a></td><td>Attorney</td><td><span class="pill defer">Deferred</span></td><td class="num">Est. tax reduction</td></tr>
+          <tr><td>Document domicile for the move</td><td><a class="drref" href="decision-log.html#dr-002">DR&#8209;002</a></td><td>Household + Driftwood</td><td><span class="pill open">Needs action</span></td><td class="num">Audit protection</td></tr>
         </tbody>
       </table>
       </div>
@@ -363,13 +376,13 @@
       <div class="sech"><span class="n">07</span><h2>Risk register</h2><span class="note">Known, addressed, and still open.</span></div>
       <div class="tbl-scroll">
       <table>
-        <thead><tr><th>Risk</th><th>Status</th></tr></thead>
+        <thead><tr><th>Risk</th><th>Basis</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td>Illiquid estate can't cover a nine-month tax bill</td><td><span class="pill done">Addressed · ILIT liquidity</span></td></tr>
-          <tr><td>Beneficiary forms vs. the will</td><td><span class="pill done">Addressed · aligned</span></td></tr>
-          <tr><td>Concentration in employer stock</td><td><span class="pill prog">In progress · sell-down</span></td></tr>
-          <tr><td>No documented domicile for the planned move</td><td><span class="pill open">Open</span></td></tr>
-          <tr><td>Key-person dependency in the business</td><td><span class="pill open">Open</span></td></tr>
+          <tr><td>Illiquid estate can't cover a nine-month tax bill</td><td><a class="drref" href="decision-log.html#dr-001">DR&#8209;001</a></td><td><span class="pill done">Addressed · ILIT liquidity</span></td></tr>
+          <tr><td>Beneficiary forms vs. the will</td><td><span class="norec">Next session</span></td><td><span class="pill done">Addressed · aligned</span></td></tr>
+          <tr><td>Concentration in employer stock</td><td><a class="drref" href="decision-log.html#dr-003">DR&#8209;003</a></td><td><span class="pill prog">In progress · sell-down</span></td></tr>
+          <tr><td>No documented domicile for the planned move</td><td><a class="drref" href="decision-log.html#dr-002">DR&#8209;002</a></td><td><span class="pill open">Open</span></td></tr>
+          <tr><td>Key-person dependency in the business</td><td><span class="norec">Next session</span></td><td><span class="pill open">Open</span></td></tr>
         </tbody>
       </table>
       </div>

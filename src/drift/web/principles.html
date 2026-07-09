@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<!-- Privacy-first analytics (Plausible) -->
 <script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
 <script>
   window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
@@ -11,92 +10,112 @@
 </script>
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
-<title>First Principles — Driftwood</title>
-<meta name="description" content="What Driftwood believes, on one page: financial decisions should not surprise one another. Complex personal wealth is an operating problem before it is an investment problem. No pitch — just the doctrine." />
+<title>The Driftwood Principles — Driftwood</title>
+<meta name="description" content="Wealth is a system. Everything Driftwood believes follows from that one idea: every decision changes the others, time is part of the system, and coordination compounds. The architecture of Private Wealth Architecture, on one page." />
 <link rel="canonical" href="https://alecmessino.github.io/project/principles.html" />
 <link rel="icon" href="favicon.svg" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Driftwood" />
-<meta property="og:title" content="First Principles — Driftwood" />
-<meta property="og:description" content="The doctrine: financial decisions should not surprise one another. Coordination is the product; what you keep is the result." />
+<meta property="og:title" content="The Driftwood Principles" />
+<meta property="og:description" content="Wealth is a system. Everything else follows: every decision changes the others, time is part of the system, coordination compounds." />
 <meta property="og:url" content="https://alecmessino.github.io/project/principles.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="First Principles — Driftwood" />
-<meta name="twitter:description" content="The doctrine, on one page: financial decisions should not surprise one another." />
+<meta name="twitter:title" content="The Driftwood Principles" />
+<meta name="twitter:description" content="Wealth is a system. Everything else follows." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
 <style>
   :root{
-    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6; --chrome:#e9e5da;
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --wash:#eaf0f4;
     --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
-    --brass:#2c5878; --gold:#a9c2d6; --teal:#15463a; --teal2:#15806a; --navy:#1a2330;
+    --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330; --on-dark:#e7ecf2;
+    --brass:#2c5878; --accent-strike-soft:#a9c2d6; --gold:#a9c2d6;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--body);font:17px/1.75 var(--sans);
+  body{margin:0;background:var(--bg);color:var(--body);font:17px/1.7 var(--sans);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  .wrap{max-width:1080px;margin:40px auto;padding:0 20px 60px}
-  .frame{background:var(--bg);border:1px solid #c3bcab;border-radius:12px;overflow:hidden;
-    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
-  .chrome{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--chrome);border-bottom:1px solid #c3bcab}
-  .chrome i{width:9px;height:9px;border-radius:999px;background:#c3bcab;display:inline-block}
-  .chrome .url{margin-left:auto;font-size:11.5px;letter-spacing:.04em;color:var(--muted);font-family:ui-monospace,monospace}
+  .wrap{max-width:960px;margin:38px auto;padding:0 20px 60px}
+  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;
+    box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
+  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
+    border-bottom:3px double var(--frame-line)}
+  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .inner{margin:0 7px 7px}
 
-  /* A reading page, not a service page: one narrow column, generous air, no widgets. */
   .doc{max-width:700px;padding:0 44px;margin:0 auto}
-  .eyebrow{font-weight:600;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin:52px 0 16px;text-align:center}
-  h1{font-family:var(--sans);font-weight:700;font-size:clamp(32px,3vw+16px,44px);line-height:1.08;
-    letter-spacing:-.02em;color:var(--ink);margin:0 0 14px;text-align:center}
-  .lead{font-family:var(--serif);font-size:18px;line-height:1.6;color:#5c6470;margin:0 0 8px;text-align:center}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);margin:52px 0 15px;text-align:center}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(34px,3.4vw+16px,50px);line-height:1.04;
+    letter-spacing:-.025em;color:var(--ink);margin:0 0 14px;text-align:center}
+  .lead{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0 auto;text-align:center;max-width:44ch}
   .rule{height:1px;background:var(--line);margin:44px auto;max-width:120px}
-  h2{font-family:var(--sans);font-weight:700;font-size:23px;line-height:1.2;letter-spacing:-.015em;
-    color:var(--ink);margin:0 0 12px}
-  h2 .num{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--brass);
-    display:block;margin-bottom:8px}
-  p{font-size:17px;line-height:1.8;color:var(--body);margin:0 0 16px}
-  p b{color:var(--ink);font-weight:600}
-  .close{font-family:var(--serif);font-size:18px;line-height:1.65;color:var(--ink);margin:0}
-  .close a{color:var(--teal2)}
-  /* Doctrine page — conviction only. */
-  .creed{background:var(--navy);color:#e7ecf2;border-radius:14px;padding:32px 34px;text-align:center;margin:8px 0 0}
-  .creed .k{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike-soft);margin-bottom:14px}
-  .creed p{font-family:var(--serif);font-weight:500;font-size:clamp(23px,2.2vw+14px,32px);line-height:1.22;color:#f1ede3;margin:0;letter-spacing:-.012em}
+
+  .axiom{text-align:center;margin:8px 0 0}
+  .axiom .k{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:12px}
+  .axiom p{font-family:var(--serif);font-weight:500;font-size:clamp(22px,1.8vw+14px,28px);line-height:1.3;color:var(--ink);margin:0;letter-spacing:-.01em}
+
+  .because{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;margin:0 0 18px}
+  .conseq{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:680px){.conseq{grid-template-columns:1fr;gap:12px}}
+  .con{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:20px 20px 22px;text-align:center}
+  .con .cn{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
+  .con .ct{font-family:var(--sans);font-weight:700;font-size:18px;line-height:1.2;letter-spacing:-.015em;color:var(--ink);margin:0 0 8px}
+  .con p{font-size:13.5px;line-height:1.55;color:var(--body);margin:0}
+  .con.hero{background:var(--wash);border-color:var(--frame-line)}
+  .con.hero .ct{color:var(--teal)}
+
+  /* ── The Architecture — the iconic diagram. Purpose at top, specialists at base, the
+        operating system in the middle, translating one into the other. ── */
+  .arch{border:1px solid var(--frame-line);border-radius:12px;overflow:hidden;background:#fff;margin:8px 0 0}
+  .band{display:grid;grid-template-columns:210px 1fr;gap:20px;align-items:center;padding:16px 22px;border-top:1px solid var(--line2)}
+  .band:first-child{border-top:none}
+  @media(max-width:640px){.band{grid-template-columns:1fr;gap:5px;padding:14px 18px}}
+  .band .bl{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass)}
+  .band .bi{font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--body)}
+  .band.top{background:var(--soft)}
+  .band.top .bl{color:var(--ink)}
+  .band.top .bi{font-family:var(--serif);font-size:17px;color:var(--ink);font-style:italic}
+  .band.fos{background:var(--navy);padding-top:18px;padding-bottom:18px}
+  .band.fos .bl{color:#a9c2d6}
+  .band.fos .bi{color:#eef2f6;font-weight:500}
+  .band.fos .bnote{grid-column:1/-1;font-family:var(--serif);font-style:italic;font-size:13.5px;color:#aeb7c1;margin-top:6px}
+  @media(max-width:640px){.band.fos .bnote{margin-top:8px}}
+  .band.base{background:var(--soft)}
+  .arch-cap{font-size:13.5px;line-height:1.6;color:var(--muted);margin:14px 4px 0;text-align:center;max-width:62ch;margin-left:auto;margin-right:auto}
+  .arch-cap b{color:var(--dim);font-weight:600}
+  .flowtag{display:flex;justify-content:space-between;font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ghost-line);margin:10px 2px 0}
+
+  h2sec{display:block}
   .stmt{text-align:center;margin:0}
   .stmt .k{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:12px}
-  .stmt p{font-family:var(--serif);font-weight:500;font-size:clamp(21px,1.8vw+14px,27px);line-height:1.32;color:var(--ink);margin:0;letter-spacing:-.01em}
-  .two{display:grid;grid-template-columns:1fr 1fr;gap:26px 36px;text-align:left}
-  @media(max-width:560px){.two{grid-template-columns:1fr;gap:24px}}
-  .col-h{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:16px;padding-bottom:9px;border-bottom:1px solid var(--line)}
-  .prin{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:15px}
-  .prin li{font-family:var(--serif);font-size:17px;line-height:1.36;color:var(--ink);padding-left:18px;position:relative}
-  .prin li::before{content:"";position:absolute;left:0;top:.5em;width:6px;height:6px;border-radius:50%;background:var(--teal2)}
-  .prin.do li::before{border-radius:1px}
-  .product{text-align:center;margin:0}
-  .product .k{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal2);margin-bottom:12px}
-  .product p{font-family:var(--serif);font-weight:600;font-size:clamp(20px,1.8vw+13px,26px);line-height:1.3;color:var(--ink);margin:0;letter-spacing:-.01em}
+  .creed{background:var(--navy);color:#e7ecf2;border-radius:14px;padding:30px 34px;text-align:center;margin:8px 0 0}
+  .creed .k{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike-soft);margin-bottom:14px}
+  .creed p{font-family:var(--serif);font-weight:500;font-size:clamp(22px,2vw+14px,30px);line-height:1.22;color:#f1ede3;margin:0;letter-spacing:-.012em}
+
+  .slogan{text-align:center;font-family:var(--sans);font-weight:700;font-size:clamp(20px,2vw+12px,26px);letter-spacing:-.02em;color:var(--ink);margin:0}
+  .slogan .s{display:block;font-family:var(--serif);font-style:italic;font-weight:400;font-size:16px;color:var(--dim);margin-top:10px;letter-spacing:0}
+  .onward{margin:8px 0 0;text-align:center;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+  .onward a{color:var(--teal2);text-decoration:none;font-weight:600}
+  .onward a:hover{text-decoration:underline}
+  .onward .d{color:var(--ghost-line);margin:0 7px}
+
   .foot{margin-top:52px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
     color:var(--muted);font-size:12.5px;line-height:1.65}
   .foot .note{color:#5a5a62;font-weight:600}
+  .foot b{color:var(--dim)}
   @media(max-width:620px){ .doc{padding:0 22px} .foot{padding-left:22px;padding-right:22px} }
-
-  /* ── Rebrand: plate frame + running head (matches the front door), in place of the browser chrome. */
-  .frame{border:1px solid var(--frame-line);border-radius:3px;
-    box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line),
-      0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
-  .chrome{background:transparent;justify-content:space-between;gap:12px;
-    padding:12px 24px;margin:7px 7px 0;border-bottom:3px double var(--frame-line)}
-  .chrome i{display:none}
-  .chrome::before{content:"Driftwood · Private Wealth Architecture";font-family:var(--sans);
-    font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-  .chrome .url{margin-left:auto;font-family:var(--sans);font-weight:700;font-size:10px;
-    letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="frame">
-    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">First Principles</span></div>
+    <div class="run">
+      <span class="inst">Driftwood · Private Wealth Architecture</span>
+      <span class="marker">The Driftwood Principles</span>
+    </div>
+    <div class="inner">
     <nav class="dwnav" aria-label="Driftwood">
-      <a class="brand" href="index.html">Drift<span class="w">wood</span></a>
+      <a class="brand" href="index.html">Driftwood</a>
       <div class="dwnav-links">
         <span class="dwnav-group">
           <span class="dwnav-label">Understand</span>
@@ -117,13 +136,76 @@
     </nav>
 
     <div class="doc">
-      <div class="eyebrow">First Principles</div>
-      <h1>What Driftwood believes.</h1>
-      <p class="lead">No services, no fees — just the ideas the firm is built on. If you're deciding
-        whether to introduce us to someone, read this first.</p>
+      <div class="eyebrow">The Driftwood Principles</div>
+      <h1>Wealth is a system.</h1>
+      <p class="lead">Everything else here follows from that one idea.</p>
 
       <div class="rule"></div>
 
+      <p class="because">Because wealth is a system…</p>
+      <div class="conseq">
+        <div class="con">
+          <div class="cn">Principle II</div>
+          <div class="ct">Every decision changes the others.</div>
+          <p>A tax move changes an estate move; a withdrawal changes a bracket. Nothing important happens in
+            isolation.</p>
+        </div>
+        <div class="con">
+          <div class="cn">Principle III</div>
+          <div class="ct">Time is part of the system.</div>
+          <p>The hidden variable is rarely <em>whether</em>. It's <em>when</em>. Sell, convert, gift, or move, and the
+            order decides the outcome.</p>
+        </div>
+        <div class="con hero">
+          <div class="cn">Principle IV</div>
+          <div class="ct">Coordination compounds.</div>
+          <p>Markets compound returns. Coordination compounds what you keep, and it starts the day the pieces begin
+            to talk.</p>
+        </div>
+      </div>
+
+      <div class="rule"></div>
+
+      <div class="stmt" style="margin-bottom:20px">
+        <span class="k">The architecture</span>
+        <p style="font-family:var(--serif);font-size:18px;line-height:1.5;color:var(--ink);margin:0 auto;max-width:52ch">
+          A financial life has layers. Read from the top, purpose becomes execution.</p>
+      </div>
+      <div class="arch" role="img" aria-label="A six-layer architecture: Purpose at the top, then Family, then the Decision Framework, then the Financial Operating System in the middle, then the Financial Subsystems, then Specialists at the base. The operating system translates purpose into execution.">
+        <div class="band top">
+          <div class="bl">Purpose</div>
+          <div class="bi">What is this wealth for?</div>
+        </div>
+        <div class="band">
+          <div class="bl">Family</div>
+          <div class="bi">Values · Goals · Governance · Legacy</div>
+        </div>
+        <div class="band">
+          <div class="bl">Decision framework</div>
+          <div class="bi">Every decision changes the others · Time is part of the system · Coordination compounds</div>
+        </div>
+        <div class="band fos">
+          <div class="bl">Financial Operating System</div>
+          <div class="bi">Coordination Index · Opportunity Register · Operating Sessions · Wealth Operating Manual · Annual Review</div>
+          <div class="bnote">The operating system. It translates purpose into execution, which is why it sits in the middle.</div>
+        </div>
+        <div class="band">
+          <div class="bl">Financial subsystems</div>
+          <div class="bi">Investments · Taxes · Estate · Insurance · Liquidity · Business · Banking · Philanthropy</div>
+        </div>
+        <div class="band base">
+          <div class="bl">Specialists</div>
+          <div class="bi">CPA · Estate attorney · Investment manager · Insurance · Banker · Business attorney</div>
+        </div>
+      </div>
+      <div class="flowtag"><span>▲ Meaning</span><span>Execution ▼</span></div>
+      <p class="arch-cap">Most firms live in the bottom two layers, and manage one subsystem well. <b>Driftwood
+        operates the middle</b>, the layer that turns what a family wants into what actually happens, and keeps every
+        layer consistent with the others.</p>
+
+      <div class="rule"></div>
+
+      <div class="stmt" style="margin-bottom:16px"><span class="k">The operating rule</span></div>
       <div class="creed">
         <div class="k">The Constitution</div>
         <p>Financial decisions should not surprise one another.</p>
@@ -131,47 +213,19 @@
 
       <div class="rule"></div>
 
-      <div class="stmt">
-        <span class="k">Our observation</span>
-        <p>Complex personal wealth is an operating problem before it is an investment problem.</p>
-      </div>
+      <p class="slogan">Investments compound. Coordination determines what remains.<span class="s">Coordination compounds, and it compounds first.</span></p>
 
-      <div class="rule"></div>
-
-      <div class="two">
-        <div class="col">
-          <div class="col-h">What we know</div>
-          <ul class="prin">
-            <li>Important financial decisions interact.</li>
-            <li>Complexity grows through relationships, not assets.</li>
-            <li>Different professionals operate on different timelines.</li>
-            <li>Great expertise without coordination produces inconsistent outcomes.</li>
-          </ul>
-        </div>
-        <div class="col">
-          <div class="col-h">Therefore, we</div>
-          <ul class="prin do">
-            <li>Map the system before building the portfolio.</li>
-            <li>Coordinate professionals instead of replacing them.</li>
-            <li>Build one operating framework for the household.</li>
-            <li>Measure success by how well decisions reinforce one another.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="rule"></div>
-
-      <div class="product">
-        <div class="k">The product</div>
-        <p>Confidence that every important financial decision has already considered the others.</p>
-      </div>
+      <div class="onward" style="margin-top:26px">Read on: <a href="inside.html">Inside Driftwood</a>
+        <span class="d">·</span> <a href="coordination.html">A worked example</a>
+        <span class="d">·</span> <a href="library.html">The Coordination Library</a></div>
     </div>
 
     <div class="foot">
       <span class="note">Educational — not investment, tax, or legal advice.</span>
-      This piece describes how Driftwood thinks; it is not a recommendation or a guarantee of any result.
-      Driftwood is a <b>registered investment adviser</b>; Form ADV and Form CRS are available at
+      This page describes how Driftwood thinks; it is not a recommendation or a guarantee of any result. Driftwood is a
+      <b>registered investment adviser</b>; Form ADV and Form CRS are available at
       <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
     </div>
   </div>
 </div>

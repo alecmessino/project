@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>Inside Driftwood — the Financial Operating System — Driftwood</title>
+<meta name="description" content="Becoming a Driftwood client doesn't begin with transferring investments. It begins with building your family's Financial Operating System: discovery, the Coordination Index, the Wealth Operating Manual, the architecture review, and a recurring cadence of Operating Sessions and the Annual Wealth Operating Review. Illustrative, not advice." />
+<link rel="canonical" href="https://alecmessino.github.io/project/inside.html" />
+<link rel="icon" href="favicon.svg" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="Inside Driftwood — the Financial Operating System" />
+<meta property="og:description" content="What actually happens when you become a client: you build a Financial Operating System, then run it, together." />
+<meta property="og:url" content="https://alecmessino.github.io/project/inside.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Inside Driftwood — the Financial Operating System" />
+<meta name="twitter:description" content="What actually happens when you become a client: you build a Financial Operating System, then run it, together." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
+<style>
+  :root{
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --wash:#eaf0f4;
+    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
+    --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330; --on-dark:#e7ecf2;
+    --brass:#2c5878; --gold:#a9c2d6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.62 var(--sans);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:960px;margin:36px auto;padding:0 20px 60px}
+  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;
+    box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
+  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
+    border-bottom:3px double var(--frame-line)}
+  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .inner{margin:0 7px 7px}
+
+  .doc{padding:50px 44px 6px;max-width:720px}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:15px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(30px,3vw+15px,44px);line-height:1.07;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:19ch}
+  .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:62ch}
+  .lede b{color:var(--ink);font-weight:600}
+  .rule{height:1px;background:var(--line);margin:0 44px}
+  .sh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .sec{padding:40px 44px 6px}
+  .sec .intro{font-size:16.5px;line-height:1.7;color:var(--body);margin:0 0 8px;max-width:64ch}
+  .sec .intro b{color:var(--ink);font-weight:600}
+
+  /* The engagement flow — a numbered spine that ends in a loop. */
+  .flow{margin:20px 0 6px}
+  .fstep{display:grid;grid-template-columns:44px 1fr;gap:18px;position:relative;padding-bottom:20px}
+  .fstep:not(:last-child)::after{content:"";position:absolute;left:21px;top:42px;bottom:-2px;width:2px;background:var(--line)}
+  .fnum{width:42px;height:42px;border-radius:50%;background:var(--wash);border:1px solid var(--frame-line);color:var(--brass);
+    font-family:var(--sans);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;
+    font-variant-numeric:tabular-nums;z-index:1}
+  .fstep.loop .fnum{background:var(--teal);border-color:var(--teal);color:#f1ede3;font-size:19px}
+  .fbody{padding-top:3px}
+  .ft{font-family:var(--sans);font-weight:700;font-size:17.5px;letter-spacing:-.01em;color:var(--ink);margin:0}
+  .fd{font-size:14.5px;line-height:1.55;color:var(--body);margin:5px 0 0;max-width:60ch}
+  .fl{display:inline-block;margin-top:8px;font-family:var(--sans);font-weight:700;font-size:12.5px;color:var(--teal2);text-decoration:none}
+  .fl:hover{text-decoration:underline}
+  .fstep.loop .ft{color:var(--teal)}
+
+  /* The four artifacts. */
+  .arts{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:18px 0 6px}
+  @media(max-width:640px){.arts{grid-template-columns:1fr}}
+  a.art{display:block;text-decoration:none;color:inherit;background:var(--soft);border:1px solid var(--line);border-radius:12px;
+    padding:18px 20px;transition:border-color .13s ease,transform .13s ease,box-shadow .13s ease}
+  a.art:hover{border-color:var(--frame-line);transform:translateY(-2px);box-shadow:0 12px 26px -18px rgba(20,18,12,.4)}
+  .art .an{font-family:var(--sans);font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink);margin:0 0 5px}
+  .art .ad{font-size:13px;line-height:1.5;color:var(--dim);margin:0}
+  .art .ag{margin-top:10px;font-family:var(--sans);font-weight:700;font-size:12px;color:var(--teal2)}
+
+  .lead-in{font-family:var(--serif);font-size:19px;line-height:1.5;color:var(--ink);margin:8px 0 0;padding-left:18px;border-left:3px solid var(--brass);max-width:60ch}
+  .lead-in b{font-weight:600}
+  .creed-band{margin:40px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
+    font-size:clamp(21px,2vw+13px,29px);letter-spacing:-.022em;color:var(--ink);line-height:1.16}
+  .cta{margin:26px 44px 0;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:26px 28px}
+  .cta .ct{font-family:var(--sans);font-weight:700;font-size:20px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.02em}
+  .cta .cd{font-size:14px;line-height:1.6;color:var(--dim);margin:0 0 18px;max-width:58ch}
+  .cta .btns{display:flex;flex-wrap:wrap;gap:12px}
+  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:8px;font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px}
+  .cta a.primary{background:var(--teal);color:#f1ede3}
+  .cta a.ghost{border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
+
+  .foot{margin-top:42px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
+    color:var(--muted);font-size:12px;line-height:1.65}
+  .foot .note{color:#5a5a62;font-weight:600}
+  .foot b{color:var(--dim)}
+  @media(max-width:620px){
+    .doc,.sec{padding-left:22px;padding-right:22px}
+    .rule,.creed-band,.cta,.foot{margin-left:22px;margin-right:22px}
+    .foot{padding-left:22px;padding-right:22px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <div class="run">
+      <span class="inst">Driftwood · Private Wealth Architecture</span>
+      <span class="marker">Inside Driftwood</span>
+    </div>
+    <div class="inner">
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Driftwood</a>
+      <div class="dwnav-links">
+        <span class="dwnav-group">
+          <span class="dwnav-label">Understand</span>
+          <a href="howitworks.html">How Driftwood&nbsp;Works</a>
+          <a href="thesis.html">How We Invest</a>
+          <a href="familyoffice.html">Family&nbsp;Offices</a>
+          <a href="library.html">Coordination&nbsp;Library</a>
+          <a href="insights.html">Insights</a>
+          <a href="about.html">Our Story</a>
+        </span>
+        <span class="dwnav-group">
+          <span class="dwnav-label">Discover</span>
+          <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+          <a href="statemap.html">State Tax&nbsp;Atlas</a>
+          <a href="taxlab.html">After-Tax&nbsp;Review</a>
+        </span>
+      </div>
+    </nav>
+
+    <div class="doc">
+      <div class="eyebrow">Inside Driftwood · The Financial Operating System</div>
+      <h1>You don't transfer investments. You build a system.</h1>
+      <p class="lede">Becoming a Driftwood client doesn't begin with moving accounts. <b>It begins with building your
+        family's Financial Operating System</b>, and then running it, together, year after year. Here is exactly what
+        that looks like.</p>
+    </div>
+
+    <div class="rule" style="margin-top:34px"></div>
+
+    <div class="sec">
+      <div class="sh">The engagement</div>
+      <p class="intro">One continuous loop, not a project with an end. Each step produces something real, and the
+        whole thing compounds.</p>
+      <div class="flow">
+        <div class="fstep">
+          <div class="fnum">1</div>
+          <div class="fbody">
+            <p class="ft">Discovery</p>
+            <p class="fd">We map the system: your full balance sheet, the professionals already on your team, and what
+              you actually want your wealth to do.</p>
+          </div>
+        </div>
+        <div class="fstep">
+          <div class="fnum">2</div>
+          <div class="fbody">
+            <p class="ft">Coordination Index</p>
+            <p class="fd">We measure how much coordination your household actually demands, and where the value is.</p>
+            <a class="fl" href="score.html">Find your Coordination Score →</a>
+          </div>
+        </div>
+        <div class="fstep">
+          <div class="fnum">3</div>
+          <div class="fbody">
+            <p class="ft">Wealth Operating Manual</p>
+            <p class="fd">We assemble the living document that holds everything: the team, the balance sheet, the
+              calendar, and the register of opportunities.</p>
+            <a class="fl" href="manual.html">See a sample Manual →</a>
+          </div>
+        </div>
+        <div class="fstep">
+          <div class="fnum">4</div>
+          <div class="fbody">
+            <p class="ft">Architecture Review</p>
+            <p class="fd">We design the plan: the decisions ahead, mapped across taxes, estate, liquidity,
+              investments, insurance, and family, so each one is made in view of the others.</p>
+          </div>
+        </div>
+        <div class="fstep">
+          <div class="fnum">5</div>
+          <div class="fbody">
+            <p class="ft">Implementation</p>
+            <p class="fd">We put it in motion, and coordinate the specialists who execute, your CPA and attorney
+              included. No one is replaced; everyone works from one plan.</p>
+          </div>
+        </div>
+        <div class="fstep">
+          <div class="fnum">6</div>
+          <div class="fbody">
+            <p class="ft">Quarterly Operating Session</p>
+            <p class="fd">Every quarter, we keep the pieces aligned as life changes, and pull the right professionals
+              into the room before decisions are made.</p>
+          </div>
+        </div>
+        <div class="fstep">
+          <div class="fnum">7</div>
+          <div class="fbody">
+            <p class="ft">Annual Wealth Operating Review</p>
+            <p class="fd">Once a year, the whole system in one document: what changed, what's ahead, and who owns each
+              decision. The centerpiece of the year.</p>
+            <a class="fl" href="awor.html">See a sample Review →</a>
+          </div>
+        </div>
+        <div class="fstep loop">
+          <div class="fnum" aria-hidden="true">↻</div>
+          <div class="fbody">
+            <p class="ft">Repeat</p>
+            <p class="fd">The system doesn't reset each year; it compounds. Every cycle, the plan gets sharper and the
+              decisions get easier.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sh">The four artifacts</div>
+      <p class="intro">A Financial Operating System isn't a feeling. It's a set of durable, tangible outputs you can
+        hold, and that outlive any single meeting or market.</p>
+      <div class="arts">
+        <a class="art" href="score.html">
+          <div class="an">The Coordination Index</div>
+          <p class="ad">One number for how much coordination your household demands, and where the value sits.</p>
+          <div class="ag">Find yours →</div>
+        </a>
+        <a class="art" href="manual.html">
+          <div class="an">The Wealth Operating Manual</div>
+          <p class="ad">The living document that holds the whole system, updated continuously, not once a year.</p>
+          <div class="ag">See a sample →</div>
+        </a>
+        <a class="art" href="manual.html">
+          <div class="an">The Opportunity Register</div>
+          <p class="ad">A running, prioritized list of what coordination has surfaced, and where each item stands.</p>
+          <div class="ag">See it in the Manual →</div>
+        </a>
+        <a class="art" href="awor.html">
+          <div class="an">The Annual Wealth Operating Review</div>
+          <p class="ad">The board report for your financial life: what changed, what's ahead, and who owns each call.</p>
+          <div class="ag">See a sample →</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sh">Why it's built this way</div>
+      <p class="lead-in">Institutions don't just coordinate. They have operating calendars, review cycles,
+        documentation, and accountability. <b>Driftwood brings those disciplines to a single family</b>, so decisions
+        stop being events and start being a system.</p>
+    </div>
+
+    <div class="creed-band">Coordination compounds.</div>
+
+    <div class="cta">
+      <div class="ct">Start building the system.</div>
+      <div class="cd">Discovery begins with a clear read of where you stand. The Coordination Score and the Tax
+        Diagnostic are two-minute first steps.</div>
+      <div class="btns">
+        <a class="primary" href="leakage.html">Run the Tax Diagnostic →</a>
+        <a class="ghost" href="howitworks.html">See the timeline, week by week</a>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span class="note">Illustrative and educational — not investment, tax, or legal advice.</span>
+      The engagement and artifacts shown are illustrative of Driftwood's process; specifics depend on your own facts
+      and on current law, and the strategies referenced require individualized tax and legal advice. Driftwood
+      coordinates with your CPA and attorney and does not provide tax or legal advice. Driftwood is a <b>registered
+      investment adviser</b>; Form ADV and Form CRS are available at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

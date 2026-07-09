@@ -1,67 +1,110 @@
-# Daily Research Operations Review — standing format
+# Daily Operations Review — standing format
 
-This is the canonical structure for the daily report. It is an **operations** review: the default
-assumption is that nothing scientific changed. Report health, gate state, and growth; treat
-research findings as absent unless a predefined gate has cleared and the evidence survives the
-project's own safeguards. If nothing meaningful changed, say so plainly.
+An **operations** review for a research platform, not a status report trying to show success. The
+default assumption is that nothing scientific changed; the job is to confirm the platform is healthy,
+say what capability matured, and track what we know / assume / have yet to establish. If nothing
+meaningful changed, say so confidently.
 
-## Standing rules
+The report opens with an at-a-glance **Operational Status**, then four permanent sections, then a
+change log.
 
-- Be skeptical; assume every apparent signal is an artifact until proven otherwise.
-- Never confuse more data with more evidence; separate engineering progress from scientific progress.
-- **Liveness first.** Compare the latest checkpoint timestamp to wall-clock. A checkpoint older
-  than ~45 min while games are live is an incident, not a footnote. The health report's own
-  "running normally" line is written by the collector and freezes when the collector dies, so it is
-  not a liveness signal on its own.
-- Do not recommend new analysis unless a verification or research gate has cleared. Prefer:
-  continue collecting, fix infrastructure, or wait.
+---
 
-## Sections (in order)
-
-1. **Infrastructure Health** — collector / protocol / dataset versions; latest checkpoint and its
-   age; is collection running now; failed Actions runs (distinguish normal re-arm `cancelled`
-   handoffs from real `failure`s); integrity (rows, malformed, missing, duplicate, future-ts);
-   schema drift. State plainly whether the collector is healthy.
-2. **Verification Gates** — for each gate: current status, change since yesterday, evidence,
-   and whether it remains BLOCKED / PENDING / VERIFIED. No speculation; observable changes only.
-3. **Dataset Growth** — objective, measurable deltas only (games, live innings, books, simultaneous
-   live pairs, marketStatus values, alternate coverage). Growth is not evidence.
-4. **Trend Dashboard** *(permanent)* — day-over-day movement in key operational metrics plus an
-   overall trajectory of **Improving / Stable / Regressing**. Data source and method below.
-5. **Research Findings** — assume none. Elevate to a Finding only if it survives confounds,
-   measurement checks, reproduction, is economically meaningful, and would still matter if it
-   weakened the original hypothesis. Otherwise: Observation / Candidate / Artifact / Rejected.
-6. **Challenges to Existing Conclusions** — actively try to falsify Paper 1, the Protocol, the
-   safeguard registry, and the operational assumptions. If nothing does, say so explicitly.
-7. **Emerging Opportunities** — what new data has made possible; split Available now vs Needs more data.
-8. **Recommendations** — at most three; prefer continue / fix / wait.
-9. **Executive Summary** — exactly four lines: Infrastructure / Verification / Research /
-   Recommended next action.
-
-## Trend Dashboard — data source and method
-
-Objective series lives in `output/metrics_history.jsonl`, upserted once per UTC day by
-`collection_health.py` (latest snapshot of the day wins) and banked every checkpoint. Render with:
+## Operational Status (at-a-glance)
 
 ```
-python the_third_turn/collection_health.py --trend
+Production      🟢 / 🟡 / 🔴
+Collector       🟢 / 🟡 / 🔴
+Integrity       🟢 / 🟡 / 🔴
+Capability      🟢 / 🟡 / 🔴
+Unknowns        🟢 / 🟡 / 🔴
+
+Scientific Status
+  Paper 1       (frozen — state if anything even could bear on it)
+  Paper 2       (data-gated — which gate, current state)
+  Protocol      (stable / a Candidate defect open / a rule reclassified)
 ```
 
-It prints day-over-day deltas and the trajectory verdict. Paste or summarize its output into
-section 4.
+**Light rubric (objective, not vibes):**
+- **Production 🟢** iff latest checkpoint age < ~45 min during game hours *and* the re-arm chain is intact. 🟡 if a benign no-game gap or a degraded-but-running condition. 🔴 if collection is stalled.
+- **Collector 🟢** iff the daemon is polling and both expected live books are fresh. 🟡 if one feed is stale for a non-structural reason. 🔴 on a crash/outage.
+- **Integrity 🟢** iff 0 malformed/missing/duplicate/future-ts *under the tool's field definition* (note the definition; see ED-4). 🔴 on any integrity break or schema regression.
+- **Capability** reflects *maturation toward gates*, never a failure: 🟢 all target capabilities present, 🟡 some absent-but-progressing, 🔴 a required capability structurally missing (e.g., no 3rd book). A 🔴 here is **not** an incident.
+- **Unknowns 🔴** while a top-ranked Known Unknown is unresolved and load-bearing (e.g., KU-1 Pinnacle root cause). 🟡 when unknowns exist but none blocks the critical path. 🟢 when none is material.
 
-**Metrics tracked:** SR-1 progress %, books quoting live, overlap games, live games seen, median
-sync lag; plus cumulative growth counters (book-panel rows, simultaneous pairs, team-total rows);
-plus integrity-clean and fix-verification flags.
+---
 
-**Trajectory rule** (health and gate-progress drive it; cumulative counters are shown but do **not**
-vote, because they only ever rise):
+## 1. Production Health *(evaluated every day; a 🔴 here is an incident)*
 
-- **Regressing** if integrity broke, fix-verification was lost, or collection stalled (no new
-  book-panel rows since the prior day) — any one forces Regressing regardless of the counters.
-- Otherwise net the gate/health signals: SR-1 %, books-live, overlap games, live games (up is good)
-  and median sync lag (down is good). Net positive → **Improving**; zero → **Stable**; negative →
-  **Regressing**.
+Health = "is the machine alive and honest." Report and interpret:
+- **Liveness** — latest checkpoint timestamp vs wall-clock (the health report's self-written "running normally" freezes when the collector dies, so checkpoint age is the real signal).
+- **Checkpoint cadence** — is it on its ~15-min interval, or drifting/stalling.
+- **GitHub Actions / re-arm chain** — current run ID; distinguish normal `cancelled` handoffs from real `failure`s; verify the chain against the API, not narrative.
+- **Schema integrity** — malformed / missing / duplicate / future-ts, *stating the field definition* and any unvalidated fields (odds/status/line-type; ED-4).
+- **API failures / stale feeds** — per-book freshness; separate a benign no-game gap from a feed fault.
 
-The stall rule means a repeat of the 2026-07-06 outage would surface as **Regressing** on the next
-day's dashboard even if every stored number still looked clean.
+## 2. System Capability *(maturation toward gates — NOT failures)*
+
+Capability = "what the platform can currently do." A missing capability is a capability, not a
+defect. Report the level and trend of:
+- **Two-book overlap** — simultaneous live pairs, overlap games (with the ED-3 alt-line caveat on the pair count).
+- **Third book** — present / absent and why (today: absent, ED-1 Pinnacle stillborn).
+- **Alternate totals** — coverage and whether discriminated (ED-3).
+- **Implied-PMF continuity** — SR-2 readiness (games with continuous PMF through ≥6 innings).
+- **Coverage** — innings, games/day, new-game enrollment (the thing overlap-games depends on; EP-4).
+
+Interpret each change as one of: **more data / better infrastructure / better measurement / actual
+scientific progress** — these are not equivalent, and cumulative growth is *more data*, not evidence.
+
+## 3. Research Status
+
+- **Verification gates** — SR-1 / SR-2 / SR-3 current state, carrying their maturity label from
+  `STOPPING_RULE_CLASSIFICATION.md` (empirically validated / provisional / design assumption /
+  awaiting evidence). Keep three milestones separate: **Engineering complete ≠ Production verified ≠
+  Research unlocked.**
+- **Paper 1** — frozen; state plainly whether anything could even bear on it (usually: no, the live
+  panels are temporally/book/data-type disjoint).
+- **Paper 2** — which gate blocks it and its state.
+- **Findings** — assume none. Nothing promotes to a Finding unless a stopping rule objectively clears.
+  Classify everything else on the ladder below.
+- **Engineering predictions resolved today** — link any resolution to `ENGINEERING_PREDICTION_LOG.md`.
+
+**Classification ladder (use exactly these):**
+`Observation` → `Candidate` → `Rejected` → `Finding` (only past a cleared gate), plus **`Known
+Unknown`** for an unanswered question that is not yet even a hypothesis.
+
+## 4. Engineering Debt / Known Unknowns
+
+- **Top open debt** — from `ENGINEERING_DEBT_AND_KNOWN_UNKNOWNS.md`, ranked by risk-to-the-platform
+  (currently ED-1 Pinnacle at the top: *unknown infrastructure is dangerous infrastructure*).
+- **Known Unknowns** — the tracked open questions (KU-1..n); note any that moved.
+- **Opened / closed today** — new debt or unknowns surfaced, and any that a shipped fix + confirming
+  check closed.
+
+---
+
+## Today's Change Log
+
+A short, literal list of what changed since the last report: data facts (rows/pairs/coverage deltas),
+engineering/process changes (fixes shipped, docs added), and prediction resolutions. Each line tagged
+with its type — `[data]` / `[infra]` / `[measurement]` / `[science]` / `[process]` — so the reader can
+see at a glance that (almost always) the day was data + infra, not science.
+
+---
+
+## Standing rules & language discipline
+
+- **No research analysis unless a predefined gate objectively clears.** The collector builds a
+  research asset over months; it does not generate nightly discoveries.
+- **Liveness first**, skeptical always: assume every attractive result is an artifact until validated;
+  never confuse more observations with more evidence.
+- **Health ≠ Capability.** A missing capability (third book, PMF continuity) is not a failure and does
+  not turn Production/Integrity red.
+- **Separate observed fact from architectural hypothesis.** "The metric is quantized by the 30 s poll
+  interval" is an observed fact; "the gate is mis-specified" is an architectural conclusion. State the
+  first as fact and label the second a **Candidate**. Do **not** institutionalize an engineering
+  hypothesis as established methodology, and **flag** implementation-dependent metrics for redesign
+  rather than silently revising them.
+- **Data sources:** `collection_health.py` / `--trend`, `output/metrics_history.jsonl`, and the ops
+  registers (`ENGINEERING_PREDICTION_LOG.md`, `STOPPING_RULE_CLASSIFICATION.md`,
+  `ENGINEERING_DEBT_AND_KNOWN_UNKNOWNS.md`).

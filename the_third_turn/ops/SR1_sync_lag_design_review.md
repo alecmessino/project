@@ -1,8 +1,9 @@
 # Design review — SR-1's median sync-lag threshold
 
-- **Date:** 2026-07-06
-- **Question posed:** Is SR-1's `median sync lag < 15 s` sub-gate theoretically achievable with the current feeds? If not, propose a replacement criterion grounded in observable data properties.
-- **Status:** Analysis complete. **The 15 s threshold is unchanged** (per instruction, not lowered). This document proposes a replacement for the owner's decision; no code threshold was modified.
+- **Date:** 2026-07-06 (updated 2026-07-09 to correct overreaching language)
+- **Question posed:** Is SR-1's `median sync lag < 15 s` sub-gate behaving as intended with the current feeds, and if not, what redesign would the observable data support?
+- **Classification:** **Candidate design defect** (an architectural hypothesis, not an established fact). The *observed* behavior (poll-cadence quantization; second-book dependence) is fact; the conclusion that the gate is "mis-specified" is a Candidate for the owner to adjudicate.
+- **Status:** Proposal only. **No threshold changed**; SR-1 and the health tool are untouched. Flagged as a redesign Candidate in the Engineering Debt register, per the owner's directive that implementation-dependent metrics be flagged, not silently revised.
 
 ## What the metric currently measures
 
@@ -30,30 +31,42 @@ rest of the distribution is inflated by bovada continuing to tick every 30 s whi
 a live-coverage gap (up to 97 minutes), each bovada tick pairing against the same stale fanduel
 quote.
 
-## Is < 15 s achievable? No, for two independent reasons.
+## Classification: Candidate design defect (observed behavior; the architectural conclusion is NOT established)
 
-1. **Poll cadence.** The collector samples every ~30 s. A wall-clock median under 15 s would
-   require sub-15 s polling *and* both books refreshing live sub-15 s. At a 30 s cadence, only
-   same-poll pairs clear 15 s; adjacent-poll pairs are already ~30 s. The target sits below the
-   instrument's own resolution.
-2. **Second-book sparsity.** The lag is dominated by the *sparser* live feed. bovada is dense
-   (every poll); fanduel is bursty (p75 gap 122 s, tail to 97 min); pinnacle emits no live quotes
-   at all. We do not control how often an external book refreshes its in-play line, so no amount of
-   "keep collecting" pulls the median toward 15 s. The threshold is aspirational: it silently
-   assumes two books that both refresh live faster than 15 s, which this feed mix does not provide.
+> Language discipline (owner directive, 2026-07-09): distinguish an *observed property* of the
+> implementation from an *architectural conclusion* about the design. The first is fact; the second
+> is a hypothesis. This section does the former plainly and marks the latter as a **Candidate**.
 
-The 15 s number appears to have been imported as a generic "near-real-time" figure without
-reference to the collector's poll cadence or the books' observed refresh behavior.
+Two properties of the sub-gate are **observed facts**:
 
-## The metric also mismeasures what leadership analysis needs
+1. **Poll-cadence quantization [observed].** The collector samples every ~30 s
+   (`poll_interval_seconds = 30`), so paired sync lags take values in {0} ∪ [30 s, ∞): nothing falls
+   in (0, 30). A median below 15 s is therefore attainable only at exactly median = 0 (both books
+   captured in the same poll cycle), never at an intermediate wall-clock value.
+2. **Second-book dependence [observed].** The lag is dominated by the sparser live feed. When one
+   book is bursty (fanduel: p75 gap 122 s at the 07-06 snapshot, tail to 97 min) the forward-fill
+   pairs its stale quote against the dense book and inflates the median; when both feeds densify,
+   the median collapses toward the 0-rung. Confirmed 07-09: fanduel densified from ~1k to ~10k live
+   quotes and the cumulative median fell 640 s → 30 s (logged in the Engineering Prediction Log).
 
-Leadership analysis needs **moments where two books are both genuinely, freshly live close together
-in time** so that who-moved-first is attributable. The forward-fill lag instead penalizes healthy
-asymmetric coverage: whenever one book is denser than the other, the metric reports a large lag
-even though the collector captured every co-live moment perfectly. Proof: restricting to pairs
-where **both** quotes are fresh (each ≤ one poll interval old) yields a median lag of **0 s** across
-~100 pairs / 14 games. When both books are actually live, the collector already captures them
-simultaneously. There is no synchronization defect to gate on; the 640 s figure is an artifact.
+What these facts do **not** establish is the stronger, architectural claim that the gate is
+*mis-specified* or *measures the wrong thing*. That is a **Candidate design defect**, stated here as
+a hypothesis for the owner to adjudicate, not as a conclusion:
+
+> **Candidate:** a PASS at median = 0 certifies collector *co-capture at 30 s granularity*, which
+> may be a weaker property than the sub-15 s market *contemporaneity* S-11 intends. Whether that gap
+> is material for leadership estimation is an architectural judgment, not a measurement.
+
+The earlier framing "< 15 s is unachievable / the gate can never clear" is **too strong and was
+falsified** by the 07-09 audit: median = 0 is a legal, reachable value and the within-day median has
+already reached it on recent days. The open question is *what a PASS would certify*, not *whether a
+PASS is possible*.
+
+## Evidence for the Candidate: forward-fill lag penalizes healthy asymmetric coverage
+
+When one book is denser than the other, the forward-fill lag reports a large value even though the
+collector captured every genuinely co-live moment. Restricting to pairs where **both** quotes are
+fresh (each ≤ one poll interval old) yields a median lag of **0 s**:
 
 | Freshness window `W` | Fresh pairs | Games | Median lag |
 |---|---|---|---|
@@ -61,33 +74,34 @@ simultaneously. There is no synchronization defect to gate on; the 640 s figure 
 | 60 s | 103 | 14 | 0 s |
 | 90 s | 132 | 14 | 0 s |
 
-## Proposed replacement criterion (observable, achievable-in-principle)
+This shows the *inflated* lag is a forward-fill artifact of sparse-vs-dense coverage. It is **not**,
+on its own, proof that the co-capture a PASS certifies is inadequate for leadership work; that
+remains the open Candidate above.
 
-Replace the single unreachable wall-clock target with two criteria built from properties the
-collector actually controls:
+## Candidate replacement criterion (proposal only — do not revise the gate yet)
 
-1. **Fresh co-observation lag.** Among pairs where *both* books' live quotes are no older than one
-   poll interval (`W`, currently ~45 s), require the median lag `< W`. This measures real
-   synchronization, is not gamed by the sparse book's stale quotes, and the instrument can meet it
-   whenever two books are co-live (today: median 0 s). It scales automatically with the poll
-   cadence rather than fixing an external number.
-2. **Fresh co-observation volume.** Require at least *N* fresh co-observed pairs across at least
-   *K* games, where a pair counts only if both quotes are ≤ `W` old. This gates on the genuinely
-   scarce resource, the density of attributable co-live moments, which grows observably as more
-   games are collected. (`N`, `K` to be set from a leadership-estimator power analysis; the current
-   ~100 pairs / 14 games is the present standing.)
+If the owner accepts the Candidate defect, the redesign should be built from properties the
+collector controls, and should **not** be the naive fresh-pair lag: the 07-09 audit showed a
+"median fresh-pair lag < W" test is **near-tautological** (it reads 0 s whenever any co-live pair
+exists), so it certifies almost nothing. The substantive criterion is **volume / fraction**, not lag:
 
-Also redefine the existing "simultaneous live quote pairs" sub-gate to use the same freshness gate,
-so the count and the lag stop disagreeing.
+1. **Fresh co-observation fraction/volume.** Require at least *N* fresh co-observed pairs (both quotes
+   ≤ one poll interval old) across at least *K* games, and/or a minimum *fraction* of live pair-instants
+   that are fresh. This gates on the genuinely scarce resource, the density of attributable co-live
+   moments, which grows observably as games accrue. `N`, `K`, and the fraction are to be set from a
+   leadership-estimator power analysis, not asserted.
+2. **Retire the wall-clock lag threshold** (or keep it only as a diagnostic, never a pass/fail gate),
+   since on a 30 s-quantized instrument any value in (0, 30] yields the identical partition.
 
 **If a true sub-15 s lag is ever a hard requirement**, it is an engineering decision with two
-prerequisites, not a matter of patience: (i) drop the poll cadence toward ~10 s, and (ii) secure a
-second book that refreshes its in-play line at that cadence (or add a third dense feed to replace
-silent pinnacle). Both are feasible; neither is the current default.
+prerequisites, not a matter of patience: drop the poll cadence toward ~10 s, and secure a second
+book that refreshes its in-play line at that cadence. Both are feasible; neither is the current default.
 
 ## Recommendation
 
-Do not lower the 15 s number in place; **replace** the sub-gate with the freshness-gated lag +
-volume pair above, which are observable, achievable when two books are co-live, and aligned with
-what leadership analysis actually consumes. This is a proposal for the owner's decision; SR-1 in
-`protocol/stopping_rules.md` and the health tool remain unchanged until that decision is made.
+**Do not revise the gate now.** Per the owner's 07-09 direction, an implementation-dependent metric
+is *flagged as a redesign Candidate*, not silently re-specified. Actions: (1) record the sync-lag
+sub-gate as a Candidate design defect in the Engineering Debt register and the stopping-rule
+classification; (2) leave SR-1 in `protocol/stopping_rules.md` and the health tool **unchanged**;
+(3) bring the volume/fraction redesign back for an explicit decision, backed by a power analysis,
+before any threshold changes. SR-1 remains BLOCKED and correct in the meantime.

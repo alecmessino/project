@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>Your Coordination Score — Driftwood</title>
+<meta name="description" content="Complexity isn't a problem to hide — it's where coordination creates the most value. Check what's true for your household and see your Household Complexity Index, and the coordination opportunities it implies. Educational self-assessment, not advice." />
+<link rel="canonical" href="https://alecmessino.github.io/project/score.html" />
+<link rel="icon" href="favicon.svg" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="Your Coordination Score — Driftwood" />
+<meta property="og:description" content="See your Household Complexity Index — and where coordination would create the most value." />
+<meta property="og:url" content="https://alecmessino.github.io/project/score.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Your Coordination Score — Driftwood" />
+<meta name="twitter:description" content="See your Household Complexity Index — and where coordination would create the most value." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
+<style>
+  :root{
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --wash:#eaf0f4;
+    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
+    --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330; --on-dark:#e7ecf2;
+    --brass:#2c5878; --gold:#a9c2d6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.62 var(--sans);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1000px;margin:36px auto;padding:0 20px 60px}
+  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:3px;overflow:hidden;
+    box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
+  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
+    border-bottom:3px double var(--frame-line);font-family:var(--sans)}
+  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .inner{margin:0 7px 7px}
+
+  .doc{padding:46px 44px 6px;max-width:720px}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(29px,2.7vw+15px,42px);line-height:1.07;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
+  .lede{font-family:var(--serif);font-size:18.5px;line-height:1.55;color:var(--dim);margin:0;max-width:62ch}
+  .lede b{color:var(--ink);font-weight:600}
+
+  .tool{padding:26px 44px 6px;display:grid;grid-template-columns:1.25fr 1fr;gap:26px;align-items:start}
+  @media(max-width:760px){.tool{grid-template-columns:1fr;gap:20px;padding-top:20px}}
+  .checklist .cl-h{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .drv{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;appearance:none;cursor:pointer;
+    background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin:0 0 9px;
+    transition:border-color .13s ease,background-color .13s ease}
+  .drv:hover{border-color:var(--brass)}
+  .drv:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+  .drv .box{flex:none;width:20px;height:20px;border-radius:5px;border:1.5px solid var(--ghost-line);background:var(--soft);
+    margin-top:1px;position:relative;transition:background-color .13s ease,border-color .13s ease}
+  .drv .box::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;
+    transform:rotate(45deg) scale(0);transition:transform .13s ease}
+  .drv .lab{font-size:14.5px;line-height:1.4;color:var(--ink);font-weight:500}
+  .drv .pts{margin-left:auto;flex:none;font-family:var(--sans);font-weight:700;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .drv[aria-pressed="true"]{background:var(--wash);border-color:var(--brass)}
+  .drv[aria-pressed="true"] .box{background:var(--brass);border-color:var(--brass)}
+  .drv[aria-pressed="true"] .box::after{transform:rotate(45deg) scale(1)}
+  .drv[aria-pressed="true"] .pts{color:var(--brass)}
+
+  .panel{position:sticky;top:16px}
+  .score{background:var(--navy);color:#eef2f6;border-radius:16px;padding:24px 24px 26px;text-align:center}
+  .score .s{font-family:var(--sans);font-weight:700;font-size:56px;line-height:1;letter-spacing:-.03em;color:#fff;font-variant-numeric:tabular-nums}
+  .score .of{font-size:13px;color:#9aa3ae;margin-top:3px}
+  .score .meter{height:8px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden;margin:16px 0 14px}
+  .score .fill{display:block;height:100%;width:0%;background:linear-gradient(90deg,#4dbf9c,#a9c2d6);transition:width .4s cubic-bezier(.4,0,.2,1)}
+  .score .tier{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#a9c2d6}
+  .score .read{font-family:var(--serif);font-size:15px;line-height:1.45;color:#dfe5ec;margin:12px 0 0}
+  .panel .hint{font-size:12px;line-height:1.55;color:var(--muted);margin:12px 4px 0;text-align:center}
+
+  .implies{padding:14px 44px 6px}
+  .implies .ih{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin:22px 0 6px;border-top:1px solid var(--line);padding-top:22px}
+  .implies .isub{font-size:15px;line-height:1.6;color:var(--body);margin:0 0 16px;max-width:64ch}
+  .implies .isub b{color:var(--ink);font-weight:600}
+  #oppList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+  #oppList li{position:relative;padding:12px 16px 12px 34px;background:var(--soft);border:1px solid var(--line);
+    border-left:3px solid var(--brass);border-radius:10px;font-size:14px;line-height:1.5;color:var(--body)}
+  #oppList li::before{content:"";position:absolute;left:15px;top:1.15em;width:7px;height:7px;border-radius:2px;background:var(--brass)}
+  #oppList li b{color:var(--ink);font-weight:600}
+  #oppEmpty{font-family:var(--serif);font-size:16px;color:var(--muted);margin:0}
+
+  .creed-band{margin:36px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
+    font-size:clamp(20px,2vw+12px,27px);letter-spacing:-.022em;color:var(--ink);line-height:1.18}
+  .cta{margin:26px 44px 0;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:26px 28px}
+  .cta .ct{font-family:var(--sans);font-weight:700;font-size:20px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.02em}
+  .cta .cd{font-size:14px;line-height:1.6;color:var(--dim);margin:0 0 18px;max-width:58ch}
+  .cta .btns{display:flex;flex-wrap:wrap;gap:12px}
+  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:8px;font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px}
+  .cta a.primary{background:var(--teal);color:#f1ede3}
+  .cta a.ghost{border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
+
+  .foot{margin-top:40px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
+    color:var(--muted);font-size:12px;line-height:1.65}
+  .foot .note{color:#5a5a62;font-weight:600}
+  .foot b{color:var(--dim)}
+  @media(max-width:620px){
+    .doc,.tool,.implies{padding-left:22px;padding-right:22px}
+    .creed-band,.cta,.foot{margin-left:22px;margin-right:22px}
+    .foot{padding-left:22px;padding-right:22px}
+    .panel{position:static}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <div class="run">
+      <span class="inst">Driftwood · Private Wealth Architecture</span>
+      <span class="marker">Coordination Score</span>
+    </div>
+    <div class="inner">
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Driftwood</a>
+      <div class="dwnav-links">
+        <span class="dwnav-group">
+          <span class="dwnav-label">Understand</span>
+          <a href="howitworks.html">How Driftwood&nbsp;Works</a>
+          <a href="thesis.html">How We Invest</a>
+          <a href="familyoffice.html">Family&nbsp;Offices</a>
+          <a href="library.html">Coordination&nbsp;Library</a>
+          <a href="insights.html">Insights</a>
+          <a href="about.html">Our Story</a>
+        </span>
+        <span class="dwnav-group">
+          <span class="dwnav-label">Discover</span>
+          <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+          <a href="statemap.html">State Tax&nbsp;Atlas</a>
+          <a href="taxlab.html">After-Tax&nbsp;Review</a>
+        </span>
+      </div>
+    </nav>
+
+    <div class="doc">
+      <div class="eyebrow">Coordination Score</div>
+      <h1>How coordinated does your financial life need to be?</h1>
+      <p class="lede">Complexity isn't a problem to hide. It's <b>where coordination creates the most value</b>. Check
+        what's true for your household and see your Household Complexity Index, and the opportunities it points to.</p>
+    </div>
+
+    <div class="tool">
+      <div class="checklist" id="drvList" role="group" aria-label="What's true for your household">
+        <div class="cl-h">Check what's true for you</div>
+        <button class="drv" aria-pressed="false" data-pts="2" data-opp="<b>Business succession &amp; liquidity</b> ·so a sale is planned, never forced.">
+          <span class="box" aria-hidden="true"></span><span class="lab">I own an operating business</span><span class="pts">+2</span>
+        </button>
+        <button class="drv" aria-pressed="false" data-pts="1" data-opp="<b>Entity clean-up</b> ·consolidated, clean ownership so nothing falls between them.">
+          <span class="box" aria-hidden="true"></span><span class="lab">I have multiple legal entities (LLCs, S-corps)</span><span class="pts">+1</span>
+        </button>
+        <button class="drv" aria-pressed="false" data-pts="1" data-opp="<b>Trust funding &amp; titling</b> ·kept consistent with the estate plan, so nothing routes around it.">
+          <span class="box" aria-hidden="true"></span><span class="lab">I have one or more trusts</span><span class="pts">+1</span>
+        </button>
+        <button class="drv" aria-pressed="false" data-pts="2" data-opp="<b>Equity-comp planning</b> ·AMT and bracket timing, and a deliberate concentration sell-down.">
+          <span class="box" aria-hidden="true"></span><span class="lab">I have equity comp or stock options</span><span class="pts">+2</span>
+        </button>
+        <button class="drv" aria-pressed="false" data-pts="2" data-opp="<b>De-risking a concentrated position</b> ·across selling, hedging, gifting, and timing.">
+          <span class="box" aria-hidden="true"></span><span class="lab">I hold a concentrated stock position</span><span class="pts">+2</span>
+        </button>
+        <button class="drv" aria-pressed="false" data-pts="2" data-opp="<b>Residency sequencing</b> ·so large events land on the right side of a state line.">
+          <span class="box" aria-hidden="true"></span><span class="lab">I have multi-state or cross-border exposure</span><span class="pts">+2</span>
+        </button>
+        <button class="drv" aria-pressed="false" data-pts="1" data-opp="<b>Capital-call &amp; valuation coordination</b> ·liquidity and cash flow around private holdings.">
+          <span class="box" aria-hidden="true"></span><span class="lab">I hold private or alternative investments</span><span class="pts">+1</span>
+        </button>
+        <button class="drv" aria-pressed="false" data-pts="1" data-opp="<b>Real-estate structure</b> ·entity, asset location, and the estate treatment of property.">
+          <span class="box" aria-hidden="true"></span><span class="lab">I own investment real estate or land</span><span class="pts">+1</span>
+        </button>
+        <button class="drv" aria-pressed="false" data-pts="1" data-opp="<b>Smarter giving</b> ·appreciated stock, donor-advised funds, and QCDs over writing a check.">
+          <span class="box" aria-hidden="true"></span><span class="lab">I give meaningfully to charity</span><span class="pts">+1</span>
+        </button>
+        <button class="drv" aria-pressed="false" data-pts="1" data-opp="<b>Estate-tax planning</b> ·an ILIT, gifting, and ownership structure to shrink a taxed estate.">
+          <span class="box" aria-hidden="true"></span><span class="lab">My estate may exceed a federal or state exemption</span><span class="pts">+1</span>
+        </button>
+      </div>
+
+      <div class="panel">
+        <div class="score">
+          <div class="s" id="scoreNum">0</div>
+          <div class="of">of a possible 14</div>
+          <div class="meter"><span class="fill" id="scoreFill"></span></div>
+          <div class="tier" id="scoreTier">Tier I · Foundational</div>
+          <p class="read" id="scoreRead">Select what's true for you to see where coordination would help most.</p>
+        </div>
+        <p class="hint">Your score isn't a price. It's a map of where the pieces of your financial life most need to
+          talk to one another.</p>
+      </div>
+    </div>
+
+    <div class="implies">
+      <div class="ih">What your score points to</div>
+      <p class="isub" id="impliesSub">These are the coordination opportunities your answers suggest are worth a closer
+        look, <b>the interactions most likely to be creating or leaking value</b>.</p>
+      <ul id="oppList"></ul>
+      <p id="oppEmpty">Nothing checked yet. Your answers will map here.</p>
+    </div>
+
+    <div class="creed-band">Complexity is where coordination pays. It's opportunity, not a burden.</div>
+
+    <div class="cta">
+      <div class="ct">Turn the map into a number.</div>
+      <div class="cd">The Tax Diagnostic takes it from here, showing what a coordinated approach could be worth on
+        your own state and bracket, in about two minutes.</div>
+      <div class="btns">
+        <a class="primary" href="leakage.html">Run the Tax Diagnostic →</a>
+        <a class="ghost" href="manual.html">See a Wealth Operating Manual</a>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span class="note">Educational self-assessment — not investment, tax, or legal advice, and not a fee quote.</span>
+      The Household Complexity Index is an illustrative tool to prompt a conversation; it does not set fees, measure
+      results, or account for your full situation, and it is not saved or transmitted. Any strategy referenced requires
+      individualized tax and legal advice. Driftwood coordinates with your CPA and attorney and does not provide tax or
+      legal advice. Driftwood is a <b>registered investment adviser</b>; Form ADV and Form CRS are available at
+      <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function(){
+    var MAX = 14;
+    var btns = Array.prototype.slice.call(document.querySelectorAll('.drv'));
+    if(!btns.length) return;
+    var numEl = document.getElementById('scoreNum');
+    var fillEl = document.getElementById('scoreFill');
+    var tierEl = document.getElementById('scoreTier');
+    var readEl = document.getElementById('scoreRead');
+    var list = document.getElementById('oppList');
+    var empty = document.getElementById('oppEmpty');
+
+    function tierFor(n){
+      if(n <= 2) return ['Tier I · Foundational','Coordination still matters, but the moving parts are few.'];
+      if(n <= 5) return ['Tier II · Complex','Enough moving parts that they need to be watched together.'];
+      if(n <= 9) return ['Tier III · Highly complex','Many interacting decisions. This is where coordination earns its keep.'];
+      return ['Tier IV · Family-office-equivalent','Family-office-level complexity. The interactions are the whole game.'];
+    }
+
+    function paint(){
+      var n = 0, opps = [];
+      btns.forEach(function(b){
+        if(b.getAttribute('aria-pressed') === 'true'){
+          n += parseInt(b.getAttribute('data-pts'), 10) || 0;
+          opps.push(b.getAttribute('data-opp'));
+        }
+      });
+      if(n > MAX) n = MAX;
+      numEl.textContent = n;
+      fillEl.style.width = Math.round((n/MAX)*100) + '%';
+      var any = btns.some(function(b){return b.getAttribute('aria-pressed')==='true';});
+      var t = tierFor(n);
+      tierEl.textContent = t[0];
+      readEl.textContent = any ? t[1] : 'Select what’s true for you to see where coordination would help most.';
+      list.innerHTML = '';
+      opps.forEach(function(o){ var li = document.createElement('li'); li.innerHTML = o; list.appendChild(li); });
+      empty.style.display = opps.length ? 'none' : 'block';
+    }
+
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){
+        b.setAttribute('aria-pressed', b.getAttribute('aria-pressed')==='true' ? 'false' : 'true');
+        paint();
+      });
+    });
+    paint();
+  })();
+</script>
+</body>
+</html>

@@ -1,8 +1,10 @@
 """Guard for the site-wide brand typeface.
 
-Erode (Fontshare/ITF) is the Driftwood brand face — editorial display AND body/prose. Inter is retained
-ONLY for dense UI (nav, tables, tabular numbers, form controls). These tests lock that in so a future edit
-can't silently regress the brand face back to Moret or drop the self-hosted Erode woff2 files.
+Erode (Fontshare/ITF) is the Driftwood editorial face — display and editorial callouts (intros, credos,
+pull-quotes). Per the "Satoshi for headings/body/UI, Erode for editorial callouts" typography decision,
+the base body renders in --sans; Inter is retained for dense UI (nav, tables, tabular numbers, form
+controls). These tests lock that in so a future edit can't silently regress the face back to Moret or
+drop the self-hosted Erode woff2 files.
 """
 
 from pathlib import Path
@@ -29,13 +31,17 @@ def test_css_defines_erode_faces_and_serif_token_is_erode():
     for w in (400, 500, 600, 700):
         assert f"font-family:'Erode';font-style:normal;font-weight:{w}" in css, \
             f"driftwood.css missing @font-face for Erode {w}"
-    # --serif (the brand/display+body token) must be Erode; body must resolve to it.
+    # --serif must be Erode and must still be used for editorial callouts; the base body renders in
+    # --sans (Satoshi) per the "Satoshi for body/UI, Erode for editorial callouts" typography decision.
     assert "--serif:'Erode'" in css, "--serif token is no longer Erode"
-    assert "body{ font-family:var(--serif)" in css, "body no longer renders in the Erode --serif token"
-    # Inter is retained for dense UI only — the four UI weights must still be present.
-    for w in (400, 500, 600, 700):
-        assert f"font-family:'Inter';font-style:normal;font-weight:{w}" in css, \
-            f"driftwood.css dropped the Inter UI face {w}"
+    assert "body{ font-family:var(--sans)" in css, "base body no longer renders in the --sans token"
+    assert "font-family:var(--serif)" in css, "Erode --serif is no longer used for editorial callouts"
+    # Satoshi (--sans) is the self-hosted UI/body/heading face — its three shipped weights must be
+    # present (Inter now appears only as a fallback name in the --sans stack, not a self-hosted face).
+    assert "'Satoshi','Inter'" in css, "--sans no longer leads with self-hosted Satoshi (Inter fallback)"
+    for w in (400, 500, 700):
+        assert f"font-family:'Satoshi';font-style:normal;font-weight:{w}" in css, \
+            f"driftwood.css dropped the self-hosted Satoshi UI face {w}"
 
 
 def test_dense_ui_and_numbers_pinned_to_inter():

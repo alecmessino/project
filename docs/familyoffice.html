@@ -10,18 +10,18 @@
 </script>
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
-<title>Why Family Offices Make Better Decisions — Driftwood</title>
+<title>The Operating Model of a Family Office, for a Single Household — Driftwood</title>
 <meta name="description" content="Family offices don't outperform because they buy better investments. They outperform because every important decision is made inside one operating framework. Driftwood brings that operating model to households without a dedicated family office. Illustrative, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/familyoffice.html" />
 <link rel="icon" href="favicon.svg" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Driftwood" />
-<meta property="og:title" content="Why Family Offices Make Better Decisions" />
+<meta property="og:title" content="The Operating Model of a Family Office, for a Single Household" />
 <meta property="og:description" content="Not better investments — one operating framework. Driftwood brings that model to a single household." />
 <meta property="og:url" content="https://alecmessino.github.io/project/familyoffice.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Why Family Offices Make Better Decisions" />
+<meta name="twitter:title" content="The Operating Model of a Family Office, for a Single Household" />
 <meta name="twitter:description" content="Not better investments — one operating framework. Driftwood brings that model to a single household." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
 <style>
@@ -38,7 +38,7 @@
   .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:var(--surface-radius);overflow:hidden;
     box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
-    border-bottom:3px double var(--frame-line);font-family:var(--sans)}
+    border-bottom:1px solid var(--line);font-family:var(--sans)}
   .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
@@ -61,7 +61,7 @@
   /* What a family office actually is — three principles. */
   .three{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:26px 0 6px}
   @media(max-width:720px){.three{grid-template-columns:1fr;gap:14px}}
-  .pr{background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);padding:20px 20px 22px}
+  .pr{padding:16px 0 18px;border-top:1px solid var(--line)}
   .pr .prn{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.02em;color:var(--brass);font-variant-numeric:tabular-nums;margin-bottom:9px}
   .pr .prt{font-family:var(--sans);font-weight:700;font-size:16px;line-height:1.25;letter-spacing:-.01em;color:var(--ink);margin:0 0 8px}
   .pr p{font-size:14px;line-height:1.6;color:var(--body);margin:0}
@@ -69,17 +69,25 @@
   /* ── The Operating Room — signature illustration ── */
   .orx{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin:10px 0 0}
   @media(max-width:720px){.orx{grid-template-columns:1fr;gap:4px}}
-  .orscene{margin:0;text-align:center}
-  .orscene svg{width:100%;height:auto;max-width:360px;display:block;margin:0 auto}
-  .orscene figcaption{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:6px}
-  .orbridge{font-family:var(--sans);font-weight:700;font-size:26px;color:var(--ghost-line);text-align:center;padding:0 4px}
-  @media(max-width:720px){.orbridge{transform:rotate(90deg);font-size:22px;padding:6px 0}}
+  /* Two parallel operating workflows — engineering schematic, not illustration. */
+  .opflow{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:26px;margin:16px auto 0;max-width:600px}
+  @media(max-width:640px){.opflow{grid-template-columns:1fr;gap:6px}}
+  .opcol{margin:0}
+  .opcol figcaption{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+  .flowlist{list-style:none;margin:0;padding:0;text-align:center}
+  .flowlist li{font-family:var(--sans);font-size:14px;color:var(--body);padding:6px 0}
+  .flowlist li + li::before{content:"↓";display:block;color:var(--ghost-line);font-size:12px;line-height:1;margin:0 0 5px}
+  .flowlist li.conf{color:var(--ink);font-weight:600}
+  .flowlist li.term{color:var(--ink);font-weight:700;font-size:15px;margin-top:7px;padding-top:12px;border-top:3px double var(--ink)}
+  .flowlist li.term::before{content:none}
+  .opeq{font-family:var(--sans);font-weight:700;font-size:22px;color:var(--ghost-line);align-self:center;text-align:center}
+  @media(max-width:640px){.opeq{transform:rotate(90deg);font-size:18px;padding:6px 0}}
   .orcap{font-family:var(--serif);font-size:18px;line-height:1.5;color:var(--ink);text-align:center;margin:26px auto 0;max-width:52ch}
 
   /* ── What Changed? — same assets, different coordination ── */
-  .wc{margin:12px 0 0;border:1px solid var(--line);border-radius:var(--surface-radius);overflow:hidden;background:#fff}
+  .wc{margin:12px 0 0;border-top:1px solid var(--line)}
   .wc-top{display:grid;grid-template-columns:1fr;gap:0}
-  .wc-assets{padding:16px 20px;background:var(--soft);border-bottom:1px solid var(--line)}
+  .wc-assets{padding:16px 0 14px;border-bottom:1px solid var(--line)}
   .wc-lab{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
   .wc-assets .v{font-size:13.5px;color:var(--dim);line-height:1.5}
   .wc-assets .v b{color:var(--ink);font-weight:600}
@@ -98,12 +106,12 @@
   .onward a{color:var(--teal2);text-decoration:none;font-weight:600}
   .onward a:hover{text-decoration:underline}
   .onward .d{color:var(--ghost-line);margin:0 6px}
-  .cta{margin:34px 44px 0;background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);padding:26px 28px}
+  .cta{margin:34px 44px 0;padding:26px 0 0;border-top:1px solid var(--line)}
   .cta .ct{font-family:var(--sans);font-weight:700;font-size:20px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.02em}
   .cta .cd{font-size:14px;line-height:1.6;color:var(--dim);margin:0 0 18px;max-width:56ch}
   .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:var(--surface-radius);
     font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px;background:var(--teal);color:#f1ede3}
-  .foot{margin-top:42px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
+  .foot{margin-top:42px;padding:20px 44px 40px;border-top:1px solid var(--line);
     color:var(--muted);font-size:12px;line-height:1.65}
   .foot .note{color:#5a5a62;font-weight:600}
   .foot b{color:var(--dim)}
@@ -118,24 +126,21 @@
 <div class="wrap">
   <div class="frame">
     <div class="run">
-      <span class="inst">Driftwood · Private Wealth Architecture</span>
-      <span class="marker">The Family-Office Standard</span>
+      <span class="inst">Driftwood</span>
     </div>
     <div class="inner">
     <nav class="dwnav" aria-label="Driftwood">
       <a class="brand" href="index.html">Driftwood</a>
       <div class="dwnav-links">
         <span class="dwnav-group">
-          <span class="dwnav-label">Understand</span>
           <a href="howitworks.html">How Driftwood&nbsp;Works</a>
           <a href="thesis.html">How We Invest</a>
-          <a href="familyoffice.html" aria-current="page">Family&nbsp;Offices</a>
+          <a href="familyoffice.html" aria-current="page">The&nbsp;Operating&nbsp;Model</a>
           <a href="library.html">Coordination&nbsp;Library</a>
           <a href="insights.html">Insights</a>
           <a href="about.html">Our Story</a>
         </span>
         <span class="dwnav-group">
-          <span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="statemap.html">State Tax&nbsp;Atlas</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
@@ -144,8 +149,8 @@
     </nav>
 
     <div class="doc">
-      <div class="eyebrow">The Family-Office Standard</div>
-      <h1>Why family offices make better decisions.</h1>
+      <div class="eyebrow">The Operating Model</div>
+      <h1>The operating model of a family office, for a single household.</h1>
       <p class="lede">Not because they can buy investments no one else can. Not because their advisors are smarter.
         <b>Because every important decision is made inside one operating framework</b>, in view of every other
         decision. The investments are almost the least interesting part.</p>
@@ -155,24 +160,24 @@
     <div class="rule" style="margin-top:34px"></div>
 
     <div class="sec">
-      <div class="sh"><span class="sn">01</span>It isn't the investments</div>
+      <div class="sh"><span class="sn">I</span>It isn't the investments</div>
       <p class="intro">A family office is not a portfolio. It's an operating model. Strip away the size and three
         things are left. None of these require a billion-dollar balance sheet.</p>
       <div class="three">
         <div class="pr">
-          <div class="prn">01</div>
+          <div class="prn">i</div>
           <div class="prt">One team</div>
           <p>Investment, tax, legal, and operations sit at the same table, not in separate buildings with separate
             calendars.</p>
         </div>
         <div class="pr">
-          <div class="prn">02</div>
+          <div class="prn">ii</div>
           <div class="prt">One framework</div>
           <p>Every decision is scored against the same goals, so a tax move and an estate move can't quietly work
             against each other.</p>
         </div>
         <div class="pr">
-          <div class="prn">03</div>
+          <div class="prn">iii</div>
           <div class="prt">Every decision in context</div>
           <p>Nothing is decided alone. Each choice is made knowing what it does to the others, before it's made.</p>
         </div>
@@ -180,52 +185,40 @@
     </div>
 
     <div class="sec">
-      <div class="sh"><span class="sn">02</span>The same idea, in two rooms</div>
+      <div class="sh"><span class="sn">II</span>The same idea, in two rooms</div>
       <p class="intro">Medicine already runs this way, and nobody finds it strange. The hard cases go to a room of
         specialists who decide together. Nobody expects the surgeon to run the whole treatment plan; they expect an
         attending to. Wealth works exactly the same way.</p>
-      <div class="orx">
-        <figure class="orscene">
-          <svg viewBox="0 0 340 300" role="img" aria-label="Four medical specialists connected to one patient at the centre.">
-            <g stroke="#b8b2a4" stroke-width="1"><line x1="170" y1="53" x2="170" y2="116"/><line x1="170" y1="248" x2="170" y2="184"/><line x1="110" y1="150.5" x2="118" y2="150.5"/><line x1="230" y1="150.5" x2="222" y2="150.5"/></g>
-            <g fill="#1e2833"><rect x="167" y="113" width="6" height="6"/><rect x="167" y="181" width="6" height="6"/><rect x="115" y="147.5" width="6" height="6"/><rect x="219" y="147.5" width="6" height="6"/></g>
-            <rect x="118" y="120" width="104" height="61" fill="#fff" stroke="#c3bcab" stroke-width="1.2"/>
-            <line x1="118" y1="134" x2="222" y2="134" stroke="#1e2833" stroke-width="2"/>
-            <text x="170" y="131" text-anchor="middle" font-size="8" font-weight="700" letter-spacing="1.8" fill="#2c5878" style="font-family:var(--sans)">THE</text>
-            <text x="170" y="162" text-anchor="middle" font-size="13" font-weight="700" fill="#1e2833" style="font-family:var(--sans)">Patient</text>
-            <g font-size="10" font-weight="700" letter-spacing="1.3" fill="#3d4650" text-anchor="middle" style="font-family:var(--sans)">
-              <rect x="118" y="30" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="170" y="45.5">SURGEON</text>
-              <rect x="6" y="139" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="58" y="154.5">ONCOLOGIST</text>
-              <rect x="230" y="139" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="282" y="154.5">RADIOLOGIST</text>
-              <rect x="118" y="248" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="170" y="263.5">PATHOLOGIST</text>
-            </g>
-          </svg>
+      <div class="opflow">
+        <figure class="opcol">
           <figcaption>Medicine</figcaption>
+          <ol class="flowlist">
+            <li>Primary Care</li>
+            <li>Cardiology</li>
+            <li>Oncology</li>
+            <li>Radiology</li>
+            <li class="conf">Treatment Conference</li>
+            <li class="term">One Plan</li>
+          </ol>
         </figure>
-        <div class="orbridge" aria-hidden="true">=</div>
-        <figure class="orscene">
-          <svg viewBox="0 0 340 300" role="img" aria-label="Four financial specialists connected to one balance sheet at the centre.">
-            <g stroke="#b8b2a4" stroke-width="1"><line x1="170" y1="53" x2="170" y2="116"/><line x1="170" y1="248" x2="170" y2="184"/><line x1="110" y1="150.5" x2="118" y2="150.5"/><line x1="230" y1="150.5" x2="222" y2="150.5"/></g>
-            <g fill="#1e2833"><rect x="167" y="113" width="6" height="6"/><rect x="167" y="181" width="6" height="6"/><rect x="115" y="147.5" width="6" height="6"/><rect x="219" y="147.5" width="6" height="6"/></g>
-            <rect x="118" y="120" width="104" height="61" fill="#fff" stroke="#c3bcab" stroke-width="1.2"/>
-            <line x1="118" y1="134" x2="222" y2="134" stroke="#1e2833" stroke-width="2"/>
-            <text x="170" y="131" text-anchor="middle" font-size="8" font-weight="700" letter-spacing="1.8" fill="#2c5878" style="font-family:var(--sans)">YOUR</text>
-            <text x="170" y="162" text-anchor="middle" font-size="13" font-weight="700" fill="#1e2833" style="font-family:var(--sans)">Balance sheet</text>
-            <g font-size="10" font-weight="700" letter-spacing="1.3" fill="#3d4650" text-anchor="middle" style="font-family:var(--sans)">
-              <rect x="118" y="30" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="170" y="45.5">CPA</text>
-              <rect x="6" y="139" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="58" y="154.5">ATTORNEY</text>
-              <rect x="230" y="139" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="282" y="154.5">ADVISOR</text>
-              <rect x="118" y="248" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="170" y="263.5">INSURANCE</text>
-            </g>
-          </svg>
+        <div class="opeq" aria-hidden="true">=</div>
+        <figure class="opcol">
           <figcaption>Wealth</figcaption>
+          <ol class="flowlist">
+            <li>CPA</li>
+            <li>Attorney</li>
+            <li>Investment Advisor</li>
+            <li>Insurance</li>
+            <li class="conf">Family</li>
+            <li class="term">One Financial Operating System</li>
+          </ol>
         </figure>
       </div>
       <p class="orcap">Complex systems produce better outcomes when specialists work from one operating plan.</p>
     </div>
 
     <div class="sec">
-      <div class="sh"><span class="sn">03</span>What changed?</div>
+      <div class="sh"><span class="sn">III</span>What changed?</div>
       <p class="intro">Here is the part that surprises people. A family office rarely wins by changing what you own.
         It wins by changing how the pieces are coordinated. Turn each decision below from its isolated <b>before</b>
         to its coordinated <b>after</b>, and watch the outcome move, <b>while the assets stay exactly the same</b>.</p>
@@ -267,7 +260,7 @@
     </div>
 
     <div class="sec">
-      <div class="sh"><span class="sn">04</span>The part that used to require $100 million</div>
+      <div class="sh"><span class="sn">IV</span>The part that used to require $100 million</div>
       <p class="intro">This operating model was, for a long time, the private advantage of families wealthy enough to
         staff a dedicated office. The people were expensive. The structure was not.</p>
       <p class="lead-cat"><b>The operating model that once required a dedicated family office is now available to a

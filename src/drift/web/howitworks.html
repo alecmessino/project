@@ -39,7 +39,7 @@
   .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:var(--surface-radius);overflow:hidden;
     box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
-    border-bottom:3px double var(--frame-line);font-family:var(--sans)}
+    border-bottom:1px solid var(--line);font-family:var(--sans)}
   .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
@@ -59,14 +59,14 @@
   .phase h2{font-family:var(--sans);font-weight:700;font-size:22px;line-height:1.2;letter-spacing:-.015em;color:var(--ink);margin:0 0 11px}
   .phase p{font-size:15.5px;line-height:1.65;color:var(--body);margin:0 0 15px;max-width:62ch}
   .phase p b{color:var(--ink);font-weight:600}
-  .out{font-family:var(--sans);font-size:14px;color:var(--dim);background:var(--soft);border-left:2px solid var(--teal2);padding:11px 15px;max-width:60ch;line-height:1.55}
+  .out{font-family:var(--sans);font-size:14px;color:var(--dim);border-left:2px solid var(--teal2);padding:11px 15px;max-width:60ch;line-height:1.55}
   .out b{color:var(--teal);font-weight:700;text-transform:uppercase;font-size:10.5px;letter-spacing:.12em;margin-right:9px}
   @media(max-width:640px){.phases{padding-left:22px;padding-right:22px}.phase{grid-template-columns:1fr;gap:12px;padding:26px 0}}
 
   /* The ongoing rhythm inside the last phase. */
   .cadence{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:62ch}
   @media(max-width:560px){.cadence{grid-template-columns:1fr}}
-  .cadence .c{border:1px solid var(--line);border-radius:var(--surface-radius);padding:15px 17px;background:#fff}
+  .cadence .c{border-top:1px solid var(--line);padding:14px 0 0}
   .cadence .cw{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:7px}
   .cadence .cd{font-size:13.5px;color:var(--body);line-height:1.5}
 
@@ -101,7 +101,7 @@
   .cta a:hover{filter:brightness(1.08)}
   @media(max-width:620px){.doc{padding-left:22px;padding-right:22px}.cta{margin-left:22px;margin-right:22px}}
 
-  .foot{margin-top:8px;padding:18px 44px 34px;border-top:1px solid var(--line);background:var(--soft);color:#9a978f;font-size:11px;line-height:1.6}
+  .foot{margin-top:8px;padding:18px 44px 34px;border-top:1px solid var(--line);color:#9a978f;font-size:11px;line-height:1.6}
   .foot .note{color:var(--muted);font-weight:600}
   .foot a{color:var(--muted)} .foot b{color:var(--muted)}
   @media(max-width:620px){.foot{padding-left:22px;padding-right:22px}}
@@ -122,24 +122,21 @@
 <div class="wrap">
   <div class="frame">
     <div class="run">
-      <span class="inst">Driftwood · Private Wealth Architecture</span>
-      <span class="marker">How Driftwood Works</span>
+      <span class="inst">Driftwood</span>
     </div>
     <div class="inner">
     <nav class="dwnav" aria-label="Driftwood">
       <a class="brand" href="index.html">Driftwood</a>
       <div class="dwnav-links">
         <span class="dwnav-group">
-          <span class="dwnav-label">Understand</span>
           <a href="howitworks.html" aria-current="page">How Driftwood&nbsp;Works</a>
           <a href="thesis.html">How We Invest</a>
-          <a href="familyoffice.html">Family&nbsp;Offices</a>
+          <a href="familyoffice.html">The Operating Model</a>
           <a href="library.html">Coordination&nbsp;Library</a>
           <a href="insights.html">Insights</a>
           <a href="about.html">Our Story</a>
         </span>
         <span class="dwnav-group">
-          <span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="statemap.html">State Tax&nbsp;Atlas</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
@@ -156,7 +153,7 @@
 
     <div class="phases">
       <div class="phase">
-        <div class="side"><div class="pn">Step 00</div><div class="pt">Before any conversation · about 2 minutes</div></div>
+        <div class="side"><div class="pn">Before you begin</div><div class="pt">Before any conversation · about 2 minutes</div></div>
         <div>
           <h2>You see the opportunity on your own numbers.</h2>
           <p>Nothing starts with a sales call. You run the <b>Tax Diagnostic</b> yourself — your state, your bracket —
@@ -167,7 +164,7 @@
       </div>
 
       <div class="phase">
-        <div class="side"><div class="pn">Step 01</div><div class="pt">First ~2 weeks · the intake</div></div>
+        <div class="side"><div class="pn">Phase I</div><div class="pt">First ~2 weeks · the intake</div></div>
         <div>
           <h2>We map your whole system — nothing is bought or sold.</h2>
           <p>We take inventory of every part: your accounts, the last tax return, the estate documents, your cash-flow
@@ -178,7 +175,7 @@
       </div>
 
       <div class="phase">
-        <div class="side"><div class="pn">Step 02</div><div class="pt">First ~60 days · the plan</div></div>
+        <div class="side"><div class="pn">Phase II</div><div class="pt">First ~60 days · the plan</div></div>
         <div>
           <h2>We build the coordinated plan — and you approve it before anything moves.</h2>
           <p>One plan, written down: <b>asset location</b> (which account holds what), the order gains are realized and
@@ -189,7 +186,7 @@
       </div>
 
       <div class="phase">
-        <div class="side"><div class="pn">Step 03</div><div class="pt">Next ~30–60 days · implementation</div></div>
+        <div class="side"><div class="pn">Phase III</div><div class="pt">Next ~30–60 days · implementation</div></div>
         <div>
           <h2>We implement the plan — deliberately.</h2>
           <p>Everything in the plan gets set in motion: the portfolio built to fit — a diversified, low-turnover core
@@ -201,7 +198,7 @@
       </div>
 
       <div class="phase">
-        <div class="side"><div class="pn">Step 04</div><div class="pt">Every year after · the standing cadence</div></div>
+        <div class="side"><div class="pn">Phase IV</div><div class="pt">Every year after · the standing cadence</div></div>
         <div>
           <h2>Then coordination becomes a rhythm — this is most of the relationship.</h2>
           <p>The plan isn't a document that goes in a drawer. It runs on a cadence, some of it continuous, some
@@ -261,10 +258,10 @@
         around it, <b>before</b> anything is done.</p>
       <p class="stemma-lead">An ordinary intention — you mention helping with a grandchild's tuition.</p>
       <div class="stemma">
-        <div class="step"><span class="n">01</span><span class="tx">The gift is sized against the annual exclusion and your bracket.</span></div>
-        <div class="step"><span class="n">02</span><span class="tx">It is funded from the account that costs the least to tap.</span></div>
-        <div class="step"><span class="n">03</span><span class="tx">A 529 versus paying the school directly goes to your CPA.</span></div>
-        <div class="step"><span class="n">04</span><span class="tx">Beneficiaries and the estate plan are checked for knock-on effects.</span></div>
+        <div class="step"><span class="n">I</span><span class="tx">The gift is sized against the annual exclusion and your bracket.</span></div>
+        <div class="step"><span class="n">II</span><span class="tx">It is funded from the account that costs the least to tap.</span></div>
+        <div class="step"><span class="n">III</span><span class="tx">A 529 versus paying the school directly goes to your CPA.</span></div>
+        <div class="step"><span class="n">IV</span><span class="tx">Beneficiaries and the estate plan are checked for knock-on effects.</span></div>
       </div>
       <div class="stemma-end">One decision, handled whole.</div>
       <p class="rsn">The everyday shape of coordination — the same discipline the
@@ -273,7 +270,7 @@
 
     <div class="cta">
       <div class="ct">
-        <div class="ch">It starts with Step 00.</div>
+        <div class="ch">It starts before you begin.</div>
         <div class="cs">See what a coordinated approach could be worth on your own numbers — by your state and bracket, in about two minutes.</div>
       </div>
       <div><a href="leakage.html">Run the Tax Diagnostic →</a></div>

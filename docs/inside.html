@@ -38,7 +38,7 @@
   .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:var(--surface-radius);overflow:hidden;
     box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
-    border-bottom:3px double var(--frame-line)}
+    border-bottom:1px solid var(--line)}
   .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
@@ -58,7 +58,7 @@
   .flow{margin:20px 0 6px}
   .fstep{display:grid;grid-template-columns:44px 1fr;gap:18px;position:relative;padding-bottom:20px}
   .fstep:not(:last-child)::after{content:"";position:absolute;left:21px;top:42px;bottom:-2px;width:2px;background:var(--line)}
-  .fnum{width:42px;height:42px;border-radius:50%;background:var(--wash);border:1px solid var(--frame-line);color:var(--brass);
+  .fnum{width:42px;height:42px;border-radius:0;border:1px solid var(--frame-line);color:var(--brass);
     font-family:var(--sans);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;
     font-variant-numeric:tabular-nums;z-index:1}
   .fstep.loop .fnum{background:var(--teal);border-color:var(--teal);color:#f1ede3;font-size:19px}
@@ -72,9 +72,9 @@
   /* The four artifacts. */
   .arts{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:18px 0 6px}
   @media(max-width:640px){.arts{grid-template-columns:1fr}}
-  a.art{display:block;text-decoration:none;color:inherit;background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);
-    padding:18px 20px;transition:border-color .13s ease,transform .13s ease,box-shadow .13s ease}
-  a.art:hover{border-color:var(--frame-line);transform:translateY(-2px);box-shadow:0 12px 26px -18px rgba(20,18,12,.4)}
+  a.art{display:block;text-decoration:none;color:inherit;
+    padding:16px 0 18px;border-top:1px solid var(--line);transition:border-color .13s ease}
+  a.art:hover{border-color:var(--ghost-line)}
   .art .an{font-family:var(--sans);font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink);margin:0 0 5px}
   .art .ad{font-size:13px;line-height:1.5;color:var(--dim);margin:0}
   .art .ag{margin-top:10px;font-family:var(--sans);font-weight:700;font-size:12px;color:var(--teal2)}
@@ -83,7 +83,7 @@
   .lead-in b{font-weight:600}
   .creed-band{margin:40px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
     font-size:clamp(21px,2vw+13px,29px);letter-spacing:-.022em;color:var(--ink);line-height:1.16}
-  .cta{margin:26px 44px 0;background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);padding:26px 28px}
+  .cta{margin:26px 44px 0;padding:22px 0 0;border-top:1px solid var(--line)}
   .cta .ct{font-family:var(--sans);font-weight:700;font-size:20px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.02em}
   .cta .cd{font-size:14px;line-height:1.6;color:var(--dim);margin:0 0 18px;max-width:58ch}
   .cta .btns{display:flex;flex-wrap:wrap;gap:12px}
@@ -91,7 +91,7 @@
   .cta a.primary{background:var(--teal);color:#f1ede3}
   .cta a.ghost{border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
 
-  .foot{margin-top:42px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
+  .foot{margin-top:42px;padding:20px 44px 40px;border-top:1px solid var(--line);
     color:var(--muted);font-size:12px;line-height:1.65}
   .foot .note{color:#5a5a62;font-weight:600}
   .foot b{color:var(--dim)}
@@ -106,24 +106,21 @@
 <div class="wrap">
   <div class="frame">
     <div class="run">
-      <span class="inst">Driftwood · Private Wealth Architecture</span>
-      <span class="marker">Inside Driftwood</span>
+      <span class="inst">Driftwood</span>
     </div>
     <div class="inner">
     <nav class="dwnav" aria-label="Driftwood">
       <a class="brand" href="index.html">Driftwood</a>
       <div class="dwnav-links">
         <span class="dwnav-group">
-          <span class="dwnav-label">Understand</span>
           <a href="howitworks.html">How Driftwood&nbsp;Works</a>
           <a href="thesis.html">How We Invest</a>
-          <a href="familyoffice.html">Family&nbsp;Offices</a>
+          <a href="familyoffice.html">The Operating Model</a>
           <a href="library.html">Coordination&nbsp;Library</a>
           <a href="insights.html">Insights</a>
           <a href="about.html">Our Story</a>
         </span>
         <span class="dwnav-group">
-          <span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="statemap.html">State Tax&nbsp;Atlas</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
@@ -135,7 +132,7 @@
       <div class="eyebrow">Inside Driftwood · The Financial Operating System</div>
       <h1>You don't transfer investments. You build a system.</h1>
       <p class="lede">Becoming a Driftwood client doesn't begin with moving accounts. <b>It begins with building your
-        family's Financial Operating System</b>, and then running it, together, year after year. Here is exactly what
+        family's financial operating system</b>, and then running it, together, year after year. Here is exactly what
         that looks like.</p>
     </div>
 
@@ -217,7 +214,7 @@
 
     <div class="sec">
       <div class="sh">The four artifacts</div>
-      <p class="intro">A Financial Operating System isn't a feeling. It's a set of durable, tangible outputs you can
+      <p class="intro">A financial operating system isn't a feeling. It's a set of durable, tangible outputs you can
         hold, and that outlive any single meeting or market.</p>
       <div class="arts">
         <a class="art" href="score.html">

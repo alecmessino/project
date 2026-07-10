@@ -38,7 +38,7 @@
   .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:var(--surface-radius);overflow:hidden;
     box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
-    border-bottom:3px double var(--frame-line)}
+    border-bottom:1px solid var(--line)}
   .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
@@ -55,13 +55,13 @@
   .axiom p{font-family:var(--serif);font-weight:500;font-size:clamp(22px,1.8vw+14px,28px);line-height:1.3;color:var(--ink);margin:0;letter-spacing:-.01em}
 
   .because{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;margin:0 0 18px}
-  .conseq{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  @media(max-width:680px){.conseq{grid-template-columns:1fr;gap:12px}}
-  .con{background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);padding:20px 20px 22px;text-align:center}
+  .conseq{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  @media(max-width:680px){.conseq{grid-template-columns:1fr}.conseq .con + .con{border-left:none;border-top:1px solid var(--line)}}
+  .con{padding:20px 24px 22px;text-align:center}
+  .con + .con{border-left:1px solid var(--line)}
   .con .cn{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
   .con .ct{font-family:var(--sans);font-weight:700;font-size:18px;line-height:1.2;letter-spacing:-.015em;color:var(--ink);margin:0 0 8px}
   .con p{font-size:13.5px;line-height:1.55;color:var(--body);margin:0}
-  .con.hero{background:var(--wash);border-color:var(--frame-line)}
   .con.hero .ct{color:var(--teal)}
 
   /* ── The Architecture — the iconic diagram. Purpose at top, specialists at base, the
@@ -88,9 +88,9 @@
   h2sec{display:block}
   .stmt{text-align:center;margin:0}
   .stmt .k{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:12px}
-  .creed{background:var(--navy);color:#e7ecf2;border-radius:var(--surface-radius);padding:30px 34px;text-align:center;margin:8px 0 0}
-  .creed .k{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike-soft);margin-bottom:14px}
-  .creed p{font-family:var(--serif);font-weight:500;font-size:clamp(22px,2vw+14px,30px);line-height:1.22;color:#f1ede3;margin:0;letter-spacing:-.012em}
+  .creed{padding:26px 34px;text-align:center;margin:8px 0 0;border-top:3px double var(--frame-line);border-bottom:3px double var(--frame-line)}
+  .creed .k{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+  .creed p{font-family:var(--serif);font-weight:500;font-size:clamp(22px,2vw+14px,30px);line-height:1.22;color:var(--ink);margin:0;letter-spacing:-.012em}
 
   .slogan{text-align:center;font-family:var(--sans);font-weight:700;font-size:clamp(20px,2vw+12px,26px);letter-spacing:-.02em;color:var(--ink);margin:0}
   .slogan .s{display:block;font-family:var(--serif);font-style:italic;font-weight:400;font-size:16px;color:var(--dim);margin-top:10px;letter-spacing:0}
@@ -99,7 +99,7 @@
   .onward a:hover{text-decoration:underline}
   .onward .d{color:var(--ghost-line);margin:0 7px}
 
-  .foot{margin-top:52px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
+  .foot{margin-top:52px;padding:20px 44px 40px;border-top:1px solid var(--line);
     color:var(--muted);font-size:12.5px;line-height:1.65}
   .foot .note{color:var(--dim);font-weight:600}
   .foot b{color:var(--dim)}
@@ -110,24 +110,21 @@
 <div class="wrap">
   <div class="frame">
     <div class="run">
-      <span class="inst">Driftwood · Private Wealth Architecture</span>
-      <span class="marker">The Driftwood Principles</span>
+      <span class="inst">Driftwood</span>
     </div>
     <div class="inner">
     <nav class="dwnav" aria-label="Driftwood">
       <a class="brand" href="index.html">Driftwood</a>
       <div class="dwnav-links">
         <span class="dwnav-group">
-          <span class="dwnav-label">Understand</span>
           <a href="howitworks.html">How Driftwood&nbsp;Works</a>
           <a href="thesis.html">How We Invest</a>
-          <a href="familyoffice.html">Family&nbsp;Offices</a>
+          <a href="familyoffice.html">The Operating Model</a>
           <a href="library.html">Coordination&nbsp;Library</a>
           <a href="insights.html">Insights</a>
           <a href="about.html">Our Story</a>
         </span>
         <span class="dwnav-group">
-          <span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="statemap.html">State Tax&nbsp;Atlas</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
@@ -205,7 +202,6 @@
 
       <div class="rule"></div>
 
-      <div class="stmt" style="margin-bottom:16px"><span class="k">The operating rule</span></div>
       <div class="creed">
         <div class="k">The Constitution</div>
         <p>Financial decisions should not surprise one another.</p>

@@ -31,7 +31,7 @@ AXES = [
 # ── the five strategy families ────────────────────────────────────────────────────────────────────
 BUCKETS = [
     {"key": "selling", "label": "Selling", "color": "#9b4439", "blurb": "Sell outright or in stages."},
-    {"key": "harvesting", "label": "Harvesting", "color": "#a9853f",
+    {"key": "harvesting", "label": "Harvesting", "color": "#2c5878",
      "blurb": "Bank capital losses to fund a tax-neutral exit."},
     {"key": "hedging", "label": "Hedging", "color": "#4a6d8c",
      "blurb": "Cap or offset the price risk with options or forwards."},

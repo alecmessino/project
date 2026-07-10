@@ -72,8 +72,8 @@
   .score{background:var(--navy);color:#eef2f6;border-radius:var(--surface-radius);padding:24px 24px 26px;text-align:center}
   .score .s{font-family:var(--sans);font-weight:700;font-size:56px;line-height:1;letter-spacing:-.03em;color:#fff;font-variant-numeric:tabular-nums}
   .score .of{font-size:13px;color:#9aa3ae;margin-top:3px}
-  .score .meter{height:8px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden;margin:16px 0 14px}
-  .score .fill{display:block;height:100%;width:0%;background:linear-gradient(90deg,#4dbf9c,#a9c2d6);transition:width .4s cubic-bezier(.4,0,.2,1)}
+  .score .meter{height:8px;border-radius:0;background:rgba(255,255,255,.14);overflow:hidden;margin:16px 0 14px}
+  .score .fill{display:block;height:100%;width:0%;background:var(--gold);transition:width .4s cubic-bezier(.4,0,.2,1)}
   .score .tier{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#a9c2d6}
   .score .read{font-family:var(--serif);font-size:15px;line-height:1.45;color:#dfe5ec;margin:12px 0 0}
   .panel .hint{font-size:12px;line-height:1.55;color:var(--muted);margin:12px 4px 0;text-align:center}
@@ -206,7 +206,7 @@
     <div class="creed-band">Complexity is where coordination pays. It's opportunity, not a burden.</div>
 
     <div class="cta">
-      <div class="ct">Turn the map into a number.</div>
+      <div class="ct">See it in dollars.</div>
       <div class="cd">The Tax Diagnostic takes it from here, showing what a coordinated approach could be worth on
         your own state and bracket, in about two minutes.</div>
       <div class="btns">

@@ -316,7 +316,7 @@
     count.textContent = n + ' / 5';
     sum.textContent = n === 0 ? 'Five capable professionals — none of them in the same room.'
       : n === levers.length ? 'Every decision made in view of the others. The same assets, working harder — because someone owns how they fit together.'
-      : 'The pieces are starting to talk. Keep going.';
+      : 'Some decisions are now made in view of the others; the rest remain isolated.';
   }
   levers.forEach(function(b){ b.addEventListener('click', function(){
     b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); paint();

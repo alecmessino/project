@@ -83,26 +83,10 @@
   .wc-lab{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
   .wc-assets .v{font-size:13.5px;color:var(--dim);line-height:1.5}
   .wc-assets .v b{color:var(--ink);font-weight:600}
-  .wc-levers{padding:18px 20px 8px}
-  .wc-lever{display:block;width:100%;text-align:left;appearance:none;cursor:pointer;background:var(--soft);
-    border:1px solid var(--line);border-left:3px solid var(--ghost-line);border-radius:var(--surface-radius);padding:12px 15px;margin:0 0 10px;
-    transition:background-color .13s ease,border-color .13s ease}
-  .wc-lever:hover{border-color:var(--brass)}
-  .wc-lever:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
-  .wc-lever .wl-h{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .wc-lever .wl-n{font-family:var(--sans);font-weight:700;font-size:14px;color:var(--ink)}
-  .wc-lever .wl-s{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
-  .wc-lever .wl-e{font-size:13px;line-height:1.5;color:var(--body);margin-top:6px}
-  .wc-lever[aria-pressed="true"]{background:var(--wash);border-left-color:var(--brass)}
-  .wc-lever[aria-pressed="true"] .wl-s{color:var(--brass)}
-  .wc-out{padding:6px 20px 20px}
-  .wc-meter{height:12px;border-radius:999px;background:var(--line2);overflow:hidden;border:1px solid var(--line)}
-  .wc-fill{display:block;height:100%;width:56%;background:linear-gradient(90deg,#15806a,#15463a);
-    transition:width .35s cubic-bezier(.4,0,.2,1)}
-  .wc-mlab{display:flex;justify-content:space-between;margin-top:8px;font-family:var(--sans);font-size:11px;color:var(--muted)}
-  .wc-sum{font-family:var(--serif);font-size:16px;line-height:1.45;color:var(--ink);margin:14px 0 0}
-  .wc-pin{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--teal2);margin:8px 0 0}
-  .wc-note{font-size:11.5px;line-height:1.55;color:var(--muted);margin:10px 0 0}
+  /* The gradient "financial system health" meter and its lever styles were retired in the
+     institutional upgrade; the "What changed?" widget now uses the shared squared tally and
+     ruled levers (.coord-head/.tally/.coord-levers/.coord-lever/.coord-sum/.coord-note) from
+     the driftwood.css additions. Only the container (.wc) and the assets note (.wc-assets) remain. */
 
   .lead-cat{font-family:var(--serif);font-size:20px;line-height:1.5;color:var(--ink);margin:6px 0 0;
     padding-left:18px;border-left:3px solid var(--brass);max-width:60ch}
@@ -202,44 +186,36 @@
         attending to. Wealth works exactly the same way.</p>
       <div class="orx">
         <figure class="orscene">
-          <svg viewBox="0 0 340 300" role="img" aria-label="Four medical specialists — surgeon, radiologist, pathologist, oncologist — connected to one patient at the center.">
-            <g stroke="#15806a" stroke-width="1.6" opacity=".55">
-              <line x1="170" y1="53" x2="170" y2="116"/>
-              <line x1="170" y1="247" x2="170" y2="184"/>
-              <line x1="110" y1="150" x2="122" y2="150"/>
-              <line x1="230" y1="150" x2="218" y2="150"/>
-            </g>
-            <ellipse cx="170" cy="150" rx="56" ry="40" fill="rgba(21,128,106,.09)"/>
-            <ellipse cx="170" cy="150" rx="48" ry="34" fill="#fff" stroke="#15463a" stroke-width="2"/>
-            <text x="170" y="146" text-anchor="middle" font-family="'Satoshi',sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.4" fill="#15463a">THE</text>
-            <text x="170" y="163" text-anchor="middle" font-family="'Satoshi',sans-serif" font-size="15" font-weight="700" fill="#1e2833">patient</text>
-            <g font-family="'Satoshi',sans-serif" font-size="12" fill="#3d4650" text-anchor="middle">
-              <rect x="118" y="27" width="104" height="26" rx="13" fill="#fff" stroke="#c3bcab"/><text x="170" y="44">Surgeon</text>
-              <rect x="6" y="137" width="104" height="26" rx="13" fill="#fff" stroke="#c3bcab"/><text x="58" y="154">Oncologist</text>
-              <rect x="230" y="137" width="104" height="26" rx="13" fill="#fff" stroke="#c3bcab"/><text x="282" y="154">Radiologist</text>
-              <rect x="118" y="247" width="104" height="26" rx="13" fill="#fff" stroke="#c3bcab"/><text x="170" y="264">Pathologist</text>
+          <svg viewBox="0 0 340 300" role="img" aria-label="Four medical specialists connected to one patient at the centre.">
+            <g stroke="#b8b2a4" stroke-width="1"><line x1="170" y1="53" x2="170" y2="116"/><line x1="170" y1="248" x2="170" y2="184"/><line x1="110" y1="150.5" x2="118" y2="150.5"/><line x1="230" y1="150.5" x2="222" y2="150.5"/></g>
+            <g fill="#1e2833"><rect x="167" y="113" width="6" height="6"/><rect x="167" y="181" width="6" height="6"/><rect x="115" y="147.5" width="6" height="6"/><rect x="219" y="147.5" width="6" height="6"/></g>
+            <rect x="118" y="120" width="104" height="61" fill="#fff" stroke="#c3bcab" stroke-width="1.2"/>
+            <line x1="118" y1="134" x2="222" y2="134" stroke="#1e2833" stroke-width="2"/>
+            <text x="170" y="131" text-anchor="middle" font-size="8" font-weight="700" letter-spacing="1.8" fill="#2c5878" style="font-family:var(--sans)">THE</text>
+            <text x="170" y="162" text-anchor="middle" font-size="13" font-weight="700" fill="#1e2833" style="font-family:var(--sans)">Patient</text>
+            <g font-size="10" font-weight="700" letter-spacing="1.3" fill="#3d4650" text-anchor="middle" style="font-family:var(--sans)">
+              <rect x="118" y="30" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="170" y="45.5">SURGEON</text>
+              <rect x="6" y="139" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="58" y="154.5">ONCOLOGIST</text>
+              <rect x="230" y="139" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="282" y="154.5">RADIOLOGIST</text>
+              <rect x="118" y="248" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="170" y="263.5">PATHOLOGIST</text>
             </g>
           </svg>
           <figcaption>Medicine</figcaption>
         </figure>
         <div class="orbridge" aria-hidden="true">=</div>
         <figure class="orscene">
-          <svg viewBox="0 0 340 300" role="img" aria-label="Four financial specialists — CPA, advisor, attorney, insurance — connected to one balance sheet at the center.">
-            <g stroke="#15806a" stroke-width="1.6" opacity=".55">
-              <line x1="170" y1="53" x2="170" y2="116"/>
-              <line x1="170" y1="247" x2="170" y2="184"/>
-              <line x1="110" y1="150" x2="122" y2="150"/>
-              <line x1="230" y1="150" x2="218" y2="150"/>
-            </g>
-            <rect x="118" y="116" width="104" height="68" rx="10" fill="rgba(21,128,106,.09)"/>
-            <rect x="122" y="120" width="96" height="60" rx="8" fill="#fff" stroke="#15463a" stroke-width="2"/>
-            <text x="170" y="146" text-anchor="middle" font-family="'Satoshi',sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.4" fill="#15463a">YOUR</text>
-            <text x="170" y="163" text-anchor="middle" font-family="'Satoshi',sans-serif" font-size="13.5" font-weight="700" fill="#1e2833">balance sheet</text>
-            <g font-family="'Satoshi',sans-serif" font-size="12" fill="#3d4650" text-anchor="middle">
-              <rect x="118" y="27" width="104" height="26" rx="13" fill="#fff" stroke="#c3bcab"/><text x="170" y="44">CPA</text>
-              <rect x="6" y="137" width="104" height="26" rx="13" fill="#fff" stroke="#c3bcab"/><text x="58" y="154">Attorney</text>
-              <rect x="230" y="137" width="104" height="26" rx="13" fill="#fff" stroke="#c3bcab"/><text x="282" y="154">Advisor</text>
-              <rect x="118" y="247" width="104" height="26" rx="13" fill="#fff" stroke="#c3bcab"/><text x="170" y="264">Insurance</text>
+          <svg viewBox="0 0 340 300" role="img" aria-label="Four financial specialists connected to one balance sheet at the centre.">
+            <g stroke="#b8b2a4" stroke-width="1"><line x1="170" y1="53" x2="170" y2="116"/><line x1="170" y1="248" x2="170" y2="184"/><line x1="110" y1="150.5" x2="118" y2="150.5"/><line x1="230" y1="150.5" x2="222" y2="150.5"/></g>
+            <g fill="#1e2833"><rect x="167" y="113" width="6" height="6"/><rect x="167" y="181" width="6" height="6"/><rect x="115" y="147.5" width="6" height="6"/><rect x="219" y="147.5" width="6" height="6"/></g>
+            <rect x="118" y="120" width="104" height="61" fill="#fff" stroke="#c3bcab" stroke-width="1.2"/>
+            <line x1="118" y1="134" x2="222" y2="134" stroke="#1e2833" stroke-width="2"/>
+            <text x="170" y="131" text-anchor="middle" font-size="8" font-weight="700" letter-spacing="1.8" fill="#2c5878" style="font-family:var(--sans)">YOUR</text>
+            <text x="170" y="162" text-anchor="middle" font-size="13" font-weight="700" fill="#1e2833" style="font-family:var(--sans)">Balance sheet</text>
+            <g font-size="10" font-weight="700" letter-spacing="1.3" fill="#3d4650" text-anchor="middle" style="font-family:var(--sans)">
+              <rect x="118" y="30" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="170" y="45.5">CPA</text>
+              <rect x="6" y="139" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="58" y="154.5">ATTORNEY</text>
+              <rect x="230" y="139" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="282" y="154.5">ADVISOR</text>
+              <rect x="118" y="248" width="104" height="23" fill="#fff" stroke="#c3bcab"/><text x="170" y="263.5">INSURANCE</text>
             </g>
           </svg>
           <figcaption>Wealth</figcaption>
@@ -259,35 +235,33 @@
           <div class="v"><b>Unchanged throughout.</b> Same portfolio, same accounts, same insurance policy, same
             property. Nothing below buys or sells a thing.</div>
         </div>
-        <div class="wc-levers" id="wcLevers">
-          <button class="wc-lever" aria-pressed="false" data-iso="The life-insurance policy sits inside your taxable estate, inflating the tax." data-co="The policy moves into an ILIT — out of the estate, and now the liquidity that pays the tax.">
-            <span class="wl-h"><span class="wl-n">Ownership</span><span class="wl-s">Before</span></span>
-            <span class="wl-e"></span>
-          </button>
-          <button class="wc-lever" aria-pressed="false" data-iso="Tax-inefficient bonds sit in the taxable account, throwing off taxed income every year." data-co="Bonds move to the IRA; equities stay in taxable for the step-up. Same holdings, better located.">
-            <span class="wl-h"><span class="wl-n">Account location</span><span class="wl-s">Before</span></span>
-            <span class="wl-e"></span>
-          </button>
-          <button class="wc-lever" aria-pressed="false" data-iso="Income is pulled from whichever account is easiest that year." data-co="Draws are sequenced across taxable, IRA, and Roth to fill the bracket, not spill it.">
-            <span class="wl-h"><span class="wl-n">Withdrawal order</span><span class="wl-s">Before</span></span>
-            <span class="wl-e"></span>
-          </button>
-          <button class="wc-lever" aria-pressed="false" data-iso="Beneficiary forms quietly contradict the will." data-co="Beneficiaries and titling are aligned with the estate plan, so nothing routes around it.">
-            <span class="wl-h"><span class="wl-n">Beneficiaries</span><span class="wl-s">Before</span></span>
-            <span class="wl-e"></span>
-          </button>
-          <button class="wc-lever" aria-pressed="false" data-iso="Big events — a sale, a conversion — happen whenever they happen." data-co="Large events are timed to low-bracket years, and after any move across a state line.">
-            <span class="wl-h"><span class="wl-n">Timing</span><span class="wl-s">Before</span></span>
-            <span class="wl-e"></span>
-          </button>
-        </div>
-        <div class="wc-out">
-          <div class="wc-meter"><span class="wc-fill" id="wcFill"></span></div>
-          <div class="wc-mlab"><span>Financial system health</span><span id="wcCount">0 of 5 coordinated</span></div>
-          <p class="wc-sum" id="wcSum">Five capable professionals. None of them in the same room.</p>
-          <p class="wc-pin">Nothing about the investments changed. Only the coordination did.</p>
-          <p class="wc-note">Illustrative and directional — the meter shows relative effect, not a specific dollar
-            figure. Your result depends on your own facts and on current law.</p>
+        <div style="padding:18px 20px 8px">
+          <div class="coord-head"><span class="lab">Decisions in coordination</span><span class="coord-count" id="coordCount">0 / 5</span></div>
+          <div class="tally" id="coordTally"><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span></div>
+          <p class="coord-sum" id="coordSum">Five capable professionals — none of them in the same room.</p>
+          <div class="coord-levers" id="coordLevers">
+            <button class="coord-lever" type="button" aria-pressed="false"
+              data-iso="A life-insurance policy sits inside your taxable estate, inflating the tax."
+              data-co="The policy moves into an ILIT — out of the estate, and now the liquidity that pays the tax.">
+              <span class="tick"></span><span class="body"><span class="row"><span class="nm">Ownership</span><span class="st">Isolated</span></span><span class="ds"></span></span></button>
+            <button class="coord-lever" type="button" aria-pressed="false"
+              data-iso="Tax-inefficient bonds sit in the taxable account, throwing off taxed income every year."
+              data-co="Bonds move to the IRA; equities stay in taxable for the step-up. Same holdings, better located.">
+              <span class="tick"></span><span class="body"><span class="row"><span class="nm">Account location</span><span class="st">Isolated</span></span><span class="ds"></span></span></button>
+            <button class="coord-lever" type="button" aria-pressed="false"
+              data-iso="Income is pulled from whichever account is easiest that year."
+              data-co="Draws are sequenced across taxable, IRA, and Roth to fill the bracket, not spill it.">
+              <span class="tick"></span><span class="body"><span class="row"><span class="nm">Withdrawal order</span><span class="st">Isolated</span></span><span class="ds"></span></span></button>
+            <button class="coord-lever" type="button" aria-pressed="false"
+              data-iso="Beneficiary forms quietly contradict the will."
+              data-co="Beneficiaries and titling are aligned with the estate plan, so nothing routes around it.">
+              <span class="tick"></span><span class="body"><span class="row"><span class="nm">Beneficiaries</span><span class="st">Isolated</span></span><span class="ds"></span></span></button>
+            <button class="coord-lever" type="button" aria-pressed="false"
+              data-iso="Big events — a sale, a conversion — happen whenever they happen."
+              data-co="Large events are timed to low-bracket years, and after any move across a state line.">
+              <span class="tick"></span><span class="body"><span class="row"><span class="nm">Timing</span><span class="st">Isolated</span></span><span class="ds"></span></span></button>
+          </div>
+          <p class="coord-note">Illustrative and directional — the tally shows coverage, not a dollar figure.</p>
         </div>
       </div>
     </div>
@@ -325,36 +299,30 @@
 </div>
 
 <script>
-  (function(){
-    var levers = Array.prototype.slice.call(document.querySelectorAll('.wc-lever'));
-    if(!levers.length) return;
-    var fill = document.getElementById('wcFill');
-    var count = document.getElementById('wcCount');
-    var sum = document.getElementById('wcSum');
-    var BASE = 56, TOP = 100;
-    function paint(){
-      levers.forEach(function(b){
-        var on = b.getAttribute('aria-pressed') === 'true';
-        b.querySelector('.wl-s').textContent = on ? 'After' : 'Before';
-        b.querySelector('.wl-e').textContent = on ? b.getAttribute('data-co') : b.getAttribute('data-iso');
-      });
-      var n = levers.filter(function(b){return b.getAttribute('aria-pressed')==='true';}).length;
-      fill.style.width = (BASE + (TOP-BASE)*(n/levers.length)) + '%';
-      count.textContent = n + ' of ' + levers.length + ' coordinated';
-      var msg;
-      if(n===0) msg = 'Five capable professionals. None of them in the same room.';
-      else if(n===levers.length) msg = 'Every decision made in view of the others. The same assets, working harder — because someone owns how they fit together.';
-      else msg = 'The pieces are starting to talk. Keep going.';
-      sum.textContent = msg;
-    }
+(function(){
+  var levers = [].slice.call(document.querySelectorAll('#coordLevers .coord-lever'));
+  if(!levers.length) return;
+  var segs = [].slice.call(document.querySelectorAll('#coordTally .seg'));
+  var count = document.getElementById('coordCount');
+  var sum = document.getElementById('coordSum');
+  function paint(){
     levers.forEach(function(b){
-      b.addEventListener('click', function(){
-        b.setAttribute('aria-pressed', b.getAttribute('aria-pressed')==='true' ? 'false' : 'true');
-        paint();
-      });
+      var on = b.getAttribute('aria-pressed') === 'true';
+      b.querySelector('.st').textContent = on ? 'Coordinated' : 'Isolated';
+      b.querySelector('.ds').textContent = on ? b.getAttribute('data-co') : b.getAttribute('data-iso');
     });
-    paint();
-  })();
+    var n = levers.filter(function(b){ return b.getAttribute('aria-pressed') === 'true'; }).length;
+    segs.forEach(function(s,i){ s.classList.toggle('on', i < n); });
+    count.textContent = n + ' / 5';
+    sum.textContent = n === 0 ? 'Five capable professionals — none of them in the same room.'
+      : n === levers.length ? 'Every decision made in view of the others. The same assets, working harder — because someone owns how they fit together.'
+      : 'The pieces are starting to talk. Keep going.';
+  }
+  levers.forEach(function(b){ b.addEventListener('click', function(){
+    b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); paint();
+  }); });
+  paint();
+})();
 </script>
 </body>
 </html>

@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Privacy-first analytics (Plausible) -->
 <script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
 <script>
   window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
@@ -10,153 +11,69 @@
 </script>
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
-<title>The Wealth Operating Manual — a sample — Driftwood</title>
-<meta name="description" content="A living document every Driftwood household receives: the team, the balance sheet, the operating calendar, the decisions ahead, and a running register of coordination opportunities. This is an illustrative sample for the fictional Harris family. Not advice." />
+<title>The Household Operating Manual — Driftwood</title>
+<meta name="description" content="A report is read once and filed; a record is kept. The Household Operating Manual is Driftwood's living operational record — every decision, its reason, and what it touched, kept in one place as it accumulates. Illustrative, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/manual.html" />
 <link rel="icon" href="favicon.svg" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Driftwood" />
-<meta property="og:title" content="The Wealth Operating Manual — a sample" />
-<meta property="og:description" content="The tangible product: a living document that runs a household's financial life as one system." />
+<meta property="og:title" content="The Household Operating Manual" />
+<meta property="og:description" content="A report is read once. A record is kept. Driftwood's living operational record — decisions, dependencies, and revisions, kept as one accumulating book." />
 <meta property="og:url" content="https://alecmessino.github.io/project/manual.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="The Wealth Operating Manual — a sample" />
-<meta name="twitter:description" content="The tangible product: a living document that runs a household's financial life as one system." />
+<meta name="twitter:title" content="The Household Operating Manual" />
+<meta name="twitter:description" content="A report is read once. A record is kept." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
 <style>
-  :root{
-    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --wash:#eaf0f4;
-    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
-    --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
-    --brass:#2c5878; --gold:#a9c2d6;
-    --st-id:#6b6e6a; --st-id-bg:#eceae3;
-    --st-prog:#2c5878; --st-prog-bg:#e7eef4;
-    --st-done:#15806a; --st-done-bg:#e2efe9;
-    --st-defer:#8a8578; --st-defer-bg:#eeece5;
-    --st-open:#9a6a2e; --st-open-bg:#f4ecdb;
-  }
+  /* Page-local scaffolding only. Record components (frontmatter, ledger, register,
+     changelog, folio, colophon, stamp) live in the shared driftwood.css additions. */
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--body);font:16px/1.6 var(--sans);
-    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  .wrap{max-width:1040px;margin:36px auto;padding:0 20px 60px}
-  .frame{background:var(--bg);border:1px solid var(--frame-line);border-radius:var(--surface-radius);overflow:hidden;
+  body{margin:0;background:var(--bg);color:var(--body);font:16px/1.62 var(--sans);
+    letter-spacing:-.004em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1080px;margin:34px auto;padding:0 20px 72px}
+  .frame{background:var(--bg);border:1px solid var(--frame-line);overflow:hidden;
     box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line), 0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:3px double var(--frame-line);font-family:var(--sans)}
-  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
-  .doc{padding:44px 44px 6px}
-  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
-  h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.6vw+15px,40px);line-height:1.08;letter-spacing:-.022em;color:var(--ink);margin:0 0 14px;max-width:22ch}
-  .lede{font-family:var(--serif);font-size:18px;line-height:1.55;color:var(--dim);margin:0 0 20px;max-width:64ch}
+  .msec{padding:34px 48px}
+  .msec + .msec,.msec.ruled{border-top:1px solid var(--line)}
+  .msec.soft{background:var(--soft)}
+
+  .masthead-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap}
+  .eyebrow{font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(32px,3vw+15px,46px);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:16ch}
+  .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:54ch}
   .lede b{color:var(--ink);font-weight:600}
-  .metarow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 6px}
-  .badge{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.04em;color:var(--brass);
-    background:var(--wash);border:1px solid var(--frame-line);border-radius:999px;padding:6px 13px}
-  .badge.q{color:var(--dim);background:var(--soft);border-color:var(--line)}
-  .badge.live{color:var(--teal2)}
-  .badge .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--teal2);margin-right:7px;vertical-align:middle}
+  .tier-note{font-size:12px;line-height:1.6;color:var(--muted);margin:14px 0 0;max-width:74ch}
 
-  .sec{padding:14px 44px 6px}
-  .sech{display:flex;align-items:baseline;gap:12px;margin:26px 0 14px;border-bottom:1px solid var(--frame-line);padding-bottom:9px}
-  .sech .n{font-family:var(--sans);font-weight:700;font-size:11px;font-variant-numeric:tabular-nums;color:var(--ghost-line)}
-  .sech h2{font-family:var(--sans);font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin:0}
-  .sech .note{margin-left:auto;font-size:12px;color:var(--muted);font-style:italic;font-family:var(--serif)}
+  .close{background:var(--navy);padding:44px 48px 40px}
+  .close .eyebrow{color:var(--accent-strike-soft)}
+  .close h2{font-family:var(--sans);font-weight:700;font-size:clamp(26px,2.6vw+14px,38px);line-height:1.08;letter-spacing:-.022em;color:#f1ede3;margin:0 0 16px;max-width:20ch}
+  .close p{font-family:var(--serif);font-size:17.5px;line-height:1.55;color:var(--on-dark-dim);margin:0 0 26px;max-width:58ch}
+  .close .foliobar{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(233,229,219,.16);padding-top:14px}
+  .close .foliobar span{font-weight:600;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--on-dark-dim);font-variant-numeric:tabular-nums}
 
-  /* Team roster */
-  .roster{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  @media(max-width:680px){.roster{grid-template-columns:1fr}}
-  .seat{display:flex;gap:13px;align-items:flex-start;background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);padding:14px 16px}
-  .seat.lead{background:var(--wash);border-color:var(--frame-line)}
-  .seat .who{font-family:var(--sans);font-weight:700;font-size:14.5px;color:var(--ink);margin:0 0 2px}
-  .seat .role{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
-  .seat .owns{font-size:13px;line-height:1.5;color:var(--body);margin:6px 0 0}
+  .foot{padding:20px 48px 34px;border-top:1px solid var(--line);background:var(--soft);color:#9a978f;font-size:11px;line-height:1.65}
+  .foot .note{color:var(--muted);font-weight:600}
+  .foot a{color:var(--muted)} .foot b{color:var(--muted)}
 
-  /* Tables */
-  .tbl-scroll{overflow-x:auto}
-  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line2);vertical-align:top;line-height:1.45}
-  thead th{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--frame-line)}
-  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-  tbody td:first-child{font-weight:600;color:var(--ink)}
-  tr.tot td{border-top:2px solid var(--frame-line);border-bottom:none;font-weight:700;color:var(--ink);padding-top:12px}
-  .sub{color:var(--muted);font-weight:400;font-size:12px}
-  /* Provenance — every governed line item traces to a Decision Record, or is flagged as not-yet-recorded. */
-  .drref{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.02em;color:var(--teal2);
-    text-decoration:none;white-space:nowrap;font-variant-numeric:tabular-nums}
-  .drref:hover{text-decoration:underline}
-  td .drref{font-weight:700}
-  .norec{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--ghost-line);white-space:nowrap}
-  .held-dr{color:var(--ghost-line);font-weight:400}
-  .prov-note{font-size:12px;line-height:1.55;color:var(--muted);margin:12px 0 0}
-  .prov-note .drref{font-size:11px}
-
-  /* Complexity index */
-  .cx{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;align-items:center}
-  @media(max-width:680px){.cx{grid-template-columns:1fr}}
-  .cx .drivers{display:flex;flex-wrap:wrap;gap:7px}
-  .cx .drv{font-size:12px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
-  .cx .drv b{color:var(--brass);font-weight:700}
-  .cx .score{background:var(--navy);color:#eef2f6;border-radius:var(--surface-radius);padding:20px 22px;text-align:center}
-  .cx .score .s{font-family:var(--sans);font-weight:700;font-size:44px;line-height:1;letter-spacing:-.02em;color:#fff}
-  .cx .score .of{font-size:13px;color:#9aa3ae;margin-top:2px}
-  .cx .score .tier{margin-top:12px;font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#a9c2d6}
-
-  /* Calendar */
-  .cal{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-  @media(max-width:760px){.cal{grid-template-columns:1fr 1fr}}
-  @media(max-width:460px){.cal{grid-template-columns:1fr}}
-  .qtr{background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);padding:14px 15px}
-  .qtr .qh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);margin-bottom:9px}
-  .qtr ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
-  .qtr li{font-size:12.5px;line-height:1.4;color:var(--body);position:relative;padding-left:14px}
-  .qtr li::before{content:"";position:absolute;left:0;top:.5em;width:5px;height:5px;border-radius:50%;background:var(--ghost-line)}
-
-  /* Decision dashboard */
-  .decisions{display:flex;flex-direction:column;gap:12px}
-  .dc{background:#fff;border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:var(--surface-radius);padding:14px 16px}
-  .dc .dch{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;justify-content:space-between}
-  .dc .dt{font-family:var(--sans);font-weight:700;font-size:15px;color:var(--ink)}
-  .dc .when{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
-  .dc .rev{font-size:13px;line-height:1.5;color:var(--body);margin:7px 0 0}
-  .dc .rev b{color:var(--ink);font-weight:600}
-
-  /* Status pills */
-  .pill{display:inline-block;font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.06em;
-    text-transform:uppercase;padding:4px 9px;border-radius:999px;white-space:nowrap}
-  .pill.id{color:var(--st-id);background:var(--st-id-bg)}
-  .pill.prog{color:var(--st-prog);background:var(--st-prog-bg)}
-  .pill.done{color:var(--st-done);background:var(--st-done-bg)}
-  .pill.defer{color:var(--st-defer);background:var(--st-defer-bg)}
-  .pill.open{color:var(--st-open);background:var(--st-open-bg)}
-
-  .legend{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
-
-  .foot{margin-top:40px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
-    color:var(--muted);font-size:12px;line-height:1.65}
-  .foot .note{color:#5a5a62;font-weight:600}
-  .foot b{color:var(--dim)}
-  .cta{margin:30px 44px 0;background:var(--wash);border:1px solid var(--frame-line);border-radius:var(--surface-radius);padding:24px 28px}
-  .cta .ct{font-family:var(--sans);font-weight:700;font-size:19px;color:var(--ink);margin:0 0 7px;letter-spacing:-.01em}
-  .cta .cd{font-size:13.5px;line-height:1.6;color:var(--dim);margin:0 0 16px;max-width:60ch}
-  .cta a{display:inline-flex;align-items:center;min-height:42px;text-decoration:none;border-radius:var(--surface-radius);font-family:var(--sans);font-size:14px;font-weight:600;padding:11px 20px;background:var(--teal);color:#f1ede3;margin-right:10px}
-  .cta a.ghost{background:transparent;border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
-  @media(max-width:620px){
-    .doc,.sec{padding-left:22px;padding-right:22px}
-    .foot,.cta{margin-left:22px;margin-right:22px}
-    .foot{padding-left:22px;padding-right:22px}
-  }
+  @media(max-width:640px){ .msec,.close,.foot{padding-left:22px;padding-right:22px} }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="frame">
     <div class="run">
-      <span class="inst">Driftwood · Private Wealth Architecture</span>
-      <span class="marker">Wealth Operating Manual · Sample</span>
+      <span class="inst">
+        <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true" style="display:block"><rect x="1" y="1" width="22" height="22" rx="5" fill="#1a2330"/><text x="12" y="17.5" text-anchor="middle" style="font-family:var(--serif)" font-size="15" font-weight="700" fill="#15806a">D</text></svg>
+        Driftwood · Private Wealth Architecture
+      </span>
+      <span class="marker">The Operating Manual</span>
     </div>
     <div class="inner">
     <nav class="dwnav" aria-label="Driftwood">
@@ -180,230 +97,186 @@
       </div>
     </nav>
 
-    <div class="doc">
-      <div class="eyebrow">A Sample Wealth Operating Manual</div>
-      <h1>The Harris Family — Wealth Operating Manual</h1>
-      <p class="lede">Every Driftwood household has one: a single living document that holds the whole system, updated
-        continuously rather than once a year. It is the tangible form of the product. <b>This is an illustrative
-        sample</b> for a fictional family, shortened to fit a page.</p>
-      <div class="metarow">
-        <span class="badge live"><span class="dot"></span>Living document</span>
-        <span class="badge">Coordination Index · Tier III</span>
-        <span class="badge q">Updated Q2 2026 · illustrative</span>
-        <span class="badge q">Steward: Driftwood</span>
+    <!-- ── MASTHEAD / FRONT MATTER ── -->
+    <div class="msec">
+      <div class="masthead-top">
+        <div style="max-width:640px">
+          <div class="eyebrow">Permanent operating record · the reserved tier</div>
+          <h1>The Household Operating Manual.</h1>
+          <p class="lede">A report is read once and filed. This is the other thing — the record a report becomes. Every decision, its reason, and what it touched, kept in one place and never deleted, so the plan is something that <b>accumulates</b> rather than something that resets each year.</p>
+        </div>
+        <div class="stamp">
+          <div class="t">Confidential</div>
+          <div class="s">Prepared for the Merrell household</div>
+        </div>
+      </div>
+
+      <div class="frontmatter" style="margin-top:30px">
+        <div class="cell"><div class="k">Household</div><div class="v">The Merrell household</div></div>
+        <div class="cell"><div class="k">Adviser of record</div><div class="v">Driftwood</div></div>
+        <div class="cell"><div class="k">Established</div><div class="v tnum">April 2021</div></div>
+        <div class="cell"><div class="k">Revision</div><div class="v tnum">14 · current</div></div>
+        <div class="cell"><div class="k">As of</div><div class="v tnum">9 July 2026</div></div>
+        <div class="cell"><div class="k">Next standing review</div><div class="v due">September 2026</div></div>
+      </div>
+      <p class="tier-note">This is the record tier, held apart on purpose. Ordinary pages inherit its type and its rules; only the standing record is framed as the manual — the device keeps its meaning by staying rare.</p>
+    </div>
+
+    <!-- ── § A · HOUSEHOLD DECISION LEDGER ── -->
+    <div class="msec soft ruled">
+      <div class="rec-head"><span class="rs">§ A</span><span class="rt">Household Decision Ledger</span></div>
+      <p class="rec-lede">Every decision, dated, with the reason it was made and the parts of the system it touched. Nothing is removed; the ledger only grows. This is the thing a family office keeps — and the thing an annual statement is not.</p>
+    </div>
+    <div class="msec soft ruled" style="padding-top:6px">
+      <div class="ledger-head">
+        <div>Date</div><div>Decision &amp; reason</div><div>Affected</div><div>Reference</div><div>Status</div>
+      </div>
+
+      <div class="ledger-year"><span class="y">2026</span><span class="c">1 entry</span></div>
+      <div class="ledger-row">
+        <div class="date">Mar 2026</div>
+        <div><div class="title">Relocated municipal bonds to the taxable account.</div><div class="reason">Tax-exempt coupons are wasted inside a tax-deferred account; the taxable book is their right home.</div></div>
+        <div class="affected">Portfolio · Taxes</div>
+        <div class="ref"><a href="index.html#evidence">Exhibit 3 →</a></div>
+        <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
+      </div>
+
+      <div class="ledger-year"><span class="y">2025</span><span class="c">2 entries</span></div>
+      <div class="ledger-row">
+        <div class="date">Nov 2025</div>
+        <div><div class="title">Sequenced a Roth conversion to fill the 24% bracket.</div><div class="reason">A low-income year before RMDs begin — bracket space that will not return.</div></div>
+        <div class="affected">Taxes · Estate</div>
+        <div class="ref"><a href="taxlab.html">§ After-Tax Review →</a></div>
+        <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
+      </div>
+      <div class="ledger-row">
+        <div class="date">Jun 2025</div>
+        <div><div class="title">Established a 529 for the first grandchild.</div><div class="reason">Five years of the annual exclusion, front-loaded, funded from the taxable book.</div></div>
+        <div class="affected">Liquidity · Estate</div>
+        <div class="ref"><a href="#changelog">rev. 12 →</a></div>
+        <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
+      </div>
+
+      <div class="ledger-year"><span class="y">2024</span><span class="c">2 entries</span></div>
+      <div class="ledger-row">
+        <div class="date">Sep 2024</div>
+        <div><div class="title">Re-domiciled the household to Texas.</div><div class="reason">Retire the 4.95% Illinois tax on the coming business sale before it is realized.</div></div>
+        <div class="affected">Taxes · Liquidity · Estate</div>
+        <div class="ref"><a href="statemap.html">Exhibit 1 →</a></div>
+        <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
+      </div>
+      <div class="ledger-row">
+        <div class="date">Feb 2024</div>
+        <div><div class="title">Moved the life policy into an ILIT.</div><div class="reason">Remove the death benefit from the taxable estate; let it fund the tax it once inflated.</div></div>
+        <div class="affected">Estate</div>
+        <div class="ref"><a href="#changelog">§ Estate →</a></div>
+        <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
+      </div>
+
+      <div class="ledger-year"><span class="y">2023</span><span class="c">1 entry</span></div>
+      <div class="ledger-row">
+        <div class="date">May 2023</div>
+        <div><div class="title">Began a three-year exit from the concentrated position.</div><div class="reason">Reduce single-stock risk on a schedule, at a tax cost agreed in advance.</div></div>
+        <div class="affected">Portfolio · Taxes</div>
+        <div class="ref"><a href="concentration.html">Exhibit 2 →</a></div>
+        <div class="recstatus prog"><span class="sw"></span><span class="lb">In progress</span></div>
+      </div>
+
+      <div class="ledger-year"><span class="y">2022</span><span class="c">1 entry</span></div>
+      <div class="ledger-row">
+        <div class="date">Oct 2022</div>
+        <div><div class="title">Set the household asset-location map.</div><div class="reason">Place each asset class in the account where it is taxed least.</div></div>
+        <div class="affected">Portfolio · Taxes</div>
+        <div class="ref"><a href="index.html#evidence">Exhibit 3 →</a></div>
+        <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
+      </div>
+
+      <div class="ledger-year"><span class="y">2021</span><span class="c">baseline</span></div>
+      <div class="ledger-row">
+        <div class="date">Apr 2021</div>
+        <div><div class="title">Opened the household book.</div><div class="reason">Inventoried the accounts, the return, and the estate documents — one coordinated starting point.</div></div>
+        <div class="affected">Portfolio · Taxes · Estate · Liquidity</div>
+        <div class="ref"><span class="none">—</span></div>
+        <div class="recstatus"><span class="sw"></span><span class="lb">Baseline</span></div>
       </div>
     </div>
 
-    <div class="sec">
-      <div class="sech"><span class="n">01</span><h2>The team &amp; who owns what</h2><span class="note">One seat owns the connections between the rest.</span></div>
-      <div class="roster">
-        <div class="seat lead">
-          <div>
-            <div class="role">Coordinator</div>
-            <div class="who">Driftwood</div>
-            <div class="owns">The whole system: the plan, the calendar, and how every decision interacts. Runs the
-              reviews; keeps the others aligned.</div>
-          </div>
+    <!-- ── § B · COORDINATION REGISTER ── -->
+    <div class="msec ruled">
+      <div class="rec-head"><span class="rs">§ B</span><span class="rt">Coordination Register</span></div>
+      <p class="rec-lede" style="margin-bottom:20px">The matters currently in motion — what is open, whom it waits on, and who owns the next move. A dependency is closed only when its professional has signed off.</p>
+      <div class="register-head">
+        <div>Matter</div><div>Dependencies</div><div>Owner</div><div>Status</div>
+      </div>
+      <div class="register-row">
+        <div><div class="matter">Sale of the operating business</div><div class="opened">Opened Jan 2026</div></div>
+        <div class="deps">
+          <span class="dep done"><span class="box"></span>CPA</span>
+          <span class="dep done"><span class="box"></span>Attorney</span>
+          <span class="dep pending"><span class="box"></span>Insurance</span>
+          <span class="dep done"><span class="box"></span>Portfolio</span>
         </div>
-        <div class="seat">
-          <div>
-            <div class="role">Household</div>
-            <div class="who">Tom &amp; Dana Harris</div>
-            <div class="owns">Make the decisions, with the consequences modeled in front of them first. Two children;
-              a family trust for both.</div>
-          </div>
+        <div class="owner">Driftwood</div>
+        <div class="rstat">Awaiting valuation</div>
+      </div>
+      <div class="register-row">
+        <div><div class="matter">2026 Roth conversion</div><div class="opened">Opened Feb 2026</div></div>
+        <div class="deps">
+          <span class="dep pending"><span class="box"></span>CPA</span>
+          <span class="dep done"><span class="box"></span>Portfolio</span>
         </div>
-        <div class="seat">
-          <div>
-            <div class="role">CPA</div>
-            <div class="who">Outside firm</div>
-            <div class="owns">Files the returns. Driftwood brings the working papers, projections, and the realized-gain
-              picture, one direction.</div>
-          </div>
+        <div class="owner">Driftwood</div>
+        <div class="rstat blue">Modeling bracket</div>
+      </div>
+      <div class="register-row">
+        <div><div class="matter">Second-home purchase</div><div class="opened">Opened Nov 2025</div></div>
+        <div class="deps">
+          <span class="dep done"><span class="box"></span>Attorney</span>
+          <span class="dep pending"><span class="box"></span>Portfolio</span>
         </div>
-        <div class="seat">
-          <div>
-            <div class="role">Estate attorney</div>
-            <div class="who">Outside firm</div>
-            <div class="owns">Drafts the documents and the trusts. Driftwood keeps titling, beneficiaries, and asset
-              location consistent with them.</div>
-          </div>
+        <div class="owner">You</div>
+        <div class="rstat">Funding source open</div>
+      </div>
+      <div class="register-row">
+        <div><div class="matter">Year-end gifting</div><div class="opened">Opened Jun 2026</div></div>
+        <div class="deps">
+          <span class="dep done"><span class="box"></span>CPA</span>
+          <span class="dep pending"><span class="box"></span>Attorney</span>
         </div>
-        <div class="seat">
-          <div>
-            <div class="role">Insurance</div>
-            <div class="who">Outside agent</div>
-            <div class="owns">Places coverage. Driftwood owns the ILIT structure, the premium funding, and how the
-              policy sits in the estate.</div>
-          </div>
-        </div>
-        <div class="seat">
-          <div>
-            <div class="role">Business counsel</div>
-            <div class="who">Outside firm</div>
-            <div class="owns">Handles the operating company and any sale. Driftwood coordinates the tax, liquidity, and
-              estate around it.</div>
-          </div>
-        </div>
+        <div class="owner">Driftwood</div>
+        <div class="rstat due">Scheduled December</div>
       </div>
     </div>
 
-    <div class="sec">
-      <div class="sech"><span class="n">02</span><h2>Balance sheet &amp; ownership</h2><span class="note">What's owned, how it's held — and what governs it.</span></div>
-      <div class="tbl-scroll">
-      <table>
-        <thead><tr><th>Asset</th><th>Held as</th><th class="num">Value</th></tr></thead>
-        <tbody>
-          <tr><td>Taxable brokerage</td><td>Joint <span class="sub">· low basis</span></td><td class="num">$1,000,000</td></tr>
-          <tr><td>Equity comp (RSUs)</td><td>Tom, one employer <span class="held-dr">· <a class="drref" href="decision-log.html#dr-003">DR&#8209;003</a></span></td><td class="num">$700,000</td></tr>
-          <tr><td>Traditional 401(k)</td><td>Tom</td><td class="num">$1,000,000</td></tr>
-          <tr><td>Rollover IRA</td><td>Dana</td><td class="num">$400,000</td></tr>
-          <tr><td>Roth 401(k) + Roth IRA</td><td>Tom &amp; Dana</td><td class="num">$400,000</td></tr>
-          <tr><td>HSA</td><td>Tom</td><td class="num">$100,000</td></tr>
-          <tr><td>Primary residence</td><td>Joint</td><td class="num">$900,000</td></tr>
-          <tr><td>Investment property + land</td><td>Harris Holdings LLC</td><td class="num">$500,000</td></tr>
-          <tr><td>Closely-held business</td><td>Harris Co. (S-corp) <span class="held-dr">· <a class="drref" href="decision-log.html#dr-002">DR&#8209;002</a></span></td><td class="num">$1,000,000</td></tr>
-          <tr><td>Life insurance</td><td class="sub" style="color:var(--ink);font-weight:600">Moving to ILIT <span class="held-dr" style="font-weight:400">· <a class="drref" href="decision-log.html#dr-001">DR&#8209;001</a></span></td><td class="num">$2,000,000</td></tr>
-          <tr class="tot"><td>Estate at death</td><td class="sub">before coordination</td><td class="num">$8,000,000</td></tr>
-        </tbody>
-      </table>
-      </div>
-      <p class="prov-note">A reference like <a class="drref" href="decision-log.html#dr-001">DR&#8209;001</a> links a
-        holding to the recorded decision that governs it, in the <a href="decision-log.html" style="color:var(--teal2);font-weight:600;text-decoration:none">Decision&nbsp;Log</a>.
-        <span class="norec">Next session</span> marks an item whose rationale hasn't been recorded yet — captured at
-        the next Operating Session.</p>
+    <!-- ── § C · HOUSEHOLD CHANGE LOG ── -->
+    <div class="msec soft ruled" id="changelog">
+      <div class="rec-head"><span class="rs">§ C</span><span class="rt">Household Change Log</span></div>
+      <p class="rec-lede" style="margin-bottom:20px">The revision history of the plan itself — what changed at each version, and by whose hand. The manual is a versioned instrument, not a live dashboard that forgets its own past.</p>
+      <div class="changelog-head"><div>Rev.</div><div>Date</div><div>Change</div><div>By</div></div>
+      <div class="changelog-row"><div class="rev">rev. 14</div><div class="cdate">Mar 2026</div><div class="change">Beneficiaries updated; municipal bonds relocated to taxable.</div><div class="by">Driftwood</div></div>
+      <div class="changelog-row"><div class="rev">rev. 13</div><div class="cdate">Nov 2025</div><div class="change">Roth conversion recorded; estimated tax adjusted.</div><div class="by">Driftwood</div></div>
+      <div class="changelog-row"><div class="rev">rev. 12</div><div class="cdate">Jun 2025</div><div class="change">529 established; annual gift logged.</div><div class="by">Driftwood</div></div>
+      <div class="changelog-row"><div class="rev">rev. 11</div><div class="cdate">Sep 2024</div><div class="change">Residence changed to Texas; estate plan re-based.</div><div class="by">Driftwood · Attorney</div></div>
+      <div class="changelog-row"><div class="rev">rev. 10</div><div class="cdate">Feb 2024</div><div class="change">Trust amended; life policy assigned to the ILIT.</div><div class="by">Attorney</div></div>
+      <div class="changelog-row"><div class="rev">rev. 09</div><div class="cdate">May 2023</div><div class="change">Concentration transition begun.</div><div class="by">Driftwood</div></div>
     </div>
 
-    <div class="sec">
-      <div class="sech"><span class="n">03</span><h2>Household Coordination Index</h2><span class="note">Coordination demand is opportunity, not a surcharge.</span></div>
-      <div class="cx">
-        <div class="drivers">
-          <span class="drv">Operating business <b>+2</b></span>
-          <span class="drv">Legal entities <b>+1</b></span>
-          <span class="drv">Family trust <b>+1</b></span>
-          <span class="drv">Equity comp <b>+2</b></span>
-          <span class="drv">Investment real estate <b>+1</b></span>
-          <span class="drv">Multi-state move planned <b>+1</b></span>
-          <span class="drv">Estate-tax exposure <b>+1</b></span>
-        </div>
-        <div class="score">
-          <div class="s">9</div>
-          <div class="of">of a possible ~14</div>
-          <div class="tier">Tier III · Intensive</div>
-        </div>
+    <!-- ── CLOSE ── -->
+    <div class="close">
+      <div class="eyebrow">The point</div>
+      <h2>A report is read once. A record is kept.</h2>
+      <p>Polish is easy to copy; continuity is not. The manual's advantage is that it <i>remembers</i> — across decades, decisions, and the people who made them. That is the difference between a firm that reports to you and one that keeps your household's book.</p>
+      <div class="foliobar">
+        <span>§ Operating Manual · rev. 14 · fol. 1</span>
+        <span>The Merrell household · est. 2021</span>
       </div>
     </div>
 
-    <div class="sec">
-      <div class="sech"><span class="n">04</span><h2>Annual operating calendar</h2><span class="note">The rhythm that keeps nothing from slipping.</span></div>
-      <div class="cal">
-        <div class="qtr">
-          <div class="qh">Q1</div>
-          <ul><li>Estimated taxes (Jan 15)</li><li>Prior-year Roth conversion true-up</li><li>Annual insurance &amp; ILIT review</li></ul>
-        </div>
-        <div class="qtr">
-          <div class="qh">Q2</div>
-          <ul><li>Estimated taxes (Apr · Jun)</li><li>Business valuation refresh</li><li>Attorney: trust &amp; titling review</li></ul>
-        </div>
-        <div class="qtr">
-          <div class="qh">Q3</div>
-          <ul><li>Estimated taxes (Sep 15)</li><li>Mid-year tax projection</li><li>Concentration sell-down check</li></ul>
-        </div>
-        <div class="qtr">
-          <div class="qh">Q4</div>
-          <ul><li>Roth conversion window</li><li>Tax-loss harvest &amp; QCDs</li><li>CPA year-end meeting; annual gifts</li></ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="sec">
-      <div class="sech"><span class="n">05</span><h2>Decision dashboard</h2><span class="note">The next 12–36 months, and what to review first.</span></div>
-      <div class="decisions">
-        <div class="dc">
-          <div class="dch"><span class="dt">Sell the business</span><span class="when">12–24 months</span></div>
-          <p class="rev"><b>Review before:</b> deal structure &amp; §1202, ILIT liquidity to cover the estate bill,
-            proceeds allocation, and the timing against a possible state move.</p>
-        </div>
-        <div class="dc">
-          <div class="dch"><span class="dt">Relocate Illinois → Texas</span><span class="when">~18 months</span></div>
-          <p class="rev"><b>Review before:</b> establish the residency date first, then sequence the sale and Roth
-            conversions after it; document domicile; refresh the estate plan for the new state.</p>
-        </div>
-        <div class="dc">
-          <div class="dch"><span class="dt">Roth conversion ladder</span><span class="when">Annual, through 72</span></div>
-          <p class="rev"><b>Review before:</b> each year's bracket headroom, IRMAA thresholds, and the surviving-spouse
-            single bracket down the line.</p>
-        </div>
-        <div class="dc">
-          <div class="dch"><span class="dt">Fund grandchildren's education</span><span class="when">This year</span></div>
-          <p class="rev"><b>Review before:</b> annual exclusion sizing, 529 front-loading vs. direct tuition payments,
-            and the source account.</p>
-        </div>
-      </div>
-      <p style="font-size:13px;line-height:1.55;color:var(--muted);margin:14px 0 0;max-width:70ch">
-        This dashboard looks <b style="color:var(--dim);font-weight:600">forward</b> — what's coming and what to
-        review first. What was already decided, and <i>why</i>, lives in the
-        <a href="decision-log.html" style="color:var(--teal2);font-weight:600;text-decoration:none">Decision&nbsp;Log</a> —
-        the record every one of these will be checked against.</p>
-    </div>
-
-    <div class="sec">
-      <div class="sech"><span class="n">06</span><h2>Opportunity register</h2><span class="note">What coordination has surfaced, and where each stands.</span></div>
-      <div class="legend">
-        <span class="pill id">Identified</span><span class="pill prog">In progress</span>
-        <span class="pill done">Implemented</span><span class="pill defer">Deferred</span><span class="pill open">Needs action</span>
-      </div>
-      <div class="tbl-scroll">
-      <table>
-        <thead><tr><th>Opportunity</th><th>Basis</th><th>Owner</th><th>Status</th><th class="num">Illustrative impact</th></tr></thead>
-        <tbody>
-          <tr><td>Move life policy into an ILIT</td><td><a class="drref" href="decision-log.html#dr-001">DR&#8209;001</a></td><td>Attorney + Driftwood</td><td><span class="pill done">Implemented</span></td><td class="num">≈ $2.0M out of estate</td></tr>
-          <tr><td>Asset location (bonds → IRA)</td><td><span class="norec">Next session</span></td><td>Driftwood</td><td><span class="pill done">Implemented</span></td><td class="num">Annual tax drag</td></tr>
-          <tr><td>Tax-loss harvest (this year)</td><td><span class="norec">Next session</span></td><td>Driftwood</td><td><span class="pill done">Implemented</span></td><td class="num">Current-year tax</td></tr>
-          <tr><td>Roth conversions, low-bracket years</td><td><a class="drref" href="decision-log.html#dr-004">DR&#8209;004</a></td><td>Driftwood + CPA</td><td><span class="pill prog">In progress</span></td><td class="num">Lifetime tax</td></tr>
-          <tr><td>Business succession &amp; buy-sell</td><td><span class="norec">Next session</span></td><td>Business counsel</td><td><span class="pill prog">In progress</span></td><td class="num">Forced-sale risk</td></tr>
-          <tr><td>RSU concentration sell-down</td><td><a class="drref" href="decision-log.html#dr-003">DR&#8209;003</a></td><td>Driftwood</td><td><span class="pill prog">In progress</span></td><td class="num">Single-stock risk</td></tr>
-          <tr><td>§162 bonus to fund the premium</td><td><span class="norec">Next session</span></td><td>CPA + Driftwood</td><td><span class="pill id">Identified</span></td><td class="num">Annual tax</td></tr>
-          <tr><td>Sequence sale/conversions after the move</td><td><a class="drref" href="decision-log.html#dr-002">DR&#8209;002</a></td><td>Driftwood</td><td><span class="pill id">Identified</span></td><td class="num">Six-figure timing</td></tr>
-          <tr><td>Gift discounted business interests</td><td><a class="drref" href="decision-log.html#dr-005">DR&#8209;005</a></td><td>Attorney</td><td><span class="pill defer">Deferred</span></td><td class="num">Est. tax reduction</td></tr>
-          <tr><td>Document domicile for the move</td><td><a class="drref" href="decision-log.html#dr-002">DR&#8209;002</a></td><td>Household + Driftwood</td><td><span class="pill open">Needs action</span></td><td class="num">Audit protection</td></tr>
-        </tbody>
-      </table>
-      </div>
-    </div>
-
-    <div class="sec">
-      <div class="sech"><span class="n">07</span><h2>Risk register</h2><span class="note">Known, addressed, and still open.</span></div>
-      <div class="tbl-scroll">
-      <table>
-        <thead><tr><th>Risk</th><th>Basis</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>Illiquid estate can't cover a nine-month tax bill</td><td><a class="drref" href="decision-log.html#dr-001">DR&#8209;001</a></td><td><span class="pill done">Addressed · ILIT liquidity</span></td></tr>
-          <tr><td>Beneficiary forms vs. the will</td><td><span class="norec">Next session</span></td><td><span class="pill done">Addressed · aligned</span></td></tr>
-          <tr><td>Concentration in employer stock</td><td><a class="drref" href="decision-log.html#dr-003">DR&#8209;003</a></td><td><span class="pill prog">In progress · sell-down</span></td></tr>
-          <tr><td>No documented domicile for the planned move</td><td><a class="drref" href="decision-log.html#dr-002">DR&#8209;002</a></td><td><span class="pill open">Open</span></td></tr>
-          <tr><td>Key-person dependency in the business</td><td><span class="norec">Next session</span></td><td><span class="pill open">Open</span></td></tr>
-        </tbody>
-      </table>
-      </div>
-    </div>
-
-    <div class="cta">
-      <div class="ct">This is the product, made tangible.</div>
-      <div class="cd">The Manual is what a Driftwood engagement produces and maintains, so a household's whole
-        financial life is run as one system. See what it would surface for you.</div>
-      <a href="leakage.html">Run the Tax Diagnostic →</a>
-      <a class="ghost" href="familyoffice.html">Why family offices win</a>
-    </div>
-
+    <!-- ── COLOPHON + DISCLOSURE ── -->
     <div class="foot">
-      <span class="note">Illustrative sample — not investment, tax, or legal advice.</span>
-      The Harris family is fictional and this document is shortened and simplified for illustration; a real Wealth
-      Operating Manual is private to the client and far more detailed. Figures and statuses are hypothetical; the
-      strategies referenced (ILITs, §162 arrangements, Roth conversions, entity and trust planning) carry their own
-      rules and require individualized tax and legal advice. Driftwood coordinates with your CPA and attorney and does
-      not provide tax or legal advice. Driftwood is a <b>registered investment adviser</b>; Form ADV and Form CRS are
-      available at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+      <div class="colophon" style="margin-bottom:8px">Set in Satoshi &amp; Erode · a concept for a living operating record · illustrative household, not a real client</div>
+      <span class="note">Illustrative and educational — not investment, tax, or legal advice.</span>
+      The household, decisions, and figures above are hypothetical, drawn to show the form of the record. Driftwood coordinates with your CPA and attorney; it does not provide tax or legal advice. Driftwood is a <b>registered investment adviser</b>; Form ADV and Form CRS are available at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
     </div>
     </div>
   </div>

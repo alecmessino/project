@@ -110,13 +110,9 @@
   .ripplesec .rsh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 8px}
   .ripplesec .rsi{font-size:15.5px;line-height:1.65;color:var(--body);margin:0 0 18px;max-width:60ch}
   .ripplesec .rsi b{color:var(--ink);font-weight:600}
-  .ripple{margin:6px auto 0;max-width:560px;display:flex;flex-direction:column;align-items:stretch}
-  .ripple .rstep{background:#fff;border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:var(--surface-radius);padding:12px 16px;font-size:14px;line-height:1.45;color:var(--body);text-align:left}
-  .ripple .rstep b{color:var(--ink);font-weight:700}
-  .ripple .rstep.start{background:#eaf0f4;border-color:var(--brass);font-family:var(--sans);font-weight:600;color:var(--ink);font-size:15px}
-  .ripple .rstep.end{background:var(--teal);border-color:var(--teal);border-left-color:var(--teal);color:#f1ede3;font-family:var(--sans);font-weight:700;font-size:16px;text-align:center;letter-spacing:-.01em}
-  .ripple .rarrow{align-self:center;width:1px;height:15px;background:var(--frame-line);position:relative}
-  .ripple .rarrow::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--frame-line)}
+  /* The rounded-card + triangle-arrow ripple was retired in the institutional upgrade; the
+     decision cascade is now the ruled stemma (.stemma-lead/.stemma/.stemma-end), defined in the
+     shared driftwood.css additions — one ink spine, square nodes, a double-rule resolution. */
   .ripplesec .rsn{font-size:12.5px;line-height:1.6;color:var(--muted);margin:16px auto 0;max-width:560px;text-align:center}
   .ripplesec .rsn a{color:var(--teal2)}
   @media(max-width:620px){.ripplesec{padding-left:22px;padding-right:22px}}
@@ -263,19 +259,14 @@
       <div class="rsh">Coordinated, on an ordinary Tuesday</div>
       <p class="rsi">You don't have to bring a crisis. Mention one ordinary intention and the whole team moves
         around it, <b>before</b> anything is done.</p>
-      <div class="ripple">
-        <div class="rstep start">You mention you'd like to help with a grandchild's tuition</div>
-        <div class="rarrow" aria-hidden="true"></div>
-        <div class="rstep">The gift is sized against the annual exclusion and your bracket</div>
-        <div class="rarrow" aria-hidden="true"></div>
-        <div class="rstep">It's funded from the account that costs the least to tap</div>
-        <div class="rarrow" aria-hidden="true"></div>
-        <div class="rstep">A 529 versus paying the school directly goes to your CPA</div>
-        <div class="rarrow" aria-hidden="true"></div>
-        <div class="rstep">Beneficiaries and the estate plan are checked for knock-on effects</div>
-        <div class="rarrow" aria-hidden="true"></div>
-        <div class="rstep end">One small decision, handled whole</div>
+      <p class="stemma-lead">An ordinary intention — you mention helping with a grandchild's tuition.</p>
+      <div class="stemma">
+        <div class="step"><span class="n">01</span><span class="tx">The gift is sized against the annual exclusion and your bracket.</span></div>
+        <div class="step"><span class="n">02</span><span class="tx">It is funded from the account that costs the least to tap.</span></div>
+        <div class="step"><span class="n">03</span><span class="tx">A 529 versus paying the school directly goes to your CPA.</span></div>
+        <div class="step"><span class="n">04</span><span class="tx">Beneficiaries and the estate plan are checked for knock-on effects.</span></div>
       </div>
+      <div class="stemma-end">One decision, handled whole.</div>
       <p class="rsn">The everyday shape of coordination — the same discipline the
         <a href="library.html">Coordination Library</a> shows on the big decisions.</p>
     </div>

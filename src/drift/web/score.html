@@ -69,13 +69,18 @@
   .drv[aria-pressed="true"] .pts{color:var(--brass)}
 
   .panel{position:sticky;top:16px}
-  .score{background:var(--navy);color:#eef2f6;border-radius:var(--surface-radius);padding:24px 24px 26px;text-align:center}
-  .score .s{font-family:var(--sans);font-weight:700;font-size:56px;line-height:1;letter-spacing:-.03em;color:#fff;font-variant-numeric:tabular-nums}
-  .score .of{font-size:13px;color:#9aa3ae;margin-top:3px}
-  .score .meter{height:8px;border-radius:0;background:rgba(255,255,255,.14);overflow:hidden;margin:16px 0 14px}
-  .score .fill{display:block;height:100%;width:0%;background:var(--gold);transition:width .4s cubic-bezier(.4,0,.2,1)}
-  .score .tier{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#a9c2d6}
-  .score .read{font-family:var(--serif);font-size:15px;line-height:1.45;color:#dfe5ec;margin:12px 0 0}
+  /* A-03 — a factor tally + a neutral classification (an inventory), not a score/meter/tier. */
+  .assess{border:1px solid var(--frame-line);border-top:2px solid var(--ink);background:#fff;padding:20px 22px 22px}
+  .assess .ah{font-weight:700;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .assess .tally{display:flex;height:26px;border:1px solid var(--line);background:var(--soft)}
+  .assess .tally .seg{flex:1;border-right:1px solid var(--line)}
+  .assess .tally .seg:last-child{border-right:none}
+  .assess .tally .seg.on{background:var(--ink)}
+  .assess .count{font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;color:var(--ink);letter-spacing:.03em;margin-top:10px}
+  .assess .count .of{color:var(--muted);font-weight:600}
+  .assess .cls{font-weight:700;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-strike);margin:14px 0 6px;padding-top:14px;border-top:1px solid var(--line2)}
+  .assess .read{font-family:var(--serif);font-size:14.5px;line-height:1.45;color:var(--dim);margin:0}
+  .drv .pts{display:none}   /* A-03 retires the +N points; each factor is one line in the tally */
   .panel .hint{font-size:12px;line-height:1.55;color:var(--muted);margin:12px 4px 0;text-align:center}
 
   .implies{padding:14px 44px 6px}
@@ -116,7 +121,7 @@
   <div class="frame">
     <div class="run">
       <span class="inst">Driftwood · Private Wealth Architecture</span>
-      <span class="marker">Coordination Score</span>
+      <span class="marker">Coordination Assessment</span>
     </div>
     <div class="inner">
     <nav class="dwnav" aria-label="Driftwood">
@@ -141,7 +146,7 @@
     </nav>
 
     <div class="doc">
-      <div class="eyebrow">Coordination Score</div>
+      <div class="eyebrow">Coordination Assessment</div>
       <h1>How coordinated does your financial life need to be?</h1>
       <p class="lede">Complexity isn't a problem to hide. It's <b>where coordination creates the most value</b>. Check
         what's true for your household and see your Coordination Index, and the opportunities it points to.</p>
@@ -183,22 +188,24 @@
       </div>
 
       <div class="panel">
-        <div class="score">
-          <div class="s" id="scoreNum">0</div>
-          <div class="of">of a possible 14</div>
-          <div class="meter"><span class="fill" id="scoreFill"></span></div>
-          <div class="tier" id="scoreTier">Tier I · Foundational</div>
-          <p class="read" id="scoreRead">Select what's true for you to see where coordination would help most.</p>
+        <div class="assess">
+          <div class="ah">Coordination surface</div>
+          <div class="tally" id="tally">
+            <span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span>
+          </div>
+          <div class="count"><span id="factorN">0</span> <span class="of">of 10 factors apply</span></div>
+          <div class="cls" id="factorCls">No factors selected</div>
+          <p class="read" id="factorRead">Check what's true for your household to see the coordination surface it describes, and the matters it implies.</p>
         </div>
-        <p class="hint">Your score isn't a price. It's a map of where the pieces of your financial life most need to
-          talk to one another.</p>
+        <p class="hint">This is an inventory, not a grade. It maps where the pieces of a financial life most need to
+          be kept consistent with one another.</p>
       </div>
     </div>
 
     <div class="implies">
-      <div class="ih">What your score points to</div>
-      <p class="isub" id="impliesSub">These are the coordination opportunities your answers suggest are worth a closer
-        look, <b>the interactions most likely to be creating or leaking value</b>.</p>
+      <div class="ih">Implied matters — the register your selections build</div>
+      <p class="isub" id="impliesSub">Each factor implies a matter to keep coordinated. This is the register your
+        answers build, <b>the interactions most likely to be creating or leaking value</b>.</p>
       <ul id="oppList"></ul>
       <p id="oppEmpty">Nothing checked yet. Your answers will map here.</p>
     </div>
@@ -228,42 +235,35 @@
 </div>
 
 <script>
+  // A-03 — a factor tally + a neutral classification (no score, no meter, no ranked tiers).
   (function(){
-    var MAX = 14;
     var btns = Array.prototype.slice.call(document.querySelectorAll('.drv'));
     if(!btns.length) return;
-    var numEl = document.getElementById('scoreNum');
-    var fillEl = document.getElementById('scoreFill');
-    var tierEl = document.getElementById('scoreTier');
-    var readEl = document.getElementById('scoreRead');
-    var list = document.getElementById('oppList');
-    var empty = document.getElementById('oppEmpty');
+    var segs = Array.prototype.slice.call(document.querySelectorAll('#tally .seg'));
+    var nEl = document.getElementById('factorN'), clsEl = document.getElementById('factorCls'),
+        readEl = document.getElementById('factorRead');
+    var list = document.getElementById('oppList'), empty = document.getElementById('oppEmpty');
 
-    function tierFor(n){
-      if(n <= 2) return ['Tier I · Foundational','Coordination still matters, but the moving parts are few.'];
-      if(n <= 5) return ['Tier II · Active','Enough moving parts that they need to be watched together.'];
-      if(n <= 9) return ['Tier III · Intensive','Many interacting decisions. This is where coordination earns its keep.'];
-      return ['Tier IV · Family-office-grade','Family-office-level coordination. The interactions are the whole game.'];
+    // Neutral, descriptive — the size of the coordination surface, not a grade or a rank.
+    function classify(n){
+      if(n === 0) return ['No factors selected','Check what’s true for your household to see the coordination surface it describes, and the matters it implies.'];
+      if(n <= 3) return ['A few interacting parts','A handful of moving parts — each decision still touches the others, but the surface is small.'];
+      if(n <= 6) return ['Several interacting parts','Enough interacting parts that they are best decided together, not one at a time.'];
+      return ['Many interacting parts','Many decisions that move each other — the interactions are where most of the value is kept or lost.'];
     }
 
     function paint(){
-      var n = 0, opps = [];
+      var n = 0, matters = [];
       btns.forEach(function(b){
-        if(b.getAttribute('aria-pressed') === 'true'){
-          n += parseInt(b.getAttribute('data-pts'), 10) || 0;
-          opps.push(b.getAttribute('data-opp'));
-        }
+        if(b.getAttribute('aria-pressed') === 'true'){ n++; matters.push(b.getAttribute('data-opp')); }
       });
-      if(n > MAX) n = MAX;
-      numEl.textContent = n;
-      fillEl.style.width = Math.round((n/MAX)*100) + '%';
-      var any = btns.some(function(b){return b.getAttribute('aria-pressed')==='true';});
-      var t = tierFor(n);
-      tierEl.textContent = t[0];
-      readEl.textContent = any ? t[1] : 'Select what’s true for you to see where coordination would help most.';
+      segs.forEach(function(s,i){ s.classList.toggle('on', i < n); });
+      nEl.textContent = n;
+      var c = classify(n);
+      clsEl.textContent = c[0]; readEl.textContent = c[1];
       list.innerHTML = '';
-      opps.forEach(function(o){ var li = document.createElement('li'); li.innerHTML = o; list.appendChild(li); });
-      empty.style.display = opps.length ? 'none' : 'block';
+      matters.forEach(function(m){ var li = document.createElement('li'); li.innerHTML = m; list.appendChild(li); });
+      empty.style.display = matters.length ? 'none' : 'block';
     }
 
     btns.forEach(function(b){

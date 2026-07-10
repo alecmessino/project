@@ -26,14 +26,14 @@
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
 <style>
   :root{
-    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --wash:#eaf0f4;
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --wash:var(--soft);
     --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
     --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
     --brass:#2c5878; --gold:#a9c2d6;
-    --st-open:#9a6a2e; --st-open-bg:#f4ecdb;
+    --st-open:#9b4439; --st-open-bg:var(--line2);
     --st-prog:#2c5878; --st-prog-bg:#e7eef4;
     --st-done:#15806a; --st-done-bg:#e2efe9;
-    --st-super:#8a8578; --st-super-bg:#eeece5;
+    --st-super:var(--muted); --st-super-bg:var(--line2);
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--body);font:16px/1.6 var(--sans);
@@ -121,7 +121,7 @@
   .close p{font-size:14.5px;line-height:1.6;margin:0 0 12px;max-width:68ch;color:#c3ccd6}
   .close p:last-child{margin-bottom:0}
   .close b{color:#fff}
-  .close a{color:#9ad4c4;font-weight:600;text-decoration:none}
+  .close a{color:var(--gold);font-weight:600;text-decoration:none}
   .close a:hover{text-decoration:underline}
 
   .foot{margin:26px 44px 0;padding:16px 0 30px;border-top:1px solid var(--line);font-size:11.5px;line-height:1.55;color:var(--muted)}

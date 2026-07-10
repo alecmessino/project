@@ -26,7 +26,7 @@
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
 <style>
   :root{
-    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --wash:#eaf0f4;
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --wash:var(--soft);
     --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
     --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330; --on-dark:#e7ecf2;
     --brass:#2c5878; --accent-strike-soft:#a9c2d6; --gold:#a9c2d6;
@@ -101,7 +101,7 @@
 
   .foot{margin-top:52px;padding:20px 44px 40px;border-top:1px solid var(--line);background:var(--soft);
     color:var(--muted);font-size:12.5px;line-height:1.65}
-  .foot .note{color:#5a5a62;font-weight:600}
+  .foot .note{color:var(--dim);font-weight:600}
   .foot b{color:var(--dim)}
   @media(max-width:620px){ .doc{padding:0 22px} .foot{padding-left:22px;padding-right:22px} }
 </style>

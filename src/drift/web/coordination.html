@@ -367,33 +367,69 @@
 
     <div class="rule"></div>
 
-    <!-- ── The ripple ──────────────────────────────────────────────── -->
+    <!-- Exhibit 6 — dependency structure matrix: which systems each decision touches -->
     <div class="cases">
-      <div class="sh"><span class="sn">03</span>One decision, seven consequences</div>
-      <p class="lab-intro">This is the pattern behind every case Driftwood works. Watch one ordinary decision, the
-        Harrises pulling some income this year, travel through the system. Nothing about the investments changed.
-        Everything downstream did.</p>
-      <div class="ripple">
-        <div class="rstep start">The Harrises need <b>$180,000</b> this year</div>
-        <div class="rarrow" aria-hidden="true"></div>
-        <div class="rstep">Which accounts fund it: taxable, IRA, Roth, or cash, and in what order</div>
-        <div class="rarrow" aria-hidden="true"></div>
-        <div class="rstep">Their taxable income for the year moves</div>
-        <div class="rarrow" aria-hidden="true"></div>
-        <div class="rstep">So does their capital-gains rate, and the 3.8% surtax</div>
-        <div class="rarrow" aria-hidden="true"></div>
-        <div class="rstep">Two years later, an IRMAA Medicare surcharge appears, or doesn't</div>
-        <div class="rarrow" aria-hidden="true"></div>
-        <div class="rstep">The room for a low-tax Roth conversion shrinks, or is preserved</div>
-        <div class="rarrow" aria-hidden="true"></div>
-        <div class="rstep">The estate's composition shifts, and with it what steps up at death</div>
-        <div class="rarrow" aria-hidden="true"></div>
-        <div class="rstep">The portfolio drifts from its target, unless the draw was chosen with that in mind</div>
-        <div class="rarrow" aria-hidden="true"></div>
-        <div class="rstep end">What you keep</div>
+      <div class="sh"><span class="sn">03</span>Which systems each decision touches</div>
+      <p class="lab-intro">Coordination — the product itself — set as an engineer would set it: a dependency structure
+        matrix, not a chord diagram. Decisions down the side, systems across the top; a filled mark is a primary effect,
+        a hairline mark a secondary one. Rest on any mark and the specific consequence is stated in words below.</p>
+      <div class="exhibit-plate" style="margin:8px auto 0">
+       <div class="exhibit-cap">
+        <span class="num">Exhibit 6 · dependency structure</span>
+        <span class="dsm-legend"><span><i class="p"></i>primary</span><span><i class="s"></i>secondary</span><span>— none</span></span>
+       </div>
+       <div class="dsm-head" style="margin-top:14px">
+        <div></div><div>Portfolio</div><div>Taxes</div><div>Estate</div><div>Liquidity</div>
+       </div>
+       <div id="dsm">
+      <div class="dsm-row">
+       <div class="rn">Sell the business</div>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Sell the business → Portfolio" data-note="Proceeds re-enter the allocation; the concentration ends on a schedule, not at once."><span class="m p"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Sell the business → Taxes" data-note="The gain is realized — bracket, state of residence, and timing set the bill."><span class="m p"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Sell the business → Estate" data-note="Estate liquidity changes shape; gifting capacity opens the year of the sale."><span class="m s"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Sell the business → Liquidity" data-note="A one-time liquidity event that must be placed before it drifts into cash."><span class="m p"></span></button>
       </div>
-      <p class="labnote">One withdrawal decision. Seven downstream consequences. Coordinated, each arrow is an
-        opportunity. Uncoordinated, each is a quiet leak.</p>
+      <div class="dsm-row">
+       <div class="rn">Convert to Roth</div>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Convert to Roth → Portfolio" data-note="The asset-location map shifts — converted dollars are re-placed for tax-free growth."><span class="m s"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Convert to Roth → Taxes" data-note="Ordinary income today buys tax-free compounding later; the bracket sets the size."><span class="m p"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Convert to Roth → Estate" data-note="Converted dollars leave the future RMD stream; heirs inherit income-tax-free."><span class="m p"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Convert to Roth → Liquidity" data-note="The conversion tax needs cash from the taxable book — planned, not borrowed."><span class="m s"></span></button>
+      </div>
+      <div class="dsm-row">
+       <div class="rn">Move states</div>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Move states → Portfolio" data-note="Municipal holdings are re-underwritten for the new state’s exemption."><span class="m s"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Move states → Taxes" data-note="Residency resets the marginal rate on everything realized after the line is crossed."><span class="m p"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Move states → Estate" data-note="Situs, state estate tax, and document validity are re-based to the new state."><span class="m p"></span></button>
+       <button class="dsm-cell lvl0" type="button" aria-current="false"><span class="m n"></span></button>
+      </div>
+      <div class="dsm-row">
+       <div class="rn">Fund a grandchild’s tuition</div>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Fund a grandchild’s tuition → Portfolio" data-note="Funded from the account that costs the least to tap."><span class="m s"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Fund a grandchild’s tuition → Taxes" data-note="Sized against the annual exclusion and the current bracket."><span class="m s"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Fund a grandchild’s tuition → Estate" data-note="Assets — and all their future growth — leave the taxable estate."><span class="m p"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Fund a grandchild’s tuition → Liquidity" data-note="A 529 versus paying the school directly changes the cash path and the timing."><span class="m s"></span></button>
+      </div>
+      <div class="dsm-row">
+       <div class="rn">Rebalance the book</div>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Rebalance the book → Portfolio" data-note="Weights return to target; risk returns to what was agreed."><span class="m p"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Rebalance the book → Taxes" data-note="Every lot sold is a tax decision — harvest it, defer it, or donate it instead."><span class="m p"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Rebalance the book → Estate" data-note="Appreciated lots are reserved for step-up or charitable transfer, not sold blind."><span class="m s"></span></button>
+       <button class="dsm-cell" type="button" aria-current="false" data-lab="Rebalance the book → Liquidity" data-note="Cash is raised or deployed as a by-product — routed, not parked."><span class="m s"></span></button>
+      </div>
+       </div>
+       <div class="dsm-readout">
+        <span class="lab" id="dsmLab">Read</span>
+        <span class="txt" id="dsmTxt">Rest on any mark to read the specific consequence.</span>
+       </div>
+       <div class="exhibit-evidence">
+        <span class="k">Purpose</span><span class="v">State which household systems each decision touches, and how.</span>
+        <span class="k">Method</span><span class="v">Dependency structure matrix; primary/secondary classification by the adviser.</span>
+        <span class="k">Inputs</span><span class="v tnum">Five representative decisions × four household systems.</span>
+        <span class="k">Source</span><span class="v src">Driftwood coordination practice — illustrative, not exhaustive.</span>
+       </div>
+      </div>
+      <p class="dsm-why"><span class="t">Why this form</span>Five decisions × four systems is twenty statements of consequence. A chord diagram draws them; a matrix lets you read them one at a time — and shows the empty cells, which are part of the argument.</p>
     </div>
 
     <div class="rule"></div>
@@ -639,6 +675,23 @@
       b.addEventListener('click', function(){ select(b.getAttribute('data-decision'), b); });
     });
   })();
+</script>
+<script>
+// Exhibit 6 — dependency structure matrix: rest on (or Tab to) a mark to read the consequence.
+(function(){
+  var wrap = document.getElementById("dsm"); if(!wrap) return;
+  var lab = document.getElementById("dsmLab"), txt = document.getElementById("dsmTxt");
+  var cells = [].slice.call(wrap.querySelectorAll(".dsm-cell[data-note]"));
+  function clear(){ cells.forEach(function(c){ c.setAttribute("aria-current","false"); });
+    lab.textContent = "Read"; txt.textContent = "Rest on any mark to read the specific consequence."; }
+  function show(c){ cells.forEach(function(x){ x.setAttribute("aria-current", x===c ? "true":"false"); });
+    lab.textContent = c.getAttribute("data-lab"); txt.textContent = c.getAttribute("data-note"); }
+  cells.forEach(function(c){
+    c.addEventListener("mouseenter", function(){ show(c); });
+    c.addEventListener("focus", function(){ show(c); });
+  });
+  wrap.addEventListener("mouseleave", clear);
+})();
 </script>
 </body>
 </html>

@@ -417,3 +417,94 @@ table.exhibit-table{ width:100%; border-collapse:collapse; font-family:var(--san
   .ledger-row,.register-row,.changelog-row{ grid-template-columns:1fr; gap:5px; padding:16px 0; }
   .ledger-row .date,.changelog-row .rev{ font-size:12px; color:var(--muted); }
 }
+
+/* ============================================================================
+   THE DRIFTWOOD EXHIBIT SYSTEM — interactive (Exhibits 4–6) + Evidence Framework
+   ----------------------------------------------------------------------------
+   Permanent components of the exhibit family (see the .exhibit block above).
+   The interaction disappears into the document: the reader inspects evidence,
+   not operates a visualization. Tokens only; no chart library; print-complete. */
+
+/* Shared white plate for the interactive exhibits (matches the .kf register). */
+.exhibit-plate{ max-width:840px; border:1px solid var(--frame-line); border-top:2px solid var(--ink);
+  background:#fff; padding:24px 26px 18px; }
+
+/* Live readout strip — always populated; the cursor is a ruler, not a toggle. */
+.exhibit-readout{ display:flex; gap:8px 26px; flex-wrap:wrap; align-items:baseline; padding:9px 12px;
+  background:var(--soft); border:1px solid var(--line2); font-variant-numeric:tabular-nums; margin-bottom:12px; }
+.exhibit-readout .yr{ font-weight:700; font-size:12.5px; color:var(--ink); }
+.exhibit-readout .lbl{ font-size:12.5px; color:var(--body); }
+.exhibit-readout .lbl b{ font-weight:700; color:var(--ink); }
+.exhibit-readout .kept{ font-size:12.5px; color:var(--teal); }
+.exhibit-readout .kept b{ font-weight:700; }
+.exhibit-readout .sw{ display:inline-block; width:8px; height:8px; margin-right:7px; vertical-align:baseline; }
+.exhibit-readout .sw.co{ background:var(--teal2); } .exhibit-readout .sw.is{ background:var(--bench); }
+.exhibit-chart{ width:100%; height:auto; display:block; cursor:crosshair; font-family:var(--sans); }
+.exhibit-chart text{ font-variant-numeric:tabular-nums; }
+
+/* Methodology fold — the site chevron; forced open in print. */
+details.exhibit-method{ margin-top:14px; border-top:1px solid var(--line2); padding-top:10px; }
+.exhibit-method>summary{ font-weight:700; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+.exhibit-method p{ font-size:11.5px; line-height:1.6; color:var(--muted); margin:9px 0 0; max-width:72ch; }
+.exhibit-method p.src{ font-style:italic; margin:6px 0 0; }
+
+/* The Evidence Framework — identical four-row metadata beneath every quantitative exhibit. */
+.exhibit-evidence{ border-top:1px solid var(--line2); margin-top:12px; padding-top:11px;
+  display:grid; grid-template-columns:70px 1fr; gap:4px 14px; max-width:76ch; }
+.exhibit-evidence .k{ font-weight:700; font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+.exhibit-evidence .v{ font-size:11.5px; line-height:1.5; color:var(--dim); }
+.exhibit-evidence .v.tnum{ font-variant-numeric:tabular-nums; }
+.exhibit-evidence .v.src{ font-style:italic; }
+
+/* Exhibit 5 — after-tax real waterfall (accounting convention). */
+.waterfall-head,.waterfall-row{ display:grid; grid-template-columns:180px 1fr 96px; gap:14px; align-items:center; }
+.waterfall-head{ padding:0 0 8px; border-bottom:2px solid var(--ink); }
+.waterfall-head div{ font-weight:700; font-size:9.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); }
+.waterfall-head .u{ text-align:right; }
+.waterfall-row{ padding:12px 0; border-bottom:1px solid var(--line2); }
+.waterfall-row:hover{ background:var(--soft); }
+.waterfall-row .ln{ font-weight:600; font-size:13.5px; color:var(--ink); }
+.waterfall-row .nt{ font-size:11px; line-height:1.45; color:var(--muted); }
+.waterfall-row .track{ height:24px; position:relative; }
+.waterfall-row .track .bar{ position:absolute; top:0; bottom:0; }
+.waterfall-row .amt{ text-align:right; font-variant-numeric:tabular-nums; font-size:13.5px; color:var(--ink); }
+.waterfall-row .amt.neg{ color:var(--neg); } .waterfall-row .amt.dim{ color:var(--dim); }
+.waterfall-row.total{ padding:13px 0 12px; border-bottom:3px double var(--ink); }
+.waterfall-row.total .ln{ font-weight:700; } .waterfall-row.total .amt{ color:var(--teal); font-weight:700; }
+.waterfall-note{ font-size:11.5px; line-height:1.6; color:var(--muted); margin:12px 0 0; max-width:72ch; }
+
+/* Exhibit 6 — dependency structure matrix (DSM). */
+.dsm-legend{ display:flex; gap:4px 16px; font-size:10.5px; color:var(--muted); align-items:center; flex-wrap:wrap; }
+.dsm-legend span{ white-space:nowrap; }
+.dsm-legend i{ display:inline-block; width:9px; height:9px; margin-right:6px; vertical-align:-1px; }
+.dsm-legend i.p{ background:var(--ink); } .dsm-legend i.s{ border:1px solid var(--ghost-line); }
+.dsm-head,.dsm-row{ display:grid; grid-template-columns:216px repeat(4,1fr); gap:0; }
+.dsm-head{ border-bottom:2px solid var(--ink); }
+.dsm-head div{ font-weight:700; font-size:9.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); text-align:center; padding-bottom:8px; }
+.dsm-row{ border-bottom:1px solid var(--line2); align-items:stretch; }
+.dsm-row .rn{ font-weight:600; font-size:13.5px; color:var(--ink); padding:12px 12px 12px 0; display:flex; align-items:center; }
+.dsm-cell{ appearance:none; background:transparent; border:none; border-left:1px solid var(--line2); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; padding:12px 0; }
+.dsm-cell:hover{ background:var(--soft); }
+.dsm-cell.lvl0{ cursor:default; }
+.dsm-cell .m{ display:block; }
+.dsm-cell .m.p{ width:11px; height:11px; background:var(--ink); }
+.dsm-cell .m.s{ width:11px; height:11px; border:1px solid var(--ghost-line); }
+.dsm-cell .m.n{ width:8px; height:1px; background:var(--line); }
+.dsm-cell[aria-current="true"] .m.p{ background:var(--teal2); }
+.dsm-cell[aria-current="true"] .m.s{ border-color:var(--teal2); }
+.dsm-readout{ display:flex; gap:12px; align-items:baseline; padding:12px 2px 2px; min-height:44px; }
+.dsm-readout .lab{ font-weight:700; font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--teal2); white-space:nowrap; }
+.dsm-readout .txt{ font-size:13px; line-height:1.5; color:var(--body); }
+.dsm-why{ font-weight:600; font-size:12.5px; line-height:1.5; color:var(--muted); margin:16px 0 0; max-width:70ch;
+  padding-top:12px; border-top:1px solid var(--line2); }
+.dsm-why .t{ color:var(--teal2); text-transform:uppercase; letter-spacing:.1em; font-size:10.5px; margin-right:9px; }
+
+/* Print — every exhibit degrades to a complete, static figure. */
+@media print{
+  .exhibit-chart{ cursor:default; }
+  .exhibit-chart .crosshair,.exhibit-chart .marker{ display:none; }
+  details.exhibit-method{ }
+  details.exhibit-method>*{ display:revert; }        /* force the fold open on paper */
+  .dsm-cell{ cursor:default; }
+}

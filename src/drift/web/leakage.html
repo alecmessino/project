@@ -178,6 +178,52 @@
       <div class="levers" id="levers"></div>
     </div>
 
+    <!-- Exhibit 5 — after-tax real waterfall: where a gross return goes -->
+    <div class="sec">
+      <div class="exhibit-plate">
+        <div class="exhibit-cap">
+          <span class="num">Exhibit 5</span>
+          <span class="unit">USD per $1,000,000 · one year · modeled</span>
+        </div>
+        <h3 class="exhibit-title">Where a gross return goes</h3>
+        <div class="waterfall-head">
+          <div>Line</div><div>Position</div><div class="u">USD</div>
+        </div>
+        <div class="waterfall-row">
+          <div><div class="ln">Gross return</div><div class="nt">8.0% on $1,000,000, before anything</div></div>
+          <div class="track"><span class="bar" style="left:0;width:100%;background:#fff;border:1px solid var(--ink)"></span></div>
+          <div class="amt">80,000</div>
+        </div>
+        <div class="waterfall-row">
+          <div><div class="ln">Taxes</div><div class="nt">Dividends, interest, realized gains — top brackets</div></div>
+          <div class="track"><span class="bar" style="left:73.75%;width:26.25%;background:var(--neg);border:1px solid var(--neg)"></span></div>
+          <div class="amt neg">(21,000)</div>
+        </div>
+        <div class="waterfall-row">
+          <div><div class="ln">Fees</div><div class="nt">Advisory at 20 bps + fund expenses at cost</div></div>
+          <div class="track"><span class="bar" style="left:71.25%;width:2.5%;background:var(--neg);border:1px solid var(--neg)"></span></div>
+          <div class="amt neg">(2,000)</div>
+        </div>
+        <div class="waterfall-row">
+          <div><div class="ln">Inflation</div><div class="nt">2.5% CPI assumption on the base</div></div>
+          <div class="track"><span class="bar" style="left:40%;width:31.25%;background:var(--bench);border:1px solid var(--bench)"></span></div>
+          <div class="amt dim">(25,000)</div>
+        </div>
+        <div class="waterfall-row total">
+          <div><div class="ln">After-tax real return</div><div class="nt">What compounding actually gets</div></div>
+          <div class="track"><span class="bar" style="left:0;width:40%;background:var(--teal);border:1px solid var(--teal)"></span></div>
+          <div class="amt">32,000</div>
+        </div>
+        <p class="waterfall-note">Coordination works the two rust lines — placement, lot selection, harvesting, and withdrawal order reduce the tax line; the gross return and inflation are not ours to promise. <i>Modeled, hypothetical, illustrative — not a forecast and not advice.</i></p>
+        <div class="exhibit-evidence">
+          <span class="k">Purpose</span><span class="v">Decompose one year of gross return into what survives taxes, fees, and inflation.</span>
+          <span class="k">Method</span><span class="v">Static decomposition at the stated rates, in accounting convention.</span>
+          <span class="k">Inputs</span><span class="v tnum">8.0% gross · top marginal brackets · 20 bps advisory + fund costs · 2.5% CPI.</span>
+          <span class="k">Source</span><span class="v src">Driftwood After-Tax Review — modeled, hypothetical, illustrative.</span>
+        </div>
+      </div>
+    </div>
+
     <div class="sec">
       <div class="h">The higher the tax, the more there is to keep — after-tax growth by state (per year)</div>
     </div>

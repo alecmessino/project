@@ -187,8 +187,7 @@
     .dw-pulse{animation:dwpulse .55s ease}
   }
   /* Dismiss control for the floating export buttons. */
-  .fabx{align-self:flex-end;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);
-    background:#fff;color:var(--dim);font-size:16px;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(20,18,12,.18)}
+  .fabx{display:none}
   .fabx:hover{color:var(--ink)}
   .resetbtn{margin-top:10px;font:inherit;font-size:12px;color:var(--dim);background:none;border:none;cursor:pointer;padding:2px 0}
   .resetbtn:hover{color:var(--ink);text-decoration:underline}
@@ -227,9 +226,9 @@
   .savings .tlh .ico{color:var(--pos);font-weight:700;margin-right:5px}
   .savings .tlh b{color:var(--ink)}
   /* --- Phase A: floating "receipt" action button --- */
-  .fab{position:fixed;right:22px;bottom:22px;z-index:30;font:inherit;font-size:13.5px;font-weight:680;color:#fff;
+  .fab{font:inherit;font-size:13.5px;font-weight:680;color:#fff;
     background:var(--accent);border:none;border-radius:0;padding:13px 20px;cursor:pointer;letter-spacing:.2px;
-    box-shadow:0 2px 10px rgba(30,40,51,.18);transition:background var(--transition-standard)}
+    transition:background var(--transition-standard)}
   .fab:hover{filter:brightness(1.06)}
   .fab svg{vertical-align:-2px;margin-right:7px}
   /* --- Phase C: three-account placement + estate flags + flexibility card --- */
@@ -249,9 +248,9 @@
   .flexcard p{margin:0;font-size:12.6px;line-height:1.58;color:var(--ink)}
   .flexcard p b{color:var(--ink)}
   /* dual-action FAB (proposal + CPA/attorney brief) */
-  .fabwrap{position:fixed;right:22px;bottom:22px;z-index:30;display:flex;flex-direction:column;align-items:flex-end;gap:9px}
+  .fabwrap{display:flex;justify-content:flex-end;align-items:center;gap:10px;flex-wrap:wrap;max-width:1040px;margin:0 auto;padding:8px 20px 40px}
   .fabwrap .fab{position:static}
-  .fab.brief{background:var(--slate);box-shadow:0 2px 10px rgba(30,40,51,.18);font-size:12.5px;padding:11px 17px}
+  .fab.brief{background:var(--slate);font-size:12.5px;padding:11px 17px}
   .fab.brief:hover{filter:brightness(1.06)}
   #cpabrief{display:none}
   /* --- The notebook: a review intro + a checklist of the decisions it covers (not tabs) --- */
@@ -411,7 +410,7 @@
   .entity .hb{display:flex;align-items:center;gap:9px;margin:0 0 14px;font-size:12.5px;color:var(--ink)}
   .toggle{position:relative;width:40px;height:22px;flex:none;border-radius:0;background:var(--line);cursor:pointer;transition:background .15s}
   .toggle.on{background:var(--accent)}
-  .toggle .knob{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .toggle .knob{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:0;background:#fff}
   .toggle.on .knob{left:20px}
   .est-cliff{border:1px solid var(--neg);border-left:4px solid var(--neg);background:var(--soft);border-radius:var(--surface-radius);padding:16px 18px}
   .est-cliff.safe{border-color:var(--line);border-left-color:var(--pos);background:var(--soft)}
@@ -513,7 +512,7 @@
       <h1>Driftwood <span class="sep">·</span> <span class="sub">After-Tax Review</span></h1>
       <span class="hyp-pill">Illustrative modeling</span>
     </div>
-    <p class="notebook-intro">Every portfolio has a handful of structural decisions. Let's review yours.
+    <p class="notebook-intro">Every portfolio has a handful of structural decisions. Here are yours.
       <a href="howitworks.html" style="font-family:var(--sans);font-size:13px;font-weight:600;color:var(--teal2);text-decoration:none;white-space:nowrap;margin-left:4px">· How Driftwood works →</a></p>
     <div class="checklist" id="secnav" role="tablist" aria-label="What this review covers">
       <button type="button" data-sec="portfolio"><span class="ck pend" aria-hidden="true">○</span> Portfolio</button>

@@ -343,37 +343,61 @@
           <p><sup>2</sup> Equity is kept in the taxable account to preserve the step-up in basis at death; international equity retains the foreign tax credit.</p>
           <p class="source">Source: Driftwood After-Tax Review — modeled, hypothetical, and illustrative. Not a forecast and not advice; your figure depends on bracket, basis, and holdings.</p>
         </div>
+        <div class="exhibit-evidence">
+          <span class="k">Purpose</span><span class="v">Estimated annual tax drag, isolated vs. coordinated placement.</span>
+          <span class="k">Method</span><span class="v">Static placement comparison at stated marginal rates.</span>
+          <span class="k">Inputs</span><span class="v tnum">37% federal · 13.3% state · $1,000,000 invested.</span>
+          <span class="k">Source</span><span class="v src">Driftwood After-Tax Review — modeled, hypothetical, illustrative.</span>
+        </div>
       </div>
 
-      <!-- Second exhibit — the coordinated after-tax advantage compounding over the horizon -->
-      <div class="kf">
-        <svg class="kf-svg" viewBox="0 0 760 274" preserveAspectRatio="xMidYMid meet" role="img"
-          aria-label="The coordinated after-tax advantage compounding over the horizon, in dollars: about $410k kept by coordinating versus $90k taxed naively, over 30 years.">
+      <!-- Exhibit 4 — inspectable projection: coordinated vs isolated over 30 years (the cursor is a ruler) -->
+      <div class="exhibit-plate" style="margin-top:16px">
+        <div class="exhibit-cap">
+          <span class="num">Exhibit 4</span>
+          <span class="unit">Cumulative value kept, USD · $1,000,000 of realized gains</span>
+        </div>
+        <h3 class="exhibit-title">Coordinated versus isolated, over thirty years</h3>
+        <div class="exhibit-readout" id="ex4readout">
+          <span class="yr">Year <b id="ex4yr">30</b></span>
+          <span class="lbl"><span class="sw co"></span>Coordinated <b id="ex4co">$410,000</b></span>
+          <span class="lbl"><span class="sw is"></span>Isolated <b id="ex4is">$90,000</b></span>
+          <span class="kept">Kept by coordinating <b id="ex4kept">$320,000</b></span>
+        </div>
+        <svg class="exhibit-chart" id="ex4chart" viewBox="0 0 760 274" preserveAspectRatio="xMidYMid meet" role="img"
+          aria-label="Coordinated versus isolated after-tax value over thirty years; hover to read exact values. At year 30, about $410,000 kept by coordinating versus $90,000 isolated.">
           <line x1="58" y1="240" x2="626" y2="240" stroke="#d8d3c6" stroke-width="1"/>
-          <text x="48" y="243.5" class="kf-num" font-size="10" fill="#6b6e6a" text-anchor="end">$0</text>
+          <text x="48" y="243.5" font-size="10" fill="#6b6e6a" text-anchor="end">$0</text>
           <line x1="58" y1="168" x2="626" y2="168" stroke="#ece8df" stroke-width="1"/>
-          <text x="48" y="171.5" class="kf-num" font-size="10" fill="#6b6e6a" text-anchor="end">$200k</text>
+          <text x="48" y="171.5" font-size="10" fill="#6b6e6a" text-anchor="end">$200k</text>
           <line x1="58" y1="96" x2="626" y2="96" stroke="#ece8df" stroke-width="1"/>
-          <text x="48" y="99.5" class="kf-num" font-size="10" fill="#6b6e6a" text-anchor="end">$400k</text>
+          <text x="48" y="99.5" font-size="10" fill="#6b6e6a" text-anchor="end">$400k</text>
           <line x1="58" y1="24" x2="626" y2="24" stroke="#ece8df" stroke-width="1"/>
-          <text x="48" y="27.5" class="kf-num" font-size="10" fill="#6b6e6a" text-anchor="end">$600k</text>
-          <path d="M58.0 240.0 L76.9 238.0 L95.9 235.8 L114.8 233.5 L133.7 231.2 L152.7 228.6 L171.6 226.0 L190.5 223.2 L209.5 220.2 L228.4 217.1 L247.3 213.8 L266.3 210.3 L285.2 206.6 L304.1 202.7 L323.1 198.7 L342.0 194.3 L360.9 189.8 L379.9 185.0 L398.8 179.9 L417.7 174.6 L436.7 168.9 L455.6 163.0 L474.5 156.7 L493.5 150.1 L512.4 143.1 L531.3 135.8 L550.3 128.0 L569.2 119.8 L588.1 111.2 L607.1 102.0 L626.0 92.4 L626.0 207.6 L607.1 209.7 L588.1 211.7 L569.2 213.6 L550.3 215.4 L531.3 217.1 L512.4 218.7 L493.5 220.3 L474.5 221.7 L455.6 223.1 L436.7 224.4 L417.7 225.6 L398.8 226.8 L379.9 227.9 L360.9 229.0 L342.0 230.0 L323.1 230.9 L304.1 231.8 L285.2 232.7 L266.3 233.5 L247.3 234.2 L228.4 235.0 L209.5 235.7 L190.5 236.3 L171.6 236.9 L152.7 237.5 L133.7 238.1 L114.8 238.6 L95.9 239.1 L76.9 239.6 L58.0 240.0 Z" fill="rgba(21,128,106,.13)"/>
+          <text x="48" y="27.5" font-size="10" fill="#6b6e6a" text-anchor="end">$600k</text>
           <path d="M58.0 240.0 L76.9 239.6 L95.9 239.1 L114.8 238.6 L133.7 238.1 L152.7 237.5 L171.6 236.9 L190.5 236.3 L209.5 235.7 L228.4 235.0 L247.3 234.2 L266.3 233.5 L285.2 232.7 L304.1 231.8 L323.1 230.9 L342.0 230.0 L360.9 229.0 L379.9 227.9 L398.8 226.8 L417.7 225.6 L436.7 224.4 L455.6 223.1 L474.5 221.7 L493.5 220.3 L512.4 218.7 L531.3 217.1 L550.3 215.4 L569.2 213.6 L588.1 211.7 L607.1 209.7 L626.0 207.6" fill="none" stroke="#b7bcbf" stroke-width="2"/>
           <path d="M58.0 240.0 L76.9 238.0 L95.9 235.8 L114.8 233.5 L133.7 231.2 L152.7 228.6 L171.6 226.0 L190.5 223.2 L209.5 220.2 L228.4 217.1 L247.3 213.8 L266.3 210.3 L285.2 206.6 L304.1 202.7 L323.1 198.7 L342.0 194.3 L360.9 189.8 L379.9 185.0 L398.8 179.9 L417.7 174.6 L436.7 168.9 L455.6 163.0 L474.5 156.7 L493.5 150.1 L512.4 143.1 L531.3 135.8 L550.3 128.0 L569.2 119.8 L588.1 111.2 L607.1 102.0 L626.0 92.4" fill="none" stroke="#15806a" stroke-width="2.5"/>
-          <text x="379.9" y="210" class="kf-sans" font-size="10.5" font-weight="600" fill="#15806a" text-anchor="middle" letter-spacing=".03em">kept by coordinating</text>
-          <circle cx="626" cy="92.4" r="3.5" fill="#15806a"/>
-          <circle cx="626" cy="207.6" r="3.5" fill="#b7bcbf"/>
-          <text x="636" y="95.4" class="kf-num" font-size="18" font-weight="700" fill="#15463a">$410k</text>
-          <text x="636" y="110.4" class="kf-sans" font-size="10" fill="#5c6470">coordinated</text>
-          <text x="636" y="210.6" class="kf-num" font-size="13.5" font-weight="700" fill="#6b6e6a">$90k</text>
-          <text x="636" y="224.6" class="kf-sans" font-size="10" fill="#6b6e6a">naive</text>
-          <text x="58" y="259" class="kf-sans" font-size="10.5" fill="#6b6e6a" text-anchor="start">today</text>
-          <text x="342" y="259" class="kf-sans" font-size="10.5" fill="#6b6e6a" text-anchor="middle">year 15</text>
-          <text x="626" y="259" class="kf-sans" font-size="10.5" fill="#6b6e6a" text-anchor="middle">year 30</text>
+          <line class="crosshair" id="ex4cross" x1="626" x2="626" y1="24" y2="240" stroke="#b8b2a4" stroke-width="1"/>
+          <rect class="marker" id="ex4mco" x="622.5" y="88.9" width="7" height="7" fill="#15806a"/>
+          <rect class="marker" id="ex4mis" x="622.5" y="204.1" width="7" height="7" fill="#6b6e6a"/>
+          <text x="636" y="95.4" font-size="15" font-weight="700" fill="#15463a">$410k</text>
+          <text x="636" y="110.4" font-size="10" fill="#5c6470">coordinated</text>
+          <text x="636" y="210.6" font-size="12" font-weight="700" fill="#6b6e6a">$90k</text>
+          <text x="636" y="224.6" font-size="10" fill="#6b6e6a">isolated</text>
+          <text x="58" y="259" font-size="10.5" fill="#6b6e6a" text-anchor="start">today</text>
+          <text x="342" y="259" font-size="10.5" fill="#6b6e6a" text-anchor="middle">year 15</text>
+          <text x="626" y="259" font-size="10.5" fill="#6b6e6a" text-anchor="middle">year 30</text>
         </svg>
-        <div class="kf-cap"><b>Hypothetical / illustrative</b> — $1M of realized gains, an illustrative +3.7–4.7%/yr
-          edge from coordination on identical holdings, modeled federal-only. Not a forecast, not advice; your figure
-          depends on your bracket, basis, and holdings.</div>
+        <details class="exhibit-method">
+          <summary>Assumptions &amp; methodology</summary>
+          <p>Identical holdings and identical pre-tax return; the paths differ only in implementation — asset location, lot selection, harvesting cadence, and withdrawal order — modeled as an illustrative +3.7–4.7%/yr after-tax edge, federal to a high-tax state. Values compound from $1,000,000 of realized gains.</p>
+          <p class="src">Source: Driftwood After-Tax Review — modeled, hypothetical, illustrative. Not a forecast and not advice; your figure depends on bracket, basis, and holdings.</p>
+        </details>
+        <div class="exhibit-evidence">
+          <span class="k">Purpose</span><span class="v">The long-term effect of coordinated implementation, isolated from market return.</span>
+          <span class="k">Method</span><span class="v">Two paths, identical holdings and pre-tax return; implementation modeled per the stated assumptions.</span>
+          <span class="k">Inputs</span><span class="v tnum">Marginal rates · turnover · allocation · 30-year horizon · $1,000,000 realized-gain base.</span>
+          <span class="k">Source</span><span class="v src">Driftwood After-Tax Review — modeled, hypothetical, illustrative.</span>
+        </div>
       </div>
     </div>
 
@@ -454,6 +478,33 @@ window.__STATE__ = {"header": {"generated": "2026-07-09 23:40:27 UTC"}, "hero": 
   var s = window.__STATE__, gen = document.getElementById("gen");
   if(s && s.header && gen) gen.textContent = "Generated " + s.header.generated;
   // The systems diagram is a static ink schematic — no scroll-driven draw-in.
+})();
+
+// Exhibit 4 — inspectable projection: a hairline crosshair reads exact values (no animation).
+(function(){
+  var svg = document.getElementById("ex4chart"); if(!svg) return;
+  var paths = svg.querySelectorAll("path"); if(paths.length < 2) return;
+  function pts(p){ return p.getAttribute("d").replace("M","").trim().split("L").map(function(s){
+    var a = s.trim().split(/\s+/); return { x:parseFloat(a[0]), y:parseFloat(a[1]) }; }); }
+  var iso = pts(paths[0]), co = pts(paths[1]);   // document order: isolated, then coordinated
+  var cross=document.getElementById("ex4cross"), mco=document.getElementById("ex4mco"), mis=document.getElementById("ex4mis"),
+      yr=document.getElementById("ex4yr"), eco=document.getElementById("ex4co"), eis=document.getElementById("ex4is"), ek=document.getElementById("ex4kept");
+  function val(y){ return Math.round((240 - y) / 72 * 200000 / 1000) * 1000; }
+  function fmt(v){ return "$" + v.toLocaleString("en-US"); }
+  function set(i){
+    var c = co[i], n = iso[i];
+    cross.setAttribute("x1", c.x); cross.setAttribute("x2", c.x);
+    mco.setAttribute("x", c.x - 3.5); mco.setAttribute("y", c.y - 3.5);
+    mis.setAttribute("x", n.x - 3.5); mis.setAttribute("y", n.y - 3.5);
+    var vc = val(c.y), vn = val(n.y);
+    yr.textContent = i; eco.textContent = fmt(vc); eis.textContent = fmt(vn); ek.textContent = fmt(vc - vn);
+  }
+  svg.addEventListener("mousemove", function(e){
+    var r = svg.getBoundingClientRect(); var x = (e.clientX - r.left) / r.width * 760;
+    set(Math.max(0, Math.min(30, Math.round((x - 58) / 18.9333))));
+  });
+  svg.addEventListener("mouseleave", function(){ set(30); });
+  set(30);
 })();
 </script>
 </body>

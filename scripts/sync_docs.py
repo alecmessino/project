@@ -24,6 +24,7 @@ PAIRS = {
     "ledger.html": "ledger.html",
     "tearsheet.html": "tearsheet.html",
     "taxlab.html": "taxlab.html",
+    "workspace.html": "workspace.html",
     "thesis.html": "thesis.html",
 }
 STATE_RE = re.compile(r"window\.__STATE__ = (.*?);\s*\n")

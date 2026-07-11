@@ -259,10 +259,13 @@ def taxlab(
     out: str = typer.Option("docs/taxlab.html", "--out", help="After-Tax Review page"),
 ):
     """Build the interactive After-Tax Review (after-tax / TLH / asset location) from the ledger."""
+    from pathlib import Path
     from .taxlab import build_taxlab
-    from .exhibit import export_taxlab
+    from .exhibit import export_taxlab, export_workspace
     state = build_taxlab(docs)
     path = export_taxlab(state, out)
+    # The Advisor Workspace is a separate page over the same engine/state (internal, noindex).
+    export_workspace(state, Path(docs) / "workspace.html")
     p = state.get("profile")
     if p:
         console.print(f"taxlab: pretax {p['pretax_return']*100:+.1f}%  "

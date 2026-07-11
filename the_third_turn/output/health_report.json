@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-11T20:15:41+00:00",
+  "generated": "2026-07-11T20:30:51+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 139259,
+    "rows": 139846,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 34157,
-      "live_total": 14061,
-      "live_today": 2458,
-      "last_row_age_min": 19.9
+      "rows_total": 34163,
+      "live_total": 14067,
+      "live_today": 2464,
+      "last_row_age_min": 14.8
     },
     "fanduel": {
-      "rows_total": 105096,
-      "live_total": 15648,
-      "live_today": 4235,
+      "rows_total": 105677,
+      "live_total": 15760,
+      "live_today": 4347,
       "last_row_age_min": 0.1
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 8030.7
+      "last_row_age_min": 8045.9
     }
   },
   "books_reporting_live": [
@@ -37,14 +37,14 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 14061,
-    "OPEN": 14159,
-    "SUSPENDED": 1437,
-    "REMOVED": 52
+    "unset": 14067,
+    "OPEN": 14267,
+    "SUSPENDED": 1440,
+    "REMOVED": 53
   },
   "overlap": {
-    "simultaneous_pairs_total": 16044,
-    "simultaneous_pairs_today": 4376,
+    "simultaneous_pairs_total": 16158,
+    "simultaneous_pairs_today": 4490,
     "overlap_games": 45,
     "median_sync_lag_s": 91.0,
     "games_by_books_live": {
@@ -85,7 +85,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 16044,
+        "current": 16158,
         "target": 2000,
         "pass": true,
         "progress": 1.0

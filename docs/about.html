@@ -58,8 +58,7 @@
   body{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.66 var(--sans);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{max-width:1080px;margin:40px auto;padding:0 20px 60px}
-  .frame{background:var(--bg);border:1px solid #c3bcab;border-radius:var(--surface-radius);overflow:hidden;
-    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
+  .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
 
   /* One prose column — institutional pages are typography, not widgets. */
   .doc{max-width:720px;padding:0 44px}
@@ -99,7 +98,7 @@
   @media(max-width:680px){.founder{grid-template-columns:1fr;gap:26px}}
   .founder-photo{margin:0}
   .founder-photo img{width:100%;max-width:300px;height:auto;aspect-ratio:1/1;object-fit:cover;object-position:center 30%;
-    border-radius:var(--surface-radius);border:1px solid var(--frame-line);display:block;
+    border-radius:0;border:1px solid var(--frame-line);display:block;
     }
   @media(max-width:680px){.founder-photo img{max-width:264px}}
   .founder-name{font-family:var(--sans);font-weight:700;font-size:24px;letter-spacing:-.02em;color:var(--ink);margin:0}
@@ -107,6 +106,12 @@
   .founder-bio p{font-size:16px;line-height:1.72;color:var(--body);margin:0 0 14px}
   .founder-bio p.founder-credo{font-family:var(--serif);font-size:16.5px;line-height:1.5;color:var(--ink);
     font-style:italic;margin:16px 0 0;padding-left:16px;border-left:2px solid var(--frame-line)}
+  /* An engraved sign-off: the credo is the statement; the italic Erode name signs it. No image, no box. */
+  .founder-sign{margin:20px 0 0;padding-left:16px}
+  .founder-sign .sig{display:block;font-family:var(--serif);font-style:italic;font-weight:500;font-size:30px;
+    line-height:1;letter-spacing:.01em;color:var(--ink)}
+  .founder-sign .sigline{display:block;margin-top:9px;font-family:var(--sans);font-weight:700;font-size:10px;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
   .founder-bio p:last-of-type{margin-bottom:0}
   .trust-strip{grid-column:1/-1;margin-top:30px;padding-top:15px;border-top:1px solid var(--line);
     font-family:var(--sans);font-size:12.5px;line-height:1.9;color:var(--muted)}
@@ -116,26 +121,11 @@
   .trust-strip a{color:var(--muted)}
 
   /* Our Philosophy — the calm closing, one idea per line. */
-  .philosophy{max-width:720px;margin:6px 44px 0;padding:26px 30px;background:var(--navy);border-radius:var(--surface-radius);
+  .philosophy{max-width:720px;margin:6px 44px 0;padding:26px 30px;background:var(--navy);border-radius:0;
     color:#e7ecf2}
   .philosophy p{font-family:var(--serif);font-size:19px;line-height:1.5;color:#eef2f6;margin:0}
   .philosophy p + p{margin-top:14px}
   .philosophy .soft{color:#aeb7c1}
-
-  .idlinks{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 2px}
-  .idlinks a{display:inline-flex;align-items:center;min-height:44px;padding:9px 16px;border:1px solid #cdc4b2;
-    border-radius:var(--surface-radius);text-decoration:none;color:var(--ink);font-family:var(--sans);font-size:13.5px;font-weight:500;
-    background:#fff;transition:background-color var(--t-fast,.12s ease)}
-  .idlinks a:hover{background:var(--soft)}
-
-  .cta{margin:36px 44px 0;max-width:720px;background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);padding:28px 30px}
-  .cta .ct{font-family:var(--sans);font-weight:700;font-size:22px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.02em}
-  .cta .cd{font-size:14.5px;line-height:1.6;color:var(--dim);margin:0 0 20px;max-width:48ch}
-  .cta .btns{display:flex;flex-wrap:wrap;gap:12px}
-  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:var(--surface-radius);
-    font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px}
-  .cta a.primary{background:var(--teal);color:#f1ede3}
-  .cta a.ghost{border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
 
   .foot{margin-top:40px;padding:20px 44px 40px;border-top:1px solid var(--line);
     color:var(--muted);font-size:12.5px;line-height:1.65}
@@ -149,9 +139,7 @@
   }
 
   /* ── Rebrand: plate frame + running head (matches the front door), in place of the browser chrome. */
-  .frame{border:1px solid var(--frame-line);border-radius:var(--surface-radius);
-    box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line),
-      0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
+  .frame{border-radius:var(--surface-radius);}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;
     margin:7px 7px 0;border-bottom:1px solid var(--line);font-family:var(--sans)}
   .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
@@ -211,7 +199,7 @@
     <section class="sec">
       <div class="sh">Three observations</div>
       <div class="obs">
-        <div class="n"><span class="num">01</span>Systems over philosophies</div>
+        <div class="n"><span class="num">I</span>Systems over philosophies</div>
         <p>At Dimensional Fund Advisors, I expected to spend most of my time thinking about portfolios and
           markets. Instead, I found myself paying attention to something else. The strongest firms weren't
           distinguished only by their investment philosophy. They were distinguished by how consistently
@@ -219,7 +207,7 @@
           conversations. They were parts of the same system.</p>
       </div>
       <div class="obs">
-        <div class="n"><span class="num">02</span>Isolation over expertise</div>
+        <div class="n"><span class="num">II</span>Isolation over expertise</div>
         <p>Later, working directly with families, the conversations became less about investment theory and more
           about real life: retirement, concentrated stock, trusts, business sales, estate plans, and the
           decisions that connected them. The professionals were rarely the problem. Most were thoughtful and
@@ -227,7 +215,7 @@
           between them.</p>
       </div>
       <div class="obs">
-        <div class="n"><span class="num">03</span>Structure over performance</div>
+        <div class="n"><span class="num">III</span>Structure over performance</div>
         <p>Early in my career, I worked on a project identifying tax-inefficient funds held in taxable portfolios.
           The lesson wasn't really about taxes. It was about visibility. Once people could see the consequence of a
           structural decision, changing course became obvious. Small structural decisions, repeated consistently
@@ -276,6 +264,10 @@
             was built to solve that problem.</p>
           <p class="founder-credo">"I didn't want to be one more specialist at the table. I wanted to be the one
             accountable for how the whole table fits together."</p>
+          <div class="founder-sign" aria-label="Signed, Alec Messino, Founder of Driftwood">
+            <span class="sig">Alec Messino</span>
+            <span class="sigline">Founder · Driftwood</span>
+          </div>
         </div>
         <!-- Credentials span the full founder block, not the narrow bio column, so the formal
              run-on sets on one or two clean lines instead of stranding dividers mid-column. -->

@@ -56,8 +56,8 @@
   .foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);
     color:var(--dim);font-size:12.5px}
   .foot .note{color:var(--slate)}
-  .pill{display:inline-block;font-size:11px;color:var(--dim);border:1px solid var(--line);
-    border-radius:var(--surface-radius);padding:1px 10px;margin-left:8px;vertical-align:middle}
+  .pill{display:inline-block;font-size:11px;color:var(--dim);text-transform:uppercase;
+    letter-spacing:.7px;padding:1px 0;margin-left:12px;vertical-align:middle}
   /* Phones: shrink the generous desktop gutters, wrap the metric rows to two-up, and let any
      wide study table scroll inside its own container instead of pushing the page sideways. */
   @media(max-width:620px){
@@ -93,7 +93,7 @@
   <header>
     <h1>Drift<span class="w">wood</span> · Core Alpha research studies</h1>
     <div class="sub" id="sub"></div>
-    <div class="research-banner" style="margin-top:10px;font-size:11.5px;color:var(--body);border:1px solid var(--line);border-left:3px solid var(--brass,#2c5878);background:var(--soft);border-radius:var(--surface-radius);padding:8px 12px;line-height:1.5">
+    <div class="research-banner" style="margin-top:14px;font-size:11.5px;color:var(--dim);border-left:1px solid var(--line);padding:2px 0 2px 14px;line-height:1.5">
       <b>Core Alpha Research.</b> These are educational studies of <i>why</i> the Core Alpha (momentum) strategy
       behaves as it does — not the deployed, tax-managed <b>Structural&nbsp;Alpha</b> book. Hypothetical
       backtests, not a client account. <a href="index.html" style="color:var(--slate,#4a4f57)">See the current book →</a>
@@ -116,6 +116,7 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
 
 function niceStep(span,n){const raw=(span||1)/n,mag=Math.pow(10,Math.floor(Math.log10(raw)));const u=raw/mag,step=u<1.5?1:u<3?2:u<7?5:10;return step*mag;}
 function fmtMonth(d){const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const p=(d||"").split("-");return p.length>1?M[(+p[1])-1]+" ’"+p[0].slice(2):(d||"");}
+function roman(n){const m=[["X",10],["IX",9],["V",5],["IV",4],["I",1]];let r="";for(const[s,v]of m){while(n>=v){r+=s;n-=v;}}return r;}
 
 // Dated %-rebased sparkline: %-labelled y gridlines, start/end month ticks, an end-value label.
 function spark(el, values, dates){
@@ -168,7 +169,7 @@ function render(s){
       table = `<div class="tscroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
     }
     return `<section class="study">
-      <h2>${st.name}<span class="pill">study ${i+1}</span></h2>
+      <h2>${st.name}<span class="pill">${roman(i+1)}</span></h2>
       <p class="desc">${st.description}</p>
       <div class="metrics">${metrics}</div>
       ${sparkEl}${table}

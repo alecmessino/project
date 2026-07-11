@@ -35,8 +35,7 @@
   body{margin:0;background:var(--bg);color:var(--body);font:18px/1.78 var(--sans);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{max-width:1080px;margin:40px auto;padding:0 20px 60px}
-  .frame{background:var(--bg);border:1px solid #c3bcab;border-radius:var(--surface-radius);overflow:hidden;
-    box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
+  .frame{background:var(--bg)}
   .doc{max-width:648px;padding:0 44px;margin:0 auto}
   .kicker{font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
     color:var(--muted);margin:52px 0 18px}
@@ -58,12 +57,9 @@
   .foot .note{color:#5a5a62;font-weight:600}
   @media(max-width:620px){ body{font-size:17px} .doc{padding:0 22px} p{font-size:17px} .foot{padding-left:22px;padding-right:22px} }
 
-  /* ── Rebrand: plate frame + running head (matches the front door), in place of the browser chrome. */
-  .frame{border:1px solid var(--frame-line);border-radius:var(--surface-radius);
-    box-shadow:inset 0 0 0 6px var(--bg), inset 0 0 0 7px var(--line),
-      0 1px 0 rgba(26,32,38,.10), 0 14px 34px -26px rgba(26,32,38,.42)}
+  /* ── Running head (masthead), matches the front door — a single hairline, no plate. */
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;
-    margin:7px 7px 0;border-bottom:1px solid var(--line);font-family:var(--sans)}
+    margin:0;border-bottom:1px solid var(--line);font-family:var(--sans)}
   .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
 

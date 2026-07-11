@@ -181,7 +181,16 @@ def _esc(s: str) -> str:
 
 NAV = (
     '<nav class="dwnav" aria-label="Driftwood Capital">\n'
-    '  <a class="brand" href="index.html">Driftwood Capital</a>\n'
+    '  <a class="brand" href="index.html" aria-label="Driftwood Capital — home">'
+    '<svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true">'
+    '<path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/>'
+    '<path d="M1.5 8 H8 L27 15" stroke-width="2.4"/>'
+    '<path d="M1.5 15 H27" stroke-width="2.4"/>'
+    '<path d="M1.5 22 H8 L27 15" stroke-width="2.4"/>'
+    '<path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/>'
+    '<path d="M27 15 H44.5" stroke-width="3.4"/></svg>'
+    '<span class="brand-rule" aria-hidden="true"></span>'
+    '<span class="brand-word">Driftwood Capital</span></a>\n'
     '  <div class="dwnav-links">\n'
     '    <span class="dwnav-group"><span class="dwnav-label">Understand</span>\n'
     '      <a href="about.html">Our Story</a>\n'

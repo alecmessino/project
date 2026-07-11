@@ -22,6 +22,14 @@
   --teal:#15463a; --teal2:#15806a;
   /* Editorial blue takes every identity/wayfinding role; --brass/--gold are retired aliases of it. */
   --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6; --brass:#2c5878; --gold:#a9c2d6;
+  /* ── Identity system — the Streams confluence lockup. One place for every lockup metric so the
+     nav/chrome brand stays consistent site-wide; see brand.html for the full standard. ───────── */
+  --logo-mark:17px;             /* nav mark height */
+  --logo-gap:14px;              /* space around mark · divider · wordmark */
+  --logo-rule:20px;             /* divider height */
+  --logo-rule-color:var(--line);/* architectural hairline */
+  --logo-word:14px;             /* wordmark size in the nav */
+  --logo-word-spacing:.15em;    /* wordmark tracking */
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:22px; --s6:30px;
   /* ── Institutional surface system — single source of truth, frozen 2026-07 ──────────────────
      Surfaces behave like paper, not floating software. One token squares every card, plate,
@@ -77,11 +85,20 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
 .dwnav{ display:flex; justify-content:space-between; align-items:center; gap:10px 24px;
   flex-wrap:wrap; padding:14px 24px; border-bottom:1px solid var(--line,#e3dccd);
   background:var(--soft,#fbf9f4); font-family:var(--sans); }
-/* The Nameplate: single-ink DRIFTWOOD in tracked caps — never two-tone. Color belongs to
-   the page, not the name, so the wordmark reads identically everywhere. */
-.dwnav .brand{ font-size:15px; font-weight:700; color:var(--ink,#1d242d); text-decoration:none;
-  letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; }
-.dwnav .brand:hover{ opacity:.85; }
+/* The Nameplate (Secondary lockup): the Streams confluence mark, an architectural hairline, and
+   DRIFTWOOD CAPITAL in tracked caps — single-ink, never two-tone. Colour belongs to the page, so
+   the wordmark reads identically everywhere. Metrics come from the --logo-* tokens. */
+.dwnav .brand{ display:inline-flex; align-items:center; gap:var(--logo-gap,14px);
+  text-decoration:none; white-space:nowrap; }
+.dwnav .brand-mark{ height:var(--logo-mark,17px); width:auto; flex:none;
+  color:var(--accent-strike,#2c5878); overflow:visible; }
+.dwnav .brand-rule{ width:1px; height:var(--logo-rule,20px); flex:none;
+  background:var(--logo-rule-color,#d8d3c6); }
+.dwnav .brand-word{ font-size:var(--logo-word,14px); font-weight:500; color:var(--ink,#1d242d);
+  letter-spacing:var(--logo-word-spacing,.15em); text-transform:uppercase; }
+.dwnav .brand:hover .brand-word{ color:var(--accent-strike,#2c5878); }
+/* Mobile: drop the divider, tighten to the Micro lockup. */
+@media (max-width:620px){ .dwnav .brand{ gap:10px; } .dwnav .brand-rule{ display:none; } }
 /* A running index of tracked-caps links, split into two labelled families: Understand (who we are
    and how we think) and Discover (the interactive tools). The current page carries a 2px
    editorial-blue rule. */

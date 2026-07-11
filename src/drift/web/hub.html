@@ -313,10 +313,9 @@
             <text x="740" y="228" text-anchor="middle" font-size="24" font-weight="700" letter-spacing="-.01em" fill="#1e2833">What you keep</text>
           </svg>
         </div>
-        <p class="sb-explain" id="sbExplain">Every part moves the others — which is why they are decided together, not one at a time. Select a part to see what it moves.</p>
-        <p class="sb-cap">Every important financial decision changes at least five others. A tax decision changes
-          withdrawals. Withdrawals change asset location. Estate decisions change portfolio design. Managed together,
-          they determine <b>what you keep</b>.
+        <p class="sb-explain" id="sbExplain">Select a part to see what it moves.</p>
+        <p class="sb-cap">A tax decision changes withdrawals. Withdrawals change asset location. Estate decisions
+          change portfolio design. Managed together, they determine <b>what you keep</b>.
           <a class="sb-link" href="coordination.html">See it in one household →</a></p>
       </div>
     </div>
@@ -512,7 +511,7 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
   var diagram = document.getElementById("sbDiagram"); if(!diagram) return;
   var nodes = [].slice.call(diagram.querySelectorAll(".sbnode"));
   var explain = document.getElementById("sbExplain"); if(!nodes.length || !explain) return;
-  var DEF = 'Every part moves the others — which is why they are decided together, not one at a time. Select a part to see what it moves.';
+  var DEF = 'Select a part to see what it moves.';
   var DATA = [
     ['Portfolio','Change the portfolio and you realize gains, shift asset location, and move what is available to spend — Taxes, Estate, and Liquidity all move with it.'],
     ['Taxes','A tax decision changes where assets are best held, what the estate will owe, and the order accounts are drawn — Portfolio, Estate, and Liquidity respond.'],

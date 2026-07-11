@@ -186,6 +186,7 @@ NAV = (
     '    <span class="dwnav-group"><span class="dwnav-label">Understand</span>\n'
     '      <a href="about.html">Our Story</a>\n'
     '      <a href="principles.html">Philosophy</a>\n'
+    '      <a href="inside.html">Operating&nbsp;System</a>\n'
     '      <a href="thesis.html">How We Invest</a>\n'
     '      <a href="howitworks.html">How It Works</a>\n'
     '      <a href="insights.html">Insights</a>\n'

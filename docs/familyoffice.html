@@ -14,6 +14,11 @@
 <meta name="description" content="Family offices don't outperform because they buy better investments. They outperform because every important decision is made inside one operating framework. Driftwood brings that operating model to households without a dedicated family office. Illustrative, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/familyoffice.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="The Operating Model of a Family Office, for a Single Household" />
@@ -38,7 +43,7 @@
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
@@ -46,16 +51,16 @@
   .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:15px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(33px,3.1vw+16px,46px);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:18ch}
   .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:62ch}
-  .lede b{color:var(--ink);font-weight:600}
-  .punch{font-family:var(--serif);font-weight:600;font-size:clamp(23px,2.2vw+13px,32px);line-height:1.15;
+  .lede b{color:var(--ink);font-weight:500}
+  .punch{font-family:var(--serif);font-weight:500;font-size:clamp(23px,2.2vw+13px,32px);line-height:1.15;
     letter-spacing:-.02em;color:var(--ink);margin:22px 0 0;max-width:18ch}
-  .punch .s{display:block;font-family:var(--sans);font-weight:600;font-size:14px;color:var(--dim);margin-top:9px;letter-spacing:0;line-height:1.4;max-width:40ch}
+  .punch .s{display:block;font-family:var(--sans);font-weight:500;font-size:14px;color:var(--dim);margin-top:9px;letter-spacing:0;line-height:1.4;max-width:40ch}
   .rule{height:1px;background:var(--line);margin:0 44px}
   .sh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
   .sh .sn{color:var(--brass);font-weight:700;font-variant-numeric:tabular-nums;margin-right:11px}
   .sec{padding:44px 44px 6px}
   .sec .intro{font-size:16.5px;line-height:1.7;color:var(--body);margin:0 0 8px;max-width:64ch}
-  .sec .intro b{color:var(--ink);font-weight:600}
+  .sec .intro b{color:var(--ink);font-weight:500}
 
   /* What a family office actually is — three principles. */
   .three{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:26px 0 6px}
@@ -76,7 +81,7 @@
   .flowlist{list-style:none;margin:0;padding:0;text-align:center}
   .flowlist li{font-family:var(--sans);font-size:14px;color:var(--body);padding:6px 0}
   .flowlist li + li::before{content:"↓";display:block;color:var(--ghost-line);font-size:12px;line-height:1;margin:0 0 5px}
-  .flowlist li.conf{color:var(--ink);font-weight:600}
+  .flowlist li.conf{color:var(--ink);font-weight:500}
   .flowlist li.term{color:var(--ink);font-weight:700;font-size:15px;margin-top:7px;padding-top:12px;border-top:3px double var(--ink)}
   .flowlist li.term::before{content:none}
   .opeq{font-family:var(--sans);font-weight:700;font-size:22px;color:var(--ghost-line);align-self:center;text-align:center}
@@ -89,7 +94,7 @@
   .wc-assets{padding:16px 0 14px;border-bottom:1px solid var(--line)}
   .wc-lab{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
   .wc-assets .v{font-size:13.5px;color:var(--dim);line-height:1.5}
-  .wc-assets .v b{color:var(--ink);font-weight:600}
+  .wc-assets .v b{color:var(--ink);font-weight:500}
   /* The gradient "financial system health" meter and its lever styles were retired in the
      institutional upgrade; the "What changed?" widget now uses the shared squared tally and
      ruled levers (.coord-head/.tally/.coord-levers/.coord-lever/.coord-sum/.coord-note) from
@@ -97,22 +102,22 @@
 
   .lead-cat{font-family:var(--serif);font-size:20px;line-height:1.5;color:var(--ink);margin:6px 0 0;
     padding-left:18px;border-left:3px solid var(--brass);max-width:60ch}
-  .lead-cat b{font-weight:600}
+  .lead-cat b{font-weight:500}
 
   .creed-band{margin:40px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
     font-size:clamp(21px,2vw+13px,28px);letter-spacing:-.022em;color:var(--ink);line-height:1.16}
   .onward{margin:20px 44px 0;text-align:center;font-family:var(--sans);font-size:13px;color:var(--muted)}
-  .onward a{color:var(--teal2);text-decoration:none;font-weight:600}
+  .onward a{color:var(--teal2);text-decoration:none;font-weight:500}
   .onward a:hover{text-decoration:underline}
   .onward .d{color:var(--ghost-line);margin:0 6px}
   .cta{margin:34px 44px 0;padding:26px 0 0;border-top:1px solid var(--line)}
   .cta .ct{font-family:var(--sans);font-weight:700;font-size:20px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.02em}
   .cta .cd{font-size:14px;line-height:1.6;color:var(--dim);margin:0 0 18px;max-width:56ch}
   .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:var(--surface-radius);
-    font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px;background:var(--teal);color:#f1ede3}
+    font-family:var(--sans);font-size:14.5px;font-weight:500;padding:12px 22px;background:var(--teal);color:#f1ede3}
   .foot{margin-top:42px;padding:20px 44px 40px;border-top:1px solid var(--line);
     color:var(--muted);font-size:12px;line-height:1.65}
-  .foot .note{color:#5a5a62;font-weight:600}
+  .foot .note{color:#5a5a62;font-weight:500}
   .foot b{color:var(--dim)}
   @media(max-width:620px){
     .doc,.sec{padding-left:22px;padding-right:22px}
@@ -125,24 +130,25 @@
 <div class="wrap">
   <div class="frame">
     <div class="inner">
-    <nav class="dwnav" aria-label="Driftwood">
+    <nav class="dwnav" aria-label="Driftwood Capital">
       <a class="brand" href="index.html">Driftwood Capital</a>
       <div class="dwnav-links">
-        <span class="dwnav-group">
-          <a href="principles.html">Philosophy</a>
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
           <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
           <a href="thesis.html">How We Invest</a>
-        </span>
-        <span class="dwnav-group">
+          <a href="howitworks.html">How It Works</a>
           <a href="insights.html">Insights</a>
           <a href="ledger.html">Research</a>
-          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
-        <span class="dwnav-group">
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
     </nav>
 
     <div class="doc">

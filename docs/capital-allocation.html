@@ -14,6 +14,11 @@
 <meta name="description" content="The household's governing policy for how capital is deployed — goals, buckets, and subsystems coordinated as one, not a portfolio model in isolation. It sits under the Constitution and feeds the Decision Log. An illustrative sample for a fictional family. Not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/capital-allocation.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="The Capital Allocation Policy — a sample" />
@@ -37,7 +42,7 @@
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
@@ -47,25 +52,25 @@
   .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:14px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px, 2.6vw + 15px, 42px);line-height:1.06;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
   .lede{font-family:var(--serif);font-size:18.5px;line-height:1.55;color:var(--dim);margin:0;max-width:60ch}
-  .lede b{color:var(--ink);font-weight:600}
+  .lede b{color:var(--ink);font-weight:500}
 
   /* Section padding */
   .sec{padding:26px 44px 6px}
   .sec p.body{font-size:14.5px;line-height:1.64;color:var(--body);max-width:72ch;margin:0 0 14px}
-  .sec p.body b{color:var(--ink);font-weight:600}
+  .sec p.body b{color:var(--ink);font-weight:500}
 
   /* Objectives — hairline-keyed list (typography + rule, not a box) */
   .obj{list-style:none;margin:6px 0 4px;padding:0;display:flex;flex-direction:column;gap:14px}
   .obj li{padding:2px 0 2px 18px;border-left:1px solid var(--line);max-width:74ch}
   .obj .art{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike);display:block;margin-bottom:6px}
   .obj p{font-size:14px;line-height:1.6;color:var(--body);margin:0}
-  .obj p b{color:var(--ink);font-weight:600}
+  .obj p b{color:var(--ink);font-weight:500}
 
   /* Section-local ruled list (sequencing / triggers) */
   .ruleset{list-style:none;margin:8px 0 4px;padding:0;display:flex;flex-direction:column}
   .ruleset li{padding:13px 0;border-bottom:1px solid var(--line2);font-size:14px;line-height:1.58;color:var(--body);max-width:76ch}
   .ruleset li:first-child{border-top:1px solid var(--line2)}
-  .ruleset li b{color:var(--ink);font-weight:600}
+  .ruleset li b{color:var(--ink);font-weight:500}
   .ruleset .rk{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-strike);margin-right:10px}
 
   /* Navy close (mirrors manual.html) */
@@ -73,10 +78,10 @@
   .close .eyebrow{color:var(--accent-strike-soft)}
   .close h2{font-family:var(--sans);font-weight:700;font-size:clamp(24px,2.4vw+13px,34px);line-height:1.1;letter-spacing:-.022em;color:var(--on-dark-strong);margin:0 0 16px;max-width:22ch}
   .close p{font-family:var(--serif);font-size:17px;line-height:1.55;color:var(--on-dark-dim);margin:0 0 24px;max-width:60ch}
-  .close a{color:var(--accent-strike-soft);font-weight:600;text-decoration:none}
+  .close a{color:var(--accent-strike-soft);font-weight:500;text-decoration:none}
   .close a:hover{text-decoration:underline}
   .close .foliobar{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(233,229,219,.16);padding-top:14px}
-  .close .foliobar span{font-weight:600;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--on-dark-dim);font-variant-numeric:tabular-nums}
+  .close .foliobar span{font-weight:500;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--on-dark-dim);font-variant-numeric:tabular-nums}
 
   /* Colophon + disclosure */
   .foot{margin:0;padding:20px 48px 34px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;line-height:1.65}
@@ -95,24 +100,25 @@
       <span class="marker">The Driftwood Record · Capital Allocation Policy</span>
     </div>
     <div class="inner">
-    <nav class="dwnav" aria-label="Driftwood">
+    <nav class="dwnav" aria-label="Driftwood Capital">
       <a class="brand" href="index.html">Driftwood Capital</a>
       <div class="dwnav-links">
-        <span class="dwnav-group">
-          <a href="principles.html">Philosophy</a>
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
           <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
           <a href="thesis.html">How We Invest</a>
-        </span>
-        <span class="dwnav-group">
+          <a href="howitworks.html">How It Works</a>
           <a href="insights.html">Insights</a>
           <a href="ledger.html">Research</a>
-          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
-        <span class="dwnav-group">
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
     </nav>
     <div class="om-sections">
       <a class="t" href="record.html">The Driftwood Record</a>

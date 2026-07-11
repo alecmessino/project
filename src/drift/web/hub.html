@@ -15,6 +15,11 @@
 <meta name="description" content="Most households already have the pieces of a good plan — a portfolio, a CPA, an estate attorney. What's missing is someone coordinating them as one system. Driftwood manages that system; what you keep is the result. Fee-only, fiduciary." />
 <link rel="canonical" href="https://alecmessino.github.io/project/index.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="Driftwood Capital — your financial life, run as one system" />
@@ -69,34 +74,34 @@
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;
     padding:12px 24px;margin:7px 7px 0;border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
   /* ── Hero — problem + category, in one memorable line. ───────────────────────────────────────── */
   .hero{display:block;padding:40px 44px 34px;max-width:82ch}
-  .eyebrow{font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.16em;
+  .eyebrow{font-family:var(--sans);font-weight:500;font-size:12px;letter-spacing:.16em;
     text-transform:uppercase;color:var(--accent-strike);margin-bottom:20px}
   .kick{font-family:var(--serif);font-size:clamp(18px,.7vw+15px,21px);line-height:1.5;color:var(--muted);margin:0 0 12px;max-width:52ch}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(40px,3.6vw + 18px,55px);line-height:1.05;
     letter-spacing:-.022em;color:var(--ink);margin:0 0 24px;max-width:18ch}
   .lede{font-family:var(--serif);font-size:18.5px;line-height:1.58;color:var(--dim);margin:0 0 30px;max-width:56ch}
-  .lede b{color:var(--ink);font-weight:600}
+  .lede b{color:var(--ink);font-weight:500}
   .ctas{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-  .ctas a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:600;white-space:nowrap;
+  .ctas a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:500;white-space:nowrap;
     transition:filter var(--t-fast),transform var(--t-fast),background var(--t-fast),border-color var(--t-fast)}
   .ctas .primary{background:var(--teal);color:#f1ede3;padding:15px 26px;border-radius:var(--surface-radius)}
   .ctas .primary:hover{filter:brightness(1.06)}
-  .ctas .ghost{color:var(--ink);padding:15px 10px;font-weight:600;border-bottom:2px solid transparent}
+  .ctas .ghost{color:var(--ink);padding:15px 10px;font-weight:500;border-bottom:2px solid transparent}
   .ctas .ghost:hover{border-bottom-color:var(--teal)}
 
   /* ── Section scaffold — strong hierarchy: tiny label, medium statement, generous air. ────────── */
   .sec{padding:20px 44px 44px}
   .sec .h{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:18px}
   .lede2{font-family:var(--serif);font-size:clamp(19px,1vw+15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
-  .lede2 b{font-weight:600}
+  .lede2 b{font-weight:500}
   .sysbody{font-family:var(--sans);font-size:15.5px;line-height:1.65;color:var(--body);margin:0 0 26px;max-width:60ch}
-  .sysbody b{color:var(--ink);font-weight:600}
+  .sysbody b{color:var(--ink);font-weight:500}
 
   /* Four capabilities — icon · title · question · one line · CTA. Separated cards, room to breathe. */
   .caps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px}
@@ -106,7 +111,7 @@
   .cap-n{font-family:var(--sans);font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;
     letter-spacing:.14em;color:var(--accent-strike);margin-bottom:16px}
   .cap-t{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
-  .cap-q{font-family:var(--sans);font-weight:600;font-size:18.5px;line-height:1.2;color:var(--ink);margin:0 0 9px;letter-spacing:-.01em}
+  .cap-q{font-family:var(--sans);font-weight:500;font-size:18.5px;line-height:1.2;color:var(--ink);margin:0 0 9px;letter-spacing:-.01em}
   .cap-d{font-family:var(--sans);font-size:14px;color:var(--dim);line-height:1.5;margin-bottom:18px}
   .cap-go{margin-top:auto;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--teal2)}
   .cap-go::after{content:"\00a0→";display:inline-block;transition:transform .2s var(--ease-out)}
@@ -131,7 +136,7 @@
   .sbnode:focus{outline:none}
   .sbnode:focus-visible .box{stroke:var(--accent-strike);stroke-width:2}
   .sbnode.hi .box{stroke:var(--ink);stroke-width:1.6;fill:var(--soft)}
-  .sbnode.hi text{fill:var(--ink);font-weight:600}
+  .sbnode.hi text{fill:var(--ink);font-weight:500}
   .sbnode.hi .conn{opacity:1;stroke:var(--ink)}
   .sbnode.sel .box{stroke:var(--ink);stroke-width:2}
   .sbnode.dim{opacity:.32;transition:opacity .18s ease}
@@ -140,7 +145,7 @@
   .sb-explain .who{font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike);margin-right:10px;white-space:nowrap}
   @media(prefers-reduced-motion:reduce){.sbnode .box,.sbnode .conn,.sbnode text,.sbnode.dim{transition:none}}
   .sb-cap{font-family:var(--sans);font-size:13.5px;line-height:1.62;color:var(--muted);margin:38px auto 0;max-width:62ch}
-  .sb-cap b{color:var(--ink);font-weight:600}
+  .sb-cap b{color:var(--ink);font-weight:500}
   /* The systems diagram is a static ink schematic — square plates, hairline connectors, square
      nodes; no scroll-driven draw-in. The figure stands still. */
   @media(max-width:620px){.sysband{padding:44px 22px}.sb-sub{margin-bottom:30px}}
@@ -155,12 +160,12 @@
   .kf-num{font-family:var(--sans);font-variant-numeric:tabular-nums}
   .kf-sans{font-family:var(--sans)}
   .kf-cap{font-family:var(--sans);font-size:10.5px;color:#9a978f;margin-top:16px;padding-top:12px;border-top:1px solid var(--line2);line-height:1.5;max-width:82ch}
-  .kf-cap b{color:var(--muted);font-weight:600}
+  .kf-cap b{color:var(--muted);font-weight:500}
 
   /* Credibility strip — trust signals, not marketing. One quiet band. */
   .cred{margin:6px 44px 0;padding:20px 8px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
     display:flex;flex-wrap:wrap;justify-content:center;gap:10px 14px;font-family:var(--sans);font-size:12px;color:var(--dim)}
-  .cred b{display:inline-flex;align-items:center;font-weight:600;color:var(--dim)}
+  .cred b{display:inline-flex;align-items:center;font-weight:500;color:var(--dim)}
   .cred b::before{content:"✓";color:var(--teal2);font-weight:700;margin-right:7px}
   .cred .dot{color:var(--ghost-line)}
   @media(max-width:620px){.cred .dot{display:none}}
@@ -169,11 +174,11 @@
   .close-conv{padding:60px 44px 52px;max-width:720px}
   .conv{font-family:var(--serif);font-size:clamp(23px,1.7vw+15px,31px);line-height:1.4;color:var(--ink);
     letter-spacing:-.008em;margin:0 0 30px}
-  .conv b{font-weight:600}
+  .conv b{font-weight:500}
   @media(max-width:620px){.close-conv{padding-left:22px;padding-right:22px}}
 
   .foot{margin-top:26px;padding:18px 44px 34px;border-top:1px solid var(--line);color:#9a978f;font-size:11px;line-height:1.6}
-  .foot .note{color:var(--muted);font-weight:600}
+  .foot .note{color:var(--muted);font-weight:500}
   .foot a{color:var(--muted)}
   .foot b{color:var(--muted)}
   @media(max-width:620px){.hero,.sec{padding-left:22px;padding-right:22px}.foot,.cred{padding-left:22px;padding-right:22px}.cred{margin-left:0;margin-right:0}}
@@ -196,24 +201,25 @@
 <div class="wrap">
   <div class="frame">
     <div class="inner">
-    <nav class="dwnav" aria-label="Driftwood">
+    <nav class="dwnav" aria-label="Driftwood Capital">
       <a class="brand" href="index.html">Driftwood Capital</a>
       <div class="dwnav-links">
-        <span class="dwnav-group">
-          <a href="principles.html">Philosophy</a>
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
           <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
           <a href="thesis.html">How We Invest</a>
-        </span>
-        <span class="dwnav-group">
+          <a href="howitworks.html">How It Works</a>
           <a href="insights.html">Insights</a>
           <a href="ledger.html">Research</a>
-          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
-        <span class="dwnav-group">
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
     </nav>
 
     <!-- ── HERO — problem + category ── -->
@@ -224,9 +230,50 @@
         What almost no household has is <b>the one role responsible for how they fit together</b>, so that every
         important decision is made in view of the others. Coordination is the product. What you keep is the result.</p>
       <div class="ctas">
-        <a class="primary" href="leakage.html">See where your wealth is leaking →</a>
+        <a class="primary" href="leakage.html">Measure your tax drag →</a>
         <a class="ghost" href="coordination.html">See a worked example</a>
       </div>
+    </div>
+
+    <!-- ── THE OPERATING SYSTEM — the differentiator, made tangible, before the tools ── -->
+    <div class="sec" id="operating-system">
+      <div class="h">The operating system</div>
+      <p class="lede2">Driftwood isn't another investment firm. It's the system your wealth runs on.</p>
+      <p class="sysbody">Coordination isn't a feeling. It is a set of durable documents a family can hold — the
+        instruments an institution runs on, brought to a single household: a living manual, a register of every
+        decision and open opportunity, and one annual review of the whole system. <b>This is what you keep,
+        written down.</b></p>
+      <div class="rl-cards">
+        <a class="rl-card feat" href="manual.html">
+          <div class="rl-meta">The living document</div>
+          <div class="rl-t">The Wealth Operating Manual</div>
+          <div class="rl-d">The team, the balance sheet, the calendar, and the open opportunities — the whole
+            system in one place, kept current, not filed once a year.</div>
+          <div class="rl-go">See a sample →</div>
+        </a>
+        <a class="rl-card" href="opportunity-register.html">
+          <div class="rl-meta">What coordination surfaces</div>
+          <div class="rl-t">The Opportunity Register</div>
+          <div class="rl-d">A running, prioritized list of what coordination has found across the balance sheet —
+            and where each item stands.</div>
+          <div class="rl-go">See a sample →</div>
+        </a>
+        <a class="rl-card" href="decision-log.html">
+          <div class="rl-meta">Every decision, recorded</div>
+          <div class="rl-t">The Decision Log</div>
+          <div class="rl-d">A dated record of every important decision — why it was made, and what it moved across
+            the rest of the system.</div>
+          <div class="rl-go">See a sample →</div>
+        </a>
+        <a class="rl-card" href="awor.html">
+          <div class="rl-meta">The board report for a family</div>
+          <div class="rl-t">The Annual Operating Review</div>
+          <div class="rl-d">Once a year, the whole system in one document: what changed, what's ahead, and who owns
+            each decision.</div>
+          <div class="rl-go">See a sample →</div>
+        </a>
+      </div>
+      <a class="sb-link" href="inside.html" style="margin-top:14px">See how the operating system is built →</a>
     </div>
 
     <!-- ── HOW IT WORKS — four capabilities, one sequence ── -->
@@ -237,7 +284,7 @@
         <a class="cap-card" href="leakage.html">
           <div class="cap-n">I</div>
           <div class="cap-t">Diagnose</div>
-          <div class="cap-q">Where is your wealth leaking today?</div>
+          <div class="cap-q">Where does your return go to tax?</div>
           <div class="cap-d">See what taxes quietly take from the same holdings — by your state and bracket.</div>
           <div class="cap-go">Tax Diagnostic</div>
         </a>
@@ -307,10 +354,9 @@
             <text x="740" y="228" text-anchor="middle" font-size="24" font-weight="700" letter-spacing="-.01em" fill="#1e2833">What you keep</text>
           </svg>
         </div>
-        <p class="sb-explain" id="sbExplain">Every part moves the others — which is why they are decided together, not one at a time. Select a part to see what it moves.</p>
-        <p class="sb-cap">Every important financial decision changes at least five others. A tax decision changes
-          withdrawals. Withdrawals change asset location. Estate decisions change portfolio design. Managed together,
-          they determine <b>what you keep</b>.
+        <p class="sb-explain" id="sbExplain">Select a part to see what it moves.</p>
+        <p class="sb-cap">A tax decision changes withdrawals. Withdrawals change asset location. Estate decisions
+          change portfolio design. Managed together, they determine <b>what you keep</b>.
           <a class="sb-link" href="coordination.html">See it in one household →</a></p>
       </div>
     </div>
@@ -442,13 +488,13 @@
     </div>
 
     <!-- ── CLOSE — end on conviction, one invitation (not a sitemap) ── -->
-    <div class="sec close-conv">
+    <div class="sec close-conv" id="conversation">
       <p class="conv">The best financial decisions are rarely investment decisions alone. They are
         <b>coordination decisions.</b> When every part of your financial life works together, you keep more
         of what you've built.</p>
       <div class="ctas">
         <a class="primary" href="mailto:alec.messino@gmail.com?subject=A%20conversation%20with%20Driftwood%20Capital">Schedule a conversation →</a>
-        <a class="ghost" href="leakage.html">or see where your wealth leaks</a>
+        <a class="ghost" href="leakage.html">or see what tax quietly costs</a>
       </div>
     </div>
 
@@ -506,7 +552,7 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
   var diagram = document.getElementById("sbDiagram"); if(!diagram) return;
   var nodes = [].slice.call(diagram.querySelectorAll(".sbnode"));
   var explain = document.getElementById("sbExplain"); if(!nodes.length || !explain) return;
-  var DEF = 'Every part moves the others — which is why they are decided together, not one at a time. Select a part to see what it moves.';
+  var DEF = 'Select a part to see what it moves.';
   var DATA = [
     ['Portfolio','Change the portfolio and you realize gains, shift asset location, and move what is available to spend — Taxes, Estate, and Liquidity all move with it.'],
     ['Taxes','A tax decision changes where assets are best held, what the estate will owe, and the order accounts are drawn — Portfolio, Estate, and Liquidity respond.'],

@@ -14,6 +14,11 @@
 <meta name="description" content="The operating manual: what actually happens once you become a Driftwood client — the intake, the coordinated plan, implementation, and the standing cadence that runs every year after, with clear hand-offs to your CPA and attorney." />
 <link rel="canonical" href="https://alecmessino.github.io/project/howitworks.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="How Driftwood Works — what happens once you're a client" />
@@ -39,7 +44,7 @@
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
@@ -47,7 +52,7 @@
   .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(34px,3.2vw+16px,48px);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:20ch}
   .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:60ch}
-  .lede b{color:var(--ink);font-weight:600}
+  .lede b{color:var(--ink);font-weight:500}
 
   /* The engagement, as a timeline of phases: number + timeframe, then what happens + what you get. */
   .phases{padding:14px 44px 10px}
@@ -57,7 +62,7 @@
   .phase .pt{font-family:var(--sans);font-size:12.5px;color:var(--muted);margin-top:7px;line-height:1.45}
   .phase h2{font-family:var(--sans);font-weight:700;font-size:22px;line-height:1.2;letter-spacing:-.015em;color:var(--ink);margin:0 0 11px}
   .phase p{font-size:15.5px;line-height:1.65;color:var(--body);margin:0 0 15px;max-width:62ch}
-  .phase p b{color:var(--ink);font-weight:600}
+  .phase p b{color:var(--ink);font-weight:500}
   .out{font-family:var(--sans);font-size:14px;color:var(--dim);border-left:2px solid var(--teal2);padding:11px 15px;max-width:60ch;line-height:1.55}
   .out b{color:var(--teal);font-weight:700;text-transform:uppercase;font-size:10.5px;letter-spacing:.12em;margin-right:9px}
   @media(max-width:640px){.phases{padding-left:22px;padding-right:22px}.phase{grid-template-columns:1fr;gap:12px;padding:26px 0}}
@@ -87,8 +92,8 @@
   .evtable th:last-child,.evtable td:last-child{padding-right:0}
   .evtable td{padding:15px 18px 15px 0;border-bottom:1px solid var(--line2);vertical-align:top;font-size:14px;line-height:1.55;color:var(--body)}
   .evtable tr:last-child td{border-bottom:none}
-  .evtable .ev-when{font-family:var(--serif);font-weight:600;font-size:15.5px;color:var(--ink);width:22%}
-  .evtable .ev-who{font-weight:600;color:var(--teal2);width:26%}
+  .evtable .ev-when{font-family:var(--serif);font-weight:500;font-size:15.5px;color:var(--ink);width:22%}
+  .evtable .ev-who{font-weight:500;color:var(--teal2);width:26%}
   .evtable th:nth-child(3),.evtable td:nth-child(3){width:52%}
   @media(max-width:680px){.evtable,.evtable thead,.evtable tbody,.evtable tr,.evtable th,.evtable td{display:block;width:auto!important}.evtable thead{display:none}.evtable tr{border-bottom:1px solid var(--line);padding:12px 0}.evtable td{border:none;padding:2px 0}.evtable .ev-who{margin-bottom:2px}}
 
@@ -101,14 +106,14 @@
   @media(max-width:620px){.doc{padding-left:22px;padding-right:22px}.cta{margin-left:22px;margin-right:22px}}
 
   .foot{margin-top:8px;padding:18px 44px 34px;border-top:1px solid var(--line);color:#9a978f;font-size:11px;line-height:1.6}
-  .foot .note{color:var(--muted);font-weight:600}
+  .foot .note{color:var(--muted);font-weight:500}
   .foot a{color:var(--muted)} .foot b{color:var(--muted)}
   @media(max-width:620px){.foot{padding-left:22px;padding-right:22px}}
   /* The Ripple — one decision, its downstream consequences (shared visual language). */
   .ripplesec{padding:8px 44px 26px}
   .ripplesec .rsh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 8px}
   .ripplesec .rsi{font-size:15.5px;line-height:1.65;color:var(--body);margin:0 0 18px;max-width:60ch}
-  .ripplesec .rsi b{color:var(--ink);font-weight:600}
+  .ripplesec .rsi b{color:var(--ink);font-weight:500}
   /* The rounded-card + triangle-arrow ripple was retired in the institutional upgrade; the
      decision cascade is now the ruled stemma (.stemma-lead/.stemma/.stemma-end), defined in the
      shared driftwood.css additions — one ink spine, square nodes, a double-rule resolution. */
@@ -121,24 +126,25 @@
 <div class="wrap">
   <div class="frame">
     <div class="inner">
-    <nav class="dwnav" aria-label="Driftwood">
+    <nav class="dwnav" aria-label="Driftwood Capital">
       <a class="brand" href="index.html">Driftwood Capital</a>
       <div class="dwnav-links">
-        <span class="dwnav-group">
-          <a href="principles.html">Philosophy</a>
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
           <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
           <a href="thesis.html">How We Invest</a>
-        </span>
-        <span class="dwnav-group">
+          <a href="howitworks.html" aria-current="page">How It Works</a>
           <a href="insights.html">Insights</a>
           <a href="ledger.html">Research</a>
-          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
-        <span class="dwnav-group">
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
     </nav>
 
     <div class="doc">

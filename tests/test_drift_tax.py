@@ -479,9 +479,9 @@ def test_taxlab_js_mirrors_python_il_estate_curve():
     import re
     from pathlib import Path
     import drift.taxlab as T
-    html = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    html = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
     m = re.search(r"const IL_AG=(\[\[.*?\]\]);", html)
-    assert m, "IL_AG array not found in taxlab.html"
+    assert m, "IL_AG array not found in workspace.html"
     js_rows = ast.literal_eval(m.group(1))
     py_rows = [[bp, tax, rate] for (bp, tax, rate) in T._IL_AG_CURVE]
     assert js_rows == py_rows, f"JS IL_AG {js_rows} != Python _IL_AG_CURVE {py_rows}"
@@ -554,7 +554,7 @@ def test_mobile_state_picker_is_a_severity_chip_grid_not_a_bare_select():
     # handler with no separate sync path that can desync.
     from pathlib import Path
     import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
     assert '<select id="leadstate"' not in tx                 # the bare dropdown is gone
     assert 'id="leadstate"' in tx and "buildLeadStates(" in tx
     assert "paintLeadSel(" in tx                              # selection mirrored, no desync
@@ -566,7 +566,7 @@ def test_lead_funnel_is_competence_framed_with_instant_recap():
     # delivers the prospect's own computed figures instantly, and brands the booking step.
     from pathlib import Path
     import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
     assert "Send Me My Custom Tax Recovery Plan" not in tx     # the direct-response grab is gone (C1)
     assert "See my personalized analysis" in tx               # competence-led CTA (C1)
     assert "lead-recap" in tx                                  # instant figures delivered on submit (C2)
@@ -578,7 +578,7 @@ def test_estate_view_includes_illiquid_true_net_worth_inputs():
     # feed the Gross Estate — illiquid assets are what trigger the cliff for HNW clients.
     from pathlib import Path
     import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
     for el in ('id="estre"', 'id="estbiz"', 'id="estli"', 'id="estliown"'):
         assert el in tx, f"estate input missing: {el}"
     assert "liInEstate" in tx and "§2042" in tx          # life insurance counted only when owned
@@ -591,7 +591,7 @@ def test_personalized_outreach_url_params_supported():
     # F3: cold-outreach links pre-load bracket / portfolio / home / li / biz and the prospect view.
     from pathlib import Path
     import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
     assert 'qp.get("portfolio")' in tx and 'qp.get("home")' in tx
     assert 'qp.get("li")' in tx and 'qp.get("biz")' in tx
     assert 'qp.get("bracket")' in tx
@@ -629,7 +629,7 @@ def test_build_taxlab_embeds_firm_models(tmp_path):
 def test_transition_ui_labels_structural_alpha_and_keeps_models_distinct():
     from pathlib import Path
     import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
     assert 'id="transition"' in tx and "renderTransition(" in tx
     assert "Estimated Structural Alpha (Tax + Fee Optimization)" in tx
     assert "not a forecast that these funds out-perform" in tx     # honest savings framing
@@ -641,7 +641,7 @@ def test_decision_tree_visualizes_placement_and_gates_trust_on_estate():
     # gated on the gross estate — never an auto-recommendation (UPL guardrail).
     from pathlib import Path
     import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
     assert 'id="decisiontree"' in tx and "renderDecisionTree(" in tx and "grossEstate(" in tx
     assert "Credit Shelter" in tx and "SLAT" in tx
     assert "your attorney determines suitability" in tx   # education, not advice
@@ -655,7 +655,7 @@ def test_pdf_proposal_print_template_and_disclosures():
     import drift.taxlab as T
     web = Path(T.__file__).with_name("web")
     css = (web / "driftwood.css").read_text()
-    tx = (web / "taxlab.html").read_text()
+    tx = (web / "workspace.html").read_text()
     assert "@media print" in css and "@page" in css
     assert "#printfoot" in css and "position:fixed" in css     # running footer on every page
     assert 'id="printdisc"' in tx and 'id="printproposal"' in tx
@@ -682,7 +682,7 @@ def test_structural_alpha_shows_a_sensitivity_range_with_tooltip():
     # M3: the headline carries a defensible visible range AND a hover tooltip naming the drivers.
     from pathlib import Path
     import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "taxlab.html").read_text()
+    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
     assert "Sensitivity range" in tx and "DRAG_BAND" in tx
     assert "saLo" in tx and "saHi" in tx
     assert "effective tax rate, turnover, and market return" in tx      # the band's drivers, in the tip

@@ -15,6 +15,11 @@
 <meta name="description" content="One household, two state lines. A worked example of how coordinated financial decisions change the outcome: the Illinois estate-tax trap, the Texas income-tax opportunity, and the ripple every single move sets off. Illustrative, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/coordination.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="What Coordination Is Worth" />
@@ -40,7 +45,7 @@
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
@@ -48,7 +53,7 @@
   .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(34px,3.2vw+16px,48px);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:18ch}
   .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:62ch}
-  .lede b{color:var(--ink);font-weight:600}
+  .lede b{color:var(--ink);font-weight:500}
 
   .rule{height:1px;background:var(--line);margin:0 44px}
   .sh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
@@ -58,7 +63,7 @@
   .why{padding:46px 44px 8px}
   .why h2{font-family:var(--sans);font-weight:700;font-size:clamp(23px,1.4vw+16px,29px);line-height:1.18;letter-spacing:-.018em;color:var(--ink);margin:14px 0 10px;max-width:24ch}
   .why .sub{font-size:16px;line-height:1.7;color:var(--body);margin:0 0 30px;max-width:64ch}
-  .why .sub b{color:var(--ink);font-weight:600}
+  .why .sub b{color:var(--ink);font-weight:500}
   .analog{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:0 0 20px}
   @media(max-width:720px){.analog{grid-template-columns:1fr;gap:16px}}
   .an{padding:18px 0 20px;border-top:1px solid var(--line)}
@@ -70,9 +75,9 @@
   /* ── The interactive map: pull one lever, watch the ripples. */
   .lab{padding:16px 44px 20px}
   .lab-intro{font-size:16px;line-height:1.7;color:var(--body);margin:0 0 22px;max-width:64ch}
-  .lab-intro b{color:var(--ink);font-weight:600}
+  .lab-intro b{color:var(--ink);font-weight:500}
   .decisions{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 8px}
-  .dbtn{appearance:none;cursor:pointer;font-family:var(--sans);font-size:13.5px;font-weight:600;letter-spacing:-.005em;
+  .dbtn{appearance:none;cursor:pointer;font-family:var(--sans);font-size:13.5px;font-weight:500;letter-spacing:-.005em;
     color:var(--ink);background:#fff;border:1px solid #cdc4b2;border-radius:0;padding:10px 17px;
     transition:background-color .13s ease,color .13s ease,border-color .13s ease}
   .dbtn:hover{border-color:var(--brass)}
@@ -103,7 +108,7 @@
   .household caption{text-align:left;font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.16em;
     text-transform:uppercase;color:var(--muted);padding-bottom:10px}
   .household th,.household td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line2)}
-  .household th{font-weight:600;color:var(--dim);font-size:12px}
+  .household th{font-weight:500;color:var(--dim);font-size:12px}
   .household td:last-child,.household th:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
   .household .tag{font-size:11px;color:var(--muted)}
   .household tr.tot td{border-top:2px solid var(--frame-line);border-bottom:none;font-weight:700;color:var(--ink);padding-top:12px}
@@ -122,13 +127,13 @@
   .st-b .plan{list-style:none;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:10px}
   .st-b .plan li{position:relative;padding-left:20px;font-size:13.5px;line-height:1.5;color:var(--body)}
   .st-b .plan li::before{content:"";position:absolute;left:0;top:.5em;width:7px;height:7px;border-radius:var(--surface-radius);background:var(--brass)}
-  .st-b .plan li b{color:var(--ink);font-weight:600}
+  .st-b .plan li b{color:var(--ink);font-weight:500}
   .delta{border-top:1px dashed var(--frame-line);padding-top:16px;margin-top:4px}
   .delta .dl{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
   .delta .fig{font-family:var(--sans);font-weight:700;font-size:clamp(30px,3vw+14px,40px);line-height:1;letter-spacing:-.03em;color:var(--teal);font-variant-numeric:tabular-nums}
   .delta .fig.zero{color:var(--ink)}
   .delta .cap{font-size:13px;line-height:1.55;color:var(--dim);margin:9px 0 0}
-  .delta .cap b{color:var(--ink);font-weight:600}
+  .delta .cap b{color:var(--ink);font-weight:500}
   .flow{font-size:12.5px;color:var(--muted);margin:7px 0 0;font-variant-numeric:tabular-nums}
   .flow .a{color:var(--neg)}
   .flow .b{color:var(--teal2)}
@@ -138,7 +143,7 @@
   .btbl{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
   .btbl th,.btbl td{text-align:left;padding:12px 12px;border-bottom:1px solid var(--line2);vertical-align:top;line-height:1.5}
   .btbl thead th{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--frame-line)}
-  .btbl td:first-child{font-weight:600;color:var(--ink);width:34%}
+  .btbl td:first-child{font-weight:500;color:var(--ink);width:34%}
   .btbl .il{color:var(--body)}
   .btbl .tx{color:var(--body)}
   .tscroll{overflow-x:auto}
@@ -158,7 +163,7 @@
   .owns thead th{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.04em;color:var(--muted);
     border-bottom:1px solid var(--frame-line)}
   .owns thead th:last-child{color:var(--brass)}
-  .owns td:first-child,.owns th:first-child{text-align:left;font-weight:600;color:var(--ink);white-space:normal}
+  .owns td:first-child,.owns th:first-child{text-align:left;font-weight:500;color:var(--ink);white-space:normal}
   .owns td.y{color:var(--dim);font-weight:700}
   .owns tr.hl td{background:var(--wash);font-weight:700;color:var(--ink)}
   .owns tr.hl td.y{color:var(--brass)}
@@ -169,7 +174,7 @@
   .rstep{background:#fff;border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:var(--surface-radius);
     padding:12px 16px;font-size:14px;line-height:1.45;color:var(--body);text-align:left}
   .rstep b{color:var(--ink);font-weight:700}
-  .rstep.start{background:var(--wash);border-color:var(--brass);font-family:var(--sans);font-weight:600;color:var(--ink);font-size:15px}
+  .rstep.start{background:var(--wash);border-color:var(--brass);font-family:var(--sans);font-weight:500;color:var(--ink);font-size:15px}
   .rstep.end{background:var(--teal);border-color:var(--teal);border-left-color:var(--teal);color:#f1ede3;
     font-family:var(--sans);font-weight:700;font-size:16px;text-align:center;letter-spacing:-.01em}
   .rarrow{align-self:center;width:1px;height:15px;background:var(--frame-line);position:relative}
@@ -188,13 +193,13 @@
   .cta .cd{font-size:14.5px;line-height:1.6;color:var(--dim);margin:0 0 20px;max-width:56ch}
   .cta .btns{display:flex;flex-wrap:wrap;gap:12px}
   .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:var(--surface-radius);
-    font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px}
+    font-family:var(--sans);font-size:14.5px;font-weight:500;padding:12px 22px}
   .cta a.primary{background:var(--teal);color:#f1ede3}
   .cta a.ghost{border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
 
   .foot{margin-top:44px;padding:20px 44px 40px;border-top:1px solid var(--line);
     color:var(--muted);font-size:12px;line-height:1.65}
-  .foot .note{color:#5a5a62;font-weight:600}
+  .foot .note{color:#5a5a62;font-weight:500}
   .foot b{color:var(--dim)}
   @media(max-width:620px){
     .doc,.why,.lab,.missing,.cases,.border,.through{padding-left:22px;padding-right:22px}
@@ -207,24 +212,25 @@
 <div class="wrap">
   <div class="frame">
     <div class="inner">
-    <nav class="dwnav" aria-label="Driftwood">
+    <nav class="dwnav" aria-label="Driftwood Capital">
       <a class="brand" href="index.html">Driftwood Capital</a>
       <div class="dwnav-links">
-        <span class="dwnav-group">
-          <a href="principles.html">Philosophy</a>
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
           <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
           <a href="thesis.html">How We Invest</a>
-        </span>
-        <span class="dwnav-group">
+          <a href="howitworks.html">How It Works</a>
           <a href="insights.html">Insights</a>
           <a href="ledger.html">Research</a>
-          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
-        <span class="dwnav-group">
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
     </nav>
 
     <div class="doc">

@@ -14,6 +14,11 @@
 <meta name="description" content="One decision, many consequences. An inheritance feels like a windfall; it's actually a ten-year tax decision that starts the day it lands. Inherited IRAs, the step-up, and Roth timing, coordinated. A Driftwood coordination case study. Illustrative, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/case-inheritance.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="Inheriting $3 Million — a coordination case study" />
@@ -38,7 +43,7 @@
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
@@ -48,17 +53,17 @@
   .eyebrow a:hover{text-decoration:underline}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(32px,3vw+16px,44px);line-height:1.06;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px}
   .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:60ch}
-  .lede b{color:var(--ink);font-weight:600}
+  .lede b{color:var(--ink);font-weight:500}
   .rule{height:1px;background:var(--line);margin:34px 44px}
   .sh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
   .sec{padding:6px 44px}
   .sec .intro{font-size:16px;line-height:1.7;color:var(--body);margin:0 0 22px;max-width:64ch}
-  .sec .intro b{color:var(--ink);font-weight:600}
+  .sec .intro b{color:var(--ink);font-weight:500}
 
   .ripple{margin:8px auto 0;max-width:560px;display:flex;flex-direction:column;align-items:stretch}
   .rstep{padding:9px 8px;font-size:14px;line-height:1.5;color:var(--body);text-align:center}
   .rstep b{color:var(--ink);font-weight:700}
-  .rstep.start{font-family:var(--sans);font-weight:600;color:var(--ink);font-size:15px}
+  .rstep.start{font-family:var(--sans);font-weight:500;color:var(--ink);font-size:15px}
   .rstep.end{color:var(--teal);font-family:var(--sans);font-weight:700;font-size:16px;letter-spacing:-.01em}
   .rarrow{align-self:center;width:1px;height:15px;background:var(--frame-line);position:relative}
   .rarrow::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
@@ -75,17 +80,17 @@
   .plan li{position:relative;padding-left:20px;font-size:14px;line-height:1.5;color:var(--body)}
   .plan li::before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--ghost-line)}
   .st.co .plan li::before{border-radius:var(--surface-radius);background:var(--brass)}
-  .plan li b{color:var(--ink);font-weight:600}
+  .plan li b{color:var(--ink);font-weight:500}
 
   .outcome{margin:30px 44px 0;text-align:center;font-family:var(--serif);font-size:20px;line-height:1.4;color:var(--ink)}
-  .outcome b{font-weight:600}
+  .outcome b{font-weight:500}
   .whos{margin:16px 44px 0;font-size:13px;line-height:1.6;color:var(--muted);text-align:center}
-  .whos b{color:var(--dim);font-weight:600}
+  .whos b{color:var(--dim);font-weight:500}
 
   .creed-band{margin:40px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
     font-size:clamp(21px,2vw+13px,28px);letter-spacing:-.022em;color:var(--ink);line-height:1.16}
   .onward{margin:20px 44px 0;text-align:center;font-family:var(--sans);font-size:13px;color:var(--muted)}
-  .onward a{color:var(--teal2);text-decoration:none;font-weight:600}
+  .onward a{color:var(--teal2);text-decoration:none;font-weight:500}
   .onward a:hover{text-decoration:underline}
   .onward .d{color:var(--ghost-line);margin:0 6px}
 
@@ -93,11 +98,11 @@
   .cta .ct{font-family:var(--sans);font-weight:700;font-size:20px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.02em}
   .cta .cd{font-size:14px;line-height:1.6;color:var(--dim);margin:0 0 18px;max-width:56ch}
   .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:var(--surface-radius);
-    font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px;background:var(--teal);color:#f1ede3}
+    font-family:var(--sans);font-size:14.5px;font-weight:500;padding:12px 22px;background:var(--teal);color:#f1ede3}
 
   .foot{margin-top:42px;padding:20px 44px 40px;border-top:1px solid var(--line);
     color:var(--muted);font-size:12px;line-height:1.65}
-  .foot .note{color:#5a5a62;font-weight:600}
+  .foot .note{color:#5a5a62;font-weight:500}
   .foot b{color:var(--dim)}
   @media(max-width:620px){
     .doc,.sec{padding-left:22px;padding-right:22px}
@@ -114,24 +119,25 @@
       <span class="marker">One decision, many consequences</span>
     </div>
     <div class="inner">
-    <nav class="dwnav" aria-label="Driftwood">
+    <nav class="dwnav" aria-label="Driftwood Capital">
       <a class="brand" href="index.html">Driftwood Capital</a>
       <div class="dwnav-links">
-        <span class="dwnav-group">
-          <a href="principles.html">Philosophy</a>
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
           <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
           <a href="thesis.html">How We Invest</a>
-        </span>
-        <span class="dwnav-group">
+          <a href="howitworks.html">How It Works</a>
           <a href="insights.html">Insights</a>
           <a href="ledger.html">Research</a>
-          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
-        <span class="dwnav-group">
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
     </nav>
 
     <div class="doc">

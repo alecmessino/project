@@ -23,7 +23,7 @@ PAIRS = {
     "concentration.html": "concentration.html",
     "ledger.html": "ledger.html",
     "tearsheet.html": "tearsheet.html",
-    "taxlab.html": "taxlab.html",
+    "workspace.html": "workspace.html",
     "thesis.html": "thesis.html",
 }
 STATE_RE = re.compile(r"window\.__STATE__ = (.*?);\s*\n")
@@ -49,7 +49,7 @@ def main() -> int:
         out_p.write_text(rendered)
         print(f"   {tpl:16} -> docs/{out:30} ({len(rendered)} bytes, data {len(data)})")
     # Plain static assets (not templated) — copy them through.
-    for asset in ("driftwood.css", "dw-context.js", "about.html", "principles.html", "philosophy.html",
+    for asset in ("driftwood.css", "dw-context.js", "taxlab.html", "about.html", "principles.html", "philosophy.html",
                   "insights.html", "every-portfolio-has-two-returns.html",
                   "the-worlds-largest-investors.html", "enough-is-a-number.html", "howitworks.html",
                   "coordination.html", "library.html", "case-business-sale.html",

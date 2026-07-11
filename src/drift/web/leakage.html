@@ -13,6 +13,11 @@
 <meta name="description" content="See where a concentrated, high-turnover portfolio leaks return to tax each year — and the after-tax Structural Alpha a tax-managed book of the same exposure recovers, by state. Illustrative, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/leakage.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="Driftwood Capital — The Tax Diagnostic" />
@@ -39,21 +44,21 @@
   .sheet{max-width:1040px;margin:30px auto;padding:0 20px 50px}
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
   .hd{padding:30px 40px 16px}
-  .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:12px}
+  .eyebrow{font-weight:500;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:12px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px, 2vw + 20px, 38px);line-height:1.04;
     letter-spacing:-.02em;color:var(--ink);margin:0 0 12px}
   .lede{font-family:var(--serif);font-size:15px;color:#5c6470;margin:0;max-width:74ch}
   .hero{margin:18px 40px 4px;padding:18px 24px;background:var(--navy);border-radius:0;display:flex;
     align-items:baseline;gap:18px;flex-wrap:wrap}
   .hero .big{font-variant-numeric:tabular-nums;font-size:40px;font-weight:700;color:#f1ede3;letter-spacing:-.02em;line-height:1}
-  .hero .cap{font-size:12.5px;color:var(--gold);font-weight:600}
+  .hero .cap{font-size:12.5px;color:var(--gold);font-weight:500}
   .hero .note{font-size:11.5px;color:#9aa3ae;margin-left:auto;max-width:34ch;line-height:1.45}
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:20px 40px 6px}
   @media(max-width:760px){.cols{grid-template-columns:1fr}}
   .card{padding:16px 0 6px;border-top:1px solid var(--line)}
   .card .tag{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:4px}
   .before .tag{color:var(--neg)} .after .tag{color:var(--teal2)}
-  .card h3{font-family:var(--sans);font-weight:600;font-size:19px;color:var(--ink);margin:0 0 4px}
+  .card h3{font-family:var(--sans);font-weight:500;font-size:19px;color:var(--ink);margin:0 0 4px}
   .card .csub{font-size:12px;color:var(--dim);margin-bottom:14px;min-height:32px}
   .leak{margin:8px 0 6px}
   .leak .bar{display:flex;height:26px;border-radius:0;overflow:hidden;border:1px solid var(--line)}
@@ -65,17 +70,17 @@
   .before .metrics .m .v{color:var(--neg)} .after .metrics .m .v{color:var(--teal)}
   .metrics .m .l{font-size:11px;color:var(--dim);margin-top:1px}
   .sec{padding:14px 40px 4px}
-  .sec .h{font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .sec .h{font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
   .levers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   @media(max-width:760px){.levers{grid-template-columns:1fr}}
   .lv{border-left:1px solid var(--line);padding:2px 0 2px 15px}
-  .lv .n{font-weight:600;font-size:13.5px;color:var(--ink)}
-  .lv .sh{font-size:11px;color:var(--brass);font-weight:600;margin:2px 0 6px}
+  .lv .n{font-weight:500;font-size:13.5px;color:var(--ink)}
+  .lv .sh{font-size:11px;color:var(--brass);font-weight:500;margin:2px 0 6px}
   .lv .d{font-size:12px;color:var(--body);line-height:1.45}
   table.states{width:calc(100% - 80px);margin:8px 40px 0;border-collapse:collapse;font-size:13px}
   table.states th,table.states td{padding:7px 10px;border-bottom:1px solid var(--line2);text-align:right}
   table.states th:first-child,table.states td:first-child{text-align:left}
-  table.states thead th{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  table.states thead th{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
   table.states td.alpha{font-weight:700;color:var(--teal);font-variant-numeric:tabular-nums}
   table.states td{font-variant-numeric:tabular-nums}
   @media(max-width:760px){
@@ -89,10 +94,10 @@
   .cta{margin:20px 40px 4px;padding:16px 0 0;border-top:1px solid var(--line);
     display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .cta .ctxt{flex:1;min-width:240px}
-  .cta .ctxt .ch{font-family:var(--sans);font-weight:600;font-size:19px;color:var(--ink);margin-bottom:3px}
+  .cta .ctxt .ch{font-family:var(--sans);font-weight:500;font-size:19px;color:var(--ink);margin-bottom:3px}
   .cta .ctxt .cd{font-size:12.5px;color:var(--dim)}
   .cta .btns{display:flex;gap:10px;flex-wrap:wrap}
-  .cta a{text-decoration:none;border-radius:0;font-size:14px;font-weight:600;white-space:nowrap;padding:12px 20px}
+  .cta a{text-decoration:none;border-radius:0;font-size:14px;font-weight:500;white-space:nowrap;padding:12px 20px}
   .cta a.primary{background:var(--teal);color:#f1ede3}
   .cta a.ghost{color:var(--ink);font-weight:500;padding:12px 4px}
   .cta a.ghost:hover{color:var(--teal)}
@@ -111,7 +116,7 @@
   .frame{border-radius:var(--surface-radius);}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;
     margin:7px 7px 0;border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
 
 </style>
@@ -123,24 +128,25 @@
       <span class="inst">Driftwood Capital</span>
       <span class="marker">Tax Diagnostic</span>
     </div>
-    <nav class="dwnav" aria-label="Driftwood">
-      <a class="brand" href="index.html">Drift<span class="w">wood</span> Capital</a>
+    <nav class="dwnav" aria-label="Driftwood Capital">
+      <a class="brand" href="index.html">Driftwood Capital</a>
       <div class="dwnav-links">
-        <span class="dwnav-group">
-          <a href="principles.html">Philosophy</a>
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
           <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
           <a href="thesis.html">How We Invest</a>
-        </span>
-        <span class="dwnav-group">
+          <a href="howitworks.html">How It Works</a>
           <a href="insights.html">Insights</a>
           <a href="ledger.html">Research</a>
-          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
-        <span class="dwnav-group">
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
           <a href="leakage.html" aria-current="page">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
     </nav>
     <div id="dw-household" data-page="leakage"></div>
 

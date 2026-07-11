@@ -15,6 +15,11 @@
 <meta name="description" content="The family's governing instrument: purpose, decision rights, and the guardrails every decision is measured against. The supreme document the Manual, Decision Log, Capital Allocation Policy, and Annual Review all operate under. An illustrative sample for a fictional family. Not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/constitution.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="The Household Constitution — a sample." />
@@ -39,7 +44,7 @@
   .frame{background:var(--bg);overflow:hidden;}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{display:inline-flex;align-items:center;gap:9px;font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
@@ -49,13 +54,13 @@
   .eyebrow{font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:15px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(30px,2.8vw+15px,44px);line-height:1.06;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:18ch}
   .lede{font-family:var(--serif);font-size:18.5px;line-height:1.55;color:var(--dim);margin:0;max-width:56ch}
-  .lede b{color:var(--ink);font-weight:600}
+  .lede b{color:var(--ink);font-weight:500}
 
   /* Article sections — typography + hairline rules, not boxes */
   .art{padding:30px 48px 4px;border-top:1px solid var(--line)}
   .art.soft{background:var(--soft)}
   .art p{font-size:14.5px;line-height:1.66;color:var(--body);max-width:72ch;margin:0 0 14px}
-  .art p b{color:var(--ink);font-weight:600}
+  .art p b{color:var(--ink);font-weight:500}
   .art .art-note{font-size:12px;color:var(--muted);font-style:italic;font-family:var(--serif);max-width:64ch}
 
   /* Preamble — the adopted creed as a serif pull-statement */
@@ -63,7 +68,7 @@
   .preamble .pk{font-weight:700;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
   .preamble .creed{font-family:var(--serif);font-weight:500;font-size:clamp(23px,2.1vw+14px,32px);line-height:1.22;color:var(--ink);margin:0 auto;letter-spacing:-.012em;max-width:20ch}
   .preamble .cite{font-size:12px;color:var(--muted);margin:18px 0 0}
-  .preamble .cite a{color:var(--teal2);text-decoration:none;font-weight:600}
+  .preamble .cite a{color:var(--teal2);text-decoration:none;font-weight:500}
   .preamble .cite a:hover{text-decoration:underline}
 
   /* Purpose pull-line (Art. I) */
@@ -83,14 +88,14 @@
   .guards li:first-child{border-top:none}
   .guards li::before{counter-increment:g;content:"§ " counter(g,upper-roman);position:absolute;left:0;top:14px;
     font-weight:700;font-size:10px;letter-spacing:.08em;color:var(--ghost-line);font-variant-numeric:tabular-nums}
-  .guards li b{color:var(--ink);font-weight:600}
+  .guards li b{color:var(--ink);font-weight:500}
 
   /* Standing-rules list (Art. V) */
   .rules{list-style:none;margin:4px 0 10px;padding:0;display:flex;flex-direction:column;gap:10px}
   .rules li{position:relative;padding-left:16px;font-size:14px;line-height:1.55;color:var(--body);max-width:72ch}
   .rules li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;background:var(--ghost-line)}
-  .rules li b{color:var(--ink);font-weight:600}
-  .rules a{color:var(--teal2);text-decoration:none;font-weight:600}
+  .rules li b{color:var(--ink);font-weight:500}
+  .rules a{color:var(--teal2);text-decoration:none;font-weight:500}
   .rules a:hover{text-decoration:underline}
 
   /* Exhibit wrapper — the ONE framed centerpiece plate */
@@ -105,11 +110,11 @@
   .close h2{font-family:var(--sans);font-weight:700;font-size:clamp(24px,2.4vw+13px,34px);line-height:1.1;letter-spacing:-.022em;color:#f1ede3;margin:0 0 16px;max-width:22ch}
   .close p{font-family:var(--serif);font-size:17px;line-height:1.55;color:var(--on-dark-dim);margin:0 0 26px;max-width:58ch}
   .close .foliobar{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(233,229,219,.16);padding-top:14px}
-  .close .foliobar span{font-weight:600;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--on-dark-dim);font-variant-numeric:tabular-nums}
+  .close .foliobar span{font-weight:500;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--on-dark-dim);font-variant-numeric:tabular-nums}
 
   /* Colophon + disclosure */
   .foot{padding:20px 48px 34px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;line-height:1.65}
-  .foot .note{color:var(--muted);font-weight:600}
+  .foot .note{color:var(--muted);font-weight:500}
   .foot a{color:var(--muted)} .foot b{color:var(--muted)}
 
   @media(max-width:640px){ .doc,.art,.preamble,.close,.foot{padding-left:22px;padding-right:22px} }
@@ -123,24 +128,25 @@
       <span class="marker">The Driftwood Record · Constitution</span>
     </div>
     <div class="inner">
-    <nav class="dwnav" aria-label="Driftwood">
+    <nav class="dwnav" aria-label="Driftwood Capital">
       <a class="brand" href="index.html">Driftwood Capital</a>
       <div class="dwnav-links">
-        <span class="dwnav-group">
-          <a href="principles.html">Philosophy</a>
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
           <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
           <a href="thesis.html">How We Invest</a>
-        </span>
-        <span class="dwnav-group">
+          <a href="howitworks.html">How It Works</a>
           <a href="insights.html">Insights</a>
           <a href="ledger.html">Research</a>
-          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
-        <span class="dwnav-group">
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
     </nav>
     <div class="om-sections">
       <a class="t" href="record.html">The Driftwood Record</a>

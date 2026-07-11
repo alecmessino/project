@@ -13,6 +13,11 @@
 <meta name="description" content="Every way to de-risk a concentrated, low-basis stock position — selling, harvesting, hedging, deferring, and giving — scored across liquidity, speed, fees, tax cost, customization, and simplicity. Orientation, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/concentration.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="How to de-risk a concentrated stock position" />
@@ -39,16 +44,16 @@
   .sheet{max-width:1100px;margin:30px auto;padding:0 20px 50px}
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
   .article{padding:30px 40px 6px;max-width:760px}
-  .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
+  .eyebrow{font-weight:500;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px, 1.7vw + 21px, 34px);line-height:1.08;letter-spacing:-.02em;color:var(--ink);margin:0 0 12px}
   .lead{font-family:var(--serif);font-size:17px;line-height:1.5;color:#5c6470;margin:0 0 18px}
   .article p.para{font-size:15px;line-height:1.7;color:var(--body);margin:0 0 14px}
   .tool-head{padding:20px 40px 2px}
-  h2{font-family:var(--sans);font-weight:600;font-size:24px;letter-spacing:-.01em;color:var(--ink);margin:0}
+  h2{font-family:var(--sans);font-weight:500;font-size:24px;letter-spacing:-.01em;color:var(--ink);margin:0}
   /* filters */
   .filters{display:flex;flex-wrap:wrap;gap:12px 16px;padding:14px 40px 6px;align-items:end}
   .fg{display:flex;flex-direction:column;gap:5px}
-  .fg label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .fg label{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
   .fg select,.fg button{font:inherit;font-family:var(--sans);font-size:13px;color:var(--ink);background:#fff;
     border:1px solid var(--line);border-radius:var(--surface-radius);padding:9px 12px;cursor:pointer}
   .fg select:focus,.fg button:focus{outline:2px solid var(--teal2);outline-offset:1px}
@@ -63,7 +68,7 @@
   table.hm{border-collapse:separate;border-spacing:0;width:100%;min-width:720px;font-family:var(--sans);--stick-bg:var(--bg)}
   table.hm th,table.hm td{padding:0}
   table.hm thead th{position:sticky;top:0;background:var(--bg)}
-  .th{font:inherit;font-size:11.5px;font-weight:600;color:var(--dim);background:transparent;border:0;cursor:pointer;
+  .th{font:inherit;font-size:11.5px;font-weight:500;color:var(--dim);background:transparent;border:0;cursor:pointer;
     padding:8px 8px;white-space:nowrap;text-align:center;width:96px}
   .th.name{text-align:left;width:auto;min-width:210px;padding-left:4px}
   .th:hover{color:var(--ink)}
@@ -74,12 +79,12 @@
   tbody tr:hover{background:var(--soft)}
   tbody tr.sel{background:var(--soft)}
   td.name{padding:9px 4px;border-bottom:1px solid var(--line2)}
-  td.name .nm{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--ink);font-weight:600}
+  td.name .nm{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--ink);font-weight:500}
   td.name .dot{width:9px;height:9px;border-radius:0;flex:none}
   td.name .bk{font-size:10.5px;color:var(--muted);font-weight:500;margin-left:18px;display:block;margin-top:1px}
   td.cell{border-bottom:1px solid var(--line2);text-align:center;padding:6px 6px}
   td.cell .box{width:100%;height:30px;border-radius:var(--surface-radius);display:flex;align-items:center;justify-content:center;
-    font-size:10px;font-weight:600;color:#3c3a33}
+    font-size:10px;font-weight:500;color:#3c3a33}
   .heat-1 .box{background:var(--h1)} .heat-2 .box{background:var(--h2)} .heat-3 .box{background:var(--h3)}
   .heat-4 .box{background:var(--h4)} .heat-5 .box{background:var(--h5)}
   .nores{padding:22px 4px;color:var(--muted);font-size:13.5px;display:none}
@@ -88,16 +93,16 @@
     padding:16px 0 16px 24px;display:none}
   .detail.on{display:block}
   .detail h3{font-family:var(--sans);font-size:19px;color:var(--ink);margin:0 0 4px;display:flex;align-items:center;gap:9px}
-  .detail .fam{font-size:11px;font-weight:600;font-family:var(--sans);color:#fff;border-radius:0;padding:2px 9px}
+  .detail .fam{font-size:11px;font-weight:500;font-family:var(--sans);color:#fff;border-radius:0;padding:2px 9px}
   .detail p{margin:8px 0 0;font-size:13.5px;line-height:1.6;color:var(--body)}
   .detail .mini{display:flex;flex-wrap:wrap;gap:4px 20px;margin-top:12px;font-family:var(--sans)}
   .detail .chip{font-size:11px;color:var(--dim);padding:3px 0}
-  .detail .chip b{color:var(--ink);font-weight:600}
+  .detail .chip b{color:var(--ink);font-weight:500}
   /* Committee read — how a large, tax-aware holder frames the decision. Reads like a memo, not a widget. */
   .detail .committee{margin-top:16px;border-top:1px solid var(--line);padding-top:14px;display:grid;gap:11px}
   .detail .ci{display:grid;grid-template-columns:170px 1fr;gap:14px;align-items:baseline}
   .detail .ci .cl{font-family:var(--sans);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
-    color:var(--muted);font-weight:600;line-height:1.4}
+    color:var(--muted);font-weight:500;line-height:1.4}
   .detail .ci .cv{font-size:13px;line-height:1.55;color:var(--body)}
   .detail .ci.yes .cl{color:var(--teal)} .detail .ci.no .cl{color:var(--neg,#9b4439)}
   @media(max-width:560px){ .detail .ci{grid-template-columns:1fr;gap:3px} }
@@ -105,9 +110,9 @@
   .foot b{color:#5a5a62}
   .cta{margin:20px 40px 4px;padding:18px 0 4px;border-top:1px solid var(--line);
     display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-  .cta .ctxt{flex:1;min-width:240px} .cta .ch{font-family:var(--sans);font-weight:600;font-size:17px;color:var(--ink);margin-bottom:2px}
+  .cta .ctxt{flex:1;min-width:240px} .cta .ch{font-family:var(--sans);font-weight:500;font-size:17px;color:var(--ink);margin-bottom:2px}
   .cta .cd{font-size:12.5px;color:var(--dim)}
-  .cta a{font-family:var(--sans);text-decoration:none;border-radius:var(--surface-radius);font-size:14px;font-weight:600;white-space:nowrap;padding:11px 18px;background:var(--teal);color:#f1ede3}
+  .cta a{font-family:var(--sans);text-decoration:none;border-radius:var(--surface-radius);font-size:14px;font-weight:500;white-space:nowrap;padding:11px 18px;background:var(--teal);color:#f1ede3}
   @media(max-width:760px){ .article,.tool-head,.filters,.heat,.detail,.cta,.foot{padding-left:20px;padding-right:20px;margin-left:0;margin-right:0} }
   /* Phones: the 8-column heatmap can't fit, so it scrolls — but tighten the columns so several
      show at once and keep the strategy name pinned (see .stickcol) so every row stays legible. */
@@ -131,7 +136,7 @@
   .frame{border-radius:var(--surface-radius);}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;
     margin:7px 7px 0;border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
 
 </style>
@@ -143,24 +148,25 @@
       <span class="inst">Driftwood Capital</span>
       <span class="marker">Single-Asset Risk</span>
     </div>
-    <nav class="dwnav" aria-label="Driftwood">
-      <a class="brand" href="index.html">Drift<span class="w">wood</span> Capital</a>
+    <nav class="dwnav" aria-label="Driftwood Capital">
+      <a class="brand" href="index.html">Driftwood Capital</a>
       <div class="dwnav-links">
-        <span class="dwnav-group">
-          <a href="principles.html">Philosophy</a>
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
           <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
           <a href="thesis.html">How We Invest</a>
-        </span>
-        <span class="dwnav-group">
+          <a href="howitworks.html">How It Works</a>
           <a href="insights.html">Insights</a>
           <a href="ledger.html">Research</a>
-          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
-        <span class="dwnav-group">
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
     </nav>
 
     <article class="article">

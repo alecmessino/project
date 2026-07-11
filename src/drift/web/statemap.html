@@ -13,6 +13,11 @@
 <meta name="description" content="Fifty states, eight tax dimensions — capital gains, marriage, estate, munis, QSBS, losses, basis step-up, and how much each state's rules move a tax-managed portfolio. An interactive reference. Illustrative modeling, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/statemap.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="Driftwood Capital — State Tax Atlas" />
@@ -38,12 +43,12 @@
   .sheet{max-width:1100px;margin:30px auto;padding:0 20px 50px}
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
   .hd{padding:28px 40px 6px}
-  .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
+  .eyebrow{font-weight:500;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px, 2.4vw + 19px, 36px);line-height:1.05;
     letter-spacing:-.02em;color:var(--ink);margin:0 0 10px}
   .lede{font-family:var(--serif);font-size:14.5px;color:#5c6470;margin:0;max-width:76ch}
   .tabs{display:flex;flex-wrap:wrap;gap:8px;padding:14px 40px 4px}
-  .tabs button{font:inherit;font-size:13px;font-weight:600;color:var(--dim);background:#fff;border:1px solid var(--line);
+  .tabs button{font:inherit;font-size:13px;font-weight:500;color:var(--dim);background:#fff;border:1px solid var(--line);
     border-radius:var(--surface-radius);padding:8px 14px;cursor:pointer;transition:all .12s}
   .tabs button:hover{background:var(--soft)}
   .tabs button[aria-selected="true"]{background:var(--ink);color:#f1ede3;border-color:var(--ink)}
@@ -76,20 +81,20 @@
   .detail{border-left:1px solid var(--line);padding:2px 0 20px 24px;min-height:220px}
   .detail .dn{font-family:var(--sans);font-size:21px;color:var(--ink);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
   .detail .dn .code{font-size:13px;color:var(--dim)}
-  .detail .pill{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:0;color:#16130f;margin-left:auto}
+  .detail .pill{font-size:10.5px;font-weight:500;padding:3px 9px;border-radius:0;color:#16130f;margin-left:auto}
   .detail .dnote{font-size:13px;line-height:1.6;color:var(--body);margin:14px 0 0}
   .detail .src{font-size:10.5px;color:var(--muted);margin-top:14px;border-top:1px solid var(--line2);padding-top:10px;line-height:1.45}
   .detail a.cta{display:inline-block;margin-top:14px;background:var(--teal);color:#f1ede3;text-decoration:none;
-    font-weight:600;font-size:13px;padding:10px 16px;border-radius:var(--surface-radius)}
+    font-weight:500;font-size:13px;padding:10px 16px;border-radius:var(--surface-radius)}
   .foot{margin:14px 40px 30px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:11px;line-height:1.55}
   .foot b{color:#5a5a62}
   .asof{font-size:11px;color:var(--muted);padding:0 40px;margin:2px 0 0}
   .chlog{margin:6px 40px 0;font-size:11.5px;color:var(--muted)}
-  .chlog summary{cursor:pointer;color:var(--teal2);font-weight:600;width:max-content}
+  .chlog summary{cursor:pointer;color:var(--teal2);font-weight:500;width:max-content}
   .chlog ul{margin:8px 0 0;padding-left:18px;line-height:1.55} .chlog li{margin:3px 0}
   .chlog b{color:#5a5a62}
   .closing{padding:16px 40px 0;margin:0;font-size:13px;color:var(--dim)}
-  .closing a{color:var(--teal2);font-weight:600;text-decoration:none}
+  .closing a{color:var(--teal2);font-weight:500;text-decoration:none}
   .closing a:hover{text-decoration:underline}
   @media print{ body{background:#fff} .sheet{margin:0;max-width:none;padding:0} .frame{} .chrome,.detail a.cta{display:none} }
 
@@ -97,7 +102,7 @@
   .frame{border-radius:var(--surface-radius);}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;
     margin:7px 7px 0;border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
 
 </style>
@@ -109,24 +114,25 @@
       <span class="inst">Driftwood Capital</span>
       <span class="marker">State Tax Atlas</span>
     </div>
-    <nav class="dwnav" aria-label="Driftwood">
-      <a class="brand" href="index.html">Drift<span class="w">wood</span> Capital</a>
+    <nav class="dwnav" aria-label="Driftwood Capital">
+      <a class="brand" href="index.html">Driftwood Capital</a>
       <div class="dwnav-links">
-        <span class="dwnav-group">
-          <a href="principles.html">Philosophy</a>
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
           <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
           <a href="thesis.html">How We Invest</a>
-        </span>
-        <span class="dwnav-group">
+          <a href="howitworks.html">How It Works</a>
           <a href="insights.html">Insights</a>
           <a href="ledger.html">Research</a>
-          <a href="statemap.html" aria-current="page">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
-        <span class="dwnav-group">
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html" aria-current="page">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
     </nav>
     <div id="dw-household" data-page="statemap"></div>
     <div class="hd">

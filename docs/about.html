@@ -15,6 +15,11 @@
 <meta name="description" content="Driftwood brings the coordination large institutions use — one system across investing, taxes, structure, and cash flow — to individual investors. Founded by Alec Messino, a fee-only fiduciary who spent six years at Dimensional Fund Advisors." />
 <link rel="canonical" href="https://alecmessino.github.io/project/about.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="About Driftwood — the discipline institutions use, for individuals" />
@@ -62,25 +67,25 @@
 
   /* One prose column — institutional pages are typography, not widgets. */
   .doc{max-width:720px;padding:0 44px}
-  .eyebrow{font-weight:600;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin:44px 0 16px}
+  .eyebrow{font-weight:500;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin:44px 0 16px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(33px,3.2vw+16px,46px);line-height:1.08;
     letter-spacing:-.02em;color:var(--ink);margin:0 0 24px}
   .lead{font-family:var(--serif);font-size:18px;line-height:1.6;color:#43434b;margin:0 0 18px}
-  .lead b{color:var(--ink);font-weight:600}
+  .lead b{color:var(--ink);font-weight:500}
   .sec{padding:0 44px;max-width:720px}
   .rule{height:1px;background:var(--line);margin:38px 44px;max-width:720px}
-  .sh{font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.13em;text-transform:uppercase;
+  .sh{font-family:var(--sans);font-weight:500;font-size:12px;letter-spacing:.13em;text-transform:uppercase;
     color:var(--muted);margin:0 0 16px}
   p{font-size:16px;line-height:1.75;color:var(--body);margin:0 0 16px}
-  p b{color:var(--ink);font-weight:600}
-  .pull{font-family:var(--serif);font-weight:600;font-size:20px;line-height:1.45;color:var(--ink);
+  p b{color:var(--ink);font-weight:500}
+  .pull{font-family:var(--serif);font-weight:500;font-size:20px;line-height:1.45;color:var(--ink);
     margin:22px 0 8px;padding-left:18px;border-left:3px solid var(--brass)}
   a{color:var(--teal2)}
   /* Three observations — a named lesson from each seat. Marker: number, tracked caps, a hairline rule. */
   .obs{margin:0 0 30px}
   .obs:last-of-type{margin-bottom:14px}
   .obs .n{display:flex;align-items:center;gap:14px;margin-bottom:13px;font-family:var(--sans);
-    font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+    font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
   .obs .n .num{color:var(--brass);font-weight:700;font-variant-numeric:tabular-nums}
   .obs .n::after{content:"";flex:1;height:1px;background:var(--line)}
   .obs p{margin:0}
@@ -88,7 +93,7 @@
     font-size:clamp(22px,2vw+14px,30px);letter-spacing:-.022em;color:var(--ink);line-height:1.16}
   @media(max-width:620px){.creed-band{margin-left:22px;margin-right:22px}}
   .onward{margin:22px 44px 0;text-align:center;font-family:var(--sans);font-size:13px;letter-spacing:.01em;color:var(--muted)}
-  .onward a{color:var(--teal2);text-decoration:none;font-weight:600}
+  .onward a{color:var(--teal2);text-decoration:none;font-weight:500}
   .onward a:hover{text-decoration:underline}
   .onward .d{color:var(--ghost-line);margin:0 6px}
   @media(max-width:620px){.onward{margin-left:22px;margin-right:22px}}
@@ -116,7 +121,7 @@
   .trust-strip{grid-column:1/-1;margin-top:30px;padding-top:15px;border-top:1px solid var(--line);
     font-family:var(--sans);font-size:12.5px;line-height:1.9;color:var(--muted)}
   .trust-strip .c{white-space:normal}
-  .trust-strip b{color:var(--dim);font-weight:600}
+  .trust-strip b{color:var(--dim);font-weight:500}
   .trust-strip .d{color:var(--ghost-line);margin:0 9px;white-space:nowrap}
   .trust-strip a{color:var(--muted)}
 
@@ -129,7 +134,7 @@
 
   .foot{margin-top:40px;padding:20px 44px 40px;border-top:1px solid var(--line);
     color:var(--muted);font-size:12.5px;line-height:1.65}
-  .foot .note{color:#5a5a62;font-weight:600}
+  .foot .note{color:#5a5a62;font-weight:500}
 
   @media(max-width:620px){
     .doc,.sec,.cta,.philosophy{padding-left:20px;padding-right:20px}
@@ -142,7 +147,7 @@
   .frame{border-radius:var(--surface-radius);}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;
     margin:7px 7px 0;border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
 
 </style>
@@ -154,24 +159,25 @@
       <span class="inst">Driftwood Capital</span>
       <span class="marker">Our Story</span>
     </div>
-    <nav class="dwnav" aria-label="Driftwood">
-      <a class="brand" href="index.html">Drift<span class="w">wood</span> Capital</a>
+    <nav class="dwnav" aria-label="Driftwood Capital">
+      <a class="brand" href="index.html">Driftwood Capital</a>
       <div class="dwnav-links">
-        <span class="dwnav-group">
-          <a href="principles.html">Philosophy</a>
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
           <a href="about.html" aria-current="page">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
           <a href="thesis.html">How We Invest</a>
-        </span>
-        <span class="dwnav-group">
+          <a href="howitworks.html">How It Works</a>
           <a href="insights.html">Insights</a>
           <a href="ledger.html">Research</a>
-          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
-        <span class="dwnav-group">
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
     </nav>
 
     <div class="doc">

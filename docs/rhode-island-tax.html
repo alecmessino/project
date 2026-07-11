@@ -13,6 +13,11 @@
 <meta name="description" content="How Rhode Island taxes investors: capital gains, estate and inheritance tax, the marriage penalty, municipal-bond interest, QSBS, and basis step-up. Top effective long-term rate 5.99%. Careful tax management can affect after-tax outcomes by ~+4.1%/yr in our illustrative modeling. A state tax referen" />
 <link rel="canonical" href="https://alecmessino.github.io/project/rhode-island-tax.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="Rhode Island Capital Gains &amp; Estate Tax — Tax-Leakage Diagnostic | Driftwood" />
@@ -47,7 +52,7 @@
   .bcrumb{padding:12px 40px 0;font-size:11.5px;color:var(--muted)}
   .bcrumb a{color:var(--brass);text-decoration:none} .bcrumb a:hover{text-decoration:underline}
   .hd{padding:22px 40px 6px}
-  .eyebrow{font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
+  .eyebrow{font-weight:500;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
   h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px, 2.4vw + 19px, 36px);line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin:0 0 10px}
   .lede{font-size:15px;color:var(--dim);margin:0;max-width:76ch}
   .context{font-size:14px;line-height:1.65;color:var(--body);margin:14px 0 0;max-width:76ch;
@@ -56,14 +61,14 @@
     align-items:center;gap:20px;flex-wrap:wrap}
   .hero .big{font-variant-numeric:tabular-nums;font-size:44px;font-weight:700;color:#f1ede3;letter-spacing:-.02em;line-height:1}
   .hero .big .u{font-size:18px;color:var(--gold);margin-left:2px}
-  .hero .hlab{font-size:13px;color:#dfe4ea;font-weight:600;flex:1;min-width:220px}
+  .hero .hlab{font-size:13px;color:#dfe4ea;font-weight:500;flex:1;min-width:220px}
   .hero .hsub{font-weight:400;color:#9aa3ae;font-size:12px}
   .hero .hbar{width:100%;height:8px;border-radius:0;background:var(--neg);overflow:hidden}
   .hero .hbar .kept{display:block;height:100%;background:var(--teal2)}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px 40px 6px}
   @media(max-width:760px){.grid{grid-template-columns:1fr}}
   .dcard{border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:0;padding:14px 16px;background:#fff}
-  .dcard .dh{font-family:var(--sans);font-weight:600;font-size:14.5px;color:var(--ink);margin-bottom:5px;display:flex;align-items:center;gap:8px}
+  .dcard .dh{font-family:var(--sans);font-weight:500;font-size:14.5px;color:var(--ink);margin-bottom:5px;display:flex;align-items:center;gap:8px}
   .dcard .dtag{font-size:10.5px;font-weight:700;color:var(--brass);border:1px solid var(--gold);border-radius:0;padding:2px 8px}
   .dcard p{margin:0;font-size:12.5px;color:var(--body);line-height:1.5}
   .dcard .dsrc{font-size:10px;color:var(--muted);margin-top:8px}
@@ -72,32 +77,32 @@
   .asofline b{color:var(--dim)}
   .mnote{font-size:11.5px;color:var(--muted);margin:10px 0 0;line-height:1.55;max-width:70ch}
   .chlog{margin:8px 40px 0;font-size:11.5px;color:var(--muted)}
-  .chlog summary{cursor:pointer;color:var(--teal2);font-weight:600;width:max-content}
+  .chlog summary{cursor:pointer;color:var(--teal2);font-weight:500;width:max-content}
   .chlog ul{margin:8px 0 0;padding-left:18px;line-height:1.55} .chlog li{margin:3px 0}
   .chlog b{color:var(--dim)}
   .sec{padding:14px 40px 4px}
-  .sec .sh{font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .sec .sh{font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
   .levers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   @media(max-width:760px){.levers{grid-template-columns:1fr}}
   .lv{border:1px solid var(--line);border-left:3px solid var(--teal2);border-radius:0;padding:13px 15px;background:var(--soft)}
-  .lv .n{font-weight:600;font-size:13px;color:var(--ink)} .lv .d{font-size:12px;color:var(--body);line-height:1.45;margin-top:4px}
+  .lv .n{font-weight:500;font-size:13px;color:var(--ink)} .lv .d{font-size:12px;color:var(--body);line-height:1.45;margin-top:4px}
   details.faq{border-bottom:1px solid var(--line2);padding:10px 0}
-  details.faq summary{font-weight:600;font-size:13.5px;color:var(--ink);cursor:pointer}
+  details.faq summary{font-weight:500;font-size:13.5px;color:var(--ink);cursor:pointer}
   details.faq p{margin:8px 0 2px;font-size:12.5px;color:var(--body)}
   .cta{margin:20px 40px 4px;padding:20px 24px;background:var(--soft);border:1px solid var(--line);border-radius:0;
     display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-  .cta .ctxt{flex:1;min-width:240px} .cta .ch{font-weight:600;font-size:18px;color:var(--ink);margin-bottom:3px}
+  .cta .ctxt{flex:1;min-width:240px} .cta .ch{font-weight:500;font-size:18px;color:var(--ink);margin-bottom:3px}
   .cta .cd{font-size:12.5px;color:var(--dim)}
-  .cta a{text-decoration:none;border-radius:0;font-size:14px;font-weight:600;white-space:nowrap;padding:12px 20px}
+  .cta a{text-decoration:none;border-radius:0;font-size:14px;font-weight:500;white-space:nowrap;padding:12px 20px}
   .cta a.primary{background:var(--teal);color:#f1ede3} .cta a.ghost{border:1px solid var(--frame-line);color:var(--ink);font-weight:500}
-  .rel{padding:6px 40px 4px;font-size:12.5px;color:var(--dim)} .rel a{color:var(--teal2);text-decoration:none;font-weight:600}
+  .rel{padding:6px 40px 4px;font-size:12.5px;color:var(--dim)} .rel a{color:var(--teal2);text-decoration:none;font-weight:500}
   .capture{margin:12px 40px 4px}
   .capform{display:flex;gap:8px;flex-wrap:wrap}
   .capform input[type=email]{flex:1;min-width:220px;padding:11px 14px;border:1px solid var(--line);border-radius:0;font:inherit;font-size:14px;background:#fff}
-  .capform button{background:var(--brass);color:#fff;border:0;border-radius:0;font:inherit;font-weight:600;font-size:14px;padding:11px 18px;cursor:pointer}
+  .capform button{background:var(--brass);color:#fff;border:0;border-radius:0;font:inherit;font-weight:500;font-size:14px;padding:11px 18px;cursor:pointer}
   .capform button:disabled{opacity:.6;cursor:default}
   .capnote{font-size:11.5px;color:var(--dim);margin-top:8px} .capnote a{color:var(--teal2)}
-  .capok{background:var(--soft);border:1px solid var(--line);border-left:3px solid var(--teal2);border-radius:0;padding:14px 16px;font-size:13.5px;color:var(--teal);font-weight:600}
+  .capok{background:var(--soft);border:1px solid var(--line);border-left:3px solid var(--teal2);border-radius:0;padding:14px 16px;font-size:13.5px;color:var(--teal);font-weight:500}
   .vh{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
   .disc{margin:16px 40px 6px;font-size:10.5px;line-height:1.55;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
   .disc a{color:var(--teal2)}
@@ -115,24 +120,25 @@
 <div class="sheet">
   <div class="frame">
     <nav class="dwnav" aria-label="Driftwood Capital">
-  <a class="brand" href="index.html">Drift<span class="w">wood</span> Capital</a>
-  <div class="dwnav-links">
-    <span class="dwnav-group">
-      <a href="principles.html">Philosophy</a>
-      <a href="about.html">Our Story</a>
-      <a href="thesis.html">How We Invest</a>
-    </span>
-    <span class="dwnav-group">
-      <a href="insights.html">Insights</a>
-      <a href="ledger.html">Research</a>
-      <a href="statemap.html" aria-current="page">State&nbsp;Tax&nbsp;Atlas</a>
-    </span>
-    <span class="dwnav-group">
-      <a href="leakage.html">Tax&nbsp;Diagnostic</a>
-      <a href="taxlab.html">After-Tax&nbsp;Review</a>
-    </span>
-  </div>
-</nav>
+      <a class="brand" href="index.html">Driftwood Capital</a>
+      <div class="dwnav-links">
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
+          <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
+          <a href="thesis.html">How We Invest</a>
+          <a href="howitworks.html">How It Works</a>
+          <a href="insights.html">Insights</a>
+          <a href="ledger.html">Research</a>
+        </span>
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
+          <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+          <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html" aria-current="page">State&nbsp;Tax&nbsp;Atlas</a>
+        </span>
+      </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
+    </nav>
     <div class="bcrumb"><a href="index.html">Driftwood Capital</a> › <a href="statemap.html">The State Atlas</a> › Rhode Island</div>
     <div class="hd">
       <div class="eyebrow">The State Atlas · Rhode Island</div>

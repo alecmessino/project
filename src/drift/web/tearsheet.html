@@ -13,6 +13,11 @@
 <meta name="description" content="A hypothetical multi-decade backtest of the Model Portfolio — strategy vs buy-and-hold, fit in-sample and reported out-of-sample. Research only, not a performance forecast." />
 <link rel="canonical" href="https://alecmessino.github.io/project/tearsheet.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="Driftwood Capital — Model Portfolio (Hypothetical)" />
@@ -34,8 +39,7 @@
     -webkit-font-smoothing:antialiased}
   .wrap{max-width:900px;margin:0 auto;padding:56px 28px 80px}
   header{border-top:3px solid var(--rule);padding-top:20px}
-  header h1{font-size:clamp(22px, 1vw + 18px, 25px);margin:0 0 6px;font-weight:650;letter-spacing:-.2px}
-  header h1 .w{color:var(--slate)}
+  header h1{font-size:clamp(22px, 1vw + 18px, 25px);margin:0 0 6px;font-weight:700;letter-spacing:-.2px}
   .method{color:var(--dim);font-size:13.5px;max-width:70ch;margin:6px 0 0}
   .book{padding:30px 0;border-top:1px solid var(--line);margin-top:8px}
   .book h2{font-size:19px;margin:0 0 2px;font-weight:640}
@@ -52,7 +56,7 @@
     opacity:0;visibility:hidden;transition:opacity .12s ease;z-index:6;box-shadow:0 4px 16px rgba(0,0,0,.17);pointer-events:none}
   .term .tip::after{content:"";position:absolute;left:15px;top:100%;border:5px solid transparent;border-top-color:var(--ink)}
   .term:hover .tip,.term:focus .tip,.term:focus-within .tip{opacity:1;visibility:visible}
-  .cmp .v{text-align:right;font-weight:600}
+  .cmp .v{text-align:right;font-weight:500}
   .cmp>div:nth-last-child(-n+3){border-bottom:none}
   .pos{color:var(--pos)} .neg{color:var(--neg)}
   svg.eq{display:block;width:100%;height:150px;margin:6px 0 4px}
@@ -73,7 +77,7 @@
   /* Maximal-subtle: full hypothetical-performance disclosure as a quiet small-print footnote in the
      foot; the header "HYPOTHETICAL" label keeps the point-of-performance marking. Language unchanged. */
   .disclaimer{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--line);font-size:10.5px;line-height:1.5;color:#9a98a0}
-  .disclaimer b{color:#76747e;font-weight:600;text-transform:none;letter-spacing:0;font-size:10.5px}
+  .disclaimer b{color:#76747e;font-weight:500;text-transform:none;letter-spacing:0;font-size:10.5px}
   .disclaimer .body{color:#9a98a0;margin-top:3px}
 </style>
 <link rel="stylesheet" href="driftwood.css">
@@ -81,27 +85,28 @@
 </head>
 <body>
 <div class="wrap">
-  <nav class="dwnav" aria-label="Driftwood" style="border-radius:var(--surface-radius);margin-bottom:10px">
-    <a class="brand" href="index.html">Drift<span class="w">wood</span> Capital</a>
-    <div class="dwnav-links">
-        <span class="dwnav-group">
-          <a href="principles.html">Philosophy</a>
+  <nav class="dwnav" aria-label="Driftwood Capital">
+      <a class="brand" href="index.html">Driftwood Capital</a>
+      <div class="dwnav-links">
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
           <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
           <a href="thesis.html">How We Invest</a>
-        </span>
-        <span class="dwnav-group">
+          <a href="howitworks.html">How It Works</a>
           <a href="insights.html">Insights</a>
           <a href="ledger.html">Research</a>
-          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
-        <span class="dwnav-group">
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
-  </nav>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
+    </nav>
   <header>
-    <h1>Drift<span class="w">wood</span> · Model Portfolio <span style="font-size:.5em;letter-spacing:.5px;color:var(--neg);vertical-align:middle">HYPOTHETICAL</span></h1>
+    <h1>Driftwood · Model Portfolio <span style="font-size:.5em;letter-spacing:.5px;color:var(--neg);vertical-align:middle">HYPOTHETICAL</span></h1>
     <p class="method" id="method"></p>
   </header>
   <div class="research-banner" style="margin:14px 0 22px;padding:2px 0 2px 14px;border-left:1px solid var(--line);font-size:12.5px;line-height:1.55;color:var(--dim)">

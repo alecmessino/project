@@ -14,6 +14,11 @@
 <meta name="description" content="Becoming a Driftwood client doesn't begin with transferring investments. It begins with building your family's Financial Operating System: discovery, the Coordination Index, the Wealth Operating Manual, the architecture review, and a recurring cadence of Operating Sessions and the Annual Wealth Operating Review. Illustrative, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/inside.html" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="Inside Driftwood — the Financial Operating System" />
@@ -38,7 +43,7 @@
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:1px solid var(--line)}
-  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
@@ -46,19 +51,19 @@
   .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:15px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(30px,3vw+15px,44px);line-height:1.07;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:19ch}
   .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:62ch}
-  .lede b{color:var(--ink);font-weight:600}
+  .lede b{color:var(--ink);font-weight:500}
   .rule{height:1px;background:var(--line);margin:0 44px}
   .sh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
   .sec{padding:40px 44px 6px}
   .sec .intro{font-size:16.5px;line-height:1.7;color:var(--body);margin:0 0 8px;max-width:64ch}
-  .sec .intro b{color:var(--ink);font-weight:600}
+  .sec .intro b{color:var(--ink);font-weight:500}
 
   /* The engagement flow — a numbered spine that ends in a loop. */
   .flow{margin:20px 0 6px}
   .fstep{display:grid;grid-template-columns:44px 1fr;gap:18px;position:relative;padding-bottom:20px}
   .fstep:not(:last-child)::after{content:"";position:absolute;left:21px;top:42px;bottom:-2px;width:2px;background:var(--line)}
   .fnum{width:42px;height:42px;border-radius:0;border:1px solid var(--frame-line);color:var(--brass);
-    font-family:var(--sans);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;
+    font-family:var(--sans);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;
     font-variant-numeric:tabular-nums;z-index:1}
   .fstep.loop .fnum{background:var(--teal);border-color:var(--teal);color:#f1ede3;font-size:19px}
   .fbody{padding-top:3px}
@@ -79,20 +84,20 @@
   .art .ag{margin-top:10px;font-family:var(--sans);font-weight:700;font-size:12px;color:var(--teal2)}
 
   .lead-in{font-family:var(--serif);font-size:19px;line-height:1.5;color:var(--ink);margin:8px 0 0;padding-left:18px;border-left:3px solid var(--brass);max-width:60ch}
-  .lead-in b{font-weight:600}
+  .lead-in b{font-weight:500}
   .creed-band{margin:40px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
     font-size:clamp(21px,2vw+13px,29px);letter-spacing:-.022em;color:var(--ink);line-height:1.16}
   .cta{margin:26px 44px 0;padding:22px 0 0;border-top:1px solid var(--line)}
   .cta .ct{font-family:var(--sans);font-weight:700;font-size:20px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.02em}
   .cta .cd{font-size:14px;line-height:1.6;color:var(--dim);margin:0 0 18px;max-width:58ch}
   .cta .btns{display:flex;flex-wrap:wrap;gap:12px}
-  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:var(--surface-radius);font-family:var(--sans);font-size:14.5px;font-weight:600;padding:12px 22px}
+  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:var(--surface-radius);font-family:var(--sans);font-size:14.5px;font-weight:500;padding:12px 22px}
   .cta a.primary{background:var(--teal);color:#f1ede3}
   .cta a.ghost{border:1px solid #cdc4b2;color:var(--ink);font-weight:500}
 
   .foot{margin-top:42px;padding:20px 44px 40px;border-top:1px solid var(--line);
     color:var(--muted);font-size:12px;line-height:1.65}
-  .foot .note{color:#5a5a62;font-weight:600}
+  .foot .note{color:#5a5a62;font-weight:500}
   .foot b{color:var(--dim)}
   @media(max-width:620px){
     .doc,.sec{padding-left:22px;padding-right:22px}
@@ -105,24 +110,25 @@
 <div class="wrap">
   <div class="frame">
     <div class="inner">
-    <nav class="dwnav" aria-label="Driftwood">
+    <nav class="dwnav" aria-label="Driftwood Capital">
       <a class="brand" href="index.html">Driftwood Capital</a>
       <div class="dwnav-links">
-        <span class="dwnav-group">
-          <a href="principles.html">Philosophy</a>
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
           <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html" aria-current="page">Operating&nbsp;System</a>
           <a href="thesis.html">How We Invest</a>
-        </span>
-        <span class="dwnav-group">
+          <a href="howitworks.html">How It Works</a>
           <a href="insights.html">Insights</a>
           <a href="ledger.html">Research</a>
-          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
-        <span class="dwnav-group">
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
     </nav>
 
     <div class="doc">

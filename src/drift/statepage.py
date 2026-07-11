@@ -509,6 +509,11 @@ def render_state_html(data: dict) -> str:
 <meta name="description" content="{_esc(desc)}" />
 <link rel="canonical" href="{url}" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="{_esc(title)}" />
@@ -592,6 +597,11 @@ def render_states_index(pages: dict) -> str:
 <meta name="description" content="How every state taxes investors — top long-term capital-gains rate, estate and inheritance tax, munis, QSBS, and basis step-up for all 50 states and DC. A state tax reference. Illustrative, not advice." />
 <link rel="canonical" href="{url}" />
 <link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="State Capital Gains & Estate Tax — Driftwood Capital" />

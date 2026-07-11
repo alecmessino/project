@@ -118,37 +118,42 @@
   a.cap-card:hover .cap-go{color:var(--teal)}
   a.cap-card:hover .cap-go::after{transform:translateX(4px)}
 
-  /* The defining visual — a full-screen editorial statement: five parts converging on one outcome.
-     The signature moment of the page, in the calm limestone palette. Connecting lines draw in on
-     scroll. A whisper-soft band (hairline-ruled) sets it apart without shouting. */
-  .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:62px 44px 56px;margin:12px 0 0}
-  .sysband-in{max-width:920px;margin:0 auto;text-align:center}
-  .sb-eye{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:20px}
-  .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(30px,3vw+16px,46px);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:0 0 14px}
-  .sb-sub{font-family:var(--serif);font-size:19px;line-height:1.5;color:var(--dim);margin:0 auto 42px;max-width:48ch}
-  .sb-diagram svg{width:100%;height:auto;display:block;max-width:840px;margin:0 auto}
-  .sb-diagram text{font-family:var(--sans)}
-  /* Restrained inspection — hover/select a part to reveal what it moves. Opacity only; no spectacle. */
-  .sbnode{cursor:pointer}
-  .sbnode .box{fill:#fff;stroke:var(--frame-line);stroke-width:1.2;transition:stroke .18s ease,fill .18s ease}
-  .sbnode .conn{stroke:var(--ghost-line);stroke-width:1;opacity:.5;transition:opacity .18s ease,stroke .18s ease}
-  .sbnode text{transition:fill .18s ease}
-  .sbnode:focus{outline:none}
-  .sbnode:focus-visible .box{stroke:var(--accent-strike);stroke-width:2}
-  .sbnode.hi .box{stroke:var(--ink);stroke-width:1.6;fill:var(--soft)}
-  .sbnode.hi text{fill:var(--ink);font-weight:500}
-  .sbnode.hi .conn{opacity:1;stroke:var(--ink)}
-  .sbnode.sel .box{stroke:var(--ink);stroke-width:2}
-  .sbnode.dim{opacity:.32;transition:opacity .18s ease}
-  .sb-explain{max-width:640px;margin:16px auto 0;font-size:14px;line-height:1.6;color:var(--body);
-    min-height:44px;padding-top:14px;border-top:1px solid var(--line2);text-align:left}
-  .sb-explain .who{font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike);margin-right:10px;white-space:nowrap}
-  @media(prefers-reduced-motion:reduce){.sbnode .box,.sbnode .conn,.sbnode text,.sbnode.dim{transition:none}}
-  .sb-cap{font-family:var(--sans);font-size:13.5px;line-height:1.62;color:var(--muted);margin:38px auto 0;max-width:62ch}
-  .sb-cap b{color:var(--ink);font-weight:500}
-  /* The systems diagram is a static ink schematic — square plates, hairline connectors, square
-     nodes; no scroll-driven draw-in. The figure stands still. */
-  @media(max-width:620px){.sysband{padding:44px 22px}.sb-sub{margin-bottom:30px}}
+  /* THE SYSTEM — the signature moment. Five interconnected domains converging into one emergent
+     outcome. At rest the eye lands on the system; selecting a domain illuminates the others it moves
+     and reveals the specific changes. Restraint: opacity and line-weight only — ~180ms fades, no
+     motion — an institutional interactive (think NYT graphic), not a dashboard. */
+  .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:58px 44px 50px;margin:0}
+  .sysband-in{max-width:640px;margin:0 auto;text-align:center}
+  .sb-eye{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
+  .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(25px,2.1vw+15px,36px);line-height:1.14;letter-spacing:-.02em;color:var(--ink);margin:0 auto;max-width:19ch}
+  .sysstage{margin:8px auto 0;max-width:520px}
+  .sysstage svg{width:100%;height:auto;display:block;overflow:visible}
+  .sysstage text{font-family:var(--sans)}
+  .sysnode{cursor:pointer}
+  .sysnode .dot{fill:var(--ghost-line);transition:fill .18s ease}
+  .sysnode .lbl{fill:var(--dim);font-size:15px;font-weight:600;transition:fill .18s ease}
+  .sysnode:focus{outline:none}
+  .sysnode:focus-visible .hit{stroke:var(--accent-strike);stroke-width:2}
+  .sysnode.active .dot{fill:var(--ink)}
+  .sysnode.active .lbl{fill:var(--ink);font-weight:700}
+  .sysnode.lit .dot{fill:var(--ink)}
+  .sysnode.lit .lbl{fill:var(--ink)}
+  /* interconnection lines — hidden at rest; a selected domain fades in its links to the others */
+  .sysstage .link{stroke:var(--ink);stroke-width:1.3;opacity:0;transition:opacity .18s ease}
+  .sysstage .link.show{opacity:.82}
+  /* convergence lines — always present, faint; they carry into the phrase, no box around it */
+  .sysstage .converge{stroke:var(--ghost-line);stroke-width:1;opacity:.5;transition:opacity .18s ease,stroke .18s ease}
+  .sysstage .converge.hot{stroke:var(--ink);opacity:1}
+  .sysstage .keep{fill:var(--dim);font-weight:700;transition:fill .18s ease}
+  .sysstage .keep.on{fill:var(--ink)}
+  .sb-prompt{font-family:var(--sans);font-size:13px;letter-spacing:.02em;color:var(--muted);margin:20px auto 0;
+    min-height:46px;padding-top:14px;border-top:1px solid var(--line2);max-width:60ch}
+  .sb-prompt .who{font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike);margin-right:11px;white-space:nowrap}
+  .sb-prompt .chg{color:var(--body);font-size:14px}
+  .sb-more{display:inline-block;margin-top:18px;font-family:var(--sans);font-size:13px;font-weight:700;color:var(--teal2);text-decoration:none}
+  .sb-more:hover{color:var(--teal);text-decoration:underline}
+  @media(prefers-reduced-motion:reduce){.sysnode .dot,.sysnode .lbl,.sysstage .link,.sysstage .converge,.sysstage .keep{transition:none}}
+  @media(max-width:620px){.sysband{padding:42px 22px}.sysstage{max-width:400px}.sysnode .lbl{font-size:13px}}
 
   /* Evidence — the surprise is the headline; the chart is the exhibit; methodology is a footnote. */
   .ev-head{font-family:var(--sans);font-weight:700;font-size:clamp(26px,2.4vw+15px,36px);line-height:1.08;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
@@ -235,14 +240,67 @@
       </div>
     </div>
 
+    <!-- ── THE SYSTEM — the core idea, experienced: every decision moves the others ── -->
+    <div class="sysband" id="thesystem">
+      <div class="sysband-in">
+        <div class="sb-eye">The system</div>
+        <h2 class="sb-h">Every important financial decision changes at least five others.</h2>
+        <div class="sysstage" id="sysDiagram">
+          <svg viewBox="0 0 720 500" role="group" aria-label="Five interconnected domains of a financial life — Portfolio, Taxes, Estate, Liquidity, and Professionals — converging into what you keep. Select a domain to see what it changes.">
+            <!-- convergence lines: the five domains carry into the outcome (always present, faint) -->
+            <line class="converge" data-node="0" x1="360" y1="70" x2="360" y2="438"/>
+            <line class="converge" data-node="1" x1="155" y1="175" x2="360" y2="438"/>
+            <line class="converge" data-node="2" x1="565" y1="175" x2="360" y2="438"/>
+            <line class="converge" data-node="3" x1="245" y1="315" x2="360" y2="438"/>
+            <line class="converge" data-node="4" x1="475" y1="315" x2="360" y2="438"/>
+            <!-- interconnection lines: hidden at rest; a selected domain fades in its links -->
+            <line class="link" data-a="0" data-b="1" x1="360" y1="70" x2="155" y2="175"/>
+            <line class="link" data-a="0" data-b="2" x1="360" y1="70" x2="565" y2="175"/>
+            <line class="link" data-a="0" data-b="3" x1="360" y1="70" x2="245" y2="315"/>
+            <line class="link" data-a="0" data-b="4" x1="360" y1="70" x2="475" y2="315"/>
+            <line class="link" data-a="1" data-b="2" x1="155" y1="175" x2="565" y2="175"/>
+            <line class="link" data-a="1" data-b="3" x1="155" y1="175" x2="245" y2="315"/>
+            <line class="link" data-a="1" data-b="4" x1="155" y1="175" x2="475" y2="315"/>
+            <line class="link" data-a="2" data-b="3" x1="565" y1="175" x2="245" y2="315"/>
+            <line class="link" data-a="2" data-b="4" x1="565" y1="175" x2="475" y2="315"/>
+            <line class="link" data-a="3" data-b="4" x1="245" y1="315" x2="475" y2="315"/>
+            <!-- the emergent outcome — no box; the lines carry into the phrase -->
+            <text class="keep" x="360" y="468" text-anchor="middle" font-size="23">What you keep</text>
+            <!-- the five domains -->
+            <g class="sysnode" data-node="0" tabindex="0" role="button" aria-label="Portfolio — changes Taxes, Estate, Liquidity, and Professionals">
+              <circle class="hit" cx="360" cy="70" r="30" fill="transparent"/><circle class="dot" cx="360" cy="70" r="6"/>
+              <text class="lbl" x="360" y="50" text-anchor="middle">Portfolio</text>
+            </g>
+            <g class="sysnode" data-node="1" tabindex="0" role="button" aria-label="Taxes — changes Portfolio, Estate, Liquidity, and Professionals">
+              <circle class="hit" cx="155" cy="175" r="30" fill="transparent"/><circle class="dot" cx="155" cy="175" r="6"/>
+              <text class="lbl" x="139" y="180" text-anchor="end">Taxes</text>
+            </g>
+            <g class="sysnode" data-node="2" tabindex="0" role="button" aria-label="Estate — changes Portfolio, Taxes, Liquidity, and Professionals">
+              <circle class="hit" cx="565" cy="175" r="30" fill="transparent"/><circle class="dot" cx="565" cy="175" r="6"/>
+              <text class="lbl" x="581" y="180" text-anchor="start">Estate</text>
+            </g>
+            <g class="sysnode" data-node="3" tabindex="0" role="button" aria-label="Liquidity — changes Portfolio, Taxes, Estate, and Professionals">
+              <circle class="hit" cx="245" cy="315" r="30" fill="transparent"/><circle class="dot" cx="245" cy="315" r="6"/>
+              <text class="lbl" x="229" y="320" text-anchor="end">Liquidity</text>
+            </g>
+            <g class="sysnode" data-node="4" tabindex="0" role="button" aria-label="Professionals — change Portfolio, Taxes, Estate, and Liquidity">
+              <circle class="hit" cx="475" cy="315" r="30" fill="transparent"/><circle class="dot" cx="475" cy="315" r="6"/>
+              <text class="lbl" x="491" y="320" text-anchor="start">Professionals</text>
+            </g>
+          </svg>
+        </div>
+        <p class="sb-prompt" id="sysPrompt">Select a decision to see what else changes.</p>
+        <a class="sb-more" href="coordination.html">See it in one household →</a>
+      </div>
+    </div>
+
     <!-- ── THE OPERATING SYSTEM — the differentiator, made tangible, before the tools ── -->
     <div class="sec" id="operating-system">
       <div class="h">The operating system</div>
-      <p class="lede2">Driftwood isn't another investment firm. It's the system your wealth runs on.</p>
-      <p class="sysbody">Coordination isn't a feeling. It is a set of durable documents a family can hold — the
-        instruments an institution runs on, brought to a single household: a living manual, a register of every
-        decision and open opportunity, and one annual review of the whole system. <b>This is what you keep,
-        written down.</b></p>
+      <p class="lede2">Keeping five systems in view of one another takes a method — the operating system an institution runs on, brought to a single household.</p>
+      <p class="sysbody">An operating calendar, a documented process, and clear accountability: coordination as a
+        discipline, not a feeling. It produces durable outputs a family can hold — <b>the record of what you keep,
+        written down</b>:</p>
       <div class="rl-cards">
         <a class="rl-card feat" href="manual.html">
           <div class="rl-meta">The living document</div>
@@ -309,55 +367,6 @@
           <div class="cap-d">A low-turnover core, placed by tax and held with discipline.</div>
           <div class="cap-go">How we invest</div>
         </a>
-      </div>
-    </div>
-
-    <!-- ── WHY IT WORKS — the defining visual, full-bleed, as the signature moment ── -->
-    <div class="sysband" id="sysband">
-      <div class="sysband-in">
-        <div class="sb-eye">The thesis</div>
-        <h2 class="sb-h">One decision. Five consequences.</h2>
-        <p class="sb-sub">Every important decision moves the others. Most households have the parts; almost none coordinate them.</p>
-        <div class="sb-diagram" id="sbDiagram">
-          <svg viewBox="0 0 940 420" preserveAspectRatio="xMidYMid meet" role="group"
-            aria-label="The five parts of a financial life and their dependencies. Select a part to see what it moves.">
-            <!-- Five interdependent parts. Hover or select one to see which others it moves. -->
-            <g class="sbnode" data-deps="1,2,3" tabindex="0" role="button" aria-label="Portfolio — moves Taxes, Estate, and Liquidity">
-              <line class="conn" x1="300" y1="67" x2="609" y2="210"/>
-              <rect class="box" x="70" y="44" width="230" height="46"/><rect class="dot" x="297" y="64" width="6" height="6"/>
-              <text x="185" y="73" text-anchor="middle" font-size="16">Portfolio</text>
-            </g>
-            <g class="sbnode" data-deps="0,2,3" tabindex="0" role="button" aria-label="Taxes — moves Portfolio, Estate, and Liquidity">
-              <line class="conn" x1="300" y1="133" x2="609" y2="210"/>
-              <rect class="box" x="70" y="110" width="230" height="46"/><rect class="dot" x="297" y="130" width="6" height="6"/>
-              <text x="185" y="139" text-anchor="middle" font-size="16">Taxes</text>
-            </g>
-            <g class="sbnode" data-deps="0,1,3" tabindex="0" role="button" aria-label="Estate — moves Portfolio, Taxes, and Liquidity">
-              <line class="conn" x1="300" y1="199" x2="609" y2="210"/>
-              <rect class="box" x="70" y="176" width="230" height="46"/><rect class="dot" x="297" y="196" width="6" height="6"/>
-              <text x="185" y="205" text-anchor="middle" font-size="16">Estate</text>
-            </g>
-            <g class="sbnode" data-deps="0,1" tabindex="0" role="button" aria-label="Liquidity — moves Portfolio and Taxes">
-              <line class="conn" x1="300" y1="265" x2="609" y2="210"/>
-              <rect class="box" x="70" y="242" width="230" height="46"/><rect class="dot" x="297" y="262" width="6" height="6"/>
-              <text x="185" y="271" text-anchor="middle" font-size="16">Liquidity</text>
-            </g>
-            <g class="sbnode" data-deps="0,1,2,3" tabindex="0" role="button" aria-label="Professionals — hold Portfolio, Taxes, Estate, and Liquidity consistent">
-              <line class="conn" x1="300" y1="331" x2="609" y2="210"/>
-              <rect class="box" x="70" y="308" width="230" height="46"/><rect class="dot" x="297" y="328" width="6" height="6"/>
-              <text x="185" y="337" text-anchor="middle" font-size="16">Professionals</text>
-            </g>
-            <rect x="612" y="156" width="256" height="108" fill="#fff" stroke="#c3bcab" stroke-width="1.2"/>
-            <rect fill="#1e2833" x="606" y="207" width="6" height="6"/>
-            <line x1="612" y1="186" x2="868" y2="186" stroke="#1e2833" stroke-width="2"/>
-            <text x="740" y="177" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="1.6" fill="#2c5878">THE OUTCOME</text>
-            <text x="740" y="228" text-anchor="middle" font-size="24" font-weight="700" letter-spacing="-.01em" fill="#1e2833">What you keep</text>
-          </svg>
-        </div>
-        <p class="sb-explain" id="sbExplain">Select a part to see what it moves.</p>
-        <p class="sb-cap">A tax decision changes withdrawals. Withdrawals change asset location. Estate decisions
-          change portfolio design. Managed together, they determine <b>what you keep</b>.
-          <a class="sb-link" href="coordination.html">See it in one household →</a></p>
       </div>
     </div>
 
@@ -547,37 +556,50 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
   set(30);
 })();
 
-// Five Parts — restrained dependency inspection: reveal what a part moves, on hover/focus/click.
+// The System — teaching interaction: selecting a domain illuminates the others it moves and reveals
+// the specific downstream changes. Opacity and line-weight only; no motion. An institutional
+// interactive (think NYT graphic), not a dashboard. Hover, focus, or tap on mobile.
 (function(){
-  var diagram = document.getElementById("sbDiagram"); if(!diagram) return;
-  var nodes = [].slice.call(diagram.querySelectorAll(".sbnode"));
-  var explain = document.getElementById("sbExplain"); if(!nodes.length || !explain) return;
-  var DEF = 'Select a part to see what it moves.';
-  var DATA = [
-    ['Portfolio','Change the portfolio and you realize gains, shift asset location, and move what is available to spend — Taxes, Estate, and Liquidity all move with it.'],
-    ['Taxes','A tax decision changes where assets are best held, what the estate will owe, and the order accounts are drawn — Portfolio, Estate, and Liquidity respond.'],
-    ['Estate','An estate decision changes portfolio design, the tax on the transfer, and the liquidity that has to pay it — Portfolio, Taxes, and Liquidity follow.'],
-    ['Liquidity','A withdrawal changes the portfolio’s balance and the bracket it lands in — Portfolio and Taxes move with every dollar drawn.'],
-    ['Professionals','The CPA, attorney, and advisor each touch the others’ work. Someone has to hold Portfolio, Taxes, Estate, and Liquidity consistent — the coordinating seat.']
+  var stage = document.getElementById("sysDiagram"); if(!stage) return;
+  var svg = stage.querySelector("svg"); if(!svg) return;
+  var nodes = [].slice.call(svg.querySelectorAll(".sysnode"));
+  var links = [].slice.call(svg.querySelectorAll(".link"));
+  var conv  = [].slice.call(svg.querySelectorAll(".converge"));
+  var keep  = svg.querySelector(".keep");
+  var prompt = document.getElementById("sysPrompt");
+  if(!nodes.length || !prompt) return;
+  var PROMPT = 'Select a decision to see what else changes.';
+  // Every decision changes every other; the reveal names the specific downstream effects.
+  var CHANGES = [
+    ['Portfolio','Realized gains · asset location · estate basis · what’s available to spend'],
+    ['Taxes','Asset location · withdrawal sequencing · estate value · charitable strategy · CPA coordination'],
+    ['Estate','Portfolio design · the transfer tax · the liquidity to pay it · gifting timing'],
+    ['Liquidity','Which lots are sold · the bracket a withdrawal lands in · the portfolio’s balance'],
+    ['Professionals','Every domain — the CPA, attorney, and advisor each touch the others’ work']
   ];
-  function probe(n){
-    var d = (nodes[n].getAttribute("data-deps")||"").split(",").filter(Boolean).map(Number); d.push(n);
-    nodes.forEach(function(nd,i){ var on = d.indexOf(i) >= 0; nd.classList.toggle("hi", on); nd.classList.toggle("dim", !on); });
+  function show(i){
+    nodes.forEach(function(nd,j){ nd.classList.toggle("active", j===i); nd.classList.toggle("lit", j!==i); });
+    links.forEach(function(ln){ var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b"); ln.classList.toggle("show", a===i||b===i); });
+    conv.forEach(function(cv){ cv.classList.toggle("hot", +cv.getAttribute("data-node")===i); });
+    if(keep) keep.classList.add("on");
+    prompt.innerHTML = '<span class="who">'+CHANGES[i][0]+' moves</span><span class="chg">'+CHANGES[i][1]+'</span>';
   }
-  function clear(){ nodes.forEach(function(nd){ nd.classList.remove("hi","dim"); }); }
-  function select(n){
-    nodes.forEach(function(nd,i){ nd.classList.toggle("sel", i===n); });
-    explain.innerHTML = '<span class="who">'+DATA[n][0]+' moves</span>'+DATA[n][1];
+  function clear(){
+    nodes.forEach(function(nd){ nd.classList.remove("active","lit"); });
+    links.forEach(function(ln){ ln.classList.remove("show"); });
+    conv.forEach(function(cv){ cv.classList.remove("hot"); });
+    if(keep) keep.classList.remove("on");
+    prompt.textContent = PROMPT;
   }
   nodes.forEach(function(nd,i){
-    nd.addEventListener("mouseenter", function(){ probe(i); });
-    nd.addEventListener("focus", function(){ probe(i); select(i); });
-    nd.addEventListener("blur", clear);
-    nd.addEventListener("click", function(){ select(i); });
-    nd.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); select(i); } });
+    nd.addEventListener("mouseenter", function(){ show(i); });
+    nd.addEventListener("focus", function(){ show(i); });
+    nd.addEventListener("click", function(){ show(i); });
+    nd.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show(i); } });
   });
-  diagram.addEventListener("mouseleave", clear);
-  explain.textContent = DEF;
+  svg.addEventListener("mouseleave", clear);
+  stage.addEventListener("focusout", function(e){ if(!stage.contains(e.relatedTarget)) clear(); });
+  prompt.textContent = PROMPT;
 })();
 </script>
 </body>

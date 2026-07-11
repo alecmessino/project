@@ -31,8 +31,28 @@
   .lockup{display:inline-flex;align-items:center;gap:12px;--cut:var(--bg);color:var(--ink)}
   .lockup .txt{display:flex;flex-direction:column;line-height:1}
   .lockup .nmw{font-family:var(--sans);font-weight:700;font-size:17px;letter-spacing:-.005em;color:var(--ink)}
-  .lockup .dsc{font-family:var(--sans);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-top:4px}
+  /* .22em matches the site's institutional running-header label (.run .inst in the record pages) —
+     wide, high-tracking, consistent with the shipped identity vocabulary. */
+  .lockup .dsc{font-family:var(--sans);font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-strike);margin-top:4px}
   .lockup.rule .txt{padding-left:12px;border-left:1px solid var(--line)}
+  .lockup.on-navy{--cut:var(--navy);color:#eef2f6}
+  .lockup.on-navy .nmw{color:#f1ede3}
+  .lockup.on-navy .dsc{color:#a9c2d6}
+  .lockup.on-navy.rule .txt{border-left-color:rgba(233,229,219,.28)}
+  /* Descriptor matrix — mark × descriptor, on both grounds */
+  .matrix{border:1px solid var(--line);border-radius:5px;overflow:hidden;max-width:900px;margin-bottom:18px}
+  .matrix.navy{background:var(--navy);border-color:#2b3746}
+  .mrow{display:grid;grid-template-columns:172px 1fr 1fr}
+  .mrow + .mrow{border-top:1px solid var(--line)}
+  .matrix.navy .mrow + .mrow{border-top:1px solid #2b3746}
+  .mcorner,.mch{padding:11px 16px;font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--soft);color:var(--accent-strike)}
+  .matrix.navy .mcorner,.matrix.navy .mch{background:#202a37;color:#a9c2d6}
+  .mch{border-left:1px solid var(--line)}
+  .matrix.navy .mch{border-left-color:#2b3746}
+  .mrh{display:flex;align-items:center;padding:0 16px;font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.12em;line-height:1.35;text-transform:uppercase;color:var(--muted);background:var(--soft)}
+  .matrix.navy .mrh{background:#202a37;color:#9aa3ae}
+  .mcell{padding:24px 22px;display:flex;align-items:center;border-left:1px solid var(--line)}
+  .matrix.navy .mcell{border-left-color:#2b3746}
   pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;line-height:1.5;color:var(--body);
       background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:12px 13px;margin:0;overflow-x:auto;white-space:pre-wrap;word-break:break-word}
   .lab{font-family:var(--sans);font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 7px}
@@ -48,9 +68,9 @@
 <div id="grid"></div>
 
 <div class="card">
-  <div class="card-h"><span class="nm">Descriptor test</span><span class="tag">the word beside the mark</span></div>
-  <p class="ds">Same mark (Convergent Monolith), two descriptors, to weigh the word itself.</p>
-  <div class="descstrip" id="descstrip"></div>
+  <div class="card-h"><span class="nm">Descriptor matrix</span><span class="tag">mark × descriptor</span></div>
+  <p class="ds">Mark 1 (Convergent Monolith) and Mark 2 (Negative-Space Convergence) against the two final descriptors, at nav-lockup scale on both grounds — to weigh visual weight, tracking, and balance side by side.</p>
+  <div id="matrix"></div>
 </div>
 
 <script>
@@ -125,15 +145,27 @@ for(const m of MARKS){
   grid.appendChild(el);
 }
 
-// descriptor comparison on the monolith
-const mono = MARKS.find(x=>x.key==="monolith").svg;
-const ds = document.getElementById("descstrip");
-for(const [word,style] of [["Private Wealth Advisory",""],["Private Wealth Architecture",""],["Private Wealth Coordination",""]]){
-  const c = document.createElement("div");
-  c.innerHTML = `<div class="lockup rule"><span class="onpaper">${mk(mono,32)}</span>
-    <span class="txt"><span class="nmw">Driftwood&nbsp;Capital</span><span class="dsc">${word.replace('Private Wealth ','Private&nbsp;Wealth&nbsp;')}</span></span></div>`;
-  ds.appendChild(c);
+// descriptor matrix — Mark 1 (Monolith) and Mark 2 (Negative-Space) × two final descriptors
+const M1 = MARKS.find(x=>x.key==="monolith").svg;
+const M2 = MARKS.find(x=>x.key==="negative").svg;
+const DESCS = ["Private Wealth Advisory", "Wealth Strategy"];  // uppercased via CSS text-transform
+
+function lockCell(markSvg, word, navy){
+  return `<div class="mcell"><div class="lockup rule${navy?' on-navy':''}">`
+    + `<span class="mkslot">${mk(markSvg,32)}</span>`
+    + `<span class="txt"><span class="nmw">Driftwood&nbsp;Capital</span>`
+    + `<span class="dsc">${word.replace(/ /g,'&nbsp;')}</span></span></div></div>`;
 }
+function buildMatrix(navy){
+  let rows = `<div class="mrow"><div class="mcorner">${navy?'On&nbsp;navy':'On&nbsp;limestone'}</div>`
+    + `<div class="mch">Mark 1 · Monolith</div><div class="mch">Mark 2 · Negative-Space</div></div>`;
+  for(const word of DESCS){
+    rows += `<div class="mrow"><div class="mrh">${word}</div>`
+      + lockCell(M1, word, navy) + lockCell(M2, word, navy) + `</div>`;
+  }
+  return `<div class="matrix${navy?' navy':''}">${rows}</div>`;
+}
+document.getElementById("matrix").innerHTML = buildMatrix(false) + buildMatrix(true);
 </script>
 </body>
 </html>

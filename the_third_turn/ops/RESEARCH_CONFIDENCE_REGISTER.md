@@ -39,6 +39,15 @@ never for positive findings.
 - Two synchronization rows exist on purpose: we can *understand* an instrument well (High) while the
   *gate built on it* remains of uncertain validity (Moderate). Do not collapse them.
 
+## Update log
+
+**2026-07-11** — No level changed. New evidence: E-013 (22 consecutive clean re-arms → Collector
+reliability **High, firmer**), E-015 (overlap plateau broke 30→45 → Dataset maturity stays **Low**
+but direction ↑), E-014 (cumulative sync-lag non-monotonic 30→91 s → reinforces the RD-1 Candidate;
+confidence in *that metric* ↓, not in the system). Science unchanged; no gate cleared; SR-1 remains
+BLOCKED. The headline "SR-1 61%→57%" is an artifact of the flagged sync-lag metric (E-014), not a
+loss of research readiness — actual readiness (overlap breadth) improved.
+
 ## Discipline
 
 Movements are logged to `GOVERNANCE_DECISION_LOG.md` with the evidence that justified them. A level

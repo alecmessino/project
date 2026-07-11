@@ -23,6 +23,9 @@ stopping rules (a ledger entry is never a Finding).
 | E-010 | 2026-07-09 | `book_panel` interleaves 2–3 alternate total lines per (game,book,ts) with no main-vs-alt discriminator (~95% of groups) | Data-quality / Methodology | ↓ threatens line-based inference | Feed, SR-1 pairs | RD-3, ED-3 |
 | E-011 | 2026-07-09 | Adversarial audit: live panels are 100% July (0/103,494 June rows), temporally/book/data-type disjoint from Paper 1's sample | Verification | → Paper 1 (unchallenged, confirmed) | Paper 1 | — |
 | E-012 | 2026-07-09 | 576 nominal cross-book "arbs" dissolved under scrutiny (median divergence 3.6 pp; concentrated in near-settled / suspended / status-unverifiable legs; same-poll co-presence, not executable) | Verification / Rejected | → Science (no evidence of inefficiency) | — | A-01 |
+| E-013 | 2026-07-11 | Re-arm chain now 22 consecutive clean re-arms (#16→#38), 0 failures since the pre-fix #14; continuous ~15-min checkpoints across 07-09→07-11 (verified via Actions API) | Verification | → Collector (High, firmer) | Collector | EP-2 |
+| E-014 | 2026-07-11 | Cumulative SR-1 median sync lag moved **30 s (07-09) → 91 s (07-10/11)** — non-monotonic; a further symptom of the implementation-dependent metric, not a synchronization regression | Measurement / Methodology | ↓ confidence in the sync-lag metric (not the system) | Synchronization, SR-1 | RD-1, E-006 |
+| E-015 | 2026-07-11 | SR-1 overlap-games broke its plateau: 30 → 37 (07-10) → 45 (07-11) as new games enrolled | Dataset / Verification | ↑ Dataset maturity | Dataset, SR-1 | EP-4 |
 
 ## How the ledger is used
 

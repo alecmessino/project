@@ -24,5 +24,5 @@ earned rather than asserted.
 
 | # | Date made | Prediction | Confirming / refuting evidence | Status |
 |---|---|---|---|---|
-| EP-4 | 2026-07-09 | The SR-1 overlap-games count will **not** advance on collection time alone; it is stalled on **new-game enrollment**, not on maturation. | Overlap-games stays flat on days with 0 newly-enrolled games and only rises when new games first appear in the panel. | Open — watch daily |
+| EP-4 | 2026-07-09 | The SR-1 overlap-games count will **not** advance on collection time alone; it is stalled on **new-game enrollment**, not on maturation. | Overlap-games stays flat on days with 0 newly-enrolled games and only rises when new games first appear in the panel. | **Confirmed 2026-07-11** — overlap rose 30 → 37 (07-10) → 45 (07-11) as new games enrolled on the new slate days (E-015); it did not advance on collection time alone. |
 | EP-5 | 2026-07-09 | Pinnacle's zero live quotes are a **configuration/subscription/auth** condition, not a transient feed outage, so it will stay stillborn until the collector integration is changed. | A read of the pinnacle adapter path + a controlled fetch explains the 6-pregame-rows-then-silence pattern; collecting longer does not produce a live pinnacle quote. | Open — see Engineering Debt ED-1 |

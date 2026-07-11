@@ -78,11 +78,9 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
   flex-wrap:wrap; padding:14px 24px; border-bottom:1px solid var(--line,#e3dccd);
   background:var(--soft,#fbf9f4); font-family:var(--sans); }
 /* The Nameplate: single-ink DRIFTWOOD in tracked caps — never two-tone. Color belongs to
-   the page, not the name; the legacy two-tone markup (Drift<span class="w">wood</span>) is
-   neutralized to a single ink so every page reads identically. */
+   the page, not the name, so the wordmark reads identically everywhere. */
 .dwnav .brand{ font-size:15px; font-weight:700; color:var(--ink,#1d242d); text-decoration:none;
   letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; }
-.dwnav .brand .w{ color:inherit; }
 .dwnav .brand:hover{ opacity:.85; }
 /* A running index of tracked-caps links, split into two labelled families: Understand (who we are
    and how we think) and Discover (the interactive tools). The current page carries a 2px

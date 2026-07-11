@@ -181,7 +181,7 @@ def _esc(s: str) -> str:
 
 NAV = (
     '<nav class="dwnav" aria-label="Driftwood Capital">\n'
-    '  <a class="brand" href="index.html">Drift<span class="w">wood</span> Capital</a>\n'
+    '  <a class="brand" href="index.html">Driftwood Capital</a>\n'
     '  <div class="dwnav-links">\n'
     '    <span class="dwnav-group">\n'
     '      <a href="principles.html">Philosophy</a>\n'

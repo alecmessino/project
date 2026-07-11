@@ -198,6 +198,7 @@ NAV = (
     '      <a href="taxlab.html">After-Tax&nbsp;Review</a>\n'
     '    </span>\n'
     '  </div>\n'
+    '  <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>\n'
     '</nav>'
 )
 
@@ -560,7 +561,7 @@ def render_state_html(data: dict) -> str:
         <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture — by bracket and holdings.</div>
       </div>
       <a class="primary" href="leakage.html?state={code}">Run my {_esc(name)} diagnostic →</a>
-      <a class="ghost" href="taxlab.html?view=review&state={code}">Book a 15-min intro</a>
+      <a class="ghost" href="index.html#conversation">Start a conversation</a>
     </div>
 {capture}
     <div class="rel">Compare nearby regimes: {related} · <a href="states.html">all 50 states + DC →</a></div>

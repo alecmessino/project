@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Privacy-first analytics (Plausible) -->
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>The Opportunity Register — a sample. — Driftwood</title>
+<meta name="description" content="The single standing, prioritized register of every coordination opportunity the system has surfaced — each with an owner, a lead professional, dependencies, and a status. An illustrative sample for a fictional family. Not advice." />
+<link rel="canonical" href="https://alecmessino.github.io/project/opportunity-register.html" />
+<link rel="icon" href="favicon.svg" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="The Opportunity Register — a sample." />
+<meta property="og:description" content="The single standing, prioritized register of every coordination opportunity the system has surfaced." />
+<meta property="og:url" content="https://alecmessino.github.io/project/opportunity-register.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="The Opportunity Register — a sample." />
+<meta name="twitter:description" content="The single standing, prioritized register of every coordination opportunity the system has surfaced." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
+<style>
+  /* Page-local scaffolding only. The register grid, front matter, stamp, section heads,
+     exhibit plate, and evidence apparatus are all shared classes in driftwood.css; this
+     block only sets the masthead type scale, the status/priority palette, and the two
+     column tweaks the register needs to carry a lead-professional and a priority cell. */
+  :root{
+    --st-done:#15806a; --st-done-bg:#e2efe9; --st-prog:#2c5878; --st-prog-bg:#e7eef4;
+    --st-defer:var(--muted); --st-defer-bg:var(--line2); --st-open:#9b4439; --st-open-bg:var(--line2);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:16px/1.6 var(--sans);
+    letter-spacing:-.004em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1080px;margin:34px auto;padding:0 20px 72px}
+  .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
+  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
+    border-bottom:1px solid var(--line);font-family:var(--sans)}
+  .run .inst{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .inner{margin:0 7px 7px}
+
+  /* Masthead */
+  .doc{padding:44px 48px 8px}
+  .masthead-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(30px,2.8vw+15px,44px);line-height:1.06;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:18ch}
+  .lede{font-family:var(--serif);font-size:18.5px;line-height:1.55;color:var(--dim);margin:0;max-width:60ch}
+  .lede b{color:var(--ink);font-weight:600}
+
+  /* Section body — typography and whitespace, ruled not boxed */
+  .sec{padding:30px 48px 6px}
+  .sec.ruled{border-top:1px solid var(--line)}
+  .sec p{font-size:14.5px;line-height:1.62;color:var(--body);max-width:74ch;margin:0 0 14px}
+  .sec p b{color:var(--ink);font-weight:600}
+  .sec p a{color:var(--teal2);font-weight:600;text-decoration:none}
+  .sec p a:hover{text-decoration:underline}
+  .sec .rec-head{margin-top:2px}
+
+  /* Lifecycle explainer — enters / leaves, ruled columns not boxes */
+  .flow{display:grid;grid-template-columns:1fr 1fr;gap:14px 30px;margin:6px 0 4px}
+  @media(max-width:640px){.flow{grid-template-columns:1fr}}
+  .flow .col{padding:2px 0 2px 16px;border-left:1px solid var(--line)}
+  .flow .col.key{border-left-color:var(--brass)}
+  .flow .fk{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:8px}
+  .flow .col.key .fk{color:var(--ink)}
+  .flow p{font-size:13px;line-height:1.55;color:var(--body);margin:0;max-width:44ch}
+
+  /* Status pills — reused vocabulary, palette matched to the Annual Review / Decision Log */
+  .pill{display:inline-block;font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.06em;
+    text-transform:uppercase;padding:4px 9px;border-radius:0;white-space:nowrap}
+  .pill.open{color:var(--st-open);background:var(--st-open-bg)}
+  .pill.prog{color:var(--st-prog);background:var(--st-prog-bg)}
+  .pill.done{color:var(--st-done);background:var(--st-done-bg)}
+  .pill.defer{color:var(--st-defer);background:var(--st-defer-bg)}
+
+  /* Centerpiece register — the manual §B grammar, widened to carry lead + priority */
+  .reg-plate{max-width:none}
+  .reg-plate .register-head,.reg-plate .register-row{
+    grid-template-columns:minmax(190px,1fr) 104px 168px 86px 82px 128px;gap:16px}
+  .reg-plate .register-row{align-items:start}
+  /* Lead professional cell — small-caps, same weight class as owner */
+  .lead{font-size:13px;color:var(--body);font-variant:small-caps;letter-spacing:.03em}
+  /* Priority cell — a ruled tick + label, no box */
+  .prio{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-weight:700;
+    font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .prio .pk{width:3px;align-self:stretch;min-height:15px;background:var(--ghost-line)}
+  .prio.hi{color:var(--st-open)} .prio.hi .pk{background:var(--st-open)}
+  .prio.med{color:var(--st-prog)} .prio.med .pk{background:var(--st-prog)}
+  .prio.lo{color:var(--muted)} .prio.lo .pk{background:var(--ghost-line)}
+  /* Cross-reference line under a matter */
+  .register-row .seen{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+  .register-row .seen a{color:var(--teal2);font-weight:600;text-decoration:none}
+  .register-row .seen a:hover{text-decoration:underline}
+  /* Status band divider — mirrors the ledger's year rule */
+  .reg-band{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0 8px;
+    border-bottom:1px solid var(--line);margin-top:4px}
+  .reg-band:first-child{margin-top:0}
+  .reg-band .b{font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+  .reg-band .c{font-size:10.5px;color:var(--muted);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+  @media(max-width:720px){
+    .reg-plate .register-head{display:none}
+    .reg-plate .register-row{grid-template-columns:1fr;gap:6px;padding:16px 0}
+  }
+
+  /* Status legend — a small ruled key, not boxes */
+  .legend{display:grid;grid-template-columns:repeat(2,1fr);gap:2px 30px;max-width:74ch;margin:4px 0 6px}
+  @media(max-width:560px){.legend{grid-template-columns:1fr}}
+  .legend .lr{display:flex;gap:12px;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--line2)}
+  .legend .lr .ld{font-size:12.5px;line-height:1.5;color:var(--body)}
+  .legend .lr .ld b{color:var(--ink);font-weight:600}
+
+  /* Cross-reference "where it lives" list — hairline rows */
+  .lives{border-top:1px solid var(--line2);margin:4px 0 2px;max-width:74ch}
+  .lives .lv{display:flex;gap:14px;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--line2)}
+  .lives .lv .who{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--brass);flex:none;width:150px}
+  .lives .lv .what{font-size:13px;line-height:1.5;color:var(--body)}
+  .lives .lv .what a{color:var(--teal2);font-weight:600;text-decoration:none}
+  .lives .lv .what a:hover{text-decoration:underline}
+  @media(max-width:560px){.lives .lv{flex-direction:column;gap:4px} .lives .lv .who{width:auto}}
+
+  /* Navy close (mirrors decision-log / manual) */
+  .close{margin:36px 48px 0;padding:30px 32px;background:var(--navy);border-radius:var(--surface-radius);color:#e7ecf2}
+  .close .eyebrow{color:var(--accent-strike-soft)}
+  .close p{font-family:var(--serif);font-size:15.5px;line-height:1.6;margin:0 0 14px;max-width:64ch;color:#c3ccd6}
+  .close p:last-of-type{margin-bottom:0}
+  .close b{color:#fff}
+  .close a{color:var(--gold);font-weight:600;text-decoration:none}
+  .close a:hover{text-decoration:underline}
+  .close .foliobar{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;
+    border-top:1px solid rgba(233,229,219,.16);padding-top:14px;margin-top:20px}
+  .close .foliobar span{font-weight:600;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--on-dark-dim,#c3ccd6);font-variant-numeric:tabular-nums}
+
+  /* Colophon + disclosure */
+  .foot{margin:22px 48px 0;padding:18px 0 34px;border-top:1px solid var(--line);color:var(--muted);font-size:11.5px;line-height:1.62}
+  .foot .note{display:block;font-weight:700;color:var(--dim);margin-bottom:4px}
+  .foot a{color:var(--muted)} .foot b{color:var(--muted)}
+  .foot .colophon{margin-bottom:8px}
+
+  @media(max-width:640px){ .doc,.sec,.close,.foot{padding-left:22px;padding-right:22px}
+    .close{margin-left:22px;margin-right:22px} .foot{margin-left:22px;margin-right:22px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <div class="run">
+      <span class="inst">
+        <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true" style="display:block"><rect x="1" y="1" width="22" height="22" rx="5" fill="#1a2330"/><text x="12" y="17.5" text-anchor="middle" style="font-family:var(--serif)" font-size="15" font-weight="700" fill="#15806a">D</text></svg>
+        Driftwood
+      </span>
+      <span class="marker">The Driftwood Record · Opportunity Register</span>
+    </div>
+    <div class="inner">
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Driftwood</a>
+      <div class="dwnav-links">
+        <span class="dwnav-group">
+          <a href="howitworks.html">How Driftwood&nbsp;Works</a>
+          <a href="thesis.html">How We Invest</a>
+          <a href="familyoffice.html">The Operating Model</a>
+          <a href="library.html">Coordination&nbsp;Library</a>
+          <a href="insights.html">Insights</a>
+          <a href="about.html">Our Story</a>
+        </span>
+        <span class="dwnav-group">
+          <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+          <a href="statemap.html">State Tax&nbsp;Atlas</a>
+          <a href="taxlab.html">After-Tax&nbsp;Review</a>
+        </span>
+      </div>
+    </nav>
+    <div class="om-sections">
+      <a class="t" href="record.html">The Driftwood Record</a>
+      <a href="constitution.html">Constitution</a><span class="d">·</span><a href="capital-allocation.html">Capital Allocation</a><span class="d">·</span><a href="manual.html">The Manual</a><span class="d">·</span><a href="decision-log.html">Decision Log</a><span class="d">·</span><a href="opportunity-register.html" aria-current="page">Opportunity Register</a><span class="d">·</span><a href="awor.html">Annual Review</a>
+    </div>
+
+    <!-- ── MASTHEAD / FRONT MATTER ── -->
+    <div class="doc">
+      <div class="masthead-top">
+        <div style="max-width:640px">
+          <div class="eyebrow">The standing record · one prioritized list</div>
+          <h1>The Opportunity Register.</h1>
+          <p class="lede">One place where every coordination opportunity the system has surfaced is written down, ranked, and owned — from the moment it is implied to the moment it closes. Not a fresh list each meeting; a standing one that only grows. <b>This is an illustrative sample</b> for a fictional family.</p>
+        </div>
+        <div class="stamp">
+          <div class="t">Standing register</div>
+          <div class="s">Source of record · the Merrell household</div>
+        </div>
+      </div>
+
+      <div class="frontmatter" style="margin-top:30px">
+        <div class="cell"><div class="k">Household</div><div class="v">The Merrell household</div></div>
+        <div class="cell"><div class="k">Adviser of record</div><div class="v">Driftwood</div></div>
+        <div class="cell"><div class="k">As of</div><div class="v tnum">July 2026</div></div>
+        <div class="cell"><div class="k">Version</div><div class="v tnum">rev. 6 · standing</div></div>
+        <div class="cell"><div class="k">Entries open</div><div class="v tnum">8 of 10</div></div>
+        <div class="cell"><div class="k">Next review</div><div class="v due">September 2026</div></div>
+      </div>
+    </div>
+
+    <!-- ── § I · WHAT THE REGISTER IS ── -->
+    <div class="sec ruled">
+      <div class="rec-head"><span class="rs">§ I</span><span class="rt">What the register is · how an item enters and leaves</span></div>
+      <p>Institutions do not manage opportunities from memory or from a meeting's agenda. They keep a single standing register — every open matter in one ranked list, so nothing lives only in one professional's inbox and nothing is discovered twice. This is that list for one household: <b>the source of truth from which the narrower views are drawn.</b> The Annual Review's opportunity table and the Manual's open-matters register are not separate records; they are <b>scoped views of the rows below.</b></p>
+      <div class="flow">
+        <div class="col key">
+          <div class="fk">How an item enters</div>
+          <p>A register does not begin from a wish list — it begins from evidence. Most rows arrive as <b>implied matters</b> from the <a href="score.html">Coordination Assessment</a>: a gap the diagnostic surfaced, promoted to a named opportunity with an owner and a lead professional. Others enter from a Decision Log entry that opens a follow-on, or from a life event the household reports.</p>
+        </div>
+        <div class="col key">
+          <div class="fk">How an item leaves</div>
+          <p>An item is closed only when its lead professional has signed off, or when it is deliberately <b>deferred</b> to a dependency — a deferral is a decision, kept on the record, not a disappearance. Nothing is deleted. A closed row stays visible so the register reads as history, not just a to-do list that resets.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── § II · THE REGISTER (CENTERPIECE) ── -->
+    <div class="sec ruled">
+      <div class="rec-head"><span class="rs">§ II</span><span class="rt">The Register</span></div>
+      <p style="margin-bottom:22px">Grouped by status band, ranked by priority within each. Every row carries an owner (who drives the next move), a lead professional (who must sign off to close it), its open dependencies, and where it is seen elsewhere in the record.</p>
+
+      <div class="exhibit">
+        <div class="exhibit-cap">
+          <span class="num">Register · standing</span>
+          <span class="unit">10 entries · 8 open · as of July 2026</span>
+        </div>
+        <h3 class="exhibit-title">Every coordination opportunity the system has surfaced</h3>
+        <p class="exhibit-sub">The canonical list. The Roth conversion and the business sale each appear once here, with references to both the review and the log; the scoped views elsewhere draw from these same rows.</p>
+
+        <div class="exhibit-plate reg-plate">
+          <div class="register-head">
+            <div>Opportunity</div><div>Lead</div><div>Dependencies</div><div>Owner</div><div>Priority</div><div>Status</div>
+          </div>
+
+          <!-- BAND · OPEN, NEEDS ACTION -->
+          <div class="reg-band"><span class="b">Open · needs action</span><span class="c">2 entries</span></div>
+
+          <div class="register-row">
+            <div>
+              <div class="matter">Substantiate Texas domicile for the move</div>
+              <div class="opened">Opened Sep 2024 · implied by the Assessment</div>
+              <div class="seen">Seen in <a href="awor.html">Annual Review §04</a> · <a href="decision-log.html#dr-002">Decision Log DR&#8209;002</a></div>
+            </div>
+            <div class="lead">Driftwood</div>
+            <div class="deps">
+              <span class="dep pending"><span class="box"></span>Attorney</span>
+              <span class="dep pending"><span class="box"></span>Household</span>
+            </div>
+            <div class="owner">Household</div>
+            <div><span class="prio hi"><span class="pk"></span>High</span></div>
+            <div><span class="pill open">Needs action</span></div>
+          </div>
+
+          <div class="register-row">
+            <div>
+              <div class="matter">Second-home purchase</div>
+              <div class="opened">Opened Nov 2025 · household-reported</div>
+              <div class="seen">Seen in <a href="manual.html">Manual §B</a></div>
+            </div>
+            <div class="lead">Driftwood</div>
+            <div class="deps">
+              <span class="dep done"><span class="box"></span>Attorney</span>
+              <span class="dep pending"><span class="box"></span>Portfolio</span>
+            </div>
+            <div class="owner">You</div>
+            <div><span class="prio med"><span class="pk"></span>Med</span></div>
+            <div><span class="pill open">Funding open</span></div>
+          </div>
+
+          <!-- BAND · IN PROGRESS -->
+          <div class="reg-band"><span class="b">In progress</span><span class="c">4 entries</span></div>
+
+          <div class="register-row">
+            <div>
+              <div class="matter">Sequence the business sale</div>
+              <div class="opened">Opened Jan 2026 · succession &amp; buy-sell</div>
+              <div class="seen">Seen in <a href="manual.html">Manual §B</a> · <a href="awor.html">Annual Review §04</a> · <a href="decision-log.html#dr-002">Decision Log DR&#8209;002</a></div>
+            </div>
+            <div class="lead">Business counsel</div>
+            <div class="deps">
+              <span class="dep done"><span class="box"></span>CPA</span>
+              <span class="dep done"><span class="box"></span>Attorney</span>
+              <span class="dep pending"><span class="box"></span>Insurance</span>
+              <span class="dep done"><span class="box"></span>Portfolio</span>
+            </div>
+            <div class="owner">Driftwood</div>
+            <div><span class="prio hi"><span class="pk"></span>High</span></div>
+            <div><span class="pill prog">Awaiting valuation</span></div>
+          </div>
+
+          <div class="register-row">
+            <div>
+              <div class="matter">Roth conversion ladder</div>
+              <div class="opened">Opened Feb 2026 · timed to the low-bracket window</div>
+              <div class="seen">Seen in <a href="manual.html">Manual §B</a> · <a href="awor.html">Annual Review §04</a> · <a href="decision-log.html#dr-004">Decision Log DR&#8209;004</a></div>
+            </div>
+            <div class="lead">CPA</div>
+            <div class="deps">
+              <span class="dep pending"><span class="box"></span>CPA</span>
+              <span class="dep done"><span class="box"></span>Portfolio</span>
+            </div>
+            <div class="owner">Driftwood</div>
+            <div><span class="prio hi"><span class="pk"></span>High</span></div>
+            <div><span class="pill prog">Modeling bracket</span></div>
+          </div>
+
+          <div class="register-row">
+            <div>
+              <div class="matter">RSU concentration sell-down</div>
+              <div class="opened">Opened May 2023 · on a schedule, not a signal</div>
+              <div class="seen">Seen in <a href="awor.html">Annual Review §04</a> · <a href="decision-log.html#dr-003">Decision Log DR&#8209;003</a></div>
+            </div>
+            <div class="lead">Driftwood</div>
+            <div class="deps">
+              <span class="dep done"><span class="box"></span>Portfolio</span>
+              <span class="dep pending"><span class="box"></span>CPA</span>
+            </div>
+            <div class="owner">Driftwood</div>
+            <div><span class="prio hi"><span class="pk"></span>High</span></div>
+            <div><span class="pill prog">On schedule</span></div>
+          </div>
+
+          <div class="register-row">
+            <div>
+              <div class="matter">§162 bonus to fund the ILIT premium</div>
+              <div class="opened">Opened Feb 2024 · implied by the Assessment</div>
+              <div class="seen">Seen in <a href="awor.html">Annual Review §04</a></div>
+            </div>
+            <div class="lead">CPA</div>
+            <div class="deps">
+              <span class="dep done"><span class="box"></span>CPA</span>
+              <span class="dep pending"><span class="box"></span>Attorney</span>
+            </div>
+            <div class="owner">CPA</div>
+            <div><span class="prio med"><span class="pk"></span>Med</span></div>
+            <div><span class="pill prog">In progress</span></div>
+          </div>
+
+          <!-- BAND · DEFERRED BY DESIGN -->
+          <div class="reg-band"><span class="b">Deferred by design</span><span class="c">2 entries</span></div>
+
+          <div class="register-row">
+            <div>
+              <div class="matter">Gift discounted business interests</div>
+              <div class="opened">Opened Q2 2026 · waits on the sale terms</div>
+              <div class="seen">Seen in <a href="awor.html">Annual Review §04</a> · <a href="decision-log.html#dr-005">Decision Log DR&#8209;005</a></div>
+            </div>
+            <div class="lead">Estate attorney</div>
+            <div class="deps">
+              <span class="dep done"><span class="box"></span>CPA</span>
+              <span class="dep pending"><span class="box"></span>Attorney</span>
+            </div>
+            <div class="owner">Estate attorney</div>
+            <div><span class="prio med"><span class="pk"></span>Med</span></div>
+            <div><span class="pill defer">Deferred to sale</span></div>
+          </div>
+
+          <div class="register-row">
+            <div>
+              <div class="matter">Year-end annual-exclusion gifting</div>
+              <div class="opened">Opened Jun 2026 · seasonal, recurs each year</div>
+              <div class="seen">Seen in <a href="manual.html">Manual §B</a></div>
+            </div>
+            <div class="lead">CPA</div>
+            <div class="deps">
+              <span class="dep done"><span class="box"></span>CPA</span>
+              <span class="dep pending"><span class="box"></span>Attorney</span>
+            </div>
+            <div class="owner">Driftwood</div>
+            <div><span class="prio lo"><span class="pk"></span>Low</span></div>
+            <div><span class="pill defer">Scheduled Dec</span></div>
+          </div>
+
+          <!-- BAND · CLOSED, ON THE RECORD -->
+          <div class="reg-band"><span class="b">Closed · on the record</span><span class="c">2 entries</span></div>
+
+          <div class="register-row">
+            <div>
+              <div class="matter">Route the life policy through an ILIT</div>
+              <div class="opened">Opened Feb 2024 · closed on attorney sign-off</div>
+              <div class="seen">Seen in <a href="awor.html">Annual Review §04</a> · <a href="decision-log.html#dr-001">Decision Log DR&#8209;001</a> · <a href="manual.html">Manual ledger</a></div>
+            </div>
+            <div class="lead">Estate attorney</div>
+            <div class="deps">
+              <span class="dep done"><span class="box"></span>Attorney</span>
+              <span class="dep done"><span class="box"></span>Insurance</span>
+            </div>
+            <div class="owner">Estate attorney</div>
+            <div><span class="prio lo"><span class="pk"></span>Closed</span></div>
+            <div><span class="pill done">Complete</span></div>
+          </div>
+
+          <div class="register-row">
+            <div>
+              <div class="matter">Set the household asset-location map</div>
+              <div class="opened">Opened Oct 2022 · closed on implementation</div>
+              <div class="seen">Seen in <a href="awor.html">Annual Review §04</a> · <a href="manual.html">Manual ledger</a></div>
+            </div>
+            <div class="lead">Driftwood</div>
+            <div class="deps">
+              <span class="dep done"><span class="box"></span>Portfolio</span>
+            </div>
+            <div class="owner">Driftwood</div>
+            <div><span class="prio lo"><span class="pk"></span>Closed</span></div>
+            <div><span class="pill done">Complete</span></div>
+          </div>
+
+          <!-- Provenance -->
+          <div class="exhibit-evidence">
+            <div class="k">As of</div><div class="v tnum">July 2026 · next standing review September 2026</div>
+            <div class="k">Sources</div><div class="v">Coordination Assessment (implied matters), the Decision Log, and household-reported events</div>
+            <div class="k">Method</div><div class="v">One canonical row per opportunity; the Roth conversion and the business sale are de-duplicated across the review and the manual into a single row each, with references to both</div>
+            <div class="k">Basis</div><div class="v src">Illustrative figures and matters for a fictional household — the form of the register, not a real client's list</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── § III · STATUS LEGEND ── -->
+    <div class="sec ruled">
+      <div class="rec-head"><span class="rs">§ III</span><span class="rt">Status legend</span></div>
+      <p style="margin-bottom:14px">Four states, one meaning each. A row moves between them only on evidence — a professional's sign-off, a fired dependency, or a reported event.</p>
+      <div class="legend">
+        <div class="lr"><span class="pill open">Needs action</span><span class="ld"><b>Open.</b> Surfaced and owned, but the next move has not been made. The most valuable band — where coordination is still available.</span></div>
+        <div class="lr"><span class="pill prog">In progress</span><span class="ld"><b>Live.</b> The move is underway; a dependency or a professional is actively working it toward close.</span></div>
+        <div class="lr"><span class="pill defer">Deferred</span><span class="ld"><b>Waiting, on purpose.</b> Held for a dependency — a sale price, a season. The reason to wait stays on the record.</span></div>
+        <div class="lr"><span class="pill done">Complete</span><span class="ld"><b>Closed.</b> The lead professional has signed off. It stays visible so the register reads as history, never blank.</span></div>
+      </div>
+    </div>
+
+    <!-- ── § IV · WHERE IT LIVES IN THE SYSTEM ── -->
+    <div class="sec ruled">
+      <div class="rec-head"><span class="rs">§ IV</span><span class="rt">Where it lives in the system</span></div>
+      <p style="margin-bottom:10px">This register is the source; the other records are windows onto it. Each view narrows the same rows to what its reader needs — none of them is a second, competing list.</p>
+      <div class="lives">
+        <div class="lv"><span class="who">Annual Review §04</span><span class="what">A once-a-year, ranked <a href="awor.html">extract of the open and in-progress rows</a> — the prioritized opportunities the household reviews together. A scoped view of the bands above.</span></div>
+        <div class="lv"><span class="who">The Manual §B</span><span class="what">The <a href="manual.html">open-matters register</a> — the same live rows, shown as dependencies in motion against whom each waits on. The operating-book view.</span></div>
+        <div class="lv"><span class="who">The Decision Log</span><span class="what">The <a href="decision-log.html">lineage</a> — why each matter was opened, what it assumed, and what would reopen it once closed. The register says <i>what</i>; the log says <i>why</i>.</span></div>
+        <div class="lv"><span class="who">The Assessment</span><span class="what">The <a href="score.html">Coordination Assessment</a> — where most rows begin, as an implied matter promoted to a named, owned opportunity.</span></div>
+      </div>
+    </div>
+
+    <!-- ── CLOSE ── -->
+    <div class="close">
+      <div class="eyebrow">The point</div>
+      <p>A household without a standing register does not have fewer opportunities — it has the same ones, <b>rediscovered from zero</b> each year, half of them forgotten between meetings. The register is how coordination becomes a system instead of a memory: one list, ranked, owned, and never reset. Wealth is a system, not a collection of products — and a system keeps its own book.</p>
+      <p>See it in context: <a href="awor.html">the Annual Review extract</a> · <a href="manual.html">the Manual's open matters</a> · <a href="decision-log.html">the Decision Log's lineage</a>.</p>
+      <div class="foliobar">
+        <span>§ Opportunity Register · rev. 6 · fol. 1</span>
+        <span>The Merrell household · est. 2021</span>
+      </div>
+    </div>
+
+    <!-- ── COLOPHON + DISCLOSURE ── -->
+    <div class="foot">
+      <div class="colophon">Set in Satoshi &amp; Erode · a concept for a single standing register · illustrative household, not a real client</div>
+      <span class="note">Illustrative and educational — not investment, tax, or legal advice.</span>
+      The Merrell household, matters, and priorities above are hypothetical, drawn to show the form of the register. Driftwood coordinates with your CPA and attorney; it does not provide tax or legal advice. Driftwood is a <b>registered investment adviser</b>; Form ADV and Form CRS are available at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Privacy-first analytics (Plausible) -->
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>The Household Constitution — a sample. — Driftwood</title>
+<meta name="description" content="The family's governing instrument: purpose, decision rights, and the guardrails every decision is measured against. The supreme document the Manual, Decision Log, Capital Allocation Policy, and Annual Review all operate under. An illustrative sample for a fictional family. Not advice." />
+<link rel="canonical" href="https://alecmessino.github.io/project/constitution.html" />
+<link rel="icon" href="favicon.svg" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="The Household Constitution — a sample." />
+<meta property="og:description" content="The family's governing instrument: purpose, decision rights, and the guardrails every decision is measured against." />
+<meta property="og:url" content="https://alecmessino.github.io/project/constitution.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="The Household Constitution — a sample." />
+<meta name="twitter:description" content="The family's governing instrument: purpose, decision rights, and the guardrails every decision is measured against." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
+<style>
+  /* Page-local scaffolding only — masthead type scale + section padding (mirrors decision-log /
+     manual). Record components (frontmatter, stamp, rec-head, exhibit, foliobar, colophon) live in
+     the shared driftwood.css. Tokens only; squared; no rounded corners. */
+  /* Dark-surface + card tokens the shared sheet references but leaves to the page (same page-local
+     pattern as ledger.html / hub.html / index.html). */
+  :root{ --card:#ffffff; --on-dark-dim:#c3ccd6; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:16px/1.62 var(--sans);
+    letter-spacing:-.004em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1040px;margin:34px auto;padding:0 20px 72px}
+  .frame{background:var(--bg);overflow:hidden;}
+  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
+    border-bottom:1px solid var(--line);font-family:var(--sans)}
+  .run .inst{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .inner{margin:0 7px 7px}
+
+  /* Masthead / front matter */
+  .doc{padding:40px 48px 6px}
+  .masthead-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap}
+  .eyebrow{font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:15px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(30px,2.8vw+15px,44px);line-height:1.06;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:18ch}
+  .lede{font-family:var(--serif);font-size:18.5px;line-height:1.55;color:var(--dim);margin:0;max-width:56ch}
+  .lede b{color:var(--ink);font-weight:600}
+
+  /* Article sections — typography + hairline rules, not boxes */
+  .art{padding:30px 48px 4px;border-top:1px solid var(--line)}
+  .art.soft{background:var(--soft)}
+  .art p{font-size:14.5px;line-height:1.66;color:var(--body);max-width:72ch;margin:0 0 14px}
+  .art p b{color:var(--ink);font-weight:600}
+  .art .art-note{font-size:12px;color:var(--muted);font-style:italic;font-family:var(--serif);max-width:64ch}
+
+  /* Preamble — the adopted creed as a serif pull-statement */
+  .preamble{padding:34px 48px 30px;border-top:3px double var(--frame-line);border-bottom:1px solid var(--line);text-align:center}
+  .preamble .pk{font-weight:700;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
+  .preamble .creed{font-family:var(--serif);font-weight:500;font-size:clamp(23px,2.1vw+14px,32px);line-height:1.22;color:var(--ink);margin:0 auto;letter-spacing:-.012em;max-width:20ch}
+  .preamble .cite{font-size:12px;color:var(--muted);margin:18px 0 0}
+  .preamble .cite a{color:var(--teal2);text-decoration:none;font-weight:600}
+  .preamble .cite a:hover{text-decoration:underline}
+
+  /* Purpose pull-line (Art. I) */
+  .purpose{font-family:var(--serif);font-size:19px;line-height:1.5;color:var(--ink);border-left:2px solid var(--accent-strike);padding:4px 0 4px 20px;margin:2px 0 18px;max-width:60ch}
+
+  /* Governed-for roster (Art. II) — hairline list, no box */
+  .roster{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:6px 0 8px}
+  @media(max-width:720px){.roster{grid-template-columns:1fr 1fr}}
+  @media(max-width:480px){.roster{grid-template-columns:1fr}}
+  .roster .r{background:var(--card);padding:14px 16px}
+  .roster .rn{font-weight:700;font-size:14px;color:var(--ink);margin-bottom:3px}
+  .roster .rr{font-size:12px;color:var(--muted);line-height:1.45}
+
+  /* Guardrail list (Art. IV) — numbered hairline entries */
+  .guards{list-style:none;margin:6px 0 10px;padding:0;counter-reset:g;display:flex;flex-direction:column;gap:0}
+  .guards li{position:relative;padding:13px 0 13px 46px;border-top:1px solid var(--line2);font-size:14px;line-height:1.55;color:var(--body);max-width:74ch}
+  .guards li:first-child{border-top:none}
+  .guards li::before{counter-increment:g;content:"§ " counter(g,upper-roman);position:absolute;left:0;top:14px;
+    font-weight:700;font-size:10px;letter-spacing:.08em;color:var(--ghost-line);font-variant-numeric:tabular-nums}
+  .guards li b{color:var(--ink);font-weight:600}
+
+  /* Standing-rules list (Art. V) */
+  .rules{list-style:none;margin:4px 0 10px;padding:0;display:flex;flex-direction:column;gap:10px}
+  .rules li{position:relative;padding-left:16px;font-size:14px;line-height:1.55;color:var(--body);max-width:72ch}
+  .rules li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;background:var(--ghost-line)}
+  .rules li b{color:var(--ink);font-weight:600}
+  .rules a{color:var(--teal2);text-decoration:none;font-weight:600}
+  .rules a:hover{text-decoration:underline}
+
+  /* Exhibit wrapper — the ONE framed centerpiece plate */
+  .plate{margin:22px 0 8px;padding:26px 28px 24px;border:1px solid var(--frame-line);border-top:2px solid var(--ink);background:var(--card)}
+  .plate .exhibit{max-width:none}
+  @media(max-width:640px){.plate{padding:20px 18px 18px}}
+  .plate-scroll{overflow-x:auto}
+
+  /* Navy close (mirrors manual.html) */
+  .close{background:var(--navy);padding:40px 48px 36px;margin-top:34px}
+  .close .eyebrow{color:var(--accent-strike-soft)}
+  .close h2{font-family:var(--sans);font-weight:700;font-size:clamp(24px,2.4vw+13px,34px);line-height:1.1;letter-spacing:-.022em;color:#f1ede3;margin:0 0 16px;max-width:22ch}
+  .close p{font-family:var(--serif);font-size:17px;line-height:1.55;color:var(--on-dark-dim);margin:0 0 26px;max-width:58ch}
+  .close .foliobar{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(233,229,219,.16);padding-top:14px}
+  .close .foliobar span{font-weight:600;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--on-dark-dim);font-variant-numeric:tabular-nums}
+
+  /* Colophon + disclosure */
+  .foot{padding:20px 48px 34px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;line-height:1.65}
+  .foot .note{color:var(--muted);font-weight:600}
+  .foot a{color:var(--muted)} .foot b{color:var(--muted)}
+
+  @media(max-width:640px){ .doc,.art,.preamble,.close,.foot{padding-left:22px;padding-right:22px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <div class="run">
+      <span class="inst">Driftwood</span>
+      <span class="marker">The Driftwood Record · Constitution</span>
+    </div>
+    <div class="inner">
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Driftwood</a>
+      <div class="dwnav-links">
+        <span class="dwnav-group">
+          <a href="howitworks.html">How Driftwood&nbsp;Works</a>
+          <a href="thesis.html">How We Invest</a>
+          <a href="familyoffice.html">The Operating Model</a>
+          <a href="library.html">Coordination&nbsp;Library</a>
+          <a href="insights.html">Insights</a>
+          <a href="about.html">Our Story</a>
+        </span>
+        <span class="dwnav-group">
+          <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+          <a href="statemap.html">State Tax&nbsp;Atlas</a>
+          <a href="taxlab.html">After-Tax&nbsp;Review</a>
+        </span>
+      </div>
+    </nav>
+    <div class="om-sections">
+      <a class="t" href="record.html">The Driftwood Record</a>
+      <a href="constitution.html" aria-current="page">Constitution</a><span class="d">·</span><a href="capital-allocation.html">Capital Allocation</a><span class="d">·</span><a href="manual.html">The Manual</a><span class="d">·</span><a href="decision-log.html">Decision Log</a><span class="d">·</span><a href="opportunity-register.html">Opportunity Register</a><span class="d">·</span><a href="awor.html">Annual Review</a>
+    </div>
+
+    <!-- ── MASTHEAD / FRONT MATTER ── -->
+    <div class="doc">
+      <div class="masthead-top">
+        <div style="max-width:640px">
+          <div class="eyebrow">The supreme governing instrument</div>
+          <h1>The Household Constitution.</h1>
+          <p class="lede">Every other record — the Manual, the Decision Log, the Capital Allocation Policy, the Annual Review — operates under this one. It fixes what the wealth is for, who decides what, and the guardrails every decision is measured against. <b>This is an illustrative sample</b> for a fictional family.</p>
+        </div>
+        <div class="stamp">
+          <div class="t">Ratified</div>
+          <div class="s">Policy of record · the Merrell household</div>
+        </div>
+      </div>
+
+      <div class="frontmatter" style="margin-top:30px">
+        <div class="cell"><div class="k">Household</div><div class="v">The Merrell household</div></div>
+        <div class="cell"><div class="k">Adopted</div><div class="v tnum">April 2021</div></div>
+        <div class="cell"><div class="k">Ratified by</div><div class="v">The family &amp; Driftwood</div></div>
+        <div class="cell"><div class="k">Amendment</div><div class="v tnum">Amend. 3 · current</div></div>
+        <div class="cell"><div class="k">As of</div><div class="v tnum">July 2026</div></div>
+        <div class="cell"><div class="k">Next review</div><div class="v due">September 2026</div></div>
+      </div>
+      <p class="art-note" style="margin-top:14px">A constitution is not a plan; it is the instrument a plan answers to. It changes rarely, by amendment, and only by the family's hand together with the adviser of record.</p>
+    </div>
+
+    <!-- ── PREAMBLE — the adopted creed ── -->
+    <div class="preamble">
+      <div class="pk">Preamble</div>
+      <p class="creed">Financial decisions should not surprise one another.</p>
+      <p class="cite">Adopted verbatim as the family's first principle from <a href="principles.html">The Driftwood Principles</a>, and ratified below into the Articles that give it force.</p>
+    </div>
+
+    <!-- ── ARTICLE I · PURPOSE ── -->
+    <div class="art">
+      <div class="rec-head"><span class="rs">Art. I</span><span class="rt">Purpose of the wealth</span></div>
+      <p class="rec-lede" style="margin-bottom:16px">Before a single allocation is made, the family states what the wealth is for. Every guardrail below exists to serve this sentence, and any decision that cannot be traced back to it is out of order.</p>
+      <p class="purpose">This wealth exists to keep the family independent, educate the next generation, and outlast us.</p>
+      <p>Independence first: the household should never be forced into a decision — a sale, a withdrawal, a move — by a shortfall it could have foreseen. Education second: the next generation inherits not only capital but the framework for governing it. Endurance third: the structure is built to work across decades and successions, not to optimize any single year. Where these three pull against one another, they are weighed in that order.</p>
+    </div>
+
+    <!-- ── ARTICLE II · WHO WE GOVERN FOR ── -->
+    <div class="art soft">
+      <div class="rec-head"><span class="rs">Art. II</span><span class="rt">Who we govern for</span></div>
+      <p class="rec-lede" style="margin-bottom:16px">A household is not a single decision-maker. This Article names the constituents the wealth is governed for, so that no decision is optimized for one at the silent expense of another.</p>
+      <div class="roster">
+        <div class="r"><div class="rn">Tom &amp; Dana Merrell</div><div class="rr">Principals · the founding generation</div></div>
+        <div class="r"><div class="rn">The next generation</div><div class="rr">Two children · education and eventual stewardship</div></div>
+        <div class="r"><div class="rn">The grandchildren</div><div class="rr">Beneficiaries · the endurance horizon</div></div>
+      </div>
+      <p class="art-note">The family is fictional and the constituents are illustrative. In a real Constitution this roster is explicit because decision rights (Art. III) and guardrails (Art. IV) mean nothing without naming whom they protect.</p>
+    </div>
+
+    <!-- ── ARTICLE III · DECISION RIGHTS — THE CENTERPIECE ── -->
+    <div class="art">
+      <div class="rec-head"><span class="rs">Art. III</span><span class="rt">Decision rights</span></div>
+      <p class="rec-lede" style="margin-bottom:6px">The heart of the instrument. For each domain, one line settles who decides, who must be consulted, and the guardrail the decision may not cross. Ambiguity about who decides is itself a risk; this charter removes it.</p>
+
+      <div class="plate">
+        <div class="exhibit">
+          <div class="exhibit-cap">
+            <span class="num">Charter · Art. III</span>
+            <span class="unit">Decision rights · v1.0</span>
+          </div>
+          <div class="exhibit-title">The Decision-Rights Charter</div>
+          <p class="exhibit-sub">Who decides, who is consulted, and the guardrail each decision is measured against — by domain.</p>
+          <div class="plate-scroll">
+          <table class="exhibit-table">
+            <thead>
+              <tr>
+                <th>Domain</th>
+                <th>Decision</th>
+                <th>Who decides</th>
+                <th>Who is consulted</th>
+                <th>The guardrail</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="name">Investments</td>
+                <td>Rebalancing &amp; allocation</td>
+                <td>Driftwood decides</td>
+                <td>Family consulted</td>
+                <td>No single position &gt; 15% of liquid net worth</td>
+              </tr>
+              <tr>
+                <td class="name">Estate</td>
+                <td>Gifting &amp; transfers</td>
+                <td>Family decides</td>
+                <td>Estate attorney + Driftwood</td>
+                <td>No gift that impairs 24 months of liquidity</td>
+              </tr>
+              <tr>
+                <td class="name">Residency</td>
+                <td>Domicile &amp; large sales</td>
+                <td>Family decides</td>
+                <td>CPA + Driftwood</td>
+                <td>Sequenced before realization, never after</td>
+              </tr>
+              <tr>
+                <td class="name">Tax</td>
+                <td>Annual Roth &amp; harvest</td>
+                <td>Driftwood decides</td>
+                <td>Family consulted</td>
+                <td>No conversion year crossing an IRMAA cliff</td>
+              </tr>
+              <tr>
+                <td class="name">Liquidity</td>
+                <td>Reserve floor</td>
+                <td>Driftwood decides</td>
+                <td>Family consulted</td>
+                <td>90 days operating cash, untouched</td>
+              </tr>
+              <tr>
+                <td class="name">Insurance</td>
+                <td>Coverage review</td>
+                <td>Family decides</td>
+                <td>Advisor + Driftwood</td>
+                <td>Coverage tracks the estate as it grows</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+          <div class="exhibit-evidence">
+            <div class="k">Purpose</div><div class="v">This wealth exists to keep the family independent, educate the next generation, and outlast us — the charter assigns each decision to the party best placed to serve that end.</div>
+            <div class="k">Method</div><div class="v">Each domain resolved to one accountable decider and a required consultation; the guardrail states the boundary the decision may not cross without amendment.</div>
+            <div class="k">Inputs</div><div class="v tnum">6 domains · liquid net worth, 24-month liquidity, 90-day reserve, 15% position ceiling</div>
+            <div class="k">Source</div><div class="v src">Ratified household charter, cross-referenced to the Manual's Decision Ledger and the Decision Log.</div>
+            <div class="k">As of</div><div class="v tnum">As of July 2026 · v1.0</div>
+          </div>
+        </div>
+      </div>
+      <p class="art-note">Illustrative thresholds for a fictional family. The point is not the specific numbers but that each decision has one owner, one required conversation, and one line it cannot cross quietly.</p>
+    </div>
+
+    <!-- ── ARTICLE IV · GUARDRAILS ── -->
+    <div class="art soft">
+      <div class="rec-head"><span class="rs">Art. IV</span><span class="rt">Guardrails</span></div>
+      <p class="rec-lede" style="margin-bottom:16px">The standing limits that hold across every domain, independent of who is deciding. A guardrail is not a target to optimize toward; it is a boundary a decision may not cross without a formal amendment to this Constitution.</p>
+      <ol class="guards">
+        <li><b>Concentration.</b> No single position may exceed 15% of liquid net worth. Involuntary drift above the line (vesting, appreciation) opens a scheduled, bracket-aware sell-down — not a market-timing debate.</li>
+        <li><b>Liquidity floor.</b> 90 days of operating cash is held untouched at all times, and no gift or purchase may impair 24 months of household liquidity.</li>
+        <li><b>Sequencing.</b> Residency, large sales, and realizations are sequenced before the taxable event, never reconstructed after it. Order is treated as a decision, not an accident.</li>
+        <li><b>Bracket discipline.</b> No planned Roth conversion may cross an IRMAA surcharge cliff or push the household through a bracket it did not choose.</li>
+        <li><b>Coverage tracks the estate.</b> Insurance is reviewed against the estate as it grows, so that liquidity to settle a liability arrives when the liability is due.</li>
+      </ol>
+      <p class="art-note">Where a guardrail and an opportunity conflict, the guardrail holds and the opportunity is logged to the Decision Log with the reason it was declined — so the record shows what was chosen against, not only what was chosen.</p>
+    </div>
+
+    <!-- ── ARTICLE V · STANDING RULES & AMENDMENT ── -->
+    <div class="art">
+      <div class="rec-head"><span class="rs">Art. V</span><span class="rt">Standing rules &amp; amendment</span></div>
+      <p class="rec-lede" style="margin-bottom:16px">How this instrument governs the others, and how it changes. The Constitution is a versioned document: it is amended, never quietly rewritten, and every amendment is entered in the Change Log so the reasoning survives the revision.</p>
+      <ul class="rules">
+        <li><b>Supremacy.</b> Where a lower record — the Manual, the Capital Allocation Policy, the Decision Log — conflicts with this Constitution, the Constitution controls, and the conflict is resolved at the next Operating Session.</li>
+        <li><b>Amendment.</b> This instrument is amended only by the family together with the adviser of record. This is <b>Amendment 3</b>, current as of July 2026; each amendment carries its own date, its reason, and the hand that made it.</li>
+        <li><b>Standing review.</b> The Constitution is read against the family's circumstances at least annually. The next standing review is September 2026; a material life event (a sale, a move, a succession) can open a review sooner.</li>
+        <li><b>Provenance.</b> Nothing here is deleted. Superseded language is retained, marked, and traceable to the amendment that changed it — the same discipline the <a href="decision-log.html">Decision Log</a> keeps for decisions, this Constitution keeps for its own text via the Manual's <a href="manual.html#changelog">Change Log</a>.</li>
+      </ul>
+      <p class="art-note">Amendment 1 fixed the guardrail thresholds; Amendment 2 added the sequencing rule after the Texas re-domicile; Amendment 3 (current) ratified the Decision-Rights Charter of Art. III. Illustrative history for a fictional family.</p>
+    </div>
+
+    <!-- ── CLOSE ── -->
+    <div class="close">
+      <div class="eyebrow">The point</div>
+      <h2>Institutions govern by a constitution. A household deserves the same.</h2>
+      <p>A collection of products has no governing document; a system does. This instrument is what makes the family's wealth a system rather than a set of accounts that happen to be held by the same name — one framework the whole household, and every professional around it, decides against.</p>
+      <div class="foliobar">
+        <span>§ Constitution · amend. 3 · fol. 1</span>
+        <span>The Merrell household · adopted 2021</span>
+      </div>
+    </div>
+
+    <!-- ── COLOPHON + DISCLOSURE ── -->
+    <div class="foot">
+      <div class="colophon" style="margin-bottom:8px">Set in Satoshi &amp; Erode · a concept for a household governing instrument · illustrative family, not a real client</div>
+      <span class="note">Illustrative and educational — not investment, tax, or legal advice.</span>
+      The household, decision rights, guardrails, and thresholds above are hypothetical, drawn to show the form of the instrument. Driftwood coordinates with your CPA and attorney; it does not provide tax or legal advice. Driftwood is a <b>registered investment adviser</b>; Form ADV and Form CRS are available at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

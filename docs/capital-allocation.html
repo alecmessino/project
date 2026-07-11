@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>The Capital Allocation Policy — a sample — Driftwood</title>
+<meta name="description" content="The household's governing policy for how capital is deployed — goals, buckets, and subsystems coordinated as one, not a portfolio model in isolation. It sits under the Constitution and feeds the Decision Log. An illustrative sample for a fictional family. Not advice." />
+<link rel="canonical" href="https://alecmessino.github.io/project/capital-allocation.html" />
+<link rel="icon" href="favicon.svg" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Driftwood" />
+<meta property="og:title" content="The Capital Allocation Policy — a sample" />
+<meta property="og:description" content="A coordination-first policy for how a household's capital is deployed across goals, buckets, and subsystems." />
+<meta property="og:url" content="https://alecmessino.github.io/project/capital-allocation.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="The Capital Allocation Policy — a sample" />
+<meta name="twitter:description" content="A coordination-first policy for how a household's capital is deployed across goals, buckets, and subsystems." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
+<style>
+  /* Page-local scaffolding only: masthead type scale, section padding, and the navy
+     close/colophon. Record components (frontmatter, stamp, rec-head, exhibit, exhibit-table,
+     exhibit-evidence) live in the shared driftwood.css. Surface + on-dark tokens are declared
+     here exactly as the sibling record pages declare them; no hardcoded hex in markup or rules. */
+  :root{ --card:#fff; --on-dark:#e7ecf2; --on-dark-strong:#f1ede3; --on-dark-dim:#9aa3ae; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:16px/1.62 var(--sans);
+    letter-spacing:-.004em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1040px;margin:34px auto;padding:0 20px 72px}
+  .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
+  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
+    border-bottom:1px solid var(--line);font-family:var(--sans)}
+  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .inner{margin:0 7px 7px}
+
+  /* Masthead type scale */
+  .doc{padding:44px 44px 6px}
+  .masthead-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:14px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px, 2.6vw + 15px, 42px);line-height:1.06;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
+  .lede{font-family:var(--serif);font-size:18.5px;line-height:1.55;color:var(--dim);margin:0;max-width:60ch}
+  .lede b{color:var(--ink);font-weight:600}
+
+  /* Section padding */
+  .sec{padding:26px 44px 6px}
+  .sec p.body{font-size:14.5px;line-height:1.64;color:var(--body);max-width:72ch;margin:0 0 14px}
+  .sec p.body b{color:var(--ink);font-weight:600}
+
+  /* Objectives — hairline-keyed list (typography + rule, not a box) */
+  .obj{list-style:none;margin:6px 0 4px;padding:0;display:flex;flex-direction:column;gap:14px}
+  .obj li{padding:2px 0 2px 18px;border-left:1px solid var(--line);max-width:74ch}
+  .obj .art{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike);display:block;margin-bottom:6px}
+  .obj p{font-size:14px;line-height:1.6;color:var(--body);margin:0}
+  .obj p b{color:var(--ink);font-weight:600}
+
+  /* Section-local ruled list (sequencing / triggers) */
+  .ruleset{list-style:none;margin:8px 0 4px;padding:0;display:flex;flex-direction:column}
+  .ruleset li{padding:13px 0;border-bottom:1px solid var(--line2);font-size:14px;line-height:1.58;color:var(--body);max-width:76ch}
+  .ruleset li:first-child{border-top:1px solid var(--line2)}
+  .ruleset li b{color:var(--ink);font-weight:600}
+  .ruleset .rk{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-strike);margin-right:10px}
+
+  /* Navy close (mirrors manual.html) */
+  .close{margin:40px 0 0;background:var(--navy);padding:40px 48px 34px}
+  .close .eyebrow{color:var(--accent-strike-soft)}
+  .close h2{font-family:var(--sans);font-weight:700;font-size:clamp(24px,2.4vw+13px,34px);line-height:1.1;letter-spacing:-.022em;color:var(--on-dark-strong);margin:0 0 16px;max-width:22ch}
+  .close p{font-family:var(--serif);font-size:17px;line-height:1.55;color:var(--on-dark-dim);margin:0 0 24px;max-width:60ch}
+  .close a{color:var(--accent-strike-soft);font-weight:600;text-decoration:none}
+  .close a:hover{text-decoration:underline}
+  .close .foliobar{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(233,229,219,.16);padding-top:14px}
+  .close .foliobar span{font-weight:600;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--on-dark-dim);font-variant-numeric:tabular-nums}
+
+  /* Colophon + disclosure */
+  .foot{margin:0;padding:20px 48px 34px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;line-height:1.65}
+  .foot .colophon{margin-bottom:8px}
+  .foot .note{display:block;color:var(--dim);font-weight:700;margin-bottom:4px}
+  .foot a{color:var(--muted)} .foot b{color:var(--muted)}
+
+  @media(max-width:640px){ .doc,.sec{padding-left:22px;padding-right:22px} .close,.foot{padding-left:22px;padding-right:22px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <div class="run">
+      <span class="inst">Driftwood</span>
+      <span class="marker">The Driftwood Record · Capital Allocation Policy</span>
+    </div>
+    <div class="inner">
+    <nav class="dwnav" aria-label="Driftwood">
+      <a class="brand" href="index.html">Driftwood</a>
+      <div class="dwnav-links">
+        <span class="dwnav-group">
+          <a href="howitworks.html">How Driftwood&nbsp;Works</a>
+          <a href="thesis.html">How We Invest</a>
+          <a href="familyoffice.html">The Operating Model</a>
+          <a href="library.html">Coordination&nbsp;Library</a>
+          <a href="insights.html">Insights</a>
+          <a href="about.html">Our Story</a>
+        </span>
+        <span class="dwnav-group">
+          <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+          <a href="statemap.html">State Tax&nbsp;Atlas</a>
+          <a href="taxlab.html">After-Tax&nbsp;Review</a>
+        </span>
+      </div>
+    </nav>
+    <div class="om-sections">
+      <a class="t" href="record.html">The Driftwood Record</a>
+      <a href="constitution.html">Constitution</a><span class="d">·</span><a href="capital-allocation.html" aria-current="page">Capital Allocation</a><span class="d">·</span><a href="manual.html">The Manual</a><span class="d">·</span><a href="decision-log.html">Decision Log</a><span class="d">·</span><a href="opportunity-register.html">Opportunity Register</a><span class="d">·</span><a href="awor.html">Annual Review</a>
+    </div>
+
+    <!-- ── MASTHEAD / FRONT MATTER ── -->
+    <div class="doc">
+      <div class="masthead-top">
+        <div style="max-width:640px">
+          <div class="eyebrow">The Driftwood Record · Policy of record</div>
+          <h1>The Capital Allocation Policy.</h1>
+          <p class="lede">Not a portfolio model in isolation, but the household's governing policy for how capital is deployed — across goals, buckets, and subsystems, coordinated as one. It states the decision rights the <a href="constitution.html">Constitution</a> grants, and every deployment made under it is logged as a decision in the <a href="decision-log.html">Decision Log</a>. <b>This is an illustrative sample</b> for a fictional family.</p>
+        </div>
+        <div class="stamp">
+          <div class="t">Policy of record</div>
+          <div class="s">Adopted under the Constitution</div>
+        </div>
+      </div>
+
+      <div class="frontmatter" style="margin-top:30px">
+        <div class="cell"><div class="k">Household</div><div class="v">The Merrell household</div></div>
+        <div class="cell"><div class="k">Adviser of record</div><div class="v">Driftwood</div></div>
+        <div class="cell"><div class="k">Established</div><div class="v tnum">June 2021</div></div>
+        <div class="cell"><div class="k">Policy revision</div><div class="v tnum">Rev. 2 · current</div></div>
+        <div class="cell"><div class="k">As of</div><div class="v tnum">July 2026</div></div>
+        <div class="cell"><div class="k">Next review</div><div class="v due">September 2026</div></div>
+      </div>
+    </div>
+
+    <!-- ── § I · OBJECTIVES & PURPOSE ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ I</span><span class="rt">Objectives &amp; Purpose</span></div>
+      <p class="rec-lede" style="margin-bottom:16px">A household deserves what an institution takes for granted: capital deployed against stated objectives, not moved account-by-account. Each objective below is an exercise of authority the Constitution already grants — the policy does not create decision rights, it spends them deliberately.</p>
+      <ul class="obj">
+        <li>
+          <span class="art">Article II — Purpose of capital</span>
+          <p><b>Fund the family's obligations before its ambitions.</b> Near-term commitments — the house, education, the reserve — are provisioned in full before growth capital is measured. Coordination means the sequence is fixed in advance, not negotiated under pressure.</p>
+        </li>
+        <li>
+          <span class="art">Article III — Risk the household can hold</span>
+          <p><b>Carry only the risk the household can hold through a full cycle.</b> The concentrated position is treated as risk to be retired on schedule, not a conviction to be defended. The policy allocation is the shape of risk the family has agreed to live inside.</p>
+        </li>
+        <li>
+          <span class="art">Article IV — One system, not a collection</span>
+          <p><b>Deploy every dollar as part of one system.</b> Tax location, estate design, and the investment engine are subsystems of a single policy — a change to one is priced against the others before it is made, never in isolation.</p>
+        </li>
+        <li>
+          <span class="art">Article VI — Continuity across advisers and years</span>
+          <p><b>Make the policy legible to the family and its successors.</b> The allocation, its ranges, and the reason for each band are written down so the plan survives a change of adviser, a change of markets, or a change of mind — as evidence, not memory.</p>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── § II · THE POLICY ALLOCATION (CENTERPIECE) ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ II</span><span class="rt">The Policy Allocation</span></div>
+      <p class="rec-lede" style="margin-bottom:22px">The one framed artifact of this record: the household's capital, deployed by purpose. Each bucket carries a target, a range it may drift inside without action, its funding source, and the single condition that reopens it. The buckets are goals and subsystems — not asset classes — because that is how the household actually spends and coordinates.</p>
+
+      <div class="exhibit-plate">
+        <div class="exhibit">
+          <div class="exhibit-cap">
+            <span class="num">Exhibit · Policy allocation</span>
+            <span class="unit">% of investable assets · targets sum to 100</span>
+          </div>
+          <h3 class="exhibit-title">Capital deployed by purpose</h3>
+          <p class="exhibit-sub">Buckets, not asset classes. Ranges are the drift a bucket may take before a rebalance is required; the trigger is the condition that forces the move.</p>
+
+          <div style="overflow-x:auto">
+          <table class="exhibit-table">
+            <thead>
+              <tr>
+                <th>Bucket / purpose</th>
+                <th class="n">Target</th>
+                <th class="n">Range (min&#8211;max)</th>
+                <th>Funding source</th>
+                <th>Rebalance trigger</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="name">Operating reserve<br><span style="font-size:12px;color:var(--muted)">Named-risk buffer &amp; near-term cash</span></td>
+                <td class="n tnum">5%</td>
+                <td class="n tnum">3&#8211;8%</td>
+                <td>Cash &amp; short duration</td>
+                <td>&lt; 3% for two quarters</td>
+              </tr>
+              <tr>
+                <td class="name">Near-term goals<br><span style="font-size:12px;color:var(--muted)">House &amp; education, &lt; 5 yr</span></td>
+                <td class="n tnum">10%</td>
+                <td class="n tnum">8&#8211;15%</td>
+                <td>Taxable book</td>
+                <td>Funding date inside 24 months</td>
+              </tr>
+              <tr>
+                <td class="name">Core growth<br><span style="font-size:12px;color:var(--muted)">The long-horizon engine</span></td>
+                <td class="n tnum">55%</td>
+                <td class="n tnum">45&#8211;65%</td>
+                <td>Structural Alpha book</td>
+                <td>Band breach at quarter-end</td>
+              </tr>
+              <tr>
+                <td class="name">Concentration in transition<br><span style="font-size:12px;color:var(--muted)">Single-employer RSU position</span></td>
+                <td class="n tnum">15% &#8594; 0</td>
+                <td class="n tnum">0&#8211;15%</td>
+                <td>Structural Alpha (transition)</td>
+                <td>Off the RSU sell-down schedule</td>
+              </tr>
+              <tr>
+                <td class="name">Estate &amp; gifting sleeve<br><span style="font-size:12px;color:var(--muted)">Provisioned for transfer</span></td>
+                <td class="n tnum">10%</td>
+                <td class="n tnum">7&#8211;13%</td>
+                <td>Taxable &amp; trust</td>
+                <td>Annual exclusion / exemption change</td>
+              </tr>
+              <tr>
+                <td class="name">Private / alternatives<br><span style="font-size:12px;color:var(--muted)">Illiquid, opportunistic</span></td>
+                <td class="n tnum">5%</td>
+                <td class="n tnum">0&#8211;10%</td>
+                <td>Core growth reallocation</td>
+                <td>Commitment pacing off plan</td>
+              </tr>
+              <tr class="total">
+                <td class="name">Policy allocation</td>
+                <td class="n tnum grand">100%</td>
+                <td class="n nil">&#8212;</td>
+                <td class="nil">&#8212;</td>
+                <td class="nil">&#8212;</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <div class="exhibit-notes">
+            <p>The concentration bucket funds down to zero on the sell-down schedule; its share migrates into Core growth as the position is retired. Ranges are policy bands, not forecasts — a bucket inside its range requires no action.</p>
+          </div>
+
+          <div class="exhibit-evidence">
+            <div class="k">Purpose</div><div class="v">State, in one place, how the household's capital is deployed by goal and subsystem, and the conditions that reopen each bucket.</div>
+            <div class="k">Method</div><div class="v">Targets set to the family's funded obligations and agreed risk; ranges set as the drift tolerated before a coordinated rebalance is required.</div>
+            <div class="k">Inputs</div><div class="v tnum">Six buckets · targets summing to 100% · min&#8211;max policy bands · one rebalance trigger per bucket.</div>
+            <div class="k">Source</div><div class="v src">Illustrative policy bands for a fictional household — not a live account, holdings statement, or recommendation. As of July 2026 · v1.0.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── § III · LIQUIDITY POLICY ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ III</span><span class="rt">Liquidity Policy</span></div>
+      <p class="rec-lede" style="margin-bottom:18px">Liquidity is the first bucket funded and the last spent. The reserve floor is a hard constraint on the whole allocation: no rebalance, gift, or commitment may draw the operating reserve below its floor. When a shock does breach it, the policy names how it is rebuilt — before growth capital is touched.</p>
+      <div class="exhibit" style="max-width:640px">
+        <table class="exhibit-table">
+          <thead>
+            <tr><th>Reserve provision</th><th class="n">Level</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="name">Reserve floor</td><td class="n tnum">3%</td><td>Rebuild within two quarters before other deployment</td></tr>
+            <tr><td class="name">Target reserve</td><td class="n tnum">5%</td><td>Standing — the funded resting level</td></tr>
+            <tr><td class="name">Upper bound</td><td class="n tnum">8%</td><td>Sweep the excess into Core growth</td></tr>
+          </tbody>
+        </table>
+        <div class="exhibit-notes">
+          <p class="source">Illustrative reserve policy for a fictional household — not a live cash position. As of July 2026.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── § IV · REBALANCING & SEQUENCING ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ IV</span><span class="rt">Rebalancing &amp; Sequencing Rules</span></div>
+      <p class="rec-lede" style="margin-bottom:14px">Rebalancing is a coordinated act, not a reflex. A band breach opens the question; the sequencing rules decide how it is answered so that the tax, estate, and liquidity subsystems are priced together, in a fixed order of precedence.</p>
+      <ul class="ruleset">
+        <li><span class="rk">First</span><b>Cash flow before sale.</b> Fund a rebalance from new contributions, dividends, and the reserve's upper band before any position is sold — a sale is the last lever, not the first.</li>
+        <li><span class="rk">Then</span><b>The schedule outranks the signal.</b> The concentration bucket is retired on its calendar, not on price. A band breach never accelerates or defers the RSU sell-down; that sequence is set in the <a href="decision-log.html">Decision Log</a>.</li>
+        <li><span class="rk">Then</span><b>Tax-aware order of sale.</b> When a sale is required, harvest losses first, then long-term lots in the lowest-bracket year available, coordinated with the CPA — realized gains are a cost the policy spends deliberately.</li>
+        <li><span class="rk">Then</span><b>Estate before growth on the downshift.</b> Capital leaving Core growth funds the estate &amp; gifting sleeve to target before it funds alternatives — transfer capacity is provisioned ahead of opportunistic risk.</li>
+        <li><span class="rk">Always</span><b>Every deployment is logged.</b> Each executed rebalance is written to the Decision Log as a dated decision — what was done, why, and what it assumed — so the policy and its execution stay one record.</li>
+      </ul>
+    </div>
+
+    <!-- ── § V · REVIEW TRIGGERS ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ V</span><span class="rt">Review Triggers</span></div>
+      <p class="rec-lede" style="margin-bottom:14px">The policy is reviewed on the standing September date — and reopened before it, out of cycle, whenever one of the conditions below fires. These mirror the &ldquo;Reopens if&rdquo; field of the Decision Log: a review is an act triggered by an event, not a re-read on a calendar.</p>
+      <ul class="ruleset">
+        <li><span class="rk">Reopens if</span>The operating reserve holds below its <b>3% floor for two consecutive quarters</b>, or a named obligation moves inside the 24-month funding window.</li>
+        <li><span class="rk">Reopens if</span>Any bucket <b>breaches its policy range at quarter-end</b> and cannot be returned inside the band under the § IV sequencing rules.</li>
+        <li><span class="rk">Reopens if</span>The <b>business sale is priced</b>, materially changing the size of the estate, the low-bracket window, or the funding source for any bucket.</li>
+        <li><span class="rk">Reopens if</span>The <b>RSU sell-down schedule is completed or interrupted</b>, retiring the concentration bucket ahead of or behind plan.</li>
+        <li><span class="rk">Reopens if</span>A change in <b>law, residency, or the family's objectives</b> alters the assumptions any bucket's target was set against — at which point the policy is revised, not quietly overridden.</li>
+      </ul>
+    </div>
+
+    <!-- ── CLOSE ── -->
+    <div class="close">
+      <div class="eyebrow">Why a policy, not a portfolio</div>
+      <h2>Wealth is a system, not a collection of products.</h2>
+      <p>A portfolio model answers what to hold. A capital allocation policy answers something a household needs more: how every dollar is deployed against its own goals, in what order, and what would make the family change its mind. That is Private Wealth Architecture — the structure that lets every part act as one system.</p>
+      <p>Read it in context: <a href="constitution.html">the Constitution</a> grants the authority · <a href="decision-log.html">the Decision Log</a> records each deployment · <a href="manual.html">the Operating Manual</a> keeps the standing book.</p>
+      <div class="foliobar">
+        <span>§ Capital Allocation · Rev. 2 · fol. 1</span>
+        <span>The Merrell household · est. 2021</span>
+      </div>
+    </div>
+
+    <!-- ── COLOPHON + DISCLOSURE ── -->
+    <div class="foot">
+      <div class="colophon">Set in Satoshi &amp; Erode · a concept for a household capital allocation policy · illustrative household, not a real client</div>
+      <span class="note">Illustrative and educational — not investment, tax, or legal advice.</span>
+      The Merrell household, the allocation, and every figure above are hypothetical and modeled, drawn to show the form of the policy — not a live account, holdings statement, or recommendation. Driftwood coordinates with your CPA and attorney; it does not provide tax or legal advice. Driftwood is a <b>registered investment adviser</b>; Form ADV and Form CRS are available at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

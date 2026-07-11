@@ -56,7 +56,7 @@ def main() -> int:
                   "case-vacation-home.html", "case-inheritance.html", "familyoffice.html",
                   "case-moving-states.html", "case-stock-options.html", "case-rmds.html",
                   "case-widowed.html", "case-charitable-giving.html", "fees.html", "manual.html",
-                  "score.html", "review.html", "awor.html", "inside.html", "decision-log.html",
+                  "score.html", "review.html", "awor.html", "inside.html", "decision-register.html",
                   "constitution.html", "capital-allocation.html", "opportunity-register.html",
                   "record.html"):
         (DOCS / asset).write_text((WEB / asset).read_text())

@@ -126,6 +126,7 @@
   .sysband-in{max-width:640px;margin:0 auto;text-align:center}
   .sb-eye{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
   .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(25px,2.1vw+15px,36px);line-height:1.14;letter-spacing:-.02em;color:var(--ink);margin:0 auto;max-width:19ch}
+  .sb-lede{font-family:var(--sans);font-size:16px;line-height:1.55;color:var(--dim);margin:15px auto 0;max-width:48ch}
   .sysstage{margin:8px auto 0;max-width:520px}
   .sysstage svg{width:100%;height:auto;display:block;overflow:visible}
   .sysstage text{font-family:var(--sans)}
@@ -243,10 +244,11 @@
     <!-- ── THE SYSTEM — the core idea, experienced: every decision moves the others ── -->
     <div class="sysband" id="thesystem">
       <div class="sysband-in">
-        <div class="sb-eye">The system</div>
-        <h2 class="sb-h">Every important financial decision changes at least five others.</h2>
+        <div class="sb-eye">What we do</div>
+        <h2 class="sb-h">Five systems, coordinated as one.</h2>
+        <p class="sb-lede">Investments, taxes, estate, liquidity, and the professionals who advise you — usually managed in isolation, though every important decision moves the others.</p>
         <div class="sysstage" id="sysDiagram">
-          <svg viewBox="0 0 720 500" role="group" aria-label="Five interconnected domains of a financial life — Portfolio, Taxes, Estate, Liquidity, and Professionals — converging into what you keep. Select a domain to see what it changes.">
+          <svg viewBox="0 0 720 500" role="group" aria-label="Five interconnected systems of a financial life — Investments, Taxes, Estate, Liquidity, and Professionals — converging into what you keep. Select a system to see what it changes.">
             <!-- convergence lines: the five domains carry into the outcome (always present, faint) -->
             <line class="converge" data-node="0" x1="360" y1="70" x2="360" y2="438"/>
             <line class="converge" data-node="1" x1="155" y1="175" x2="360" y2="438"/>
@@ -267,23 +269,23 @@
             <!-- the emergent outcome — no box; the lines carry into the phrase -->
             <text class="keep" x="360" y="468" text-anchor="middle" font-size="23">What you keep</text>
             <!-- the five domains -->
-            <g class="sysnode" data-node="0" tabindex="0" role="button" aria-label="Portfolio — changes Taxes, Estate, Liquidity, and Professionals">
+            <g class="sysnode" data-node="0" tabindex="0" role="button" aria-label="Investments — changes Taxes, Estate, Liquidity, and Professionals">
               <circle class="hit" cx="360" cy="70" r="30" fill="transparent"/><circle class="dot" cx="360" cy="70" r="6"/>
-              <text class="lbl" x="360" y="50" text-anchor="middle">Portfolio</text>
+              <text class="lbl" x="360" y="50" text-anchor="middle">Investments</text>
             </g>
-            <g class="sysnode" data-node="1" tabindex="0" role="button" aria-label="Taxes — changes Portfolio, Estate, Liquidity, and Professionals">
+            <g class="sysnode" data-node="1" tabindex="0" role="button" aria-label="Taxes — changes Investments, Estate, Liquidity, and Professionals">
               <circle class="hit" cx="155" cy="175" r="30" fill="transparent"/><circle class="dot" cx="155" cy="175" r="6"/>
               <text class="lbl" x="139" y="180" text-anchor="end">Taxes</text>
             </g>
-            <g class="sysnode" data-node="2" tabindex="0" role="button" aria-label="Estate — changes Portfolio, Taxes, Liquidity, and Professionals">
+            <g class="sysnode" data-node="2" tabindex="0" role="button" aria-label="Estate — changes Investments, Taxes, Liquidity, and Professionals">
               <circle class="hit" cx="565" cy="175" r="30" fill="transparent"/><circle class="dot" cx="565" cy="175" r="6"/>
               <text class="lbl" x="581" y="180" text-anchor="start">Estate</text>
             </g>
-            <g class="sysnode" data-node="3" tabindex="0" role="button" aria-label="Liquidity — changes Portfolio, Taxes, Estate, and Professionals">
+            <g class="sysnode" data-node="3" tabindex="0" role="button" aria-label="Liquidity — changes Investments, Taxes, Estate, and Professionals">
               <circle class="hit" cx="245" cy="315" r="30" fill="transparent"/><circle class="dot" cx="245" cy="315" r="6"/>
               <text class="lbl" x="229" y="320" text-anchor="end">Liquidity</text>
             </g>
-            <g class="sysnode" data-node="4" tabindex="0" role="button" aria-label="Professionals — change Portfolio, Taxes, Estate, and Liquidity">
+            <g class="sysnode" data-node="4" tabindex="0" role="button" aria-label="Professionals — change Investments, Taxes, Estate, and Liquidity">
               <circle class="hit" cx="475" cy="315" r="30" fill="transparent"/><circle class="dot" cx="475" cy="315" r="6"/>
               <text class="lbl" x="491" y="320" text-anchor="start">Professionals</text>
             </g>
@@ -297,13 +299,11 @@
     <!-- ── THE OPERATING SYSTEM — the differentiator, made tangible, before the tools ── -->
     <div class="sec" id="operating-system">
       <div class="h">The operating system</div>
-      <p class="lede2">Keeping five systems in view of one another takes a method — the operating system an institution runs on, brought to a single household.</p>
-      <p class="sysbody">An operating calendar, a documented process, and clear accountability: coordination as a
-        discipline, not a feeling. It produces durable outputs a family can hold — <b>the record of what you keep,
-        written down</b>:</p>
+      <p class="lede2">Coordinating five systems takes a method, not a feeling — an operating calendar, a documented process, and clear accountability. That method is the operating system an institution runs on, brought to a single household.</p>
+      <p class="sysbody">You see the method in what it leaves behind. <b>Every coordinated household runs on four enduring records</b> — the system written down, and kept current:</p>
       <div class="rl-cards">
         <a class="rl-card feat" href="manual.html">
-          <div class="rl-meta">The living document</div>
+          <div class="rl-meta">The standing system</div>
           <div class="rl-t">The Wealth Operating Manual</div>
           <div class="rl-d">The team, the balance sheet, the calendar, and the open opportunities — the whole
             system in one place, kept current, not filed once a year.</div>
@@ -316,15 +316,15 @@
             and where each item stands.</div>
           <div class="rl-go">See a sample →</div>
         </a>
-        <a class="rl-card" href="decision-log.html">
-          <div class="rl-meta">Every decision, recorded</div>
-          <div class="rl-t">The Decision Log</div>
+        <a class="rl-card" href="decision-register.html">
+          <div class="rl-meta">What was decided, and why</div>
+          <div class="rl-t">The Decision Register</div>
           <div class="rl-d">A dated record of every important decision — why it was made, and what it moved across
             the rest of the system.</div>
           <div class="rl-go">See a sample →</div>
         </a>
         <a class="rl-card" href="awor.html">
-          <div class="rl-meta">The board report for a family</div>
+          <div class="rl-meta">The year, in one document</div>
           <div class="rl-t">The Annual Operating Review</div>
           <div class="rl-d">Once a year, the whole system in one document: what changed, what's ahead, and who owns
             each decision.</div>
@@ -571,9 +571,9 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
   var PROMPT = 'Select a decision to see what else changes.';
   // Every decision changes every other; the reveal names the specific downstream effects.
   var CHANGES = [
-    ['Portfolio','Realized gains · asset location · estate basis · what’s available to spend'],
+    ['Investments','Realized gains · asset location · estate basis · what’s available to spend'],
     ['Taxes','Asset location · withdrawal sequencing · estate value · charitable strategy · CPA coordination'],
-    ['Estate','Portfolio design · the transfer tax · the liquidity to pay it · gifting timing'],
+    ['Estate','The investment mix · the transfer tax · the liquidity to pay it · gifting timing'],
     ['Liquidity','Which lots are sold · the bracket a withdrawal lands in · the portfolio’s balance'],
     ['Professionals','Every domain — the CPA, attorney, and advisor each touch the others’ work']
   ];

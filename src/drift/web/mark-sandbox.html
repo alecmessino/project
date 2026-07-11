@@ -56,23 +56,33 @@
   /* ── MASTER LOCKUP · 2A (frozen) ─────────────────────────────────────────────
      Confluence mark (5 tributaries → 1 outflow, exit one step heavier) · hairline
      divider · DRIFTWOOD CAPITAL over PRIVATE WEALTH ADVISORY, high-tracking caps. */
-  .lk-stage{padding:46px 48px;border:1px solid var(--line);border-radius:5px;margin-bottom:14px;display:flex;justify-content:center}
+  .lk-stage{padding:62px 64px;border:1px solid var(--line);border-radius:5px;margin-bottom:14px;display:flex;justify-content:center}
   .lk-stage.navy{background:var(--navy);border-color:#2b3746}
-  .lk2a{display:inline-flex;align-items:center;gap:22px}
+  .lk2a{display:inline-flex;align-items:center;gap:32px}   /* more air between mark · divider · text */
   .lk2a .lk-mark{color:var(--accent-strike);display:flex}
   .lk2a .lk-mark svg{display:block;height:48px;width:auto;overflow:visible}
-  .lk2a .lk-rule{width:1px;height:54px;background:var(--frame-line)}
-  .lk2a .lk-txt{display:flex;flex-direction:column;gap:10px}
-  .lk2a .lk-name{font-family:var(--sans);font-weight:500;font-size:31px;letter-spacing:.17em;text-transform:uppercase;color:var(--ink);line-height:1}
-  .lk2a .lk-desc{font-family:var(--sans);font-weight:500;font-size:11.5px;letter-spacing:.4em;text-transform:uppercase;color:var(--accent-strike);line-height:1}
+  .lk2a .lk-rule{width:1px;height:58px;background:var(--line)}   /* lighter, architectural hairline */
+  .lk2a .lk-txt{display:flex;flex-direction:column;gap:14px}
+  .lk2a .lk-name{font-family:var(--sans);font-weight:500;font-size:31px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);line-height:1}
+  .lk2a .lk-desc{font-family:var(--sans);font-weight:500;font-size:11.5px;letter-spacing:.44em;text-transform:uppercase;color:var(--accent-strike);line-height:1}
   .lk2a.on-navy .lk-mark{color:#a9c2d6}
   .lk2a.on-navy .lk-name{color:#f1ede3}
   .lk2a.on-navy .lk-desc{color:#a9c2d6}
-  .lk2a.on-navy .lk-rule{background:rgba(233,229,219,.32)}
-  .lk2a.compact{gap:14px}
+  .lk2a.on-navy .lk-rule{background:rgba(233,229,219,.20)}
+  .lk2a.compact{gap:22px}
   .lk2a.compact .lk-mark svg{height:26px}
-  .lk2a.compact .lk-rule{height:28px}
-  .lk2a.compact .lk-name{font-size:17px;letter-spacing:.15em}
+  .lk2a.compact .lk-rule{height:30px}
+  .lk2a.compact .lk-name{font-size:17px;letter-spacing:.16em}
+  /* mark-refinement options */
+  .mk-opts{display:flex;gap:48px;flex-wrap:wrap;margin-top:10px}
+  .mk-opt{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .mk-lg{color:var(--accent-strike);display:flex;min-height:46px;align-items:center}
+  .mk-lg svg{height:46px;width:auto;overflow:visible}
+  /* institutional signature — centred, formal, no mark */
+  .lk-sig{text-align:center;font-family:var(--sans)}
+  .lk-sig .s-name{font-weight:500;font-size:23px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink);line-height:1;margin-bottom:18px}
+  .lk-sig .s-desc{font-weight:500;font-size:11px;letter-spacing:.36em;text-transform:uppercase;color:var(--accent-strike);line-height:1;margin-bottom:11px}
+  .lk-sig .s-meta{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);line-height:1.4}
   /* mark-only specimens */
   .fav-row{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-top:6px}
   .fav{display:flex;flex-direction:column;align-items:center;gap:8px}
@@ -93,48 +103,56 @@
 <h1>Confluence Lockup — 2A · frozen</h1>
 <p class="sub">The committee freeze: the Confluence mark — five tributaries converging into one coordinated outflow, the exit one step heavier so the direction reads first — with a hairline divider and <strong>DRIFTWOOD&nbsp;CAPITAL</strong> over <strong>PRIVATE&nbsp;WEALTH&nbsp;ADVISORY</strong>, high-tracking all-caps. Palette and type pulled from <code>driftwood.css</code>.</p>
 
-<div class="card master">
-  <div class="card-h"><span class="nm">Master lockup</span><span class="tag">2A · Private Wealth Advisory</span></div>
-  <div class="lk-stage"><div class="lk2a">
-    <span class="lk-mark" data-mark></span>
-    <span class="lk-rule"></span>
-    <span class="lk-txt"><span class="lk-name">Driftwood&nbsp;Capital</span><span class="lk-desc">Private&nbsp;Wealth&nbsp;Advisory</span></span>
-  </div></div>
-  <div class="lk-stage navy"><div class="lk2a on-navy">
-    <span class="lk-mark" data-mark></span>
-    <span class="lk-rule"></span>
-    <span class="lk-txt"><span class="lk-name">Driftwood&nbsp;Capital</span><span class="lk-desc">Private&nbsp;Wealth&nbsp;Advisory</span></span>
-  </div></div>
-  <div class="cols">
-    <div class="fav-row">
-      <div class="fav"><div class="disc" style="width:48px;height:48px" data-mark-fav></div><div class="cap">48 · avatar</div></div>
-      <div class="fav"><div class="disc" style="width:32px;height:32px" data-mark-fav></div><div class="cap">32</div></div>
-      <div class="fav"><div class="disc lime" style="width:46px;height:46px" data-mark-fav></div><div class="cap">nav · limestone</div></div>
-    </div>
-    <div><p class="lab">SVG · the mark · viewBox 0 0 40 26</p><pre id="mark-src"></pre></div>
+<div class="card">
+  <div class="card-h"><span class="nm">Mark refinement</span><span class="tag">exaggerate the convergence · streams → river</span></div>
+  <p class="ds">Three treatments of the same five-into-one confluence. <strong>Frozen</strong> (2A) reads as a clean chevron; <strong>Streams</strong> and <strong>Flow</strong> exaggerate the convergence so it feels inevitable — less arrow, more tributaries. The lockups below use <strong>Streams</strong>, my recommendation: distinct diagonals, more vertical spread, the outer streams angling harder into the river.</p>
+  <div class="mk-opts">
+    <div class="mk-opt"><div class="mk-lg" data-v="frozen"></div><div class="disc" style="width:44px;height:44px" data-vf="frozen"></div><div class="cap">Frozen · 2A</div></div>
+    <div class="mk-opt"><div class="mk-lg" data-v="streams"></div><div class="disc" style="width:44px;height:44px" data-vf="streams"></div><div class="cap">Streams · recommended</div></div>
+    <div class="mk-opt"><div class="mk-lg" data-v="flow"></div><div class="disc" style="width:44px;height:44px" data-vf="flow"></div><div class="cap">Flow · curved</div></div>
   </div>
+  <div style="margin-top:22px"><p class="lab">SVG · Streams · viewBox 0 0 42 30</p><pre id="mark-src"></pre></div>
 </div>
 
 <div class="card">
-  <div class="card-h"><span class="nm">Extensions to float</span><span class="tag">not part of the freeze — for your feedback</span></div>
-  <p class="ds">Two production needs the master lockup implies — mocked here for your call, not decided.</p>
-  <p class="lab" style="margin-top:6px">1 · Favicon cut — heavier weight for ≤ 32px. The deck calls for it: below 48px the fine lines thin out and the direction stops reading.</p>
+  <div class="card-h"><span class="nm">The lockup system</span><span class="tag">four standard lockups</span></div>
+
+  <p class="lab">Primary · hero · reports · PDFs — mark + wordmark + descriptor</p>
+  <div class="lk-stage"><div class="lk2a">
+    <span class="lk-mark" data-mark></span><span class="lk-rule"></span>
+    <span class="lk-txt"><span class="lk-name">Driftwood&nbsp;Capital</span><span class="lk-desc">Private&nbsp;Wealth&nbsp;Advisory</span></span>
+  </div></div>
+  <div class="lk-stage navy"><div class="lk2a on-navy">
+    <span class="lk-mark" data-mark></span><span class="lk-rule"></span>
+    <span class="lk-txt"><span class="lk-name">Driftwood&nbsp;Capital</span><span class="lk-desc">Private&nbsp;Wealth&nbsp;Advisory</span></span>
+  </div></div>
+
+  <p class="lab" style="margin-top:28px">Secondary · navigation · headers · email — mark + wordmark, descriptor dropped</p>
+  <div class="lk-stage" style="padding:30px 44px;justify-content:flex-start"><div class="lk2a compact">
+    <span class="lk-mark" data-mark></span><span class="lk-rule"></span>
+    <span class="lk-txt"><span class="lk-name">Driftwood&nbsp;Capital</span></span></div></div>
+  <div class="lk-stage navy" style="padding:30px 44px;justify-content:flex-start"><div class="lk2a compact on-navy">
+    <span class="lk-mark" data-mark></span><span class="lk-rule"></span>
+    <span class="lk-txt"><span class="lk-name">Driftwood&nbsp;Capital</span></span></div></div>
+
+  <p class="lab" style="margin-top:28px">Avatar · favicon · social · workspace — mark only (heavier favicon cut at ≤ 32px)</p>
   <div class="fav-row">
-    <div class="fav"><div class="disc" style="width:32px;height:32px" data-favcut></div><div class="cap">32 · heavier cut</div></div>
-    <div class="fav"><div class="disc" style="width:16px;height:16px" data-favcut></div><div class="cap">16 · heavier cut</div></div>
-    <div class="fav"><div class="disc" style="width:32px;height:32px" data-mark-fav></div><div class="cap">32 · fine (thins)</div></div>
-    <div class="fav"><div class="disc" style="width:16px;height:16px" data-mark-fav></div><div class="cap">16 · fine (thins)</div></div>
+    <div class="fav"><div class="disc" style="width:56px;height:56px" data-mark-fav></div><div class="cap">56 · social</div></div>
+    <div class="fav"><div class="disc" style="width:32px;height:32px" data-favcut></div><div class="cap">32 · favicon cut</div></div>
+    <div class="fav"><div class="disc" style="width:16px;height:16px" data-favcut></div><div class="cap">16 · favicon cut</div></div>
+    <div class="fav"><div class="disc lime" style="width:44px;height:44px" data-mark-fav></div><div class="cap">bare · limestone</div></div>
   </div>
-  <p class="lab" style="margin-top:24px">2 · Compact nav lockup — mark + wordmark, descriptor dropped, for the top navigation bar where the two-line block is too tall.</p>
-  <div class="lk-stage" style="padding:22px 30px;justify-content:flex-start">
-    <div class="lk2a compact"><span class="lk-mark" data-mark></span><span class="lk-rule"></span>
-      <span class="lk-txt"><span class="lk-name">Driftwood&nbsp;Capital</span></span></div>
+
+  <p class="lab" style="margin-top:28px">Institutional signature · proposals · letters · AWOR · Operating Manual — centred, formal, no mark</p>
+  <div class="lk-stage" style="padding:60px 44px">
+    <div class="lk-sig">
+      <div class="s-name">Driftwood&nbsp;Capital</div>
+      <div class="s-desc">Private&nbsp;Wealth&nbsp;Advisory</div>
+      <div class="s-meta">Austin · Fee-Only Fiduciary</div>
+    </div>
   </div>
-  <div class="lk-stage navy" style="padding:22px 30px;justify-content:flex-start">
-    <div class="lk2a compact on-navy"><span class="lk-mark" data-mark></span><span class="lk-rule"></span>
-      <span class="lk-txt"><span class="lk-name">Driftwood&nbsp;Capital</span></span></div>
-  </div>
-  <p class="ds" style="margin-top:14px"><strong>Also worth specifying (not mocked):</strong> clear-space = the mark's height on every side; a minimum lockup width (below which it falls back to the mark-only avatar); and the wordmark moving to all-caps <code>DRIFTWOOD&nbsp;CAPITAL</code> site-wide, replacing today's title-case nav brand.</p>
+
+  <p class="ds" style="margin-top:16px"><strong>Flagged:</strong> “Austin” is a firm fact — used only to mock the signature; confirm before it ships (I won't hard-code a location without your word). Clear-space = the mark's height on every side; below the minimum lockup width the lockup falls back to the Avatar; the wordmark is all-caps <code>DRIFTWOOD&nbsp;CAPITAL</code> everywhere.</p>
 </div>
 
 <h2 class="arch-h">Exploration archive</h2>
@@ -241,11 +259,13 @@ function buildMatrix(navy){
 }
 document.getElementById("matrix").innerHTML = buildMatrix(false) + buildMatrix(true);
 
-// ── Master lockup 2A — the frozen confluence mark ──────────────────────────────
-// Five tributaries, left-aligned; horizontal runs lengthen toward the middle and
-// turn on a 45° chevron into one node; a single outflow exits right, one step
-// heavier. Middle tributary and outflow are collinear. Colour via currentColor.
-const MARK2A = `<svg viewBox="0 0 40 26" fill="none" stroke="currentColor" stroke-linecap="butt">
+// ── The confluence mark — three treatments of five-into-one ────────────────────
+// FROZEN (2A): horizontal runs lengthen to a 45° chevron into one node — a clean
+// arrow. STREAMS (recommended): short entries, then five distinct diagonals fan
+// harder into the node — more tributaries, less arrow. FLOW: the same, eased into
+// curves. In every case the middle tributary + outflow are collinear; the outflow
+// is one step heavier. Colour via currentColor.
+const FROZEN = `<svg viewBox="0 0 40 26" fill="none" stroke="currentColor" stroke-linecap="butt">
   <path d="M1.5 1 H12 L24 13" stroke-width="1.4"/>
   <path d="M1.5 7 H18 L24 13" stroke-width="1.4"/>
   <path d="M1.5 13 H24" stroke-width="1.4"/>
@@ -253,18 +273,38 @@ const MARK2A = `<svg viewBox="0 0 40 26" fill="none" stroke="currentColor" strok
   <path d="M1.5 25 H12 L24 13" stroke-width="1.4"/>
   <path d="M24 13 H38.5" stroke-width="2.1"/>
 </svg>`;
-document.querySelectorAll("[data-mark],[data-mark-fav]").forEach(el => el.innerHTML = MARK2A);
-document.getElementById("mark-src").textContent = MARK2A;
+const STREAMS = `<svg viewBox="0 0 42 30" fill="none" stroke="currentColor" stroke-linecap="butt">
+  <path d="M1.5 1.5 H6 L26 15" stroke-width="1.4"/>
+  <path d="M1.5 8.25 H6 L26 15" stroke-width="1.4"/>
+  <path d="M1.5 15 H26" stroke-width="1.4"/>
+  <path d="M1.5 21.75 H6 L26 15" stroke-width="1.4"/>
+  <path d="M1.5 28.5 H6 L26 15" stroke-width="1.4"/>
+  <path d="M26 15 H40.5" stroke-width="2.2"/>
+</svg>`;
+const FLOW = `<svg viewBox="0 0 42 30" fill="none" stroke="currentColor" stroke-linecap="round">
+  <path d="M1.5 1.5 H7 C16 1.5, 20 10, 26 15" stroke-width="1.4"/>
+  <path d="M1.5 8.25 H7 C15 8.25, 20 12, 26 15" stroke-width="1.4"/>
+  <path d="M1.5 15 H26" stroke-width="1.4"/>
+  <path d="M1.5 21.75 H7 C15 21.75, 20 18, 26 15" stroke-width="1.4"/>
+  <path d="M1.5 28.5 H7 C16 28.5, 20 20, 26 15" stroke-width="1.4"/>
+  <path d="M26 15 H40.5" stroke-width="2.2"/>
+</svg>`;
+const MARKV = { frozen:FROZEN, streams:STREAMS, flow:FLOW };
+const DEFAULT_V = "streams";
+document.querySelectorAll("[data-mark],[data-mark-fav]").forEach(el => el.innerHTML = MARKV[DEFAULT_V]);
+document.querySelectorAll("[data-v]").forEach(el => el.innerHTML = MARKV[el.getAttribute("data-v")]);
+document.querySelectorAll("[data-vf]").forEach(el => el.innerHTML = MARKV[el.getAttribute("data-vf")]);
+document.getElementById("mark-src").textContent = STREAMS;
 
-// Favicon cut — the same five-into-one geometry at 32×32 with heavier strokes, so the
-// direction still reads at ≤32px where the fine lockup lines would disappear.
+// Favicon cut — Streams geometry at 32×32 with heavier strokes, so the direction
+// still reads at ≤32px where the fine lockup lines would disappear.
 const FAVCUT = `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="butt">
-  <path d="M6 8 H12 L20 16" stroke-width="2.4"/>
-  <path d="M6 12 H16 L20 16" stroke-width="2.4"/>
-  <path d="M6 16 H20" stroke-width="2.4"/>
-  <path d="M6 20 H16 L20 16" stroke-width="2.4"/>
-  <path d="M6 24 H12 L20 16" stroke-width="2.4"/>
-  <path d="M20 16 H27" stroke-width="3.2"/>
+  <path d="M4 5 L21 16" stroke-width="2.4"/>
+  <path d="M4 10.5 L21 16" stroke-width="2.4"/>
+  <path d="M4 16 H21" stroke-width="2.4"/>
+  <path d="M4 21.5 L21 16" stroke-width="2.4"/>
+  <path d="M4 27 L21 16" stroke-width="2.4"/>
+  <path d="M21 16 H28" stroke-width="3.2"/>
 </svg>`;
 document.querySelectorAll("[data-favcut]").forEach(el => el.innerHTML = FAVCUT);
 </script>

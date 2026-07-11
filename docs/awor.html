@@ -40,7 +40,7 @@
   .frame{background:var(--paper);border-radius:var(--surface-radius);overflow:hidden;}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:1px solid var(--line)}
-  .run .inst{font-weight:600;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
   .run .conf{font-weight:700;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass)}
   .inner{padding:0 clamp(24px,5vw,58px) 10px}
 
@@ -48,7 +48,7 @@
   .mast{text-align:center;padding:44px 0 28px;border-bottom:1px solid var(--line);margin-bottom:8px}
   .mast .wm{font-family:var(--sans);font-weight:700;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);margin-bottom:26px}
   .mast .kt{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
-  .mast h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,3.2vw+15px,46px);line-height:1.08;letter-spacing:-.01em;color:var(--ink);margin:0 0 14px}
+  .mast h1{font-family:var(--serif);font-weight:500;font-size:clamp(30px,3.2vw+15px,46px);line-height:1.08;letter-spacing:-.01em;color:var(--ink);margin:0 0 14px}
   .mast .fam{font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--ink)}
   .mast .sub{font-size:13px;color:var(--muted);margin-top:8px}
   .mast .standfirst{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--dim);margin:18px auto 0;max-width:46ch}
@@ -58,7 +58,7 @@
   .sh .n{font-family:var(--sans);font-weight:700;font-size:12px;font-variant-numeric:tabular-nums;color:var(--brass)}
   .sh h2{font-family:var(--sans);font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin:0}
   p{font-size:15.5px;line-height:1.68;color:var(--body);margin:0 0 14px;max-width:66ch}
-  p b{color:var(--ink);font-weight:600}
+  p b{color:var(--ink);font-weight:500}
 
   /* Executive summary band */
   .exec{background:var(--navy);color:#e7ecf2;border-radius:var(--surface-radius);padding:24px 26px}
@@ -83,14 +83,14 @@
   @media(max-width:600px){.changed{grid-template-columns:1fr}}
   .changed .c{display:flex;gap:11px;align-items:baseline;font-size:14.5px;line-height:1.45;color:var(--body)}
   .changed .c .q{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--brass);white-space:nowrap;min-width:34px}
-  .changed .c b{color:var(--ink);font-weight:600}
+  .changed .c b{color:var(--ink);font-weight:500}
 
   /* Tables */
   .tbl-scroll{overflow-x:auto}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
   th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line2);vertical-align:top;line-height:1.45}
   thead th{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--frame-line)}
-  tbody td:first-child{font-weight:600;color:var(--ink)}
+  tbody td:first-child{font-weight:500;color:var(--ink)}
   .pill{display:inline-block;font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:0;white-space:nowrap}
   .pill.done{color:var(--st-done);background:var(--st-done-bg)}
   .pill.prog{color:var(--st-prog);background:var(--st-prog-bg)}
@@ -105,7 +105,7 @@
   .tl li{position:relative;padding-left:16px;font-size:13.5px;line-height:1.45;color:var(--body)}
   .tl li::before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--ghost-line)}
   .tl .next li::before{border-radius:var(--surface-radius);background:var(--brass)}
-  .tl li b{color:var(--ink);font-weight:600}
+  .tl li b{color:var(--ink);font-weight:500}
 
   /* Health checklist */
   .health{display:flex;flex-direction:column;gap:0}
@@ -134,11 +134,11 @@
   .cta{margin:34px 0 0;padding:26px 0 4px;border-top:1px solid var(--line)}
   .cta .ct{font-family:var(--sans);font-weight:700;font-size:19px;color:var(--ink);margin:0 0 7px;letter-spacing:-.01em}
   .cta .cd{font-size:13.5px;line-height:1.6;color:var(--dim);margin:0 0 16px;max-width:60ch}
-  .cta a{display:inline-flex;align-items:center;min-height:42px;text-decoration:none;border-radius:0;font-family:var(--sans);font-size:14px;font-weight:600;padding:11px 20px;background:var(--teal);color:#f1ede3;margin-right:10px}
+  .cta a{display:inline-flex;align-items:center;min-height:42px;text-decoration:none;border-radius:0;font-family:var(--sans);font-size:14px;font-weight:500;padding:11px 20px;background:var(--teal);color:#f1ede3;margin-right:10px}
   .cta a.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);font-weight:500}
 
   .foot{margin:34px -0 0;padding:20px 0 8px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.65}
-  .foot .note{color:#5a5a62;font-weight:600}
+  .foot .note{color:#5a5a62;font-weight:500}
   .foot b{color:var(--dim)}
   @media(max-width:620px){.inner{padding-left:22px;padding-right:22px}}
 </style>
@@ -268,7 +268,7 @@
         </div>
       </div>
       <p style="font-size:13.5px;line-height:1.6;color:var(--muted);margin:16px 0 0;max-width:66ch">
-        Each line here traces to an entry in the <a href="decision-log.html" style="color:var(--teal2);font-weight:600;text-decoration:none">Decision&nbsp;Log</a>.
+        Each line here traces to an entry in the <a href="decision-log.html" style="color:var(--teal2);font-weight:500;text-decoration:none">Decision&nbsp;Log</a>.
         This review is not a yearly reset — it re-reads every open decision against the reason it was made and asks a
         single question of each: <i>did its assumption hold, and did its trigger fire?</i></p>
     </div>

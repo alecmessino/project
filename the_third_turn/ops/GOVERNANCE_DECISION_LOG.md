@@ -48,6 +48,13 @@ invalidate inference) · **Confidence Register** (what the evidence justifies be
 - **Reasoning:** A governance framework that separates *what can break / what can invalidate inference / what we believe / why beliefs changed* gives a rigorous audit trail and makes methodological choices defensible to referees.
 - **Future implications:** Every future review updates the Confidence Register and appends decisions here; the daily review's purpose is explicitly to increase confidence in the eventual papers, not to produce them.
 
+### GD-6 · 2026-07-09 · Complete and FREEZE the governance framework; enter Phase 4
+- **Decision:** Add exactly three self-calibration artifacts — Evidence Ledger, Assumption Register, Inference Graph — then declare the governance framework feature-complete and adopt an artifact-admission rule. Enter Phase 4 (Evidence Accumulation): stabilize the collector, resolve the highest-impact Research Debt, accumulate data with minimal intervention, and resist analysis until gates clear.
+- **Evidence:** Governance had the four pillars but no quantitative link between evidence and belief (Evidence Ledger), no explicit assumption inventory (Assumption Register), and no auditable provenance from observation to paper claim (Inference Graph). Beyond these three, further governance would grow faster than the research.
+- **Alternatives rejected:** Keep expanding governance horizontally (risks governance-as-technical-debt); add nothing (leaves confidence changes justified by prose, not cited evidence).
+- **Reasoning:** The three artifacts each satisfy the admission rule (auditability + reproducibility + reduced false-discovery risk). A hard stop plus an admission rule prevents the process from outgrowing the research.
+- **Future implications:** No new governance artifact without a decision-log entry justifying it against the four admission criteria. **Explicitly: adding these process artifacts did NOT move any Confidence-Register level** — process auditability improved, but no specific inference threat (RD-1..7) was eliminated, and confidence in the science must not rise for building better paperwork. The next highest-leverage work is engineering/measurement on RD-1/RD-2/RD-3, then disciplined accumulation.
+
 ---
 
 *Append new decisions below this line. Never edit a past entry; correct with a new dated entry that

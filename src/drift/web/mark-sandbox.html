@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Confluence Mark — sandbox</title>
+<link rel="stylesheet" href="driftwood.css" />
+<style>
+  /* Sandbox only — NOT a shipped page. Palette + type come from driftwood.css so the marks are
+     judged against the true site colours. --cut is the local "background" a negative-space cut
+     paints; it is re-set per specimen so cuts read as paper on limestone and navy on navy. */
+  body{margin:0;background:var(--bg);color:var(--ink);padding:32px 40px 80px}
+  h1{font-family:var(--sans);font-weight:700;font-size:20px;letter-spacing:-.015em;margin:0 0 4px}
+  .sub{font-family:var(--sans);color:var(--muted);font-size:13px;margin:0 0 6px;max-width:70ch;line-height:1.55}
+  .note{font-family:var(--sans);color:var(--accent-strike);font-size:12px;margin:0 0 28px}
+  .card{border-top:1px solid var(--line);padding:26px 0}
+  .card-h{display:flex;align-items:baseline;gap:12px;margin-bottom:4px}
+  .card-h .nm{font-family:var(--sans);font-weight:700;font-size:16px;color:var(--ink)}
+  .card-h .tag{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike)}
+  .ds{font-family:var(--sans);color:var(--muted);font-size:12.5px;line-height:1.55;max-width:74ch;margin:0 0 20px}
+  .cols{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:34px;align-items:start}
+  @media(max-width:860px){.cols{grid-template-columns:1fr}}
+  .specimens{display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap}
+  .chip{display:flex;flex-direction:column;align-items:center;gap:9px}
+  .chip .cap{font-family:var(--sans);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+  .swatch{display:flex;align-items:center;justify-content:center}
+  .onpaper{--cut:var(--bg);color:var(--ink)}
+  .onnavy{--cut:var(--navy);color:#eef2f6;background:var(--navy);border-radius:4px}
+  .p32{padding:8px}.p16{padding:9px}
+  /* the lockup, as it would sit in the nav */
+  .lockup{display:inline-flex;align-items:center;gap:12px;--cut:var(--bg);color:var(--ink)}
+  .lockup .txt{display:flex;flex-direction:column;line-height:1}
+  .lockup .nmw{font-family:var(--sans);font-weight:700;font-size:17px;letter-spacing:-.005em;color:var(--ink)}
+  .lockup .dsc{font-family:var(--sans);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-top:4px}
+  .lockup.rule .txt{padding-left:12px;border-left:1px solid var(--line)}
+  pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;line-height:1.5;color:var(--body);
+      background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:12px 13px;margin:0;overflow-x:auto;white-space:pre-wrap;word-break:break-word}
+  .lab{font-family:var(--sans);font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 7px}
+  svg{display:block}
+  .descstrip{display:flex;gap:30px;flex-wrap:wrap;align-items:center;margin-top:8px}
+</style>
+</head>
+<body>
+<h1>Confluence Mark — five-into-one, structural refinement</h1>
+<p class="sub">Each direction demonstrates the Five Systems (Investment · Tax · Estate · Liquidity · Relationship) funnelling into one outcome — <em>what you keep</em>. Judged at favicon scale (16/32, light-on-navy), nav scale (40, navy-on-limestone), and in the lockup. Palette and type are pulled from <code>driftwood.css</code>.</p>
+<p class="note">Descriptor shown: “Private Wealth Advisory” (your latest note). A strip at the foot compares it against “Private Wealth Architecture.”</p>
+
+<div id="grid"></div>
+
+<div class="card">
+  <div class="card-h"><span class="nm">Descriptor test</span><span class="tag">the word beside the mark</span></div>
+  <p class="ds">Same mark (Convergent Monolith), two descriptors, to weigh the word itself.</p>
+  <div class="descstrip" id="descstrip"></div>
+</div>
+
+<script>
+const MARKS = [
+  { key:"baseline", nm:"0 · Baseline, evolved", tag:"reference",
+    ds:"The current confluence opened from four tributaries to five → node → outflow. Included only as the point of departure; it keeps the thin, illustrative quality we're moving away from.",
+    svg:
+`<g fill="none" stroke="currentColor" stroke-width="1.7">
+  <path d="M5 6.5 L19 16"/><path d="M5 11.25 L19 16"/><path d="M5 16 L19 16"/>
+  <path d="M5 20.75 L19 16"/><path d="M5 25.5 L19 16"/><path d="M19 16 H27"/>
+</g>
+<rect x="17.5" y="14.5" width="3" height="3" fill="currentColor"/>` },
+
+  { key:"monolith", nm:"1 · Convergent Monolith", tag:"structural weight",
+    ds:"Five strokes of graduated weight funnel into one solid foundation block. Reads as mass and architecture — a column base, not a signal. Communicates stability; survives down to 16px because the block anchors it.",
+    svg:
+`<g fill="none" stroke="currentColor">
+  <line x1="5"    y1="4.5" x2="16" y2="18" stroke-width="1.25"/>
+  <line x1="10.5" y1="4.5" x2="16" y2="18" stroke-width="1.7"/>
+  <line x1="16"   y1="4.5" x2="16" y2="18" stroke-width="2.15"/>
+  <line x1="21.5" y1="4.5" x2="16" y2="18" stroke-width="1.7"/>
+  <line x1="27"   y1="4.5" x2="16" y2="18" stroke-width="1.25"/>
+</g>
+<rect x="13" y="18" width="6" height="9.5" fill="currentColor"/>` },
+
+  { key:"negative", nm:"2 · Negative-Space Convergence", tag:"emergent property",
+    ds:"A solid registry block; five slivers are cut from it, converging to a single point. What you keep is the primary object — the systems are the force that shapes it. Mid-century, legacy-financial. Rewards a second look.",
+    svg:
+`<rect x="5" y="4" width="22" height="24" fill="currentColor"/>
+<g stroke="var(--cut)" stroke-width="1.5" fill="none">
+  <line x1="16" y1="25.5" x2="6.6"  y2="4"/>
+  <line x1="16" y1="25.5" x2="11.3" y2="4"/>
+  <line x1="16" y1="25.5" x2="16"   y2="4"/>
+  <line x1="16" y1="25.5" x2="20.7" y2="4"/>
+  <line x1="16" y1="25.5" x2="25.4" y2="4"/>
+</g>` },
+
+  { key:"weave", nm:"3 · The Weave", tag:"interlocked coordination",
+    ds:"Five strands braid through one centre node — interdependence actively tied, not merely funnelled. The most bespoke, high-touch reading; also the least legible at 16px, where the strands begin to merge.",
+    svg:
+`<g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+  <path d="M5 7  C 13 12, 13 20, 21 25"/>
+  <path d="M5 25 C 13 20, 13 12, 21 7"/>
+  <path d="M16 4 C 13 12, 19 20, 16 28"/>
+  <path d="M27 11 C 20 15, 12 17, 6 20"/>
+  <path d="M6 12 C 12 15, 20 17, 26 21"/>
+</g>
+<rect x="14" y="14" width="4" height="4" fill="var(--cut)" stroke="currentColor" stroke-width="1.1"/>` },
+];
+
+function mk(inner, size){ return `<svg width="${size}" height="${size}" viewBox="0 0 32 32">${inner}</svg>`; }
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+const grid = document.getElementById("grid");
+for(const m of MARKS){
+  const el = document.createElement("div");
+  el.className = "card";
+  el.innerHTML = `
+    <div class="card-h"><span class="nm">${m.nm}</span><span class="tag">${m.tag}</span></div>
+    <p class="ds">${m.ds}</p>
+    <div class="cols">
+      <div class="specimens">
+        <div class="chip"><div class="onnavy swatch p32">${mk(m.svg,32)}</div><div class="cap">32 · favicon</div></div>
+        <div class="chip"><div class="onnavy swatch p16">${mk(m.svg,16)}</div><div class="cap">16</div></div>
+        <div class="chip"><div class="onpaper swatch">${mk(m.svg,40)}</div><div class="cap">40 · nav</div></div>
+        <div class="chip"><div class="lockup rule"><span class="onpaper">${mk(m.svg,32)}</span>
+          <span class="txt"><span class="nmw">Driftwood&nbsp;Capital</span><span class="dsc">Private Wealth Advisory</span></span></div>
+          <div class="cap">lockup</div></div>
+      </div>
+      <div><p class="lab">SVG · viewBox 0 0 32 32</p><pre>${esc(m.svg)}</pre></div>
+    </div>`;
+  grid.appendChild(el);
+}
+
+// descriptor comparison on the monolith
+const mono = MARKS.find(x=>x.key==="monolith").svg;
+const ds = document.getElementById("descstrip");
+for(const [word,style] of [["Private Wealth Advisory",""],["Private Wealth Architecture",""],["Private Wealth Coordination",""]]){
+  const c = document.createElement("div");
+  c.innerHTML = `<div class="lockup rule"><span class="onpaper">${mk(mono,32)}</span>
+    <span class="txt"><span class="nmw">Driftwood&nbsp;Capital</span><span class="dsc">${word.replace('Private Wealth ','Private&nbsp;Wealth&nbsp;')}</span></span></div>`;
+  ds.appendChild(c);
+}
+</script>
+</body>
+</html>

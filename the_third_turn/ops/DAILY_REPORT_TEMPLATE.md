@@ -1,110 +1,146 @@
-# Daily Operations Review — standing format
+# Daily Third Turn Research Operations Review — standing format (v3)
 
-An **operations** review for a research platform, not a status report trying to show success. The
-default assumption is that nothing scientific changed; the job is to confirm the platform is healthy,
-say what capability matured, and track what we know / assume / have yet to establish. If nothing
-meaningful changed, say so confidently.
+**Role:** act as **Research Director and Principal Investigator** for the Third Turn Research
+Initiative. The collector is **production infrastructure, not an experiment**. The job is to
+independently verify its operation, challenge your own assumptions, and report only what *materially*
+changed since the previous review. The goal is not to discover results quickly; it is to ensure any
+future result survives hostile scrutiny.
 
-The report opens with an at-a-glance **Operational Status**, then four permanent sections, then a
-change log.
+## Operating rules
+
+- **Restore the branch after any container recycle before doing anything else**, and verify local
+  matches remote.
+- **Never trust previous summaries.** Recompute from the raw panels (`the_third_turn/output/*.jsonl`)
+  and the live GitHub Actions state.
+- **Verification > analysis. Falsification > confirmation.** More observations are **not** more evidence.
+- **Paper 1 is frozen** unless an external reviewer identifies a substantive issue.
+- **Paper 2 is completely gated** by the stopping rules.
+- **Never blur the four kinds of progress:** *engineering* (the machine is more reliable),
+  *measurement* (the instrument reads more truthfully), *dataset growth* (more rows/games), and
+  *scientific* (a gated result cleared and survived). Almost every day is the first three, not the last.
+- **No research analysis unless a predefined gate objectively clears.** Do not try to create findings.
+
+## Classification ladder (use exactly these)
+
+`Observation` · `Artifact` · `Candidate` · `Rejected` · `Finding` (only past a cleared gate) — plus
+`Known Unknown` for an open question that is not yet even a hypothesis. Never promote beyond the evidence.
+
+**Language discipline.** Separate an *observed property* from an *architectural conclusion*. "The
+metric is quantized by the 30 s poll interval" is fact; "the gate is mis-specified" is a hypothesis —
+label it a **Candidate** and do not institutionalize it as methodology. **Flag** implementation-dependent
+metrics for redesign; do not silently revise them.
 
 ---
 
 ## Operational Status (at-a-glance)
 
 ```
-Production      🟢 / 🟡 / 🔴
-Collector       🟢 / 🟡 / 🔴
-Integrity       🟢 / 🟡 / 🔴
-Capability      🟢 / 🟡 / 🔴
-Unknowns        🟢 / 🟡 / 🔴
+Production      🟢 / 🟡 / 🔴     (checkpoint age < ~45 min in game hours + re-arm chain intact)
+Collector       🟢 / 🟡 / 🔴     (daemon polling; expected live books fresh)
+Integrity       🟢 / 🟡 / 🔴     (0 malformed/missing/dup/future-ts under the tool's field def)
+Capability      🟢 / 🟡 / 🔴     (maturation toward gates — a 🔴 here is NOT an incident)
+Unknowns        🟢 / 🟡 / 🔴     (🔴 while a load-bearing Known Unknown is open, e.g. KU-1 Pinnacle)
+Research Debt   n open (m new)   (threats to valid inference; see §Research Debt)
 
 Scientific Status
-  Paper 1       (frozen — state if anything even could bear on it)
-  Paper 2       (data-gated — which gate, current state)
-  Protocol      (stable / a Candidate defect open / a rule reclassified)
+  Paper 1   frozen — state whether anything could even bear on it
+  Paper 2   gated — which stopping rule blocks it, current state
+  Protocol  stable / Candidate defect open / rule reclassified
 ```
 
-**Light rubric (objective, not vibes):**
-- **Production 🟢** iff latest checkpoint age < ~45 min during game hours *and* the re-arm chain is intact. 🟡 if a benign no-game gap or a degraded-but-running condition. 🔴 if collection is stalled.
-- **Collector 🟢** iff the daemon is polling and both expected live books are fresh. 🟡 if one feed is stale for a non-structural reason. 🔴 on a crash/outage.
-- **Integrity 🟢** iff 0 malformed/missing/duplicate/future-ts *under the tool's field definition* (note the definition; see ED-4). 🔴 on any integrity break or schema regression.
-- **Capability** reflects *maturation toward gates*, never a failure: 🟢 all target capabilities present, 🟡 some absent-but-progressing, 🔴 a required capability structurally missing (e.g., no 3rd book). A 🔴 here is **not** an incident.
-- **Unknowns 🔴** while a top-ranked Known Unknown is unresolved and load-bearing (e.g., KU-1 Pinnacle root cause). 🟡 when unknowns exist but none blocks the critical path. 🟢 when none is material.
+*Health ≠ Capability: a missing capability (third book, PMF continuity) never turns Production/Integrity red.*
 
 ---
 
-## 1. Production Health *(evaluated every day; a 🔴 here is an incident)*
+## 1. Engineering Review
 
-Health = "is the machine alive and honest." Report and interpret:
-- **Liveness** — latest checkpoint timestamp vs wall-clock (the health report's self-written "running normally" freezes when the collector dies, so checkpoint age is the real signal).
-- **Checkpoint cadence** — is it on its ~15-min interval, or drifting/stalling.
-- **GitHub Actions / re-arm chain** — current run ID; distinguish normal `cancelled` handoffs from real `failure`s; verify the chain against the API, not narrative.
-- **Schema integrity** — malformed / missing / duplicate / future-ts, *stating the field definition* and any unvalidated fields (odds/status/line-type; ED-4).
-- **API failures / stale feeds** — per-book freshness; separate a benign no-game gap from a feed fault.
+Audit the production system and **attempt to falsify the assumption that the collector is healthy.**
+Report: current collector status; current Actions run ID; re-arm chain integrity (verify against the
+API — distinguish normal `cancelled` handoffs from real `failure`s); checkpoint cadence;
+infrastructure incidents; schema changes; dataset integrity (state the field definition; note
+unvalidated fields); feed outages; book availability; new failure modes; new operational risks. **If
+you find weaknesses hidden behind green health checks, explain them** and route each to Engineering
+Debt and/or Research Debt.
 
-## 2. System Capability *(maturation toward gates — NOT failures)*
+## 2. Verification Gates
 
-Capability = "what the platform can currently do." A missing capability is a capability, not a
-defect. Report the level and trend of:
-- **Two-book overlap** — simultaneous live pairs, overlap games (with the ED-3 alt-line caveat on the pair count).
-- **Third book** — present / absent and why (today: absent, ED-1 Pinnacle stillborn).
-- **Alternate totals** — coverage and whether discriminated (ED-3).
-- **Implied-PMF continuity** — SR-2 readiness (games with continuous PMF through ≥6 innings).
-- **Coverage** — innings, games/day, new-game enrollment (the thing overlap-games depends on; EP-4).
+**Recompute every stopping rule independently** from the raw panels (do not read the tool's verdict
+back). For each gate: current state, previous state, evidence, and whether the change is *engineering
+/ measurement / data accumulation / scientific evidence*. Carry each rule's maturity label from
+`STOPPING_RULE_CLASSIFICATION.md`. **Never declare a gate passed unless every criterion is actually
+satisfied**, and keep separate: *Engineering complete ≠ Production verified ≠ Research unlocked*.
 
-Interpret each change as one of: **more data / better infrastructure / better measurement / actual
-scientific progress** — these are not equivalent, and cumulative growth is *more data*, not evidence.
+## 3. Collector Behavior Review
 
-## 3. Research Status
+Analyze how the engine itself behaves: polling cadence; quote arrival; feed density; book
+synchronization; stale-quote behavior; suspension behavior; marketStatus behavior; alternate-line
+behavior; timestamp quality; quote lifecycle; synchronization artifacts. **Highlight what changed
+materially since yesterday, and separate permanent structural change from temporary noise.**
 
-- **Verification gates** — SR-1 / SR-2 / SR-3 current state, carrying their maturity label from
-  `STOPPING_RULE_CLASSIFICATION.md` (empirically validated / provisional / design assumption /
-  awaiting evidence). Keep three milestones separate: **Engineering complete ≠ Production verified ≠
-  Research unlocked.**
-- **Paper 1** — frozen; state plainly whether anything could even bear on it (usually: no, the live
-  panels are temporally/book/data-type disjoint).
-- **Paper 2** — which gate blocks it and its state.
-- **Findings** — assume none. Nothing promotes to a Finding unless a stopping rule objectively clears.
-  Classify everything else on the ladder below.
-- **Engineering predictions resolved today** — link any resolution to `ENGINEERING_PREDICTION_LOG.md`.
+## 4. Trend Dashboard
 
-**Classification ladder (use exactly these):**
-`Observation` → `Candidate` → `Rejected` → `Finding` (only past a cleared gate), plus **`Known
-Unknown`** for an unanswered question that is not yet even a hypothesis.
+Update operational trends (`collection_health.py --trend` + `metrics_history.jsonl`), grouped into
+four distinct tracks — never merged:
+- **Infrastructure** (reliability, cadence, re-arm) · **Measurement quality** (sync artifacts,
+  freshness, status coverage) · **Dataset maturity** (rows, games, overlap, coverage) · **Research
+  readiness** (gate progress).
 
-## 4. Engineering Debt / Known Unknowns
+Label each: **Improving / Stable / Regressing / Plateaued**, and explain *why* (and which of the four
+progress kinds it is).
 
-- **Top open debt** — from `ENGINEERING_DEBT_AND_KNOWN_UNKNOWNS.md`, ranked by risk-to-the-platform
-  (currently ED-1 Pinnacle at the top: *unknown infrastructure is dangerous infrastructure*).
-- **Known Unknowns** — the tracked open questions (KU-1..n); note any that moved.
-- **Opened / closed today** — new debt or unknowns surfaced, and any that a shipped fix + confirming
-  check closed.
+## 5. Adversarial Audit
+
+**Attempt to invalidate every standing conclusion:** Paper 1, Paper 2 assumptions, SR-1, SR-2,
+collector assumptions, health metrics, protocol assumptions, safeguards. **If nothing breaks, state
+explicitly why.** If something weakens, classify it on the ladder (Observation/Artifact/Candidate/
+Finding/Rejection) and log any *inference* threat to Research Debt. Prefer weaknesses over results.
+
+## 6. Dataset Maturity
+
+Objective growth only, **no interpretation:** rows, games, books, overlap, coverage, market states,
+quote lifecycle. Cumulative growth is *dataset growth*, not evidence.
+
+## 7. Research Review
+
+Determine whether any **new scientific evidence** actually exists. If not, say so plainly. Do not
+confuse infrastructure or measurement improvement with research progress. Nothing promotes to a
+Finding unless a stopping rule objectively cleared. Note any Engineering Prediction resolved today
+(→ `ENGINEERING_PREDICTION_LOG.md`).
+
+## 8. Research Debt  *(permanent — threats to valid inference)*
+
+Distinct from engineering debt. Report from `RESEARCH_DEBT.md`: the open threats to a *future*
+inference (which analysis each endangers and how it would bias it), any item **opened** today (a new
+inference threat surfaced by the audit) or **closed** (threat eliminated or quantified — never closed
+by "more data"). As Paper 2 approaches this backlog is the priority: these are the threats that must
+be cleared or explicitly bounded *before* any gated analysis is authorized.
+
+## 9. Recommendations
+
+Maximum three, ranked by expected **long-term research value**. Prefer permanent improvements over
+tactical ones. Do not recommend analysis unless a gate has objectively cleared.
+
+## 10. Executive Assessment
+
+Answer explicitly:
+1. Did the research program become more valuable today?
+2. Did the collector become more reliable?
+3. Did measurement improve?
+4. Did the dataset mature?
+5. Did scientific knowledge advance?
+6. What is now the single largest bottleneck?
+7. What is the highest-leverage next action?
 
 ---
 
-## Today's Change Log
+## Standing Directive
 
-A short, literal list of what changed since the last report: data facts (rows/pairs/coverage deltas),
-engineering/process changes (fixes shipped, docs added), and prediction resolutions. Each line tagged
-with its type — `[data]` / `[infra]` / `[measurement]` / `[science]` / `[process]` — so the reader can
-see at a glance that (almost always) the day was data + infra, not science.
+Do not try to create findings. Your responsibility is to **make the research harder to fool.** Assume
+every metric, gate, dashboard, and conclusion is guilty until independently verified. If no scientific
+progress occurred today, say so directly. If the most important work today was engineering or
+measurement, **make that the headline.** The collector builds a research asset over months; it does
+not generate nightly discoveries.
 
----
-
-## Standing rules & language discipline
-
-- **No research analysis unless a predefined gate objectively clears.** The collector builds a
-  research asset over months; it does not generate nightly discoveries.
-- **Liveness first**, skeptical always: assume every attractive result is an artifact until validated;
-  never confuse more observations with more evidence.
-- **Health ≠ Capability.** A missing capability (third book, PMF continuity) is not a failure and does
-  not turn Production/Integrity red.
-- **Separate observed fact from architectural hypothesis.** "The metric is quantized by the 30 s poll
-  interval" is an observed fact; "the gate is mis-specified" is an architectural conclusion. State the
-  first as fact and label the second a **Candidate**. Do **not** institutionalize an engineering
-  hypothesis as established methodology, and **flag** implementation-dependent metrics for redesign
-  rather than silently revising them.
-- **Data sources:** `collection_health.py` / `--trend`, `output/metrics_history.jsonl`, and the ops
-  registers (`ENGINEERING_PREDICTION_LOG.md`, `STOPPING_RULE_CLASSIFICATION.md`,
-  `ENGINEERING_DEBT_AND_KNOWN_UNKNOWNS.md`).
+**Registers backing this review:** `ENGINEERING_PREDICTION_LOG.md` · `STOPPING_RULE_CLASSIFICATION.md`
+· `ENGINEERING_DEBT_AND_KNOWN_UNKNOWNS.md` · `RESEARCH_DEBT.md` · `SR1_sync_lag_design_review.md` ·
+`POSTMORTEM_2026-07-06_collector_outage.md`.

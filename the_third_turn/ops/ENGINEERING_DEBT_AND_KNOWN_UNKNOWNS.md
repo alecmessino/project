@@ -4,6 +4,9 @@ The platform's running list of (a) things that are wrong or fragile and owe a fi
 metrics whose value depends on the implementation rather than the world, and (c) honest unanswered
 questions. Distinct from the decisions log (which records *settled* choices) and the safeguard
 registry (which records *rules*): this file records *open* engineering and epistemic obligations.
+Distinct also from `RESEARCH_DEBT.md`: this register is threats to the **system** (fragility, faults,
+implementation-dependent metrics); Research Debt is threats to **valid inference**. Many items appear
+in both with different framing, and each RD item links back to the ED where its fix lives.
 
 Ranked by risk-to-the-research-platform, not by ease.
 

@@ -10,7 +10,7 @@
 /* Erode — editorial callouts / ledes / pull-quotes only, never headings or dense UI. */
 @font-face{font-family:'Erode';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/erode-400.woff2") format("woff2")}
 @font-face{font-family:'Erode';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/erode-500.woff2") format("woff2")}
-@font-face{font-family:'Erode';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/erode-600.woff2") format("woff2")}
+@font-face{font-family:'Erode';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/erode-600.woff2") format("woff2")}
 @font-face{font-family:'Erode';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/erode-700.woff2") format("woff2")}
 
 :root{
@@ -42,7 +42,7 @@
   --ease-out:cubic-bezier(.2,.8,.2,1);
   /* Satoshi (--sans) is the workhorse: headings, body prose, and all UI. Erode (--serif) is reserved
      for editorial callouts — ledes, value statements, pull-quotes — where a serif adds prestige. */
-  --sans:'Satoshi',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;  /* headings + body + UI */
+  --sans:'Satoshi','Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;  /* headings + body + UI */
   --serif:'Erode','Georgia','Times New Roman',serif;   /* editorial callouts / ledes / pull-quotes only */
   --fz-xs:11px; --fz-sm:12.5px; --fz-md:15px; --fz-lg:18px; --fz-hero:30px;
 }

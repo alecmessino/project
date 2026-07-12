@@ -118,43 +118,48 @@
   a.cap-card:hover .cap-go{color:var(--teal)}
   a.cap-card:hover .cap-go::after{transform:translateX(4px)}
 
-  /* THE SYSTEM — the signature moment. Five interconnected domains converging into one emergent
-     outcome. At rest the eye lands on the system; selecting a domain illuminates the others it moves
-     and reveals the specific changes. Restraint: opacity and line-weight only — ~180ms fades, no
-     motion — an institutional interactive (think NYT graphic), not a dashboard. */
-  .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:58px 44px 50px;margin:0}
-  .sysband-in{max-width:640px;margin:0 auto;text-align:center}
+  /* THE THESIS — a museum exhibit. Five systems in a faint web; hovering one illuminates what it
+     moves, the centre names the coordination, the flow carries down to the outcome, and a causal
+     micro-story with one proof appears beneath. Paper under glass: ~300ms opacity + hairline
+     transitions only — no motion, no scale, no spring. Teach through interaction, not paragraphs. */
+  .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:60px 44px 54px;margin:0}
+  .sysband-in{max-width:660px;margin:0 auto;text-align:center}
   .sb-eye{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
-  .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(25px,2.1vw+15px,36px);line-height:1.14;letter-spacing:-.02em;color:var(--ink);margin:0 auto;max-width:19ch}
-  .sb-lede{font-family:var(--sans);font-size:16px;line-height:1.55;color:var(--dim);margin:15px auto 0;max-width:48ch}
-  .sysstage{margin:8px auto 0;max-width:520px}
+  .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(25px,2.1vw+15px,35px);line-height:1.14;letter-spacing:-.02em;color:var(--ink);margin:0 auto;max-width:20ch}
+  .sysstage{margin:16px auto 0;max-width:540px}
   .sysstage svg{width:100%;height:auto;display:block;overflow:visible}
   .sysstage text{font-family:var(--sans)}
-  .sysnode{cursor:pointer}
-  .sysnode .dot{fill:var(--ghost-line);transition:fill .18s ease}
-  .sysnode .lbl{fill:var(--dim);font-size:15px;font-weight:600;transition:fill .18s ease}
-  .sysnode:focus{outline:none}
-  .sysnode:focus-visible .hit{stroke:var(--accent-strike);stroke-width:2}
-  .sysnode.active .dot{fill:var(--ink)}
-  .sysnode.active .lbl{fill:var(--ink);font-weight:700}
-  .sysnode.lit .dot{fill:var(--ink)}
-  .sysnode.lit .lbl{fill:var(--ink)}
-  /* interconnection lines — hidden at rest; a selected domain fades in its links to the others */
-  .sysstage .link{stroke:var(--ink);stroke-width:1.3;opacity:0;transition:opacity .18s ease}
-  .sysstage .link.show{opacity:.82}
-  /* convergence lines — always present, faint; they carry into the phrase, no box around it */
-  .sysstage .converge{stroke:var(--ghost-line);stroke-width:1;opacity:.5;transition:opacity .18s ease,stroke .18s ease}
-  .sysstage .converge.hot{stroke:var(--ink);opacity:1}
-  .sysstage .keep{fill:var(--dim);font-weight:700;transition:fill .18s ease}
-  .sysstage .keep.on{fill:var(--ink)}
-  .sb-prompt{font-family:var(--sans);font-size:13px;letter-spacing:.02em;color:var(--muted);margin:20px auto 0;
-    min-height:46px;padding-top:14px;border-top:1px solid var(--line2);max-width:60ch}
-  .sb-prompt .who{font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike);margin-right:11px;white-space:nowrap}
-  .sb-prompt .chg{color:var(--body);font-size:14px}
-  .sb-more{display:inline-block;margin-top:18px;font-family:var(--sans);font-size:13px;font-weight:700;color:var(--teal2);text-decoration:none}
-  .sb-more:hover{color:var(--teal);text-decoration:underline}
-  @media(prefers-reduced-motion:reduce){.sysnode .dot,.sysnode .lbl,.sysstage .link,.sysstage .converge,.sysstage .keep{transition:none}}
-  @media(max-width:620px){.sysband{padding:42px 22px}.sysstage{max-width:400px}.sysnode .lbl{font-size:13px}}
+  .net{stroke:var(--ghost-line);stroke-width:1;opacity:.14;transition:opacity .3s ease,stroke .3s ease}
+  .net.lit{stroke:var(--accent-strike);opacity:.9}
+  .net.dim{opacity:.045}
+  .flow{stroke:var(--ghost-line);stroke-width:1;opacity:.42;transition:opacity .3s ease,stroke .3s ease}
+  .flow.on{stroke:var(--accent-strike);opacity:.9}
+  .hub{fill:var(--muted);font-size:16px;font-weight:700;letter-spacing:.005em;transition:fill .3s ease}
+  .hub.on{fill:var(--ink)}
+  .keep{fill:var(--dim);font-size:21px;font-weight:700;letter-spacing:-.012em;transition:fill .3s ease}
+  .keep.on{fill:var(--ink)}
+  .node{cursor:pointer}
+  .node .hit{fill:transparent}
+  .node .dot{fill:var(--ghost-line);transition:fill .3s ease}
+  .node .lbl{fill:var(--dim);font-size:15px;font-weight:600;transition:fill .3s ease}
+  .node.lit .dot{fill:var(--accent-strike)}
+  .node.lit .lbl{fill:var(--body)}
+  .node.active .dot{fill:var(--ink)}
+  .node.active .lbl{fill:var(--ink);font-weight:700}
+  .node:focus{outline:none}
+  .node:focus-visible .hit{stroke:var(--accent-strike);stroke-width:2}
+  /* the micro-story — a causal chain + one proof, cross-fading from a quiet rest prompt */
+  .mstory{position:relative;max-width:62ch;margin:26px auto 0;min-height:120px;padding-top:22px;border-top:1px solid var(--line2)}
+  .mrest{position:absolute;top:22px;left:0;right:0;font-family:var(--sans);font-size:13px;color:var(--muted);letter-spacing:.02em;margin:0;transition:opacity .3s ease}
+  .mlead{font-family:var(--serif);font-size:19px;line-height:1.38;color:var(--ink);margin:0 0 12px;opacity:0;transition:opacity .3s ease}
+  .mchain{font-family:var(--sans);font-size:13.5px;line-height:1.7;color:var(--muted);margin:0;opacity:0;transition:opacity .3s ease}
+  .mchain b{color:var(--body);font-weight:600}
+  .mproof{display:inline-block;margin-top:16px;font-family:var(--sans);font-size:13px;font-weight:700;color:var(--teal2);text-decoration:none;opacity:0;transition:opacity .3s ease,color .2s ease}
+  .mproof:hover{color:var(--teal);text-decoration:underline}
+  .mstory.show .mrest{opacity:0}
+  .mstory.show .mlead,.mstory.show .mchain,.mstory.show .mproof{opacity:1}
+  @media(prefers-reduced-motion:reduce){.net,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof{transition:none}}
+  @media(max-width:620px){.sysband{padding:44px 22px}.sysstage{max-width:410px}.node .lbl{font-size:13px}.mlead{font-size:17px}}
 
   /* Evidence — the surprise is the headline; the chart is the exhibit; methodology is a footnote. */
   .ev-head{font-family:var(--sans);font-weight:700;font-size:clamp(26px,2.4vw+15px,36px);line-height:1.08;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
@@ -255,58 +260,60 @@
       </div>
     </div>
 
-    <!-- ── THE SYSTEM — the core idea, experienced: every decision moves the others ── -->
+    <!-- ── THE THESIS — a museum exhibit: hovering a system teaches what it moves ── -->
     <div class="sysband" id="thesystem">
       <div class="sysband-in">
-        <div class="sb-eye">What we do</div>
-        <h2 class="sb-h">Five systems, coordinated as one.</h2>
-        <p class="sb-lede">Investments, taxes, estate, liquidity, and the professionals who advise you — usually managed in isolation, though every important decision moves the others.</p>
+        <div class="sb-eye">The thesis</div>
+        <h2 class="sb-h">Five systems. No decision touches just one.</h2>
         <div class="sysstage" id="sysDiagram">
-          <svg viewBox="0 0 720 500" role="group" aria-label="Five interconnected systems of a financial life — Investments, Taxes, Estate, Liquidity, and Professionals — converging into what you keep. Select a system to see what it changes.">
-            <!-- convergence lines: the five domains carry into the outcome (always present, faint) -->
-            <line class="converge" data-node="0" x1="360" y1="70" x2="360" y2="438"/>
-            <line class="converge" data-node="1" x1="155" y1="175" x2="360" y2="438"/>
-            <line class="converge" data-node="2" x1="565" y1="175" x2="360" y2="438"/>
-            <line class="converge" data-node="3" x1="245" y1="315" x2="360" y2="438"/>
-            <line class="converge" data-node="4" x1="475" y1="315" x2="360" y2="438"/>
-            <!-- interconnection lines: hidden at rest; a selected domain fades in its links -->
-            <line class="link" data-a="0" data-b="1" x1="360" y1="70" x2="155" y2="175"/>
-            <line class="link" data-a="0" data-b="2" x1="360" y1="70" x2="565" y2="175"/>
-            <line class="link" data-a="0" data-b="3" x1="360" y1="70" x2="245" y2="315"/>
-            <line class="link" data-a="0" data-b="4" x1="360" y1="70" x2="475" y2="315"/>
-            <line class="link" data-a="1" data-b="2" x1="155" y1="175" x2="565" y2="175"/>
-            <line class="link" data-a="1" data-b="3" x1="155" y1="175" x2="245" y2="315"/>
-            <line class="link" data-a="1" data-b="4" x1="155" y1="175" x2="475" y2="315"/>
-            <line class="link" data-a="2" data-b="3" x1="565" y1="175" x2="245" y2="315"/>
-            <line class="link" data-a="2" data-b="4" x1="565" y1="175" x2="475" y2="315"/>
-            <line class="link" data-a="3" data-b="4" x1="245" y1="315" x2="475" y2="315"/>
-            <!-- the emergent outcome — no box; the lines carry into the phrase -->
-            <text class="keep" x="360" y="468" text-anchor="middle" font-size="23">What you keep</text>
-            <!-- the five domains -->
-            <g class="sysnode" data-node="0" tabindex="0" role="button" aria-label="Investments — changes Taxes, Estate, Liquidity, and Professionals">
-              <circle class="hit" cx="360" cy="70" r="30" fill="transparent"/><circle class="dot" cx="360" cy="70" r="6"/>
-              <text class="lbl" x="360" y="50" text-anchor="middle">Investments</text>
+          <svg viewBox="0 0 620 540" role="group" aria-label="Five financial systems — Portfolio, Taxes, Liquidity, Professionals, and Estate — in one coordinated network. Hover a system to see what it moves; what you keep is the result.">
+            <!-- the network: every system connected to every other (faint at rest) -->
+            <line class="net" data-a="0" data-b="1" x1="310" y1="60" x2="467" y2="174"/>
+            <line class="net" data-a="0" data-b="2" x1="310" y1="60" x2="407" y2="358"/>
+            <line class="net" data-a="0" data-b="3" x1="310" y1="60" x2="213" y2="358"/>
+            <line class="net" data-a="0" data-b="4" x1="310" y1="60" x2="153" y2="174"/>
+            <line class="net" data-a="1" data-b="2" x1="467" y1="174" x2="407" y2="358"/>
+            <line class="net" data-a="1" data-b="3" x1="467" y1="174" x2="213" y2="358"/>
+            <line class="net" data-a="1" data-b="4" x1="467" y1="174" x2="153" y2="174"/>
+            <line class="net" data-a="2" data-b="3" x1="407" y1="358" x2="213" y2="358"/>
+            <line class="net" data-a="2" data-b="4" x1="407" y1="358" x2="153" y2="174"/>
+            <line class="net" data-a="3" data-b="4" x1="213" y1="358" x2="153" y2="174"/>
+            <!-- the flow: coordination carries down to the outcome -->
+            <line class="flow" x1="310" y1="256" x2="310" y2="474"/>
+            <!-- the centre: coordination (an invisible paper mask keeps it legible over the web) -->
+            <rect class="hub-bg" x="256" y="214" width="108" height="24" fill="var(--bg)"/>
+            <text class="hub" x="310" y="230" text-anchor="middle">Coordination</text>
+            <!-- the outcome — free, below the network; never boxed -->
+            <text class="keep" x="310" y="500" text-anchor="middle">What you keep.</text>
+            <!-- the five systems -->
+            <g class="node" data-i="0" tabindex="0" role="button" aria-label="Portfolio — see what it moves">
+              <circle class="hit" cx="310" cy="60" r="30"/><circle class="dot" cx="310" cy="60" r="5.5"/>
+              <text class="lbl" x="310" y="38" text-anchor="middle">Portfolio</text>
             </g>
-            <g class="sysnode" data-node="1" tabindex="0" role="button" aria-label="Taxes — changes Investments, Estate, Liquidity, and Professionals">
-              <circle class="hit" cx="155" cy="175" r="30" fill="transparent"/><circle class="dot" cx="155" cy="175" r="6"/>
-              <text class="lbl" x="139" y="180" text-anchor="end">Taxes</text>
+            <g class="node" data-i="1" tabindex="0" role="button" aria-label="Taxes — see what it moves">
+              <circle class="hit" cx="467" cy="174" r="30"/><circle class="dot" cx="467" cy="174" r="5.5"/>
+              <text class="lbl" x="491" y="179" text-anchor="start">Taxes</text>
             </g>
-            <g class="sysnode" data-node="2" tabindex="0" role="button" aria-label="Estate — changes Investments, Taxes, Liquidity, and Professionals">
-              <circle class="hit" cx="565" cy="175" r="30" fill="transparent"/><circle class="dot" cx="565" cy="175" r="6"/>
-              <text class="lbl" x="581" y="180" text-anchor="start">Estate</text>
+            <g class="node" data-i="2" tabindex="0" role="button" aria-label="Liquidity — see what it moves">
+              <circle class="hit" cx="407" cy="358" r="30"/><circle class="dot" cx="407" cy="358" r="5.5"/>
+              <text class="lbl" x="407" y="390" text-anchor="middle">Liquidity</text>
             </g>
-            <g class="sysnode" data-node="3" tabindex="0" role="button" aria-label="Liquidity — changes Investments, Taxes, Estate, and Professionals">
-              <circle class="hit" cx="245" cy="315" r="30" fill="transparent"/><circle class="dot" cx="245" cy="315" r="6"/>
-              <text class="lbl" x="229" y="320" text-anchor="end">Liquidity</text>
+            <g class="node" data-i="3" tabindex="0" role="button" aria-label="Professionals — see what they move">
+              <circle class="hit" cx="213" cy="358" r="30"/><circle class="dot" cx="213" cy="358" r="5.5"/>
+              <text class="lbl" x="213" y="390" text-anchor="middle">Professionals</text>
             </g>
-            <g class="sysnode" data-node="4" tabindex="0" role="button" aria-label="Professionals — change Investments, Taxes, Estate, and Liquidity">
-              <circle class="hit" cx="475" cy="315" r="30" fill="transparent"/><circle class="dot" cx="475" cy="315" r="6"/>
-              <text class="lbl" x="491" y="320" text-anchor="start">Professionals</text>
+            <g class="node" data-i="4" tabindex="0" role="button" aria-label="Estate — see what it moves">
+              <circle class="hit" cx="153" cy="174" r="30"/><circle class="dot" cx="153" cy="174" r="5.5"/>
+              <text class="lbl" x="129" y="179" text-anchor="end">Estate</text>
             </g>
           </svg>
         </div>
-        <p class="sb-prompt" id="sysPrompt">Select a decision to see what else changes.</p>
-        <a class="sb-more" href="coordination.html">See it in one household →</a>
+        <div class="mstory" id="mstory">
+          <p class="mrest" id="mrest">Hover a system to follow what it moves.</p>
+          <p class="mlead" id="mlead"></p>
+          <p class="mchain" id="mchain"></p>
+          <a class="mproof" id="mproof" href="#"></a>
+        </div>
       </div>
     </div>
 
@@ -562,50 +569,80 @@ window.__STATE__ = {"header": {"generated": "2026-07-11 23:14:25 UTC"}, "hero": 
   set(30);
 })();
 
-// The System — teaching interaction: selecting a domain illuminates the others it moves and reveals
-// the specific downstream changes. Opacity and line-weight only; no motion. An institutional
-// interactive (think NYT graphic), not a dashboard. Hover, focus, or tap on mobile.
+// The Thesis — a museum exhibit. Hovering a system runs three layers at once: the network
+// illuminates what it moves, the centre names the coordination and the flow carries down to the
+// outcome, and a causal micro-story + one proof appear beneath. Opacity + hairline transitions
+// only (~300ms); no motion. Click a system to open its proof.
 (function(){
   var stage = document.getElementById("sysDiagram"); if(!stage) return;
   var svg = stage.querySelector("svg"); if(!svg) return;
-  var nodes = [].slice.call(svg.querySelectorAll(".sysnode"));
-  var links = [].slice.call(svg.querySelectorAll(".link"));
-  var conv  = [].slice.call(svg.querySelectorAll(".converge"));
+  var nodes = [].slice.call(svg.querySelectorAll(".node"));
+  var nets  = [].slice.call(svg.querySelectorAll(".net"));
+  var flow  = svg.querySelector(".flow");
+  var hub   = svg.querySelector(".hub");
+  var hubBg = svg.querySelector(".hub-bg");
   var keep  = svg.querySelector(".keep");
-  var prompt = document.getElementById("sysPrompt");
-  if(!nodes.length || !prompt) return;
-  var PROMPT = 'Select a decision to see what else changes.';
-  // Every decision changes every other; the reveal names the specific downstream effects.
-  var CHANGES = [
-    ['Investments','Realized gains · asset location · estate basis · what’s available to spend'],
-    ['Taxes','Asset location · withdrawal sequencing · estate value · charitable strategy · CPA coordination'],
-    ['Estate','The investment mix · the transfer tax · the liquidity to pay it · gifting timing'],
-    ['Liquidity','Which lots are sold · the bracket a withdrawal lands in · the portfolio’s balance'],
-    ['Professionals','Every domain — the CPA, attorney, and advisor each touch the others’ work']
+  var story = document.getElementById("mstory");
+  var lead  = document.getElementById("mlead");
+  var chain = document.getElementById("mchain");
+  var proof = document.getElementById("mproof");
+  if(!nodes.length || !story) return;
+  var HUB0 = "Coordination";
+  // Each system: how the centre reads, the memorable lead, the causal chain, and the one proof.
+  var SYS = [
+    { center:"Coordinating the portfolio", lead:"Portfolios determine taxes.",
+      chain:["what you own sets the tax bill","the bill sets where each holding is placed","placement sets the estate basis","coordination determines what you keep"],
+      href:"thesis.html", proof:"See how we invest" },
+    { center:"Coordinating taxes", lead:"Taxes never change alone.",
+      chain:["asset location changes withdrawals","withdrawals affect the estate","the estate changes beneficiary strategy","coordination determines what you keep"],
+      href:"taxlab.html", proof:"See the After-Tax Review" },
+    { center:"Coordinating liquidity", lead:"Liquidity changes every other decision.",
+      chain:["a cash need forces a sale","the sale realizes gains","the gains move the tax bracket","coordination determines what you keep"],
+      href:"opportunity-register.html", proof:"See the Opportunity Register" },
+    { center:"Coordinating your specialists", lead:"Specialists optimize the parts. Coordination optimizes the whole.",
+      chain:["the CPA optimizes taxes","the attorney optimizes the estate","the advisor optimizes the portfolio","coordination aligns all three"],
+      href:"decision-register.html", proof:"See the Decision Register" },
+    { center:"Coordinating the estate", lead:"Estate planning changes the portfolio.",
+      chain:["the transfer plan reshapes the portfolio","the portfolio sets the step-up","the step-up changes what heirs owe","coordination determines what you keep"],
+      href:"manual.html", proof:"See the Operating Manual" }
   ];
+  function fitHub(){
+    if(!hubBg || !hub.getBBox) return;
+    try{ var b = hub.getBBox();
+      hubBg.setAttribute("x", b.x - 14); hubBg.setAttribute("y", b.y - 6);
+      hubBg.setAttribute("width", b.width + 28); hubBg.setAttribute("height", b.height + 12);
+    }catch(e){}
+  }
   function show(i){
+    var d = SYS[i];
     nodes.forEach(function(nd,j){ nd.classList.toggle("active", j===i); nd.classList.toggle("lit", j!==i); });
-    links.forEach(function(ln){ var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b"); ln.classList.toggle("show", a===i||b===i); });
-    conv.forEach(function(cv){ cv.classList.toggle("hot", +cv.getAttribute("data-node")===i); });
+    nets.forEach(function(ln){ var on=(+ln.getAttribute("data-a")===i)||(+ln.getAttribute("data-b")===i);
+      ln.classList.toggle("lit", on); ln.classList.toggle("dim", !on); });
+    if(flow) flow.classList.add("on");
+    hub.textContent = d.center; hub.classList.add("on"); fitHub();
     if(keep) keep.classList.add("on");
-    prompt.innerHTML = '<span class="who">'+CHANGES[i][0]+' moves</span><span class="chg">'+CHANGES[i][1]+'</span>';
+    lead.textContent = d.lead;
+    chain.innerHTML = d.chain.map(function(c,k){ return k===d.chain.length-1 ? '<b>'+c+'</b>' : c; }).join(' &rarr; ');
+    proof.textContent = d.proof + " →"; proof.setAttribute("href", d.href);
+    story.classList.add("show");
   }
   function clear(){
     nodes.forEach(function(nd){ nd.classList.remove("active","lit"); });
-    links.forEach(function(ln){ ln.classList.remove("show"); });
-    conv.forEach(function(cv){ cv.classList.remove("hot"); });
+    nets.forEach(function(ln){ ln.classList.remove("lit","dim"); });
+    if(flow) flow.classList.remove("on");
+    hub.textContent = HUB0; hub.classList.remove("on"); fitHub();
     if(keep) keep.classList.remove("on");
-    prompt.textContent = PROMPT;
+    story.classList.remove("show");
   }
   nodes.forEach(function(nd,i){
     nd.addEventListener("mouseenter", function(){ show(i); });
     nd.addEventListener("focus", function(){ show(i); });
-    nd.addEventListener("click", function(){ show(i); });
-    nd.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show(i); } });
+    nd.addEventListener("click", function(){ window.location.href = SYS[i].href; });
+    nd.addEventListener("keydown", function(e){ if(e.key==="Enter"){ window.location.href = SYS[i].href; } });
   });
   svg.addEventListener("mouseleave", clear);
   stage.addEventListener("focusout", function(e){ if(!stage.contains(e.relatedTarget)) clear(); });
-  prompt.textContent = PROMPT;
+  fitHub();
 })();
 </script>
 </body>

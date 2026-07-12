@@ -51,6 +51,41 @@ before it ships. They are the reason the site reads as one authored institution.
 
 ---
 
+## 0.6 · The one-question test
+
+Every page answers **exactly one question.** If a page answers two, split it. If it
+answers none, delete it. This is the sharpest editorial filter we have — it decides
+what a page is *for* before a word is written.
+
+| Page | The one question |
+|---|---|
+| Home | *Why Driftwood?* |
+| Operating System | *What actually happens?* |
+| After-Tax Review | *Can coordination be measured?* |
+| Manual | *How is this household run?* |
+| Decision Register | *Why was each decision made?* |
+| Opportunity Register | *What should happen next?* |
+| Research | *Why should I believe this?* |
+
+This is the page-level twin of the family question (§2): the family says what *kind* of
+document this is; the one-question test says what *this* document is for.
+
+## 0.7 · The publishing checklist (run against every page during normalization)
+
+Not "does it compile?" — "is it authored?" Every page is walked against this list before
+its family PR opens.
+
+- **Identity** — one institution · one page title · one document family.
+- **Narrative** — one thesis · one deck · no duplicated idea.
+- **Structure** — consistent opening rhythm · spacing · measure · rule treatment.
+- **Navigation** — a clear next document · a clear relationship to the wider body.
+- **Editorial** — read it aloud once · **remove one unnecessary sentence.**
+
+**Every page loses something during normalization.** That is a requirement, not an
+aspiration. A normalization commit that only adds is suspect.
+
+---
+
 ## 1 · The audit — what's inconsistent today
 
 Surveyed all 40 shipped pages. Findings, worst first:
@@ -165,6 +200,13 @@ One-sentence deck.
 - Uses the **frozen confluence mark**, never the old "D."
 - One fictional household name site-wide: **Harris**.
 
+**Record & Reference are also a historical-integrity pass.** These are the pages
+sophisticated visitors scrutinize most closely, so every archival artifact must answer:
+is the branding **current** (frozen mark, never the old "D")? Are the **names**
+internally consistent (one household: Harris)? Are the **dates** consistent? Are the
+**version numbers** consistent? Are examples clearly labeled **illustrative** where
+appropriate?
+
 ---
 
 ## 5 · Typography hierarchy (one ladder)
@@ -229,6 +271,22 @@ Applied site-wide, the same discipline already applied to the homepage:
 6. One institutional voice: quiet, confident, observational, evidence-first. Product
    copy ("Get started," "Unlock…") is removed.
 
+## 8.5 · The institutional QA gate (before every merge)
+
+No PR merges until every answer is **yes**, or the exception is intentional and documented
+(§9). The checklist a reviewer can run in thirty seconds:
+
+1. Does the page load with the **same top spacing** as every other page?
+2. Is there exactly **one identity**?
+3. Is there exactly **one eyebrow**?
+4. Is there exactly **one H1**?
+5. Is there exactly **one thesis**?
+6. Is there exactly **one primary action**?
+7. Does the **first screen** tell me where I am?
+8. Does this page **earn its existence**?
+9. Could **one paragraph** be deleted?
+10. Does it feel like it belongs to the **same institution** as every other page?
+
 ---
 
 ## 9 · Sanctioned exceptions
@@ -262,10 +320,46 @@ Every other page conforms.
 
 ## 11 · Rollout (after approval)
 
-1. Add the spacing tokens + two header partials to `driftwood.css` / `statepage.py`.
-2. Normalize page by page, family by family — mechanical, one commit per family.
-3. Deliver as **one PR for review** with before/after screenshots per family and the
-   exception list. No auto-merge.
+**The public website is now assumed complete.** From here, every change must justify
+itself by *deleting complexity, not adding it* — no new content, no new capability, no
+redesign. What remains is editorial normalization only.
 
-This is an editorial systems pass, **not a redesign**. No page loses content; pages
+**Phase A — finish the public editorial polish.** One PR per slice, reviewed, not
+auto-merged. Two tracks are separated on purpose:
+
+1. **Spacing foundation** (infrastructure — its own PR): the §6 tokens in `driftwood.css`
+   plus the centralized opening rhythm. Reviewed alone so spacing never changes silently
+   inside an editorial PR.
+2. **Editorial normalization**, family by family: **Essay → Research → Record/Reference →
+   Exhibits → Cases → Tools.** (Research is early — it is one of Driftwood's biggest
+   credibility differentiators.) Header grammar, duplicate removal, typography rhythm,
+   page framing, taxonomy. Nothing conceptual.
+
+Every slice is run against §0.7 (the checklist) and §8.5 (the QA gate) before it opens.
+
+**Phase B — walk the whole site.** Then stop shipping and *use* the site. Every page, on
+desktop, tablet, and phone. This review surfaces the last ~50 small issues and is worth
+more than any feature.
+
+**v1 is complete when this is true:** *no page visibly reveals which template generated
+it.* Someone should feel they are reading one publication, not traversing page generators.
+
+This remains an editorial systems pass, **not a redesign**. No page loses content; pages
 lose repetition.
+
+---
+
+## 12 · The close: a constitution, then a freeze
+
+Before design gravity shifts off the public site, produce one final artifact:
+
+**Public Site Constitution v1** — a single document capturing design principles ·
+publishing grammar · identity rules · document families · editorial principles ·
+intentional exceptions · version history. It becomes the canonical reference so every
+future change is an *amendment to a defined system*, not an ad-hoc improvement.
+
+Then the public site **freezes** — bug fixes and new research only — and the center of
+gravity moves to the **Advisor Workspace**: the flagship, built in a deliberately
+different, product design language (dense, purposeful, keyboard-first — Bloomberg /
+Foundry / Stripe / Linear, not the editorial museum). Internally it is the *Coordination
+Engine*; the client never sees that name, but it changes how it is built.

@@ -201,6 +201,20 @@
   a.rl-card:hover .rl-go{color:var(--teal)}
   .sb-link{display:inline-block;margin-top:12px;font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--teal2);text-decoration:none}
   .sb-link:hover{color:var(--teal);text-decoration:underline}
+  /* Operating System — a family-office archive index, not feature cards: ruled rows, quiet
+     metadata, one affordance. Institutional restraint over SaaS. */
+  .os-note{font-family:var(--sans);font-size:14px;color:var(--dim);line-height:1.6;margin:0 0 20px;max-width:64ch}
+  .os-archive{border-top:1px solid var(--line);margin-top:4px}
+  a.os-entry{display:block;padding:27px 4px 25px;border-bottom:1px solid var(--line);
+    text-decoration:none;color:inherit;transition:border-color .18s ease}
+  a.os-entry:hover{border-bottom-color:var(--accent-strike)}
+  .os-title{font-family:var(--sans);font-size:20px;font-weight:600;letter-spacing:-.015em;color:var(--ink);margin:0 0 7px;transition:color .18s ease}
+  a.os-entry:hover .os-title{color:var(--accent-strike)}
+  .os-desc{font-family:var(--sans);font-size:14px;line-height:1.55;color:var(--dim);margin:0 0 14px;max-width:62ch}
+  .os-view{font-family:var(--sans);font-size:12.5px;font-weight:600;letter-spacing:.01em;color:var(--teal2)}
+  .os-view::after{content:"\00a0→";display:inline-block;transition:transform .2s var(--ease-out)}
+  a.os-entry:hover .os-view{color:var(--teal)}
+  a.os-entry:hover .os-view::after{transform:translateX(3px)}
 </style>
 </head>
 <body>
@@ -300,38 +314,30 @@
     <div class="sec" id="operating-system">
       <div class="h">The operating system</div>
       <p class="lede2">Coordinating five systems takes a method, not a feeling — an operating calendar, a documented process, and clear accountability. That method is the operating system an institution runs on, brought to a single household.</p>
-      <p class="sysbody">You see the method in what it leaves behind. <b>Every coordinated household runs on four enduring records</b> — the system written down, and kept current:</p>
-      <div class="rl-cards">
-        <a class="rl-card feat" href="manual.html">
-          <div class="rl-meta">The standing system</div>
-          <div class="rl-t">The Wealth Operating Manual</div>
-          <div class="rl-d">The team, the balance sheet, the calendar, and the open opportunities — the whole
-            system in one place, kept current, not filed once a year.</div>
-          <div class="rl-go">See a sample →</div>
+      <p class="os-note">You see the method in what it leaves behind: the enduring records a coordinated household runs on, kept as one archive. Shown here as illustrative samples for a fictional family.</p>
+      <div class="os-archive">
+        <a class="os-entry" href="manual.html">
+          <div class="os-title">Wealth Operating Manual</div>
+          <div class="os-desc">The standing reference for how the household is managed.</div>
+          <div class="os-view">View sample</div>
         </a>
-        <a class="rl-card" href="opportunity-register.html">
-          <div class="rl-meta">What coordination surfaces</div>
-          <div class="rl-t">The Opportunity Register</div>
-          <div class="rl-d">A running, prioritized list of what coordination has found across the balance sheet —
-            and where each item stands.</div>
-          <div class="rl-go">See a sample →</div>
+        <a class="os-entry" href="decision-register.html">
+          <div class="os-title">Decision Register</div>
+          <div class="os-desc">Every coordinated decision, recorded with its rationale and downstream effects.</div>
+          <div class="os-view">View sample</div>
         </a>
-        <a class="rl-card" href="decision-register.html">
-          <div class="rl-meta">What was decided, and why</div>
-          <div class="rl-t">The Decision Register</div>
-          <div class="rl-d">A dated record of every important decision — why it was made, and what it moved across
-            the rest of the system.</div>
-          <div class="rl-go">See a sample →</div>
+        <a class="os-entry" href="opportunity-register.html">
+          <div class="os-title">Opportunity Register</div>
+          <div class="os-desc">Open coordination opportunities across the balance sheet, awaiting implementation.</div>
+          <div class="os-view">View sample</div>
         </a>
-        <a class="rl-card" href="awor.html">
-          <div class="rl-meta">The year, in one document</div>
-          <div class="rl-t">The Annual Operating Review</div>
-          <div class="rl-d">Once a year, the whole system in one document: what changed, what's ahead, and who owns
-            each decision.</div>
-          <div class="rl-go">See a sample →</div>
+        <a class="os-entry" href="awor.html">
+          <div class="os-title">Annual Operating Review</div>
+          <div class="os-desc">The yearly institutional review of the complete financial system.</div>
+          <div class="os-view">View sample</div>
         </a>
       </div>
-      <a class="sb-link" href="inside.html" style="margin-top:14px">See how the operating system is built →</a>
+      <a class="sb-link" href="inside.html" style="margin-top:16px">See how the operating system is built →</a>
     </div>
 
     <!-- ── HOW IT WORKS — four capabilities, one sequence ── -->

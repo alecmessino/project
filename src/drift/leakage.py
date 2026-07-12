@@ -76,6 +76,11 @@ _DISPLAY = [("Federal only", "—"), ("Illinois", "IL"), ("New York", "NY"), ("C
 
 # The two engine levers that make up the assumption-free recovery (after-tax %/yr; ~federal→CA range).
 _LEVERS = [
+    {"name": "Asset location",
+     "share": "the coordination",
+     "desc": "The bridge between how you invest and how the household is structured — placing the "
+             "higher-turnover strategy in Roth and Traditional accounts, where its short-term gains escape "
+             "tax entirely. Coordination itself; quantified for each household in the After-Tax Review."},
     {"name": "Patient trading and lot selection",
      "share": "≈ 60–65%",
      "desc": "Holds positions through short-term noise and chooses which lots to sell, turning gains that "
@@ -84,10 +89,6 @@ _LEVERS = [
      "share": "≈ 35–40%",
      "desc": "Realizes losses and applies them against the highest-taxed gains first — capturing a spread "
              "a simple buy-and-hold fund never reaches."},
-    {"name": "Asset location",
-     "share": "household-specific",
-     "desc": "Places the higher-turnover strategy in Roth and Traditional accounts, where its short-term "
-             "gains escape tax entirely; quantified for each household in the After-Tax Review."},
 ]
 
 
@@ -111,7 +112,7 @@ def build_leakage() -> dict:
             "keep_pct": 9,                            # keeps 9% of the 30y pre-tax gain after tax
         },
         "after": {
-            "label": "Structural Alpha · tax-managed",
+            "label": "Coordinated · tax-managed",
             "sub": "The same holdings, managed for tax: careful lot selection, patient trading, and loss harvesting.",
             "st_share": 53, "turnover": 136,
             "atc_low": 5.1, "atc_high": 6.3,

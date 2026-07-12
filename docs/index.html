@@ -204,18 +204,17 @@
   /* Operating System — a family-office archive index, not feature cards: ruled rows, quiet
      metadata, one affordance. Institutional restraint over SaaS. */
   .os-note{font-family:var(--sans);font-size:14px;color:var(--dim);line-height:1.6;margin:0 0 20px;max-width:64ch}
-  .os-archive{border-top:1px solid var(--line)}
-  a.os-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;
-    padding:19px 4px 18px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;
-    transition:border-color .18s ease}
-  a.os-row:hover{border-bottom-color:var(--accent-strike)}
-  .os-name{font-family:var(--sans);font-size:18px;font-weight:500;letter-spacing:-.012em;color:var(--ink);transition:color .18s ease}
-  a.os-row:hover .os-name{color:var(--accent-strike)}
-  .os-right{display:inline-flex;align-items:baseline;gap:26px;margin-left:auto}
-  .os-meta{font-family:var(--sans);font-size:12.5px;color:var(--muted);letter-spacing:.02em}
-  .os-view{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal2);white-space:nowrap}
-  a.os-row:hover .os-view{color:var(--teal)}
-  @media(max-width:560px){.os-right{margin-left:0;width:100%;justify-content:space-between;gap:16px}}
+  .os-archive{border-top:1px solid var(--line);margin-top:4px}
+  a.os-entry{display:block;padding:27px 4px 25px;border-bottom:1px solid var(--line);
+    text-decoration:none;color:inherit;transition:border-color .18s ease}
+  a.os-entry:hover{border-bottom-color:var(--accent-strike)}
+  .os-title{font-family:var(--sans);font-size:20px;font-weight:600;letter-spacing:-.015em;color:var(--ink);margin:0 0 7px;transition:color .18s ease}
+  a.os-entry:hover .os-title{color:var(--accent-strike)}
+  .os-desc{font-family:var(--sans);font-size:14px;line-height:1.55;color:var(--dim);margin:0 0 14px;max-width:62ch}
+  .os-view{font-family:var(--sans);font-size:12.5px;font-weight:600;letter-spacing:.01em;color:var(--teal2)}
+  .os-view::after{content:"\00a0→";display:inline-block;transition:transform .2s var(--ease-out)}
+  a.os-entry:hover .os-view{color:var(--teal)}
+  a.os-entry:hover .os-view::after{transform:translateX(3px)}
 </style>
 </head>
 <body>
@@ -317,21 +316,25 @@
       <p class="lede2">Coordinating five systems takes a method, not a feeling — an operating calendar, a documented process, and clear accountability. That method is the operating system an institution runs on, brought to a single household.</p>
       <p class="os-note">You see the method in what it leaves behind: the enduring records a coordinated household runs on, kept as one archive. Shown here as illustrative samples for a fictional family.</p>
       <div class="os-archive">
-        <a class="os-row" href="manual.html">
-          <span class="os-name">The Wealth Operating Manual</span>
-          <span class="os-right"><span class="os-meta">Updated continuously</span><span class="os-view">View</span></span>
+        <a class="os-entry" href="manual.html">
+          <div class="os-title">Wealth Operating Manual</div>
+          <div class="os-desc">The standing reference for how the household is managed.</div>
+          <div class="os-view">View sample</div>
         </a>
-        <a class="os-row" href="decision-register.html">
-          <span class="os-name">The Decision Register</span>
-          <span class="os-right"><span class="os-meta">Append-only · every decision dated</span><span class="os-view">View</span></span>
+        <a class="os-entry" href="decision-register.html">
+          <div class="os-title">Decision Register</div>
+          <div class="os-desc">Every coordinated decision, recorded with its rationale and downstream effects.</div>
+          <div class="os-view">View sample</div>
         </a>
-        <a class="os-row" href="opportunity-register.html">
-          <span class="os-name">The Opportunity Register</span>
-          <span class="os-right"><span class="os-meta">Standing · prioritized</span><span class="os-view">View</span></span>
+        <a class="os-entry" href="opportunity-register.html">
+          <div class="os-title">Opportunity Register</div>
+          <div class="os-desc">Open coordination opportunities across the balance sheet, awaiting implementation.</div>
+          <div class="os-view">View sample</div>
         </a>
-        <a class="os-row" href="awor.html">
-          <span class="os-name">The Annual Operating Review</span>
-          <span class="os-right"><span class="os-meta">2026 edition</span><span class="os-view">View</span></span>
+        <a class="os-entry" href="awor.html">
+          <div class="os-title">Annual Operating Review</div>
+          <div class="os-desc">The yearly institutional review of the complete financial system.</div>
+          <div class="os-view">View sample</div>
         </a>
       </div>
       <a class="sb-link" href="inside.html" style="margin-top:16px">See how the operating system is built →</a>

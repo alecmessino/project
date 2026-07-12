@@ -122,40 +122,40 @@
      moves, the centre names the coordination, the flow carries down to the outcome, and a causal
      micro-story with one proof appears beneath. Paper under glass: ~300ms opacity + hairline
      transitions only — no motion, no scale, no spring. Teach through interaction, not paragraphs. */
-  .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:60px 44px 54px;margin:0}
-  .sysband-in{max-width:660px;margin:0 auto;text-align:center}
+  .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:76px 44px 68px;margin:0}
+  .sysband-in{max-width:680px;margin:0 auto;text-align:center}
   .sb-eye{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
   .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(25px,2.1vw+15px,35px);line-height:1.14;letter-spacing:-.02em;color:var(--ink);margin:0 auto;max-width:20ch}
-  .sysstage{margin:16px auto 0;max-width:540px}
+  .sysstage{margin:28px auto 0;max-width:568px}
   .sysstage svg{width:100%;height:auto;display:block;overflow:visible}
   .sysstage text{font-family:var(--sans)}
-  .net{stroke:var(--ghost-line);stroke-width:1;opacity:.14;transition:opacity .3s ease,stroke .3s ease}
-  .net.lit{stroke:var(--accent-strike);opacity:.9}
-  .net.dim{opacity:.045}
-  .flow{stroke:var(--ghost-line);stroke-width:1;opacity:.42;transition:opacity .3s ease,stroke .3s ease}
-  .flow.on{stroke:var(--accent-strike);opacity:.9}
-  .hub{fill:var(--muted);font-size:16px;font-weight:700;letter-spacing:.005em;transition:fill .3s ease}
+  /* the web — hairline-thin and near-silent at rest; a hovered system lifts its own links only */
+  .net{stroke:var(--ghost-line);stroke-width:.8;opacity:.11;transition:opacity .34s ease,stroke .34s ease}
+  .net.lit{stroke:var(--accent-strike);stroke-width:1;opacity:.72}
+  .net.dim{opacity:.03}
+  .flow{stroke:var(--ghost-line);stroke-width:.8;opacity:.32;transition:opacity .34s ease,stroke .34s ease}
+  .flow.on{stroke:var(--accent-strike);opacity:.72}
+  .hub{fill:var(--muted);font-size:15px;font-weight:700;letter-spacing:.03em;transition:fill .34s ease}
   .hub.on{fill:var(--ink)}
-  .keep{fill:var(--dim);font-size:21px;font-weight:700;letter-spacing:-.012em;transition:fill .3s ease}
+  .keep{fill:var(--dim);font-size:22px;font-weight:700;letter-spacing:-.012em;transition:fill .34s ease}
   .keep.on{fill:var(--ink)}
   .node{cursor:pointer}
   .node .hit{fill:transparent}
-  .node .dot{fill:var(--ghost-line);transition:fill .3s ease}
-  .node .lbl{fill:var(--dim);font-size:15px;font-weight:600;transition:fill .3s ease}
+  .node .dot{fill:var(--ghost-line);transition:fill .34s ease}
+  .node .lbl{fill:var(--dim);font-size:14.5px;font-weight:600;transition:fill .34s ease}
   .node.lit .dot{fill:var(--accent-strike)}
   .node.lit .lbl{fill:var(--body)}
   .node.active .dot{fill:var(--ink)}
   .node.active .lbl{fill:var(--ink);font-weight:700}
   .node:focus{outline:none}
   .node:focus-visible .hit{stroke:var(--accent-strike);stroke-width:2}
-  /* the micro-story — a causal chain + one proof, cross-fading from a quiet rest prompt */
-  .mstory{position:relative;max-width:62ch;margin:26px auto 0;min-height:120px;padding-top:22px;border-top:1px solid var(--line2)}
-  .mrest{position:absolute;top:22px;left:0;right:0;font-family:var(--sans);font-size:13px;color:var(--muted);letter-spacing:.02em;margin:0;transition:opacity .3s ease}
-  .mlead{font-family:var(--serif);font-size:19px;line-height:1.38;color:var(--ink);margin:0 0 12px;opacity:0;transition:opacity .3s ease}
-  .mchain{font-family:var(--sans);font-size:13.5px;line-height:1.7;color:var(--muted);margin:0;opacity:0;transition:opacity .3s ease}
-  .mchain b{color:var(--body);font-weight:600}
-  .mproof{display:inline-block;margin-top:16px;font-family:var(--sans);font-size:13px;font-weight:700;color:var(--teal2);text-decoration:none;opacity:0;transition:opacity .3s ease,color .2s ease}
-  .mproof:hover{color:var(--teal);text-decoration:underline}
+  /* the micro-story — a memorable line, one consequence, and a footnote-quiet proof */
+  .mstory{position:relative;max-width:60ch;margin:32px auto 0;min-height:110px;padding-top:24px;border-top:1px solid var(--line2)}
+  .mrest{position:absolute;top:24px;left:0;right:0;font-family:var(--sans);font-size:12px;color:var(--muted);letter-spacing:.03em;margin:0;transition:opacity .34s ease}
+  .mlead{font-family:var(--serif);font-size:18px;line-height:1.4;color:var(--ink);margin:0 0 11px;opacity:0;transition:opacity .34s ease}
+  .mchain{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--muted);margin:0 auto;max-width:52ch;opacity:0;transition:opacity .34s ease}
+  .mproof{display:inline-block;margin-top:18px;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.02em;color:var(--accent-strike);text-decoration:none;opacity:0;transition:opacity .34s ease}
+  .mproof:hover{text-decoration:underline}
   .mstory.show .mrest{opacity:0}
   .mstory.show .mlead,.mstory.show .mchain,.mstory.show .mproof{opacity:1}
   @media(prefers-reduced-motion:reduce){.net,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof{transition:none}}
@@ -260,64 +260,7 @@
       </div>
     </div>
 
-    <!-- ── THE THESIS — a museum exhibit: hovering a system teaches what it moves ── -->
-    <div class="sysband" id="thesystem">
-      <div class="sysband-in">
-        <div class="sb-eye">The thesis</div>
-        <h2 class="sb-h">Five systems. No decision touches just one.</h2>
-        <div class="sysstage" id="sysDiagram">
-          <svg viewBox="0 0 620 540" role="group" aria-label="Five financial systems — Portfolio, Taxes, Liquidity, Professionals, and Estate — in one coordinated network. Hover a system to see what it moves; what you keep is the result.">
-            <!-- the network: every system connected to every other (faint at rest) -->
-            <line class="net" data-a="0" data-b="1" x1="310" y1="60" x2="467" y2="174"/>
-            <line class="net" data-a="0" data-b="2" x1="310" y1="60" x2="407" y2="358"/>
-            <line class="net" data-a="0" data-b="3" x1="310" y1="60" x2="213" y2="358"/>
-            <line class="net" data-a="0" data-b="4" x1="310" y1="60" x2="153" y2="174"/>
-            <line class="net" data-a="1" data-b="2" x1="467" y1="174" x2="407" y2="358"/>
-            <line class="net" data-a="1" data-b="3" x1="467" y1="174" x2="213" y2="358"/>
-            <line class="net" data-a="1" data-b="4" x1="467" y1="174" x2="153" y2="174"/>
-            <line class="net" data-a="2" data-b="3" x1="407" y1="358" x2="213" y2="358"/>
-            <line class="net" data-a="2" data-b="4" x1="407" y1="358" x2="153" y2="174"/>
-            <line class="net" data-a="3" data-b="4" x1="213" y1="358" x2="153" y2="174"/>
-            <!-- the flow: coordination carries down to the outcome -->
-            <line class="flow" x1="310" y1="256" x2="310" y2="474"/>
-            <!-- the centre: coordination (an invisible paper mask keeps it legible over the web) -->
-            <rect class="hub-bg" x="256" y="214" width="108" height="24" fill="var(--bg)"/>
-            <text class="hub" x="310" y="230" text-anchor="middle">Coordination</text>
-            <!-- the outcome — free, below the network; never boxed -->
-            <text class="keep" x="310" y="500" text-anchor="middle">What you keep.</text>
-            <!-- the five systems -->
-            <g class="node" data-i="0" tabindex="0" role="button" aria-label="Portfolio — see what it moves">
-              <circle class="hit" cx="310" cy="60" r="30"/><circle class="dot" cx="310" cy="60" r="5.5"/>
-              <text class="lbl" x="310" y="38" text-anchor="middle">Portfolio</text>
-            </g>
-            <g class="node" data-i="1" tabindex="0" role="button" aria-label="Taxes — see what it moves">
-              <circle class="hit" cx="467" cy="174" r="30"/><circle class="dot" cx="467" cy="174" r="5.5"/>
-              <text class="lbl" x="491" y="179" text-anchor="start">Taxes</text>
-            </g>
-            <g class="node" data-i="2" tabindex="0" role="button" aria-label="Liquidity — see what it moves">
-              <circle class="hit" cx="407" cy="358" r="30"/><circle class="dot" cx="407" cy="358" r="5.5"/>
-              <text class="lbl" x="407" y="390" text-anchor="middle">Liquidity</text>
-            </g>
-            <g class="node" data-i="3" tabindex="0" role="button" aria-label="Professionals — see what they move">
-              <circle class="hit" cx="213" cy="358" r="30"/><circle class="dot" cx="213" cy="358" r="5.5"/>
-              <text class="lbl" x="213" y="390" text-anchor="middle">Professionals</text>
-            </g>
-            <g class="node" data-i="4" tabindex="0" role="button" aria-label="Estate — see what it moves">
-              <circle class="hit" cx="153" cy="174" r="30"/><circle class="dot" cx="153" cy="174" r="5.5"/>
-              <text class="lbl" x="129" y="179" text-anchor="end">Estate</text>
-            </g>
-          </svg>
-        </div>
-        <div class="mstory" id="mstory">
-          <p class="mrest" id="mrest">Hover a system to follow what it moves.</p>
-          <p class="mlead" id="mlead"></p>
-          <p class="mchain" id="mchain"></p>
-          <a class="mproof" id="mproof" href="#"></a>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── THE OPERATING SYSTEM — the differentiator, made tangible, before the tools ── -->
+    <!-- ── THE OPERATING SYSTEM — the differentiator, surfaced first as the proof of method ── -->
     <div class="sec" id="operating-system">
       <div class="h">The operating system</div>
       <p class="lede2">Coordinating five systems takes a method, not a feeling — an operating calendar, a documented process, and clear accountability. That method is the operating system an institution runs on, brought to a single household.</p>
@@ -345,6 +288,63 @@
         </a>
       </div>
       <a class="sb-link" href="inside.html" style="margin-top:16px">See how the operating system is built →</a>
+    </div>
+
+    <!-- ── THE THESIS — a museum exhibit: hovering a system teaches what it moves ── -->
+    <div class="sysband" id="thesystem">
+      <div class="sysband-in">
+        <div class="sb-eye">The thesis</div>
+        <h2 class="sb-h">Five systems. No decision touches just one.</h2>
+        <div class="sysstage" id="sysDiagram">
+          <svg viewBox="0 0 640 570" role="group" aria-label="Five financial systems — Portfolio, Taxes, Liquidity, Professionals, and Estate — in one coordinated network. Hover a system to see what it moves; what you keep is the result.">
+            <!-- the network: every system connected to every other (faint at rest) -->
+            <line class="net" data-a="0" data-b="1" x1="320" y1="56" x2="499" y2="186"/>
+            <line class="net" data-a="0" data-b="2" x1="320" y1="56" x2="431" y2="396"/>
+            <line class="net" data-a="0" data-b="3" x1="320" y1="56" x2="209" y2="396"/>
+            <line class="net" data-a="0" data-b="4" x1="320" y1="56" x2="141" y2="186"/>
+            <line class="net" data-a="1" data-b="2" x1="499" y1="186" x2="431" y2="396"/>
+            <line class="net" data-a="1" data-b="3" x1="499" y1="186" x2="209" y2="396"/>
+            <line class="net" data-a="1" data-b="4" x1="499" y1="186" x2="141" y2="186"/>
+            <line class="net" data-a="2" data-b="3" x1="431" y1="396" x2="209" y2="396"/>
+            <line class="net" data-a="2" data-b="4" x1="431" y1="396" x2="141" y2="186"/>
+            <line class="net" data-a="3" data-b="4" x1="209" y1="396" x2="141" y2="186"/>
+            <!-- the flow: coordination carries down to the outcome -->
+            <line class="flow" x1="320" y1="280" x2="320" y2="516"/>
+            <!-- the centre: coordination (an invisible paper mask keeps it legible over the web) -->
+            <rect class="hub-bg" x="266" y="234" width="108" height="24" fill="var(--bg)"/>
+            <text class="hub" x="320" y="250" text-anchor="middle">Coordination</text>
+            <!-- the outcome — free, below the network; never boxed -->
+            <text class="keep" x="320" y="542" text-anchor="middle">What you keep.</text>
+            <!-- the five systems -->
+            <g class="node" data-i="0" tabindex="0" role="button" aria-label="Portfolio — see what it moves">
+              <circle class="hit" cx="320" cy="56" r="32"/><circle class="dot" cx="320" cy="56" r="5"/>
+              <text class="lbl" x="320" y="32" text-anchor="middle">Portfolio</text>
+            </g>
+            <g class="node" data-i="1" tabindex="0" role="button" aria-label="Taxes — see what it moves">
+              <circle class="hit" cx="499" cy="186" r="32"/><circle class="dot" cx="499" cy="186" r="5"/>
+              <text class="lbl" x="523" y="191" text-anchor="start">Taxes</text>
+            </g>
+            <g class="node" data-i="2" tabindex="0" role="button" aria-label="Liquidity — see what it moves">
+              <circle class="hit" cx="431" cy="396" r="32"/><circle class="dot" cx="431" cy="396" r="5"/>
+              <text class="lbl" x="431" y="428" text-anchor="middle">Liquidity</text>
+            </g>
+            <g class="node" data-i="3" tabindex="0" role="button" aria-label="Professionals — see what they move">
+              <circle class="hit" cx="209" cy="396" r="32"/><circle class="dot" cx="209" cy="396" r="5"/>
+              <text class="lbl" x="209" y="428" text-anchor="middle">Professionals</text>
+            </g>
+            <g class="node" data-i="4" tabindex="0" role="button" aria-label="Estate — see what it moves">
+              <circle class="hit" cx="141" cy="186" r="32"/><circle class="dot" cx="141" cy="186" r="5"/>
+              <text class="lbl" x="117" y="191" text-anchor="end">Estate</text>
+            </g>
+          </svg>
+        </div>
+        <div class="mstory" id="mstory">
+          <p class="mrest" id="mrest">Hover any system.</p>
+          <p class="mlead" id="mlead"></p>
+          <p class="mchain" id="mchain"></p>
+          <a class="mproof" id="mproof" href="#"></a>
+        </div>
+      </div>
     </div>
 
     <!-- ── HOW IT WORKS — four capabilities, one sequence ── -->
@@ -588,22 +588,22 @@ window.__STATE__ = {"header": {"generated": "2026-07-11 23:14:25 UTC"}, "hero": 
   var proof = document.getElementById("mproof");
   if(!nodes.length || !story) return;
   var HUB0 = "Coordination";
-  // Each system: how the centre reads, the memorable lead, the causal chain, and the one proof.
+  // Each system: a concise centre label, a memorable lead, one consequence, and the one proof.
   var SYS = [
-    { center:"Coordinating the portfolio", lead:"Portfolios determine taxes.",
-      chain:["what you own sets the tax bill","the bill sets where each holding is placed","placement sets the estate basis","coordination determines what you keep"],
+    { center:"Portfolio coordination", lead:"Portfolios determine taxes.",
+      body:"What you own also sets asset location, the estate basis, and what’s available to spend.",
       href:"thesis.html", proof:"See how we invest" },
-    { center:"Coordinating taxes", lead:"Taxes never change alone.",
-      chain:["asset location changes withdrawals","withdrawals affect the estate","the estate changes beneficiary strategy","coordination determines what you keep"],
+    { center:"Tax coordination", lead:"Taxes never change alone.",
+      body:"Changing tax strategy also moves withdrawals, portfolio construction, estate outcomes, and how advisors coordinate.",
       href:"taxlab.html", proof:"See the After-Tax Review" },
-    { center:"Coordinating liquidity", lead:"Liquidity changes every other decision.",
-      chain:["a cash need forces a sale","the sale realizes gains","the gains move the tax bracket","coordination determines what you keep"],
+    { center:"Liquidity coordination", lead:"Liquidity changes every other decision.",
+      body:"A cash need moves which lots are sold, the bracket you land in, and the portfolio’s balance.",
       href:"opportunity-register.html", proof:"See the Opportunity Register" },
-    { center:"Coordinating your specialists", lead:"Specialists optimize the parts. Coordination optimizes the whole.",
-      chain:["the CPA optimizes taxes","the attorney optimizes the estate","the advisor optimizes the portfolio","coordination aligns all three"],
+    { center:"Professional coordination", lead:"Specialists optimize the parts.",
+      body:"Coordination aligns the whole — one plan across the CPA, the attorney, and the advisor.",
       href:"decision-register.html", proof:"See the Decision Register" },
-    { center:"Coordinating the estate", lead:"Estate planning changes the portfolio.",
-      chain:["the transfer plan reshapes the portfolio","the portfolio sets the step-up","the step-up changes what heirs owe","coordination determines what you keep"],
+    { center:"Estate coordination", lead:"Estate planning reshapes the portfolio.",
+      body:"Beneficiaries, taxes, liquidity, and investment decisions all change together.",
       href:"manual.html", proof:"See the Operating Manual" }
   ];
   function fitHub(){
@@ -622,7 +622,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-11 23:14:25 UTC"}, "hero": 
     hub.textContent = d.center; hub.classList.add("on"); fitHub();
     if(keep) keep.classList.add("on");
     lead.textContent = d.lead;
-    chain.innerHTML = d.chain.map(function(c,k){ return k===d.chain.length-1 ? '<b>'+c+'</b>' : c; }).join(' &rarr; ');
+    chain.textContent = d.body;
     proof.textContent = d.proof + " →"; proof.setAttribute("href", d.href);
     story.classList.add("show");
   }

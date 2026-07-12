@@ -330,16 +330,52 @@ auto-merged. Two tracks are separated on purpose:
 1. **Spacing foundation** (infrastructure — its own PR): the §6 tokens in `driftwood.css`
    plus the centralized opening rhythm. Reviewed alone so spacing never changes silently
    inside an editorial PR.
-2. **Editorial normalization**, family by family: **Essay → Research → Record/Reference →
-   Exhibits → Cases → Tools.** (Research is early — it is one of Driftwood's biggest
-   credibility differentiators.) Header grammar, duplicate removal, typography rhythm,
-   page framing, taxonomy. Nothing conceptual.
+2. **Editorial normalization**, family by family, in the order a first-time visitor
+   encounters the site — thinking, then evidence, then proof, then records, then examples,
+   then tools: **Essay → Research → Exhibits → Record/Reference → Cases → Tools.**
+   (Research and Exhibits shape first impressions far more than the archive.) Header
+   grammar, duplicate removal, typography rhythm, page framing, taxonomy. Nothing
+   conceptual.
 
 Every slice is run against §0.7 (the checklist) and §8.5 (the QA gate) before it opens.
+
+**The Research brief — the print-and-bind bar.** Research is the credibility family, so
+its test is physical: *if someone printed every research page and bound them, would they
+read as one series?* Normalize title hierarchy, abstract/deck placement, methodology
+placement, disclosure treatment, citations, figures, footnotes, version numbers, and
+update dates until the answer is yes.
+
+**The Record brief — the moat.** The Record is not "another document family"; it is the
+thing no other RIA publishes. Its pass gets more time, and it asks a bigger question than
+consistency: *what makes the Driftwood Record unlike anything else?* Pursue the archive
+mechanics — version history, amendment history, cross-references, linked decisions ↔
+research ↔ exhibits, document relationships. Think institutional archive, never blog.
+
+**Reading time is an editorial decision.** Every document family has an intentional
+reading commitment, not an accidental one: Essays 3–5 min · Research 8–15 min · Records
+2–4 min · Reference/Manuals 5–10 min · Tools 30–90 seconds. Audit each page against its
+family budget during its pass; a page far over budget is answering two questions (§0.6).
 
 **Phase B — walk the whole site.** Then stop shipping and *use* the site. Every page, on
 desktop, tablet, and phone. This review surfaces the last ~50 small issues and is worth
 more than any feature.
+
+**Phase Z — cross-document coherence (the last pass before the freeze).** Not editing
+pages — walking the *links between* them, until the site is a network rather than a
+collection: every page leads naturally to another; every research paper has a related
+exhibit; every exhibit points back to research; every tool points back to philosophy;
+every philosophy page points to evidence. This is also where quiet "you are here" context
+belongs (not breadcrumbs — context: *Understand · Research · After-Tax Wealth
+Architecture*), so a reader always knows where they stand inside the publication.
+
+**The cover-to-cover read.** Before declaring the freeze, perform one editorial read of
+the whole site as if it went to print tomorrow — ignore templates and code, read every
+page in sequence (Home → Our Story → Operating System → Manual → Tax Diagnostic →
+After-Tax Review → Research → Home), and flag every moment the illusion of one
+institution breaks: repetition, tone, spacing, hierarchy, terminology, navigation, visual
+rhythm. It catches what family-by-family passes cannot — the seams that only show when
+moving *between* pages. Recommend only changes that strengthen the sense that one
+editorial team authored this over years.
 
 **v1 is complete when this is true:** *no page visibly reveals which template generated
 it.* Someone should feel they are reading one publication, not traversing page generators.

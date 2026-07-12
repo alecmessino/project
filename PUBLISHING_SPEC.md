@@ -248,7 +248,7 @@ Every other page conforms.
 
 **`insights.html`**
 - *Before:* `Driftwood Capital · Insights` (running bar) → `INSIGHTS` (eyebrow) → **Insights** (title) → deck. The word "Insights" three times; the firm twice.
-- *After:* nav only → eyebrow `ESSAYS` → title **Insights** → deck. Named once.
+- *After:* nav only → eyebrow `INSIGHTS` (the family) → title **How a financial life fits together.** (the index's own thesis) → deck. Named once. Follows the shipped `library.html` grammar — eyebrow = the collection, title = a thesis — rather than repeating the label as the title (a bare label isn't a thesis; see §3).
 
 **`about.html`**
 - *Before:* running bar `Driftwood Capital · Our Story` → eyebrow `OUR STORY` → title "Why Driftwood exists."

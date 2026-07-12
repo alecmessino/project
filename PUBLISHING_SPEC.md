@@ -77,12 +77,29 @@ its family PR opens.
 
 - **Identity** — one institution · one page title · one document family.
 - **Narrative** — one thesis · one deck · no duplicated idea.
+- **Headline integrity** — no heading may imply something the methodology or data
+  qualifies differently. ("Across three decades" over a 40-year method line; "long-term"
+  over rolling ten-year windows.) Little mismatches quietly erode trust; the headline
+  never carries a number the data owns.
 - **Structure** — consistent opening rhythm · spacing · measure · rule treatment.
 - **Navigation** — a clear next document · a clear relationship to the wider body.
 - **Editorial** — read it aloud once · **remove one unnecessary sentence.**
 
 **Every page loses something during normalization.** That is a requirement, not an
 aspiration. A normalization commit that only adds is suspect.
+
+## 0.8 · The 30-second rule
+
+A sophisticated prospect lands on *any* page — not necessarily the homepage. Within
+thirty seconds they can answer three questions:
+
+1. **What kind of document is this?** (the family)
+2. **Why does it exist?** (its singular purpose)
+3. **What should I read next?** (the natural continuation)
+
+If a page fails any one of the three, it is not finished. This is the page-level twin of
+the one-institution test: §0.6 decides what a page is for; this decides whether a reader
+can *tell*.
 
 ---
 
@@ -330,16 +347,79 @@ auto-merged. Two tracks are separated on purpose:
 1. **Spacing foundation** (infrastructure — its own PR): the §6 tokens in `driftwood.css`
    plus the centralized opening rhythm. Reviewed alone so spacing never changes silently
    inside an editorial PR.
-2. **Editorial normalization**, family by family: **Essay → Research → Record/Reference →
-   Exhibits → Cases → Tools.** (Research is early — it is one of Driftwood's biggest
-   credibility differentiators.) Header grammar, duplicate removal, typography rhythm,
-   page framing, taxonomy. Nothing conceptual.
+2. **Editorial normalization**, family by family, in the order a first-time visitor
+   encounters the site — thinking, then evidence, then proof, then records, then examples,
+   then tools: **Essay → Research → Exhibits → Record/Reference → Cases → Tools.**
+   (Research and Exhibits shape first impressions far more than the archive.) Header
+   grammar, duplicate removal, typography rhythm, page framing, taxonomy. Nothing
+   conceptual.
 
 Every slice is run against §0.7 (the checklist) and §8.5 (the QA gate) before it opens.
+
+**The Research brief — the print-and-bind bar.** Research is the credibility family, so
+its test is physical: *if someone printed every research page and bound them, would they
+read as one series?* Normalize title hierarchy, abstract/deck placement, methodology
+placement, disclosure treatment, citations, figures, footnotes, version numbers, and
+update dates until the answer is yes.
+
+**Series identity.** Every research document is visibly one of a numbered series — quiet,
+NBER-not-flashy. The family eyebrow carries the series and the number
+(`CORE ALPHA RESEARCH · Nº 003 · LONG-HISTORY TEARSHEET`); the data-injected as-of line is
+the date of record. A new series (e.g. wealth-planning research) numbers independently
+once it has a sibling. Institutional publishers win by being unmistakably consistent, not
+clever — the numbering compounds.
+
+**The Exhibits brief — what prospects remember.** The interactive thesis, the After-Tax
+Review, the coordination diagrams: these are Driftwood's famous charts, and they get
+*more* care than Research, not less. Treat them as **museum exhibits** — not tools, not
+graphics, not UI. Observation-first, minimal copy, the interaction does the persuading.
+
+**The Record brief — the moat.** The Record is not "another document family"; it is the
+thing no other RIA publishes. **Slow down here — spend twice as long as on any other
+family.** It asks a bigger question than consistency: *what makes the Driftwood Record
+unlike anything else?* The bar, as questions: Can every document cite another? Can every
+decision point to its evidence? Can every research paper point to the decisions it
+informed? Can amendments be followed historically? Can a reader understand how Driftwood
+thinks *over time*? Pursue the archive mechanics — version history, amendment history,
+cross-references, linked decisions ↔ research ↔ exhibits, document relationships. Think
+institutional archive, never blog. That becomes genuinely difficult to copy.
+
+**Reading time is an editorial decision.** Every document family has an intentional
+reading commitment, not an accidental one: Essays 3–5 min · Research 8–15 min · Records
+2–4 min · Reference/Manuals 5–10 min · Tools 30–90 seconds. Audit each page against its
+family budget during its pass; a page far over budget is answering two questions (§0.6).
+Where it helps a reader commit — the longer documents — the budget may be displayed
+quietly ("Research · 12 minute read"); never as chrome on every page.
 
 **Phase B — walk the whole site.** Then stop shipping and *use* the site. Every page, on
 desktop, tablet, and phone. This review surfaces the last ~50 small issues and is worth
 more than any feature.
+
+**Phase Y — performance & friction audit (experience, not speed).** At this maturity,
+friction matters more than new ideas. Walk for: scroll jumps · image-load smoothness ·
+typography shifts on load · hover states that all feel identical · consistent transitions
+· correct scroll restoration · equally-polished mobile · identical touch targets. Nothing
+conceptual ships from this phase — only smoothness.
+
+**Phase Z — cross-document coherence (the last pass before the freeze).** Not editing
+pages — walking the *links between* them, until the site is a network rather than a
+collection: every page leads naturally to another; every research paper has a related
+exhibit; every exhibit points back to research; every tool points back to philosophy;
+every philosophy page points to evidence. Readers don't experience pages — they
+experience transitions (Home → Operating System → Manual → Decision Register →
+After-Tax Review; Research → Thesis → Tax Diagnostic). The test of every transition:
+*does the next click feel inevitable?* This is also where quiet "you are here" context
+belongs (not breadcrumbs — context: *Understand · Research · After-Tax Wealth
+Architecture*), so a reader always knows where they stand inside the publication.
+
+**The cover-to-cover read.** Before declaring the freeze, perform one editorial read of
+the whole site as if it went to print tomorrow — ignore templates and code, read every
+page in sequence (Home → Our Story → Operating System → Manual → Tax Diagnostic →
+After-Tax Review → Research → Home), and flag every moment the illusion of one
+institution breaks: repetition, tone, spacing, hierarchy, terminology, navigation, visual
+rhythm. It catches what family-by-family passes cannot — the seams that only show when
+moving *between* pages. Recommend only changes that strengthen the sense that one
+editorial team authored this over years.
 
 **v1 is complete when this is true:** *no page visibly reveals which template generated
 it.* Someone should feel they are reading one publication, not traversing page generators.
@@ -358,8 +438,14 @@ publishing grammar · identity rules · document families · editorial principle
 intentional exceptions · version history. It becomes the canonical reference so every
 future change is an *amendment to a defined system*, not an ad-hoc improvement.
 
-Then the public site **freezes** — bug fixes and new research only — and the center of
-gravity moves to the **Advisor Workspace**: the flagship, built in a deliberately
-different, product design language (dense, purposeful, keyboard-first — Bloomberg /
-Foundry / Stripe / Linear, not the editorial museum). Internally it is the *Coordination
-Engine*; the client never sees that name, but it changes how it is built.
+**The freeze is real.** Written into the Constitution verbatim:
+
+> **Public Site Freeze — v1.** After approval, only the following may change without
+> constitutional amendment: research publications · new exhibits · regulatory updates ·
+> bug fixes · factual corrections. Everything else requires a deliberate editorial
+> review.
+
+Then the center of gravity moves to the **Advisor Workspace**: the flagship, built in a
+deliberately different, product design language (dense, purposeful, keyboard-first —
+Bloomberg / Foundry / Stripe / Linear, not the editorial museum). Internally it is the
+*Coordination Engine*; the client never sees that name, but it changes how it is built.

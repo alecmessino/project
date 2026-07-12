@@ -112,21 +112,13 @@
     .foot{padding-left:20px;padding-right:20px}
   }
 
-  /* ── Rebrand: plate frame + running head (matches the front door), in place of the browser chrome. */
   .frame{border-radius:var(--surface-radius);}
-  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;
-    margin:7px 7px 0;border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
-
+  .hyp-pill{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+    border:1px solid var(--line);border-radius:var(--surface-radius);padding:2px 7px;margin-left:8px;vertical-align:middle}
 </style>
 </head>
 <body>
 <div class="frame">
-  <div class="run">
-    <span class="inst">Driftwood Capital</span>
-    <span class="marker">Core Alpha</span>
-  </div>
   <nav class="dwnav" aria-label="Driftwood Capital">
       <a class="brand" href="index.html" aria-label="Driftwood Capital — home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Capital</span></a>
       <div class="dwnav-links">
@@ -149,7 +141,7 @@
     </nav>
 
   <div class="pad top">
-    <div class="eyebrow">Core Alpha · the complementary strategy</div>
+    <div class="eyebrow">Core Alpha Research · Nº 001 · The Dashboard <span class="hyp-pill">HYPOTHETICAL</span></div>
     <h1 class="hero">The current book — and what just changed.</h1>
     <p class="asof" id="asof"></p>
     <div class="research-banner">

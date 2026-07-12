@@ -25,6 +25,32 @@ a rule that **the site says everything once**.
 
 ---
 
+## 0.5 · Editorial principles
+
+The voice, distilled. Every heading, label, and sentence is filtered through these
+before it ships. They are the reason the site reads as one authored institution.
+
+1. **Coordination is the product; the evidence is downstream.** Every page reinforces
+   that Driftwood coordinates a system. Tax, estate, liquidity, and returns are where
+   coordination becomes *measurable* — never the product itself.
+2. **Say it once.** The firm is named once (nav), the page once (title), each idea
+   once. A repeated word or idea weakens the original.
+3. **One voice — quiet, confident, observational, evidence-first.** No product copy
+   ("get started," "unlock"), no hype ("up to," "supercharge"), no factor-strategy
+   jargon the reader must decode.
+4. **Teach, don't sell.** Where a page can show the mechanism, it shows it; the
+   exhibit or the interaction does the persuading.
+5. **Show on identical terms.** Claims are demonstrated on the same holdings, the same
+   exposure — credibility before persuasion.
+6. **Restraint over completeness.** Cut anything that competes with the page's one
+   thesis. A good section that is redundant still goes.
+7. **Honesty is the house style.** Hypothetical is labeled hypothetical; nothing is
+   claimed the firm cannot stand behind; no operational fact is fabricated.
+8. **Read it aloud.** Copy that trips when spoken gets rewritten. Institutions sound
+   composed.
+
+---
+
 ## 1 · The audit — what's inconsistent today
 
 Surveyed all 40 shipped pages. Findings, worst first:
@@ -61,6 +87,23 @@ without reading a label — through density, measure, and framing.
 | **Reference** | Procedural, governing, sectioned | manual · constitution · capital-allocation |
 | **Exhibit** | Observation-first, interactive, minimal copy | homepage thesis · After-Tax Review (taxlab) · coordination |
 | **Tool** | Utility, minimal framing, do-something | State Tax Atlas · Tax Diagnostic · Coordination Assessment |
+
+**The question each family answers.** A family isn't a look — it's an editorial job.
+Every page in a family opens by answering its family's one question, and its density,
+measure, and framing all serve that answer:
+
+| Family | The one question it answers |
+|---|---|
+| **Essay** | *Why does Driftwood think this?* |
+| **Case** | *What did coordination change for one household?* |
+| **Research** | *What does the evidence actually show?* |
+| **Record** | *What was decided — and what does the archive hold?* |
+| **Reference** | *How is this household run?* |
+| **Exhibit** | *Can I see coordination happen?* |
+| **Tool** | *What does this mean for me?* |
+
+If a page can't answer its family's question in its first viewport, it's either in the
+wrong family or missing its thesis.
 
 *(Record + Reference share one masthead treatment — "the Driftwood Record" — since
 they are one bound archive. Exhibits and Tools are the two families that may break

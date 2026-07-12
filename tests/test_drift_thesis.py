@@ -46,7 +46,7 @@ def test_render_thesis_embeds_state_and_leads_with_the_philosophy(tmp_path):
     assert html.lstrip().startswith("<!DOCTYPE html>")
     # The Approach page is now "How We Invest" — an evidence-first philosophy, not the retired
     # drift / diffusion name story.
-    assert "How we invest" in html
+    assert "How We Invest" in html
     assert "Evidence over prediction" in html
     assert "random-walk null" not in html.lower()
     assert "driftwood" in html.lower()

@@ -143,7 +143,7 @@ def test_thesis_leads_with_the_investment_philosophy_not_product_names():
     # than product names or the retired drift / diffusion name story. Named strategies are demoted to a
     # quiet implementation detail beneath the architecture (which is the product).
     t = _read(THESIS_TEMPLATE)
-    assert "How we invest" in t
+    assert "How We Invest" in t
     assert "Evidence over prediction" in t
     assert "institutional portfolio architecture" in t.lower()
     # the retired mathematical name-origin / factor-pitch framing is gone

@@ -10,7 +10,7 @@
   plausible.init()
 </script>
 <title>Driftwood Capital — The Tax Diagnostic</title>
-<meta name="description" content="See where a concentrated, high-turnover portfolio leaks return to tax each year — and the after-tax Structural Alpha a tax-managed book of the same exposure recovers, by state. Illustrative, not advice." />
+<meta name="description" content="See where a concentrated, high-turnover portfolio leaks return to tax each year — and what a coordinated, tax-managed book of the same exposure recovers, by state. Illustrative, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/leakage.html" />
 <link rel="icon" href="favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
@@ -21,12 +21,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="Driftwood Capital — The Tax Diagnostic" />
-<meta property="og:description" content="See where a concentrated, high-turnover portfolio leaks return to tax each year — and the after-tax Structural Alpha a tax-managed book of the same exposure recovers, by state. Illustrative, not advice." />
+<meta property="og:description" content="See where a concentrated, high-turnover portfolio leaks return to tax each year — and what a coordinated, tax-managed book of the same exposure recovers, by state. Illustrative, not advice." />
 <meta property="og:url" content="https://alecmessino.github.io/project/leakage.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/leakage.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Driftwood Capital — The Tax Diagnostic" />
-<meta name="twitter:description" content="See where a concentrated, high-turnover portfolio leaks return to tax each year — and the after-tax Structural Alpha a tax-managed book of the same exposure recovers, by state. Illustrative, not advice." />
+<meta name="twitter:description" content="See where a concentrated, high-turnover portfolio leaks return to tax each year — and what a coordinated, tax-managed book of the same exposure recovers, by state. Illustrative, not advice." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/leakage.png" />
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
@@ -152,16 +152,17 @@
 
     <div class="hd">
       <div class="eyebrow">The Tax Diagnostic</div>
-      <h1>Where the return leaks — and how we keep it.</h1>
-      <p class="lede">A concentrated, high-turnover portfolio gives up return to tax every year,
-        mostly through short-term gains. The same holdings, coordinated as one system, keep
-        far more of it. What follows compares the two on identical holdings — a tax-efficiency result,
-        not a claim about pre-tax returns.</p>
+      <h1>One place coordination becomes measurable.</h1>
+      <p class="lede">Taxes are the most measurable expression of coordination — the same discipline that
+        also changes estate planning, withdrawal strategy, liquidity, and how your advisors work together.
+        Here it becomes visible: a concentrated, high-turnover portfolio gives up return to tax every year;
+        the same holdings, coordinated as one system, keep far more of it — a tax-efficiency result on
+        identical holdings, not a claim about pre-tax returns.</p>
     </div>
 
     <div class="hero">
       <div class="big" id="h-alpha" aria-live="polite">…</div>
-      <div class="cap" id="h-cap">after-tax / year recovered</div>
+      <div class="cap" id="h-cap">modeled after-tax improvement / year</div>
       <div class="note" id="h-note"></div>
     </div>
 
@@ -173,7 +174,7 @@
     </div>
 
     <div class="sec">
-      <div class="h">How the leak gets closed</div>
+      <div class="h">How coordination changes the outcome</div>
       <div class="levers" id="levers"></div>
     </div>
 
@@ -213,7 +214,7 @@
           <div class="track"><span class="bar" style="left:0;width:40%;background:var(--teal);border:1px solid var(--teal)"></span></div>
           <div class="amt">32,000</div>
         </div>
-        <p class="waterfall-note">Coordination works the two rust lines — placement, lot selection, harvesting, and withdrawal order reduce the tax line; the gross return and inflation are not ours to promise. <i>Modeled, hypothetical, illustrative — not a forecast and not advice.</i></p>
+        <p class="waterfall-note">Coordination works the tax line — placement, lot selection, and harvesting; the gross return and inflation are not ours to promise. <i>Modeled, illustrative — not a forecast or advice.</i></p>
         <div class="exhibit-evidence">
           <span class="k">Purpose</span><span class="v">Decompose one year of gross return into what survives taxes, fees, and inflation.</span>
           <span class="k">Method</span><span class="v">Static decomposition at the stated rates, in accounting convention.</span>
@@ -229,7 +230,7 @@
     </div>
     <div class="tscroll">
     <table class="states">
-      <thead><tr><th>Tax environment</th><th>Before (concentrated, naive)</th><th>After (Structural Alpha)</th><th>Tax Alpha recovered</th></tr></thead>
+      <thead><tr><th>Tax environment</th><th>Uncoordinated</th><th>Coordinated</th><th>After-tax recovered</th></tr></thead>
       <tbody id="states"></tbody>
     </table>
     </div>
@@ -240,8 +241,7 @@
         <div class="cd">The full After-Tax&nbsp;Review turns this into your numbers — what coordination keeps, by bracket, state, and holdings.</div>
       </div>
       <div class="btns">
-        <a class="primary" id="cta-analysis" href="taxlab.html?view=review">Run my analysis →</a>
-        <a class="ghost" id="cta-book" href="taxlab.html?view=review">Book a 15-min intro</a>
+        <a class="primary" id="cta-analysis" href="taxlab.html?view=review">Request a Private After-Tax Review →</a>
       </div>
     </div>
 
@@ -270,12 +270,12 @@ function render(s){
   const annual = (row && qPort>0) ? qPort * row.alpha/100 : 0;
 
   if(row){
-    document.getElementById("h-alpha").textContent = `up to +${row.alpha.toFixed(1)}%`;
+    document.getElementById("h-alpha").textContent = `+${row.alpha.toFixed(1)}%`;
   } else {
     document.getElementById("h-alpha").textContent = `+${hd.alpha_low}% to +${hd.alpha_high}%`;
   }
   document.getElementById("h-note").textContent =
-    `Pre-tax: ${hd.pretax_before}%/yr (before) vs ${hd.pretax_after}%/yr (after) — the structural book is `+
+    `Pre-tax: ${hd.pretax_before}%/yr (before) vs ${hd.pretax_after}%/yr (after) — the coordinated book is `+
     `NOT claimed to out-earn pre-tax. Illustrative, after-tax, over ~${(s.header||{}).horizon_years||30} years.`;
 
   // Personalized banner (compliant reframe: "up to ~X%/yr in our illustrative modeling").
@@ -286,7 +286,7 @@ function render(s){
     pband.innerHTML =
       `Personalized for <b>${nm}</b>${qPort>0?` · <b>${fmt$big(qPort)}</b> portfolio`:''}: in our illustrative `+
       `modeling, a concentrated, high-turnover book in ${nm} keeps ~<b>${row.before.toFixed(1)}%/yr</b> after tax `+
-      `versus ~<b>${row.after.toFixed(1)}%/yr</b> tax-managed — up to <b>~+${row.alpha.toFixed(1)}%/yr</b> recovered`+
+      `versus ~<b>${row.after.toFixed(1)}%/yr</b> coordinated — a modeled <b>~+${row.alpha.toFixed(1)}%/yr</b>`+
       `${qPort>0?` (≈ <b>${fmt$(annual)}/yr</b> on this portfolio)`:''}. Your actual figure depends on your `+
       `holdings; the full After-Tax Review computes it.`;
   } else { pband.style.display = "none"; }
@@ -296,7 +296,7 @@ function render(s){
   const ad = row ? Object.assign({}, a, {atc_low:row.after,  atc_high:row.after})  : a;
   const span = d => d.atc_low===d.atc_high ? `${d.atc_low}%` : `${d.atc_low}–${d.atc_high}%`;
   const sideHTML = (d, before) =>
-    `<div class="tag">${before?'Before — the leak':'After — plugged'}</div>`+
+    `<div class="tag">${before?'Uncoordinated':'Coordinated'}</div>`+
     `<h3>${d.label}</h3><div class="csub">${d.sub}</div>`+
     `<div class="leak"><div class="bar">`+
       `<div class="kept" style="width:${d.keep_pct}%"></div>`+
@@ -334,7 +334,7 @@ function render(s){
     `<b>Illustrative / hypothetical — not a real track record and not advice.</b> Figures reflect the `+
     `<b>retroactive application</b> of a systematic model to historical data (FIFO lot accounting on the `+
     `book's own marks, partly proxy-spliced); they are hypothetical, <b>no client capital was invested</b>, `+
-    `and past performance <b>does not guarantee future results</b>. This is structural tax &amp; fee `+
+    `and past performance <b>does not guarantee future results</b>. This is coordinated tax &amp; fee `+
     `management on an identical exposure — <b>not a forecast that these funds out-perform</b>. `+
     `Intended for sophisticated investors; it may not be relevant to your situation. Source: ${(s.header||{}).source||''}.`+
     `<div style="margin-top:7px">Driftwood is a `+

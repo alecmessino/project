@@ -10,7 +10,7 @@
   plausible.init()
 </script>
 <title>Driftwood Capital — The Tax Diagnostic</title>
-<meta name="description" content="See where a concentrated, high-turnover portfolio leaks return to tax each year — and the after-tax Structural Alpha a tax-managed book of the same exposure recovers, by state. Illustrative, not advice." />
+<meta name="description" content="See where a concentrated, high-turnover portfolio leaks return to tax each year — and what a coordinated, tax-managed book of the same exposure recovers, by state. Illustrative, not advice." />
 <link rel="canonical" href="https://alecmessino.github.io/project/leakage.html" />
 <link rel="icon" href="favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
@@ -21,12 +21,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Capital" />
 <meta property="og:title" content="Driftwood Capital — The Tax Diagnostic" />
-<meta property="og:description" content="See where a concentrated, high-turnover portfolio leaks return to tax each year — and the after-tax Structural Alpha a tax-managed book of the same exposure recovers, by state. Illustrative, not advice." />
+<meta property="og:description" content="See where a concentrated, high-turnover portfolio leaks return to tax each year — and what a coordinated, tax-managed book of the same exposure recovers, by state. Illustrative, not advice." />
 <meta property="og:url" content="https://alecmessino.github.io/project/leakage.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/leakage.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Driftwood Capital — The Tax Diagnostic" />
-<meta name="twitter:description" content="See where a concentrated, high-turnover portfolio leaks return to tax each year — and the after-tax Structural Alpha a tax-managed book of the same exposure recovers, by state. Illustrative, not advice." />
+<meta name="twitter:description" content="See where a concentrated, high-turnover portfolio leaks return to tax each year — and what a coordinated, tax-managed book of the same exposure recovers, by state. Illustrative, not advice." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/leakage.png" />
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
@@ -152,16 +152,17 @@
 
     <div class="hd">
       <div class="eyebrow">The Tax Diagnostic</div>
-      <h1>Where the return leaks — and how we keep it.</h1>
-      <p class="lede">A concentrated, high-turnover portfolio gives up return to tax every year,
-        mostly through short-term gains. The same holdings, coordinated as one system, keep
-        far more of it. What follows compares the two on identical holdings — a tax-efficiency result,
-        not a claim about pre-tax returns.</p>
+      <h1>One place coordination becomes measurable.</h1>
+      <p class="lede">Taxes are the most measurable expression of coordination — the same discipline that
+        also changes estate planning, withdrawal strategy, liquidity, and how your advisors work together.
+        Here it becomes visible: a concentrated, high-turnover portfolio gives up return to tax every year;
+        the same holdings, coordinated as one system, keep far more of it — a tax-efficiency result on
+        identical holdings, not a claim about pre-tax returns.</p>
     </div>
 
     <div class="hero">
       <div class="big" id="h-alpha" aria-live="polite">…</div>
-      <div class="cap" id="h-cap">after-tax / year recovered</div>
+      <div class="cap" id="h-cap">modeled after-tax improvement / year</div>
       <div class="note" id="h-note"></div>
     </div>
 
@@ -173,7 +174,7 @@
     </div>
 
     <div class="sec">
-      <div class="h">How the leak gets closed</div>
+      <div class="h">How coordination changes the outcome</div>
       <div class="levers" id="levers"></div>
     </div>
 
@@ -213,7 +214,7 @@
           <div class="track"><span class="bar" style="left:0;width:40%;background:var(--teal);border:1px solid var(--teal)"></span></div>
           <div class="amt">32,000</div>
         </div>
-        <p class="waterfall-note">Coordination works the two rust lines — placement, lot selection, harvesting, and withdrawal order reduce the tax line; the gross return and inflation are not ours to promise. <i>Modeled, hypothetical, illustrative — not a forecast and not advice.</i></p>
+        <p class="waterfall-note">Coordination works the tax line — placement, lot selection, and harvesting; the gross return and inflation are not ours to promise. <i>Modeled, illustrative — not a forecast or advice.</i></p>
         <div class="exhibit-evidence">
           <span class="k">Purpose</span><span class="v">Decompose one year of gross return into what survives taxes, fees, and inflation.</span>
           <span class="k">Method</span><span class="v">Static decomposition at the stated rates, in accounting convention.</span>
@@ -229,7 +230,7 @@
     </div>
     <div class="tscroll">
     <table class="states">
-      <thead><tr><th>Tax environment</th><th>Before (concentrated, naive)</th><th>After (Structural Alpha)</th><th>Tax Alpha recovered</th></tr></thead>
+      <thead><tr><th>Tax environment</th><th>Uncoordinated</th><th>Coordinated</th><th>After-tax recovered</th></tr></thead>
       <tbody id="states"></tbody>
     </table>
     </div>
@@ -240,8 +241,7 @@
         <div class="cd">The full After-Tax&nbsp;Review turns this into your numbers — what coordination keeps, by bracket, state, and holdings.</div>
       </div>
       <div class="btns">
-        <a class="primary" id="cta-analysis" href="taxlab.html?view=review">Run my analysis →</a>
-        <a class="ghost" id="cta-book" href="taxlab.html?view=review">Book a 15-min intro</a>
+        <a class="primary" id="cta-analysis" href="taxlab.html?view=review">Request a Private After-Tax Review →</a>
       </div>
     </div>
 
@@ -250,7 +250,7 @@
 </div>
 
 <script>
-window.__STATE__ = {"header": {"generated": "2026-07-04 22:57:40 UTC", "source": "scripts/tax_alpha.py \u00b7 30y proxy-spliced cache, 1996\u20132026 (tests/data/matrix_history.json)", "horizon_years": 30}, "headline": {"alpha_low": 3.7, "alpha_high": 4.7, "pretax_before": 9.4, "pretax_after": 9.1}, "before": {"label": "Concentrated \u00b7 high-turnover", "sub": "A concentrated, high-turnover book in a taxable account, taxed naively.", "st_share": 96, "turnover": 371, "atc_low": 0.4, "atc_high": 2.7, "keep_pct": 9}, "after": {"label": "Structural Alpha \u00b7 tax-managed", "sub": "The same holdings, managed for tax: careful lot selection, patient trading, and loss harvesting.", "st_share": 53, "turnover": 136, "atc_low": 5.1, "atc_high": 6.3, "keep_pct": 41}, "levers": [{"name": "Patient trading and lot selection", "share": "\u2248 60\u201365%", "desc": "Holds positions through short-term noise and chooses which lots to sell, turning gains that would be taxed as ordinary income into long-term gains taxed roughly 17 points lower."}, {"name": "Loss harvesting", "share": "\u2248 35\u201340%", "desc": "Realizes losses and applies them against the highest-taxed gains first \u2014 capturing a spread a simple buy-and-hold fund never reaches."}, {"name": "Asset location", "share": "household-specific", "desc": "Places the higher-turnover strategy in Roth and Traditional accounts, where its short-term gains escape tax entirely; quantified for each household in the Tax Lab."}], "states": [{"state": "Federal only", "before": 2.7, "after": 6.3, "alpha": 3.7}, {"state": "Illinois", "before": 1.8, "after": 5.9, "alpha": 4.0}, {"state": "New York", "before": 0.8, "after": 5.3, "alpha": 4.5}, {"state": "California", "before": 0.4, "after": 5.1, "alpha": 4.7}], "state_alpha": {"\u2014": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "AK": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "FL": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "NV": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "NH": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "SD": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "TN": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "TX": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "WY": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "WA": {"before": 2.6, "after": 6.0, "alpha": 3.4}, "AZ": {"before": 2.2, "after": 6.1, "alpha": 3.9}, "CO": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "GA": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "ID": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "IL": {"before": 1.8, "after": 5.9, "alpha": 4.0}, "IN": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "IA": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "KY": {"before": 2.0, "after": 6.0, "alpha": 4.0}, "MA": {"before": 1.3, "after": 5.7, "alpha": 4.4}, "MI": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "MS": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "NC": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "PA": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "UT": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "AL": {"before": 1.8, "after": 5.9, "alpha": 4.1}, "AR": {"before": 2.0, "after": 6.0, "alpha": 4.0}, "CA": {"before": 0.4, "after": 5.1, "alpha": 4.7}, "CT": {"before": 1.5, "after": 5.7, "alpha": 4.2}, "DE": {"before": 1.5, "after": 5.7, "alpha": 4.2}, "DC": {"before": 0.8, "after": 5.4, "alpha": 4.5}, "HI": {"before": 0.8, "after": 5.5, "alpha": 4.7}, "KS": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "LA": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "ME": {"before": 1.5, "after": 5.7, "alpha": 4.2}, "MD": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "MN": {"before": 1.0, "after": 5.4, "alpha": 4.4}, "MO": {"before": 1.8, "after": 5.9, "alpha": 4.0}, "MT": {"before": 1.7, "after": 5.9, "alpha": 4.2}, "NE": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "NJ": {"before": 0.8, "after": 5.4, "alpha": 4.5}, "NM": {"before": 1.7, "after": 5.9, "alpha": 4.2}, "NY": {"before": 0.8, "after": 5.3, "alpha": 4.5}, "ND": {"before": 2.2, "after": 6.1, "alpha": 3.9}, "NYC": {"before": 0.2, "after": 5.0, "alpha": 4.8}, "OH": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "OK": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "OR": {"before": 1.0, "after": 5.4, "alpha": 4.4}, "RI": {"before": 1.6, "after": 5.8, "alpha": 4.1}, "SC": {"before": 1.6, "after": 5.9, "alpha": 4.2}, "VT": {"before": 1.2, "after": 5.7, "alpha": 4.5}, "VA": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "WV": {"before": 1.8, "after": 5.9, "alpha": 4.1}, "WI": {"before": 1.4, "after": 5.7, "alpha": 4.3}}, "state_names": {"\u2014": "a no-income-tax state", "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California", "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "DC": "Washington DC", "FL": "Florida", "GA": "Georgia", "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa", "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland", "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri", "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey", "NM": "New Mexico", "NY": "New York", "NYC": "New York City", "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio", "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina", "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont", "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"}};
+window.__STATE__ = {"header": {"generated": "2026-07-12 20:57:32 UTC", "source": "scripts/tax_alpha.py \u00b7 30y proxy-spliced cache, 1996\u20132026 (tests/data/matrix_history.json)", "horizon_years": 30}, "headline": {"alpha_low": 3.7, "alpha_high": 4.7, "pretax_before": 9.4, "pretax_after": 9.1}, "before": {"label": "Concentrated \u00b7 high-turnover", "sub": "A concentrated, high-turnover book in a taxable account, taxed naively.", "st_share": 96, "turnover": 371, "atc_low": 0.4, "atc_high": 2.7, "keep_pct": 9}, "after": {"label": "Coordinated \u00b7 tax-managed", "sub": "The same holdings, managed for tax: careful lot selection, patient trading, and loss harvesting.", "st_share": 53, "turnover": 136, "atc_low": 5.1, "atc_high": 6.3, "keep_pct": 41}, "levers": [{"name": "Asset location", "share": "the coordination", "desc": "The bridge between how you invest and how the household is structured \u2014 placing the higher-turnover strategy in Roth and Traditional accounts, where its short-term gains escape tax entirely. Coordination itself; quantified for each household in the After-Tax Review."}, {"name": "Patient trading and lot selection", "share": "\u2248 60\u201365%", "desc": "Holds positions through short-term noise and chooses which lots to sell, turning gains that would be taxed as ordinary income into long-term gains taxed roughly 17 points lower."}, {"name": "Loss harvesting", "share": "\u2248 35\u201340%", "desc": "Realizes losses and applies them against the highest-taxed gains first \u2014 capturing a spread a simple buy-and-hold fund never reaches."}], "states": [{"state": "Federal only", "before": 2.7, "after": 6.3, "alpha": 3.7}, {"state": "Illinois", "before": 1.8, "after": 5.9, "alpha": 4.0}, {"state": "New York", "before": 0.8, "after": 5.3, "alpha": 4.5}, {"state": "California", "before": 0.4, "after": 5.1, "alpha": 4.7}], "state_alpha": {"\u2014": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "AK": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "FL": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "NV": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "NH": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "SD": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "TN": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "TX": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "WY": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "WA": {"before": 2.6, "after": 6.0, "alpha": 3.4}, "AZ": {"before": 2.2, "after": 6.1, "alpha": 3.9}, "CO": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "GA": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "ID": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "IL": {"before": 1.8, "after": 5.9, "alpha": 4.0}, "IN": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "IA": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "KY": {"before": 2.0, "after": 6.0, "alpha": 4.0}, "MA": {"before": 1.3, "after": 5.7, "alpha": 4.4}, "MI": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "MS": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "NC": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "PA": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "UT": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "AL": {"before": 1.8, "after": 5.9, "alpha": 4.1}, "AR": {"before": 2.0, "after": 6.0, "alpha": 4.0}, "CA": {"before": 0.4, "after": 5.1, "alpha": 4.7}, "CT": {"before": 1.5, "after": 5.7, "alpha": 4.2}, "DE": {"before": 1.5, "after": 5.7, "alpha": 4.2}, "DC": {"before": 0.8, "after": 5.4, "alpha": 4.5}, "HI": {"before": 0.8, "after": 5.5, "alpha": 4.7}, "KS": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "LA": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "ME": {"before": 1.5, "after": 5.7, "alpha": 4.2}, "MD": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "MN": {"before": 1.0, "after": 5.4, "alpha": 4.4}, "MO": {"before": 1.8, "after": 5.9, "alpha": 4.0}, "MT": {"before": 1.7, "after": 5.9, "alpha": 4.2}, "NE": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "NJ": {"before": 0.8, "after": 5.4, "alpha": 4.5}, "NM": {"before": 1.7, "after": 5.9, "alpha": 4.2}, "NY": {"before": 0.8, "after": 5.3, "alpha": 4.5}, "ND": {"before": 2.2, "after": 6.1, "alpha": 3.9}, "NYC": {"before": 0.2, "after": 5.0, "alpha": 4.8}, "OH": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "OK": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "OR": {"before": 1.0, "after": 5.4, "alpha": 4.4}, "RI": {"before": 1.6, "after": 5.8, "alpha": 4.1}, "SC": {"before": 1.6, "after": 5.9, "alpha": 4.2}, "VT": {"before": 1.2, "after": 5.7, "alpha": 4.5}, "VA": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "WV": {"before": 1.8, "after": 5.9, "alpha": 4.1}, "WI": {"before": 1.4, "after": 5.7, "alpha": 4.3}}, "state_names": {"\u2014": "a no-income-tax state", "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California", "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "DC": "Washington DC", "FL": "Florida", "GA": "Georgia", "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa", "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland", "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri", "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey", "NM": "New Mexico", "NY": "New York", "NYC": "New York City", "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio", "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina", "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont", "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"}};
 
 const fmt$ = v => "$"+Math.round(v).toLocaleString();
 const fmt$big = v => v>=1e6 ? "$"+(v/1e6).toFixed(v>=1e7?0:1)+"M" : "$"+Math.round(v/1e3)+"k";
@@ -270,12 +270,12 @@ function render(s){
   const annual = (row && qPort>0) ? qPort * row.alpha/100 : 0;
 
   if(row){
-    document.getElementById("h-alpha").textContent = `up to +${row.alpha.toFixed(1)}%`;
+    document.getElementById("h-alpha").textContent = `+${row.alpha.toFixed(1)}%`;
   } else {
     document.getElementById("h-alpha").textContent = `+${hd.alpha_low}% to +${hd.alpha_high}%`;
   }
   document.getElementById("h-note").textContent =
-    `Pre-tax: ${hd.pretax_before}%/yr (before) vs ${hd.pretax_after}%/yr (after) — the structural book is `+
+    `Pre-tax: ${hd.pretax_before}%/yr (before) vs ${hd.pretax_after}%/yr (after) — the coordinated book is `+
     `NOT claimed to out-earn pre-tax. Illustrative, after-tax, over ~${(s.header||{}).horizon_years||30} years.`;
 
   // Personalized banner (compliant reframe: "up to ~X%/yr in our illustrative modeling").
@@ -286,7 +286,7 @@ function render(s){
     pband.innerHTML =
       `Personalized for <b>${nm}</b>${qPort>0?` · <b>${fmt$big(qPort)}</b> portfolio`:''}: in our illustrative `+
       `modeling, a concentrated, high-turnover book in ${nm} keeps ~<b>${row.before.toFixed(1)}%/yr</b> after tax `+
-      `versus ~<b>${row.after.toFixed(1)}%/yr</b> tax-managed — up to <b>~+${row.alpha.toFixed(1)}%/yr</b> recovered`+
+      `versus ~<b>${row.after.toFixed(1)}%/yr</b> coordinated — a modeled <b>~+${row.alpha.toFixed(1)}%/yr</b>`+
       `${qPort>0?` (≈ <b>${fmt$(annual)}/yr</b> on this portfolio)`:''}. Your actual figure depends on your `+
       `holdings; the full After-Tax Review computes it.`;
   } else { pband.style.display = "none"; }
@@ -296,7 +296,7 @@ function render(s){
   const ad = row ? Object.assign({}, a, {atc_low:row.after,  atc_high:row.after})  : a;
   const span = d => d.atc_low===d.atc_high ? `${d.atc_low}%` : `${d.atc_low}–${d.atc_high}%`;
   const sideHTML = (d, before) =>
-    `<div class="tag">${before?'Before — the leak':'After — plugged'}</div>`+
+    `<div class="tag">${before?'Uncoordinated':'Coordinated'}</div>`+
     `<h3>${d.label}</h3><div class="csub">${d.sub}</div>`+
     `<div class="leak"><div class="bar">`+
       `<div class="kept" style="width:${d.keep_pct}%"></div>`+
@@ -334,7 +334,7 @@ function render(s){
     `<b>Illustrative / hypothetical — not a real track record and not advice.</b> Figures reflect the `+
     `<b>retroactive application</b> of a systematic model to historical data (FIFO lot accounting on the `+
     `book's own marks, partly proxy-spliced); they are hypothetical, <b>no client capital was invested</b>, `+
-    `and past performance <b>does not guarantee future results</b>. This is structural tax &amp; fee `+
+    `and past performance <b>does not guarantee future results</b>. This is coordinated tax &amp; fee `+
     `management on an identical exposure — <b>not a forecast that these funds out-perform</b>. `+
     `Intended for sophisticated investors; it may not be relevant to your situation. Source: ${(s.header||{}).source||''}.`+
     `<div style="margin-top:7px">Driftwood is a `+

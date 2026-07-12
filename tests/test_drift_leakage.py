@@ -1,9 +1,10 @@
 """Guards for the Tax-Leakage Diagnostic (D2) — the one-page Before/After pitch artifact.
 
-The diagnostic is a Structural Alpha proof: a concentrated, high-turnover book leaking tax versus the
-tax-managed engine plugging it, sourced from the Tax-Alpha decomposition (scripts/tax_alpha.py). These
-tests lock its numbers' provenance + structure, the compliance framing, and its place in the PRIMARY
-client funnel (not the exploratory-research appendix).
+The diagnostic makes coordination measurable: a concentrated, high-turnover book leaking tax versus
+the same holdings coordinated and tax-managed, sourced from the Tax-Alpha decomposition
+(scripts/tax_alpha.py). Coordination is the product; the after-tax result is the evidence. These tests
+lock its numbers' provenance + structure, the compliance framing, and its place in the PRIMARY client
+funnel (not the exploratory-research appendix).
 """
 
 import json
@@ -40,10 +41,12 @@ def test_leakage_states_show_tax_alpha_rising_with_the_rate():
         assert abs((r["after"] - r["before"]) - r["alpha"]) < 0.31  # alpha ≈ the after-before gap
 
 
-def test_leakage_template_carries_the_structural_alpha_and_compliance_framing():
+def test_leakage_template_leads_with_coordination_and_carries_compliance_framing():
     t = LEAKAGE_TEMPLATE.read_text()
-    assert "Tax Diagnostic" in t
-    assert "Structural Alpha" in t
+    assert "Tax Diagnostic" in t                          # the tool's name / eyebrow
+    # coordination is the product; the after-tax result is the evidence — not a "tax-alpha" product
+    assert "coordination becomes measurable" in t
+    assert "Structural Alpha" not in t                    # retired from the public site (reads as a factor bet)
     # honesty / Marketing-Rule guards
     assert "not a forecast that these funds out-perform" in t
     assert "NOT claimed to out-earn pre-tax" in t
@@ -80,14 +83,16 @@ def test_state_alpha_table_covers_states_and_matches_the_static_anchors():
         assert r["after"] > r["before"]
 
 
-def test_leakage_template_personalizes_and_carries_a_booking_cta():
+def test_leakage_template_personalizes_and_carries_a_single_review_cta():
     t = LEAKAGE_TEMPLATE.read_text()
     # reads the cold-outreach deep-link params and localizes off the per-state table
     assert 'qp.get("state")' in t and ('qp.get("portfolio")' in t or 'qp.get("port")' in t)
     assert "state_alpha" in t and "pband" in t
-    # compliant reframe (Marketing-Rule): "up to ... in our illustrative modeling", diagnostic-gated
-    assert "up to +" in t and "illustrative modeling" in t
+    # compliant reframe (Marketing-Rule): a modeled / illustrative figure, diagnostic-gated — no "up to" hype
+    assert "modeled" in t and "illustrative modeling" in t
+    assert "up to +" not in t
     assert "Your actual figure depends on your" in t
-    # booking / conversion CTA into the After-Tax Review's Review Summary, forwarding params + utm attribution
+    # ONE conversion CTA into the After-Tax Review, forwarding params + utm attribution
     assert 'id="cta-analysis"' in t and "view=review" in t
+    assert 'id="cta-book"' not in t                  # single action — the second CTA is retired
     assert "utm_campaign" in t                       # campaign params forwarded for attribution

@@ -5,7 +5,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const TEMPLATE = path.join(__dirname, '..', '..', 'src', 'drift', 'web', 'taxlab.html');
+// The estate/lead/statemap flows this harness drives moved from the public TaxLab into the
+// Advisor Workspace when TaxLab became a public exhibit (commit 7035c86). Point at their home.
+const TEMPLATE = path.join(__dirname, '..', '..', 'src', 'drift', 'web', 'workspace.html');
 
 function templateText() { return fs.readFileSync(TEMPLATE, 'utf8'); }
 function cssText() { return fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'drift', 'web', 'driftwood.css'), 'utf8'); }

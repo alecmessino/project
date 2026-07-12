@@ -449,3 +449,63 @@ Then the center of gravity moves to the **Advisor Workspace**: the flagship, bui
 deliberately different, product design language (dense, purposeful, keyboard-first —
 Bloomberg / Foundry / Stripe / Linear, not the editorial museum). Internally it is the
 *Coordination Engine*; the client never sees that name, but it changes how it is built.
+
+---
+
+## 13 · Trust calibration — making the institution feel like it already exists
+
+The principal's client's-eye review (July 2026): design is no longer the gap. The
+remaining gap is **trust and perceived permanence** — convincing a sophisticated prospect
+that this institution already operates. The standing directives, in priority order:
+
+1. **Boutique is a feature.** The site's institutional grammar makes the firm read as 25
+   people; the dissonance on discovering otherwise costs trust. Lean in, on the record:
+   *"Driftwood is intentionally small. Every household works directly with Alec Messino
+   while leveraging institutional research, custodians, and outside specialists when
+   appropriate."* (Principal-provided language.) Ship in the human-story pass.
+2. **Show the human earlier.** The site teaches, proves, explains — but the person a
+   prospect is trusting with $8M appears too late. Move the story up: professional, not
+   emotional; why he built this. **Alec is the coordination engine** — the conductor, not
+   the software.
+3. **Proof of practice, not just proof of thinking.** Nothing builds trust faster than
+   documents: an example household followed end-to-end (timeline · estate · portfolio ·
+   tax · decision log · annual review), a real meeting agenda, Manual pages, an
+   investment-committee memo, a research memo, a withdrawal memo, a transition plan.
+   Every sample is fictional and labeled illustrative — that rule is absolute (§0.5·7).
+4. **Less "Driftwood."** Institutional writing assumes the publisher — the NYT never
+   writes "The New York Times believes." Nav + RIA disclosures legitimately name the firm
+   (~6–8 mentions/page); body copy beyond that is audited down in the QA pass.
+5. **Reduce cleverness.** Retire copy that *tries* — "Keep more of what you've earned,"
+   "Measure your tax drag," "One place coordination becomes measurable." The rest of the
+   site doesn't try; it explains. Quieter rewrites land in each page's family pass.
+6. **Institutional memory (the Record pass).** Version history (v1.2 → v1.3 · Amended),
+   cross-references (Referenced by · Used in · Superseded by), citations both directions
+   (research ↔ decisions ↔ exhibits ↔ manuals). Institutions have memory; show it.
+7. **Introduce time.** *Published July 2026 · Revised September 2026 · Last reviewed ·
+   Current edition · First published.* Little stamps create permanence. (The taxlab
+   exhibit plate's "As of · v1.0 · reviewed quarterly" is the pattern to extend.)
+8. **Quiet.** Sometimes the most institutional move is nothing: more whitespace, one
+   sentence, then begin.
+9. **Make the research harder.** White papers, appendices, methodology, sensitivity
+   analysis, references, footnotes — AQR/NBER/Dimensional grade. Not because prospects
+   read them; because they'll believe someone else did. (New research stays shippable
+   post-freeze by constitution.)
+10. **Institutional friction.** Elite firms aren't frictionless. Prefer "Request
+    document · Read appendix · View methodology · Continue reading" to giant buttons.
+11. **Navigation, eventually.** The identity is institutional; the nav still reads as
+    website navigation (Understand / Discover). A publication-style nav (Library ·
+    Operating System · Research · Tax Lab · Conversation) is approved *in direction* —
+    it is an IA change requiring its own design + review PR, after the passes below.
+
+**The operating roadmap (supersedes the family order alone):**
+
+1. ~~Finish PRs #72–#75~~ *(merged)* + remaining normalization (Cases → Tools), with the
+   cleverness rewrites folded into each family's pass.
+2. **Record/Reference institutional-memory pass** — design reviewed first, then built:
+   version history, amendments, cross-references, archival integrity (frozen mark, one
+   household, consistent dates).
+3. **Front-to-back QA pass** (Phases B + Y): consistency, loading rhythm, typography,
+   spacing, disclosures, mobile, interaction polish — plus the "less Driftwood" audit.
+4. **Proof of practice:** the sample-document shelf (all fictional, all labeled).
+5. **The human story, earlier + boutique positioning** (principal-provided language).
+6. **Freeze at v1** (per §12) and move the center of gravity to the Workspace.

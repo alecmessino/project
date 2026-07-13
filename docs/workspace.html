@@ -1403,11 +1403,11 @@ function ctaMailto(){
   const h=$("leadcta").querySelector(".h"); if(h) h.focus();
 }
 // --- Estate Planning View (entity-level architecture + IL cliff + HB2601) ---
-// Calibrated to the Illinois AG estate-tax calculator (mirror of drift.taxlab.il_estate_tax):
-// the tax on the amount OVER the exclusion, so HB2601 just shifts the baseline. Anchors at the
-// $4M exclusion: $5M->~$285k, $8M->~$690k, $10M->~$980k. (excess_breakpoint, tax, marginal_rate).
-const IL_AG=[[0,0,0.285],[1000000,285000,0.135],[4000000,690000,0.145],[6000000,980000,0.160],[10000000,1620000,0.160]];
-function ilAgTax(excess){ if(excess<=0)return 0; let bp=0,base=0,r=0; for(const row of IL_AG){ if(excess>=row[0]){bp=row[0];base=row[1];r=row[2];} else break; } return base+r*(excess-bp); }
+// The Illinois AG estate-tax curve is the canonical drift.state_facts.IL_AG_CURVE, injected as
+// S.assumptions.estate.il_ag_curve (rows: excess_breakpoint, tax, marginal_rate) — read here rather
+// than hand-mirrored, so Python and the browser render the one source. The tax is on the amount OVER
+// the exclusion, so the HB2601 toggle just shifts the baseline.
+function ilAgTax(excess){ if(excess<=0)return 0; const curve=(S.assumptions.estate.il_ag_curve)||[]; let bp=0,base=0,r=0; for(const row of curve){ if(excess>=row[0]){bp=row[0];base=row[1];r=row[2];} else break; } return base+r*(excess-bp); }
 function ilEstateTax(estate,exclusion){ return ilAgTax(Math.max(0,estate-exclusion)); }
 function hbOn(){ return $("hb2601").classList.contains("on"); }
 function estateKind(st){ if(st==="IL") return {kind:"illinois"}; const m=(S.assumptions.estate.state_estate)||{}, t=m[st]; return t?{kind:"levy",type:t}:{kind:"none"}; }

@@ -474,6 +474,18 @@ table.exhibit-table{ width:100%; border-collapse:collapse; font-family:var(--san
   letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-variant-numeric:tabular-nums; }
 @media(max-width:620px){ .firm-anchor{ font-size:9px; letter-spacing:.1em; padding:10px 14px; gap:4px 16px; } }
 
+/* ── Footer disclosure line — one canonical treatment ─────────────────────────────────────────
+   Every page's quiet <div class="foot"> disclosure used to carry its own inline .foot{} — 24
+   variants that had drifted apart in top spacing, colour, size, and line-height. This single rule
+   unifies the SHARED footer treatment (vertical rhythm · type · rule) sitewide and wins over each
+   page's inline .foot{} by specificity (0,1,1 vs 0,1,0), so no per-page edit is required. It
+   deliberately does NOT set horizontal padding, so each page keeps its own content gutter (44px
+   editorial · 40px Atlas · 48px wide tools). Renders below the firm-anchor band, matching that
+   pattern on every public page. */
+body .foot{ margin-top:42px; padding-top:20px; padding-bottom:38px;
+  border-top:1px solid var(--line); color:var(--muted); font-size:11px; line-height:1.65; }
+body .foot .note{ color:var(--dim); font-weight:500; }
+
 /* Decision ledger — a ruled journal that only grows */
 .ledger-head,.ledger-row{ display:grid; grid-template-columns:96px 1fr 132px 116px 116px; gap:16px; }
 .ledger-head{ padding:14px 0 9px; border-bottom:2px solid var(--ink); }

@@ -375,7 +375,7 @@ function render(s){
   const h=s.header;
   document.getElementById("sub").innerHTML =
     `<b>Hypothetical backtest</b> · <b>${h.universe.length}</b> instruments · modeled from <b>${h.inception||"—"}</b>`;
-  document.getElementById("gen").textContent = h.updated ? ("Generated "+h.updated+" · snapshot") : "";
+  document.getElementById("gen").textContent = "Model data as of July 2026.";
   if(!s.equity.length){
     document.getElementById("body").innerHTML='<p class="empty">No entries yet — the ledger begins on the next run.</p>';
     return;

@@ -257,7 +257,7 @@ def _src_line(d: dict) -> str:
     if cites:
         links = " · ".join(
             f'<a href="{_esc(c["url"])}" target="_blank" rel="noopener">{_esc(c["label"])}</a>' for c in cites)
-        return f'<div class="dsrc"><b>Prove it:</b> {links}</div>'
+        return f'<div class="dsrc"><b>Statute:</b> {links}</div>'
     return (f'<div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. '
             f'{_esc(d.get("source", ""))}</div>')
 
@@ -433,7 +433,7 @@ def _capture(code: str, name: str, alpha, rate: str) -> str:
         <label class="vh" for="capemail">Your email address</label>
         <input type="email" id="capemail" placeholder="you@email.com" required autocomplete="email" aria-label="Your email address" />
         <input type="text" id="caphp" name="{_FORM_HP}" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <button type="submit" id="capsend">Email me {nm}'s 1-pager →</button>
+        <button type="submit" id="capsend">Email me {nm}'s brief →</button>
       </form>
       <div class="capnote" id="capnote">A one-page, {nm}-specific after-tax breakdown — we'll follow up by email, usually within a business day. We never share your address.</div>
     </div>
@@ -456,7 +456,7 @@ def _capture(code: str, name: str, alpha, rate: str) -> str:
           .then(function(r){{ if(!r.ok) throw 0;
             document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Thanks — we\\'ll email your {nm} after-tax breakdown, usually within a business day.</div>';
             if(window.plausible) plausible("lead_submitted",{{props:{{source:"state_page",state:"{code}"}}}}); }})
-          .catch(function(){{ btn.disabled=false; btn.textContent="Email me {nm}'s 1-pager →";
+          .catch(function(){{ btn.disabled=false; btn.textContent="Email me {nm}'s brief →";
             document.getElementById("capnote").innerHTML='Sorry — that didn\\'t send. Email us at <a href="mailto:{_CONTACT}">{_CONTACT}</a>.'; }});
       }});
     }})();
@@ -546,7 +546,7 @@ def render_state_html(data: dict) -> str:
     <div class="bcrumb"><a href="index.html">Driftwood Capital</a> › <a href="statemap.html">The State Atlas</a> › {_esc(name)}</div>
     <div class="hd">
       <div class="eyebrow">The State Atlas · {_esc(name)}</div>
-      <h1>How {_esc(name)} taxes investors</h1>
+      <h1>How {_esc(name)} taxes investors.</h1>
       <p class="lede">{_esc(lede)}</p>
       {summary_p}
       {context_p}
@@ -640,7 +640,7 @@ def render_states_index(pages: dict) -> str:
     {NAV}
     <div class="hd">
       <div class="eyebrow">The State Atlas · state tax reference</div>
-      <h1>How every state taxes investors</h1>
+      <h1>How every state taxes investors.</h1>
       <p class="lede">Pick your state for its capital-gains, estate, marriage, and basis-step-up profile —
         and an illustrative estimate of how much its tax rules can affect a tax-managed portfolio.</p>
     </div>

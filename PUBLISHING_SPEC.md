@@ -526,6 +526,17 @@ that this institution already operates. The standing directives, in priority ord
     Operating System · Research · Tax Lab · Conversation) is approved *in direction* —
     it is an IA change requiring its own design + review PR, after the passes below.
 
+**Phase Ω — the Institutional Experience Audit (inserted July 2026, before all remaining
+work).** Before finishing the editorial checklist, the whole experience was audited
+once — IA, visual language, interaction model, conversion flow, narrative sequencing —
+so nothing gets polished twice. The findings, six deliverables, and ranked ~130-item
+backlog live in **EXPERIENCE_AUDIT.md**; its Tier-1 items (the conversion terminus, the
+human in the funnel, series navigation, CTA grammar) take priority over the remaining
+roadmap steps, and its variance data (openings 22–158px, nine H1 sizes, ten disclosure
+feet) defines the QA pass's checklist. The audit's structural rulings: `inside` re-scopes
+to the system-and-artifacts (the engagement sequence belongs to `howitworks` alone), and
+the Core Alpha series gains prev/next navigation.
+
 **The operating roadmap (supersedes the family order alone; reordered July 2026 —
 Proof of Practice moves ahead of Tools/QA because its artifacts inform both):**
 
@@ -535,22 +546,38 @@ Proof of Practice moves ahead of Tools/QA because its artifacts inform both):**
    Status, archival integrity (frozen mark, one household, consistent 2026 dates).
 3. **Proof of practice:** the sample-document shelf, in trust order (the Annual Review,
    Manual, and Decision Register already exist as samples):
-   1. **Investment Committee Memo** — the most institution-building artifact.
-   2. **Transition Plan** — answers "what happens if I hire you?"
-   3. **Meeting Agenda** — answers "what does it feel like to work together?"
-   4. **Withdrawal Memo** — demonstrates judgment.
-   All fictional (Harris), all labeled, all in the Record grammar. Before the freeze, one
-   more page joins them: **"How we work together"** — literally that title, not "Process,"
-   not "Experience": who does what · cadence · reviews · specialists · communication ·
-   decisions · documentation · responsibilities. Five minutes to read. It closes the last
-   gap: the site shows how Driftwood thinks; this shows what being a client feels like.
+   1. ~~**Investment Committee Memo**~~ *(built — IC 2026-02, the DR-003 decision)*
+   2. **Transition Plan** — answers "what happens if I hire you?" Highest value; prospects
+      immediately understand it.
+   3. **Withdrawal Memo** — demonstrates judgment, coordination, sophistication.
+   4. **Meeting Agenda** — useful, but builds confidence more slowly than a decision memo.
+   All fictional (Harris), all labeled, all in the Record grammar.
+   **The fake-firm guard (absolute):** every sample artifact must answer *"could this
+   realistically exist for a client tomorrow?"* If yes, build it. If it exists only to
+   make the archive feel richer — don't. The committee-as-the-room framing is the
+   template: artifacts demonstrate coordination; they never imply staff.
+   **Announce nothing.** New publishing mechanics (Authority, Reviewed, Status) are never
+   introduced or explained on the site — no "now with…" anywhere. Institutions don't
+   explain their publishing apparatus; readers absorb it.
+   Before the freeze, two more join the shelf:
+   - **"How we work together"** — literally that title, not "Process," not "Experience":
+     who does what · cadence · reviews · specialists · communication · decisions ·
+     documentation · responsibilities. Five minutes to read. It closes the last gap: the
+     site shows how Driftwood thinks; this shows what being a client feels like.
+   - **The Household Coordination Map** — one page, one relationship diagram: portfolio ·
+     estate · taxes · cash · insurance · entities · professionals. The visual equivalent
+     of everything the site argues.
 4. **Tools pass** (leakage · statemap · score), with the cleverness rewrites.
 5. **Front-to-back QA pass** (Phases B + Y): consistency, loading rhythm, typography,
-   spacing, disclosures, mobile, interaction polish — plus the "less Driftwood" audit.
+   spacing, disclosures, mobile, interaction polish — plus the "less Driftwood" audit and
+   the **twenty-percent test** on every page: *if I deleted 20% of the words on this page,
+   would it become better?* If yes, delete them. Subtraction has improved this site every
+   time; another quiet 10–15% site-wide is expected here.
 6. **The human story, earlier + boutique positioning** (principal-provided language).
 7. **Public Site Constitution v1**, carrying the freeze rules (§12) and the filter,
    strengthened per review: **"The public website records how Driftwood thinks. The work
-   itself happens elsewhere."** Every proposed feature is asked: does this belong in the
-   public record, or in the operating system? If the latter, it goes to the Advisor
-   Workspace, never the site.
+   itself happens elsewhere."** The durable governance rule, asked of every new idea
+   before it is built: **is this *evidence of* the institution, or part of the
+   institution's *operation*?** If it documents how Driftwood thinks, it belongs on the
+   public site. If it helps Driftwood do its work, it belongs in the Advisor Workspace.
 8. **Freeze at v1** and move the center of gravity to the Workspace.

@@ -166,7 +166,7 @@ function render(s){
     `${h.n_studies||s.studies.length} backtests chosen to show the Core Alpha strategy honestly — across `+
     "instruments, across the lookback window, against transaction cost, and against a no-trend control. "+
     "Each answers a research question about why the strategy behaves as it does.";
-  document.getElementById("gen").textContent = "Generated "+h.generated+" · universe: "+h.universe;
+  document.getElementById("gen").textContent = "Model data as of July 2026.";
 
   document.getElementById("studies").innerHTML = s.studies.map((st,i)=>{
     const metrics = st.metrics.map(m=>

@@ -142,13 +142,13 @@
     <div class="bcrumb"><a href="index.html">Driftwood Capital</a> › <a href="statemap.html">The State Atlas</a> › Texas</div>
     <div class="hd">
       <div class="eyebrow">The State Atlas · Texas</div>
-      <h1>How Texas taxes investors</h1>
+      <h1>How Texas taxes investors.</h1>
       <p class="lede">Every state taxes investors differently. Here is how Texas treats capital gains at the top rate, the marriage penalty, estate and inheritance tax at death, municipal-bond interest, the §1202 QSBS exclusion, and a harvested loss — a plain reference to the state&#x27;s tax code.</p>
       <p class="lede" style="margin-top:10px">Texas levies no state income tax on capital gains; no state death tax; community-property step-up (a full basis step-up at the first death).</p>
       <p class="context">Texas has no state income tax, constitutionally restricted, and pairs a strong homestead exemption with a community-property regime — so community assets receive a full basis step-up at the first spouse&#x27;s death. Property and sales taxes carry more of the state&#x27;s revenue.</p>
     </div>
     <div class="grid">
-      <div class="dcard"><div class="dh">Income &amp; gains<span class="dtag">0%</span></div><p>No state tax on capital gains — and a harvested loss is worth only the federal rate here.</p><div class="dsrc"><b>Prove it:</b> <a href="https://statutes.capitol.texas.gov/Docs/CN/htm/CN.8.htm" target="_blank" rel="noopener">Tex. Const. art. VIII, §24 (a personal income tax requires voter approval — Texas levies none)</a></div></div>
+      <div class="dcard"><div class="dh">Income &amp; gains<span class="dtag">0%</span></div><p>No state tax on capital gains — and a harvested loss is worth only the federal rate here.</p><div class="dsrc"><b>Statute:</b> <a href="https://statutes.capitol.texas.gov/Docs/CN/htm/CN.8.htm" target="_blank" rel="noopener">Tex. Const. art. VIII, §24 (a personal income tax requires voter approval — Texas levies none)</a></div></div>
 <div class="dcard"><div class="dh">Marriage</div><p>No state income tax — no marriage penalty on the state return.</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State income-tax filing schedules, tax year 2025 — verify with a tax advisor.</div></div>
 <div class="dcard"><div class="dh">Death</div><p>No state estate or inheritance tax — only the federal estate tax applies.</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State estate/inheritance statutes, tax year 2025 — confirm with counsel.</div></div>
 <div class="dcard"><div class="dh">Munis<span class="dtag">exempt</span></div><p>Municipal-bond interest is exempt from state tax whether the issuer is in-state or out-of-state — the broadest muni preference (states with no tax on investment income, plus a few that exempt all munis by statute).</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State income-tax statutes on municipal-bond interest, tax year 2025 — verify with a tax advisor.</div></div>
@@ -187,7 +187,7 @@
         <label class="vh" for="capemail">Your email address</label>
         <input type="email" id="capemail" placeholder="you@email.com" required autocomplete="email" aria-label="Your email address" />
         <input type="text" id="caphp" name="botcheck" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <button type="submit" id="capsend">Email me Texas's 1-pager →</button>
+        <button type="submit" id="capsend">Email me Texas's brief →</button>
       </form>
       <div class="capnote" id="capnote">A one-page, Texas-specific after-tax breakdown — we'll follow up by email, usually within a business day. We never share your address.</div>
     </div>
@@ -210,7 +210,7 @@
           .then(function(r){ if(!r.ok) throw 0;
             document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Thanks — we\'ll email your Texas after-tax breakdown, usually within a business day.</div>';
             if(window.plausible) plausible("lead_submitted",{props:{source:"state_page",state:"TX"}}); })
-          .catch(function(){ btn.disabled=false; btn.textContent="Email me Texas's 1-pager →";
+          .catch(function(){ btn.disabled=false; btn.textContent="Email me Texas's brief →";
             document.getElementById("capnote").innerHTML='Sorry — that didn\'t send. Email us at <a href="mailto:alec.messino@gmail.com">alec.messino@gmail.com</a>.'; });
       });
     })();

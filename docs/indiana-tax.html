@@ -142,7 +142,7 @@
     <div class="bcrumb"><a href="index.html">Driftwood Capital</a> › <a href="statemap.html">The State Atlas</a> › Indiana</div>
     <div class="hd">
       <div class="eyebrow">The State Atlas · Indiana</div>
-      <h1>How Indiana taxes investors</h1>
+      <h1>How Indiana taxes investors.</h1>
       <p class="lede">Every state taxes investors differently. Here is how Indiana treats capital gains at the top rate, the marriage penalty, estate and inheritance tax at death, municipal-bond interest, the §1202 QSBS exclusion, and a harvested loss — a plain reference to the state&#x27;s tax code.</p>
       <p class="lede" style="margin-top:10px">Indiana taxes long-term gains at a top effective 3%; no state death tax; common-law step-up (only half of jointly-held property).</p>
       
@@ -187,7 +187,7 @@
         <label class="vh" for="capemail">Your email address</label>
         <input type="email" id="capemail" placeholder="you@email.com" required autocomplete="email" aria-label="Your email address" />
         <input type="text" id="caphp" name="botcheck" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <button type="submit" id="capsend">Email me Indiana's 1-pager →</button>
+        <button type="submit" id="capsend">Email me Indiana's brief →</button>
       </form>
       <div class="capnote" id="capnote">A one-page, Indiana-specific after-tax breakdown — we'll follow up by email, usually within a business day. We never share your address.</div>
     </div>
@@ -210,7 +210,7 @@
           .then(function(r){ if(!r.ok) throw 0;
             document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Thanks — we\'ll email your Indiana after-tax breakdown, usually within a business day.</div>';
             if(window.plausible) plausible("lead_submitted",{props:{source:"state_page",state:"IN"}}); })
-          .catch(function(){ btn.disabled=false; btn.textContent="Email me Indiana's 1-pager →";
+          .catch(function(){ btn.disabled=false; btn.textContent="Email me Indiana's brief →";
             document.getElementById("capnote").innerHTML='Sorry — that didn\'t send. Email us at <a href="mailto:alec.messino@gmail.com">alec.messino@gmail.com</a>.'; });
       });
     })();

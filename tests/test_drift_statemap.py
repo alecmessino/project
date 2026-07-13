@@ -69,7 +69,7 @@ def test_prove_it_citations_only_where_verified():
             assert ("citation" in r) == ((c, dim) in verified), f"{c}/{dim} citation mismatch"
     # the template renders the Prove-it link and keeps the no-fabrication note
     t = STATEMAP_TEMPLATE.read_text()
-    assert "Prove it:" in t
+    assert "Statute:" in t
 
 
 def test_template_is_original_and_carries_compliance_framing():

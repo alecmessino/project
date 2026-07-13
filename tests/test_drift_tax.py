@@ -289,7 +289,8 @@ def test_nyc_overlay_stacks_local_tax_on_new_york():
 def test_wa_excise_is_long_term_only():
     from drift.tax import STATE_RATES
     lt, st = STATE_RATES["WA"]
-    assert abs(lt - 0.07) < 1e-9 and st == 0.0          # 7% LT cap-gains excise, no income/ST tax
+    # 7% + a 2.9% tier over ~$1M (SB 5813, 2025) → 9.9% top-effective on LONG-term gains only; no ST tax.
+    assert abs(lt - 0.099) < 1e-9 and st == 0.0
 
 
 def test_il_estate_tax_cliff_and_hb2601_toggle():

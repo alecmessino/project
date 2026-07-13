@@ -142,3 +142,37 @@ def test_build_edition_covers_every_jurisdiction_with_provenance():
 def test_spine_rejects_an_unknown_edition():
     with pytest.raises(KeyError):
         atlas.build_state_edition("CA", "1999")
+
+
+# ── One canonical rate source (state_facts.RATES) ─────────────────────────────────────────────────
+# The after-tax calculator and the Atlas display must never disagree about a rate: both project from
+# drift.state_facts.RATES. These guard that single source and that every reconciled value is cited.
+
+def test_calculator_rates_project_from_the_canonical_source():
+    from drift import state_facts
+    from drift.tax import STATE_RATES
+    from drift.statemap import _income
+    # The calculator's table is exactly RATES minus the out-of-scope territories.
+    for code, rate in STATE_RATES.items():
+        assert rate == state_facts.RATES[code], f"{code}: calculator rate diverged from canonical"
+    assert set(STATE_RATES) == set(state_facts.RATES) - state_facts.TERRITORY_CODES
+
+
+def test_atlas_headline_is_the_formatted_canonical_long_term_rate():
+    from drift import state_facts
+    from drift.statemap import _income, _INCOME
+    for code in _INCOME:
+        rec = _income(code)
+        assert rec["tag"] == state_facts.rate_display(code), (
+            f"{code}: Atlas headline '{rec['tag']}' != canonical {state_facts.rate_display(code)}"
+        )
+
+
+def test_every_reconciled_rate_carries_a_primary_source():
+    # Each value changed in the 2025 reconciliation must cite an authority + URL + effective date,
+    # so the reconciliation log can never lose a citation.
+    from drift import state_facts
+    for code, src in state_facts.RATE_SOURCES.items():
+        for field in ("prev_tax", "prev_map", "adopted", "authority", "url", "effective"):
+            assert src.get(field), f"{code} reconciliation record missing {field!r}"
+        assert src["url"].startswith("http"), f"{code}: source url is not a link"

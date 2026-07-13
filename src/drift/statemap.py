@@ -30,6 +30,7 @@ from __future__ import annotations
 import time
 
 from .leakage import STATE_ALPHA, STATE_NAMES
+from .state_facts import rate_display, TERRITORY_CODES  # canonical rate + territory set (§15.4)
 
 # ── Editions: the Atlas is a citable reference, versioned by tax-year edition ───────────────────────
 # Each annual edition carries its own provenance — the law year the content reflects, the date a human
@@ -74,59 +75,60 @@ TILES = {
     "HI": [0, 7], "TX": [3, 7], "FL": [7, 7],
     "AS": [5, 8], "GU": [6, 8], "MP": [7, 8], "PR": [8, 8], "VI": [9, 8],
 }
-TERRITORIES = {"AS", "GU", "MP", "PR", "VI"}
+TERRITORIES = TERRITORY_CODES  # canonical set from drift.state_facts (one definition)
 
 NAMES = dict(STATE_NAMES)
 NAMES.update({"AS": "American Samoa", "GU": "Guam", "MP": "N. Mariana Islands",
               "PR": "Puerto Rico", "VI": "U.S. Virgin Islands"})
 
-# ── 1 · Income & gains: harvested-loss conformity + top effective LT rate + quirk ─────────────────
-# (regime, top_effective_lt_rate, quirk). regime ∈ notax/conforming/nonconforming/expiring/lt_only.
+# ── 1 · Income & gains: harvested-loss conformity + quirk ─────────────────────────────────────────
+# (regime, quirk). regime ∈ notax/conforming/nonconforming/expiring/lt_only. The headline rate is NOT
+# stored here — it is the canonical top-effective LT rate from drift.state_facts.RATES, formatted by
+# rate_display(); this table carries only the conformity regime and the editorial quirk (§15.4).
 _INCOME = {
-    "AK": ("notax", "0%", ""), "AL": ("nonconforming", "5%", "losses offset income same year only — no carryforward"),
-    "AR": ("conforming", "1.95%", "50% long-term exclusion; net gain over $10M fully exempt"),
-    "AZ": ("conforming", "1.88%", "25% long-term subtraction (post-2011 lots)"),
-    "CA": ("conforming", "13.3%", "12.3% + a 1% surtax over $1M"),
-    "CO": ("conforming", "4.40%", "a TABOR surplus can cut the rate in a given year"),
-    "CT": ("conforming", "6.99%", "recapture: a flat rate on all income over ~$1.08M"),
-    "DC": ("conforming", "10.8%", ""), "DE": ("conforming", "6.60%", ""), "FL": ("notax", "0%", ""),
-    "GA": ("conforming", "5.19%", "drops to 4.99% in 2026"),
-    "HI": ("expiring", "7.25%", "7.25% long-term cap; loss carryforward dies after 5 years"),
-    "IA": ("conforming", "3.80%", "local school surtax can add up to +20% of tax"),
-    "ID": ("conforming", "5.30%", ""), "IL": ("conforming", "4.95%", ""),
-    "IN": ("conforming", "3%", "+ county tax; 2.95% in 2026"), "KS": ("conforming", "5.58%", ""),
-    "KY": ("conforming", "4%", "drops to 3.5% in 2026"), "LA": ("conforming", "3%", ""),
-    "MA": ("conforming", "9%", "5% long-term + a 4% surtax over ~$1.1M; short-term taxed 8.5%"),
-    "MD": ("conforming", "8.50%", "6.5% + a 2% gain surtax (cliff at $350K) + county tax"),
-    "ME": ("conforming", "7.15%", ""), "MI": ("conforming", "4.25%", "+ city tax (Detroit 2.4%)"),
-    "MN": ("conforming", "10.8%", "9.85% + a 1% net-investment surtax over $1M"),
-    "MO": ("notax", "0%", "gains exempt from 2025; losses still deduct (up to 4.7%)"),
-    "MS": ("conforming", "4.40%", "4.0% in 2026, stepping toward 3.0% by 2030"),
-    "MT": ("conforming", "4.10%", "a separate, lower long-term schedule (3.0 / 4.1%)"),
-    "NC": ("conforming", "4.25%", "3.99% in 2026"), "ND": ("conforming", "1.50%", "40% long-term exclusion"),
-    "NE": ("conforming", "5.20%", "4.55% in 2026"), "NH": ("notax", "0%", ""),
-    "NJ": ("nonconforming", "10.8%", "no carryforward — banked losses never reach the NJ bill"),
-    "NM": ("conforming", "5.90%", "the 40% exclusion was repealed in 2025 ($2,500 cap)"),
-    "NV": ("notax", "0%", ""),
-    "NY": ("conforming", "10.9%", "+ NYC ~3.88% (~14.8% combined); flat-on-all-income recapture"),
-    "OH": ("conforming", "3.13%", "school districts can add ~0.25–2%"),
-    "OK": ("conforming", "4.75%", "4.5% in 2026"),
-    "OR": ("conforming", "9.90%", "+ Portland-metro tax up to 4% (~13.9% combined)"),
-    "PA": ("nonconforming", "3.07%", "no carryforward; losses locked to the year, the class, and the spouse"),
-    "RI": ("conforming", "5.99%", ""), "SC": ("conforming", "3.36%", "44% net-gain deduction"),
-    "SD": ("notax", "0%", ""), "TN": ("notax", "0%", ""), "TX": ("notax", "0%", ""),
-    "UT": ("conforming", "4.50%", ""), "VA": ("conforming", "5.75%", ""),
-    "VT": ("conforming", "8.75%", "listed securities get only a $5K exclusion; a 3%-of-AGI floor"),
-    "WA": ("lt_only", "9.90%", "a 7% + 2.9% excise on long-term gains only, gross of short-term losses"),
-    "WI": ("conforming", "5.36%", "30% long-term exclusion"),
-    "WV": ("conforming", "4.82%", "4.58% in 2026"), "WY": ("notax", "0%", ""),
-    "AS": ("conforming", "20%", "IRC frozen at 12/31/2000; the rate is the total tax, replacing federal"),
-    "GU": ("conforming", "20%", "federal mirror code; the rate is the total tax, replacing federal"),
-    "MP": ("conforming", "20%", "federal mirror code; the rate is the total tax, replacing federal"),
-    "PR": ("expiring", "15%", "own code: 15% is the total tax; carryforward 7 years as short-term, 90% cap"),
-    "VI": ("conforming", "20%", "federal mirror code; the rate is the total tax, replacing federal"),
+    "AK": ("notax", ""), "AL": ("nonconforming", "losses offset income same year only — no carryforward"),
+    "AR": ("conforming", "50% long-term exclusion; net gain over $10M fully exempt"),
+    "AZ": ("conforming", "25% long-term subtraction (post-2011 lots)"),
+    "CA": ("conforming", "12.3% + a 1% surtax over $1M"),
+    "CO": ("conforming", "a TABOR surplus can cut the rate in a given year"),
+    "CT": ("conforming", "recapture: a flat rate on all income over ~$1.08M"),
+    "DC": ("conforming", ""), "DE": ("conforming", ""), "FL": ("notax", ""),
+    "GA": ("conforming", "HB 111 cut the rate to 5.19% for 2025, with annual cuts toward 4.99%"),
+    "HI": ("expiring", "7.25% long-term cap; loss carryforward dies after 5 years"),
+    "IA": ("conforming", "local school surtax can add up to +20% of tax"),
+    "ID": ("conforming", ""), "IL": ("conforming", ""),
+    "IN": ("conforming", "+ county tax; 2.95% in 2026"), "KS": ("conforming", ""),
+    "KY": ("conforming", "drops to 3.5% in 2026"), "LA": ("conforming", "flat 3% from 2025; the cap-gains deduction was repealed"),
+    "MA": ("conforming", "5% long-term + a 4% surtax over ~$1.1M; short-term 8.5% likewise + the 4% surtax"),
+    "MD": ("conforming", "6.5% + a 2% capital-gains surtax on long-term gains + county tax"),
+    "ME": ("conforming", ""), "MI": ("conforming", "+ city tax (Detroit 2.4%)"),
+    "MN": ("conforming", "9.85% + a 1% net-investment surtax over $1M"),
+    "MO": ("notax", "gains exempt from 2025; losses still deduct (up to 4.7%)"),
+    "MS": ("conforming", "4.0% in 2026, stepping toward 3.0% by 2030"),
+    "MT": ("conforming", "a separate, lower long-term schedule (3.0 / 4.1%)"),
+    "NC": ("conforming", "3.99% in 2026"), "ND": ("conforming", "40% long-term exclusion"),
+    "NE": ("conforming", "4.55% in 2026"), "NH": ("notax", ""),
+    "NJ": ("nonconforming", "no carryforward — banked losses never reach the NJ bill"),
+    "NM": ("conforming", "the general 40% exclusion was repealed for 2025 (survives only for a NM business, $1M cap)"),
+    "NV": ("notax", ""),
+    "NY": ("conforming", "+ NYC ~3.88% (~14.8% combined); flat-on-all-income recapture"),
+    "OH": ("conforming", "top rate 3.125% for 2025; flat 2.75% in 2026; school districts add ~0.25–2%"),
+    "OK": ("conforming", "4.5% in 2026"),
+    "OR": ("conforming", "+ Portland-metro tax up to 4% (~13.9% combined)"),
+    "PA": ("nonconforming", "no carryforward; losses locked to the year, the class, and the spouse"),
+    "RI": ("conforming", ""), "SC": ("conforming", "44% long-term deduction; short-term taxed at the full 6.0%"),
+    "SD": ("notax", ""), "TN": ("notax", ""), "TX": ("notax", ""),
+    "UT": ("conforming", ""), "VA": ("conforming", ""),
+    "VT": ("conforming", "the 40% exclusion is unavailable for listed securities (only a $5K flat exclusion)"),
+    "WA": ("lt_only", "a 7% + 2.9% excise on long-term gains only, gross of short-term losses"),
+    "WI": ("conforming", "30% long-term exclusion"),
+    "WV": ("conforming", "4.58% in 2026"), "WY": ("notax", ""),
+    "AS": ("conforming", "IRC frozen at 12/31/2000; the rate is the total tax, replacing federal"),
+    "GU": ("conforming", "federal mirror code; the rate is the total tax, replacing federal"),
+    "MP": ("conforming", "federal mirror code; the rate is the total tax, replacing federal"),
+    "PR": ("expiring", "own code: 15% is the total tax; carryforward 7 years as short-term, 90% cap"),
+    "VI": ("conforming", "federal mirror code; the rate is the total tax, replacing federal"),
 }
-_INC_TAG = {"notax": "0%"}
 _INCOME_NOTE = {
     "notax": "No state tax on capital gains — and a harvested loss is worth only the federal rate here.",
     "conforming": "Loss treatment conforms to federal: capital losses net against gains and carry forward. Top effective long-term rate {rate}.",
@@ -139,7 +141,8 @@ _INCOME_NOTE = {
 def _income(code):
     if code not in _INCOME:
         return None
-    regime, rate, quirk = _INCOME[code]
+    regime, quirk = _INCOME[code]
+    rate = rate_display(code)  # canonical top-effective LT rate (drift.state_facts), formatted
     if regime == "notax" and quirk:
         # A no-income-tax state can still have loss quirks (e.g. MO: gains exempt but losses deduct);
         # the generic "loss worth only the federal rate" line would be FALSE, so state the quirk instead.

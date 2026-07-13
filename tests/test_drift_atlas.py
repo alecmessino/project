@@ -18,11 +18,12 @@ import pytest
 
 from drift.statemap import (
     TILES, TERRITORIES, EDITIONS, CURRENT_EDITION,
-    AS_OF_LAW, LAST_REVIEWED, _CHANGELOG, build_statemap,
+    AS_OF_LAW, LAST_REVIEWED, _CHANGELOG, build_statemap, _state_record,
 )
 from drift.leakage import STATE_NAMES, STATE_ALPHA
 from drift.tax import STATE_RATES
 from drift.statepage import STATE_PAGE_CODES
+from drift import atlas
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
@@ -104,3 +105,40 @@ def test_default_build_uses_the_current_edition_and_stamps_it():
 def test_unknown_edition_is_a_hard_error():
     with pytest.raises(KeyError):
         build_statemap("1999")
+
+
+# ── The canonical spine (atlas.py) ────────────────────────────────────────────────────────────────
+# The {state, edition} record projects the live tax facts as its `environment` layer and declares
+# the four downstream reasoning-chain layers as empty-but-typed placeholders. These guard that the
+# spine adds no facts of its own and that its shape is stable for consumers.
+
+def test_environment_layer_is_exactly_the_live_state_record():
+    # The spine must not re-author facts: its environment layer IS statemap's record, verbatim.
+    for code in ("IL", "CA", "TX", "FL", "WY"):
+        rec = atlas.build_state_edition(code)
+        assert rec["environment"] == _state_record(code)
+        assert rec["code"] == code and rec["edition"] == CURRENT_EDITION
+
+
+def test_the_reasoning_chain_layers_are_present_and_empty():
+    rec = atlas.build_state_edition("IL")
+    assert atlas.CHAIN == ("environment", "impact", "considerations", "framework", "actions")
+    # Downstream layers are declared but unpopulated (filled later, under content authority).
+    assert rec["impact"] is None
+    assert rec["considerations"] == []
+    assert rec["framework"] == {"signals": {}}
+    assert rec["actions"] == []
+
+
+def test_build_edition_covers_every_jurisdiction_with_provenance():
+    ed = atlas.build_edition()
+    assert ed["edition"] == CURRENT_EDITION
+    assert ed["as_of_law"] == AS_OF_LAW and ed["changelog"] == _CHANGELOG
+    # Every canonical jurisdiction (and the territories strip) is present.
+    assert CANON <= set(ed["states"])
+    assert set(ed["states"]) == set(TILES)
+
+
+def test_spine_rejects_an_unknown_edition():
+    with pytest.raises(KeyError):
+        atlas.build_state_edition("CA", "1999")

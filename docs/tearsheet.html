@@ -163,9 +163,11 @@ function eqchart(el, strat, bench, splitFrac, market){
   const sep=document.createElementNS(ns,"line");
   sep.setAttribute("x1",sx);sep.setAttribute("x2",sx);sep.setAttribute("y1",pad);sep.setAttribute("y2",h-pad);
   sep.setAttribute("stroke","#cfcfd4");sep.setAttribute("stroke-dasharray","3 3");el.appendChild(sep);
+  // Data-colour standard: the strategy is the only saturated line (#15806a, drawn last/on top);
+  // benchmarks recede to neutral greys — the market line stays dashed to read as context.
   const lines=[[bench,"#b8bcc2",1.3,null]];
-  if(market&&market.length) lines.push([market,"#9aa0c0",1.2,"3 2"]);   // global market (VT)
-  lines.push([strat,"#3d4650",1.7,null]);
+  if(market&&market.length) lines.push([market,"#cdd0d6",1.2,"3 2"]);   // global market (VT)
+  lines.push([strat,"#15806a",2.5,null]);
   for(const [data,color,wdt,dash] of lines){
     const p=document.createElementNS(ns,"polyline");
     p.setAttribute("points",data.map((v,i)=>xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" "));
@@ -223,9 +225,9 @@ function render(st){
       ${bk.market ? `<p class="uni" style="margin:-6px 0 10px">${bk.market.label}: `+
         `CAGR <b>${pct(bk.market.summary.cagr)}</b> · Sharpe <b>${num(bk.market.summary.sharpe)}</b> · `+
         `max DD <b>${pct(-bk.market.summary.max_drawdown)}</b></p>` : ``}
-      <div class="legend"><span><i style="background:#3d4650"></i>Strategy</span>
+      <div class="legend"><span><i style="background:#15806a"></i>Strategy</span>
         <span><i style="background:#b8bcc2"></i>Buy &amp; hold (universe)</span>
-        ${bk.market ? '<span><i style="background:#9aa0c0"></i>Global market (VT)</span>' : ''}
+        ${bk.market ? '<span><i style="background:#cdd0d6"></i>Global market (VT)</span>' : ''}
         <span><i style="background:#cfcfd4"></i>in-sample / out-of-sample split</span></div>
       <svg class="eq" id="eq${i}" preserveAspectRatio="none" role="img" aria-label="${bk.name} — strategy versus buy-and-hold equity curves"></svg>
       <div class="oos">

@@ -274,9 +274,11 @@ function render(s){
     ["Sessions", (ph.days||0)+"", "neutral"],
   ].map(([l,v,c])=>`<div class="cell"><div class="v ${c}">${v}</div><div class="l">${l}</div></div>`).join("");
 
-  // Dated performance chart: the book vs its buy-and-hold benchmarks.
-  const lines=[{label:"Model", values:p.equity, color:"#15463a", width:2.4}];
-  (p.benchmarks||[]).forEach(b=> lines.push({label:b.label, values:b.equity, color:b.color||"#b8bcc2", width:1.3}));
+  // Dated performance chart: the book vs its buy-and-hold benchmarks. Data-colour standard —
+  // the strategy is the only saturated line (#15806a); benchmarks recede to neutral greys.
+  const BENCH_GREYS=["#b8bcc2","#cdd0d6","#dcdee2"];
+  const lines=[{label:"Model", values:p.equity, color:"#15806a", width:2.5}];
+  (p.benchmarks||[]).forEach((b,i)=> lines.push({label:b.label, values:b.equity, color:BENCH_GREYS[i]||"#dcdee2", width:1.3}));
   requestAnimationFrame(()=>drawChart(document.getElementById("chart"), p.dates||[], lines));
 
   // One book, one table: held sleeves (by portfolio weight) then the waiting list (by trend strength).

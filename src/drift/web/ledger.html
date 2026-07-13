@@ -221,6 +221,7 @@
 window.__STATE__ = /*__STATE__*/null/*__END__*/;
 const BDESC={VT:"global market", VTI:"US total market"};
 const SCOLOR="#15806a";   // strategy line: strong teal, drawn thick on top
+const BENCH_GREYS=["#b8bcc2","#cdd0d6","#dcdee2"];  // benchmarks recede to neutral grey — never a competing hue
 const PERLABEL={ALL:"full backtest",YTD:"year to date","1M":"last month","3M":"last 3 months",
   "6M":"last 6 months","1Y":"last year"};
 let ST=null;
@@ -331,8 +332,8 @@ function applyPeriod(key){
   const start=periodStartIdx(s.dates, key);
   const dts=s.dates.slice(start);
   const stratEq=s.equity.slice(start);
-  const lines=[{label:"Strategy", color:SCOLOR, values:stratEq, width:2.4}];
-  (s.benchmarks||[]).forEach(b=> lines.push({label:b.label, color:b.color, values:b.equity.slice(start), width:1.8}));
+  const lines=[{label:"Strategy", color:SCOLOR, values:stratEq, width:2.5}];
+  (s.benchmarks||[]).forEach(b=> lines.push({label:b.label, color:b.color, values:b.equity.slice(start), width:1.5}));
   drawChart(document.getElementById("eq"), dts, lines, -1);
   const st=winStats(stratEq, bpy);
   let rows=`<tr class="me"><td>Strategy</td><td class="${cls(st.tr)}">${pct(st.tr)}</td>
@@ -371,6 +372,10 @@ function stylebox(box, sm){
 
 function render(s){
   ST=s;
+  // Data-colour standard: the strategy is the only saturated line; benchmarks recede to neutral
+  // greys (VT primary, then lighter) — never competing hues. Set once here so the chart, the
+  // comparison table, and the legend all read the same colour back off ST.benchmarks.
+  (s.benchmarks||[]).forEach((b,i)=>{ b.color = BENCH_GREYS[i] || BENCH_GREYS[BENCH_GREYS.length-1]; });
   const h=s.header;
   document.getElementById("sub").innerHTML =
     `<b>Hypothetical backtest</b> · <b>${h.universe.length}</b> instruments · modeled from <b>${h.inception||"—"}</b>`;

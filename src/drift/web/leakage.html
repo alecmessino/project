@@ -62,7 +62,9 @@
   .card .csub{font-size:12px;color:var(--dim);margin-bottom:14px;min-height:32px}
   .leak{margin:8px 0 6px}
   .leak .bar{display:flex;height:26px;border-radius:0;overflow:hidden;border:1px solid var(--line)}
-  .leak .kept{background:var(--teal2)} .leak .lost{background:var(--neg);opacity:.86}
+  .leak .kept{background:var(--teal2)}
+  /* Losses read as hatched, not a flat block — the data-colour standard's signal for value given up. */
+  .leak .lost{background:repeating-linear-gradient(45deg, var(--neg) 0 4px, #b7695e 4px 8px)}
   .leak .lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-top:5px}
   .leak .lbl b{color:var(--ink)}
   .metrics{display:flex;gap:18px;margin-top:14px;border-top:1px solid var(--line2);padding-top:12px}

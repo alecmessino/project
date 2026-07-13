@@ -168,12 +168,20 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
     background:currentColor; transition:transform var(--t-fast,.15s) ease; }
   .dwnav--menu .dwnav-toggle .bars::before{ top:-6px; }
   .dwnav--menu .dwnav-toggle .bars::after{ top:6px; }
-  /* Collapsed by default once enhanced; the disclosure reveals a stacked list + the CTA. */
+  /* Collapsed by default once enhanced; the disclosure opens an editorial table of contents. */
   .dwnav--menu .dwnav-links,
   .dwnav--menu .dwnav-cta{ display:none; }
   .dwnav--menu.dwnav--open .dwnav-links{ display:flex; flex-direction:column; align-items:flex-start;
-    flex-basis:100%; gap:16px 0; padding-top:12px; }
-  .dwnav--menu.dwnav--open .dwnav-cta{ display:inline-block; flex-basis:100%; margin-top:2px; }
+    flex-basis:100%; gap:0; padding-top:14px; }
+  /* Each family reads as a titled column — label as quiet front-matter, links stacked one per line,
+     a hairline between families. Rhythm carries the hierarchy, not weight. */
+  .dwnav--menu.dwnav--open .dwnav-group{ flex-direction:column; align-items:flex-start; gap:11px 0; width:100%; }
+  .dwnav--menu.dwnav--open .dwnav-group + .dwnav-group{ margin-top:20px; padding-top:20px;
+    border-top:1px solid var(--line,#e3dccd); }
+  .dwnav--menu.dwnav--open .dwnav-label{ color:var(--muted,#8a8577); opacity:.7; margin-bottom:2px; }
+  /* Set the conversation action apart, below its own rule, like a colophon. */
+  .dwnav--menu.dwnav--open .dwnav-cta{ display:inline-block; flex-basis:100%; width:100%; margin-top:20px;
+    padding-top:20px; border-top:1px solid var(--line,#e3dccd); }
   /* Open: the middle bar clears and the outer two cross into an ✕. */
   .dwnav--menu.dwnav--open .dwnav-toggle .bars{ background:transparent; }
   .dwnav--menu.dwnav--open .dwnav-toggle .bars::before{ top:0; transform:rotate(45deg); }

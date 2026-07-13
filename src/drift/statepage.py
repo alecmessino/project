@@ -242,7 +242,7 @@ NAV = (
     '      <a href="statemap.html" aria-current="page">State&nbsp;Tax&nbsp;Atlas</a>\n'
     '    </span>\n'
     '  </div>\n'
-    '  <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>\n'
+    '  <a class="dwnav-cta" href="index.html#conversation">Schedule a Coordination Review</a>\n'
     '</nav>'
 )
 

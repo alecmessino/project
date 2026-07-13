@@ -642,7 +642,6 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
 <div class="sheet">
   <div class="frame">
     {NAV_ABS}
-    <div class="bcrumb"><a href="{_ABS}index.html">Driftwood Capital</a> › <a href="{edition_url(edition)}">The State Atlas</a> › {_esc(name)}</div>
     <div class="hd">
       <div class="eyebrow">The State Atlas · {_esc(name)}</div>
       <h1>How {_esc(name)} taxes investors.</h1>

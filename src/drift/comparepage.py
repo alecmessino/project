@@ -22,7 +22,7 @@ from .leakage import STATE_NAMES
 from .statemap import AS_OF_LAW, LAST_REVIEWED, CURRENT_EDITION
 from .statepage import (
     _esc, _ABS, NAV_ABS, PLAUSIBLE, DISCLOSURE, _HEAD_CSS, _provenance_block,
-    _LEVEL_DOTS, state_slug, atlas_url, edition_url, render_redirect, STATE_PAGE_CODES,
+    _LEVEL_DOTS, atlas_url,
 )
 from .site import BASE_URL, firm_anchor_html
 from . import compare as _cmp
@@ -214,7 +214,6 @@ def render_comparison_html(cmp: dict, edition: str = CURRENT_EDITION) -> str:
 <div class="sheet">
   <div class="frame">
     {NAV_ABS}
-    <div class="bcrumb"><a href="{_ABS}index.html">Driftwood Capital</a> › <a href="{edition_url(edition)}">The State Atlas</a> › <a href="{_cmp.compare_index_url(edition)}">Comparison</a> › {_esc(a_name)} &amp; {_esc(b_name)}</div>
     <div class="hd">
       <div class="eyebrow">The State Atlas · Comparison</div>
       <h1>{_esc(a_name)} and {_esc(b_name)}, weighed as two operating environments.</h1>
@@ -385,7 +384,6 @@ def render_compare_index_html(edition: str = CURRENT_EDITION) -> str:
 <div class="sheet">
   <div class="frame">
     {NAV_ABS}
-    <div class="bcrumb"><a href="{_ABS}index.html">Driftwood Capital</a> › <a href="{edition_url(edition)}">The State Atlas</a> › Comparison</div>
     <div class="hd">
       <div class="eyebrow">The State Atlas · Comparison</div>
       <h1>Weigh any two operating environments.</h1>

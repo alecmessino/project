@@ -13,6 +13,19 @@ WEB = ROOT / "src" / "drift" / "web"
 DOCS = ROOT / "docs"
 PLACEHOLDER = "/*__STATE__*/null/*__END__*/"
 
+# Build-time tokens replaced from a single source (drift.site) so firm facts have one home.
+sys.path.insert(0, str(ROOT / "src"))
+from drift.site import firm_anchor_html  # noqa: E402
+
+FIRM_ANCHOR_TOKEN = "<!--FIRM_ANCHOR-->"
+
+
+def _inject_tokens(html: str) -> str:
+    """Replace build-time tokens with their single-source rendered value."""
+    if FIRM_ANCHOR_TOKEN in html:
+        html = html.replace(FIRM_ANCHOR_TOKEN, firm_anchor_html())
+    return html
+
 # template -> docs output
 PAIRS = {
     "hub.html": "index.html",
@@ -45,7 +58,7 @@ def main() -> int:
             bad += 1
             continue
         data = m.group(1)
-        rendered = template.replace(PLACEHOLDER, data)
+        rendered = _inject_tokens(template.replace(PLACEHOLDER, data))
         out_p.write_text(rendered)
         print(f"   {tpl:16} -> docs/{out:30} ({len(rendered)} bytes, data {len(data)})")
     # Plain static assets (not templated) — copy them through.
@@ -59,7 +72,7 @@ def main() -> int:
                   "score.html", "review.html", "awor.html", "inside.html", "decision-register.html",
                   "constitution.html", "capital-allocation.html", "opportunity-register.html",
                   "record.html", "ic-memo.html", "transition-plan.html"):
-        (DOCS / asset).write_text((WEB / asset).read_text())
+        (DOCS / asset).write_text(_inject_tokens((WEB / asset).read_text()))
         print(f"   {asset:15} -> docs/{asset} (copied)")
     # Binary assets (e.g. the founder headshot) — copy through only if present, so the About page's
     # <img> resolves once the file is dropped in. Optional: absent is fine (the page hides it).

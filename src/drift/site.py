@@ -28,16 +28,20 @@ BASE_URL = "https://alecmessino.github.io/project"
 # left to counsel and the existing (test-guarded) disclosures. See FOUNDATION_FACTS.md.
 
 # Currently live — operational, safe to flip via scripts/set_contact.py:
-CONTACT_EMAIL = "alec.messino@gmail.com"
+CONTACT_EMAIL = "hello@driftwoodplanning.com"
 BOOKING_URL = "https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting"
 
-# Confirmed firm facts:
+# Confirmed firm facts (principal-directed, July 2026):
 FIRM_LEGAL_NAME = "Driftwood Capital"
+FIRM_LOCATION = "Austin, Texas"  # the firm's city/state — an intentional part of the presentation
+FIRM_SINCE = "2024"              # founding year, for the "Founded" line
 
 # Deferred — consumed by the firm-anchor band once confirmed; empty means "render nothing":
 FIRM_CRD = ""        # SEC/IARD CRD number
 FIRM_CUSTODIAN = ""  # independent third-party custodian (e.g. Schwab / Fidelity / Pershing)
-FIRM_SINCE = ""      # founding year, for the "since" line
+
+# The month/year the model data is current to — one place; bump at each data refresh.
+MODEL_ASOF = "July 2026"
 
 
 def firm_facts() -> dict:
@@ -45,10 +49,33 @@ def firm_facts() -> dict:
     firm renders exactly the lines that are true today and grows as facts are confirmed."""
     candidates = {
         "legal_name": FIRM_LEGAL_NAME,
+        "location": FIRM_LOCATION,
+        "since": FIRM_SINCE,
         "crd": FIRM_CRD,
         "custodian": FIRM_CUSTODIAN,
-        "since": FIRM_SINCE,
         "contact_email": CONTACT_EMAIL,
         "booking_url": BOOKING_URL,
     }
     return {k: v for k, v in candidates.items() if v}
+
+
+_ANCHOR_SEP = "&nbsp;&nbsp;·&nbsp;&nbsp;"
+
+
+def firm_anchor_html() -> str:
+    """The coordinates band (Launch Standard, item D): a restrained institution + provenance strip for
+    page footers — 'DRIFTWOOD CAPITAL · AUSTIN, TEXAS · FOUNDED 2024' left, provenance right. Renders
+    only confirmed facts, so an unset fact (CRD, custodian) simply does not appear — never a placeholder.
+    One source; change a fact in site.py and every footer follows on the next build."""
+    f = firm_facts()
+    left = [FIRM_LEGAL_NAME.upper()]
+    if f.get("location"):
+        left.append(f["location"].upper())
+    if f.get("since"):
+        left.append(f"FOUNDED {f['since']}")
+    if f.get("crd"):
+        left.append(f"CRD {f['crd']}")
+    right = [f"MODEL DATA AS OF {MODEL_ASOF.upper()}", "FORM ADV &amp; CRS AT ADVISERINFO.SEC.GOV"]
+    return ('<div class="firm-anchor" role="contentinfo">'
+            f'<span>{_ANCHOR_SEP.join(left)}</span>'
+            f'<span>{_ANCHOR_SEP.join(right)}</span></div>')

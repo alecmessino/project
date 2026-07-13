@@ -42,7 +42,8 @@ def test_slugs_are_unique_and_readable():
 def test_page_carries_seo_and_full_disclosure(code):
     h = SP.render_state_html(PAGES[code])
     name = STATE_NAMES[code]
-    assert name in h and f'href="{SP.BASE_URL}/{SP.page_path(code)}"' in h
+    # The canonical is the editioned publication URL.
+    assert name in h and f'href="{SP.atlas_url(code)}"' in h
     for s in _REQUIRED_SEO:
         assert s in h, f"{code}: missing SEO element {s!r}"
     for s in _REQUIRED_DISCLOSURE:
@@ -69,20 +70,29 @@ def test_page_has_honest_inline_capture(code):
     assert "usually within a business day" in h             # honest manual-follow-up framing
 
 
-def test_sitemap_covers_core_plus_every_state():
+def test_sitemap_lists_editioned_canonicals_not_flat_aliases():
     xml = SP.render_sitemap()
     assert xml.count("<loc>") == len(SP._CORE_SITEMAP) + len(SP.STATE_PAGE_CODES)
     for code in SP.STATE_PAGE_CODES:
-        assert f"{SP.BASE_URL}/{SP.page_path(code)}" in xml
-    assert f"{SP.BASE_URL}/states.html" in xml
+        assert SP.atlas_url(code) in xml, f"sitemap missing editioned {code}"
+    assert SP.edition_url() in xml                              # the edition index (replaces states.html)
+    # The flat redirect aliases must NOT appear (they would be duplicate content).
+    assert f"{SP.BASE_URL}/{SP.page_path('CA')}" not in xml
+    assert f"{SP.BASE_URL}/states.html" not in xml
 
 
-def test_states_index_links_every_page_and_discloses():
+def test_states_index_links_every_editioned_page_and_discloses():
     idx = SP.render_states_index(PAGES)
     for code in SP.STATE_PAGE_CODES:
-        assert f'href="{SP.page_path(code)}"' in idx, f"index missing {code}"
+        assert f'href="{SP.atlas_url(code)}"' in idx, f"index missing {code}"
     for s in ("registered investment adviser", "adviserinfo.sec.gov"):
         assert s in idx
+
+
+def test_flat_slugs_are_permanent_redirects_to_the_editioned_canonical():
+    stub = SP.render_redirect(SP.atlas_url("CA"), "moved")
+    assert 'http-equiv="refresh"' in stub and f'content="0; url={SP.atlas_url("CA")}"' in stub
+    assert f'rel="canonical" href="{SP.atlas_url("CA")}"' in stub
 
 
 def test_no_tax_state_with_a_loss_quirk_is_not_misstated():
@@ -125,7 +135,7 @@ def test_no_tax_pages_are_not_near_duplicates():
     for code in _NO_TAX_CLUSTER:
         h = SP.render_state_html(PAGES[code])
         # strip every state-identifying token so what's left is the real body prose
-        n = h.replace(STATE_NAMES[code], "STATE").replace(SP.slug_for(code), "slug")
+        n = h.replace(STATE_NAMES[code], "STATE").replace(SP.slug_for(code), "slug").replace(SP.state_slug(code), "slug")
         n = n.replace(f"state={code}", "state=CC").replace(code.lower(), "cc").replace(code, "CC")
         norm_bodies.append(n)
     assert len(set(norm_bodies)) == len(norm_bodies), \
@@ -140,10 +150,14 @@ def test_new_dimensions_surface_on_state_pages():
     assert "municipal-bond interest" in h and "§1202" in h
 
 
-def test_export_writes_all_files(tmp_path):
+def test_export_writes_editioned_pages_and_redirect_aliases(tmp_path):
     written = SP.export_state_pages(tmp_path)
-    assert len(written) == 52                              # 51 states + states.html
-    assert (tmp_path / "california-tax.html").exists()
-    assert (tmp_path / "states.html").exists()
+    # 51 editioned pages + 51 flat redirect aliases + edition index + states.html alias + /atlas/ redirect.
+    assert len(written) == 51 * 2 + 3
+    assert (tmp_path / "atlas" / "2026" / "california" / "index.html").exists()   # editioned canonical
+    assert (tmp_path / "california-tax.html").exists()                            # flat redirect alias
+    assert (tmp_path / "atlas" / "2026" / "index.html").exists()                  # edition index
+    assert (tmp_path / "atlas" / "index.html").exists()                          # /atlas/ → current edition
+    assert (tmp_path / "states.html").exists()                                    # flat index alias
     SP.export_sitemap(tmp_path)
     assert (tmp_path / "sitemap.xml").exists()

@@ -121,38 +121,53 @@ def test_environment_layer_is_exactly_the_live_state_record():
 
 
 def test_the_reasoning_chain_is_ordered_with_the_framework_at_the_centre():
-    # PUBLISHING_SPEC §16: environment → impact → DECISION FRAMEWORK → considerations → actions.
-    assert atlas.CHAIN == ("environment", "impact", "framework", "considerations", "actions")
+    # PUBLISHING_SPEC §16: environment → impact → DECISION FRAMEWORK → coordination → actions.
+    assert atlas.CHAIN == ("environment", "impact", "framework", "coordination", "actions")
 
 
 def test_the_reasoning_layers_are_populated_from_composable_primitives():
     from drift import reasoning
     rec = atlas.build_state_edition("IL")
-    # Impact is the Tax-Diagnostic object; framework/considerations/actions reference primitives by id.
+    # Impact is the Tax-Diagnostic node; framework/coordination/actions reference primitives by id.
     assert rec["impact"]["id"] == "after_tax_impact"
-    fw_ids = {s["signal"] for s in rec["framework"]}
-    assert fw_ids == {s["id"] for s in reasoning.FRAMEWORK_SIGNALS}
-    assert all(c["consideration"] in {x["id"] for x in reasoning.CONSIDERATIONS} for c in rec["considerations"])
-    assert all(a["action"] in {x["id"] for x in reasoning.ACTIONS} for a in rec["actions"])
+    fw_ids = {s["id"] for s in rec["framework"]}
+    assert fw_ids == set(reasoning.SIGNAL_BY_ID)
+    assert all(c["id"] in reasoning.PRIORITY_BY_ID for c in rec["coordination"])
+    assert all(a["id"] in reasoning.ACTION_BY_ID for a in rec["actions"])
     # Illinois' defining feature — the $4M estate cliff — reads as severe exposure.
-    assert next(s for s in rec["framework"] if s["signal"] == "estate_exposure")["level"] == "severe"
+    assert next(s for s in rec["framework"] if s["id"] == "estate_exposure")["level"] == "severe"
+
+
+def test_reasoning_nodes_are_addressable_and_graph_edged():
+    # Every node carries a stable per-state node_id and typed reference edges (the knowledge graph, §17).
+    from drift import reasoning
+    rec = atlas.build_state_edition("IL")
+    for s in rec["framework"]:
+        assert s["node_id"] == f"IL:signal:{s['id']}"
+        # a signal edges to the coordination priority it opens
+        assert all(p in reasoning.PRIORITY_BY_ID for p in s["opens"])
+    for a in rec["actions"]:
+        assert a["node_id"] == f"IL:action:{a['id']}"
+        assert a["references"] in reasoning.PRIORITY_BY_ID          # edge back to a priority
+    # a signal's citations are traversed from the environment dimensions it reads (edge to Facts)
+    est = next(s for s in rec["framework"] if s["id"] == "estate_exposure")
+    assert isinstance(est["citations"], list)
 
 
 def test_framework_signals_are_canonical_addressable_across_states():
-    # The primitives are state-independent: the SAME signal ids evaluate on every state (composability).
     from drift import reasoning
-    canon = {s["id"] for s in reasoning.FRAMEWORK_SIGNALS}
+    canon = set(reasoning.SIGNAL_BY_ID)
     for code in ("CA", "TX", "WA", "FL", "NY"):
-        assert {s["signal"] for s in atlas.build_state_edition(code)["framework"]} == canon
+        assert {s["id"] for s in atlas.build_state_edition(code)["framework"]} == canon
 
 
-def test_actions_reference_only_active_considerations():
-    # An action only appears when the consideration it references fired — the graph stays consistent.
+def test_actions_reference_only_active_coordination_priorities():
+    # An action only appears when the coordination priority it references fired — the graph stays consistent.
     for code in ("IL", "TX", "CA", "WA", "NV"):
         rec = atlas.build_state_edition(code)
-        active = {c["consideration"] for c in rec["considerations"]}
+        active = {c["id"] for c in rec["coordination"]}
         for a in rec["actions"]:
-            assert a["references"] in active, f"{code}: action {a['action']} references an inactive consideration"
+            assert a["references"] in active, f"{code}: action {a['id']} references an inactive priority"
 
 
 def test_build_edition_covers_every_jurisdiction_with_provenance():

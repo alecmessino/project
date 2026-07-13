@@ -732,3 +732,42 @@ the comparison spread diffs two states' `framework.signals`; a Crossing Brief re
 origin→destination `actions`; the Opportunity Register and Household Record reference the same
 consideration/action ids. No consumer re-authors the reasoning. This is the knowledge graph for
 wealth coordination — the research backbone the rest of the Driftwood platform derives from.
+
+---
+
+## 17 · Driftwood OS — the three-layer platform (graph reasoning, structured objects)
+
+Driftwood is no longer a website; it is a platform with three layers, and every output derives from
+the first two:
+
+```
+Layer 1 · FACTS       drift.state_facts — canonical, editioned, cited (tax, estate, …)
+Layer 2 · REASONING   drift.reasoning  — impact · decision signals · coordination priorities · actions
+Layer 3 · OUTPUTS     Atlas · Comparison · Crossing Brief · Opportunity Register · Household Record ·
+                      Annual Review · Advisor Workspace · AI assistant · client portal
+```
+
+**17.1 · The reasoning layer is a GRAPH, not a chain.** Each Impact, Decision Signal, Coordination
+Priority, and Action is an **addressable node** with a stable per-state `node_id`
+(`IL:signal:estate_exposure`) and **typed reference edges**: a signal `reads` environment dimensions
+and `opens` a coordination priority; a priority carries `related_signals` and `related_actions`; an
+action `references` its priority. The chain (environment → impact → **decision framework** →
+coordination priorities → actions) is only the *presentation* order; underneath it is a graph any
+consumer — a page, a report, an AI — can traverse.
+
+**17.2 · Store structured reasoning, never prose.** A node is a typed object
+(`id · title · trigger · rationale · affected_dimensions · priority · related_signals ·
+related_actions · citations`), not a paragraph. `citations` are **traversed** from the Facts layer
+(the statute links on the dimensions a node reads), so provenance rides the graph without restatement.
+Pages *render* the object; the Household Record, Opportunity Register, Annual Review, and AI reference
+the **same object by id**. The reasoning exists once.
+
+**17.3 · Coordination Priorities** (renamed from "planning considerations"). The layer names the
+household's coordination *domains* (Residency, Estate, Portfolio) — the operating-system framing, not
+advisor copy.
+
+**17.4 · Think in products, not pages.** Each Layer-3 output is a *product* that should feel like
+software, not an article: the **Comparison** is a two-state instrument, the **Crossing Brief** an
+origin→destination operating document, the **Household Record** the place the canonical state reasoning
+becomes *this household's* standing decisions and coordination priorities. They share one reasoning
+engine and differ only in rendering. Build the primitives once; render them many ways.

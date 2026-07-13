@@ -30,7 +30,7 @@ from .statemap import (
 from . import reasoning
 
 # The reasoning-chain layer keys, in order — the Decision Framework is the centrepiece (§16).
-CHAIN = ("environment", "impact", "framework", "considerations", "actions")
+CHAIN = ("environment", "impact", "framework", "coordination", "actions")
 
 
 def build_state_edition(code: str, edition: str = CURRENT_EDITION) -> dict:

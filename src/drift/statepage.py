@@ -559,7 +559,7 @@ def _reasoning_html(r: dict, name: str) -> str:
         dots = "".join(f'<i class="{"on" if i < n else ""}"></i>' for i in range(4))
         cls = f' lv-{s["level"]}' if s["level"] in ("severe", "none") else ""
         sigs.append(
-            f'<div class="fsig{cls}"><div class="fh"><span class="fl">{_esc(s["label"])}</span>'
+            f'<div class="fsig{cls}"><div class="fh"><span class="fl">{_esc(s["title"])}</span>'
             f'<span class="fm" role="img" aria-label="{_esc(s["level"])} — {_esc(s["question"])}">{dots}</span></div>'
             f'<p>{_esc(s["reading"])}</p></div>')
     framework = (
@@ -567,20 +567,20 @@ def _reasoning_html(r: dict, name: str) -> str:
         f'<p class="lede" style="margin-bottom:14px">Five lenses turn {_esc(name)}\'s tax environment into a '
         f'household decision — the same lenses every state is read through, so any two states weigh on '
         f'identical terms.</p><div class="fw">{chr(10).join(sigs)}</div></div>')
-    considerations = ""
-    if r["considerations"]:
+    coordination = ""
+    if r["coordination"]:
         items = "\n".join(
-            f'<li><span class="ca">{_esc(c["area"])}</span> <span class="cw">· with your {_esc(c["coordinate"])}</span>'
-            f'<p>{_esc(c["note"])}</p></li>' for c in r["considerations"])
-        considerations = (f'<div class="sec"><div class="sh">What this asks {_esc(name)} households to coordinate</div>'
-                          f'<ul class="considx">{items}</ul></div>')
+            f'<li><span class="ca">{_esc(c["title"])}</span> <span class="cw">· with your {_esc(c["coordinate_with"])}</span>'
+            f'<p>{_esc(c["rationale"])}</p></li>' for c in r["coordination"])
+        coordination = (f'<div class="sec"><div class="sh">Coordination priorities for {_esc(name)} households</div>'
+                        f'<ul class="considx">{items}</ul></div>')
     actions = ""
     if r["actions"]:
         items = "\n".join(
             f'<li><span class="ao">{_esc(a["owner"])}</span><span>{_esc(a["step"])}</span></li>' for a in r["actions"])
         actions = (f'<div class="sec"><div class="sh">What should happen next</div>'
                    f'<ol class="actreg">{items}</ol></div>')
-    return framework + considerations + actions
+    return framework + coordination + actions
 
 
 def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:

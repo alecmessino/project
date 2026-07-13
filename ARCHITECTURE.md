@@ -13,7 +13,7 @@ Layer 2 · REASONING    a graph of structured objects →  drift.reasoning, drif
         ↓
 Layer 3 · PRODUCTS     queries over the graph, rendered many ways
                        →  Atlas state pages (drift.statepage), Tax Diagnostic (drift.leakage → leakage.html),
-                          Advisor Workspace (drift.taxlab), + Comparison, Crossing Brief, Household Record (planned)
+                          Advisor Workspace (drift.taxlab), Comparison (drift.compare), + Crossing Brief, Household Record (planned)
 ```
 
 **The one rule that makes it a platform:** a fact is authored once (Layer 1), reasoning about it exists
@@ -84,7 +84,7 @@ does not own intelligence.
 | **Atlas state page** | render this state's full reasoning chain | live · `drift.statepage` → `/atlas/{edition}/{state}/` |
 | **Tax Diagnostic** | what is *this household's* after-tax impact here? | live · `drift.leakage` → `leakage.html?state=` |
 | **Advisor Workspace** | estate / Roth / asset-location tooling | live · `drift.taxlab` → `workspace.html` |
-| **Comparison** | which framework signals differ between two states? | planned · `/atlas/{edition}/compare/<a>-<b>/` |
+| **Comparison** | which framework signals differ, and which coordination priorities change, between two states? | live · `drift.compare` / `drift.comparepage` → `/atlas/{edition}/compare/` (instrument) + `/compare/<a>-vs-<b>/` (corridors) |
 | **Crossing Brief** | which actions are added/removed origin→destination? | planned · `/atlas/{edition}/crossing/<o>-<d>/` |
 | **Household Record** | which priorities become *this household's* standing decisions? | planned |
 | **Opportunity Register / Annual Review / AI** | traverse the graph by node id | future |
@@ -187,7 +187,11 @@ these; they never re-derive them.
   it evaluates on every state and renders everywhere the graph renders. Same pattern for a new
   coordination priority (`COORDINATION_PRIORITIES`) or action (`ACTIONS`).
 - **New product** → consume `atlas.build_state_edition` / `build_edition`, query the nodes/edges, render.
-  Put any new rule in the graph, not the product.
+  Put any new rule in the graph, not the product. **`drift.compare` is the reference implementation:**
+  `build_comparison(a, b)` is a pure set-diff over two graph records (which signals change level, which
+  coordination priorities open/close) — it authors nothing, and its browser instrument only *lays out*
+  already-decided levels/readings, it never re-evaluates a rule. Copy that shape for the Crossing Brief
+  and the Household Record.
 - **Domain change** → `scripts/set_domain.py <url>` (single-source `site.BASE_URL`); regenerate `docs/`.
 - **Guardrails to keep green:** `pytest -q` (canonical/enumeration/reconciliation/reasoning guards,
   disclosures, typography, domain, correspondence) + `node tests/web/run.js` (the DOM-shim workspace

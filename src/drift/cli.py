@@ -315,13 +315,15 @@ def states(
     out_dir: str = typer.Option("docs", "--out-dir", help="directory for the per-state landing pages + sitemap"),
     sitemap: bool = typer.Option(True, "--sitemap/--no-sitemap", help="also regenerate docs/sitemap.xml"),
 ):
-    """Build the per-state SEO landing pages (50 states + DC), the states.html index, and the sitemap."""
+    """Build the per-state pages, the Comparison instrument (index + featured corridors), and the sitemap."""
     from .statepage import export_state_pages, export_sitemap, STATE_PAGE_CODES
+    from .comparepage import export_comparisons, sitemap_entries
     written = export_state_pages(out_dir)
-    msg = (f"[green]wrote[/] {len(written)} pages to {out_dir}/ "
-           f"({len(STATE_PAGE_CODES)} states + DC + index)")
+    cmp_written = export_comparisons(out_dir)
+    msg = (f"[green]wrote[/] {len(written)} state pages + {len(cmp_written)} comparison pages to "
+           f"{out_dir}/ ({len(STATE_PAGE_CODES)} states + DC, {len(cmp_written) - 1} corridors + instrument)")
     if sitemap:
-        sp = export_sitemap(out_dir)
+        sp = export_sitemap(out_dir, extra=sitemap_entries())
         msg += f"; sitemap -> {sp}"
     console.print(msg)
 

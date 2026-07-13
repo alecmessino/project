@@ -38,10 +38,6 @@
     letter-spacing:-.004em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{max-width:1080px;margin:34px auto;padding:0 20px 72px}
   .frame{background:var(--bg);overflow:hidden;}
-  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
-    border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{display:inline-flex;align-items:center;gap:9px;font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
   .msec{padding:34px 48px}
@@ -72,13 +68,6 @@
 <body>
 <div class="wrap">
   <div class="frame">
-    <div class="run">
-      <span class="inst">
-        <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true" style="display:block"><rect x="1" y="1" width="22" height="22" rx="5" fill="#1a2330"/><text x="12" y="17.5" text-anchor="middle" style="font-family:var(--serif)" font-size="15" font-weight="700" fill="#15806a">D</text></svg>
-        Driftwood
-      </span>
-      <span class="marker">The Operating Manual</span>
-    </div>
     <div class="inner">
     <nav class="dwnav" aria-label="Driftwood Capital">
       <a class="brand" href="index.html" aria-label="Driftwood Capital — home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Capital</span></a>
@@ -115,15 +104,16 @@
         </div>
         <div class="stamp">
           <div class="t">Confidential</div>
-          <div class="s">Prepared for the Merrell household</div>
+          <div class="s">Prepared for the Harris household</div>
         </div>
       </div>
 
       <div class="frontmatter" style="margin-top:30px">
-        <div class="cell"><div class="k">Household</div><div class="v">The Merrell household</div></div>
+        <div class="cell"><div class="k">Household</div><div class="v">The Harris household</div></div>
         <div class="cell"><div class="k">Adviser of record</div><div class="v">Driftwood</div></div>
-        <div class="cell"><div class="k">Established</div><div class="v tnum">April 2021</div></div>
-        <div class="cell"><div class="k">Revision</div><div class="v tnum">14 · current</div></div>
+        <div class="cell"><div class="k">Established</div><div class="v tnum">February 2026</div></div>
+        <div class="cell"><div class="k">Revision</div><div class="v tnum">rev. 06 · current</div></div>
+        <div class="cell"><div class="k">Status</div><div class="v">Current · append-only</div></div>
         <div class="cell"><div class="k">As of</div><div class="v tnum">9 July 2026</div></div>
         <div class="cell"><div class="k">Next standing review</div><div class="v due">September 2026</div></div>
       </div>
@@ -149,59 +139,51 @@
         <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
       </div>
 
-      <div class="ledger-year"><span class="y">2025</span><span class="c">2 entries</span></div>
+      <div class="ledger-year"><span class="y">2026</span><span class="c">the first year · 6 entries</span></div>
       <div class="ledger-row">
-        <div class="date">Nov 2025</div>
-        <div><div class="title">Sequenced a Roth conversion to fill the 24% bracket.</div><div class="reason">A low-income year before RMDs begin — bracket space that will not return.</div></div>
+        <div class="date">Jul 2026</div>
+        <div><div class="title">Sequenced the first Roth conversion rung to fill the 24% bracket.</div><div class="reason">A low-income year before RMDs begin — bracket space that will not return.</div></div>
         <div class="affected">Taxes · Estate</div>
         <div class="ref"><a href="taxlab.html">§ After-Tax Review →</a></div>
         <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
       </div>
       <div class="ledger-row">
-        <div class="date">Jun 2025</div>
+        <div class="date">Jun 2026</div>
         <div><div class="title">Established a 529 for the first grandchild.</div><div class="reason">Five years of the annual exclusion, front-loaded, funded from the taxable book.</div></div>
         <div class="affected">Liquidity · Estate</div>
-        <div class="ref"><a href="#changelog">rev. 12 →</a></div>
+        <div class="ref"><a href="#changelog">rev. 05 →</a></div>
         <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
       </div>
-
-      <div class="ledger-year"><span class="y">2024</span><span class="c">2 entries</span></div>
       <div class="ledger-row">
-        <div class="date">Sep 2024</div>
-        <div><div class="title">Re-domiciled the household to Texas.</div><div class="reason">Retire the 4.95% Illinois tax on the coming business sale before it is realized.</div></div>
+        <div class="date">May 2026</div>
+        <div><div class="title">Opened the Texas residency sequence — residency before the business sale.</div><div class="reason">Retire the 4.95% Illinois tax on the coming sale before it is realized; the order, not the components, decides the outcome.</div></div>
         <div class="affected">Taxes · Liquidity · Estate</div>
         <div class="ref"><a href="statemap.html">Exhibit 1 →</a></div>
-        <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
+        <div class="recstatus prog"><span class="sw"></span><span class="lb">In progress</span></div>
       </div>
       <div class="ledger-row">
-        <div class="date">Feb 2024</div>
+        <div class="date">Apr 2026</div>
         <div><div class="title">Moved the life policy into an ILIT.</div><div class="reason">Remove the death benefit from the taxable estate; let it fund the tax it once inflated.</div></div>
         <div class="affected">Estate</div>
         <div class="ref"><a href="#changelog">§ Estate →</a></div>
         <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
       </div>
-
-      <div class="ledger-year"><span class="y">2023</span><span class="c">1 entry</span></div>
       <div class="ledger-row">
-        <div class="date">May 2023</div>
+        <div class="date">Mar 2026</div>
         <div><div class="title">Began a three-year exit from the concentrated position.</div><div class="reason">Reduce single-stock risk on a schedule, at a tax cost agreed in advance.</div></div>
         <div class="affected">Portfolio · Taxes</div>
         <div class="ref"><a href="concentration.html">Exhibit 2 →</a></div>
         <div class="recstatus prog"><span class="sw"></span><span class="lb">In progress</span></div>
       </div>
-
-      <div class="ledger-year"><span class="y">2022</span><span class="c">1 entry</span></div>
       <div class="ledger-row">
-        <div class="date">Oct 2022</div>
+        <div class="date">Feb 2026</div>
         <div><div class="title">Set the household asset-location map.</div><div class="reason">Place each asset class in the account where it is taxed least.</div></div>
         <div class="affected">Portfolio · Taxes</div>
         <div class="ref"><a href="index.html#evidence">Exhibit 3 →</a></div>
         <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
       </div>
-
-      <div class="ledger-year"><span class="y">2021</span><span class="c">baseline</span></div>
       <div class="ledger-row">
-        <div class="date">Apr 2021</div>
+        <div class="date">Feb 2026</div>
         <div><div class="title">Opened the household book.</div><div class="reason">Inventoried the accounts, the return, and the estate documents — one coordinated starting point.</div></div>
         <div class="affected">Portfolio · Taxes · Estate · Liquidity</div>
         <div class="ref"><span class="none">—</span></div>
@@ -237,7 +219,7 @@
         <div class="rstat blue">Modeling bracket</div>
       </div>
       <div class="register-row">
-        <div><div class="matter">Second-home purchase</div><div class="opened">Opened Nov 2025</div></div>
+        <div><div class="matter">Second-home purchase</div><div class="opened">Opened Jun 2026</div></div>
         <div class="deps">
           <span class="dep done"><span class="box"></span>Attorney</span>
           <span class="dep pending"><span class="box"></span>Portfolio</span>
@@ -261,12 +243,26 @@
       <div class="rec-head"><span class="rs">§ C</span><span class="rt">Household Change Log</span></div>
       <p class="rec-lede" style="margin-bottom:20px">The revision history of the plan itself — what changed at each version, and by whose hand. The manual is a versioned instrument, not a live dashboard that forgets its own past.</p>
       <div class="changelog-head"><div>Rev.</div><div>Date</div><div>Change</div><div>By</div></div>
-      <div class="changelog-row"><div class="rev">rev. 14</div><div class="cdate">Mar 2026</div><div class="change">Beneficiaries updated; municipal bonds relocated to taxable.</div><div class="by">Driftwood</div></div>
-      <div class="changelog-row"><div class="rev">rev. 13</div><div class="cdate">Nov 2025</div><div class="change">Roth conversion recorded; estimated tax adjusted.</div><div class="by">Driftwood</div></div>
-      <div class="changelog-row"><div class="rev">rev. 12</div><div class="cdate">Jun 2025</div><div class="change">529 established; annual gift logged.</div><div class="by">Driftwood</div></div>
-      <div class="changelog-row"><div class="rev">rev. 11</div><div class="cdate">Sep 2024</div><div class="change">Residence changed to Texas; estate plan re-based.</div><div class="by">Driftwood · Attorney</div></div>
-      <div class="changelog-row"><div class="rev">rev. 10</div><div class="cdate">Feb 2024</div><div class="change">Trust amended; life policy assigned to the ILIT.</div><div class="by">Attorney</div></div>
-      <div class="changelog-row"><div class="rev">rev. 09</div><div class="cdate">May 2023</div><div class="change">Concentration transition begun.</div><div class="by">Driftwood</div></div>
+      <div class="changelog-row"><div class="rev">rev. 06</div><div class="cdate">Jul 2026</div><div class="change">Roth conversion recorded; estimated tax adjusted.</div><div class="by">Driftwood</div></div>
+      <div class="changelog-row"><div class="rev">rev. 05</div><div class="cdate">Jun 2026</div><div class="change">529 established; annual gift logged.</div><div class="by">Driftwood</div></div>
+      <div class="changelog-row"><div class="rev">rev. 04</div><div class="cdate">May 2026</div><div class="change">Texas residency sequence opened; estate plan review scheduled.</div><div class="by">Driftwood · Attorney</div></div>
+      <div class="changelog-row"><div class="rev">rev. 03</div><div class="cdate">Apr 2026</div><div class="change">Trust amended; life policy assigned to the ILIT.</div><div class="by">Attorney</div></div>
+      <div class="changelog-row"><div class="rev">rev. 02</div><div class="cdate">Mar 2026</div><div class="change">Concentration transition begun.</div><div class="by">Driftwood</div></div>
+      <div class="changelog-row"><div class="rev">rev. 01</div><div class="cdate">Feb 2026</div><div class="change">Book opened; beneficiaries updated; municipal bonds relocated to taxable.</div><div class="by">Driftwood</div></div>
+
+      <div class="archive-memory">
+        <div class="blk"><div class="k">Draws on</div>
+          <p class="e"><a href="constitution.html">The Constitution</a> (amend. 3) — the instrument this book operates under.</p>
+          <p class="e"><a href="capital-allocation.html">The Capital Allocation Policy</a> (Rev. 2) — the bands the ledger deploys against.</p>
+        </div>
+        <div class="blk"><div class="k">Related</div>
+          <p class="e"><a href="decision-register.html">The Decision Register</a> — the upstream record; each ledger entry above carries its rationale there.</p>
+          <p class="e"><a href="opportunity-register.html">The Opportunity Register</a> — the open matters this book tracks as dependencies.</p>
+        </div>
+        <div class="blk"><div class="k">Referenced by</div>
+          <p class="e"><a href="awor.html">The Annual Review</a> — the year's reading of this book.</p>
+        </div>
+      </div>
     </div>
 
     <!-- ── CLOSE ── -->
@@ -275,8 +271,8 @@
       <h2>A report is read once. A record is kept.</h2>
       <p>Polish is easy to copy; continuity is not. The manual's advantage is that it <i>remembers</i> — across decades, decisions, and the people who made them. That is the difference between a firm that reports to you and one that keeps your household's book.</p>
       <div class="foliobar">
-        <span>§ Operating Manual · rev. 14 · fol. 1</span>
-        <span>The Merrell household · est. 2021</span>
+        <span>§ Operating Manual · rev. 06 · fol. 1</span>
+        <span>The Harris household · est. 2026</span>
       </div>
     </div>
 

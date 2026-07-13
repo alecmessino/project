@@ -14,22 +14,24 @@ tax-managed portfolio:
   6. Losses          — capital-loss carryforward: federal §1212 / expires / none / no-tax / n/a.
   7. Basis step-up   — marital-property regime (community / opt-in trust / common law + UDCPRDA /
                        common law) governing the IRC 1014 step-up.
-  8. Tax mgmt impact — a descriptive estimate (from `leakage.STATE_ALPHA`) of how much a state's tax
-                       rules can affect a tax-managed portfolio, given everything above. Illustrative,
-                       diagnostic-gated; a reference dimension, not a product claim.
+  8. Coordination opportunity — a descriptive estimate (from `leakage.STATE_ALPHA`) of the after-tax
+                       coordination opportunity a state's rules create, expressed as dollars per year
+                       per $1M of taxable assets. Illustrative, diagnostic-gated; a reference dimension,
+                       not a product claim.
 
 Per-state classifications, effective rates, and exemptions are settled public-domain tax facts
 (tax year 2025); they are stated here in our own words. A per-dimension "Prove it" statutory citation
 is attached ONLY where the exact code section has been independently verified (Illinois today); every
 other state carries a generic source line until its statute is checked — we do not fabricate cites.
-The Tax Management Impact values trace to our own `STATE_ALPHA`; that dimension is illustrative/hypothetical.
+The Coordination Opportunity values trace to our own `STATE_ALPHA`; that dimension is illustrative/hypothetical.
 """
 
 from __future__ import annotations
 
 import time
 
-from .leakage import STATE_ALPHA, STATE_NAMES
+from .leakage import (STATE_ALPHA, STATE_NAMES,
+                      coordination_opportunity_per_m, fmt_usd, fmt_usd_compact)
 from .state_facts import rate_display, TERRITORY_CODES, ESTATE  # canonical rate + territory + estate (§15.4)
 
 # ── Editions: the Atlas is a citable reference, versioned by tax-year edition ───────────────────────
@@ -338,7 +340,7 @@ def _attach_citations(code, rec):
     return rec
 
 
-# ── 8 · Tax Management Impact (descriptive reference dimension) ─────────────────────────────────────
+# ── 8 · Coordination Opportunity (descriptive reference dimension) ─────────────────────────────────
 _ALPHA_BUCKETS = [(3.8, "a"), (4.0, "b"), (4.3, "c"), (4.5, "d"), (99, "e")]
 
 
@@ -374,10 +376,10 @@ DIMENSIONS = [
     {"key": "stepup", "label": "Basis step-up", "title": "Marital property & the basis step-up",
      "legend": [("common", "#d8cfbc", "Common law"), ("udcprda", "#7faa97", "Common law + UDCPRDA"),
                 ("optin", "#c1a35b", "Opt-in community trust"), ("community", "#15806a", "Community property")]},
-    {"key": "alpha", "label": "Tax Management Impact",
-     "title": "How much a state's tax rules can affect a tax-managed portfolio",
-     "legend": [("a", "#cfe0d6", "lower"), ("b", "#9ec9b6", ""), ("c", "#5ea98c", ""),
-                ("d", "#2f8467", ""), ("e", "#15604a", "higher impact")]},
+    {"key": "alpha", "label": "Coordination Opportunity",
+     "title": "Illustrative after-tax coordination opportunity — dollars per year for every $1M of taxable assets",
+     "legend": [("a", "#cfe0d6", "smaller"), ("b", "#9ec9b6", ""), ("c", "#5ea98c", ""),
+                ("d", "#2f8467", ""), ("e", "#15604a", "larger opportunity")]},
 ]
 
 
@@ -405,13 +407,14 @@ def _state_record(code):
     a = STATE_ALPHA.get(code)
     if a is not None:
         nm = NAMES.get(code, code)
+        usd = coordination_opportunity_per_m(a["alpha"])
         rec["alpha"] = {
-            "regime": _alpha_bucket(a["alpha"]), "tag": f"+{a['alpha']:.1f}",
-            "value": a["alpha"], "before": a["before"], "after": a["after"],
-            "note": (f"Illustrative estimate of how much {nm}'s tax rules can affect a tax-managed portfolio: "
-                     f"about ~{a['alpha']:.1f}%/yr after tax in our modeling (a concentrated, naive book keeps "
-                     f"~{a['before']:.1f}%/yr vs ~{a['after']:.1f}%/yr tax-managed). Your actual figure depends "
-                     f"on your holdings — the diagnostic computes it."),
+            "regime": _alpha_bucket(a["alpha"]), "tag": f"{fmt_usd_compact(usd)}/$1M",
+            "value": a["alpha"], "before": a["before"], "after": a["after"], "usd_per_m": usd,
+            "note": (f"Coordinating how a portfolio is built and run against {nm}'s rules is worth an estimated "
+                     f"~{fmt_usd(usd)}/yr for every $1M of taxable assets in our modeling — about +{a['alpha']:.1f}%/yr "
+                     f"after tax (a concentrated, naive book keeps ~{a['before']:.1f}%/yr vs ~{a['after']:.1f}%/yr "
+                     f"tax-managed). Your actual figure depends on your holdings — the diagnostic computes it."),
             "source": "scripts/tax_alpha.py · 30y window (1996–2026). Illustrative, hypothetical — diagnostic-gated.",
             "deeplink": f"leakage.html?state={code}",
         }

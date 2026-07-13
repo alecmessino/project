@@ -25,6 +25,7 @@ from .statepage import (
     _LEVEL_DOTS, atlas_url, _process_bar, MEETING_URL,
 )
 from .site import BASE_URL, firm_anchor_html
+from .leakage import coordination_opportunity_per_m, fmt_usd
 from . import compare as _cmp
 
 # Comparison-specific styles layered on the shared state-page foundation, so the two never diverge.
@@ -153,11 +154,15 @@ def _impact_line(cmp: dict) -> str:
     if ia["a_alpha"] is None or ia["b_alpha"] is None:
         return ""
     a_name, b_name = cmp["a"]["name"], cmp["b"]["name"]
+    a_usd = coordination_opportunity_per_m(ia["a_alpha"])
+    b_usd = coordination_opportunity_per_m(ia["b_alpha"])
     return (
-        f'<p class="lede" style="margin:2px 40px 0;max-width:none">On an illustrative 30-year path, coordinated tax '
-        f'management recovers about <b>+{ia["a_alpha"]:.1f}%/yr</b> of after-tax return in {_esc(a_name)} versus '
-        f'<b>+{ia["b_alpha"]:.1f}%/yr</b> in {_esc(b_name)} — a hypothetical, illustrative figure; the household\'s '
-        f'own depends on bracket, holdings, and residency (see the full basis of the estimate below).</p>')
+        f'<p class="lede" style="margin:2px 40px 0;max-width:none">Because the rules differ, so does what coordination '
+        f'is worth. On an illustrative 30-year path, running a portfolio against each state\'s rules is worth an '
+        f'estimated <b>~{fmt_usd(a_usd)}/yr per $1M taxable</b> in {_esc(a_name)} versus <b>~{fmt_usd(b_usd)}/yr</b> '
+        f'in {_esc(b_name)} — the coordination gap between the two (about +{ia["a_alpha"]:.1f}%/yr vs +{ia["b_alpha"]:.1f}%/yr '
+        f'modeled). A hypothetical, illustrative figure; the household\'s own depends on bracket, holdings, and '
+        f'residency (see the full basis of the estimate below).</p>')
 
 
 def render_comparison_html(cmp: dict, edition: str = CURRENT_EDITION) -> str:
@@ -242,7 +247,7 @@ def render_comparison_html(cmp: dict, edition: str = CURRENT_EDITION) -> str:
     </div>
     <div class="sec"><div class="sh">The facts underneath</div></div>
     {_facts_table(cmp)}
-    <div class="sec"><div class="sh">Illustrative impact</div></div>
+    <div class="sec"><div class="sh">Illustrative coordination gap</div></div>
     {_impact_line(cmp)}
     <div class="cta">
       <div class="ctxt">

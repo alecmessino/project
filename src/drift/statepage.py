@@ -25,7 +25,8 @@ import re
 import time
 from pathlib import Path
 
-from .leakage import STATE_ALPHA, STATE_NAMES, build_leakage
+from .leakage import (STATE_ALPHA, STATE_NAMES, build_leakage,
+                      coordination_opportunity_per_m, fmt_usd, fmt_usd_compact)
 from .statemap import DIMENSIONS, _state_record, AS_OF_LAW, LAST_REVIEWED, _CHANGELOG, CURRENT_EDITION
 from . import reasoning
 
@@ -185,7 +186,7 @@ def _faq(code: str, name: str, rec: dict) -> list[dict]:
         faq.append({"q": f"What happens to a capital loss you carry forward in {name}?", "a": loss["note"]})
     a = rec.get("alpha")
     if a:
-        faq.append({"q": f"How much can careful tax management affect after-tax returns in {name}?",
+        faq.append({"q": f"How much is careful tax coordination worth in {name}?",
                     "a": a["note"]})
     return faq
 
@@ -308,8 +309,8 @@ def _meta_description(name: str, rec: dict) -> str:
     rate = f" Top effective long-term rate {cg['tag']}." if (cg and cg["tag"] not in ("0%", "")) else ""
     if cg and cg["tag"] == "0%":
         rate = " No state tax on capital gains."
-    impact = (f" Careful tax management can affect after-tax outcomes by ~+{a['value']:.1f}%/yr "
-              f"in our illustrative modeling.") if a else ""
+    impact = (f" Estimated after-tax coordination opportunity ~{fmt_usd(coordination_opportunity_per_m(a['value']))}"
+              f"/yr per $1M of taxable assets in our illustrative modeling.") if a else ""
     return (f"How {name} taxes investors: capital gains, estate and inheritance tax, the marriage "
             f"penalty, municipal-bond interest, QSBS, and basis step-up.{rate}{impact} A state tax "
             f"reference. Illustrative, not advice.")[:300]
@@ -356,18 +357,22 @@ def _provenance_block() -> str:
 
 
 def _impact_block(name: str, a: dict | None) -> str:
-    """The demoted (secondary-section) illustrative modeling figure — reference, not hero.
-    Renders the three source-of-truth numbers (impact, before, after) the state-page tests require."""
+    """The demoted (secondary-section) illustrative figure — reference, not hero. Public-facing, it
+    now leads with the *coordination opportunity* in dollars-per-$1M rather than a return percentage;
+    the modeled +X.X%/yr and the before/after kept-rate stay as the underlying methodology (and satisfy
+    the source-of-truth numbers the state-page tests require)."""
     if not a:
         return ""
     before, after, alpha = a["before"], a["after"], a["value"]
+    usd = coordination_opportunity_per_m(alpha)
     kept_before = max(2, min(96, round(before / max(after, 0.1) * 100)))
     return (
         f'<div class="hero">'
-        f'<div class="big">+{alpha:.1f}<span class="u">%/yr</span></div>'
-        f'<div class="hlab">Illustrative tax-management impact in {_esc(name)}<br>'
-        f'<span class="hsub">a tax-managed book keeps ~{after:.1f}%/yr after tax vs ~{before:.1f}%/yr '
-        f'for a concentrated, naive one — illustrative, over ~30 years, figures rounded to 0.1%/yr</span></div>'
+        f'<div class="big">~{fmt_usd(usd)}<span class="u">/yr per $1M taxable</span></div>'
+        f'<div class="hlab">Estimated after-tax coordination opportunity in {_esc(name)}<br>'
+        f'<span class="hsub">what running the portfolio against {_esc(name)}\'s rules can be worth — about '
+        f'+{alpha:.1f}%/yr modeled, as a tax-managed book keeps ~{after:.1f}%/yr after tax vs ~{before:.1f}%/yr '
+        f'for a concentrated, naive one; illustrative, over ~30 years, scales with the portfolio</span></div>'
         f'<div class="hbar" aria-hidden="true">'
         f'<span class="kept" style="width:{kept_before}%"></span></div>'
         f'</div>'
@@ -709,7 +714,7 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
         <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture — by bracket and holdings.</div>
       </div>
       <a class="primary" href="{_ABS}leakage.html?state={code}">Run my {_esc(name)} diagnostic →</a>
-      <a class="ghost" href="{MEETING_URL}">Start a conversation</a>
+      <a class="ghost" href="{MEETING_URL}">Schedule a Coordination Review</a>
     </div>
 {capture}
     <div class="rel">Onward: <a href="{edition_url(edition)}compare/">weigh {_esc(name)} against another state →</a> · <a href="{edition_url(edition)}crossing/">plan a move →</a> · <a href="{edition_url(edition)}household/">build a coordination record →</a><br><span style="color:var(--muted)">Nearby regimes: {related} · <a href="{edition_url(edition)}">all 50 states + DC →</a></span></div>
@@ -733,7 +738,7 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
         a = d["alpha"]
         cg = d["rec"].get("cg")
         rate = _esc(cg["tag"]) if cg else "—"
-        alpha = f'+{a["value"]:.1f}%/yr' if a else "—"
+        alpha = f'~{fmt_usd_compact(coordination_opportunity_per_m(a["value"]))}/$1M' if a else "—"
         rows.append(f'<tr><td><a href="{atlas_url(code, edition)}">{_esc(d["name"])}</a></td>'
                     f'<td>{rate}</td><td class="al">{alpha}</td></tr>')
     body = "\n".join(rows)
@@ -784,10 +789,10 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
       <div class="eyebrow">The State Atlas · state tax reference</div>
       <h1>How every state taxes investors.</h1>
       <p class="lede">Pick your state for its capital-gains, estate, marriage, and basis-step-up profile —
-        and an illustrative estimate of how much its tax rules can affect a tax-managed portfolio.</p>
+        and an illustrative estimate of the after-tax coordination opportunity its rules create.</p>
     </div>
     <table class="st">
-      <thead><tr><th scope="col">State</th><th scope="col">Top LT rate</th><th scope="col">Tax Management Impact</th></tr></thead>
+      <thead><tr><th scope="col">State</th><th scope="col">Top LT rate</th><th scope="col">Coordination Opportunity</th></tr></thead>
       <tbody>{body}</tbody>
     </table>
     <div class="cta">
@@ -796,7 +801,7 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
         <div class="cd">Weigh two environments, plan a move between them, and see how it all becomes one household's standing record.</div>
       </div>
       <a class="primary" href="{edition_url(edition)}compare/">Compare how coordination changes across states →</a>
-      <a class="ghost" href="{MEETING_URL}">Start a conversation</a>
+      <a class="ghost" href="{MEETING_URL}">Schedule a Coordination Review</a>
     </div>
     <div class="rel">Onward: <a href="{edition_url(edition)}crossing/">plan a move between states →</a> · <a href="{edition_url(edition)}household/">build a coordination record →</a></div>
     {_provenance_block()}

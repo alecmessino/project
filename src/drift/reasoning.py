@@ -24,7 +24,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from .state_facts import RATES, ESTATE
-from .leakage import STATE_ALPHA
+from .leakage import STATE_ALPHA, coordination_opportunity_per_m, fmt_usd
 
 # The reasoning-chain order — the Decision Framework is the centrepiece (§16).
 CHAIN = ("environment", "impact", "framework", "coordination", "actions")
@@ -201,10 +201,11 @@ def build_impact(ctx: _Ctx) -> dict:
     system, sourced from the Tax Diagnostic (STATE_ALPHA), edged to the dimensions it summarises."""
     a = STATE_ALPHA.get(ctx.code)
     reading = (
-        (f"On an illustrative 30-year path, coordinated tax management recovers about +{a['alpha']:.1f}%/yr "
-         f"of after-tax return here — the leak this state's rules put on an uncoordinated book "
-         f"({a['before']:.1f}% → {a['after']:.1f}%/yr kept). The household's own figure depends on bracket, "
-         f"holdings, and residency; the Tax Diagnostic computes it.") if a else
+        (f"This environment leaks after-tax return on an uncoordinated book; coordinating how the portfolio is "
+         f"built and run against it is the opportunity. On an illustrative 30-year path that is worth about "
+         f"~{fmt_usd(coordination_opportunity_per_m(a['alpha']))}/yr for every $1M of taxable assets here — "
+         f"about +{a['alpha']:.1f}%/yr modeled ({a['before']:.1f}% → {a['after']:.1f}%/yr kept). The household's "
+         f"own figure depends on bracket, holdings, and residency; the Tax Diagnostic computes it.") if a else
         "The household's after-tax figure depends on bracket, holdings, and residency; the Tax Diagnostic computes it.")
     return {"node_id": ctx.node_id("impact", "after_tax"), "id": "after_tax_impact", "kind": "impact",
             "title": "After-tax impact", "inputs": ["state", "bracket", "portfolio"],

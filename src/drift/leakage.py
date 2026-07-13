@@ -55,6 +55,28 @@ STATE_ALPHA = {
     "WV": {"before": 1.8, "after": 5.9, "alpha": 4.0}, "WI": {"before": 1.4, "after": 5.7, "alpha": 4.3},
 }
 
+
+def coordination_opportunity_per_m(alpha_pct: float) -> int:
+    """The illustrative after-tax *coordination opportunity*, expressed as dollars per year for every
+    $1M of taxable assets — i.e. `alpha_pct`% of $1,000,000, rounded to the nearest $100.
+
+    This is the public-facing translation of the modeled return figure: a scale-free dollar rate that
+    needs no assumed household size (it multiplies out to the visitor's own number the moment they set
+    a portfolio). +4.0%/yr → $40,000/yr per $1M. Illustrative, hypothetical — the same caveats as the
+    underlying STATE_ALPHA apply."""
+    return int(round(alpha_pct / 100.0 * 1_000_000, -2))
+
+
+def fmt_usd(n: int) -> str:
+    """Whole-dollar display with thousands separators: 40000 -> '$40,000'."""
+    return "$" + format(int(round(n)), ",")
+
+
+def fmt_usd_compact(n: int) -> str:
+    """Compact chip display to the nearest $1k: 40000 -> '$40k', 43000 -> '$43k'."""
+    return f"${int(round(n / 1000.0))}k"
+
+
 # Friendly names for the personalized headline ("for an Illinois portfolio"). Codes not present fall
 # back to the code itself.
 STATE_NAMES = {

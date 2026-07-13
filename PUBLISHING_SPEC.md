@@ -526,6 +526,17 @@ that this institution already operates. The standing directives, in priority ord
     Operating System · Research · Tax Lab · Conversation) is approved *in direction* —
     it is an IA change requiring its own design + review PR, after the passes below.
 
+**Phase Ω — the Institutional Experience Audit (inserted July 2026, before all remaining
+work).** Before finishing the editorial checklist, the whole experience was audited
+once — IA, visual language, interaction model, conversion flow, narrative sequencing —
+so nothing gets polished twice. The findings, six deliverables, and ranked ~130-item
+backlog live in **EXPERIENCE_AUDIT.md**; its Tier-1 items (the conversion terminus, the
+human in the funnel, series navigation, CTA grammar) take priority over the remaining
+roadmap steps, and its variance data (openings 22–158px, nine H1 sizes, ten disclosure
+feet) defines the QA pass's checklist. The audit's structural rulings: `inside` re-scopes
+to the system-and-artifacts (the engagement sequence belongs to `howitworks` alone), and
+the Core Alpha series gains prev/next navigation.
+
 **The operating roadmap (supersedes the family order alone; reordered July 2026 —
 Proof of Practice moves ahead of Tools/QA because its artifacts inform both):**
 

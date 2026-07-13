@@ -27,34 +27,27 @@ from .statemap import (
     NAMES,
     _state_record,
 )
+from . import reasoning
 
-# The reasoning-chain layer keys, in order. Consumers walk these; renderers render them in order.
-CHAIN = ("environment", "impact", "considerations", "framework", "actions")
-
-
-def _empty_downstream_layers() -> dict:
-    """The four not-yet-populated reasoning-chain layers, as empty-but-typed structures so every
-    consumer can rely on the shape before the layers are filled (under content authority)."""
-    return {
-        "impact": None,                # {inputs, model_ref, ...} — household-specific dollar impact
-        "considerations": [],          # [{dimension, trigger, note, applies_when}] — planning
-        "framework": {"signals": {}},  # {signals: {name: score}} — ranked decision signals
-        "actions": [],                 # [{step, owner, dimension, decision_ref}] — action register
-    }
+# The reasoning-chain layer keys, in order — the Decision Framework is the centrepiece (§16).
+CHAIN = ("environment", "impact", "framework", "considerations", "actions")
 
 
 def build_state_edition(code: str, edition: str = CURRENT_EDITION) -> dict:
-    """One jurisdiction's canonical record for one edition. `environment` is the live tax facts
-    (``statemap._state_record``); the downstream layers are present but empty for now."""
+    """One jurisdiction's canonical record for one edition: the environment (live tax facts) plus the
+    four reasoning layers instantiated from it as composable primitives (drift.reasoning). Every
+    downstream entry references a primitive by id, so pages, comparisons, briefs, and registers all
+    render the same reasoning."""
     if edition not in EDITIONS:
         raise KeyError(edition)
+    env = _state_record(code)
     rec = {
         "code": code,
         "edition": edition,
         "name": NAMES.get(code, code),
-        "environment": _state_record(code),
+        "environment": env,
     }
-    rec.update(_empty_downstream_layers())
+    rec.update(reasoning.build_reasoning(code, env))  # impact, framework, considerations, actions
     return rec
 
 

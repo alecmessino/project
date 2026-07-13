@@ -120,14 +120,39 @@ def test_environment_layer_is_exactly_the_live_state_record():
         assert rec["code"] == code and rec["edition"] == CURRENT_EDITION
 
 
-def test_the_reasoning_chain_layers_are_present_and_empty():
+def test_the_reasoning_chain_is_ordered_with_the_framework_at_the_centre():
+    # PUBLISHING_SPEC §16: environment → impact → DECISION FRAMEWORK → considerations → actions.
+    assert atlas.CHAIN == ("environment", "impact", "framework", "considerations", "actions")
+
+
+def test_the_reasoning_layers_are_populated_from_composable_primitives():
+    from drift import reasoning
     rec = atlas.build_state_edition("IL")
-    assert atlas.CHAIN == ("environment", "impact", "considerations", "framework", "actions")
-    # Downstream layers are declared but unpopulated (filled later, under content authority).
-    assert rec["impact"] is None
-    assert rec["considerations"] == []
-    assert rec["framework"] == {"signals": {}}
-    assert rec["actions"] == []
+    # Impact is the Tax-Diagnostic object; framework/considerations/actions reference primitives by id.
+    assert rec["impact"]["id"] == "after_tax_impact"
+    fw_ids = {s["signal"] for s in rec["framework"]}
+    assert fw_ids == {s["id"] for s in reasoning.FRAMEWORK_SIGNALS}
+    assert all(c["consideration"] in {x["id"] for x in reasoning.CONSIDERATIONS} for c in rec["considerations"])
+    assert all(a["action"] in {x["id"] for x in reasoning.ACTIONS} for a in rec["actions"])
+    # Illinois' defining feature — the $4M estate cliff — reads as severe exposure.
+    assert next(s for s in rec["framework"] if s["signal"] == "estate_exposure")["level"] == "severe"
+
+
+def test_framework_signals_are_canonical_addressable_across_states():
+    # The primitives are state-independent: the SAME signal ids evaluate on every state (composability).
+    from drift import reasoning
+    canon = {s["id"] for s in reasoning.FRAMEWORK_SIGNALS}
+    for code in ("CA", "TX", "WA", "FL", "NY"):
+        assert {s["signal"] for s in atlas.build_state_edition(code)["framework"]} == canon
+
+
+def test_actions_reference_only_active_considerations():
+    # An action only appears when the consideration it references fired — the graph stays consistent.
+    for code in ("IL", "TX", "CA", "WA", "NV"):
+        rec = atlas.build_state_edition(code)
+        active = {c["consideration"] for c in rec["considerations"]}
+        for a in rec["actions"]:
+            assert a["references"] in active, f"{code}: action {a['action']} references an inactive consideration"
 
 
 def test_build_edition_covers_every_jurisdiction_with_provenance():

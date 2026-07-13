@@ -687,3 +687,48 @@ facts; (4) edition scoping, backward-compatible; (5) reserve `/atlas/2026/` URLs
 considerations layer; (9) decision-framework + comparison spread; (10) action register +
 Crossing Brief. **Steps 2–3 change contested tax facts and steps 8–10 introduce planning
 content — both require the RIA principal's authority; the engine (1, 4–6) is built first.**
+
+---
+
+## 16 · The reasoning layers — composable knowledge primitives (the intelligence)
+
+With the institution built (one canonical data model, editioned publication, provenance), the Atlas
+earns its moat by *reasoning*, not describing. Every page answers one question — **"given this
+environment, how should a sophisticated household think?"** — through five layers, the **Decision
+Framework as the centerpiece**:
+
+```
+1 · Environment          what objectively exists            (the settled facts — LIVE)
+2 · Household Impact      what changes because of them       (the Tax Diagnostic, per household)
+3 · Decision Framework    how to evaluate those changes      (the centerpiece — ranked signals)
+4 · Planning Considerations   areas requiring coordination   (who to coordinate, and when)
+5 · Action Register       what should happen next            (the sequenced execution list)
+```
+
+**16.1 · Composability is the architecture.** The layers are NOT page-specific prose. Each Impact,
+Framework signal, Planning Consideration, and Action is an **addressable object** in the canonical
+model — a reusable knowledge primitive with a stable id. Defined once; referenced by id from state
+pages, the comparison spread, Crossing Briefs, the Tax Diagnostic, the Opportunity Register, the
+Household Record, the Annual Wealth Review, internal advisor workflows, and a future AI assistant.
+The same reasoning exists once and simply *renders* differently by context. We store institutional
+reasoning, not paragraphs.
+
+**16.2 · Primitives vs. instantiation.** A primitive is a canonical, state-independent definition
+(`src/drift/reasoning.py`): the signal `estate_exposure`, the consideration `residency_planning`, the
+action `confirm_domicile`. Each carries a stable `id`, a human label, the environment dimensions it
+`reads`, and an `evaluate`/`activates_when` rule. A state's reasoning is the *instantiation* — each
+primitive bound to that state's `environment`, yielding a level/reading and a set of activated
+considerations and actions, every entry referencing its primitive by id. `atlas.build_state_edition`
+composes the instantiation into the `impact / framework / considerations / actions` layers.
+
+**16.3 · Grounded, not invented.** Every primitive is organized from **existing approved Driftwood
+thinking** — the seven environment dimensions, the Tax Diagnostic (`STATE_ALPHA`), the hand-authored
+State Context, the Moving States decision ripple, the Opportunity Register, and the coordination
+philosophy. The reasoning layers increase clarity and actionability; they do not expand the firm's
+philosophy. Language stays concise and institutional.
+
+**16.4 · One reasoning engine, many renderings.** State pages render the chain top-to-bottom;
+the comparison spread diffs two states' `framework.signals`; a Crossing Brief renders the
+origin→destination `actions`; the Opportunity Register and Household Record reference the same
+consideration/action ids. No consumer re-authors the reasoning. This is the knowledge graph for
+wealth coordination — the research backbone the rest of the Driftwood platform derives from.

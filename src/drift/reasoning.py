@@ -77,7 +77,12 @@ def _s_estate_exposure(ctx: _Ctx):
 
 def _s_harvest_leverage(ctx: _Ctx):
     if ctx.lt <= 0:
-        return "low", "A harvested loss offsets only the federal rate here — state harvesting adds nothing."
+        # Missouri exempts gains yet still deducts losses — a rare one-sided value the generic
+        # no-tax reading would misstate.
+        if "losses still deduct" in (ctx.env.get("cg") or {}).get("note", ""):
+            return "moderate", ("Gains are exempt here, yet a capital loss still deducts against income — "
+                                "a rare one-sided value that keeps harvesting worthwhile.")
+        return "low", "With no state tax on gains, a harvested loss recovers only its federal value — the state adds no rate for it to offset."
     loss_regime = (ctx.env.get("loss") or {}).get("regime")
     if loss_regime in ("nonconforming", "none"):
         return "moderate", ("The rate rewards harvesting, but non-conforming loss rules can strand a banked "

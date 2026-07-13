@@ -27,6 +27,7 @@ from pathlib import Path
 
 from .leakage import STATE_ALPHA, STATE_NAMES, build_leakage
 from .statemap import DIMENSIONS, _state_record, AS_OF_LAW, LAST_REVIEWED, _CHANGELOG, CURRENT_EDITION
+from . import reasoning
 
 # Single source of truth for the public base URL lives in drift.site (re-exported here for callers
 # and tests); flip it with scripts/set_domain.py when the custom domain goes live.
@@ -199,6 +200,7 @@ def build_state_pages() -> dict:
             "faq": _faq(code, name, rec),
             "related": _related(code),
             "context": _state_context(code),
+            "reasoning": reasoning.build_reasoning(code, rec),  # impact / framework / considerations / actions
         }
     return out
 
@@ -418,6 +420,30 @@ _HEAD_CSS = """
   @media(max-width:760px){.levers{grid-template-columns:1fr}}
   .lv{border:1px solid var(--line);border-left:3px solid var(--teal2);border-radius:0;padding:13px 15px;background:var(--soft)}
   .lv .n{font-weight:500;font-size:13px;color:var(--ink)} .lv .d{font-size:12px;color:var(--body);line-height:1.45;margin-top:4px}
+  /* Reasoning chain (§16): Decision Framework signals, considerations, action register. Quiet — the
+     level is a dot meter, not an alarm colour; hierarchy comes from weight and rule, not hue. */
+  .fw{display:grid;gap:10px}
+  .fsig{border:1px solid var(--line);border-left:3px solid var(--brass);background:#fff;padding:12px 15px}
+  .fsig .fh{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+  .fsig .fl{font-family:var(--sans);font-weight:500;font-size:13.5px;color:var(--ink)}
+  .fsig .fm{display:inline-flex;gap:3px;align-items:center;flex-shrink:0}
+  .fsig .fm i{width:6px;height:6px;border-radius:50%;background:var(--line);display:inline-block}
+  .fsig .fm i.on{background:var(--brass)}
+  .fsig p{margin:5px 0 0;font-size:12.5px;color:var(--body);line-height:1.5}
+  .fsig.lv-severe{border-left-color:var(--neg)} .fsig.lv-severe .fm i.on{background:var(--neg)}
+  .fsig.lv-none{border-left-color:var(--line)} .fsig.lv-none .fm i.on{background:var(--muted)}
+  .considx{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .considx li{border:1px solid var(--line);border-left:3px solid var(--teal2);background:var(--soft);padding:12px 15px}
+  .considx .ca{font-family:var(--sans);font-weight:500;font-size:13px;color:var(--ink)}
+  .considx .cw{font-size:11px;color:var(--brass);font-weight:500}
+  .considx p{margin:4px 0 0;font-size:12px;color:var(--body);line-height:1.45}
+  .actreg{margin:0;padding:0;list-style:none;counter-reset:act;display:grid;gap:9px}
+  .actreg li{display:flex;gap:12px;align-items:baseline;font-size:12.5px;color:var(--body);line-height:1.5}
+  .actreg li::before{counter-increment:act;content:counter(act);font-family:var(--sans);font-weight:700;
+    font-size:11px;color:var(--brass);min-width:15px}
+  .actreg .ao{font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--muted);white-space:nowrap;min-width:96px;display:inline-block}
+  @media(max-width:600px){.actreg .ao{min-width:0;display:block;margin-bottom:1px}}
   details.faq{border-bottom:1px solid var(--line2);padding:10px 0}
   details.faq summary{font-weight:500;font-size:13.5px;color:var(--ink);cursor:pointer}
   details.faq p{margin:8px 0 2px;font-size:12.5px;color:var(--body)}
@@ -520,6 +546,43 @@ def _summary(name: str, rec: dict) -> str:
     return ("; ".join(bits) + ".") if bits else ""
 
 
+_LEVEL_DOTS = {"none": 0, "low": 1, "moderate": 2, "high": 3, "severe": 4}
+
+
+def _reasoning_html(r: dict, name: str) -> str:
+    """Render the reasoning chain (§16) from the composable primitives: the Decision Framework (the
+    centrepiece), the planning considerations it opens, and the sequenced action register. The
+    objects come from drift.reasoning — this only renders them."""
+    sigs = []
+    for s in r["framework"]:
+        n = _LEVEL_DOTS.get(s["level"], 0)
+        dots = "".join(f'<i class="{"on" if i < n else ""}"></i>' for i in range(4))
+        cls = f' lv-{s["level"]}' if s["level"] in ("severe", "none") else ""
+        sigs.append(
+            f'<div class="fsig{cls}"><div class="fh"><span class="fl">{_esc(s["label"])}</span>'
+            f'<span class="fm" role="img" aria-label="{_esc(s["level"])} — {_esc(s["question"])}">{dots}</span></div>'
+            f'<p>{_esc(s["reading"])}</p></div>')
+    framework = (
+        f'<div class="sec"><div class="sh">How to think about {_esc(name)}</div>'
+        f'<p class="lede" style="margin-bottom:14px">Five lenses turn {_esc(name)}\'s tax environment into a '
+        f'household decision — the same lenses every state is read through, so any two states weigh on '
+        f'identical terms.</p><div class="fw">{chr(10).join(sigs)}</div></div>')
+    considerations = ""
+    if r["considerations"]:
+        items = "\n".join(
+            f'<li><span class="ca">{_esc(c["area"])}</span> <span class="cw">· with your {_esc(c["coordinate"])}</span>'
+            f'<p>{_esc(c["note"])}</p></li>' for c in r["considerations"])
+        considerations = (f'<div class="sec"><div class="sh">What this asks {_esc(name)} households to coordinate</div>'
+                          f'<ul class="considx">{items}</ul></div>')
+    actions = ""
+    if r["actions"]:
+        items = "\n".join(
+            f'<li><span class="ao">{_esc(a["owner"])}</span><span>{_esc(a["step"])}</span></li>' for a in r["actions"])
+        actions = (f'<div class="sec"><div class="sh">What should happen next</div>'
+                   f'<ol class="actreg">{items}</ol></div>')
+    return framework + considerations + actions
+
+
 def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
     code, name, slug = data["code"], data["name"], data["slug"]
     rec, a, faq = data["rec"], data["alpha"], data["faq"]
@@ -597,6 +660,7 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
         concentrated, high-turnover book with a tax-managed one — illustrative and coarse; treat it as
         directional, not a precise figure.</p>
       <div class="levers">{levers}</div></div>
+    {_reasoning_html(data.get("reasoning") or {"framework": [], "considerations": [], "actions": []}, name)}
     <div class="cta">
       <div class="ctxt">
         <div class="ch">See the figure on your own {_esc(name)} portfolio.</div>

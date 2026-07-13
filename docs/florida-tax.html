@@ -142,13 +142,13 @@
     <div class="bcrumb"><a href="index.html">Driftwood Capital</a> › <a href="statemap.html">The State Atlas</a> › Florida</div>
     <div class="hd">
       <div class="eyebrow">The State Atlas · Florida</div>
-      <h1>How Florida taxes investors</h1>
+      <h1>How Florida taxes investors.</h1>
       <p class="lede">Every state taxes investors differently. Here is how Florida treats capital gains at the top rate, the marriage penalty, estate and inheritance tax at death, municipal-bond interest, the §1202 QSBS exclusion, and a harvested loss — a plain reference to the state&#x27;s tax code.</p>
       <p class="lede" style="margin-top:10px">Florida levies no state income tax on capital gains; no state death tax; an elective community-property trust for a full step-up.</p>
       <p class="context">Florida has no state income tax and a constitutional bar against one, which — paired with an unlimited-value homestead creditor exemption and tenancy-by-the-entireties protection for married couples — makes it a leading inbound-migration state for retirees and high earners.</p>
     </div>
     <div class="grid">
-      <div class="dcard"><div class="dh">Income &amp; gains<span class="dtag">0%</span></div><p>No state tax on capital gains — and a harvested loss is worth only the federal rate here.</p><div class="dsrc"><b>Prove it:</b> <a href="https://www.flsenate.gov/Laws/Constitution#A7S05" target="_blank" rel="noopener">Fla. Const. art. VII, §5(a) (no state income tax on natural persons)</a></div></div>
+      <div class="dcard"><div class="dh">Income &amp; gains<span class="dtag">0%</span></div><p>No state tax on capital gains — and a harvested loss is worth only the federal rate here.</p><div class="dsrc"><b>Statute:</b> <a href="https://www.flsenate.gov/Laws/Constitution#A7S05" target="_blank" rel="noopener">Fla. Const. art. VII, §5(a) (no state income tax on natural persons)</a></div></div>
 <div class="dcard"><div class="dh">Marriage</div><p>No state income tax — no marriage penalty on the state return.</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State income-tax filing schedules, tax year 2025 — verify with a tax advisor.</div></div>
 <div class="dcard"><div class="dh">Death</div><p>No state estate or inheritance tax — only the federal estate tax applies.</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State estate/inheritance statutes, tax year 2025 — confirm with counsel.</div></div>
 <div class="dcard"><div class="dh">Munis<span class="dtag">exempt</span></div><p>Municipal-bond interest is exempt from state tax whether the issuer is in-state or out-of-state — the broadest muni preference (states with no tax on investment income, plus a few that exempt all munis by statute).</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State income-tax statutes on municipal-bond interest, tax year 2025 — verify with a tax advisor.</div></div>
@@ -187,7 +187,7 @@
         <label class="vh" for="capemail">Your email address</label>
         <input type="email" id="capemail" placeholder="you@email.com" required autocomplete="email" aria-label="Your email address" />
         <input type="text" id="caphp" name="botcheck" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <button type="submit" id="capsend">Email me Florida's 1-pager →</button>
+        <button type="submit" id="capsend">Email me Florida's brief →</button>
       </form>
       <div class="capnote" id="capnote">A one-page, Florida-specific after-tax breakdown — we'll follow up by email, usually within a business day. We never share your address.</div>
     </div>
@@ -210,7 +210,7 @@
           .then(function(r){ if(!r.ok) throw 0;
             document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Thanks — we\'ll email your Florida after-tax breakdown, usually within a business day.</div>';
             if(window.plausible) plausible("lead_submitted",{props:{source:"state_page",state:"FL"}}); })
-          .catch(function(){ btn.disabled=false; btn.textContent="Email me Florida's 1-pager →";
+          .catch(function(){ btn.disabled=false; btn.textContent="Email me Florida's brief →";
             document.getElementById("capnote").innerHTML='Sorry — that didn\'t send. Email us at <a href="mailto:alec.messino@gmail.com">alec.messino@gmail.com</a>.'; });
       });
     })();

@@ -142,13 +142,13 @@
     <div class="bcrumb"><a href="index.html">Driftwood Capital</a> › <a href="statemap.html">The State Atlas</a> › California</div>
     <div class="hd">
       <div class="eyebrow">The State Atlas · California</div>
-      <h1>How California taxes investors</h1>
+      <h1>How California taxes investors.</h1>
       <p class="lede">Every state taxes investors differently. Here is how California treats capital gains at the top rate, the marriage penalty, estate and inheritance tax at death, municipal-bond interest, the §1202 QSBS exclusion, and a harvested loss — a plain reference to the state&#x27;s tax code.</p>
       <p class="lede" style="margin-top:10px">California taxes long-term gains at a top effective 13.3%; no state death tax; community-property step-up (a full basis step-up at the first death).</p>
       <p class="context">California applies the nation&#x27;s highest top marginal rate and taxes capital gains as ordinary income, with no preferential long-term rate. It is a community-property state (full step-up at the first death) but is decoupled from the federal §1202 QSBS exclusion.</p>
     </div>
     <div class="grid">
-      <div class="dcard"><div class="dh">Income &amp; gains<span class="dtag">13.3%</span></div><p>Loss treatment conforms to federal: capital losses net against gains and carry forward. Top effective long-term rate 13.3%. Quirk: 12.3% + a 1% surtax over $1M.</p><div class="dsrc"><b>Prove it:</b> <a href="https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=RTC&amp;sectionNum=17041" target="_blank" rel="noopener">Cal. Rev. &amp; Tax. Code §17041 (personal income tax; capital gains taxed as ordinary income)</a></div></div>
+      <div class="dcard"><div class="dh">Income &amp; gains<span class="dtag">13.3%</span></div><p>Loss treatment conforms to federal: capital losses net against gains and carry forward. Top effective long-term rate 13.3%. Quirk: 12.3% + a 1% surtax over $1M.</p><div class="dsrc"><b>Statute:</b> <a href="https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=RTC&amp;sectionNum=17041" target="_blank" rel="noopener">Cal. Rev. &amp; Tax. Code §17041 (personal income tax; capital gains taxed as ordinary income)</a></div></div>
 <div class="dcard"><div class="dh">Marriage<span class="dtag">2x</span></div><p>Joint brackets are double the single brackets — generally marriage-neutral.</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State income-tax filing schedules, tax year 2025 — verify with a tax advisor.</div></div>
 <div class="dcard"><div class="dh">Death</div><p>No state estate or inheritance tax — only the federal estate tax applies.</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State estate/inheritance statutes, tax year 2025 — confirm with counsel.</div></div>
 <div class="dcard"><div class="dh">Munis<span class="dtag">in-state</span></div><p>Only in-state municipal-bond interest escapes state tax; bonds from other states are taxed. The classic in-state muni preference that rewards a home-state ladder.</p><div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. State income-tax statutes on municipal-bond interest, tax year 2025 — verify with a tax advisor.</div></div>
@@ -187,7 +187,7 @@
         <label class="vh" for="capemail">Your email address</label>
         <input type="email" id="capemail" placeholder="you@email.com" required autocomplete="email" aria-label="Your email address" />
         <input type="text" id="caphp" name="botcheck" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <button type="submit" id="capsend">Email me California's 1-pager →</button>
+        <button type="submit" id="capsend">Email me California's brief →</button>
       </form>
       <div class="capnote" id="capnote">A one-page, California-specific after-tax breakdown — we'll follow up by email, usually within a business day. We never share your address.</div>
     </div>
@@ -210,7 +210,7 @@
           .then(function(r){ if(!r.ok) throw 0;
             document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Thanks — we\'ll email your California after-tax breakdown, usually within a business day.</div>';
             if(window.plausible) plausible("lead_submitted",{props:{source:"state_page",state:"CA"}}); })
-          .catch(function(){ btn.disabled=false; btn.textContent="Email me California's 1-pager →";
+          .catch(function(){ btn.disabled=false; btn.textContent="Email me California's brief →";
             document.getElementById("capnote").innerHTML='Sorry — that didn\'t send. Email us at <a href="mailto:alec.messino@gmail.com">alec.messino@gmail.com</a>.'; });
       });
     })();

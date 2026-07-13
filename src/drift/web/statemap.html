@@ -137,7 +137,7 @@
     <div id="dw-household" data-page="statemap"></div>
     <div class="hd">
       <div class="eyebrow">The Fifty States</div>
-      <h1>The State Tax Atlas</h1>
+      <h1>The State Tax Atlas.</h1>
       <p class="lede">Fifty states. Fifty tax personalities. How each one treats investment income, filing
         status, and estates — rates on gains, the marriage penalty, death taxes, municipal-bond interest,
         the §1202 QSBS exclusion, and what happens to a harvested loss. A final dimension shows how
@@ -259,7 +259,7 @@ function render(s){
         `treat the figure as directional, not a precise ranking. ${rec.source||""}</div>`;
     } else if(rec.citation && rec.citation.length){
       const links = rec.citation.map(c=>`<a href="${c.url}" target="_blank" rel="noopener">${c.label}</a>`).join(" · ");
-      html += `<div class="src"><b>Prove it:</b> ${links}</div>`;
+      html += `<div class="src"><b>Statute:</b> ${links}</div>`;
     } else {
       html += `<div class="src"><b>Summary of state law</b> — primary-source citation in progress. ${rec.source||""}</div>`;
     }
@@ -282,7 +282,7 @@ function render(s){
     `<div style="margin-top:7px">Driftwood is a `+
     `<b>registered investment adviser</b>; <b>Form ADV</b> and <b>Form CRS</b> are available at `+
     `<a href="https://adviserinfo.sec.gov/" style="color:var(--teal)">adviserinfo.sec.gov</a>.</div>`+
-    `<div style="margin-top:5px" id="gen">Generated ${(s.header||{}).generated||""}</div>`;
+    `<div style="margin-top:5px" id="gen">Model data as of July 2026.</div>`;
   paint();
   // The editable "Your household" bar selects the state here too (set once, carried everywhere).
   if(window.dwTaxContext && !window.__dwMapSub){ window.__dwMapSub=true;

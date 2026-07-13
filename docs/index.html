@@ -99,7 +99,20 @@
   .sec{padding:20px 44px 44px}
   .sec .h{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:18px}
   .lede2{font-family:var(--serif);font-size:clamp(19px,1vw+15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
-  .lede2 b{font-weight:500}
+  .lede2 b{color:var(--ink);font-weight:500}
+  /* ── Diagnosis — self-recognition, not a lead form. Checkable prompts; a live, non-promotional read. */
+  .diag{display:grid;gap:2px;margin:2px 0 18px;max-width:62ch}
+  .diag-item{display:flex;align-items:flex-start;gap:13px;padding:12px 14px;border-radius:var(--surface-radius);
+    cursor:pointer;font-family:var(--serif);font-size:16px;line-height:1.45;color:var(--body);transition:background var(--t-fast)}
+  .diag-item:hover{background:var(--soft)}
+  .diag-item input{margin-top:3px;width:17px;height:17px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
+  .diag-item input:checked ~ span{color:var(--ink);font-weight:500}
+  .diag-insight{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.5;color:var(--dim);
+    margin:0 0 14px;max-width:56ch;padding-left:16px;border-left:2px solid var(--accent-strike)}
+  .diag-result{font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--accent-strike);font-weight:500;margin:0 0 18px;max-width:56ch}
+  .diag-result:empty{margin:0}
+  .cat-h{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.2vw+16px,38px);line-height:1.1;
+    letter-spacing:-.02em;color:var(--ink);margin:0 0 18px;max-width:20ch}
   .sysbody{font-family:var(--sans);font-size:15.5px;line-height:1.65;color:var(--body);margin:0 0 26px;max-width:60ch}
   .sysbody b{color:var(--ink);font-weight:500}
 
@@ -247,17 +260,44 @@
       <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
     </nav>
 
-    <!-- ── HERO — problem + category ── -->
+    <!-- ── RECOGNITION — the invisible problem, named before the answer ── -->
     <div class="hero">
-      <p class="kick">Most advisors manage investments.</p>
-      <h1>Driftwood coordinates your financial life as one system.</h1>
-      <p class="lede">You already have the pieces: a portfolio, a CPA, an attorney, each excellent at their part.
-        What almost no household has is <b>the one role responsible for how they fit together</b>, so that every
-        important decision is made in view of the others. Coordination is the product. What you keep is the result.</p>
+      <p class="kick">For households whose financial lives have outgrown disconnected advice.</p>
+      <h1>Complexity accumulates until coordination becomes the constraint.</h1>
+      <p class="lede">It doesn't arrive all at once. It arrives one account, one entity, one advisor, one
+        state, one trust at a time — until every important financial decision depends on <b>three others</b>.</p>
       <div class="ctas">
-        <a class="ghost" href="leakage.html">Run the Tax Diagnostic →</a>
-        <a class="ghost" href="coordination.html">See a worked example</a>
+        <a class="primary" href="#diagnostic">See where coordination is your constraint →</a>
+        <a class="ghost" href="#category">or how Driftwood answers it</a>
       </div>
+    </div>
+
+    <!-- ── DIAGNOSIS — self-recognition, not a lead form ── -->
+    <div class="sec" id="diagnostic">
+      <div class="h">A short diagnosis</div>
+      <p class="lede2">Has coordination become your biggest financial constraint?</p>
+      <div class="diag" id="diag">
+        <label class="diag-item"><input type="checkbox"><span>My CPA and advisor rarely talk to each other.</span></label>
+        <label class="diag-item"><input type="checkbox"><span>I have multiple custodians or account structures.</span></label>
+        <label class="diag-item"><input type="checkbox"><span>My estate plan hasn't been reviewed alongside my investments.</span></label>
+        <label class="diag-item"><input type="checkbox"><span>I'm considering relocating, or I keep more than one residence.</span></label>
+        <label class="diag-item"><input type="checkbox"><span>A business, equity compensation, or trusts have added moving parts.</span></label>
+        <label class="diag-item"><input type="checkbox"><span>No one person is responsible for how it all fits together.</span></label>
+      </div>
+      <p class="diag-insight">Most households discover only one or two of these. Institutions look for all of them at once.</p>
+      <div class="diag-result" id="diagResult" aria-live="polite"></div>
+      <div class="ctas">
+        <a class="primary" href="atlas/2026/">Identify your highest-value coordination opportunities →</a>
+      </div>
+    </div>
+
+    <!-- ── CATEGORY — only now name the answer ── -->
+    <div class="sec" id="category">
+      <div class="h">The category</div>
+      <h2 class="cat-h">Driftwood coordinates your financial life as one system.</h2>
+      <p class="lede2" style="color:var(--dim)">You already have the pieces — a portfolio, a CPA, an attorney, each excellent at their part.
+        What almost no household has is <b>the one role responsible for how they fit together</b>, so that every important
+        decision is made in view of the others. Coordination is the product. What you keep is the result.</p>
     </div>
 
     <!-- ── THE OPERATING SYSTEM — the differentiator, surfaced first as the proof of method ── -->
@@ -541,6 +581,23 @@ window.__STATE__ = {"header": {"generated": "2026-07-12 23:12:47 UTC"}, "hero": 
   var s = window.__STATE__, gen = document.getElementById("gen");
   if(gen) gen.textContent = "Model data as of July 2026.";
   // The systems diagram is a static ink schematic — no scroll-driven draw-in.
+})();
+
+// The diagnosis — recognition, not a lead form. Checking prompts reveals a non-promotional read of
+// how many decisions now depend on each other; the CTA into the Atlas is always present.
+(function(){
+  var diag = document.getElementById("diag"); if(!diag) return;
+  var boxes = diag.querySelectorAll('input[type=checkbox]');
+  var out = document.getElementById("diagResult");
+  function update(){
+    var n = 0; boxes.forEach(function(b){ if(b.checked) n++; });
+    if(!n){ out.textContent = ""; return; }
+    out.textContent = (n >= 3)
+      ? "You recognize " + n + " of six. When this many decisions depend on one another, coordination — not any single specialist — is the constraint."
+      : "You recognize " + n + " of six. Most households map one or two on their own; the opportunity is in reading them as one system.";
+    if(window.plausible) plausible("diagnostic", {props: {checked: n}});
+  }
+  boxes.forEach(function(b){ b.addEventListener("change", update); });
 })();
 
 // Exhibit III — inspectable projection: a hairline crosshair reads exact values (no animation).

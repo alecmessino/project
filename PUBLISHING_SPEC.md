@@ -474,13 +474,27 @@ that this institution already operates. The standing directives, in priority ord
    Every sample is fictional and labeled illustrative — that rule is absolute (§0.5·7).
 4. **Less "Driftwood."** Institutional writing assumes the publisher — the NYT never
    writes "The New York Times believes." Nav + RIA disclosures legitimately name the firm
-   (~6–8 mentions/page); body copy beyond that is audited down in the QA pass.
+   (~6–8 mentions/page); body copy beyond that is audited down in the QA pass. The
+   codified heuristic: **if a paragraph still makes sense after deleting "Driftwood,"
+   delete "Driftwood."**
 5. **Reduce cleverness.** Retire copy that *tries* — "Keep more of what you've earned,"
    "Measure your tax drag," "One place coordination becomes measurable." The rest of the
    site doesn't try; it explains. Quieter rewrites land in each page's family pass.
 6. **Institutional memory (the Record pass).** Version history (v1.2 → v1.3 · Amended),
    cross-references (Referenced by · Used in · Superseded by), citations both directions
    (research ↔ decisions ↔ exhibits ↔ manuals). Institutions have memory; show it.
+   Three approved components beyond the base design:
+   - **Related** — surface the *thinking*, not just the links: a decision lists the
+     research, reviews, register entries, and manual sections that bear on it.
+   - **Supersedes** — institutions don't just amend; they replace. "Supersedes Decision
+     № 11" reads differently from "amended," and the wording matters.
+   - **Status** — every archival document carries one: *Current · Amended · Superseded ·
+     Archived · Withdrawn · Draft · Historical.* Permanence you can see.
+   **The fictional-history guardrail (absolute):** the archive simulates a *client
+   archive*, never firm history. `v1.1 → v1.2` works; "March 2022 committee amendment"
+   does not — no date may precede what Driftwood can stand behind. All sample dates stay
+   inside the current fiction (2026), versions stay shallow, and every page keeps its
+   illustrative-sample labeling.
 7. **Introduce time.** *Published July 2026 · Revised September 2026 · Last reviewed ·
    Current edition · First published.* Little stamps create permanence. (The taxlab
    exhibit plate's "As of · v1.0 · reviewed quarterly" is the pattern to extend.)
@@ -497,15 +511,22 @@ that this institution already operates. The standing directives, in priority ord
     Operating System · Research · Tax Lab · Conversation) is approved *in direction* —
     it is an IA change requiring its own design + review PR, after the passes below.
 
-**The operating roadmap (supersedes the family order alone):**
+**The operating roadmap (supersedes the family order alone; reordered July 2026 —
+Proof of Practice moves ahead of Tools/QA because its artifacts inform both):**
 
-1. ~~Finish PRs #72–#75~~ *(merged)* + remaining normalization (Cases → Tools), with the
-   cleverness rewrites folded into each family's pass.
-2. **Record/Reference institutional-memory pass** — design reviewed first, then built:
-   version history, amendments, cross-references, archival integrity (frozen mark, one
-   household, consistent dates).
-3. **Front-to-back QA pass** (Phases B + Y): consistency, loading rhythm, typography,
+1. ~~Cases~~ *(merged, #76)*
+2. **Record/Reference institutional-memory pass** — design approved: edition lines,
+   amendment history, № citations, Draws on / Referenced by / Related / Supersedes /
+   Status, archival integrity (frozen mark, one household, consistent 2026 dates).
+3. **Proof of practice:** the sample-document shelf — Sample Annual Review · Sample
+   Operating Manual · Sample Investment Committee Memo · Sample Decision Register ·
+   Sample Transition Plan (all fictional, all labeled).
+4. **Tools pass** (leakage · statemap · score), with the cleverness rewrites.
+5. **Front-to-back QA pass** (Phases B + Y): consistency, loading rhythm, typography,
    spacing, disclosures, mobile, interaction polish — plus the "less Driftwood" audit.
-4. **Proof of practice:** the sample-document shelf (all fictional, all labeled).
-5. **The human story, earlier + boutique positioning** (principal-provided language).
-6. **Freeze at v1** (per §12) and move the center of gravity to the Workspace.
+6. **The human story, earlier + boutique positioning** (principal-provided language).
+7. **Public Site Constitution v1**, carrying the freeze rules (§12) and the filter:
+   **"The website is not the product. It is the public record of the institution."**
+   Every proposed feature is asked: does this belong in the public record, or in the
+   operating system? If the latter, it goes to the Advisor Workspace, never the site.
+8. **Freeze at v1** and move the center of gravity to the Workspace.

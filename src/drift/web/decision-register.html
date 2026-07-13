@@ -45,10 +45,6 @@
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{max-width:1040px;margin:36px auto;padding:0 20px 60px}
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
-  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
-    border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
   .doc{padding:44px 44px 6px}
@@ -139,10 +135,6 @@
 <body>
 <div class="wrap">
   <div class="frame">
-    <div class="run">
-      <span class="inst">Driftwood Capital</span>
-      <span class="marker">The Operating Manual · Decision Register</span>
-    </div>
     <div class="inner">
     <nav class="dwnav" aria-label="Driftwood Capital">
       <a class="brand" href="index.html" aria-label="Driftwood Capital — home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Capital</span></a>
@@ -178,6 +170,7 @@
         decision, on the day it was made: why, under what assumptions, what was rejected, and — the field most
         advisors skip — <b>what would change our mind.</b> <b>This is an illustrative sample</b> for a fictional
         family.</p>
+      <div class="edition"><span class="st">Current</span><span>entries DR-001 – DR-005 · opened February 2026</span><span>append-only · nothing deleted, only superseded</span></div>
     </div>
 
     <div class="sec">
@@ -442,6 +435,17 @@
         we're about to do agree with what we already decided, or does something need to be reopened first?</i></p>
       <p>See it in context: <a href="manual.html">the Wealth Operating Manual</a> ·
         <a href="awor.html">the Annual Wealth Operating Review</a> · <a href="review.html">how the review runs</a>.</p>
+
+      <div class="archive-memory">
+        <div class="blk"><div class="k">Related</div>
+          <p class="e"><a href="manual.html">The Operating Manual</a> (rev. 06) — where each confirmed decision lands in the ledger.</p>
+          <p class="e"><a href="opportunity-register.html">The Opportunity Register</a> — where matters live before they become decisions.</p>
+          <p class="e"><a href="awor.html">The Annual Review</a> — where every open trigger is re-checked, yearly.</p>
+        </div>
+        <div class="blk"><div class="k">Supersedes</div>
+          <p class="e">Nothing yet. Entries are never deleted; a reversed decision stays in the record, marked superseded by the entry that replaced it.</p>
+        </div>
+      </div>
     </div>
 
     <div class="foot">

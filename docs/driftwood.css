@@ -408,6 +408,28 @@ table.exhibit-table{ width:100%; border-collapse:collapse; font-family:var(--san
 .stamp .t{ font-weight:700; font-size:9px; letter-spacing:.24em; text-transform:uppercase; color:var(--neg); }
 .stamp .s{ font-size:9.5px; letter-spacing:.04em; color:var(--muted); margin-top:3px; max-width:15ch; line-height:1.4; }
 
+/* ── Archive memory (Publishing Spec §13·6) — the institutional-memory vocabulary shared by every
+   Record/Reference document: an edition line under the masthead (status · version · dates) and a
+   cross-reference block at the document foot (Amendments · Draws on · Referenced by · Related ·
+   Supersedes). All sample dates live inside the client-archive fiction; never firm history. */
+.edition{ display:flex; flex-wrap:wrap; gap:5px 16px; align-items:baseline; margin:14px 0 0;
+  font-family:var(--sans); font-size:10px; font-weight:500; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--muted); font-variant-numeric:tabular-nums; }
+.edition .st{ font-weight:700; letter-spacing:.2em; color:var(--teal2); }
+.edition .st.superseded,.edition .st.withdrawn{ color:var(--neg); }
+.edition .st.draft,.edition .st.historical{ color:var(--muted); }
+.archive-memory{ margin:36px 0 0; border-top:1px solid var(--line); padding-top:18px;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px 30px;
+  font-family:var(--sans); }
+.archive-memory .blk .k{ font-weight:700; font-size:9.5px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.archive-memory .blk .e{ font-size:12.5px; line-height:1.65; color:var(--dim); margin:0 0 6px; }
+.archive-memory .blk .e:last-child{ margin-bottom:0; }
+.archive-memory .blk .e a{ color:var(--slate); text-decoration:none;
+  border-bottom:1px solid var(--line); }
+.archive-memory .blk .e a:hover{ border-bottom-color:var(--slate); }
+.archive-memory .blk .e .vv{ font-variant-numeric:tabular-nums; color:var(--ink); font-weight:500; }
+
 /* Decision ledger — a ruled journal that only grows */
 .ledger-head,.ledger-row{ display:grid; grid-template-columns:96px 1fr 132px 116px 116px; gap:16px; }
 .ledger-head{ padding:14px 0 9px; border-bottom:2px solid var(--ink); }

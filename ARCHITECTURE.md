@@ -13,7 +13,7 @@ Layer 2 · REASONING    a graph of structured objects →  drift.reasoning, drif
         ↓
 Layer 3 · PRODUCTS     queries over the graph, rendered many ways
                        →  Atlas state pages (drift.statepage), Tax Diagnostic (drift.leakage → leakage.html),
-                          Advisor Workspace (drift.taxlab), Comparison (drift.compare), + Crossing Brief, Household Record (planned)
+                          Advisor Workspace (drift.taxlab), Comparison (drift.compare), Crossing Brief (drift.crossing), + Household Record (planned)
 ```
 
 **The one rule that makes it a platform:** a fact is authored once (Layer 1), reasoning about it exists
@@ -85,7 +85,7 @@ does not own intelligence.
 | **Tax Diagnostic** | what is *this household's* after-tax impact here? | live · `drift.leakage` → `leakage.html?state=` |
 | **Advisor Workspace** | estate / Roth / asset-location tooling | live · `drift.taxlab` → `workspace.html` |
 | **Comparison** | which framework signals differ, and which coordination priorities change, between two states? | live · `drift.compare` / `drift.comparepage` → `/atlas/{edition}/compare/` (instrument) + `/compare/<a>-vs-<b>/` (corridors) |
-| **Crossing Brief** | which actions are added/removed origin→destination? | planned · `/atlas/{edition}/crossing/<o>-<d>/` |
+| **Crossing Brief** | what must a household change *because it is moving* — the directional operating memo | live · `drift.crossing` / `drift.crossingpage` → `/atlas/{edition}/crossing/` + `/crossing/<o>-to-<d>/` |
 | **Household Record** | which priorities become *this household's* standing decisions? | planned |
 | **Opportunity Register / Annual Review / AI** | traverse the graph by node id | future |
 
@@ -162,10 +162,10 @@ signal        { node_id, id, kind:"signal", title, question, reads:[dim…],
 
 coordination  { node_id, id, kind:"coordination", title, domain, coordinate_with, priority:int,
                 rationale, affected_dimensions:[dim…], related_signals:[signal_id…],
-                related_actions:[action_id…], citations:[…] }
+                related_actions:[action_id…], crossing_question, citations:[…] }
 
 action        { node_id, id, kind:"action", title, owner, references:priority_id,
-                related_signals:[signal_id…], step }
+                related_signals:[signal_id…], crossing_phase:"before|during|after", step }
 
 impact        { node_id, id:"after_tax_impact", kind:"impact", title, inputs, affected_dimensions,
                 diagnostic_ref, illustrative_alpha_pct, before_pct, after_pct, reading }

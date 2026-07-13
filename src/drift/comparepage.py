@@ -404,6 +404,7 @@ def render_compare_index_html(edition: str = CURRENT_EDITION) -> str:
         with the facts underneath.</p>
       <div class="corridors">{corridors}</div>
     </div>
+    <div class="rel">Comparing because a move is on the table? A <a href="{BASE_URL}/atlas/{edition}/crossing/">Crossing Brief →</a> turns the difference into an operating plan.</div>
     {_provenance_block()}
     {DISCLOSURE}
     {firm_anchor_html()}

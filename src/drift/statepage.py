@@ -672,7 +672,7 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
       <a class="ghost" href="{_ABS}index.html#conversation">Start a conversation</a>
     </div>
 {capture}
-    <div class="rel">Compare nearby regimes: {related} · <a href="{edition_url(edition)}">all 50 states + DC →</a> · <a href="{edition_url(edition)}compare/">weigh two states →</a></div>
+    <div class="rel">Compare nearby regimes: {related} · <a href="{edition_url(edition)}">all 50 states + DC →</a> · <a href="{edition_url(edition)}compare/">weigh two states →</a> · <a href="{edition_url(edition)}crossing/">plan a move →</a></div>
     {_provenance_block()}
     {DISCLOSURE}
     {firm_anchor_html()}

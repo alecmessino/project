@@ -11,11 +11,12 @@ This file is the checklist for the trust-foundation items the design work is gat
 | Fact | Status | Single insertion point | How to insert | Unblocks |
 |---|---|---|---|---|
 | **Production domain** | pending | `src/drift/site.py :: BASE_URL` | `python scripts/set_domain.py https://…` then rebuild (see OPERATIONS.md) | canonical / og / JSON-LD on all 92 pages · PR-1 |
-| **Firm email** | live value is a personal Gmail | `src/drift/site.py :: CONTACT_EMAIL` | `python scripts/set_contact.py --email hello@…` | PR-2 · retires Gmail on 53 pages |
-| **Booking URL** | live value is branded to another firm | `src/drift/site.py :: BOOKING_URL` | `python scripts/set_contact.py --booking https://…` | PR-2 · fixes the conversion moment |
-| **CRD number** | not set | `src/drift/site.py :: FIRM_CRD` | set the constant | firm-anchor band (IA-4) · PR-3 |
-| **Custodian** | not set | `src/drift/site.py :: FIRM_CUSTODIAN` | set the constant | firm-anchor band (IA-4) · PR-3 |
-| **Founding year ("since")** | not set | `src/drift/site.py :: FIRM_SINCE` | set the constant | firm-anchor band (IA-4) |
+| **Firm email** | **firm-domain placeholder set** (`hello@driftwoodplanning.com`) — Gmail retired sitewide | `src/drift/site.py :: CONTACT_EMAIL` | `python scripts/set_contact.py --email hello@…` when the reserved inbox is live | ✅ Gmail gone on all pages |
+| **Booking URL** | live, but slug still branded to the prior firm (`…cwsplanning…`) | `src/drift/site.py :: BOOKING_URL` | `python scripts/set_contact.py --booking https://…` | homepage invitation now points here |
+| **Firm location** | **confirmed: Austin, Texas** (principal-directed) | `src/drift/site.py :: FIRM_LOCATION` | set the constant | ✅ firm-anchor band |
+| **Founding year ("since")** | **confirmed: 2024** (principal-directed) | `src/drift/site.py :: FIRM_SINCE` | set the constant | ✅ firm-anchor band |
+| **CRD number** | not set | `src/drift/site.py :: FIRM_CRD` | set the constant | firm-anchor band grows a line when set |
+| **Custodian** | not set | `src/drift/site.py :: FIRM_CUSTODIAN` | set the constant | firm-anchor band grows a line when set |
 | **RIA registration / disclosures** | **legal decision — untouched** | existing footer + schema (test-guarded) | confirm with counsel; see note below | PR-3 |
 
 ## How the firm-anchor band consumes these

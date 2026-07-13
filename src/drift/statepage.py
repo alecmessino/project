@@ -30,7 +30,7 @@ from .statemap import DIMENSIONS, _state_record, AS_OF_LAW, LAST_REVIEWED, _CHAN
 
 # Single source of truth for the public base URL lives in drift.site (re-exported here for callers
 # and tests); flip it with scripts/set_domain.py when the custom domain goes live.
-from .site import BASE_URL
+from .site import BASE_URL, firm_anchor_html
 
 # The 50 states + DC get a landing page (territories are edge cases; "—"/"NYC" are pseudo-keys).
 STATE_PAGE_CODES = sorted(
@@ -419,7 +419,7 @@ _HEAD_CSS = """
 _FORM_EP = "https://api.web3forms.com/submit"
 _FORM_KEY = "cf6b1c2d-9971-4256-9ff9-72d6918c84e6"
 _FORM_HP = "botcheck"
-_CONTACT = "alec.messino@gmail.com"
+_CONTACT = "hello@driftwoodplanning.com"
 
 
 def _capture(code: str, name: str, alpha, rate: str) -> str:
@@ -576,6 +576,7 @@ def render_state_html(data: dict) -> str:
     <div class="rel">Compare nearby regimes: {related} · <a href="states.html">all 50 states + DC →</a></div>
     {_provenance_block()}
     {DISCLOSURE}
+    {firm_anchor_html()}
     <div class="foot">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}.</div>
   </div>
 </div>
@@ -650,6 +651,7 @@ def render_states_index(pages: dict) -> str:
     </table>
     {_provenance_block()}
     {DISCLOSURE}
+    {firm_anchor_html()}
     <div class="foot">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}.</div>
   </div>
 </div>

@@ -68,7 +68,7 @@ globalThis.__run = async () => {
   ENV.setFetch({ ok:false, status:500 }); _leadBusy = false; form('a@b.com');
   submitLead({ preventDefault(){} }); await tick();
   const err = document.getElementById('leadcta').innerHTML;
-  out.err_recover = err.includes('gmail.com') && !err.includes('Your analysis');
+  out.err_recover = err.includes('driftwoodplanning.com') && !err.includes('Your analysis');
   // invalid email -> no POST
   _leadBusy = false; const before = ENV.fetchLog.length; form('nope'); submitLead({ preventDefault(){} });
   out.invalid_nopost = ENV.fetchLog.length === before;

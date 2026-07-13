@@ -315,17 +315,21 @@ def states(
     out_dir: str = typer.Option("docs", "--out-dir", help="directory for the per-state landing pages + sitemap"),
     sitemap: bool = typer.Option(True, "--sitemap/--no-sitemap", help="also regenerate docs/sitemap.xml"),
 ):
-    """Build the per-state pages, the Comparison instrument, the Crossing Briefs, and the sitemap."""
+    """Build the state pages, Comparison, Crossing Briefs, Household Records, and the sitemap."""
     from .statepage import export_state_pages, export_sitemap, STATE_PAGE_CODES
-    from . import comparepage, crossingpage
+    from . import comparepage, crossingpage, householdpage
     written = export_state_pages(out_dir)
     cmp_written = comparepage.export_comparisons(out_dir)
     xing_written = crossingpage.export_crossings(out_dir)
-    msg = (f"[green]wrote[/] {len(written)} state pages + {len(cmp_written)} comparison + "
-           f"{len(xing_written)} crossing pages to {out_dir}/ ({len(STATE_PAGE_CODES)} states + DC, "
-           f"{len(cmp_written) - 1} corridors, {len(xing_written) - 1} crossing briefs)")
+    hh_written = householdpage.export_households(out_dir)
+    msg = (f"[green]wrote[/] {len(written)} state + {len(cmp_written)} comparison + "
+           f"{len(xing_written)} crossing + {len(hh_written)} household pages to {out_dir}/ "
+           f"({len(STATE_PAGE_CODES)} states + DC, {len(cmp_written) - 1} corridors, "
+           f"{len(xing_written) - 1} crossing briefs, {len(hh_written) - 1} household records)")
     if sitemap:
-        sp = export_sitemap(out_dir, extra=comparepage.sitemap_entries() + crossingpage.sitemap_entries())
+        extra = (comparepage.sitemap_entries() + crossingpage.sitemap_entries()
+                 + householdpage.sitemap_entries())
+        sp = export_sitemap(out_dir, extra=extra)
         msg += f"; sitemap -> {sp}"
     console.print(msg)
 

@@ -13,7 +13,7 @@ Layer 2 · REASONING    a graph of structured objects →  drift.reasoning, drif
         ↓
 Layer 3 · PRODUCTS     queries over the graph, rendered many ways
                        →  Atlas state pages (drift.statepage), Tax Diagnostic (drift.leakage → leakage.html),
-                          Advisor Workspace (drift.taxlab), Comparison (drift.compare), Crossing Brief (drift.crossing), + Household Record (planned)
+                          Advisor Workspace (drift.taxlab), Comparison (drift.compare), Crossing Brief (drift.crossing), Household Record (drift.household)
 ```
 
 **The one rule that makes it a platform:** a fact is authored once (Layer 1), reasoning about it exists
@@ -86,7 +86,7 @@ does not own intelligence.
 | **Advisor Workspace** | estate / Roth / asset-location tooling | live · `drift.taxlab` → `workspace.html` |
 | **Comparison** | which framework signals differ, and which coordination priorities change, between two states? | live · `drift.compare` / `drift.comparepage` → `/atlas/{edition}/compare/` (instrument) + `/compare/<a>-vs-<b>/` (corridors) |
 | **Crossing Brief** | what must a household change *because it is moving* — the directional operating memo | live · `drift.crossing` / `drift.crossingpage` → `/atlas/{edition}/crossing/` + `/crossing/<o>-to-<d>/` |
-| **Household Record** | which priorities become *this household's* standing decisions? | planned |
+| **Household Record** | *where does this family's operating system live* — the index that binds the graph to a household | live · `drift.household` / `drift.householdpage` → `/atlas/{edition}/household/` + `/household/<id>/`. **References artifacts, never duplicates** — points to the Atlas page, Crossing Brief, Comparison, Registers, and Annual Review, each authoritative in its own right. |
 | **Opportunity Register / Annual Review / AI** | traverse the graph by node id | future |
 
 **Rule for new products:** consume `atlas.build_state_edition(...)` (or `build_edition`); read the

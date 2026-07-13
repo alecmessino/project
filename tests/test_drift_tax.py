@@ -473,19 +473,23 @@ def test_build_taxlab_degraded_without_ledger(tmp_path):
     json.dumps(st3)
 
 
-def test_taxlab_js_mirrors_python_il_estate_curve():
-    """The Tax Lab page JS hand-duplicates the Python IL estate curve as a literal IL_AG array.
-    Guard them from silently drifting apart when _IL_AG_CURVE is tuned (the documented workflow)."""
-    import ast
+def test_taxlab_il_estate_curve_is_injected_not_hand_mirrored():
+    """The IL estate curve is canonical (drift.state_facts.IL_AG_CURVE): the Python calculator and the
+    workspace JS both render it from one source, so they cannot drift. Guard that the JS no longer
+    carries a hand-typed IL_AG literal and instead reads the injected curve, and that build_taxlab
+    injects it verbatim."""
     import re
     from pathlib import Path
     import drift.taxlab as T
+    from drift.state_facts import IL_AG_CURVE
     html = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
-    m = re.search(r"const IL_AG=(\[\[.*?\]\]);", html)
-    assert m, "IL_AG array not found in workspace.html"
-    js_rows = ast.literal_eval(m.group(1))
-    py_rows = [[bp, tax, rate] for (bp, tax, rate) in T._IL_AG_CURVE]
-    assert js_rows == py_rows, f"JS IL_AG {js_rows} != Python _IL_AG_CURVE {py_rows}"
+    assert "const IL_AG=" not in html, "workspace.html still hand-mirrors the IL curve"
+    assert "S.assumptions.estate.il_ag_curve" in html, "workspace.html must read the injected curve"
+    # The Python calculator uses the canonical curve...
+    assert T._IL_AG_CURVE is IL_AG_CURVE
+    # ...and it is injected for the browser, verbatim (as JSON-serializable lists).
+    injected = T.ASSUMPTIONS["estate"]["il_ag_curve"]
+    assert injected == [list(r) for r in IL_AG_CURVE]
 
 
 def test_pure_tax_fns_handle_edge_inputs():

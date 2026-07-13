@@ -30,7 +30,7 @@ from __future__ import annotations
 import time
 
 from .leakage import STATE_ALPHA, STATE_NAMES
-from .state_facts import rate_display, TERRITORY_CODES  # canonical rate + territory set (§15.4)
+from .state_facts import rate_display, TERRITORY_CODES, ESTATE  # canonical rate + territory + estate (§15.4)
 
 # ── Editions: the Atlas is a citable reference, versioned by tax-year edition ───────────────────────
 # Each annual edition carries its own provenance — the law year the content reflects, the date a human
@@ -176,41 +176,28 @@ _MARRIAGE_NOTE = {
     "one": "One bracket schedule applies to both single and joint filers — a structural marriage penalty for two earners.",
 }
 
-# ── 3 · Estate / inheritance (2025 law) — regime + top rate + exemption + quirk ───────────────────
-# (regime, top_rate, exemption, quirk). regime ∈ none/estate/inheritance/both.
-_ESTATE = {
-    "CT": ("estate", "12%", "$15M", ""), "DC": ("estate", "16%", "$4.99M", ""),
-    "HI": ("estate", "20%", "$5.49M", ""), "IL": ("estate", "16%", "$4M", ""),
-    "MA": ("estate", "16%", "$2M", ""), "ME": ("estate", "12%", "$7.16M", ""),
-    "MN": ("estate", "16%", "$3M", ""), "NY": ("estate", "16%", "$7.35M", "a cliff: clear the exemption by >5% and the whole estate is taxed"),
-    "OR": ("estate", "16%", "$1M", ""), "RI": ("estate", "16%", "$1.84M", ""),
-    "VT": ("estate", "16%", "$5M", ""), "WA": ("estate", "35%", "$3M", ""),
-    "KY": ("inheritance", "16%", "", ""), "NE": ("inheritance", "15%", "", ""),
-    "NJ": ("inheritance", "16%", "", ""), "PA": ("inheritance", "15%", "", ""),
-    "MD": ("both", "16%", "$5M", ""),
-}
+# ── 3 · Estate / inheritance (2025 law) — projected from the canonical drift.state_facts.ESTATE ────
 _ESTATE_TAG = {"estate": "estate", "inheritance": "inher.", "both": "estate+inh", "none": ""}
-_ESTATE_NOTE_IL = ("Illinois estate tax: a $4,000,000 exemption (not indexed — a taxable threshold, not a "
-                   "credit; SB 2970 to $6,000,000 is pending, not enacted). Top rate ~16% (the tax equals the "
-                   "IRC 2011 state death-tax credit frozen at 12/31/2001, 0.8–16% over 21 brackets), with "
-                   "soft-cliff mechanics: once the estate clears $4M the table applies to the whole taxable "
-                   "estate. Administered by the Attorney General, not IDOR; no portability. Confirm with counsel.")
+_ESTATE_SOURCE = "State estate/inheritance statutes, tax year 2025 — confirm with counsel."
 
 
 def _estate(code):
+    e = ESTATE.get(code)
+    if not e:
+        return {"regime": "none", "tag": _ESTATE_TAG["none"],
+                "note": "No state estate or inheritance tax — only the federal estate tax applies.",
+                "source": _ESTATE_SOURCE}
+    rate, exm, quirk = f"{e['top_rate'] * 100:g}%", e["exemption_display"], e["note"]
     if code == "IL":
-        return {"regime": "estate", "tag": "estate", "note": _ESTATE_NOTE_IL,
-                "source": "State estate/inheritance statutes, tax year 2025 — confirm with counsel."}
-    regime, rate, exm, quirk = (_ESTATE.get(code) or ("none", "", "", ""))
-    notes = {
-        "none": "No state estate or inheritance tax — only the federal estate tax applies.",
-        "estate": f"State estate tax (paid by the estate): top rate ~{rate}, exemption ~{exm}."
-                  + (f" {quirk[0].upper()+quirk[1:]}." if quirk else " Confirm the figure with counsel."),
-        "inheritance": f"State inheritance tax (paid by beneficiaries; the rate depends on the heir's relationship), top rate ~{rate}.",
-        "both": f"Both a state estate tax (~{rate}, exemption ~{exm}) and an inheritance tax can apply — coordinate with counsel.",
-    }
-    return {"regime": regime, "tag": _ESTATE_TAG[regime], "note": notes[regime],
-            "source": "State estate/inheritance statutes, tax year 2025 — confirm with counsel."}
+        note = quirk  # the detailed IL note (cliff mechanics, AG-administered, pending bills)
+    elif e["regime"] == "estate":
+        note = f"State estate tax (paid by the estate): top rate ~{rate}, exemption ~{exm}. {quirk}"
+    elif e["regime"] == "inheritance":
+        note = (f"State inheritance tax (paid by beneficiaries; the rate depends on the heir's "
+                f"relationship), top rate ~{rate}. {quirk}")
+    else:  # both
+        note = f"Both a state estate tax (~{rate}, exemption ~{exm}) and an inheritance tax apply. {quirk}"
+    return {"regime": e["regime"], "tag": _ESTATE_TAG[e["regime"]], "note": note, "source": _ESTATE_SOURCE}
 
 
 # ── 4 · Basis step-up: marital-property regime ───────────────────────────────────────────────────

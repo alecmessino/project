@@ -59,6 +59,29 @@ the table from the engine and confirms the match.
 
 ## 2 · Estate / inheritance facts
 
-Pending — reconciled in the next step (step 3). Research is complete (16 death-tax states + the
-Illinois pending-bill conflict resolved against primary sources); the canonical estate block and its
-log entries land with that PR.
+The estate facts forked four ways — `statemap._ESTATE`, `taxlab.state_estate` (regime-only, different
+membership), the hardcoded `taxlab` IL constants, and a **hand-typed `IL_AG` JS mirror** in
+`workspace.html`. All now project from one canonical block, `state_facts.ESTATE` (+ the injected
+`IL_AG_CURVE` for the browser). Regimes and top rates verified `high` confidence against primary
+sources; **five states encoded the 2026 indexed exemption** and were corrected to the 2025 figure
+(the 2026 value is retained in each note), for consistency with the 2025 income-rate edition.
+
+| State | Prev exemption | Adopted (2025) | Authority | Note |
+|---|---|---|---|---|
+| CT | $15M | **$13.99M** | CT DRS / Tax Foundation | $15M is the liability *cap*, not the exemption; → ~$15M in 2026 |
+| DC | $4.99M | **$4.87M** | DC OTR | indexed 2025 exclusion $4,873,200 |
+| ME | $7.16M | **$7.0M** | Maine Revenue Services (706ME) | $7.16M is the 2026 figure |
+| NY | $7.35M | **$7.16M** | NY Dept. of Taxation | cliff confirmed; $7.35M is 2026 |
+| RI | $1.84M | **$1.8M** | RI Division of Taxation | $1,802,431; $1.84M is 2026 |
+
+Rates and regimes for the other death-tax states (HI 20%/$5.49M, MA 16%/$2M, MN 16%/$3M, OR 16%/$1M,
+VT 16%/$5M, WA 35%/$3M, MD both/16%/$5M, KY·NE·NJ·PA inheritance) were confirmed unchanged.
+
+**Illinois pending-legislation conflict — resolved.** The repo cited two bills inconsistently. Both
+are real but **neither is enacted**, so the $4M exclusion stands:
+- **HB 2601** — raises the *general* exclusion to **$8M**; stalled in House Rules (3/2025), effectively dead.
+- **SB 2970** — a **$6M exemption for qualified farm property only** (not a general raise); in committee (2026).
+
+The IL note and the `il_hb2601_exclusion` toggle now describe each accurately. Per-state citations
+live in `state_facts.ESTATE_SOURCES`; the workspace IL curve is now injected from
+`state_facts.IL_AG_CURVE` (the hand-typed JS mirror is retired).

@@ -176,3 +176,40 @@ def test_every_reconciled_rate_carries_a_primary_source():
         for field in ("prev_tax", "prev_map", "adopted", "authority", "url", "effective"):
             assert src.get(field), f"{code} reconciliation record missing {field!r}"
         assert src["url"].startswith("http"), f"{code}: source url is not a link"
+
+
+# ── One canonical estate source (state_facts.ESTATE) ──────────────────────────────────────────────
+# statemap (display), taxlab (calculator), and the workspace JS all project from state_facts.ESTATE.
+
+def test_statemap_estate_projects_from_the_canonical_table():
+    from drift import state_facts
+    from drift.statemap import _estate
+    for code, e in state_facts.ESTATE.items():
+        rec = _estate(code)
+        assert rec["regime"] == e["regime"], f"{code}: statemap estate regime diverged"
+    # A non-death-tax state resolves to 'none'.
+    assert _estate("KS")["regime"] == "none"
+
+
+def test_taxlab_estate_layer_projects_from_the_canonical_table():
+    from drift import state_facts
+    from drift.taxlab import ASSUMPTIONS, _IL_AG_CURVE
+    est = ASSUMPTIONS["estate"]
+    # IL constants come from the canonical IL entry.
+    assert est["il_exclusion"] == state_facts.ESTATE["IL"]["exemption_usd"]
+    assert est["il_top_rate"] == state_facts.ESTATE["IL"]["top_rate"]
+    # state_estate is the canonical regimes minus IL (the precise engine) plus the NYC overlay.
+    expected = {c: e["regime"] for c, e in state_facts.ESTATE.items() if c != "IL"}
+    expected["NYC"] = "estate"
+    assert est["state_estate"] == expected
+    assert "IL" not in est["state_estate"]
+    # The IL curve is the one canonical curve.
+    assert _IL_AG_CURVE is state_facts.IL_AG_CURVE
+
+
+def test_every_reconciled_estate_fact_carries_a_source():
+    from drift import state_facts
+    for code, src in state_facts.ESTATE_SOURCES.items():
+        for field in ("prev", "adopted", "authority", "url", "effective"):
+            assert src.get(field), f"{code} estate reconciliation record missing {field!r}"
+        assert src["url"].startswith("http")

@@ -139,3 +139,88 @@ RATE_SOURCES: dict[str, dict] = {
            "authority": "WV Tax Division — 2025 IT-140 top rate 4.82% (triggered cut)",
            "url": "https://tax.wv.gov/Documents/PIT/2025/it140.TaxRateSchedules.2025.pdf", "effective": "Jan 1 2025"},
 }
+
+
+# ── Estate / inheritance ("death") tax — canonical, 2025 tax-year law ───────────────────────────────
+# The single source for statemap (the Atlas display), taxlab (the estate calculator), and the
+# workspace JS. Each entry: regime ∈ estate/inheritance/both; top_rate (decimal); exemption_usd (None
+# for inheritance-only states, which key off heir class); exemption_display; cliff (whole estate taxed
+# once the exemption is cleared); note. Exemptions are the 2025 figure a 2025 death faces; where a
+# state indexes for inflation the 2026 figure is stated in the note. Absent states have no death tax.
+_ESTATE_NOTE_IL = (
+    "Illinois estate tax: a $4,000,000 exemption — not indexed, administered by the Attorney General "
+    "(Form 700), not IDOR, and not portable between spouses. It is a cliff threshold: once the estate "
+    "clears $4M the frozen IRC 2011 state death-tax credit table (0.8–16% over 21 brackets) applies to "
+    "essentially the whole taxable estate, so the first dollars over $4M carry a ~29% effective cost. "
+    "Broad-raise bills are pending but NOT enacted — HB 2601 (to $8M) stalled in Rules; SB 2970's $6M "
+    "applies only to qualified farm property — so $4M stands. Confirm the filing figure with counsel."
+)
+ESTATE: dict[str, dict] = {
+    "CT": {"regime": "estate", "top_rate": 0.12, "exemption_usd": 13_990_000, "exemption_display": "$13.99M",
+           "cliff": False, "note": "Flat 12% over the exemption (tied to the federal exclusion; total liability capped at $15M); rises to ~$15M for 2026."},
+    "DC": {"regime": "estate", "top_rate": 0.16, "exemption_usd": 4_873_200, "exemption_display": "$4.87M",
+           "cliff": False, "note": "Inflation-indexed zero-bracket amount; no portability."},
+    "HI": {"regime": "estate", "top_rate": 0.20, "exemption_usd": 5_490_000, "exemption_display": "$5.49M",
+           "cliff": False, "note": "Graduated 10–20% over the exemption — the nation's highest top rate; not indexed."},
+    "IL": {"regime": "estate", "top_rate": 0.16, "exemption_usd": 4_000_000, "exemption_display": "$4M",
+           "cliff": True, "note": _ESTATE_NOTE_IL},
+    "MA": {"regime": "estate", "top_rate": 0.16, "exemption_usd": 2_000_000, "exemption_display": "$2M",
+           "cliff": False, "note": "$2M exemption with a uniform $99,600 credit; the 2023 reform removed the old cliff, so only value above $2M is taxed."},
+    "ME": {"regime": "estate", "top_rate": 0.12, "exemption_usd": 7_000_000, "exemption_display": "$7.0M",
+           "cliff": False, "note": "Progressive 8/10/12% over the exclusion; indexed (rises to ~$7.16M for 2026)."},
+    "MN": {"regime": "estate", "top_rate": 0.16, "exemption_usd": 3_000_000, "exemption_display": "$3M",
+           "cliff": False, "note": "Flat $3M exemption (not indexed, not portable); 13–16% over it."},
+    "NY": {"regime": "estate", "top_rate": 0.16, "exemption_usd": 7_160_000, "exemption_display": "$7.16M",
+           "cliff": True, "note": "A cliff: an estate over 105% of the exemption loses it entirely and the whole estate is taxed; rises to $7.35M for 2026."},
+    "OR": {"regime": "estate", "top_rate": 0.16, "exemption_usd": 1_000_000, "exemption_display": "$1M",
+           "cliff": False, "note": "$1M exemption (unindexed); 10–16% over it."},
+    "RI": {"regime": "estate", "top_rate": 0.16, "exemption_usd": 1_802_431, "exemption_display": "$1.8M",
+           "cliff": False, "note": "Credit-based threshold, CPI-indexed (rises to ~$1.84M for 2026)."},
+    "VT": {"regime": "estate", "top_rate": 0.16, "exemption_usd": 5_000_000, "exemption_display": "$5M",
+           "cliff": False, "note": "Flat $5M exclusion; flat 16% over it."},
+    "WA": {"regime": "estate", "top_rate": 0.35, "exemption_usd": 3_000_000, "exemption_display": "$3M",
+           "cliff": False, "note": "ESSB 5813 (deaths on/after Jul 1 2025): $3M exclusion, graduated to 35% — the highest state rate; $3M indexed from 2026."},
+    "MD": {"regime": "both", "top_rate": 0.16, "exemption_usd": 5_000_000, "exemption_display": "$5M",
+           "cliff": False, "note": "The only state with both an estate tax ($5M exemption, portable, to 16%) and a 10% inheritance tax on non-close heirs."},
+    "KY": {"regime": "inheritance", "top_rate": 0.16, "exemption_usd": None, "exemption_display": "—",
+           "cliff": False, "note": "Inheritance tax only; Class A heirs exempt, others 4–16% by heir class."},
+    "NE": {"regime": "inheritance", "top_rate": 0.15, "exemption_usd": None, "exemption_display": "—",
+           "cliff": False, "note": "County inheritance tax; 1–15% by heir class (post-LB 310)."},
+    "NJ": {"regime": "inheritance", "top_rate": 0.16, "exemption_usd": None, "exemption_display": "—",
+           "cliff": False, "note": "Estate tax repealed 2018; inheritance tax only — Class A exempt, others 11–16%."},
+    "PA": {"regime": "inheritance", "top_rate": 0.15, "exemption_usd": None, "exemption_display": "—",
+           "cliff": False, "note": "Inheritance tax only; lineal heirs 4.5%, siblings 12%, others 15%."},
+}
+
+# Illinois AG estate-tax computation curve — a calibrated fit to the Attorney General's calculator
+# (the true cliff mechanics are subtler). Rows: (excess_over_exclusion, tax_at_that_excess,
+# marginal_rate_above). Anchors: $5M estate → ~$285k, $8M → ~$690k, $10M → ~$980k at the $4M exclusion.
+# Canonical here so the Python calculator and the workspace JS render the same curve.
+IL_AG_CURVE = [
+    (0, 0, 0.285),
+    (1_000_000, 285_000, 0.135),
+    (4_000_000, 690_000, 0.145),
+    (6_000_000, 980_000, 0.160),
+    (10_000_000, 1_620_000, 0.160),
+]
+
+# Per-state estate reconciliation records (2025 tax-year); drives RECONCILIATION_LOG.md §2.
+ESTATE_SOURCES: dict[str, dict] = {
+    "CT": {"prev": "$15M exemption", "adopted": "$13.99M", "authority": "CT DRS / Tax Foundation 2025 — $15M is the liability cap, not the exemption",
+           "url": "https://taxfoundation.org/data/all/state/estate-inheritance-taxes/", "effective": "TY2025"},
+    "DC": {"prev": "$4.99M", "adopted": "$4.87M", "authority": "DC OTR — indexed 2025 exclusion $4,873,200",
+           "url": "https://taxfoundation.org/data/all/state/estate-inheritance-taxes/", "effective": "TY2025"},
+    "ME": {"prev": "$7.16M", "adopted": "$7.0M", "authority": "Maine Revenue Services (706ME) — 2025 exclusion $7.0M ($7.16M is 2026)",
+           "url": "https://www.maine.gov/revenue/taxes/income-estate-tax/estate-tax-706me", "effective": "TY2025"},
+    "NY": {"prev": "$7.35M", "adopted": "$7.16M", "authority": "NY Dept. of Taxation — 2025 basic exclusion $7.16M ($7.35M is 2026)",
+           "url": "https://www.tax.ny.gov/pit/estate/etidx.htm", "effective": "TY2025"},
+    "RI": {"prev": "$1.84M", "adopted": "$1.8M", "authority": "RI Division of Taxation — 2025 threshold $1,802,431 ($1.84M is 2026)",
+           "url": "https://taxfoundation.org/data/all/state/estate-inheritance-taxes/", "effective": "TY2025"},
+    "IL": {"prev": "SB 2970 → $6M (general) pending", "adopted": "$4M stands; HB 2601 $8M stalled, SB 2970 $6M is farm-only",
+           "authority": "Illinois AG estate tax + ILGA bill status (HB 2601, SB 2970)",
+           "url": "https://illinoisattorneygeneral.gov/estate-taxes/2013-2025-estate-calculator", "effective": "TY2025"},
+}
+
+
+def _pct(rate: float) -> str:
+    return f"{rate * 100:g}%"

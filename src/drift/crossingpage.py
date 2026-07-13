@@ -318,7 +318,8 @@ def render_crossing_index_html(edition: str = CURRENT_EDITION) -> str:
       <p class="lede">A Crossing Brief is prepared for one move — the memo an institution hands a household
         before a transition. Its job is to coordinate, not to educate: which priorities change, which
         standing decisions to revisit, and what to do before, during, and after. These are the routes
-        households make most often; the Household Record prepares one for a household's own crossing.</p>
+        households make most often; the <a href="{BASE_URL}/atlas/{edition}/household/">Household Record</a>
+        prepares one for a household's own crossing.</p>
     </div>
     {chr(10).join(groups)}
     <div class="cta">

@@ -44,7 +44,7 @@
   .sheet{max-width:1040px;margin:30px auto;padding:0 20px 50px}
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
   .hd{padding:30px 40px 16px}
-  .eyebrow{font-weight:500;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:12px}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:12px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px, 2vw + 20px, 38px);line-height:1.04;
     letter-spacing:-.02em;color:var(--ink);margin:0 0 12px}
   .lede{font-family:var(--serif);font-size:15px;color:#5c6470;margin:0;max-width:74ch}
@@ -126,10 +126,6 @@
 <body>
 <div class="sheet">
   <div class="frame">
-    <div class="run">
-      <span class="inst">Driftwood Capital</span>
-      <span class="marker">Tax Diagnostic</span>
-    </div>
     <nav class="dwnav" aria-label="Driftwood Capital">
       <a class="brand" href="index.html" aria-label="Driftwood Capital — home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Capital</span></a>
       <div class="dwnav-links">
@@ -340,7 +336,7 @@ function render(s){
     `and past performance <b>does not guarantee future results</b>. This is coordinated tax &amp; fee `+
     `management on an identical exposure — <b>not a forecast that these funds out-perform</b>. `+
     `Intended for sophisticated investors; it may not be relevant to your situation. Source: ${(s.header||{}).source||''}.`+
-    `<div style="margin-top:7px">Driftwood is a `+
+    `<div style="margin-top:7px">Driftwood Capital is a `+
     `<b>registered investment adviser</b>; <b>Form ADV</b> and <b>Form CRS</b> are available at `+
     `<a href="https://adviserinfo.sec.gov/" style="color:var(--teal)">adviserinfo.sec.gov</a>.</div>`+
     `<div style="margin-top:5px" id="gen">Model data as of July 2026.</div>`;

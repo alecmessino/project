@@ -374,7 +374,7 @@ def _jsonld(name: str, code: str, rec: dict, faq: list[dict], edition: str = CUR
 
 
 _HEAD_CSS = """
-  :root{--bg:#f6f3ec;--soft:#fbf9f4;--line:#e3dccd;--line2:#f0ece2;--chrome:#ece6da;
+  :root{--bg:#f1efe9;--soft:#f7f5f0;--line:#d8d3c6;--line2:#e9e5db;--chrome:#ece6da;
     --ink:#1d242d;--body:#3a414b;--dim:#5f5d68;--muted:#6f675b;
     --brass:#2c5878;--gold:#a9c2d6;--teal:#15463a;--teal2:#15806a;--neg:#9b4439;--navy:#1a2330;}
   *{box-sizing:border-box}
@@ -386,8 +386,8 @@ _HEAD_CSS = """
   .bcrumb{padding:12px 40px 0;font-size:11.5px;color:var(--muted)}
   .bcrumb a{color:var(--brass);text-decoration:none} .bcrumb a:hover{text-decoration:underline}
   .hd{padding:22px 40px 6px}
-  .eyebrow{font-weight:500;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
-  h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px, 2.4vw + 19px, 36px);line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin:0 0 10px}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:10px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px, 2.4vw + 19px, 36px);line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin:0 0 10px}
   .lede{font-size:15px;color:var(--dim);margin:0;max-width:76ch}
   .context{font-size:14px;line-height:1.65;color:var(--body);margin:14px 0 0;max-width:76ch;
     border-left:3px solid var(--gold);padding:2px 0 2px 16px}
@@ -464,12 +464,15 @@ _HEAD_CSS = """
   .vh{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
   .disc{margin:16px 40px 6px;font-size:10.5px;line-height:1.55;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
   .disc a{color:var(--teal2)}
-  .foot{margin:6px 40px 26px;color:var(--muted);font-size:11px}
+  /* Trailing colophon under the firm-anchor — a light one-line provenance note, deliberately NOT
+     the .foot disclosure treatment (the real disclosure is the .disc block above the anchor). Named
+     apart from .foot so the shared body .foot rule doesn't impose the heavy disclosure spacing. */
+  .colophon{margin:14px 40px 26px;color:var(--muted);font-size:11px;line-height:1.6}
   /* Phones: pull the generous 40px editorial gutters in to a comfortable 18px so the prose column
      isn't pinched, consistent with the other exhibits. */
   @media(max-width:600px){
     .bcrumb,.hd,.grid,.sec,.rel{padding-left:18px;padding-right:18px}
-    .hero,.cta,.capture,.disc,.foot,.asofline,.chlog{margin-left:18px;margin-right:18px}
+    .hero,.cta,.capture,.disc,.colophon,.asofline,.chlog{margin-left:18px;margin-right:18px}
   }
   @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}
 """
@@ -639,7 +642,6 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
 <div class="sheet">
   <div class="frame">
     {NAV_ABS}
-    <div class="bcrumb"><a href="{_ABS}index.html">Driftwood Capital</a> › <a href="{edition_url(edition)}">The State Atlas</a> › {_esc(name)}</div>
     <div class="hd">
       <div class="eyebrow">The State Atlas · {_esc(name)}</div>
       <h1>How {_esc(name)} taxes investors.</h1>
@@ -670,11 +672,11 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
       <a class="ghost" href="{_ABS}index.html#conversation">Start a conversation</a>
     </div>
 {capture}
-    <div class="rel">Compare nearby regimes: {related} · <a href="{edition_url(edition)}">all 50 states + DC →</a></div>
+    <div class="rel">Compare nearby regimes: {related} · <a href="{edition_url(edition)}">all 50 states + DC →</a> · <a href="{edition_url(edition)}compare/">weigh two states →</a></div>
     {_provenance_block()}
     {DISCLOSURE}
     {firm_anchor_html()}
-    <div class="foot">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}.</div>
+    <div class="colophon">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}.</div>
   </div>
 </div>
 </body>
@@ -750,7 +752,7 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
     {_provenance_block()}
     {DISCLOSURE}
     {firm_anchor_html()}
-    <div class="foot">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}.</div>
+    <div class="colophon">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}.</div>
   </div>
 </div>
 </body>
@@ -819,22 +821,24 @@ _CORE_SITEMAP = [
 ]
 
 
-def render_sitemap(edition: str = CURRENT_EDITION) -> str:
+def render_sitemap(edition: str = CURRENT_EDITION, extra: list[tuple[str, str, str]] = ()) -> str:
     # The sitemap lists CANONICAL URLs only — the editioned pages and the edition index — never the
     # flat redirect aliases (which would be duplicate content). states.html → the edition index.
+    # `extra` lets a caller (the CLI) append other canonical Atlas surfaces (e.g. the Comparison
+    # instrument index + featured corridors) without statepage importing those modules.
     core = [(loc, pr, cf) for (loc, pr, cf) in _CORE_SITEMAP if loc != "states.html"]
     core.append((f"atlas/{edition}/", "0.8", "monthly"))
     state_urls = [(f"{atlas_path(c, edition)}/", "0.7", "monthly") for c in STATE_PAGE_CODES]
     body = "\n".join(
         f"  <url><loc>{BASE_URL}/{loc}</loc><changefreq>{cf}</changefreq><priority>{pr}</priority></url>"
-        for loc, pr, cf in (core + state_urls))
+        for loc, pr, cf in (core + state_urls + list(extra)))
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
             "<!-- Driftwood — generated by drift states (src/drift/statepage.py). -->\n"
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
             f"{body}\n</urlset>\n")
 
 
-def export_sitemap(out_dir: str | Path = "docs") -> Path:
+def export_sitemap(out_dir: str | Path = "docs", extra: list[tuple[str, str, str]] = ()) -> Path:
     p = Path(out_dir) / "sitemap.xml"
-    p.write_text(render_sitemap())
+    p.write_text(render_sitemap(extra=extra))
     return p

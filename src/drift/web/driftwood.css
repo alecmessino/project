@@ -149,6 +149,40 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
   .dwnav-cta{ margin-left:0; }
   .dwnav-group{ gap:8px 16px; } .dwnav-group + .dwnav-group{ margin-left:0; padding-left:0;
     border-left:none; } .dwnav-label{ font-size:8.5px; opacity:.8; } }
+/* Mobile disclosure: the full running index stacks to seven rows on a phone and buries the hero and
+   its CTA below the fold. Collapse it behind a single control so the first screen leads with content,
+   not chrome. The toggle is injected by dw-context.js (shared across every page, so no per-template
+   markup), and the collapse is scoped to .dwnav--menu — a class that script adds only once the control
+   is wired — so with JavaScript off the full index stays visible rather than hiding behind a dead
+   button. Desktop is untouched: the toggle is display:none above the breakpoint. */
+.dwnav-toggle{ display:none; }
+@media (max-width:620px){
+  .dwnav--menu .dwnav-toggle{ display:inline-flex; align-items:center; gap:9px; margin-left:auto;
+    background:none; border:0; cursor:pointer; padding:6px 0; font-family:var(--sans); font-size:11px;
+    font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--accent-strike,#2c5878); }
+  .dwnav--menu .dwnav-toggle:focus-visible{ outline:2px solid var(--accent-strike,#2c5878); outline-offset:3px; }
+  .dwnav--menu .dwnav-toggle .bars{ position:relative; box-sizing:border-box; width:18px; height:2px;
+    background:currentColor; display:block; }
+  .dwnav--menu .dwnav-toggle .bars::before,
+  .dwnav--menu .dwnav-toggle .bars::after{ content:""; position:absolute; left:0; width:18px; height:2px;
+    background:currentColor; transition:transform var(--t-fast,.15s) ease; }
+  .dwnav--menu .dwnav-toggle .bars::before{ top:-6px; }
+  .dwnav--menu .dwnav-toggle .bars::after{ top:6px; }
+  /* Collapsed by default once enhanced; the disclosure reveals a stacked list + the CTA. */
+  .dwnav--menu .dwnav-links,
+  .dwnav--menu .dwnav-cta{ display:none; }
+  .dwnav--menu.dwnav--open .dwnav-links{ display:flex; flex-direction:column; align-items:flex-start;
+    flex-basis:100%; gap:16px 0; padding-top:12px; }
+  .dwnav--menu.dwnav--open .dwnav-cta{ display:inline-block; flex-basis:100%; margin-top:2px; }
+  /* Open: the middle bar clears and the outer two cross into an ✕. */
+  .dwnav--menu.dwnav--open .dwnav-toggle .bars{ background:transparent; }
+  .dwnav--menu.dwnav--open .dwnav-toggle .bars::before{ top:0; transform:rotate(45deg); }
+  .dwnav--menu.dwnav--open .dwnav-toggle .bars::after{ top:0; transform:rotate(-45deg); }
+}
+@media (prefers-reduced-motion:reduce){
+  .dwnav--menu .dwnav-toggle .bars::before,
+  .dwnav--menu .dwnav-toggle .bars::after{ transition:none; }
+}
 
 /* ── Mobile / cross-device consistency ──────────────────────────────────────────────────────
    Stop iOS Safari from auto-inflating body text (so the type scale is identical in portrait,

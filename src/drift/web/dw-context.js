@@ -170,3 +170,59 @@
   function ready() { decorate(); renderBars(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ready); else ready();
 })();
+
+/* Mobile navigation disclosure — progressive enhancement.
+ *
+ * The shared chrome carries a two-family running index (Understand · Discover). On a phone it wraps
+ * to seven rows and pushes the hero and its CTA below the fold. This wires a single disclosure control
+ * so the first screen leads with content; the collapse itself is CSS (scoped to .dwnav--menu). It lives
+ * here — one file every page already loads — so no per-template markup changes are needed, and it
+ * degrades cleanly: with the script absent the full index simply stays visible. */
+(function () {
+  if (typeof document === "undefined") return;
+  function enhance() {
+    var navs = document.querySelectorAll("nav.dwnav");
+    for (var i = 0; i < navs.length; i++) {
+      (function (nav, idx) {
+        if (nav.querySelector(".dwnav-toggle")) return;              // already wired
+        var links = nav.querySelector(".dwnav-links");
+        if (!links) return;
+        if (!links.id) links.id = "dwnav-links-" + (idx + 1);
+
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "dwnav-toggle";
+        btn.setAttribute("aria-expanded", "false");
+        btn.setAttribute("aria-controls", links.id);
+        btn.innerHTML = '<span class="bars" aria-hidden="true"></span>' +
+                        '<span class="dwnav-toggle-txt">Menu</span>';
+
+        var brand = nav.querySelector(".brand");
+        if (brand && brand.nextSibling) nav.insertBefore(btn, brand.nextSibling);
+        else nav.insertBefore(btn, nav.firstChild);
+        nav.classList.add("dwnav--menu");
+
+        function setOpen(open) {
+          nav.classList.toggle("dwnav--open", open);
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+          var txt = btn.querySelector(".dwnav-toggle-txt");
+          if (txt) txt.textContent = open ? "Close" : "Menu";
+        }
+        btn.addEventListener("click", function () {
+          setOpen(!nav.classList.contains("dwnav--open"));
+        });
+        // Dismiss on selection, on Escape, and when the viewport grows back to desktop.
+        links.addEventListener("click", function (e) { if (e.target.closest && e.target.closest("a")) setOpen(false); });
+        document.addEventListener("keydown", function (e) { if (e.key === "Escape" || e.keyCode === 27) setOpen(false); });
+        try {
+          var mq = window.matchMedia("(min-width:621px)");
+          var onChange = function () { if (mq.matches) setOpen(false); };
+          if (mq.addEventListener) mq.addEventListener("change", onChange);
+          else if (mq.addListener) mq.addListener(onChange);
+        } catch (e) {}
+      })(navs[i], i);
+    }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", enhance);
+  else enhance();
+})();

@@ -11,6 +11,7 @@ const TEMPLATE = path.join(__dirname, '..', '..', 'src', 'drift', 'web', 'worksp
 
 function templateText() { return fs.readFileSync(TEMPLATE, 'utf8'); }
 function cssText() { return fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'drift', 'web', 'driftwood.css'), 'utf8'); }
+function dwContextText() { return fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'drift', 'web', 'dw-context.js'), 'utf8'); }
 
 // The main inline <script> (the one with the app), with the trailing init() call stripped so
 // flows can seed S/CONFIG and drive specific functions deterministically.
@@ -135,4 +136,4 @@ const FIXTURE = {
   },
 };
 
-module.exports = { templateText, cssText, extractInline, installEnv, FIXTURE, TEMPLATE };
+module.exports = { templateText, cssText, dwContextText, extractInline, installEnv, FIXTURE, TEMPLATE };

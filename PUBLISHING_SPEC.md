@@ -581,3 +581,54 @@ Proof of Practice moves ahead of Tools/QA because its artifacts inform both):**
    institution's *operation*?** If it documents how Driftwood thinks, it belongs on the
    public site. If it helps Driftwood do its work, it belongs in the Advisor Workspace.
 8. **Freeze at v1** and move the center of gravity to the Workspace.
+
+---
+
+## 14 · The Launch Standard — implementation directives (July 2026)
+
+The handoff bundle's **Launch Standard** is the authoritative design spec for the
+implementation pass; it converges with the Phase Ω audit. Its tiers ship as review PRs.
+Four architectural directives govern the pass — the durable choices that prevent rewrites:
+
+**14.1 · The Firm Identity Object.** Firm facts are *infrastructure, not copy*. One object
+(`drift.site` — `CONTACT_EMAIL`, `BOOKING_URL`, `FIRM_LOCATION`, `FIRM_SINCE`, `FIRM_CRD`,
+`FIRM_CUSTODIAN`, disclosure links) is the single source every surface inherits — the
+firm-anchor band, JSON-LD, footers, the eventual inquiry / CPA-invitation / correspondence
+flows. It matures toward a full identity object (name · founded · location · registration ·
+disclosure links · custodian · contact endpoints); every fact is one-command-flippable and
+renders *only when confirmed* (the honesty rule). Never scatter a firm fact as a literal.
+
+**14.2 · One invitation per page.** One action, primary-styled once, at the end; every
+other pointer is a quiet text link. The nav's "Start a conversation" is chrome, not a
+second ask. No page reads as SaaS lead-gen with competing conversion paths.
+
+**14.3 · The Atlas is a research-institution layer — decision architecture, not SEO.** The
+moat is not information (there are thousands of tax sites); it is *decision architecture*.
+The canonical `{state, edition}` spine models a reasoning chain, and every rendering
+inherits it:
+
+```
+State environment → Household impact → Planning considerations → Decision framework → Action register
+```
+
+One data model; state pages, the comparison spread, the Crossing Brief, PDF/client
+artifacts, and future annual editions all render from it — no duplicated logic. The Atlas
+answers *"how does this place change my wealth system?"*, never merely *"what is the rate
+in Texas?"* Reserve `/atlas/2026/…` URLs so each edition is citable forever. **Do not
+optimize the Atlas for keyword/page-count expansion.**
+
+**14.4 · Plates & Exhibits — one archive language.** Every figure is a numbered artifact:
+**Plate** = schematic / diagram / map; **Exhibit** = table / chart of figures. Roman
+numerals, **numbered from I per page** — a page must never open at "Exhibit 3." Anatomy:
+eyebrow number (`PLATE I`) → serif title with period → the figure → caption; data exhibits
+add `METHOD · SOURCE · AS OF` rows. This is what pushes Driftwood from "blog" to "research
+institution."
+
+**The standing rule for the whole pass — interaction over quiet.** Where making something
+look more editorial competes with a genuinely useful interaction, **preserve the
+interaction.** The goal is *institutional software* — McKinsey research publication + family
+office operating system, not a luxury magazine. Editorial refinement comes from **hierarchy
+and typography, never from removing capability** (state selectors, comparisons, saved state,
+expandable methodology, calculators, transitions, cross-links all stay). The interaction is
+the proof that this is software; improve it (tap parity, keyboard, responsive, transitions)
+rather than flatten it.

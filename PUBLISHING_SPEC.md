@@ -632,3 +632,58 @@ and typography, never from removing capability** (state selectors, comparisons, 
 expandable methodology, calculators, transitions, cross-links all stay). The interaction is
 the proof that this is software; improve it (tap parity, keyboard, responsive, transitions)
 rather than flatten it.
+
+---
+
+## 15 · The canonical `{state, edition}` spine — implementation design
+
+The architecture map (built from the current `statemap.py` / `statepage.py` / `taxlab.py` /
+`leakage.py` / `dw-context.js`) resolves §14.3 into one buildable model. The rule is a single
+source of truth: every surface *projects* from the spine; nothing re-authors a fact.
+
+**15.1 · The record.** One edition-scoped record per jurisdiction, assembled in a new
+`src/drift/atlas.py`; `tax.STATE_RATES`, `statemap._INCOME/_ESTATE/_STEPUP`,
+`taxlab.state_estate`, and the JS `dw-context.STATES` all become projections of it.
+
+```
+StateEdition = { code, edition:"2026", name, as_of_law, last_reviewed, changelog,
+  environment:   {cg, marriage, estate, muni, qsbs, loss, stepup, alpha}   # LAYER 1 — exists today
+  impact:        {inputs:[state,bracket,portfolio], model_ref}             # LAYER 2 — household impact
+  considerations:[{dimension, trigger, note, applies_when}]                # LAYER 3 — planning
+  framework:     {signals:{estate_pressure, income_pressure, mobility_value}}  # LAYER 4 — decision
+  actions:       [{step, owner, dimension, decision_ref}]                   # LAYER 5 — action register
+}
+```
+
+The five keys are the reasoning chain of §14.3 made into data. Layers 2–5 are structured
+lists/dicts (not prose): renderers walk them. `considerations` supersedes the hand-authored
+`statepage._STATE_CONTEXT`, each entry keyed to the `environment` dimension that produced it
+(auditable, no drift). `framework.signals` is what the comparison spread and Crossing Brief
+diff across two states. `actions` is the generated form of the `case-moving-states` decision
+ripple.
+
+**15.2 · Editions.** Replace the three module globals (`AS_OF_LAW`, `LAST_REVIEWED`,
+`_CHANGELOG`) with an `EDITIONS` registry and `CURRENT_EDITION`. `build_statemap(edition=…)`
+and `_state_record(code, edition=…)` gain a defaulted parameter — current callers untouched.
+Each edition freezes its snapshot so `/atlas/2026/…` stays citable after 2027 lands.
+
+**15.3 · URLs.** Add edition-scoped canonical paths **alongside** today's flat slugs (flat
+slugs stay as canonical aliases — no SEO/link breakage): `/atlas/2026/california/`,
+`/atlas/2026/compare/california-texas/`, `/atlas/2026/crossing/illinois-texas/`, `/atlas/`
+→ current edition. `render_sitemap` emits both.
+
+**15.4 · Duplication to collapse (single canonical source each).** State income / cap-gains
+rate (numeric canonical, `rate_display` derived — `tax.STATE_RATES` and `statemap._INCOME`
+currently *disagree*, a correctness bug to fix under content authority); estate regime +
+exemption + IL curve (fold `taxlab.state_estate`, the `il_*` constants, and the hand-typed
+`workspace.html` `IL_AG` mirror into one estate block, injected as data); basis step-up;
+state names ↔ abbrev; and the state-code list (locked now by `tests/test_drift_atlas.py`).
+
+**15.5 · Build sequence** (each an independent, interaction-preserving review PR; all 21
+catalogued Atlas interactions survive — refinement from hierarchy/typography, never removal):
+(1) lock the enumerations [done]; (2) collapse income rate to one number; (3) collapse estate
+facts; (4) edition scoping, backward-compatible; (5) reserve `/atlas/2026/` URLs; (6)
+`atlas.py` with the `StateEdition` shape (environment layer); (7) household-impact layer; (8)
+considerations layer; (9) decision-framework + comparison spread; (10) action register +
+Crossing Brief. **Steps 2–3 change contested tax facts and steps 8–10 introduce planning
+content — both require the RIA principal's authority; the engine (1, 4–6) is built first.**

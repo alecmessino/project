@@ -145,41 +145,48 @@ COORDINATION_PRIORITIES = [
     {"id": "residency_planning", "title": "Residency & domicile", "domain": "Residency", "coordinate_with": "advisor + CPA",
      "trigger": ("mobility_value", "moderate"), "affected_dimensions": ["cg", "estate"], "priority": 1,
      "related_signals": ["mobility_value"], "related_actions": ["confirm_domicile"],
-     "rationale": "Whether — and how — a change of domicile is worth pursuing, and the facts (days, home, ties) that make it real rather than nominal."},
+     "rationale": "Whether — and how — a change of domicile is worth pursuing, and the facts (days, home, ties) that make it real rather than nominal.",
+     "crossing_question": "Which domicile facts — days present, primary home, the ties that follow you — will substantiate the move if a former state examines it?"},
     {"id": "estate_structure", "title": "Estate structure", "domain": "Estate", "coordinate_with": "estate attorney",
      "trigger": ("estate_exposure", "high"), "affected_dimensions": ["estate"], "priority": 1,
      "related_signals": ["estate_exposure"], "related_actions": ["review_estate_titling"],
-     "rationale": "Whether the state's estate exposure warrants credit-shelter / QTIP titling or lifetime gifting to move value below the state threshold."},
+     "rationale": "Whether the state's estate exposure warrants credit-shelter / QTIP titling or lifetime gifting to move value below the state threshold.",
+     "crossing_question": "Does the existing estate plan still assume the prior state's exemption and rate — and should any trust now be governed elsewhere?"},
     {"id": "basis_titling", "title": "Asset titling for step-up", "domain": "Estate", "coordinate_with": "estate attorney",
      "trigger": ("basis_coordination", "moderate"), "affected_dimensions": ["stepup"], "priority": 2,
      "related_signals": ["basis_coordination"], "related_actions": ["set_basis_titling"],
-     "rationale": "Titling assets to capture the fullest basis step-up the marital-property regime allows at the first death."},
+     "rationale": "Titling assets to capture the fullest basis step-up the marital-property regime allows at the first death.",
+     "crossing_question": "Is the household titled to capture the fullest first-death step-up the new marital-property regime allows?"},
     {"id": "harvest_coordination", "title": "Loss harvesting", "domain": "Portfolio", "coordinate_with": "advisor + CPA",
      "trigger": ("harvest_leverage", "moderate"), "affected_dimensions": ["cg", "loss"], "priority": 2,
      "related_signals": ["harvest_leverage"], "related_actions": ["set_harvest_cadence"],
-     "rationale": "Setting a harvesting cadence that captures the state rate a banked loss offsets, sequenced against the state's loss-carryforward rules."},
+     "rationale": "Setting a harvesting cadence that captures the state rate a banked loss offsets, sequenced against the state's loss-carryforward rules.",
+     "crossing_question": "Does the harvesting cadence still fit the new state's rate and loss-carryforward rules?"},
     {"id": "asset_location", "title": "Asset location", "domain": "Portfolio", "coordinate_with": "advisor",
      "trigger": ("rate_pressure", "low"), "affected_dimensions": ["cg"], "priority": 3,
      "related_signals": ["rate_pressure"], "related_actions": ["place_sleeves"],
-     "rationale": "Placing the high-turnover sleeve in tax-advantaged accounts so the state's rate falls on the least of the household's realized gains."},
+     "rationale": "Placing the high-turnover sleeve in tax-advantaged accounts so the state's rate falls on the least of the household's realized gains.",
+     "crossing_question": "Does the investment policy statement still assume the prior tax environment when it places the high-turnover sleeve?"},
 ]
 
 # ── Layer 5 · ACTION REGISTER — sequenced next steps, each edged to a coordination priority ────────
+# `crossing_phase` sequences an action relative to a relocation (before · during · after the move) —
+# structured timing the Crossing Brief reads; state pages and the Comparison ignore it.
 ACTIONS = [
     {"id": "confirm_domicile", "title": "Model domicile alternatives", "owner": "advisor", "priority_ref": "residency_planning",
-     "related_signals": ["mobility_value"],
+     "related_signals": ["mobility_value"], "crossing_phase": "before",
      "step": "Model the after-tax and estate outcome of the current vs a lower-tax domicile, and list the domicile facts to establish before any move."},
     {"id": "review_estate_titling", "title": "Review estate titling", "owner": "estate attorney", "priority_ref": "estate_structure",
-     "related_signals": ["estate_exposure"],
+     "related_signals": ["estate_exposure"], "crossing_phase": "after",
      "step": "Review titling and the credit-shelter / gifting options against the state estate threshold; quantify the exposure at the household's net worth."},
     {"id": "set_basis_titling", "title": "Set basis titling", "owner": "estate attorney", "priority_ref": "basis_titling",
-     "related_signals": ["basis_coordination"],
+     "related_signals": ["basis_coordination"], "crossing_phase": "after",
      "step": "Title (or elect the trust) to capture the fullest first-death basis step-up the regime allows."},
     {"id": "set_harvest_cadence", "title": "Set harvesting cadence", "owner": "advisor", "priority_ref": "harvest_coordination",
-     "related_signals": ["harvest_leverage"],
+     "related_signals": ["harvest_leverage"], "crossing_phase": "after",
      "step": "Set the annual loss-harvesting cadence and confirm it clears the state's carryforward rules."},
     {"id": "place_sleeves", "title": "Place the sleeves", "owner": "advisor", "priority_ref": "asset_location",
-     "related_signals": ["rate_pressure"],
+     "related_signals": ["rate_pressure"], "crossing_phase": "after",
      "step": "Locate the high-turnover sleeve into tax-advantaged accounts and confirm the taxable book is the low-turnover core."},
 ]
 
@@ -232,7 +239,8 @@ def build_coordination(ctx: _Ctx) -> list[dict]:
                         "title": p["title"], "domain": p["domain"], "coordinate_with": p["coordinate_with"],
                         "priority": p["priority"], "rationale": p["rationale"],
                         "affected_dimensions": p["affected_dimensions"], "related_signals": p["related_signals"],
-                        "related_actions": p["related_actions"], "citations": ctx.citations_for(p["affected_dimensions"])})
+                        "related_actions": p["related_actions"], "crossing_question": p["crossing_question"],
+                        "citations": ctx.citations_for(p["affected_dimensions"])})
     return sorted(out, key=lambda x: x["priority"])
 
 
@@ -241,7 +249,7 @@ def build_actions(ctx: _Ctx, active_priority_ids: set[str]) -> list[dict]:
     priority and the signals that drove them, in registry order."""
     return [{"node_id": ctx.node_id("action", a["id"]), "id": a["id"], "kind": "action", "title": a["title"],
              "owner": a["owner"], "references": a["priority_ref"], "related_signals": a["related_signals"],
-             "step": a["step"]}
+             "crossing_phase": a["crossing_phase"], "step": a["step"]}
             for a in ACTIONS if a["priority_ref"] in active_priority_ids]
 
 

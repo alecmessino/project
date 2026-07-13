@@ -31,18 +31,32 @@ import time
 
 from .leakage import STATE_ALPHA, STATE_NAMES
 
-# ── Provenance: what makes the Atlas a citable reference rather than a pretty page ─────────────────
-# The law year the content reflects, the date a human last reviewed it, and a short changelog of what
-# moved. The build timestamp (below) is a code artifact and is NOT a legal-currency claim — these are.
-AS_OF_LAW = "2025 tax-year law"
-LAST_REVIEWED = "2026-07-07"
-_CHANGELOG = [
-    ("2026-07-07", "First law-review date and honest per-cell source labeling; primary-source citations "
-                   "verified for Illinois, California, New York, Texas, and Florida (more in progress)."),
-    ("2025", "Washington's 7% (+2.9%) excise on long-term capital gains reflected (enacted 2022)."),
-    ("2025", "New Hampshire's Interest & Dividends tax reflected as fully repealed, effective 2025."),
-    ("2025", "Illinois estate-tax detail tracks the pending SB 2970 as of the review date."),
-]
+# ── Editions: the Atlas is a citable reference, versioned by tax-year edition ───────────────────────
+# Each annual edition carries its own provenance — the law year the content reflects, the date a human
+# last reviewed it, and a changelog of what moved — so /atlas/2026/ stays frozen and citable after a
+# later edition lands. The build timestamp (in build_statemap) is a code artifact and is NOT a legal-
+# currency claim; the edition provenance is. When 2027 is compiled it is added here with its own
+# snapshot; today there is one edition.
+EDITIONS = {
+    "2026": {
+        "as_of_law": "2025 tax-year law",
+        "last_reviewed": "2026-07-07",
+        "changelog": [
+            ("2026-07-07", "First law-review date and honest per-cell source labeling; primary-source citations "
+                           "verified for Illinois, California, New York, Texas, and Florida (more in progress)."),
+            ("2025", "Washington's 7% (+2.9%) excise on long-term capital gains reflected (enacted 2022)."),
+            ("2025", "New Hampshire's Interest & Dividends tax reflected as fully repealed, effective 2025."),
+            ("2025", "Illinois estate-tax detail tracks the pending SB 2970 as of the review date."),
+        ],
+    },
+}
+CURRENT_EDITION = "2026"
+
+# Backward-compatible aliases — the current edition's provenance as flat module globals, so existing
+# importers (statepage.py, taxlab.py) keep working unchanged while new callers pass an explicit edition.
+AS_OF_LAW = EDITIONS[CURRENT_EDITION]["as_of_law"]
+LAST_REVIEWED = EDITIONS[CURRENT_EDITION]["last_reviewed"]
+_CHANGELOG = EDITIONS[CURRENT_EDITION]["changelog"]
 
 # ── Cartogram layout (our own tile grid; 50 states + DC + a territories strip) ───────────────────
 TILES = {
@@ -414,17 +428,21 @@ def _state_record(code):
     return _attach_citations(code, {k: v for k, v in rec.items() if v is not None})
 
 
-def build_statemap() -> dict:
-    """Assemble the State Tax Map state: dimension metadata + per-state records + cartogram layout."""
+def build_statemap(edition: str = CURRENT_EDITION) -> dict:
+    """Assemble the State Tax Map state for one edition: dimension metadata + per-state records +
+    cartogram layout. Defaults to the current edition, so existing callers are unchanged."""
+    ed = EDITIONS[edition]
     codes = list(TILES)
     states = {c: _state_record(c) for c in codes}
     return {
         "header": {
             "generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
-            "asof": f"Reflects {AS_OF_LAW}; last reviewed {LAST_REVIEWED}. Compiled from state statutes "
-                    f"and revenue-department sources.",
-            "as_of_law": AS_OF_LAW, "last_reviewed": LAST_REVIEWED, "changelog": _CHANGELOG,
+            "edition": edition,
+            "asof": f"Reflects {ed['as_of_law']}; last reviewed {ed['last_reviewed']}. Compiled from state "
+                    f"statutes and revenue-department sources.",
+            "as_of_law": ed["as_of_law"], "last_reviewed": ed["last_reviewed"], "changelog": ed["changelog"],
         },
+        "edition": edition,
         "dimensions": DIMENSIONS,
         "tiles": TILES,
         "territories": sorted(TERRITORIES),

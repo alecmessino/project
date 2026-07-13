@@ -14,7 +14,12 @@ lets the de-duplication proceed one module at a time without silent drift.
 import re
 import pathlib
 
-from drift.statemap import TILES, TERRITORIES
+import pytest
+
+from drift.statemap import (
+    TILES, TERRITORIES, EDITIONS, CURRENT_EDITION,
+    AS_OF_LAW, LAST_REVIEWED, _CHANGELOG, build_statemap,
+)
 from drift.leakage import STATE_NAMES, STATE_ALPHA
 from drift.tax import STATE_RATES
 from drift.statepage import STATE_PAGE_CODES
@@ -67,3 +72,35 @@ def test_the_household_context_js_state_list_matches_the_python_canon():
         f"dw-context.js STATES diverges from the canon: "
         f"missing={CANON - js_codes}, extra={js_codes - CANON}"
     )
+
+
+# ── Edition scoping ─────────────────────────────────────────────────────────────────────────────
+# The Atlas is versioned by tax-year edition; each carries its own provenance so /atlas/2026/ stays
+# citable forever. These guard the backward-compatible scaffold: the flat module aliases must equal
+# the current edition, and the default build must reproduce today's output.
+
+def test_the_flat_provenance_aliases_track_the_current_edition():
+    ed = EDITIONS[CURRENT_EDITION]
+    assert AS_OF_LAW == ed["as_of_law"]
+    assert LAST_REVIEWED == ed["last_reviewed"]
+    assert _CHANGELOG == ed["changelog"]
+
+
+def test_default_build_uses_the_current_edition_and_stamps_it():
+    default = build_statemap()
+    explicit = build_statemap(CURRENT_EDITION)
+    assert default["edition"] == CURRENT_EDITION
+    assert default["header"]["edition"] == CURRENT_EDITION
+    # Provenance carried from the edition registry, unchanged from the flat aliases.
+    assert default["header"]["as_of_law"] == AS_OF_LAW
+    assert default["header"]["last_reviewed"] == LAST_REVIEWED
+    assert default["header"]["changelog"] == _CHANGELOG
+    # Default and explicit-current agree on everything except the fresh build timestamp.
+    for d in (default, explicit):
+        d["header"] = {k: v for k, v in d["header"].items() if k != "generated"}
+    assert default == explicit
+
+
+def test_unknown_edition_is_a_hard_error():
+    with pytest.raises(KeyError):
+        build_statemap("1999")

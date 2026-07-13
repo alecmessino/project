@@ -494,7 +494,22 @@ that this institution already operates. The standing directives, in priority ord
    archive*, never firm history. `v1.1 → v1.2` works; "March 2022 committee amendment"
    does not — no date may precede what Driftwood can stand behind. All sample dates stay
    inside the current fiction (2026), versions stay shallow, and every page keeps its
-   illustrative-sample labeling.
+   illustrative-sample labeling. The 2026 onboarding rebase also means nothing has to be
+   rewritten later: when real history exists, it publishes as itself.
+   Standing rules for the memory layer, from review:
+   - **Understated to the point of discovery.** Legal-reporter styling — tiny caps,
+     hairline rules, almost invisible. Never Notion/Confluence/GitHub. Readers should
+     *discover* the apparatus, not be instructed to use it.
+   - **Authority.** Archival documents may carry one more field distinguishing governing
+     material from explanatory material: *Current governing document · Primary reference ·
+     Operational guidance.* It quietly says: this document is authoritative, not just
+     informative.
+   - **"Reviewed," not just "Draws on."** The Annual Review's citation block reads as a
+     review inventory — each record it read, with its version (Decision Register
+     DR-001–005 · Operating Manual rev. 06 · …).
+   - **Principles, not widgets.** Not every page carries every component (the Opportunity
+     Register carries no Related block because its closing section already is one).
+     Consistency of principles, not consistency of widgets.
 7. **Introduce time.** *Published July 2026 · Revised September 2026 · Last reviewed ·
    Current edition · First published.* Little stamps create permanence. (The taxlab
    exhibit plate's "As of · v1.0 · reviewed quarterly" is the pattern to extend.)
@@ -518,15 +533,24 @@ Proof of Practice moves ahead of Tools/QA because its artifacts inform both):**
 2. **Record/Reference institutional-memory pass** — design approved: edition lines,
    amendment history, № citations, Draws on / Referenced by / Related / Supersedes /
    Status, archival integrity (frozen mark, one household, consistent 2026 dates).
-3. **Proof of practice:** the sample-document shelf — Sample Annual Review · Sample
-   Operating Manual · Sample Investment Committee Memo · Sample Decision Register ·
-   Sample Transition Plan (all fictional, all labeled).
+3. **Proof of practice:** the sample-document shelf, in trust order (the Annual Review,
+   Manual, and Decision Register already exist as samples):
+   1. **Investment Committee Memo** — the most institution-building artifact.
+   2. **Transition Plan** — answers "what happens if I hire you?"
+   3. **Meeting Agenda** — answers "what does it feel like to work together?"
+   4. **Withdrawal Memo** — demonstrates judgment.
+   All fictional (Harris), all labeled, all in the Record grammar. Before the freeze, one
+   more page joins them: **"How we work together"** — literally that title, not "Process,"
+   not "Experience": who does what · cadence · reviews · specialists · communication ·
+   decisions · documentation · responsibilities. Five minutes to read. It closes the last
+   gap: the site shows how Driftwood thinks; this shows what being a client feels like.
 4. **Tools pass** (leakage · statemap · score), with the cleverness rewrites.
 5. **Front-to-back QA pass** (Phases B + Y): consistency, loading rhythm, typography,
    spacing, disclosures, mobile, interaction polish — plus the "less Driftwood" audit.
 6. **The human story, earlier + boutique positioning** (principal-provided language).
-7. **Public Site Constitution v1**, carrying the freeze rules (§12) and the filter:
-   **"The website is not the product. It is the public record of the institution."**
-   Every proposed feature is asked: does this belong in the public record, or in the
-   operating system? If the latter, it goes to the Advisor Workspace, never the site.
+7. **Public Site Constitution v1**, carrying the freeze rules (§12) and the filter,
+   strengthened per review: **"The public website records how Driftwood thinks. The work
+   itself happens elsewhere."** Every proposed feature is asked: does this belong in the
+   public record, or in the operating system? If the latter, it goes to the Advisor
+   Workspace, never the site.
 8. **Freeze at v1** and move the center of gravity to the Workspace.

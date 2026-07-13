@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>An Investment Committee Memo — a sample — Driftwood Capital</title>
+<meta name="description" content="A sample investment-committee memo: one decision — the concentrated-position exit — with the question, the alternatives weighed, the tax budget, and what would reopen it. The rationale of record behind a Decision Register entry. An illustrative sample for a fictional family. Not advice." />
+<link rel="canonical" href="https://alecmessino.github.io/project/ic-memo.html" />
+<link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Driftwood Capital" />
+<meta property="og:title" content="An Investment Committee Memo — a sample" />
+<meta property="og:description" content="One decision, in the form it is actually made: the question, the alternatives, the tax budget, and what would reopen it." />
+<meta property="og:url" content="https://alecmessino.github.io/project/ic-memo.html" />
+<meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="An Investment Committee Memo — a sample" />
+<meta name="twitter:description" content="One decision, in the form it is actually made: the question, the alternatives, the tax budget, and what would reopen it." />
+<meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
+<style>
+  /* Page-local scaffolding only: masthead type scale, section padding, and the navy close/colophon —
+     declared exactly as the sibling record pages declare them. Record components (frontmatter, stamp,
+     rec-head, archive-memory) live in the shared driftwood.css. */
+  :root{ --card:#fff; --on-dark:#e7ecf2; --on-dark-strong:#f1ede3; --on-dark-dim:#9aa3ae; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:16px/1.62 var(--sans);
+    letter-spacing:-.004em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1040px;margin:34px auto;padding:0 20px 72px}
+  .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
+  .inner{margin:0 7px 7px}
+
+  /* Masthead type scale */
+  .doc{padding:44px 44px 6px}
+  .masthead-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:14px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px, 2.6vw + 15px, 42px);line-height:1.06;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
+  .lede{font-family:var(--serif);font-size:18.5px;line-height:1.55;color:var(--dim);margin:0;max-width:60ch}
+  .lede b{color:var(--ink);font-weight:500}
+
+  /* Section padding */
+  .sec{padding:26px 44px 6px}
+  .sec p.body{font-size:14.5px;line-height:1.64;color:var(--body);max-width:72ch;margin:0 0 14px}
+  .sec p.body b{color:var(--ink);font-weight:500}
+
+  /* Alternatives — hairline-keyed list (typography + rule, not a box) */
+  .alts{list-style:none;margin:6px 0 4px;padding:0;display:flex;flex-direction:column;gap:14px}
+  .alts li{padding:2px 0 2px 18px;border-left:1px solid var(--line);max-width:74ch}
+  .alts .ak{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike);display:block;margin-bottom:6px}
+  .alts p{font-size:14px;line-height:1.6;color:var(--body);margin:0}
+  .alts p b{color:var(--ink);font-weight:500}
+
+  /* Ruled list (guardrails / reopeners) */
+  .ruleset{list-style:none;margin:8px 0 4px;padding:0;display:flex;flex-direction:column}
+  .ruleset li{padding:13px 0;border-bottom:1px solid var(--line2);font-size:14px;line-height:1.58;color:var(--body);max-width:76ch}
+  .ruleset li:first-child{border-top:1px solid var(--line2)}
+  .ruleset li b{color:var(--ink);font-weight:500}
+  .ruleset .rk{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-strike);margin-right:10px}
+
+  /* Navy close (mirrors the sibling records) */
+  .close{margin:40px 0 0;background:var(--navy);padding:40px 48px 34px}
+  .close .eyebrow{color:var(--accent-strike-soft)}
+  .close h2{font-family:var(--sans);font-weight:700;font-size:clamp(24px,2.4vw+13px,34px);line-height:1.1;letter-spacing:-.022em;color:var(--on-dark-strong);margin:0 0 16px;max-width:22ch}
+  .close p{font-family:var(--serif);font-size:17px;line-height:1.55;color:var(--on-dark-dim);margin:0 0 24px;max-width:60ch}
+  .close a{color:var(--accent-strike-soft);font-weight:500;text-decoration:none}
+  .close a:hover{text-decoration:underline}
+  .close .foliobar{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(233,229,219,.16);padding-top:14px}
+  .close .foliobar span{font-weight:500;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--on-dark-dim);font-variant-numeric:tabular-nums}
+
+  /* Colophon + disclosure */
+  .foot{margin:0;padding:20px 48px 34px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;line-height:1.65}
+  .foot .colophon{margin-bottom:8px}
+  .foot .note{display:block;color:var(--dim);font-weight:700;margin-bottom:4px}
+  .foot a{color:var(--muted)} .foot b{color:var(--muted)}
+
+  @media(max-width:640px){ .doc,.sec{padding-left:22px;padding-right:22px} .close,.foot{padding-left:22px;padding-right:22px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <div class="inner">
+    <nav class="dwnav" aria-label="Driftwood Capital">
+      <a class="brand" href="index.html" aria-label="Driftwood Capital — home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Capital</span></a>
+      <div class="dwnav-links">
+        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
+          <a href="about.html">Our Story</a>
+          <a href="principles.html">Philosophy</a>
+          <a href="inside.html">Operating&nbsp;System</a>
+          <a href="thesis.html">How We Invest</a>
+          <a href="howitworks.html">How It Works</a>
+          <a href="insights.html">Insights</a>
+          <a href="ledger.html">Research</a>
+        </span>
+        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
+          <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+          <a href="taxlab.html">After-Tax&nbsp;Review</a>
+          <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
+        </span>
+      </div>
+      <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>
+    </nav>
+    <div class="om-sections">
+      <a class="t" href="record.html">The Driftwood Record</a>
+      <a href="constitution.html">Constitution</a><span class="d">·</span><a href="capital-allocation.html">Capital Allocation</a><span class="d">·</span><a href="manual.html">The Manual</a><span class="d">·</span><a href="decision-register.html">Decision Register</a><span class="d">·</span><a href="opportunity-register.html">Opportunity Register</a><span class="d">·</span><a href="awor.html">Annual Review</a>
+    </div>
+
+    <!-- ── MASTHEAD / FRONT MATTER ── -->
+    <div class="doc">
+      <div class="masthead-top">
+        <div style="max-width:640px">
+          <div class="eyebrow">Sample work product · investment committee memo</div>
+          <h1>One decision, in the form it is actually made.</h1>
+          <p class="lede">Before anything is bought or sold, the decision is written: the question, the
+            alternatives, the tax budget, and what would prove it wrong. The committee is not a department —
+            it is <b>the room Driftwood convenes</b>: the adviser of record, the family, and the outside
+            specialists the decision touches. <b>This is an illustrative sample</b> for a fictional family.</p>
+        </div>
+        <div class="stamp">
+          <div class="t">Confidential</div>
+          <div class="s">Prepared for the Harris household</div>
+        </div>
+      </div>
+
+      <div class="frontmatter" style="margin-top:30px">
+        <div class="cell"><div class="k">Memo</div><div class="v tnum">IC 2026-02</div></div>
+        <div class="cell"><div class="k">Household</div><div class="v">The Harris household</div></div>
+        <div class="cell"><div class="k">Date</div><div class="v tnum">March 2026</div></div>
+        <div class="cell"><div class="k">Present</div><div class="v">Adviser of record · the family · outside CPA</div></div>
+        <div class="cell"><div class="k">Status</div><div class="v">Decided · implementation in progress</div></div>
+        <div class="cell"><div class="k">Authority</div><div class="v">Operational record</div></div>
+        <div class="cell"><div class="k">Recorded as</div><div class="v tnum">DR-003</div></div>
+      </div>
+    </div>
+
+    <!-- ── § I · THE QUESTION ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ I</span><span class="rt">The question before the committee</span></div>
+      <p class="body">The household's employer stock has grown into the largest single position on the balance
+        sheet — large enough that one company's fortunes now move the family's plan more than the rest of the
+        portfolio combined. Held, it carries single-name risk the market never pays the family to bear. Sold at
+        once, a low basis turns a risk decision into a tax event. <b>The question is not whether to reduce it.
+        It is how fast, at what tax cost, and into what.</b></p>
+    </div>
+
+    <!-- ── § II · ALTERNATIVES ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ II</span><span class="rt">Alternatives weighed</span></div>
+      <ul class="alts">
+        <li><span class="ak">Sell outright</span>
+          <p>Cuts the risk immediately and completely — at the maximum tax cost, realized in a single year and
+            stacked into the top brackets. Rejected: it solves the risk by creating the largest avoidable bill.</p></li>
+        <li><span class="ak">Hold and hedge</span>
+          <p>Collars and exchange funds defer the tax but add cost, complexity, and a counterparty — and the
+            family's real objective is fewer moving parts, not more. Rejected for this household; scored in the
+            firm's <a href="concentration.html">single-asset-risk guide</a>.</p></li>
+        <li><span class="ak">Sell on a schedule</span>
+          <p>A fixed multi-year exit, each year's sales sized to an agreed tax budget, lots chosen for basis,
+            proceeds redeployed under the <a href="capital-allocation.html">Capital Allocation Policy</a>.
+            Slower than an outright sale — but the risk falls every quarter, and the tax cost is a number the
+            family approved in advance. <b>Adopted.</b></p></li>
+      </ul>
+    </div>
+
+    <!-- ── § III · THE DECISION ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ III</span><span class="rt">The decision · guardrails</span></div>
+      <p class="body">Exit the position over <b>three years, on a schedule, not a signal</b> — no forecasts, no
+        waiting for a better price. Each year's tranche is sized to the tax budget agreed with the family's CPA;
+        lots are selected for basis; proceeds move into the tax-managed core under the policy's bands.</p>
+      <ul class="ruleset">
+        <li><span class="rk">Tax budget</span>Realized gains in any year stay inside the budget set at the
+          Operating Session — harvested losses elsewhere in the book extend it, they don't excuse exceeding it.</li>
+        <li><span class="rk">No timing</span>Tranches execute on the calendar. A rising price does not pause the
+          schedule; a falling one does not accelerate it beyond the budget.</li>
+        <li><span class="rk">Destination</span>Proceeds land in the policy's core allocation — never in a new
+          concentrated idea.</li>
+      </ul>
+    </div>
+
+    <!-- ── § IV · REOPENS IF ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ IV</span><span class="rt">What would reopen this</span></div>
+      <ul class="ruleset">
+        <li><span class="rk">Reopens if</span>Tax law changes the cost of the remaining tranches — the budget is
+          re-run, not assumed.</li>
+        <li><span class="rk">Reopens if</span>A liquidity need or the business sale changes what the proceeds are
+          for.</li>
+        <li><span class="rk">Reopens if</span>The position falls far enough that the remaining risk no longer
+          justifies the remaining tax cost.</li>
+      </ul>
+      <p class="body" style="margin-top:14px">The memo is the rationale of record: the Decision Register carries
+        the entry (<a href="decision-register.html">DR-003</a>), the <a href="manual.html">Operating Manual</a>
+        logs the implementation (rev. 02), and each Operating Session re-checks the triggers above.</p>
+
+      <div class="archive-memory">
+        <div class="blk"><div class="k">Related</div>
+          <p class="e"><a href="concentration.html">Single-asset risk</a> — the guide that scored the alternatives.</p>
+          <p class="e"><a href="capital-allocation.html">The Capital Allocation Policy</a> <span class="vv">Rev. 2</span> — the bands the proceeds deploy into.</p>
+        </div>
+        <div class="blk"><div class="k">Recorded as</div>
+          <p class="e"><a href="decision-register.html">Decision Register</a> <span class="vv">DR-003</span> — sell down the concentrated position on a schedule, not a signal.</p>
+          <p class="e"><a href="manual.html">Operating Manual</a> <span class="vv">rev. 02</span> — concentration transition begun, March 2026.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CLOSE ── -->
+    <div class="close">
+      <div class="eyebrow">The point</div>
+      <h2>Decisions are written before they are made.</h2>
+      <p>A memo like this exists for every structural decision in the household — so that five years from now,
+        the question "why did we do this?" has an answer with a date on it. That is the difference between advice
+        and an operating record.</p>
+      <p>Read it in context: <a href="decision-register.html">the Decision Register</a> carries the entry ·
+        <a href="manual.html">the Operating Manual</a> keeps the book · <a href="record.html">the Driftwood
+        Record</a> holds the whole shelf.</p>
+      <div class="foliobar">
+        <span>§ IC Memo · 2026-02 · fol. 1</span>
+        <span>The Harris household · est. 2026</span>
+      </div>
+    </div>
+
+    <!-- ── COLOPHON + DISCLOSURE ── -->
+    <div class="foot">
+      <div class="colophon">Set in Satoshi &amp; Erode · a concept for an investment-decision memo · illustrative household, not a real client</div>
+      <span class="note">Illustrative and educational — not investment, tax, or legal advice.</span>
+      The Harris household, the position, and the figures above are hypothetical, drawn to show the form of the
+      memo. Nothing here is a recommendation to buy, sell, or hold any security. Driftwood coordinates with your
+      CPA and attorney; it does not provide tax or legal advice. Driftwood Capital is a <b>registered investment
+      adviser</b>; Form ADV and Form CRS are available at
+      <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.
+    </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

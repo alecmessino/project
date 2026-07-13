@@ -15,7 +15,9 @@ from __future__ import annotations
 from pathlib import Path
 
 from .statemap import AS_OF_LAW, LAST_REVIEWED, CURRENT_EDITION
-from .statepage import _esc, _ABS, NAV_ABS, PLAUSIBLE, DISCLOSURE, _HEAD_CSS, _provenance_block
+from .statepage import (
+    _esc, _ABS, NAV_ABS, PLAUSIBLE, DISCLOSURE, _HEAD_CSS, _provenance_block, _process_bar, MEETING_URL,
+)
 from .site import BASE_URL, firm_anchor_html
 from . import household as _hh
 
@@ -169,6 +171,7 @@ def render_household_html(rec: dict, edition: str = CURRENT_EDITION) -> str:
 <div class="sheet">
   <div class="frame">
     {NAV_ABS}
+    {_process_bar("coordinate", edition)}
     <div class="hd">
       <div class="eyebrow">The State Atlas · Household Record</div>
       <h1>{_esc(name)}.</h1>
@@ -194,6 +197,14 @@ def render_household_html(rec: dict, edition: str = CURRENT_EDITION) -> str:
     <div class="sec"><div class="sh">Governing documents</div>
       <p class="lede" style="margin-bottom:8px">The standing documents that hold the family's operating rules — authored once, referenced here.</p>
       <div class="docrow">{docs}</div>
+    </div>
+    <div class="cta">
+      <div class="ctxt">
+        <div class="ch">This is how one household's system is coordinated.</div>
+        <div class="cd">Yours would begin the same way — as a standing record, not a folder. We start with your highest-value coordination opportunities.</div>
+      </div>
+      <a class="primary" href="{MEETING_URL}">Review your coordination opportunities with Driftwood →</a>
+      <a class="ghost" href="{_hh.household_index_url(edition)}">See another record</a>
     </div>
     <div class="principle"><b>Reference, not duplicate.</b> The Household Record is the institutional index and the permanent context for {_esc(name)}. Every summary above is a pointer; the linked artifact — the Atlas reasoning, the Crossing Brief, the Registers, the Annual Review — remains the single authoritative source. The Record never re-authors what those documents hold.</div>
     {_provenance_block()}
@@ -248,6 +259,7 @@ def render_household_index_html(edition: str = CURRENT_EDITION) -> str:
 <div class="sheet">
   <div class="frame">
     {NAV_ABS}
+    {_process_bar("coordinate", edition)}
     <div class="hd">
       <div class="eyebrow">The State Atlas · Household Record</div>
       <h1>Where a household's financial operating system lives.</h1>
@@ -258,6 +270,13 @@ def render_household_index_html(edition: str = CURRENT_EDITION) -> str:
     </div>
     <div class="sec"><div class="sh">Sample operating files</div></div>
     <div class="hhcards" style="margin:2px 40px 0">{chr(10).join(cards)}</div>
+    <div class="cta">
+      <div class="ctxt">
+        <div class="ch">If your household spans more than one state, entity, or advisor, this is the file we build first.</div>
+        <div class="cd">It is where the reasoning becomes personal — your standing decisions, coordination priorities, and the specialists who hold each.</div>
+      </div>
+      <a class="primary" href="{MEETING_URL}">Review your coordination opportunities with Driftwood →</a>
+    </div>
     <div class="principle" style="margin-top:16px"><b>Reference, not duplicate.</b> A Household Record is an index and standing context — it points to the Atlas reasoning, the Crossing Brief, the Registers, and the Annual Review, each of which remains the single authoritative source.</div>
     {_provenance_block()}
     {DISCLOSURE}

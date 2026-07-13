@@ -41,6 +41,14 @@
     box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
   .bcrumb{padding:12px 40px 0;font-size:11.5px;color:var(--muted)}
   .bcrumb a{color:var(--brass);text-decoration:none} .bcrumb a:hover{text-decoration:underline}
+  /* The narrative process spine — where you are in the coordination journey (not the page tree). */
+  .procbar{display:flex;flex-wrap:wrap;align-items:center;gap:5px 9px;padding:13px 40px 2px;
+    font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+  .procbar a{color:var(--muted);text-decoration:none;padding:2px 0}
+  .procbar a.on{color:var(--accent-strike);box-shadow:inset 0 -2px 0 var(--accent-strike)}
+  .procbar a:hover{color:var(--ink)}
+  .procbar i{color:var(--ghost-line);font-weight:400}
+  @media(max-width:600px){.procbar{padding-left:18px;padding-right:18px;font-size:9px;letter-spacing:.1em}}
   .hd{padding:22px 40px 6px}
   .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:10px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px, 2.4vw + 19px, 36px);line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin:0 0 10px}
@@ -219,6 +227,7 @@
   </div>
   <a class="dwnav-cta" href="https://alecmessino.github.io/project/index.html#conversation">Start a conversation</a>
 </nav>
+    <nav class="procbar" aria-label="Where you are in the coordination process"><a class="" href="https://alecmessino.github.io/project/atlas/2026/">Environment</a><i aria-hidden="true">→</i><a class="" href="https://alecmessino.github.io/project/atlas/2026/compare/">Compare</a><i aria-hidden="true">→</i><a class="on" href="https://alecmessino.github.io/project/atlas/2026/crossing/" aria-current="step">Plan</a><i aria-hidden="true">→</i><a class="" href="https://alecmessino.github.io/project/atlas/2026/household/">Coordinate</a><i aria-hidden="true">→</i><a class="" href="https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting">Review</a></nav>
     <div class="hd">
       <div class="eyebrow">The State Atlas · Crossing Brief</div>
       <h1>What changes when a household crosses state lines.</h1>
@@ -275,13 +284,13 @@
 <li>Should the timing of charitable gifts or large realizations shift across the move?</li></ol></div>
     <div class="cta">
       <div class="ctxt">
-        <div class="ch">Read either environment in full.</div>
-        <div class="cd">Each state's Atlas page carries every dimension and the full reasoning chain; the Comparison weighs the two side by side.</div>
+        <div class="ch">This brief becomes one entry in a household's operating file.</div>
+        <div class="cd">The Household Record binds the move to the family's standing decisions, coordination priorities, and advisors — the place this brief is coordinated, not filed.</div>
       </div>
-      <a class="primary" href="https://alecmessino.github.io/project/atlas/2026/arizona/">Arizona Atlas →</a>
-      <a class="ghost" href="https://alecmessino.github.io/project/atlas/2026/compare/arizona-vs-california/">Compare the two →</a>
+      <a class="primary" href="https://alecmessino.github.io/project/atlas/2026/household/">Prepare this as your Household Record →</a>
+      <a class="ghost" href="https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting">Start a conversation</a>
     </div>
-    <div class="rel">Other routes: <a href="https://alecmessino.github.io/project/atlas/2026/crossing/">the Crossing Brief index →</a></div>
+    <div class="rel">Read either environment in full: <a href="https://alecmessino.github.io/project/atlas/2026/california/">California Atlas →</a> · <a href="https://alecmessino.github.io/project/atlas/2026/arizona/">Arizona Atlas →</a> · <a href="https://alecmessino.github.io/project/atlas/2026/compare/arizona-vs-california/">weigh the two →</a> · <a href="https://alecmessino.github.io/project/atlas/2026/crossing/">other crossings →</a></div>
     <p class="asofline">State law reflects <b>2025 tax-year law</b>; last reviewed <b>2026-07-07</b>. Every classification is a summary of state law; where a primary-source citation has been verified, it is linked on the card.</p><details class="chlog"><summary>What changed</summary><ul><li><b>2026-07-07</b> — First law-review date and honest per-cell source labeling; primary-source citations verified for Illinois, California, New York, Texas, and Florida (more in progress).</li>
 <li><b>2025</b> — Washington&#x27;s 7% (+2.9%) excise on long-term capital gains reflected (enacted 2022).</li>
 <li><b>2025</b> — New Hampshire&#x27;s Interest &amp; Dividends tax reflected as fully repealed, effective 2025.</li>

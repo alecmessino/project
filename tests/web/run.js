@@ -127,6 +127,11 @@ function staticFlow() {
     leadstate_mobile_css: t.includes('body.on-implementation .leadstate'),
     ui_tokens: shim.cssText().includes('--s4:16px') && shim.cssText().includes('--t-mid'),   // tokens now live in driftwood.css
     reduced_motion: t.includes('prefers-reduced-motion'),
+    // Mobile nav disclosure: collapse the running index behind a control so the hero/CTA lead the
+    // first phone screen. Styling gated on .dwnav--menu (JS-set) so JS-off keeps the full index.
+    mobile_nav_css: shim.cssText().includes('.dwnav-toggle') && shim.cssText().includes('.dwnav--menu.dwnav--open'),
+    mobile_nav_wired: (function () { const j = shim.dwContextText();
+      return j.includes('dwnav-toggle') && j.includes('aria-expanded') && j.includes('dwnav--menu'); })(),
   };
 }
 

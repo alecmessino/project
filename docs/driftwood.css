@@ -239,6 +239,27 @@ details[open] > summary::after{ transform:rotate(90deg); }
   font-size:12.5px; line-height:1.55; color:var(--dim); }
 .research-banner b{ color:var(--body); font-weight:600; }
 
+/* ── The Core Alpha research series rail — a bound-volume index so no exhibit dead-ends ────────
+   One strip at the foot of every research page: the four numbered pieces, the current one
+   marked, the rest linked. Adjacency is the prev/next — from any piece the reader can reach the
+   whole series. Shared here; the .series-rail class is used only on the research exhibits. */
+.series-rail{ margin:34px 0 4px; padding-top:18px; border-top:1px solid var(--line); }
+.series-rail .sr-title{ display:block; font-family:var(--sans); font-size:10px; font-weight:600;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+.series-rail ol{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:1px;
+  background:var(--line); border:1px solid var(--line); }
+.series-rail li{ flex:1 1 180px; background:var(--card,#fff); padding:12px 15px;
+  font-family:var(--sans); font-size:13px; line-height:1.35; color:var(--ink); }
+.series-rail li i{ display:block; font-style:normal; font-size:10px; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--muted);
+  font-variant-numeric:tabular-nums; margin-bottom:3px; }
+.series-rail a{ display:block; color:var(--brass,#2c5878); text-decoration:none; }
+.series-rail a:hover{ text-decoration:underline; text-underline-offset:2px; }
+.series-rail li[aria-current="page"]{ background:var(--soft); font-weight:600;
+  box-shadow:inset 2px 0 0 var(--brass,#2c5878); }
+.series-rail li[aria-current="page"] i{ color:var(--brass,#2c5878); }
+@media(max-width:620px){ .series-rail li{ flex-basis:100%; } }
+
 /* ── One-click PDF proposal / CPA brief (window.print → Save as PDF) ─────────────────────────
    A clean, multi-page print template: strip the app chrome and interactive controls, keep the
    rendered analysis (placement, transition before/after, decision tree), and append formal

@@ -15,6 +15,13 @@ from pathlib import Path
 
 from .firm_models import models_state
 from .tax import STATE_RATES, gain_profile
+from .state_facts import ESTATE as _ESTATE_FACTS, IL_AG_CURVE
+
+# Death-tax environment by state, projected from the canonical estate table (drift.state_facts). IL is
+# excluded — it is the precise engine (il_estate_tax), not a neutral card — and NYC is overlaid (a NYC
+# resident faces NY's estate tax). One source, no separate estate membership.
+_STATE_ESTATE = {code: e["regime"] for code, e in _ESTATE_FACTS.items() if code != "IL"}
+_STATE_ESTATE["NYC"] = "estate"
 
 # A few representative federal points (ordinary rate / LT cap-gains rate / NIIT).
 FED_BRACKETS = [
@@ -62,9 +69,9 @@ ASSUMPTIONS = {
         "fed_exemption_indiv": 15_000_000,   # 2026 permanent federal exemption (individual)
         "fed_exemption_couple": 30_000_000,  # couple (portable)
         "fed_rate": 0.40,                    # federal top rate
-        "il_exclusion": 4_000_000,           # Illinois exclusion (no portability)
-        "il_hb2601_exclusion": 8_000_000,    # proposed HB2601 — double the exclusion
-        "il_top_rate": 0.16,                 # Illinois top marginal rate
+        "il_exclusion": _ESTATE_FACTS["IL"]["exemption_usd"],   # canonical IL exclusion (no portability)
+        "il_hb2601_exclusion": 8_000_000,    # HB 2601 (to $8M) — stalled in Rules, not enacted; a what-if toggle
+        "il_top_rate": _ESTATE_FACTS["IL"]["top_rate"],         # canonical IL top marginal rate
         "default_individual": 3_000_000,
         "default_joint": 0,                  # individual-first; joint>0 unlocks the $30M portable exemption
         "default_trust": 1_000_000,
@@ -75,15 +82,13 @@ ASSUMPTIONS = {
         "estate_max": 30_000_000,
         "estate_step": 100_000,
         "trust_compression_top_threshold": 15_650,  # 2026 trust income hits the 37% bracket here
-        # Death-tax environment by state (Option 1): IL is modeled precisely (il_estate_tax); the
-        # states below get a neutral, non-fabricated card naming their environment and deferring the
-        # exact figure to the attorney; every other state has no state death tax ("none").
-        "state_estate": {
-            "WA": "estate", "OR": "estate", "MN": "estate", "MD": "both", "MA": "estate",
-            "NY": "estate", "NYC": "estate", "CT": "estate", "RI": "estate", "VT": "estate",
-            "ME": "estate", "HI": "estate", "DC": "estate",
-            "PA": "inheritance", "NJ": "inheritance", "KY": "inheritance", "NE": "inheritance",
-        },
+        # Death-tax environment by state: IL is modeled precisely (il_estate_tax); the other states get
+        # a neutral card naming their regime and deferring the exact figure to the attorney. Projected
+        # from the canonical estate table (one source), plus the NYC overlay.
+        "state_estate": _STATE_ESTATE,
+        # The Illinois AG estate-tax curve, injected so the workspace JS renders it instead of a
+        # hand-typed mirror (one source for Python and the browser).
+        "il_ag_curve": [list(r) for r in IL_AG_CURVE],
     },
     # Optimal Strategy & Rollover Engine (?view=strategy).
     "strategy": {
@@ -131,18 +136,10 @@ def roth_conversion(conversion: float, fed_ord_rate: float, state_rate: float,
     return {"federal": fed, "state": state, "total": fed + state,
             "state_saved": would_owe_state if state_exempts_retirement else 0.0}
 
-# Calibrated to the Illinois Attorney General estate-tax calculator (single estate), expressed
-# as the tax on the amount ABOVE the exclusion so the HB2601 toggle just shifts the baseline:
-#   $5.0M -> ~$285k, $8.0M -> ~$690k, $10.0M -> ~$980k (at the $4M exclusion); $0 at/below it.
-# Rows are (excess_over_exclusion, tax_at_that_excess, marginal_rate_above). The real AG figure
-# depends on QTIP elections/deductions — illustrative; the estate attorney files the exact number.
-_IL_AG_CURVE = [
-    (0, 0, 0.285),                 # 0 -> $1M excess: ~28.5% effective (the steep cliff zone)
-    (1_000_000, 285_000, 0.135),   # $1M -> $4M excess
-    (4_000_000, 690_000, 0.145),   # $4M -> $6M excess
-    (6_000_000, 980_000, 0.160),   # $6M -> $10M excess: 16% statutory top
-    (10_000_000, 1_620_000, 0.160),# upper anchor ($14M estate) — keeps scaling at 16% above this
-]
+# The Illinois AG estate-tax curve is canonical in drift.state_facts (IL_AG_CURVE) — the same rows
+# feed this Python calculator and the workspace JS (injected via il_ag_curve above). Illustrative;
+# the real AG figure depends on QTIP elections/deductions and the estate attorney files the exact one.
+_IL_AG_CURVE = IL_AG_CURVE
 
 
 def _il_ag_tax(excess: float) -> float:

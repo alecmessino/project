@@ -41,8 +41,7 @@
   header{border-top:3px solid var(--rule);padding-top:20px}
   header h1{font-size:clamp(22px, 1vw + 18px, 25px);margin:0 0 6px;font-weight:700;letter-spacing:-.2px}
   .eyebrow{font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 10px}
-  .hyp-pill{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
-    border:1px solid var(--line);border-radius:var(--surface-radius);padding:2px 7px;margin-left:8px;vertical-align:middle}
+  /* .hyp-pill: the shared Hypothetical Marker (driftwood.css). */
   .method{color:var(--dim);font-size:13.5px;max-width:70ch;margin:6px 0 0}
   .book{padding:30px 0;border-top:1px solid var(--line);margin-top:8px}
   .book h2{font-size:19px;margin:0 0 2px;font-weight:640}
@@ -113,7 +112,7 @@
     <h1>The Model Portfolio, across market cycles.</h1>
     <p class="method" id="method"></p>
   </header>
-  <div class="research-banner" style="margin:14px 0 22px;padding:2px 0 2px 14px;border-left:1px solid var(--line);font-size:12.5px;line-height:1.55;color:var(--dim)">
+  <div class="research-banner">
     <b>Core Alpha Research — a hypothetical Model Portfolio.</b> This long-history backtest is the Core
     Alpha strategy: the high-turnover, opportunistic momentum book built for <b>tax-advantaged</b> accounts.
     The flagship <b>Structural Alpha</b> book — diversified, low-turnover, tax-managed — is the
@@ -121,6 +120,15 @@
     out-of-sample — not a client account and not an executed order.
   </div>
   <div id="books"></div>
+  <nav class="series-rail" aria-label="The Core Alpha research series">
+    <span class="sr-title">The Core Alpha research series</span>
+    <ol>
+      <li><a href="equities.html"><i>Nº 001</i>The Dashboard</a></li>
+      <li><a href="ledger.html"><i>Nº 002</i>Model Portfolio Ledger</a></li>
+      <li aria-current="page"><i>Nº 003</i>Long-History Tearsheet</li>
+      <li><a href="equities_case_studies.html"><i>Nº 004</i>Studies</a></li>
+    </ol>
+  </nav>
   <div class="foot">
     <span class="note">Signal system — research only, not investment advice.</span>
     Out-of-sample = the held-out remainder after parameters were fit on the in-sample
@@ -164,9 +172,11 @@ function eqchart(el, strat, bench, splitFrac, market){
   const sep=document.createElementNS(ns,"line");
   sep.setAttribute("x1",sx);sep.setAttribute("x2",sx);sep.setAttribute("y1",pad);sep.setAttribute("y2",h-pad);
   sep.setAttribute("stroke","#cfcfd4");sep.setAttribute("stroke-dasharray","3 3");el.appendChild(sep);
+  // Data-colour standard: the strategy is the only saturated line (#15806a, drawn last/on top);
+  // benchmarks recede to neutral greys — the market line stays dashed to read as context.
   const lines=[[bench,"#b8bcc2",1.3,null]];
-  if(market&&market.length) lines.push([market,"#9aa0c0",1.2,"3 2"]);   // global market (VT)
-  lines.push([strat,"#3d4650",1.7,null]);
+  if(market&&market.length) lines.push([market,"#cdd0d6",1.2,"3 2"]);   // global market (VT)
+  lines.push([strat,"#15806a",2.5,null]);
   for(const [data,color,wdt,dash] of lines){
     const p=document.createElementNS(ns,"polyline");
     p.setAttribute("points",data.map((v,i)=>xs(i).toFixed(1)+","+ys(v).toFixed(1)).join(" "));
@@ -224,9 +234,9 @@ function render(st){
       ${bk.market ? `<p class="uni" style="margin:-6px 0 10px">${bk.market.label}: `+
         `CAGR <b>${pct(bk.market.summary.cagr)}</b> · Sharpe <b>${num(bk.market.summary.sharpe)}</b> · `+
         `max DD <b>${pct(-bk.market.summary.max_drawdown)}</b></p>` : ``}
-      <div class="legend"><span><i style="background:#3d4650"></i>Strategy</span>
+      <div class="legend"><span><i style="background:#15806a"></i>Strategy</span>
         <span><i style="background:#b8bcc2"></i>Buy &amp; hold (universe)</span>
-        ${bk.market ? '<span><i style="background:#9aa0c0"></i>Global market (VT)</span>' : ''}
+        ${bk.market ? '<span><i style="background:#cdd0d6"></i>Global market (VT)</span>' : ''}
         <span><i style="background:#cfcfd4"></i>in-sample / out-of-sample split</span></div>
       <svg class="eq" id="eq${i}" preserveAspectRatio="none" role="img" aria-label="${bk.name} — strategy versus buy-and-hold equity curves"></svg>
       <div class="oos">

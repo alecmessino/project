@@ -41,8 +41,7 @@
   header{border-top:3px solid var(--rule);padding-top:20px;margin-bottom:8px}
   header h1{font-size:clamp(22px, 1vw + 18px, 25px);margin:0 0 6px;font-weight:700;letter-spacing:-.2px}
   .eyebrow{font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 10px}
-  .hyp-pill{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
-    border:1px solid var(--line);border-radius:var(--surface-radius);padding:2px 7px;margin-left:8px;vertical-align:middle}
+  /* .hyp-pill: the shared Hypothetical Marker (driftwood.css). */
   .sub{color:var(--dim);font-size:13.5px;display:flex;flex-wrap:wrap;gap:6px 20px}
   .sub b{color:var(--ink);font-weight:500}
   .lede{font-family:var(--serif);color:var(--dim);font-size:14px;max-width:62ch;margin:18px 0 36px}
@@ -103,14 +102,23 @@
     <div class="eyebrow">Core Alpha Research · Nº 004 · Studies <span class="hyp-pill">HYPOTHETICAL</span></div>
     <h1>Why the strategy behaves the way it does.</h1>
     <div class="sub" id="sub"></div>
-    <div class="research-banner" style="margin-top:14px;font-size:11.5px;color:var(--dim);border-left:1px solid var(--line);padding:2px 0 2px 14px;line-height:1.5">
+    <div class="research-banner">
       <b>Core Alpha Research.</b> These are educational studies of <i>why</i> the Core Alpha (momentum) strategy
       behaves as it does — not the deployed, tax-managed <b>Structural&nbsp;Alpha</b> book. Hypothetical
-      backtests, not a client account. <a href="index.html" style="color:var(--slate,#4a4f57)">See the current book →</a>
+      backtests, not a client account. <a href="equities.html" style="color:var(--slate,#4a4f57)">See the current book →</a>
     </div>
   </header>
   <p class="lede" id="lede"></p>
   <div id="studies"></div>
+  <nav class="series-rail" aria-label="The Core Alpha research series">
+    <span class="sr-title">The Core Alpha research series</span>
+    <ol>
+      <li><a href="equities.html"><i>Nº 001</i>The Dashboard</a></li>
+      <li><a href="ledger.html"><i>Nº 002</i>Model Portfolio Ledger</a></li>
+      <li><a href="tearsheet.html"><i>Nº 003</i>Long-History Tearsheet</a></li>
+      <li aria-current="page"><i>Nº 004</i>Studies</li>
+    </ol>
+  </nav>
   <div class="foot">
     <span class="note">Signal system — research only, not investment advice.</span>
     Backtests are walk-forward and net of modeled transaction cost. The

@@ -44,9 +44,8 @@
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
   header{padding:32px 44px 0;margin:0 0 10px}
   .eyebrow{font-weight:500;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);
-    margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .hyp-pill{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
-    background:var(--soft);border:1px solid var(--line);padding:3px 8px;border-radius:var(--surface-radius)}
+    margin-bottom:12px;display:flex;align-items:center;gap:0;flex-wrap:wrap}
+  /* .hyp-pill: the shared Hypothetical Marker (driftwood.css). */
   header h1{font-family:var(--sans);font-size:clamp(28px, 2vw + 20px, 38px);margin:0 0 6px;
     font-weight:700;letter-spacing:-.018em;line-height:1.05;color:var(--ink)}
   #body{padding:0 44px}
@@ -192,7 +191,7 @@
     <h1>An append-only record of a hypothetical portfolio.</h1>
     <div class="sub" id="sub"></div>
   </header>
-  <div class="research-banner" style="margin:14px 0 22px;padding:2px 0 2px 14px;border-left:1px solid var(--line);font-size:12.5px;line-height:1.55;color:var(--dim)">
+  <div class="research-banner">
     <b>Core Alpha Research — a hypothetical Model Portfolio.</b> This is the Core Alpha strategy: the
     high-turnover, opportunistic momentum book built for <b>tax-advantaged</b> accounts. The flagship
     <b>Structural Alpha</b> book — diversified, low-turnover, tax-managed — is the taxable-account
@@ -200,6 +199,15 @@
     account and not an executed order.
   </div>
   <div id="body"></div>
+  <nav class="series-rail" aria-label="The Core Alpha research series">
+    <span class="sr-title">The Core Alpha research series</span>
+    <ol>
+      <li><a href="equities.html"><i>Nº 001</i>The Dashboard</a></li>
+      <li aria-current="page"><i>Nº 002</i>Model Portfolio Ledger</li>
+      <li><a href="tearsheet.html"><i>Nº 003</i>Long-History Tearsheet</a></li>
+      <li><a href="equities_case_studies.html"><i>Nº 004</i>Studies</a></li>
+    </ol>
+  </nav>
   <div class="foot">
     <span class="note">Hypothetical Model Portfolio — backtested; research only, not investment advice.</span>
     The model is the <b>Unconstrained Core Alpha Strategy</b> — a long-only, fully-invested cross-sectional momentum
@@ -222,6 +230,7 @@
 window.__STATE__ = /*__STATE__*/null/*__END__*/;
 const BDESC={VT:"global market", VTI:"US total market"};
 const SCOLOR="#15806a";   // strategy line: strong teal, drawn thick on top
+const BENCH_GREYS=["#b8bcc2","#cdd0d6","#dcdee2"];  // benchmarks recede to neutral grey — never a competing hue
 const PERLABEL={ALL:"full backtest",YTD:"year to date","1M":"last month","3M":"last 3 months",
   "6M":"last 6 months","1Y":"last year"};
 let ST=null;
@@ -332,8 +341,8 @@ function applyPeriod(key){
   const start=periodStartIdx(s.dates, key);
   const dts=s.dates.slice(start);
   const stratEq=s.equity.slice(start);
-  const lines=[{label:"Strategy", color:SCOLOR, values:stratEq, width:2.4}];
-  (s.benchmarks||[]).forEach(b=> lines.push({label:b.label, color:b.color, values:b.equity.slice(start), width:1.8}));
+  const lines=[{label:"Strategy", color:SCOLOR, values:stratEq, width:2.5}];
+  (s.benchmarks||[]).forEach(b=> lines.push({label:b.label, color:b.color, values:b.equity.slice(start), width:1.5}));
   drawChart(document.getElementById("eq"), dts, lines, -1);
   const st=winStats(stratEq, bpy);
   let rows=`<tr class="me"><td>Strategy</td><td class="${cls(st.tr)}">${pct(st.tr)}</td>
@@ -372,6 +381,10 @@ function stylebox(box, sm){
 
 function render(s){
   ST=s;
+  // Data-colour standard: the strategy is the only saturated line; benchmarks recede to neutral
+  // greys (VT primary, then lighter) — never competing hues. Set once here so the chart, the
+  // comparison table, and the legend all read the same colour back off ST.benchmarks.
+  (s.benchmarks||[]).forEach((b,i)=>{ b.color = BENCH_GREYS[i] || BENCH_GREYS[BENCH_GREYS.length-1]; });
   const h=s.header;
   document.getElementById("sub").innerHTML =
     `<b>Hypothetical backtest</b> · <b>${h.universe.length}</b> instruments · modeled from <b>${h.inception||"—"}</b>`;

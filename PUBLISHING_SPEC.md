@@ -581,3 +581,193 @@ Proof of Practice moves ahead of Tools/QA because its artifacts inform both):**
    institution's *operation*?** If it documents how Driftwood thinks, it belongs on the
    public site. If it helps Driftwood do its work, it belongs in the Advisor Workspace.
 8. **Freeze at v1** and move the center of gravity to the Workspace.
+
+---
+
+## 14 · The Launch Standard — implementation directives (July 2026)
+
+The handoff bundle's **Launch Standard** is the authoritative design spec for the
+implementation pass; it converges with the Phase Ω audit. Its tiers ship as review PRs.
+Four architectural directives govern the pass — the durable choices that prevent rewrites:
+
+**14.1 · The Firm Identity Object.** Firm facts are *infrastructure, not copy*. One object
+(`drift.site` — `CONTACT_EMAIL`, `BOOKING_URL`, `FIRM_LOCATION`, `FIRM_SINCE`, `FIRM_CRD`,
+`FIRM_CUSTODIAN`, disclosure links) is the single source every surface inherits — the
+firm-anchor band, JSON-LD, footers, the eventual inquiry / CPA-invitation / correspondence
+flows. It matures toward a full identity object (name · founded · location · registration ·
+disclosure links · custodian · contact endpoints); every fact is one-command-flippable and
+renders *only when confirmed* (the honesty rule). Never scatter a firm fact as a literal.
+
+**14.2 · One invitation per page.** One action, primary-styled once, at the end; every
+other pointer is a quiet text link. The nav's "Start a conversation" is chrome, not a
+second ask. No page reads as SaaS lead-gen with competing conversion paths.
+
+**14.3 · The Atlas is a research-institution layer — decision architecture, not SEO.** The
+moat is not information (there are thousands of tax sites); it is *decision architecture*.
+The canonical `{state, edition}` spine models a reasoning chain, and every rendering
+inherits it:
+
+```
+State environment → Household impact → Planning considerations → Decision framework → Action register
+```
+
+One data model; state pages, the comparison spread, the Crossing Brief, PDF/client
+artifacts, and future annual editions all render from it — no duplicated logic. The Atlas
+answers *"how does this place change my wealth system?"*, never merely *"what is the rate
+in Texas?"* Reserve `/atlas/2026/…` URLs so each edition is citable forever. **Do not
+optimize the Atlas for keyword/page-count expansion.**
+
+**14.4 · Plates & Exhibits — one archive language.** Every figure is a numbered artifact:
+**Plate** = schematic / diagram / map; **Exhibit** = table / chart of figures. Roman
+numerals, **numbered from I per page** — a page must never open at "Exhibit 3." Anatomy:
+eyebrow number (`PLATE I`) → serif title with period → the figure → caption; data exhibits
+add `METHOD · SOURCE · AS OF` rows. This is what pushes Driftwood from "blog" to "research
+institution."
+
+**The standing rule for the whole pass — interaction over quiet.** Where making something
+look more editorial competes with a genuinely useful interaction, **preserve the
+interaction.** The goal is *institutional software* — McKinsey research publication + family
+office operating system, not a luxury magazine. Editorial refinement comes from **hierarchy
+and typography, never from removing capability** (state selectors, comparisons, saved state,
+expandable methodology, calculators, transitions, cross-links all stay). The interaction is
+the proof that this is software; improve it (tap parity, keyboard, responsive, transitions)
+rather than flatten it.
+
+---
+
+## 15 · The canonical `{state, edition}` spine — implementation design
+
+The architecture map (built from the current `statemap.py` / `statepage.py` / `taxlab.py` /
+`leakage.py` / `dw-context.js`) resolves §14.3 into one buildable model. The rule is a single
+source of truth: every surface *projects* from the spine; nothing re-authors a fact.
+
+**15.1 · The record.** One edition-scoped record per jurisdiction, assembled in a new
+`src/drift/atlas.py`; `tax.STATE_RATES`, `statemap._INCOME/_ESTATE/_STEPUP`,
+`taxlab.state_estate`, and the JS `dw-context.STATES` all become projections of it.
+
+```
+StateEdition = { code, edition:"2026", name, as_of_law, last_reviewed, changelog,
+  environment:   {cg, marriage, estate, muni, qsbs, loss, stepup, alpha}   # LAYER 1 — exists today
+  impact:        {inputs:[state,bracket,portfolio], model_ref}             # LAYER 2 — household impact
+  considerations:[{dimension, trigger, note, applies_when}]                # LAYER 3 — planning
+  framework:     {signals:{estate_pressure, income_pressure, mobility_value}}  # LAYER 4 — decision
+  actions:       [{step, owner, dimension, decision_ref}]                   # LAYER 5 — action register
+}
+```
+
+The five keys are the reasoning chain of §14.3 made into data. Layers 2–5 are structured
+lists/dicts (not prose): renderers walk them. `considerations` supersedes the hand-authored
+`statepage._STATE_CONTEXT`, each entry keyed to the `environment` dimension that produced it
+(auditable, no drift). `framework.signals` is what the comparison spread and Crossing Brief
+diff across two states. `actions` is the generated form of the `case-moving-states` decision
+ripple.
+
+**15.2 · Editions.** Replace the three module globals (`AS_OF_LAW`, `LAST_REVIEWED`,
+`_CHANGELOG`) with an `EDITIONS` registry and `CURRENT_EDITION`. `build_statemap(edition=…)`
+and `_state_record(code, edition=…)` gain a defaulted parameter — current callers untouched.
+Each edition freezes its snapshot so `/atlas/2026/…` stays citable after 2027 lands.
+
+**15.3 · URLs.** Add edition-scoped canonical paths **alongside** today's flat slugs (flat
+slugs stay as canonical aliases — no SEO/link breakage): `/atlas/2026/california/`,
+`/atlas/2026/compare/california-texas/`, `/atlas/2026/crossing/illinois-texas/`, `/atlas/`
+→ current edition. `render_sitemap` emits both.
+
+**15.4 · Duplication to collapse (single canonical source each).** State income / cap-gains
+rate (numeric canonical, `rate_display` derived — `tax.STATE_RATES` and `statemap._INCOME`
+currently *disagree*, a correctness bug to fix under content authority); estate regime +
+exemption + IL curve (fold `taxlab.state_estate`, the `il_*` constants, and the hand-typed
+`workspace.html` `IL_AG` mirror into one estate block, injected as data); basis step-up;
+state names ↔ abbrev; and the state-code list (locked now by `tests/test_drift_atlas.py`).
+
+**15.5 · Build sequence** (each an independent, interaction-preserving review PR; all 21
+catalogued Atlas interactions survive — refinement from hierarchy/typography, never removal):
+(1) lock the enumerations [done]; (2) collapse income rate to one number; (3) collapse estate
+facts; (4) edition scoping, backward-compatible; (5) reserve `/atlas/2026/` URLs; (6)
+`atlas.py` with the `StateEdition` shape (environment layer); (7) household-impact layer; (8)
+considerations layer; (9) decision-framework + comparison spread; (10) action register +
+Crossing Brief. **Steps 2–3 change contested tax facts and steps 8–10 introduce planning
+content — both require the RIA principal's authority; the engine (1, 4–6) is built first.**
+
+---
+
+## 16 · The reasoning layers — composable knowledge primitives (the intelligence)
+
+With the institution built (one canonical data model, editioned publication, provenance), the Atlas
+earns its moat by *reasoning*, not describing. Every page answers one question — **"given this
+environment, how should a sophisticated household think?"** — through five layers, the **Decision
+Framework as the centerpiece**:
+
+```
+1 · Environment          what objectively exists            (the settled facts — LIVE)
+2 · Household Impact      what changes because of them       (the Tax Diagnostic, per household)
+3 · Decision Framework    how to evaluate those changes      (the centerpiece — ranked signals)
+4 · Planning Considerations   areas requiring coordination   (who to coordinate, and when)
+5 · Action Register       what should happen next            (the sequenced execution list)
+```
+
+**16.1 · Composability is the architecture.** The layers are NOT page-specific prose. Each Impact,
+Framework signal, Planning Consideration, and Action is an **addressable object** in the canonical
+model — a reusable knowledge primitive with a stable id. Defined once; referenced by id from state
+pages, the comparison spread, Crossing Briefs, the Tax Diagnostic, the Opportunity Register, the
+Household Record, the Annual Wealth Review, internal advisor workflows, and a future AI assistant.
+The same reasoning exists once and simply *renders* differently by context. We store institutional
+reasoning, not paragraphs.
+
+**16.2 · Primitives vs. instantiation.** A primitive is a canonical, state-independent definition
+(`src/drift/reasoning.py`): the signal `estate_exposure`, the consideration `residency_planning`, the
+action `confirm_domicile`. Each carries a stable `id`, a human label, the environment dimensions it
+`reads`, and an `evaluate`/`activates_when` rule. A state's reasoning is the *instantiation* — each
+primitive bound to that state's `environment`, yielding a level/reading and a set of activated
+considerations and actions, every entry referencing its primitive by id. `atlas.build_state_edition`
+composes the instantiation into the `impact / framework / considerations / actions` layers.
+
+**16.3 · Grounded, not invented.** Every primitive is organized from **existing approved Driftwood
+thinking** — the seven environment dimensions, the Tax Diagnostic (`STATE_ALPHA`), the hand-authored
+State Context, the Moving States decision ripple, the Opportunity Register, and the coordination
+philosophy. The reasoning layers increase clarity and actionability; they do not expand the firm's
+philosophy. Language stays concise and institutional.
+
+**16.4 · One reasoning engine, many renderings.** State pages render the chain top-to-bottom;
+the comparison spread diffs two states' `framework.signals`; a Crossing Brief renders the
+origin→destination `actions`; the Opportunity Register and Household Record reference the same
+consideration/action ids. No consumer re-authors the reasoning. This is the knowledge graph for
+wealth coordination — the research backbone the rest of the Driftwood platform derives from.
+
+---
+
+## 17 · Driftwood OS — the three-layer platform (graph reasoning, structured objects)
+
+Driftwood is no longer a website; it is a platform with three layers, and every output derives from
+the first two:
+
+```
+Layer 1 · FACTS       drift.state_facts — canonical, editioned, cited (tax, estate, …)
+Layer 2 · REASONING   drift.reasoning  — impact · decision signals · coordination priorities · actions
+Layer 3 · OUTPUTS     Atlas · Comparison · Crossing Brief · Opportunity Register · Household Record ·
+                      Annual Review · Advisor Workspace · AI assistant · client portal
+```
+
+**17.1 · The reasoning layer is a GRAPH, not a chain.** Each Impact, Decision Signal, Coordination
+Priority, and Action is an **addressable node** with a stable per-state `node_id`
+(`IL:signal:estate_exposure`) and **typed reference edges**: a signal `reads` environment dimensions
+and `opens` a coordination priority; a priority carries `related_signals` and `related_actions`; an
+action `references` its priority. The chain (environment → impact → **decision framework** →
+coordination priorities → actions) is only the *presentation* order; underneath it is a graph any
+consumer — a page, a report, an AI — can traverse.
+
+**17.2 · Store structured reasoning, never prose.** A node is a typed object
+(`id · title · trigger · rationale · affected_dimensions · priority · related_signals ·
+related_actions · citations`), not a paragraph. `citations` are **traversed** from the Facts layer
+(the statute links on the dimensions a node reads), so provenance rides the graph without restatement.
+Pages *render* the object; the Household Record, Opportunity Register, Annual Review, and AI reference
+the **same object by id**. The reasoning exists once.
+
+**17.3 · Coordination Priorities** (renamed from "planning considerations"). The layer names the
+household's coordination *domains* (Residency, Estate, Portfolio) — the operating-system framing, not
+advisor copy.
+
+**17.4 · Think in products, not pages.** Each Layer-3 output is a *product* that should feel like
+software, not an article: the **Comparison** is a two-state instrument, the **Crossing Brief** an
+origin→destination operating document, the **Household Record** the place the canonical state reasoning
+becomes *this household's* standing decisions and coordination priorities. They share one reasoning
+engine and differ only in rendering. Build the primitives once; render them many ways.

@@ -105,6 +105,8 @@ const FIXTURE = {
       default_individual: 3000000, default_joint: 0, default_trust: 1000000,
       estate_max: 30000000, estate_step: 100000, trust_compression_top_threshold: 15650,
       state_estate: { WA: 'estate', NY: 'estate', MA: 'estate', MD: 'both', PA: 'inheritance', NJ: 'inheritance' },
+      // Mirrors build_taxlab's injected drift.state_facts.IL_AG_CURVE so the estate calc can run.
+      il_ag_curve: [[0, 0, 0.285], [1000000, 285000, 0.135], [4000000, 690000, 0.145], [6000000, 980000, 0.160], [10000000, 1620000, 0.160]],
     },
     strategy: {},
   },

@@ -26,7 +26,8 @@ import time
 from pathlib import Path
 
 from .leakage import STATE_ALPHA, STATE_NAMES, build_leakage
-from .statemap import DIMENSIONS, _state_record, AS_OF_LAW, LAST_REVIEWED, _CHANGELOG
+from .statemap import DIMENSIONS, _state_record, AS_OF_LAW, LAST_REVIEWED, _CHANGELOG, CURRENT_EDITION
+from . import reasoning
 
 # Single source of truth for the public base URL lives in drift.site (re-exported here for callers
 # and tests); flip it with scripts/set_domain.py when the custom domain goes live.
@@ -49,7 +50,36 @@ def slug_for(code: str) -> str:
 
 
 def page_path(code: str) -> str:
+    """The flat legacy slug, kept as a permanent redirect alias: 'CA' -> 'california-tax.html'."""
     return f"{slug_for(code)}.html"
+
+
+# ── Editioned publication URLs (§15.3) ────────────────────────────────────────────────────────────
+# The Atlas is an editioned publication: /atlas/2026/{state}/ is the canonical, citable home for each
+# state page; the flat *-tax.html slugs live on as permanent redirect aliases. Editioned pages sit
+# three directories deep, so they carry absolute links (BASE_URL) rather than the root-relative links
+# the flat pages used.
+def state_slug(code: str) -> str:
+    """The editioned URL slug (no '-tax'): 'CA' -> 'california', 'DC' -> 'washington-dc'."""
+    return re.sub(r"[^a-z0-9]+", "-", STATE_NAMES.get(code, code).lower()).strip("-")
+
+
+def atlas_path(code: str, edition: str = CURRENT_EDITION) -> str:
+    """Editioned directory path (no domain): 'atlas/2026/california'."""
+    return f"atlas/{edition}/{state_slug(code)}"
+
+
+def atlas_url(code: str, edition: str = CURRENT_EDITION) -> str:
+    """Canonical editioned URL, trailing slash: '{BASE_URL}/atlas/2026/california/'."""
+    return f"{BASE_URL}/{atlas_path(code, edition)}/"
+
+
+def edition_url(edition: str = CURRENT_EDITION) -> str:
+    """The edition index (the states directory): '{BASE_URL}/atlas/2026/'."""
+    return f"{BASE_URL}/atlas/{edition}/"
+
+
+_ABS = f"{BASE_URL}/"  # absolute-link base for the nested editioned pages
 
 
 # ── related-state internal linking: two high-tax, two no-tax, so every page links into the cluster ──
@@ -170,6 +200,7 @@ def build_state_pages() -> dict:
             "faq": _faq(code, name, rec),
             "related": _related(code),
             "context": _state_context(code),
+            "reasoning": reasoning.build_reasoning(code, rec),  # impact / framework / considerations / actions
         }
     return out
 
@@ -210,6 +241,10 @@ NAV = (
     '  <a class="dwnav-cta" href="index.html#conversation">Start a conversation</a>\n'
     '</nav>'
 )
+
+# The same nav with root-relative hrefs rewritten to absolute (BASE_URL), for the nested editioned
+# pages where a root-relative 'about.html' would otherwise resolve under /atlas/2026/{state}/.
+NAV_ABS = re.sub(r'href="(?!https?:|#|/)([^"]*)"', lambda m: f'href="{_ABS}{m.group(1)}"', NAV)
 
 PLAUSIBLE = (
     '<!-- Privacy-first analytics (Plausible) -->\n'
@@ -318,8 +353,8 @@ def _faq_html(faq: list[dict]) -> str:
     return f'<div class="sec"><div class="sh">Frequently asked — {len(faq)} on {{}}</div>{items}</div>'
 
 
-def _jsonld(name: str, code: str, rec: dict, faq: list[dict]) -> str:
-    url = f"{BASE_URL}/{page_path(code)}"
+def _jsonld(name: str, code: str, rec: dict, faq: list[dict], edition: str = CURRENT_EDITION) -> str:
+    url = atlas_url(code, edition)  # the editioned canonical
     blocks = [
         {"@context": "https://schema.org", "@type": "FinancialService",
          "name": f"Driftwood Capital — {name} tax-aware investing", "legalName": "Driftwood Capital",
@@ -328,7 +363,7 @@ def _jsonld(name: str, code: str, rec: dict, faq: list[dict]) -> str:
                         f"tax-loss harvesting, and lot protection. Illustrative modeling, not advice."},
         {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Driftwood Capital", "item": f"{BASE_URL}/index.html"},
-            {"@type": "ListItem", "position": 2, "name": "State Tax Map", "item": f"{BASE_URL}/statemap.html"},
+            {"@type": "ListItem", "position": 2, "name": "The State Atlas", "item": edition_url(edition)},
             {"@type": "ListItem", "position": 3, "name": name, "item": url}]},
     ]
     if faq:
@@ -385,6 +420,30 @@ _HEAD_CSS = """
   @media(max-width:760px){.levers{grid-template-columns:1fr}}
   .lv{border:1px solid var(--line);border-left:3px solid var(--teal2);border-radius:0;padding:13px 15px;background:var(--soft)}
   .lv .n{font-weight:500;font-size:13px;color:var(--ink)} .lv .d{font-size:12px;color:var(--body);line-height:1.45;margin-top:4px}
+  /* Reasoning chain (§16): Decision Framework signals, considerations, action register. Quiet — the
+     level is a dot meter, not an alarm colour; hierarchy comes from weight and rule, not hue. */
+  .fw{display:grid;gap:10px}
+  .fsig{border:1px solid var(--line);border-left:3px solid var(--brass);background:#fff;padding:12px 15px}
+  .fsig .fh{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+  .fsig .fl{font-family:var(--sans);font-weight:500;font-size:13.5px;color:var(--ink)}
+  .fsig .fm{display:inline-flex;gap:3px;align-items:center;flex-shrink:0}
+  .fsig .fm i{width:6px;height:6px;border-radius:50%;background:var(--line);display:inline-block}
+  .fsig .fm i.on{background:var(--brass)}
+  .fsig p{margin:5px 0 0;font-size:12.5px;color:var(--body);line-height:1.5}
+  .fsig.lv-severe{border-left-color:var(--neg)} .fsig.lv-severe .fm i.on{background:var(--neg)}
+  .fsig.lv-none{border-left-color:var(--line)} .fsig.lv-none .fm i.on{background:var(--muted)}
+  .considx{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .considx li{border:1px solid var(--line);border-left:3px solid var(--teal2);background:var(--soft);padding:12px 15px}
+  .considx .ca{font-family:var(--sans);font-weight:500;font-size:13px;color:var(--ink)}
+  .considx .cw{font-size:11px;color:var(--brass);font-weight:500}
+  .considx p{margin:4px 0 0;font-size:12px;color:var(--body);line-height:1.45}
+  .actreg{margin:0;padding:0;list-style:none;counter-reset:act;display:grid;gap:9px}
+  .actreg li{display:flex;gap:12px;align-items:baseline;font-size:12.5px;color:var(--body);line-height:1.5}
+  .actreg li::before{counter-increment:act;content:counter(act);font-family:var(--sans);font-weight:700;
+    font-size:11px;color:var(--brass);min-width:15px}
+  .actreg .ao{font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--muted);white-space:nowrap;min-width:96px;display:inline-block}
+  @media(max-width:600px){.actreg .ao{min-width:0;display:block;margin-bottom:1px}}
   details.faq{border-bottom:1px solid var(--line2);padding:10px 0}
   details.faq summary{font-weight:500;font-size:13.5px;color:var(--ink);cursor:pointer}
   details.faq p{margin:8px 0 2px;font-size:12.5px;color:var(--body)}
@@ -487,19 +546,56 @@ def _summary(name: str, rec: dict) -> str:
     return ("; ".join(bits) + ".") if bits else ""
 
 
-def render_state_html(data: dict) -> str:
+_LEVEL_DOTS = {"none": 0, "low": 1, "moderate": 2, "high": 3, "severe": 4}
+
+
+def _reasoning_html(r: dict, name: str) -> str:
+    """Render the reasoning chain (§16) from the composable primitives: the Decision Framework (the
+    centrepiece), the planning considerations it opens, and the sequenced action register. The
+    objects come from drift.reasoning — this only renders them."""
+    sigs = []
+    for s in r["framework"]:
+        n = _LEVEL_DOTS.get(s["level"], 0)
+        dots = "".join(f'<i class="{"on" if i < n else ""}"></i>' for i in range(4))
+        cls = f' lv-{s["level"]}' if s["level"] in ("severe", "none") else ""
+        sigs.append(
+            f'<div class="fsig{cls}"><div class="fh"><span class="fl">{_esc(s["title"])}</span>'
+            f'<span class="fm" role="img" aria-label="{_esc(s["level"])} — {_esc(s["question"])}">{dots}</span></div>'
+            f'<p>{_esc(s["reading"])}</p></div>')
+    framework = (
+        f'<div class="sec"><div class="sh">How to think about {_esc(name)}</div>'
+        f'<p class="lede" style="margin-bottom:14px">Five lenses turn {_esc(name)}\'s tax environment into a '
+        f'household decision — the same lenses every state is read through, so any two states weigh on '
+        f'identical terms.</p><div class="fw">{chr(10).join(sigs)}</div></div>')
+    coordination = ""
+    if r["coordination"]:
+        items = "\n".join(
+            f'<li><span class="ca">{_esc(c["title"])}</span> <span class="cw">· with your {_esc(c["coordinate_with"])}</span>'
+            f'<p>{_esc(c["rationale"])}</p></li>' for c in r["coordination"])
+        coordination = (f'<div class="sec"><div class="sh">Coordination priorities for {_esc(name)} households</div>'
+                        f'<ul class="considx">{items}</ul></div>')
+    actions = ""
+    if r["actions"]:
+        items = "\n".join(
+            f'<li><span class="ao">{_esc(a["owner"])}</span><span>{_esc(a["step"])}</span></li>' for a in r["actions"])
+        actions = (f'<div class="sec"><div class="sh">What should happen next</div>'
+                   f'<ol class="actreg">{items}</ol></div>')
+    return framework + coordination + actions
+
+
+def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
     code, name, slug = data["code"], data["name"], data["slug"]
     rec, a, faq = data["rec"], data["alpha"], data["faq"]
     title = f"{name} Capital Gains & Estate Tax — Tax-Leakage Diagnostic | Driftwood"
     desc = _meta_description(name, rec)
-    url = f"{BASE_URL}/{page_path(code)}"
+    url = atlas_url(code, edition)   # editioned canonical (the page lives at /atlas/{edition}/{slug}/)
     og = f"{BASE_URL}/og/states/{code.lower()}.png"
     levers = "\n".join(
         f'<div class="lv"><div class="n">{_esc(l["name"])}</div><div class="d">{_esc(l["desc"])}</div></div>'
         for l in data["levers"])
     faq_html = _faq_html(faq).replace("{}", _esc(name)) if faq else ""
-    related = " · ".join(
-        f'<a href="{page_path(c)}">{_esc(nm)}</a>' for c, nm in data["related"])
+    related = " · ".join(   # sibling editioned pages
+        f'<a href="{atlas_url(c, edition)}">{_esc(nm)}</a>' for c, nm in data["related"])
     rate = (rec.get("cg") or {}).get("tag", "")
     capture = _capture(code, name, (a or {}).get("value"), rate)
     lede = (f"Every state taxes investors differently. Here is how {name} treats capital gains at the top "
@@ -518,10 +614,10 @@ def render_state_html(data: dict) -> str:
 <title>{_esc(title)}</title>
 <meta name="description" content="{_esc(desc)}" />
 <link rel="canonical" href="{url}" />
-<link rel="icon" href="favicon.svg" />
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<link rel="icon" href="{_ABS}favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="{_ABS}favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="{_ABS}apple-touch-icon.png" />
+<link rel="mask-icon" href="{_ABS}mask-icon.svg" color="#1a2330" />
 <meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
@@ -534,16 +630,16 @@ def render_state_html(data: dict) -> str:
 <meta name="twitter:title" content="{_esc(title)}" />
 <meta name="twitter:description" content="{_esc(desc)}" />
 <meta name="twitter:image" content="{og}" />
-{_jsonld(name, code, rec, faq)}
-<link rel="stylesheet" href="driftwood.css">
-<script src="dw-context.js"></script>
+{_jsonld(name, code, rec, faq, edition)}
+<link rel="stylesheet" href="{_ABS}driftwood.css">
+<script src="{_ABS}dw-context.js"></script>
 <style>{_HEAD_CSS}</style>
 </head>
 <body>
 <div class="sheet">
   <div class="frame">
-    {NAV}
-    <div class="bcrumb"><a href="index.html">Driftwood Capital</a> › <a href="statemap.html">The State Atlas</a> › {_esc(name)}</div>
+    {NAV_ABS}
+    <div class="bcrumb"><a href="{_ABS}index.html">Driftwood Capital</a> › <a href="{edition_url(edition)}">The State Atlas</a> › {_esc(name)}</div>
     <div class="hd">
       <div class="eyebrow">The State Atlas · {_esc(name)}</div>
       <h1>How {_esc(name)} taxes investors.</h1>
@@ -564,16 +660,17 @@ def render_state_html(data: dict) -> str:
         concentrated, high-turnover book with a tax-managed one — illustrative and coarse; treat it as
         directional, not a precise figure.</p>
       <div class="levers">{levers}</div></div>
+    {_reasoning_html(data.get("reasoning") or {"framework": [], "considerations": [], "actions": []}, name)}
     <div class="cta">
       <div class="ctxt">
         <div class="ch">See the figure on your own {_esc(name)} portfolio.</div>
         <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture — by bracket and holdings.</div>
       </div>
-      <a class="primary" href="leakage.html?state={code}">Run my {_esc(name)} diagnostic →</a>
-      <a class="ghost" href="index.html#conversation">Start a conversation</a>
+      <a class="primary" href="{_ABS}leakage.html?state={code}">Run my {_esc(name)} diagnostic →</a>
+      <a class="ghost" href="{_ABS}index.html#conversation">Start a conversation</a>
     </div>
 {capture}
-    <div class="rel">Compare nearby regimes: {related} · <a href="states.html">all 50 states + DC →</a></div>
+    <div class="rel">Compare nearby regimes: {related} · <a href="{edition_url(edition)}">all 50 states + DC →</a></div>
     {_provenance_block()}
     {DISCLOSURE}
     {firm_anchor_html()}
@@ -585,8 +682,9 @@ def render_state_html(data: dict) -> str:
 """
 
 
-def render_states_index(pages: dict) -> str:
-    """A crawlable directory of every state page — sorted, with each state's rate + illustrative alpha."""
+def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
+    """The edition index (/atlas/{edition}/): a crawlable directory of every state page, sorted, with
+    each state's rate + illustrative alpha, linking to the editioned canonical pages."""
     rows = []
     for code in sorted(pages, key=lambda c: STATE_NAMES[c]):
         d = pages[code]
@@ -594,10 +692,10 @@ def render_states_index(pages: dict) -> str:
         cg = d["rec"].get("cg")
         rate = _esc(cg["tag"]) if cg else "—"
         alpha = f'+{a["value"]:.1f}%/yr' if a else "—"
-        rows.append(f'<tr><td><a href="{page_path(code)}">{_esc(d["name"])}</a></td>'
+        rows.append(f'<tr><td><a href="{atlas_url(code, edition)}">{_esc(d["name"])}</a></td>'
                     f'<td>{rate}</td><td class="al">{alpha}</td></tr>')
     body = "\n".join(rows)
-    url = f"{BASE_URL}/states.html"
+    url = edition_url(edition)
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -607,10 +705,10 @@ def render_states_index(pages: dict) -> str:
 <title>State Capital Gains & Estate Tax — all 50 states + DC | Driftwood</title>
 <meta name="description" content="How every state taxes investors — top long-term capital-gains rate, estate and inheritance tax, munis, QSBS, and basis step-up for all 50 states and DC. A state tax reference. Illustrative, not advice." />
 <link rel="canonical" href="{url}" />
-<link rel="icon" href="favicon.svg" />
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<link rel="icon" href="{_ABS}favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="{_ABS}favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="{_ABS}apple-touch-icon.png" />
+<link rel="mask-icon" href="{_ABS}mask-icon.svg" color="#1a2330" />
 <meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
@@ -623,8 +721,8 @@ def render_states_index(pages: dict) -> str:
 <meta name="twitter:title" content="State Tax Reference — Driftwood Capital" />
 <meta name="twitter:description" content="How every state taxes investors — capital gains, estate, and more." />
 <meta name="twitter:image" content="{BASE_URL}/og/statemap.png" />
-<link rel="stylesheet" href="driftwood.css">
-<script src="dw-context.js"></script>
+<link rel="stylesheet" href="{_ABS}driftwood.css">
+<script src="{_ABS}dw-context.js"></script>
 <style>{_HEAD_CSS}
   table.st{{width:calc(100% - 80px);margin:6px 40px 0;border-collapse:collapse;font-size:13.5px}}
   table.st th,table.st td{{padding:8px 10px;border-bottom:1px solid var(--line2);text-align:right}}
@@ -638,7 +736,7 @@ def render_states_index(pages: dict) -> str:
 <body>
 <div class="sheet">
   <div class="frame">
-    {NAV}
+    {NAV_ABS}
     <div class="hd">
       <div class="eyebrow">The State Atlas · state tax reference</div>
       <h1>How every state taxes investors.</h1>
@@ -660,18 +758,49 @@ def render_states_index(pages: dict) -> str:
 """
 
 
-def export_state_pages(out_dir: str | Path = "docs") -> list[str]:
-    """Write every per-state page + the states.html index. Returns the list of written filenames."""
+def render_redirect(target: str, title: str) -> str:
+    """A static permanent-redirect stub (GitHub Pages serves no true 301s): an instant meta-refresh —
+    which search engines treat as a permanent redirect — reinforced by rel=canonical so the flat URL's
+    SEO equity consolidates onto the editioned canonical. A visible link covers no-JS and humans."""
+    return (f'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8" />\n'
+            f'<title>{_esc(title)}</title>\n'
+            f'<link rel="canonical" href="{target}" />\n'
+            f'<meta http-equiv="refresh" content="0; url={target}" />\n'
+            f'<meta name="viewport" content="width=device-width, initial-scale=1" />\n'
+            f'</head>\n<body>\n'
+            f'<p>This page has permanently moved to <a href="{target}">{target}</a>.</p>\n'
+            f'</body>\n</html>\n')
+
+
+def export_state_pages(out_dir: str | Path = "docs", edition: str = CURRENT_EDITION) -> list[str]:
+    """Publish the editioned Atlas: the canonical /atlas/{edition}/{state}/ pages + the edition index,
+    with the flat *-tax.html and states.html slugs kept as permanent redirect aliases, and /atlas/
+    redirecting to the current edition. Returns the list of written paths (relative to out_dir)."""
     out_dir = Path(out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
     pages = build_state_pages()
     written = []
     for code, data in pages.items():
-        fn = page_path(code)
-        (out_dir / fn).write_text(render_state_html(data))
-        written.append(fn)
-    (out_dir / "states.html").write_text(render_states_index(pages))
+        # The canonical editioned page at /atlas/{edition}/{slug}/index.html.
+        d = out_dir / atlas_path(code, edition)
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "index.html").write_text(render_state_html(data, edition))
+        written.append(f"{atlas_path(code, edition)}/index.html")
+        # The flat legacy slug lives on as a permanent redirect to the editioned canonical.
+        (out_dir / page_path(code)).write_text(
+            render_redirect(atlas_url(code, edition), f"{data['name']} tax — moved to {edition} edition"))
+        written.append(page_path(code))
+    # The edition index, and the flat states.html as its permanent redirect alias.
+    edir = out_dir / "atlas" / edition
+    edir.mkdir(parents=True, exist_ok=True)
+    (edir / "index.html").write_text(render_states_index(pages, edition))
+    written.append(f"atlas/{edition}/index.html")
+    (out_dir / "states.html").write_text(
+        render_redirect(edition_url(edition), "State tax reference — moved"))
     written.append("states.html")
+    # /atlas/ always resolves to the current edition.
+    (out_dir / "atlas" / "index.html").write_text(
+        render_redirect(edition_url(edition), "The State Tax Atlas"))
+    written.append("atlas/index.html")
     return written
 
 
@@ -690,11 +819,15 @@ _CORE_SITEMAP = [
 ]
 
 
-def render_sitemap() -> str:
-    urls = list(_CORE_SITEMAP) + [(page_path(c), "0.7", "monthly") for c in STATE_PAGE_CODES]
+def render_sitemap(edition: str = CURRENT_EDITION) -> str:
+    # The sitemap lists CANONICAL URLs only — the editioned pages and the edition index — never the
+    # flat redirect aliases (which would be duplicate content). states.html → the edition index.
+    core = [(loc, pr, cf) for (loc, pr, cf) in _CORE_SITEMAP if loc != "states.html"]
+    core.append((f"atlas/{edition}/", "0.8", "monthly"))
+    state_urls = [(f"{atlas_path(c, edition)}/", "0.7", "monthly") for c in STATE_PAGE_CODES]
     body = "\n".join(
         f"  <url><loc>{BASE_URL}/{loc}</loc><changefreq>{cf}</changefreq><priority>{pr}</priority></url>"
-        for loc, pr, cf in urls)
+        for loc, pr, cf in (core + state_urls))
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
             "<!-- Driftwood — generated by drift states (src/drift/statepage.py). -->\n"
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

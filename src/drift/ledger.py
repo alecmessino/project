@@ -168,7 +168,9 @@ def seed_ledger(series: dict[str, list[Bar]], settings: Settings, sessions: int 
 
 
 _REGION_NAME = {"US": "United States", "DEV": "Developed intl", "EM": "Emerging mkts"}
-_BENCH_COLORS = {"VT": "#3257c4", "VTI": "#c2790f"}
+# Benchmarks recede to neutral grey (VT primary, VTI lighter) — the strategy is the only saturated
+# line on any chart. The web charts also enforce this at render, so this is the data-model default.
+_BENCH_COLORS = {"VT": "#b8bcc2", "VTI": "#cdd0d6"}
 _BENCH_DIV_YIELD = 0.018   # ~qualified-dividend yield of a broad market index (for after-tax)
 
 
@@ -258,7 +260,7 @@ def _benchmarks_state(entries: list[dict], eq: list[float], idx: list[int],
                  for i in range(1, len(beq))]
         b = {
             "label": label,
-            "color": _BENCH_COLORS.get(label, "#9aa0c0"),
+            "color": _BENCH_COLORS.get(label, "#dcdee2"),
             "total_return": round(beq[-1] - 1.0, 6),
             "excess": round((eq[-1] - 1.0) - (beq[-1] - 1.0), 6),
             "sharpe": round(analytics.sharpe(brets, bars_per_year), 2),

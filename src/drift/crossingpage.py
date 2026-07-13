@@ -21,6 +21,7 @@ from .leakage import STATE_NAMES
 from .statemap import AS_OF_LAW, LAST_REVIEWED, CURRENT_EDITION
 from .statepage import (
     _esc, _ABS, NAV_ABS, PLAUSIBLE, DISCLOSURE, _HEAD_CSS, _provenance_block, atlas_url,
+    _process_bar, MEETING_URL,
 )
 from .site import BASE_URL, firm_anchor_html
 from . import crossing as _xing
@@ -201,6 +202,7 @@ def render_crossing_html(brief: dict, edition: str = CURRENT_EDITION) -> str:
 <div class="sheet">
   <div class="frame">
     {NAV_ABS}
+    {_process_bar("plan", edition)}
     <div class="hd">
       <div class="eyebrow">The State Atlas · Crossing Brief</div>
       <h1>What changes when a household crosses state lines.</h1>
@@ -245,13 +247,13 @@ def render_crossing_html(brief: dict, edition: str = CURRENT_EDITION) -> str:
     <div class="qwrap"><ol>{questions}</ol></div>
     <div class="cta">
       <div class="ctxt">
-        <div class="ch">Read either environment in full.</div>
-        <div class="cd">Each state's Atlas page carries every dimension and the full reasoning chain; the Comparison weighs the two side by side.</div>
+        <div class="ch">This brief becomes one entry in a household's operating file.</div>
+        <div class="cd">The Household Record binds the move to the family's standing decisions, coordination priorities, and advisors — the place this brief is coordinated, not filed.</div>
       </div>
-      <a class="primary" href="{atlas_url(d["code"], edition)}">{_esc(d_name)} Atlas →</a>
-      <a class="ghost" href="{BASE_URL}/atlas/{edition}/compare/{_compare_slug(o["code"], d["code"])}/">Compare the two →</a>
+      <a class="primary" href="{BASE_URL}/atlas/{edition}/household/">Prepare this as your Household Record →</a>
+      <a class="ghost" href="{MEETING_URL}">Start a conversation</a>
     </div>
-    <div class="rel">Other routes: <a href="{_xing.crossing_index_url(edition)}">the Crossing Brief index →</a></div>
+    <div class="rel">Read either environment in full: <a href="{atlas_url(o["code"], edition)}">{_esc(o_name)} Atlas →</a> · <a href="{atlas_url(d["code"], edition)}">{_esc(d_name)} Atlas →</a> · <a href="{BASE_URL}/atlas/{edition}/compare/{_compare_slug(o["code"], d["code"])}/">weigh the two →</a> · <a href="{_xing.crossing_index_url(edition)}">other crossings →</a></div>
     {_provenance_block()}
     {DISCLOSURE}
     {firm_anchor_html()}
@@ -312,6 +314,7 @@ def render_crossing_index_html(edition: str = CURRENT_EDITION) -> str:
 <div class="sheet">
   <div class="frame">
     {NAV_ABS}
+    {_process_bar("plan", edition)}
     <div class="hd">
       <div class="eyebrow">The State Atlas · Crossing Brief</div>
       <h1>When a household crosses state lines, its operating system changes.</h1>
@@ -327,7 +330,7 @@ def render_crossing_index_html(edition: str = CURRENT_EDITION) -> str:
         <div class="ch">Considering a move that isn't here?</div>
         <div class="cd">Every state pair has a brief in the graph — start a conversation and we'll prepare the one for your household's crossing.</div>
       </div>
-      <a class="primary" href="{_ABS}index.html#conversation">Start a conversation →</a>
+      <a class="primary" href="{MEETING_URL}">Start a conversation →</a>
       <a class="ghost" href="{BASE_URL}/atlas/{edition}/compare/">Weigh two states →</a>
     </div>
     {_provenance_block()}

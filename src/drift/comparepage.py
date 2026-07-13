@@ -22,7 +22,7 @@ from .leakage import STATE_NAMES
 from .statemap import AS_OF_LAW, LAST_REVIEWED, CURRENT_EDITION
 from .statepage import (
     _esc, _ABS, NAV_ABS, PLAUSIBLE, DISCLOSURE, _HEAD_CSS, _provenance_block,
-    _LEVEL_DOTS, atlas_url,
+    _LEVEL_DOTS, atlas_url, _process_bar, MEETING_URL,
 )
 from .site import BASE_URL, firm_anchor_html
 from . import compare as _cmp
@@ -214,6 +214,7 @@ def render_comparison_html(cmp: dict, edition: str = CURRENT_EDITION) -> str:
 <div class="sheet">
   <div class="frame">
     {NAV_ABS}
+    {_process_bar("compare", edition)}
     <div class="hd">
       <div class="eyebrow">The State Atlas · Comparison</div>
       <h1>{_esc(a_name)} and {_esc(b_name)}, weighed as two operating environments.</h1>
@@ -245,13 +246,13 @@ def render_comparison_html(cmp: dict, edition: str = CURRENT_EDITION) -> str:
     {_impact_line(cmp)}
     <div class="cta">
       <div class="ctxt">
-        <div class="ch">Read either environment in full.</div>
-        <div class="cd">Each state's complete Atlas page carries every dimension, the reasoning chain, and a personalized diagnostic.</div>
+        <div class="ch">A difference between two states is a decision waiting to be coordinated.</div>
+        <div class="cd">Turn it into a sequenced operating plan for a move, or fold it into a household's standing coordination record.</div>
       </div>
-      <a class="primary" href="{atlas_url(a["code"], edition)}">{_esc(a_name)} Atlas →</a>
-      <a class="ghost" href="{atlas_url(b["code"], edition)}">{_esc(b_name)} Atlas →</a>
+      <a class="primary" href="{BASE_URL}/atlas/{edition}/household/">Build your coordination record →</a>
+      <a class="ghost" href="{BASE_URL}/atlas/{edition}/crossing/">Plan a move → Crossing Brief</a>
     </div>
-    <div class="rel">Weigh another pair: <a href="{_cmp.compare_index_url(edition)}">the Comparison instrument →</a></div>
+    <div class="rel">Read either environment in full: <a href="{atlas_url(a["code"], edition)}">{_esc(a_name)} Atlas →</a> · <a href="{atlas_url(b["code"], edition)}">{_esc(b_name)} Atlas →</a> · <a href="{_cmp.compare_index_url(edition)}">weigh another pair →</a></div>
     {_provenance_block()}
     {DISCLOSURE}
     {firm_anchor_html()}
@@ -384,6 +385,7 @@ def render_compare_index_html(edition: str = CURRENT_EDITION) -> str:
 <div class="sheet">
   <div class="frame">
     {NAV_ABS}
+    {_process_bar("compare", edition)}
     <div class="hd">
       <div class="eyebrow">The State Atlas · Comparison</div>
       <h1>Weigh any two operating environments.</h1>

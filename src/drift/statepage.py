@@ -31,7 +31,11 @@ from . import reasoning
 
 # Single source of truth for the public base URL lives in drift.site (re-exported here for callers
 # and tests); flip it with scripts/set_domain.py when the custom domain goes live.
-from .site import BASE_URL, firm_anchor_html
+from .site import BASE_URL, BOOKING_URL, firm_anchor_html
+
+# One-click booking from any flagship (Launch Standard: deep-page CTAs go straight to the scheduler,
+# not back through the homepage contact section).
+MEETING_URL = BOOKING_URL
 
 # The 50 states + DC get a landing page (territories are edge cases; "—"/"NYC" are pseudo-keys).
 STATE_PAGE_CODES = sorted(
@@ -246,6 +250,33 @@ NAV = (
 # pages where a root-relative 'about.html' would otherwise resolve under /atlas/2026/{state}/.
 NAV_ABS = re.sub(r'href="(?!https?:|#|/)([^"]*)"', lambda m: f'href="{_ABS}{m.group(1)}"', NAV)
 
+
+# ── The narrative process spine ─────────────────────────────────────────────────────────────────
+# Not a nav breadcrumb (where you are in the tree) but a PROCESS breadcrumb (where you are in the
+# coordination journey): Environment → Compare → Plan → Coordinate → Review. It reinforces that the
+# visitor is moving through one operating system, not browsing pages. Stages map 1:1 to the flagship
+# products; the active stage is highlighted and Review always lands on a conversation.
+_PROCESS_STAGES = [
+    ("environment", "Environment", lambda ed: edition_url(ed)),           # the Atlas
+    ("compare", "Compare", lambda ed: f"{edition_url(ed)}compare/"),      # the Comparison
+    ("plan", "Plan", lambda ed: f"{edition_url(ed)}crossing/"),           # the Crossing Brief
+    ("coordinate", "Coordinate", lambda ed: f"{edition_url(ed)}household/"),  # the Household Record
+    ("review", "Review", lambda ed: MEETING_URL),                         # a conversation
+]
+
+
+def _process_bar(active: str, edition: str = CURRENT_EDITION) -> str:
+    """The progressive process spine for the flagship pages; `active` is one of the stage keys."""
+    parts = []
+    for i, (key, label, urlfn) in enumerate(_PROCESS_STAGES):
+        if i:
+            parts.append('<i aria-hidden="true">→</i>')
+        cur = ' aria-current="step"' if key == active else ""
+        cls = "on" if key == active else ""
+        parts.append(f'<a class="{cls}" href="{urlfn(edition)}"{cur}>{label}</a>')
+    return f'<nav class="procbar" aria-label="Where you are in the coordination process">{"".join(parts)}</nav>'
+
+
 PLAUSIBLE = (
     '<!-- Privacy-first analytics (Plausible) -->\n'
     '<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>\n'
@@ -385,6 +416,14 @@ _HEAD_CSS = """
     box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
   .bcrumb{padding:12px 40px 0;font-size:11.5px;color:var(--muted)}
   .bcrumb a{color:var(--brass);text-decoration:none} .bcrumb a:hover{text-decoration:underline}
+  /* The narrative process spine — where you are in the coordination journey (not the page tree). */
+  .procbar{display:flex;flex-wrap:wrap;align-items:center;gap:5px 9px;padding:13px 40px 2px;
+    font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+  .procbar a{color:var(--muted);text-decoration:none;padding:2px 0}
+  .procbar a.on{color:var(--accent-strike);box-shadow:inset 0 -2px 0 var(--accent-strike)}
+  .procbar a:hover{color:var(--ink)}
+  .procbar i{color:var(--ghost-line);font-weight:400}
+  @media(max-width:600px){.procbar{padding-left:18px;padding-right:18px;font-size:9px;letter-spacing:.1em}}
   .hd{padding:22px 40px 6px}
   .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:10px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px, 2.4vw + 19px, 36px);line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin:0 0 10px}
@@ -642,6 +681,7 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
 <div class="sheet">
   <div class="frame">
     {NAV_ABS}
+    {_process_bar("environment", edition)}
     <div class="hd">
       <div class="eyebrow">The State Atlas · {_esc(name)}</div>
       <h1>How {_esc(name)} taxes investors.</h1>
@@ -669,10 +709,10 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
         <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture — by bracket and holdings.</div>
       </div>
       <a class="primary" href="{_ABS}leakage.html?state={code}">Run my {_esc(name)} diagnostic →</a>
-      <a class="ghost" href="{_ABS}index.html#conversation">Start a conversation</a>
+      <a class="ghost" href="{MEETING_URL}">Start a conversation</a>
     </div>
 {capture}
-    <div class="rel">Compare nearby regimes: {related} · <a href="{edition_url(edition)}">all 50 states + DC →</a> · <a href="{edition_url(edition)}compare/">weigh two states →</a> · <a href="{edition_url(edition)}crossing/">plan a move →</a></div>
+    <div class="rel">Onward: <a href="{edition_url(edition)}compare/">weigh {_esc(name)} against another state →</a> · <a href="{edition_url(edition)}crossing/">plan a move →</a> · <a href="{edition_url(edition)}household/">build a coordination record →</a><br><span style="color:var(--muted)">Nearby regimes: {related} · <a href="{edition_url(edition)}">all 50 states + DC →</a></span></div>
     {_provenance_block()}
     {DISCLOSURE}
     {firm_anchor_html()}
@@ -739,6 +779,7 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
 <div class="sheet">
   <div class="frame">
     {NAV_ABS}
+    {_process_bar("environment", edition)}
     <div class="hd">
       <div class="eyebrow">The State Atlas · state tax reference</div>
       <h1>How every state taxes investors.</h1>
@@ -749,6 +790,15 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
       <thead><tr><th scope="col">State</th><th scope="col">Top LT rate</th><th scope="col">Tax Management Impact</th></tr></thead>
       <tbody>{body}</tbody>
     </table>
+    <div class="cta">
+      <div class="ctxt">
+        <div class="ch">A state is where coordination begins, not ends.</div>
+        <div class="cd">Weigh two environments, plan a move between them, and see how it all becomes one household's standing record.</div>
+      </div>
+      <a class="primary" href="{edition_url(edition)}compare/">Compare how coordination changes across states →</a>
+      <a class="ghost" href="{MEETING_URL}">Start a conversation</a>
+    </div>
+    <div class="rel">Onward: <a href="{edition_url(edition)}crossing/">plan a move between states →</a> · <a href="{edition_url(edition)}household/">build a coordination record →</a></div>
     {_provenance_block()}
     {DISCLOSURE}
     {firm_anchor_html()}

@@ -290,6 +290,14 @@ Creative-Director brief — copy locked, information architecture re-curated as 
 - **Archive · Evidence · Practice · Invitation** re-paced with gallery numerals, asymmetric practice
   split, and the exhibition's exit wall (single primary preserved).
 
+**Round 2 — the curatorial cut** (same pass, user-directed): optimize for a 90-second visit, impact over
+completeness. Nine galleries became **eight**: the Archive merged into the Method as a titles-only
+"paper trail" coda; Evidence kept only the interactive Exhibit III (the placement table became a one-line
+teaser into the After-Tax Review); Practice compressed to two ruled index lines; the credibility strip
+stopped being a section and became the exit wall's quiet last line; the Category dropped its explaining
+paragraph (the toggle demonstrates it) and ends on the pull-quote. Pacing contrast widened — monumental
+hero/category/plate, compressed diagnosis/practice. Net: ~20% shorter page, >25% less content.
+
 **Deliberately deferred** (voice-significant or out of scope for a copy pass — held for the design pass or
 a directed decision):
 

@@ -272,6 +272,24 @@ Each item above traces to a specific page and dimension in §5. Close them, then
 - **Dead CSS dropped** — the orphaned `.onward .d` separator rules on Philosophy, Our Story, and Family
   Office (left behind by Pass 1's single-link consolidation).
 
+**2026-07-14 · Pass 3 (the exhibition overhaul).** Full visual refactor of the homepage under the
+Creative-Director brief — copy locked, information architecture re-curated as nine galleries
+(Constraint → Diagnosis → Category → System → Method → Archive → Evidence → Practice → Invitation):
+
+- **Hero** became an asymmetric broadsheet (triad carved per-sentence, supporting lede as a margin deck,
+  one data footnote in a navy margin note).
+- **Diagnosis** became a tactile ledger (numbered rows, hover-lens, drawn checks) — the approved
+  count-read mechanic and analytics unchanged.
+- **Category** gained the framed pull-quote and the "siloed view / coordinated view" toggle exhibit —
+  demonstrating uncoordinated advice (rust strikethroughs + editorial-blue margin annotations).
+- **The System plate** expanded from five to seven systems (added Risk & Liability, Entity Structure;
+  21-edge lattice) with a **trace-a-common-decision** trigger rail (cash & T-bills / out-of-state
+  property / $50k gift) that lights each decision's cascade; cascades stay pinned until dismissed.
+- **The Method** replaced the four-card grid with a staggered editorial sequence (oversized faint
+  numerals, blueprint watermarks on hover); the pinned verbs kept verbatim.
+- **Archive · Evidence · Practice · Invitation** re-paced with gallery numerals, asymmetric practice
+  split, and the exhibition's exit wall (single primary preserved).
+
 **Deliberately deferred** (voice-significant or out of scope for a copy pass — held for the design pass or
 a directed decision):
 

@@ -78,15 +78,43 @@
   .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
-  /* ── Hero — problem + category, in one memorable line. ───────────────────────────────────────── */
-  .hero{display:block;padding:40px 44px 34px;max-width:82ch}
-  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;
-    text-transform:uppercase;color:var(--accent-strike);margin-bottom:20px}
-  .kick{font-family:var(--serif);font-size:clamp(18px,.7vw+15px,21px);line-height:1.5;color:var(--muted);margin:0 0 12px;max-width:52ch}
-  h1{font-family:var(--sans);font-weight:700;font-size:clamp(40px,3.6vw + 18px,55px);line-height:1.05;
-    letter-spacing:-.022em;color:var(--ink);margin:0 0 24px;max-width:18ch}
-  .lede{font-family:var(--serif);font-size:18.5px;line-height:1.58;color:var(--dim);margin:0 0 30px;max-width:56ch}
+  /* ── The exhibition scaffold — each section is a gallery with its own rhythm. Hairline top rules
+     pace the walk; a faint oversized numeral marks the room; compression alternates with air. ── */
+  .gal{position:relative;border-top:1px solid var(--line)}
+  .gal-no{position:absolute;top:30px;right:34px;font-family:var(--sans);font-weight:700;
+    font-size:clamp(92px,11vw,168px);line-height:1;letter-spacing:-.04em;color:var(--ink);
+    opacity:.05;pointer-events:none;user-select:none}
+  .gal-no.l{right:auto;left:34px}
+  .vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;border:0;
+    clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden;white-space:nowrap}
+
+  /* ── Gallery I · The Constraint — an asymmetric broadsheet, not a centered column. ──────────── */
+  .hero{display:block;padding:104px 44px 78px}
+  .kick{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--accent-strike);margin:0 0 40px;max-width:none}
+  .hero-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:0 34px;align-items:start}
+  .hero h1{grid-column:1/9;font-family:var(--sans);font-weight:700;
+    font-size:clamp(38px,4.4vw,58px);line-height:1.04;letter-spacing:-.026em;color:var(--ink);margin:0}
+  .hero h1 span{display:block}
+  .hero-aside{grid-column:10/-1;margin-top:76px;padding-left:24px;border-left:1px solid var(--line)}
+  .lede{font-family:var(--serif);font-size:16.5px;line-height:1.68;color:var(--dim);margin:0}
   .lede b{color:var(--ink);font-weight:500}
+  .hero .ctas{margin-top:72px;padding-top:28px;border-top:1px solid var(--line)}
+  @media(max-width:900px){
+    .hero{padding-top:64px}
+    .hero-grid{display:block}
+    .hero-aside{margin-top:36px;padding-left:20px;max-width:56ch}
+    .hero .ctas{margin-top:44px}
+  }
+  /* Editorial data footnote — a bracketed superscript that opens a dark margin note. */
+  .fn{line-height:0}
+  .fn-btn{font-family:var(--sans);font-size:10.5px;font-weight:700;color:var(--accent-strike);
+    background:none;border:0;border-bottom:1px solid var(--accent-strike-soft);cursor:pointer;
+    padding:0 1px;margin-left:3px}
+  .fn-btn:hover{color:var(--ink)}
+  .fn-note{margin-top:20px;background:var(--navy);color:var(--on-dark);font-family:var(--sans);
+    font-size:12.5px;line-height:1.62;padding:15px 17px;max-width:46ch}
+  .fn-note b{color:var(--on-dark-strong);font-weight:700}
   .ctas{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
   .ctas a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:500;white-space:nowrap;
     transition:filter var(--t-fast),transform var(--t-fast),background var(--t-fast),border-color var(--t-fast)}
@@ -100,57 +128,115 @@
   .ctas .ghost{color:var(--ink);padding:15px 10px;font-weight:500;border-bottom:2px solid transparent}
   .ctas .ghost:hover{border-bottom-color:var(--teal)}
 
-  /* ── Section scaffold — strong hierarchy: tiny label, medium statement, generous air. ────────── */
+  /* ── Section scaffold — tiny label, medium statement, generous air. Galleries vary their own
+     vertical rhythm deliberately: dense ledger, vast plate, quiet archive — never one template. ── */
   .sec{padding:20px 44px 44px}
+  .sec.gal{padding:96px 44px 92px}
+  #diagnostic.gal{padding:88px 44px 84px}
+  #category.gal{padding:128px 44px 118px}
+  #capabilities.gal{padding:108px 44px 96px}
+  #operating-system.gal{padding:84px 44px 80px}
   .sec .h{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:18px}
   .lede2{font-family:var(--serif);font-size:clamp(19px,1vw+15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
   .lede2 b{color:var(--ink);font-weight:500}
-  /* ── Diagnosis — self-recognition, not a lead form. Checkable prompts; a live, non-promotional read. */
-  .diag{display:grid;gap:2px;margin:2px 0 18px;max-width:62ch}
-  .diag-item{display:flex;align-items:flex-start;gap:13px;padding:12px 14px;border-radius:var(--surface-radius);
-    cursor:pointer;font-family:var(--serif);font-size:16px;line-height:1.45;color:var(--body);transition:background var(--t-fast)}
-  .diag-item:hover{background:var(--soft)}
-  .diag-item input{margin-top:3px;width:17px;height:17px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
+  /* ── Gallery II · The Diagnosis — a tactile ledger of symptoms, not a lead form. Native inputs
+     stay (visually hidden) so keyboard + counter behavior is unchanged; hovering one statement
+     focuses it like a lens and the rest recede; a recognized statement carries a drawn check. ── */
+  .diag{counter-reset:dg;display:block;margin:10px 0 30px;max-width:68ch;border-top:1px solid var(--line)}
+  .diag-item{display:grid;grid-template-columns:46px 1fr;gap:0 16px;align-items:baseline;position:relative;
+    padding:18px 18px 18px 2px;border-bottom:1px solid var(--line2);cursor:pointer;
+    font-family:var(--serif);font-size:17px;line-height:1.5;color:var(--body);
+    transition:opacity .22s ease,color .22s ease}
+  .diag-item::before{counter-increment:dg;content:counter(dg,decimal-leading-zero);
+    font-family:var(--sans);font-variant-numeric:tabular-nums;font-size:11px;font-weight:700;
+    letter-spacing:.14em;color:var(--ghost-line);transform:translateY(-2px);transition:color .22s ease}
+  .diag-item::after{content:"";position:absolute;left:-20px;top:15px;bottom:15px;width:2px;
+    background:var(--accent-strike);opacity:0;transition:opacity .22s ease}
+  @media(hover:hover){
+    .diag:hover .diag-item:not(:hover):not(:focus-within){opacity:.32}
+    .diag-item:hover::after{opacity:1}
+  }
+  .diag-item:focus-within::after{opacity:1}
+  .diag-item input:focus-visible ~ span{outline:2px solid var(--accent);outline-offset:3px}
   .diag-item input:checked ~ span{color:var(--ink);font-weight:500}
+  .diag-item input:checked ~ span::after{content:"✓";font-family:var(--sans);font-size:14px;
+    font-weight:700;color:var(--accent-strike);margin-left:11px}
+  .diag-item:has(input:checked)::before{color:var(--accent-strike)}
   .diag-insight{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.5;color:var(--dim);
     margin:0 0 14px;max-width:56ch;padding-left:16px;border-left:2px solid var(--accent-strike)}
   .diag-result{font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--accent-strike);font-weight:500;margin:0 0 18px;max-width:56ch}
   .diag-result:empty{margin:0}
-  .cat-h{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.2vw+16px,38px);line-height:1.1;
-    letter-spacing:-.02em;color:var(--ink);margin:0 0 18px;max-width:20ch}
+  .cat-h{font-family:var(--sans);font-weight:700;font-size:clamp(34px,3.4vw+14px,54px);line-height:1.04;
+    letter-spacing:-.026em;color:var(--ink);margin:0 0 26px;max-width:16ch}
   .sysbody{font-family:var(--sans);font-size:15.5px;line-height:1.65;color:var(--body);margin:0 0 26px;max-width:60ch}
   .sysbody b{color:var(--ink);font-weight:500}
 
-  /* Four capabilities — icon · title · question · one line · CTA. Separated cards, room to breathe. */
-  .caps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px}
-  @media(max-width:900px){.caps{grid-template-columns:1fr 1fr}}
-  @media(max-width:540px){.caps{grid-template-columns:1fr}}
-  a.cap-card{padding:18px 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;text-decoration:none;color:inherit}
-  .cap-n{font-family:var(--sans);font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;
-    letter-spacing:.14em;color:var(--accent-strike);margin-bottom:16px}
-  .cap-t{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
-  .cap-q{font-family:var(--sans);font-weight:500;font-size:18.5px;line-height:1.2;color:var(--ink);margin:0 0 9px;letter-spacing:-.01em}
-  .cap-d{font-family:var(--sans);font-size:14px;color:var(--dim);line-height:1.5;margin-bottom:18px}
-  .cap-go{margin-top:auto;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--teal2)}
-  .cap-go::after{content:"\00a0→";display:inline-block;transition:transform .2s var(--ease-out)}
-  a.cap-card:hover .cap-go{color:var(--teal)}
-  a.cap-card:hover .cap-go::after{transform:translateX(4px)}
+  /* ── Gallery III · The Category — the claim as a carved statement, then two readings of the same
+     deliverables. The pull-quote carries the thesis; the toggle DEMONSTRATES uncoordinated advice
+     instead of describing it. ── */
+  .pull{margin:46px 0 0;padding:24px 0 24px 30px;border-left:3px solid var(--ink);
+    font-family:var(--serif);font-size:clamp(22px,1.6vw+14px,30px);line-height:1.35;color:var(--ink);max-width:26ch}
+  .views{margin-top:64px;max-width:660px}
+  .views-tabs{display:flex;border-bottom:1px solid var(--line)}
+  .vt{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);background:none;border:0;border-bottom:2px solid transparent;
+    padding:10px 2px;margin-right:30px;cursor:pointer;transition:color .2s ease,border-color .2s ease}
+  .vt:hover{color:var(--ink)}
+  .vt.on{color:var(--ink);border-bottom-color:var(--accent-strike)}
+  .views-list{list-style:none;margin:0;padding:0}
+  .views-list li{padding:21px 2px;border-bottom:1px solid var(--line2)}
+  .vl-t{display:inline-block;font-family:var(--sans);font-size:17px;font-weight:600;color:var(--ink);
+    position:relative;transition:color .3s ease}
+  .vl-t::after{content:"";position:absolute;left:-2px;right:-2px;top:55%;height:1px;background:var(--neg);
+    transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease-out)}
+  .vl-note{display:block;font-family:var(--serif);font-style:italic;font-size:14.5px;line-height:1.55;
+    color:var(--accent-strike);max-width:54ch;margin-top:8px;opacity:0;max-height:0;overflow:hidden;
+    transition:opacity .3s ease,max-height .3s ease}
+  .views.alt .vl-t{color:var(--dim)}
+  .views.alt .vl-t::after{transform:scaleX(1)}
+  .views.alt .vl-note{opacity:1;max-height:5em}
+  .views-read{font-family:var(--sans);font-size:13.5px;color:var(--muted);margin:20px 0 0;opacity:0;transition:opacity .3s ease}
+  .views-read b{color:var(--ink);font-weight:600}
+  .views.alt .views-read{opacity:1}
+
+  /* ── Gallery V · The Method — a staggered editorial sequence, not a feature grid. Each step is a
+     room: oversized faint numeral, the verb carved large, the question in the editorial voice, and
+     on hover a faint schematic surfaces beneath — the work happening under the surface. ── */
+  .method{list-style:none;margin:40px 0 0;padding:0}
+  .m-row{position:relative;max-width:62%;padding:48px 0 44px;border-top:1px solid var(--line)}
+  .m-row.alt{margin-left:auto}
+  .m-no{position:absolute;top:6px;right:-8px;font-family:var(--sans);font-weight:700;font-size:158px;
+    line-height:1;letter-spacing:-.04em;color:var(--ink);opacity:.045;pointer-events:none;user-select:none}
+  .m-row.alt .m-no{right:auto;left:-8px}
+  .m-verb{font-family:var(--sans);font-weight:700;font-size:clamp(26px,2vw+14px,34px);letter-spacing:-.022em;color:var(--ink);margin:0 0 9px}
+  .m-q{font-family:var(--serif);font-size:18px;line-height:1.45;color:var(--dim);margin:0 0 9px;max-width:34ch}
+  .m-d{font-family:var(--sans);font-size:14px;line-height:1.55;color:var(--dim);margin:0 0 18px;max-width:46ch}
+  .m-go{font-family:var(--sans);font-size:12.5px;font-weight:700;letter-spacing:.02em;color:var(--teal2);text-decoration:none}
+  .m-go::after{content:"\00a0→";display:inline-block;transition:transform .2s var(--ease-out)}
+  .m-go:hover{color:var(--teal)}
+  .m-go:hover::after{transform:translateX(4px)}
+  .m-mark{position:absolute;right:6px;bottom:36px;width:200px;height:112px;opacity:0;
+    transition:opacity .35s ease;pointer-events:none;stroke:var(--ghost-line);fill:none;stroke-width:1}
+  .m-row.alt .m-mark{right:auto;left:6px}
+  .m-row:hover .m-mark{opacity:.55}
+  @media(max-width:820px){.m-row{max-width:100%}.m-no{font-size:110px}.m-mark{display:none}}
 
   /* THE THESIS — a museum exhibit. Five systems in a faint web; hovering one illuminates what it
      moves, the centre names the coordination, the flow carries down to the outcome, and a causal
      micro-story with one proof appears beneath. Paper under glass: ~300ms opacity + hairline
      transitions only — no motion, no scale, no spring. Teach through interaction, not paragraphs. */
-  .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:76px 44px 68px;margin:0}
+  .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:120px 44px 96px;margin:0;position:relative}
   .sysband-in{max-width:680px;margin:0 auto;text-align:center}
   .sb-eye{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
-  .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(25px,2.1vw+15px,35px);line-height:1.14;letter-spacing:-.02em;color:var(--ink);margin:0 auto;max-width:20ch}
-  .sysstage{margin:28px auto 0;max-width:568px}
+  .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.4vw+15px,40px);line-height:1.12;letter-spacing:-.022em;color:var(--ink);margin:0 auto;max-width:20ch}
+  .sysstage{margin:34px auto 0;max-width:590px}
   .sysstage svg{width:100%;height:auto;display:block;overflow:visible}
   .sysstage text{font-family:var(--sans)}
-  /* the web — hairline-thin and near-silent at rest; a hovered system lifts its own links only */
-  .net{stroke:var(--ghost-line);stroke-width:.8;opacity:.11;transition:opacity .34s ease,stroke .34s ease}
+  /* the web — 21 hairlines among seven systems, near-silent at rest: the density IS the argument.
+     A hovered system lifts only its own links; a traced decision lifts the chords among its set. */
+  .net{stroke:var(--ghost-line);stroke-width:.6;opacity:.1;transition:opacity .34s ease,stroke .34s ease}
   .net.lit{stroke:var(--accent-strike);stroke-width:1;opacity:.72}
-  .net.dim{opacity:.03}
+  .net.dim{opacity:.02}
   .flow{stroke:var(--ghost-line);stroke-width:.8;opacity:.32;transition:opacity .34s ease,stroke .34s ease}
   .flow.on{stroke:var(--accent-strike);opacity:.72}
   .hub{fill:var(--muted);font-size:15px;font-weight:700;letter-spacing:.03em;transition:fill .34s ease}
@@ -176,8 +262,18 @@
   .mproof:hover{text-decoration:underline}
   .mstory.show .mrest{opacity:0}
   .mstory.show .mlead,.mstory.show .mchain,.mstory.show .mproof{opacity:1}
-  @media(prefers-reduced-motion:reduce){.net,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof{transition:none}}
-  @media(max-width:620px){.sysband{padding:44px 22px}.sysstage{max-width:410px}.node .lbl{font-size:13px}.mlead{font-size:17px}}
+  /* the trigger rail — trace a common decision; specimen labels, not software buttons */
+  .trig{margin:30px auto 0;max-width:590px;padding-top:18px;border-top:1px solid var(--line2);
+    display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:center}
+  .trig-cap{flex-basis:100%;font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .trig-btn{font-family:var(--sans);font-size:12.5px;font-weight:500;color:var(--body);background:none;
+    border:1px solid var(--line);border-radius:var(--surface-radius);padding:9px 14px;cursor:pointer;
+    transition:border-color .2s ease,color .2s ease}
+  .trig-btn:hover{border-color:var(--ghost-line);color:var(--ink)}
+  .trig-btn[aria-pressed="true"]{border-color:var(--accent-strike);color:var(--ink)}
+  @media(prefers-reduced-motion:reduce){.net,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.vl-t::after,.vl-note,.views-read,.m-mark,.diag-item{transition:none}}
+  @media(max-width:620px){.sysband{padding:64px 22px 56px}.sysstage{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}}
 
   /* Evidence — the surprise is the headline; the chart is the exhibit; methodology is a footnote. */
   .ev-head{font-family:var(--sans);font-weight:700;font-size:clamp(26px,2.4vw+15px,36px);line-height:1.08;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
@@ -199,27 +295,33 @@
   .cred .dot{color:var(--ghost-line)}
   @media(max-width:620px){.cred .dot{display:none}}
 
-  /* One closing conviction — the last impression is a statement, not a directory. */
-  .close-conv{padding:60px 44px 52px;max-width:720px}
-  .conv{font-family:var(--serif);font-size:clamp(23px,1.7vw+15px,31px);line-height:1.4;color:var(--ink);
-    letter-spacing:-.008em;margin:0 0 30px}
+  /* ── Gallery IX · The Invitation — the exhibition's exit wall: one statement, one action. ────── */
+  .close-conv{padding:118px 44px 96px;max-width:780px;border-top:2px solid var(--ink)}
+  .conv{font-family:var(--serif);font-size:clamp(24px,1.9vw+15px,34px);line-height:1.42;color:var(--ink);
+    letter-spacing:-.008em;margin:0 0 40px}
   .conv b{font-weight:500}
-  @media(max-width:620px){.close-conv{padding-left:22px;padding-right:22px}}
+  @media(max-width:620px){.close-conv{padding:64px 22px 56px}}
 
   .foot{margin-top:26px;padding:18px 44px 34px;border-top:1px solid var(--line);color:#9a978f;font-size:11px;line-height:1.6}
   .foot .note{color:var(--muted);font-weight:500}
   .foot a{color:var(--muted)}
   .foot b{color:var(--muted)}
-  @media(max-width:620px){.hero,.sec{padding-left:22px;padding-right:22px}.foot,.cred{padding-left:22px;padding-right:22px}.cred{margin-left:0;margin-right:0}}
-  /* Coordination in real life — worked example + library cards. */
-  .rl-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
-  @media(max-width:700px){.rl-cards{grid-template-columns:1fr}}
-  a.rl-card{padding:20px 0 0;border-top:1px solid var(--line);
-    display:flex;flex-direction:column;text-decoration:none;color:inherit}
-  a.rl-card.feat{border-top:2px solid var(--ink)}
-  .rl-meta{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
-  .rl-t{font-family:var(--sans);font-size:20px;font-weight:700;letter-spacing:-.02em;color:var(--ink);line-height:1.2;margin-bottom:9px}
-  .rl-d{font-family:var(--sans);font-size:14px;color:var(--dim);line-height:1.55;margin-bottom:18px}
+  @media(max-width:620px){
+    .hero{padding:56px 22px 48px}
+    .sec,.sec.gal,#diagnostic.gal,#category.gal,#capabilities.gal,#operating-system.gal{padding-left:22px;padding-right:22px;padding-top:60px;padding-bottom:56px}
+    .foot,.cred{padding-left:22px;padding-right:22px}.cred{margin-left:0;margin-right:0}
+    .gal-no{font-size:76px;top:18px;right:18px}.gal-no.l{left:18px}
+    .diag-item::after{left:-10px}
+    .hero .ctas,.sec .ctas{margin-top:36px}
+  }
+  /* ── Gallery VIII · In Practice — two ruled index entries on an asymmetric split; no card chrome. */
+  .rl-cards{display:grid;grid-template-columns:1.618fr 1fr;gap:0 54px;margin-top:14px;border-top:2px solid var(--ink)}
+  @media(max-width:700px){.rl-cards{grid-template-columns:1fr;gap:0}}
+  a.rl-card{padding:28px 0 34px;display:flex;flex-direction:column;text-decoration:none;color:inherit;
+    border-bottom:1px solid var(--line2)}
+  .rl-meta{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--brass);margin-bottom:12px}
+  .rl-t{font-family:var(--serif);font-size:25px;font-weight:600;letter-spacing:-.014em;color:var(--ink);line-height:1.22;margin-bottom:10px;max-width:22ch}
+  .rl-d{font-family:var(--sans);font-size:14px;color:var(--dim);line-height:1.55;margin-bottom:20px;max-width:52ch}
   .rl-go{margin-top:auto;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--teal2)}
   a.rl-card:hover .rl-go{color:var(--teal)}
   .sb-link{display:inline-block;margin-top:12px;font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--teal2);text-decoration:none}
@@ -265,29 +367,41 @@
       <a class="dwnav-cta" href="index.html#conversation">Schedule a Coordination Review</a>
     </nav>
 
-    <!-- ── RECOGNITION — the invisible problem, named before the answer ── -->
-    <div class="hero">
+    <!-- ── GALLERY I · THE CONSTRAINT — an asymmetric broadsheet: the triad carved large, the
+         supporting argument set as a margin deck, one footnote for the deep reader ── -->
+    <header class="hero">
       <p class="kick">For households whose financial lives have outgrown disconnected advice.</p>
-      <h1>Wealth compounds. Complexity compounds with it. Eventually, coordination becomes the constraint.</h1>
-      <p class="lede">It doesn't arrive all at once. It arrives one account, one entity, one advisor, one
-        state, one trust at a time — until every important financial decision depends on <b>three others</b>.</p>
+      <div class="hero-grid">
+        <h1><span>Wealth compounds.</span> <span>Complexity compounds with it.</span> <span>Eventually, coordination becomes the constraint.</span></h1>
+        <div class="hero-aside">
+          <p class="lede">It doesn't arrive all at once. It arrives one account, one entity, one advisor, one
+            state, one trust at a time — until every important financial decision depends on <b>three
+            others</b>.<sup class="fn"><button class="fn-btn" id="fn1btn" aria-expanded="false" aria-controls="fn1">[1]</button></sup></p>
+          <aside class="fn-note" id="fn1" hidden>
+            <b>[1]</b>&nbsp; One example from the Atlas: Illinois exempts an estate only to $4M — far below the
+            federal ~$14M — so a single titling or residency decision can move income, estate, and filing
+            outcomes at once. Illustrative, not advice.
+          </aside>
+        </div>
+      </div>
       <div class="ctas">
         <a class="quiet" href="#diagnostic">See where coordination is your constraint →</a>
         <a class="ghost" href="#category">or how Driftwood answers it</a>
       </div>
-    </div>
+    </header>
 
-    <!-- ── DIAGNOSIS — self-recognition, not a lead form ── -->
-    <div class="sec" id="diagnostic">
+    <!-- ── GALLERY II · THE DIAGNOSIS — a tactile ledger of symptoms; the mechanic is unchanged ── -->
+    <div class="sec gal" id="diagnostic">
+      <span class="gal-no" aria-hidden="true">II</span>
       <div class="h">A short diagnosis</div>
       <p class="lede2">Has coordination become your biggest financial constraint?</p>
       <div class="diag" id="diag">
-        <label class="diag-item"><input type="checkbox"><span>My CPA and advisor rarely talk to each other.</span></label>
-        <label class="diag-item"><input type="checkbox"><span>I have multiple custodians or account structures.</span></label>
-        <label class="diag-item"><input type="checkbox"><span>My estate plan hasn't been reviewed alongside my investments.</span></label>
-        <label class="diag-item"><input type="checkbox"><span>I'm considering relocating, or I keep more than one residence.</span></label>
-        <label class="diag-item"><input type="checkbox"><span>A business, equity compensation, or trusts have added moving parts.</span></label>
-        <label class="diag-item"><input type="checkbox"><span>No one person is responsible for how it all fits together.</span></label>
+        <label class="diag-item"><input class="vh" type="checkbox"><span>My CPA and advisor rarely talk to each other.</span></label>
+        <label class="diag-item"><input class="vh" type="checkbox"><span>I have multiple custodians or account structures.</span></label>
+        <label class="diag-item"><input class="vh" type="checkbox"><span>My estate plan hasn't been reviewed alongside my investments.</span></label>
+        <label class="diag-item"><input class="vh" type="checkbox"><span>I'm considering relocating, or I keep more than one residence.</span></label>
+        <label class="diag-item"><input class="vh" type="checkbox"><span>A business, equity compensation, or trusts have added moving parts.</span></label>
+        <label class="diag-item"><input class="vh" type="checkbox"><span>No one person is responsible for how it all fits together.</span></label>
       </div>
       <p class="diag-insight">Most households discover only one or two of these. Institutions look for all of them at once.</p>
       <div class="diag-result" id="diagResult" aria-live="polite"></div>
@@ -296,17 +410,179 @@
       </div>
     </div>
 
-    <!-- ── CATEGORY — only now name the answer ── -->
-    <div class="sec" id="category">
+    <!-- ── GALLERY III · THE CATEGORY — the claim carved large, then two readings of the same
+         deliverables: the toggle demonstrates uncoordinated advice instead of describing it ── -->
+    <div class="sec gal" id="category">
+      <span class="gal-no l" aria-hidden="true">III</span>
       <div class="h">The category</div>
       <h2 class="cat-h">Driftwood coordinates your financial life as one system.</h2>
       <p class="lede2" style="color:var(--dim)">You already have the pieces — a portfolio, a CPA, an attorney, each excellent at their part.
         What almost no household has is <b>the one role responsible for how they fit together</b>, so that every important
-        decision is made in view of the others. Coordination is the product. What you keep is the result.</p>
+        decision is made in view of the others.</p>
+      <blockquote class="pull">Coordination is the product. What you keep is the result.</blockquote>
+      <div class="views" id="views">
+        <div class="views-tabs" role="group" aria-label="Two readings of the same deliverables">
+          <button class="vt on" data-v="0" aria-pressed="true">The siloed view</button>
+          <button class="vt" data-v="1" aria-pressed="false">The coordinated view</button>
+        </div>
+        <ul class="views-list">
+          <li><span class="vl-t">Maximized portfolio return</span>
+            <span class="vl-note">Generated short-term gains that negated the CPA's loss-harvesting strategy.</span></li>
+          <li><span class="vl-t">Filed tax return</span>
+            <span class="vl-note">Reported the year; didn't shape it — no location, timing, or bracket decisions upstream.</span></li>
+          <li><span class="vl-t">Signed estate documents</span>
+            <span class="vl-note">Beneficiary forms and account titling were never updated to match them.</span></li>
+        </ul>
+        <p class="views-read">Each deliverable is excellent alone. <b>Nobody owned the space between them.</b></p>
+      </div>
     </div>
 
-    <!-- ── THE OPERATING SYSTEM — the differentiator, surfaced first as the proof of method ── -->
-    <div class="sec" id="operating-system">
+    <!-- ── GALLERY IV · THE SYSTEM (Plate I) — seven systems in one lattice; hovering a system
+         teaches what it moves, and tracing a common decision lights everything it touches ── -->
+    <div class="sysband" id="thesystem">
+      <span class="gal-no" aria-hidden="true">IV</span>
+      <div class="sysband-in">
+        <div class="sb-eye">Plate I · The thesis</div>
+        <h2 class="sb-h">Seven systems. No decision touches just one.</h2>
+        <div class="sysstage" id="sysDiagram">
+          <svg viewBox="0 0 640 570" role="group" aria-label="Seven financial systems — Portfolio, Taxes, Liquidity, Professionals, Estate, Risk and Liability, and Entity Structure — in one coordinated network. Hover a system to see what it moves; what you keep is the result.">
+            <!-- the lattice: every system connected to every other (near-silent at rest) -->
+            <line class="net" data-a="0" data-b="1" x1="320" y1="65" x2="457" y2="131"/>
+            <line class="net" data-a="0" data-b="2" x1="320" y1="65" x2="491" y2="279"/>
+            <line class="net" data-a="0" data-b="3" x1="320" y1="65" x2="244" y2="398"/>
+            <line class="net" data-a="0" data-b="4" x1="320" y1="65" x2="149" y2="279"/>
+            <line class="net" data-a="0" data-b="5" x1="320" y1="65" x2="183" y2="131"/>
+            <line class="net" data-a="0" data-b="6" x1="320" y1="65" x2="396" y2="398"/>
+            <line class="net" data-a="1" data-b="2" x1="457" y1="131" x2="491" y2="279"/>
+            <line class="net" data-a="1" data-b="3" x1="457" y1="131" x2="244" y2="398"/>
+            <line class="net" data-a="1" data-b="4" x1="457" y1="131" x2="149" y2="279"/>
+            <line class="net" data-a="1" data-b="5" x1="457" y1="131" x2="183" y2="131"/>
+            <line class="net" data-a="1" data-b="6" x1="457" y1="131" x2="396" y2="398"/>
+            <line class="net" data-a="2" data-b="3" x1="491" y1="279" x2="244" y2="398"/>
+            <line class="net" data-a="2" data-b="4" x1="491" y1="279" x2="149" y2="279"/>
+            <line class="net" data-a="2" data-b="5" x1="491" y1="279" x2="183" y2="131"/>
+            <line class="net" data-a="2" data-b="6" x1="491" y1="279" x2="396" y2="398"/>
+            <line class="net" data-a="3" data-b="4" x1="244" y1="398" x2="149" y2="279"/>
+            <line class="net" data-a="3" data-b="5" x1="244" y1="398" x2="183" y2="131"/>
+            <line class="net" data-a="3" data-b="6" x1="244" y1="398" x2="396" y2="398"/>
+            <line class="net" data-a="4" data-b="5" x1="149" y1="279" x2="183" y2="131"/>
+            <line class="net" data-a="4" data-b="6" x1="149" y1="279" x2="396" y2="398"/>
+            <line class="net" data-a="5" data-b="6" x1="183" y1="131" x2="396" y2="398"/>
+            <!-- the flow: coordination carries down to the outcome -->
+            <line class="flow" x1="320" y1="272" x2="320" y2="516"/>
+            <!-- the centre: coordination (an invisible paper mask keeps it legible over the lattice) -->
+            <rect class="hub-bg" x="266" y="230" width="108" height="24" fill="var(--bg)"/>
+            <text class="hub" x="320" y="246" text-anchor="middle">Coordination</text>
+            <!-- the outcome — free, below the network; never boxed -->
+            <text class="keep" x="320" y="542" text-anchor="middle">What you keep.</text>
+            <!-- the seven systems (DOM order = SYS index) -->
+            <g class="node" data-i="0" tabindex="0" role="button" aria-label="Portfolio — see what it moves">
+              <circle class="hit" cx="320" cy="65" r="30"/><circle class="dot" cx="320" cy="65" r="5"/>
+              <text class="lbl" x="320" y="41" text-anchor="middle">Portfolio</text>
+            </g>
+            <g class="node" data-i="1" tabindex="0" role="button" aria-label="Taxes — see what it moves">
+              <circle class="hit" cx="457" cy="131" r="30"/><circle class="dot" cx="457" cy="131" r="5"/>
+              <text class="lbl" x="475" y="122" text-anchor="start">Taxes</text>
+            </g>
+            <g class="node" data-i="2" tabindex="0" role="button" aria-label="Liquidity — see what it moves">
+              <circle class="hit" cx="491" cy="279" r="30"/><circle class="dot" cx="491" cy="279" r="5"/>
+              <text class="lbl" x="511" y="284" text-anchor="start">Liquidity</text>
+            </g>
+            <g class="node" data-i="3" tabindex="0" role="button" aria-label="Professionals — see what they move">
+              <circle class="hit" cx="244" cy="398" r="30"/><circle class="dot" cx="244" cy="398" r="5"/>
+              <text class="lbl" x="238" y="430" text-anchor="middle">Professionals</text>
+            </g>
+            <g class="node" data-i="4" tabindex="0" role="button" aria-label="Estate — see what it moves">
+              <circle class="hit" cx="149" cy="279" r="30"/><circle class="dot" cx="149" cy="279" r="5"/>
+              <text class="lbl" x="129" y="284" text-anchor="end">Estate</text>
+            </g>
+            <g class="node" data-i="5" tabindex="0" role="button" aria-label="Risk and liability — see what it moves">
+              <circle class="hit" cx="183" cy="131" r="30"/><circle class="dot" cx="183" cy="131" r="5"/>
+              <text class="lbl" x="165" y="122" text-anchor="end">Risk &amp; Liability</text>
+            </g>
+            <g class="node" data-i="6" tabindex="0" role="button" aria-label="Entity structure — see what it moves">
+              <circle class="hit" cx="396" cy="398" r="30"/><circle class="dot" cx="396" cy="398" r="5"/>
+              <text class="lbl" x="402" y="430" text-anchor="middle">Entity Structure</text>
+            </g>
+          </svg>
+        </div>
+        <div class="trig" id="trig" role="group" aria-label="Trace a common decision — press one to see the systems it moves">
+          <span class="trig-cap">Trace a common decision</span>
+          <button class="trig-btn" data-t="0" aria-pressed="false">Move to cash &amp; T-bills</button>
+          <button class="trig-btn" data-t="1" aria-pressed="false">Buy an out-of-state property</button>
+          <button class="trig-btn" data-t="2" aria-pressed="false">Gift $50,000 to an adult child</button>
+        </div>
+        <div class="mstory" id="mstory">
+          <p class="mrest" id="mrest">Hover any system — or trace a decision.</p>
+          <p class="mlead" id="mlead"></p>
+          <p class="mchain" id="mchain"></p>
+          <a class="mproof" id="mproof" href="#"></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── GALLERY V · THE METHOD (#capabilities) — a staggered editorial sequence, not a grid ── -->
+    <div class="sec gal" id="capabilities">
+      <span class="gal-no" aria-hidden="true">V</span>
+      <div class="h">How it works</div>
+      <p class="lede2">Every client relationship follows the same sequence.</p>
+      <ol class="method">
+        <li class="m-row">
+          <span class="m-no" aria-hidden="true">I</span>
+          <div class="m-verb">Diagnose</div>
+          <p class="m-q">Where does your return go to tax?</p>
+          <p class="m-d">See what taxes quietly take from the same holdings — by your state and bracket.</p>
+          <a class="m-go" href="leakage.html">Tax Diagnostic</a>
+          <svg class="m-mark" viewBox="0 0 200 112" aria-hidden="true">
+            <circle cx="64" cy="46" r="30"/><line x1="86" y1="68" x2="128" y2="104"/>
+            <line x1="44" y1="46" x2="84" y2="46"/><line x1="64" y1="26" x2="64" y2="66"/>
+            <rect x="140" y="20" width="48" height="10"/><rect x="140" y="38" width="34" height="10"/>
+          </svg>
+        </li>
+        <li class="m-row alt">
+          <span class="m-no" aria-hidden="true">II</span>
+          <div class="m-verb">Measure</div>
+          <p class="m-q">What is coordination worth?</p>
+          <p class="m-d">Put a dollar figure on it — for your bracket, state, and portfolio.</p>
+          <a class="m-go" href="taxlab.html">After-Tax Review</a>
+          <svg class="m-mark" viewBox="0 0 200 112" aria-hidden="true">
+            <line x1="12" y1="96" x2="188" y2="96"/>
+            <line x1="24" y1="96" x2="24" y2="88"/><line x1="60" y1="96" x2="60" y2="84"/>
+            <line x1="96" y1="96" x2="96" y2="88"/><line x1="132" y1="96" x2="132" y2="84"/><line x1="168" y1="96" x2="168" y2="88"/>
+            <rect x="40" y="58" width="16" height="38"/><rect x="88" y="40" width="16" height="56"/><rect x="136" y="22" width="16" height="74"/>
+          </svg>
+        </li>
+        <li class="m-row">
+          <span class="m-no" aria-hidden="true">III</span>
+          <div class="m-verb">Coordinate</div>
+          <p class="m-q">How do the pieces work as one plan?</p>
+          <p class="m-d">Taxes, accounts, and estate kept consistent — the way institutions coordinate decisions.</p>
+          <a class="m-go" href="howitworks.html">How it works</a>
+          <svg class="m-mark" viewBox="0 0 200 112" aria-hidden="true">
+            <rect x="12" y="12" width="40" height="24"/><rect x="148" y="12" width="40" height="24"/>
+            <rect x="12" y="76" width="40" height="24"/><rect x="148" y="76" width="40" height="24"/>
+            <rect x="80" y="44" width="40" height="24"/>
+            <line x1="52" y1="24" x2="80" y2="52"/><line x1="148" y1="24" x2="120" y2="52"/>
+            <line x1="52" y1="88" x2="80" y2="60"/><line x1="148" y1="88" x2="120" y2="60"/>
+          </svg>
+        </li>
+        <li class="m-row alt">
+          <span class="m-no" aria-hidden="true">IV</span>
+          <div class="m-verb">Manage</div>
+          <p class="m-q">How is the portfolio built and held?</p>
+          <p class="m-d">A low-turnover core, placed by tax and held with discipline — reviewed as one system, not one account at a time.</p>
+          <a class="m-go" href="thesis.html">How we invest</a>
+          <svg class="m-mark" viewBox="0 0 200 112" aria-hidden="true">
+            <rect x="30" y="64" width="120" height="30"/><rect x="44" y="44" width="120" height="30"/>
+            <rect x="58" y="24" width="120" height="30"/>
+          </svg>
+        </li>
+      </ol>
+    </div>
+
+    <!-- ── GALLERY VI · THE ARCHIVE — the artifacts the method produces, kept as one index ── -->
+    <div class="sec gal" id="operating-system">
+      <span class="gal-no l" aria-hidden="true">VI</span>
       <div class="h">The operating system</div>
       <p class="lede2">Coordination only compounds when it's run as a method, not a feeling — an operating calendar, a documented process, and clear accountability. That method is the operating system an institution runs on, brought to a single household.</p>
       <p class="os-note">You see the method in what it leaves behind: the enduring records a coordinated household runs on, kept as one archive. Shown here as illustrative samples for a fictional family.</p>
@@ -335,101 +611,9 @@
       <a class="sb-link" href="inside.html" style="margin-top:16px">See how the operating system is built →</a>
     </div>
 
-    <!-- ── THE THESIS — a museum exhibit: hovering a system teaches what it moves ── -->
-    <div class="sysband" id="thesystem">
-      <div class="sysband-in">
-        <div class="sb-eye">Plate I · The thesis</div>
-        <h2 class="sb-h">Five systems. No decision touches just one.</h2>
-        <div class="sysstage" id="sysDiagram">
-          <svg viewBox="0 0 640 570" role="group" aria-label="Five financial systems — Portfolio, Taxes, Liquidity, Professionals, and Estate — in one coordinated network. Hover a system to see what it moves; what you keep is the result.">
-            <!-- the network: every system connected to every other (faint at rest) -->
-            <line class="net" data-a="0" data-b="1" x1="320" y1="56" x2="499" y2="186"/>
-            <line class="net" data-a="0" data-b="2" x1="320" y1="56" x2="431" y2="396"/>
-            <line class="net" data-a="0" data-b="3" x1="320" y1="56" x2="209" y2="396"/>
-            <line class="net" data-a="0" data-b="4" x1="320" y1="56" x2="141" y2="186"/>
-            <line class="net" data-a="1" data-b="2" x1="499" y1="186" x2="431" y2="396"/>
-            <line class="net" data-a="1" data-b="3" x1="499" y1="186" x2="209" y2="396"/>
-            <line class="net" data-a="1" data-b="4" x1="499" y1="186" x2="141" y2="186"/>
-            <line class="net" data-a="2" data-b="3" x1="431" y1="396" x2="209" y2="396"/>
-            <line class="net" data-a="2" data-b="4" x1="431" y1="396" x2="141" y2="186"/>
-            <line class="net" data-a="3" data-b="4" x1="209" y1="396" x2="141" y2="186"/>
-            <!-- the flow: coordination carries down to the outcome -->
-            <line class="flow" x1="320" y1="280" x2="320" y2="516"/>
-            <!-- the centre: coordination (an invisible paper mask keeps it legible over the web) -->
-            <rect class="hub-bg" x="266" y="234" width="108" height="24" fill="var(--bg)"/>
-            <text class="hub" x="320" y="250" text-anchor="middle">Coordination</text>
-            <!-- the outcome — free, below the network; never boxed -->
-            <text class="keep" x="320" y="542" text-anchor="middle">What you keep.</text>
-            <!-- the five systems -->
-            <g class="node" data-i="0" tabindex="0" role="button" aria-label="Portfolio — see what it moves">
-              <circle class="hit" cx="320" cy="56" r="32"/><circle class="dot" cx="320" cy="56" r="5"/>
-              <text class="lbl" x="320" y="32" text-anchor="middle">Portfolio</text>
-            </g>
-            <g class="node" data-i="1" tabindex="0" role="button" aria-label="Taxes — see what it moves">
-              <circle class="hit" cx="499" cy="186" r="32"/><circle class="dot" cx="499" cy="186" r="5"/>
-              <text class="lbl" x="523" y="191" text-anchor="start">Taxes</text>
-            </g>
-            <g class="node" data-i="2" tabindex="0" role="button" aria-label="Liquidity — see what it moves">
-              <circle class="hit" cx="431" cy="396" r="32"/><circle class="dot" cx="431" cy="396" r="5"/>
-              <text class="lbl" x="431" y="428" text-anchor="middle">Liquidity</text>
-            </g>
-            <g class="node" data-i="3" tabindex="0" role="button" aria-label="Professionals — see what they move">
-              <circle class="hit" cx="209" cy="396" r="32"/><circle class="dot" cx="209" cy="396" r="5"/>
-              <text class="lbl" x="209" y="428" text-anchor="middle">Professionals</text>
-            </g>
-            <g class="node" data-i="4" tabindex="0" role="button" aria-label="Estate — see what it moves">
-              <circle class="hit" cx="141" cy="186" r="32"/><circle class="dot" cx="141" cy="186" r="5"/>
-              <text class="lbl" x="117" y="191" text-anchor="end">Estate</text>
-            </g>
-          </svg>
-        </div>
-        <div class="mstory" id="mstory">
-          <p class="mrest" id="mrest">Hover any system.</p>
-          <p class="mlead" id="mlead"></p>
-          <p class="mchain" id="mchain"></p>
-          <a class="mproof" id="mproof" href="#"></a>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── HOW IT WORKS — four capabilities, one sequence ── -->
-    <div class="sec" id="capabilities">
-      <div class="h">How it works</div>
-      <p class="lede2">Every client relationship follows the same sequence.</p>
-      <div class="caps">
-        <a class="cap-card" href="leakage.html">
-          <div class="cap-n">I</div>
-          <div class="cap-t">Diagnose</div>
-          <div class="cap-q">Where does your return go to tax?</div>
-          <div class="cap-d">See what taxes quietly take from the same holdings — by your state and bracket.</div>
-          <div class="cap-go">Tax Diagnostic</div>
-        </a>
-        <a class="cap-card" href="taxlab.html">
-          <div class="cap-n">II</div>
-          <div class="cap-t">Measure</div>
-          <div class="cap-q">What is coordination worth?</div>
-          <div class="cap-d">Put a dollar figure on it — for your bracket, state, and portfolio.</div>
-          <div class="cap-go">After-Tax Review</div>
-        </a>
-        <a class="cap-card" href="howitworks.html">
-          <div class="cap-n">III</div>
-          <div class="cap-t">Coordinate</div>
-          <div class="cap-q">How do the pieces work as one plan?</div>
-          <div class="cap-d">Taxes, accounts, and estate kept consistent — the way institutions coordinate decisions.</div>
-          <div class="cap-go">How it works</div>
-        </a>
-        <a class="cap-card" href="thesis.html">
-          <div class="cap-n">IV</div>
-          <div class="cap-t">Manage</div>
-          <div class="cap-q">How is the portfolio built and held?</div>
-          <div class="cap-d">A low-turnover core, placed by tax and held with discipline — reviewed as one system, not one account at a time.</div>
-          <div class="cap-go">How we invest</div>
-        </a>
-      </div>
-    </div>
-
-    <!-- ── EVIDENCE — the surprise is the headline; the chart is the exhibit ── -->
-    <div class="sec">
+    <!-- ── GALLERY VII · THE EVIDENCE — restrained data exhibits; the chart is the argument ── -->
+    <div class="sec gal">
+      <span class="gal-no" aria-hidden="true">VII</span>
       <div class="h">The evidence</div>
       <p class="ev-head">Here's one place coordination becomes measurable.</p>
       <p class="sysbody">Two identical portfolios. Same markets. Same return. <b>Nothing about the investments
@@ -522,8 +706,9 @@
       </div>
     </div>
 
-    <!-- ── REAL LIFE — route to the worked example + library ── -->
-    <div class="sec">
+    <!-- ── GALLERY VIII · IN PRACTICE — the abstraction made concrete, as an index ── -->
+    <div class="sec gal">
+      <span class="gal-no l" aria-hidden="true">VIII</span>
       <div class="h">Coordination in real life</div>
       <p class="lede2">The abstraction, made concrete — one decision at a time.</p>
       <div class="rl-cards">
@@ -667,7 +852,26 @@ window.__STATE__ = {"header": {"generated": "2026-07-13 23:17:08 UTC"}, "hero": 
       href:"decision-register.html", proof:"See the Decision Register" },
     { center:"Estate coordination", lead:"Estate planning reshapes the portfolio.",
       body:"Beneficiaries, taxes, liquidity, and investment decisions all change together.",
-      href:"manual.html", proof:"See the Operating Manual" }
+      href:"manual.html", proof:"See the Operating Manual" },
+    { center:"Risk coordination", lead:"Risk sets the floor under every plan.",
+      body:"Umbrella limits, creditor exposure, and the household’s human capital decide how much any strategy can safely carry.",
+      href:"howitworks.html", proof:"See how it’s coordinated" },
+    { center:"Entity coordination", lead:"Entities are where the wealth actually lives.",
+      body:"Trusts, LLCs, and partnerships decide titling, taxes, protection, and what the estate plan can even reach.",
+      href:"atlas/2026/household/", proof:"See a Household Record" }
+  ];
+  // Common decisions, traced: each lights the set of systems it moves at once. Facts, hedged —
+  // never invented statistics; the disclosure block below the page governs all of it.
+  var TRIG = [
+    { set:[0,1,5], lead:"Cash is a portfolio, tax, and risk decision at once.",
+      body:"The allocation gives up its growth engine; the interest is taxed as ordinary income and can trip the NIIT; and the liquid balance sits closer to creditor reach until the umbrella policy is reviewed.",
+      href:"taxlab.html", proof:"See the After-Tax Review" },
+    { set:[4,1,5], lead:"A second state re-opens settled decisions.",
+      body:"Out-of-state real property can force ancillary probate; a second residence invites a statutory-residency look at the return; and the P&C umbrella has to be re-underwritten around the new title.",
+      href:"atlas/2026/crossing/", proof:"Plan a move — the Crossing Brief" },
+    { set:[2,1,3], lead:"A gift is never just a transfer.",
+      body:"The balance sheet gives up liquid reserve; the recipient inherits the giver’s cost basis (IRC 1015); and above the annual exclusion, the CPA files a Form 709 gift-tax return.",
+      href:"decision-register.html", proof:"See the Decision Register" }
   ];
   function fitHub(){
     if(!hubBg || !hub.getBBox) return;
@@ -676,7 +880,19 @@ window.__STATE__ = {"header": {"generated": "2026-07-13 23:17:08 UTC"}, "hero": 
       hubBg.setAttribute("width", b.width + 28); hubBg.setAttribute("height", b.height + 12);
     }catch(e){}
   }
+  // A traced decision stays pinned until a system is hovered, another trigger is pressed,
+  // the same trigger is pressed again, or Escape — a pointer leaving the plate never wipes it.
+  var pinned = -1;
+  var trigBtns = [].slice.call(document.querySelectorAll("#trig .trig-btn"));
+  function setPressed(t){ trigBtns.forEach(function(b){ b.setAttribute("aria-pressed", String(+b.getAttribute("data-t")===t)); }); }
+  function story_fill(d){
+    lead.textContent = d.lead;
+    chain.textContent = d.body;
+    proof.textContent = d.proof + " →"; proof.setAttribute("href", d.href);
+    story.classList.add("show");
+  }
   function show(i){
+    pinned = -1; setPressed(-1);
     var d = SYS[i];
     nodes.forEach(function(nd,j){ nd.classList.toggle("active", j===i); nd.classList.toggle("lit", j!==i); });
     nets.forEach(function(ln){ var on=(+ln.getAttribute("data-a")===i)||(+ln.getAttribute("data-b")===i);
@@ -684,12 +900,24 @@ window.__STATE__ = {"header": {"generated": "2026-07-13 23:17:08 UTC"}, "hero": 
     if(flow) flow.classList.add("on");
     hub.textContent = d.center; hub.classList.add("on"); fitHub();
     if(keep) keep.classList.add("on");
-    lead.textContent = d.lead;
-    chain.textContent = d.body;
-    proof.textContent = d.proof + " →"; proof.setAttribute("href", d.href);
-    story.classList.add("show");
+    story_fill(d);
   }
-  function clear(){
+  function showSet(t){
+    var d = TRIG[t], set = d.set;
+    pinned = t; setPressed(t);
+    nodes.forEach(function(nd,j){ nd.classList.toggle("active", set.indexOf(j)>=0); nd.classList.remove("lit"); });
+    nets.forEach(function(ln){
+      var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b");
+      var on = set.indexOf(a)>=0 && set.indexOf(b)>=0;
+      ln.classList.toggle("lit", on); ln.classList.toggle("dim", !on); });
+    if(flow) flow.classList.add("on");
+    hub.textContent = "One decision · three systems"; hub.classList.add("on"); fitHub();
+    if(keep) keep.classList.add("on");
+    story_fill(d);
+  }
+  function clear(force){
+    if(pinned >= 0 && !force) return;
+    pinned = -1; setPressed(-1);
     nodes.forEach(function(nd){ nd.classList.remove("active","lit"); });
     nets.forEach(function(ln){ ln.classList.remove("lit","dim"); });
     if(flow) flow.classList.remove("on");
@@ -703,9 +931,42 @@ window.__STATE__ = {"header": {"generated": "2026-07-13 23:17:08 UTC"}, "hero": 
     nd.addEventListener("click", function(){ window.location.href = SYS[i].href; });
     nd.addEventListener("keydown", function(e){ if(e.key==="Enter"){ window.location.href = SYS[i].href; } });
   });
-  svg.addEventListener("mouseleave", clear);
-  stage.addEventListener("focusout", function(e){ if(!stage.contains(e.relatedTarget)) clear(); });
+  trigBtns.forEach(function(b){
+    b.addEventListener("click", function(){
+      var t = +b.getAttribute("data-t");
+      if(pinned === t){ clear(true); } else { showSet(t); }
+      if(window.plausible) plausible("trace_decision", {props: {trigger: t}});
+    });
+  });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && pinned>=0) clear(true); });
+  svg.addEventListener("mouseleave", function(){ clear(false); });
+  stage.addEventListener("focusout", function(e){ if(!stage.contains(e.relatedTarget)) clear(false); });
   fitHub();
+})();
+
+// Gallery III — two readings of the same deliverables. A class swap; the CSS does the reading.
+(function(){
+  var views = document.getElementById("views"); if(!views) return;
+  var tabs = [].slice.call(views.querySelectorAll(".vt"));
+  tabs.forEach(function(b){
+    b.addEventListener("click", function(){
+      var alt = b.getAttribute("data-v") === "1";
+      views.classList.toggle("alt", alt);
+      tabs.forEach(function(x){ var on = x===b; x.classList.toggle("on", on); x.setAttribute("aria-pressed", String(on)); });
+      if(window.plausible && alt) plausible("coordinated_view");
+    });
+  });
+})();
+
+// Gallery I — the data footnote: a bracketed superscript opens a dark margin note.
+(function(){
+  var btn = document.getElementById("fn1btn"), note = document.getElementById("fn1");
+  if(!btn || !note) return;
+  btn.addEventListener("click", function(){
+    var open = note.hasAttribute("hidden");
+    if(open){ note.removeAttribute("hidden"); } else { note.setAttribute("hidden",""); }
+    btn.setAttribute("aria-expanded", String(open));
+  });
 })();
 </script>
 </body>

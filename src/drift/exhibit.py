@@ -199,9 +199,17 @@ def export_ledger(state: dict, out: str | Path) -> Path:
 
 
 def render_hub(state: dict) -> str:
-    """Static, self-contained markets-only landing hub with state embedded."""
+    """Static, self-contained markets-only landing hub with state embedded.
+
+    The firm-anchor coordinates band is injected here as well — not only in
+    scripts/sync_docs.py — so every build path (the `drift hub` CLI, the nightly
+    pages job, and any test that renders the hub) resolves the <!--FIRM_ANCHOR-->
+    token instead of shipping it raw.
+    """
+    from .site import firm_anchor_html
     template = HUB_TEMPLATE.read_text()
-    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+    html = template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+    return html.replace("<!--FIRM_ANCHOR-->", firm_anchor_html())
 
 
 def export_hub(state: dict, out: str | Path) -> Path:

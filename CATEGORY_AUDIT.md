@@ -298,6 +298,29 @@ stopped being a section and became the exit wall's quiet last line; the Category
 paragraph (the toggle demonstrates it) and ends on the pull-quote. Pacing contrast widened — monumental
 hero/category/plate, compressed diagnosis/practice. Net: ~20% shorter page, >25% less content.
 
+**Round 3 — the finalizing pass** (same pass, user-directed): resolve the visual language and first-time
+comprehension. Eight galleries became **seven**, reordered to *Show the Machine First* — Constraint →
+**System** → Diagnosis → Method → Evidence → Practice → Invitation. The interactive seven-node plate now
+sits directly after the hero, so the whole argument is visible before a paragraph is read; the product
+line ("Driftwood coordinates your financial life as one system.") folded in as the plate's lead and the
+thesis pull-quote ("Coordination is the product. What you keep is the result.") became its closing wall-text.
+
+- **Category killed.** The siloed/coordinated toggle was redundant once the trace-a-decision trigger rail
+  demonstrates the same thing on the plate; the whole gallery, its CSS, and its toggle script were removed.
+- **Exhibit III demoted.** The full thirty-year interactive chart (and its crosshair script) were replaced by
+  a massive typographic outcome — **$410,000 coordinated / $90,000 isolated · "Same markets. Same return.
+  Only the coordination changed."** — in tabular figures, with the math one link away (After-Tax Review).
+- **Architectural language.** Oversized Roman numerals (gallery + method) are gone. The page now hangs from
+  one continuous **plumb line** down the left margin, with a small **registration cross** at each gallery's
+  T-intersection; section identity comes from **museum labels** (tracked caps: PLATE I, STEP 01, ILLUSTRATIVE,
+  UPDATED JUL 2026) and `font-variant-numeric: tabular-nums` on every figure. No cards, no boxes — alignment
+  is the ornament. The Method became a two-column spec-sheet index (STEP 01–04 + verb / question + route).
+- **Exit wall & CTA.** The generic "Schedule a Coordination Review" button became a structured intake: a
+  confident primary block **"Start a Coordination Review"** + subtext *"A 30-minute review of your financial
+  architecture."*, a numbered **01–05 intake ledger** (Assets · Primary question · CPA · Estate documents ·
+  State of residence) previewing the onboarding, and a quiet **"Read the methodology →"** secondary. The
+  Calendly href and the "coordination decisions" thesis line are preserved.
+
 **Deliberately deferred** (voice-significant or out of scope for a copy pass — held for the design pass or
 a directed decision):
 

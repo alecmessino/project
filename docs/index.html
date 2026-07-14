@@ -92,6 +92,11 @@
     transition:filter var(--t-fast),transform var(--t-fast),background var(--t-fast),border-color var(--t-fast)}
   .ctas .primary{background:var(--teal);color:#f1ede3;padding:15px 26px;border-radius:var(--surface-radius)}
   .ctas .primary:hover{filter:brightness(1.06)}
+  /* Quiet — the guided-path step (outlined, ink). The solid teal primary is reserved for the ONE
+     terminal action per page (the coordination review at the close), so the top-to-bottom argument
+     converges on a single next step instead of three same-weight buttons competing. */
+  .ctas .quiet{color:var(--ink);padding:14px 25px;border:1px solid var(--ghost-line);border-radius:var(--surface-radius)}
+  .ctas .quiet:hover{border-color:var(--teal)}
   .ctas .ghost{color:var(--ink);padding:15px 10px;font-weight:500;border-bottom:2px solid transparent}
   .ctas .ghost:hover{border-bottom-color:var(--teal)}
 
@@ -267,7 +272,7 @@
       <p class="lede">It doesn't arrive all at once. It arrives one account, one entity, one advisor, one
         state, one trust at a time — until every important financial decision depends on <b>three others</b>.</p>
       <div class="ctas">
-        <a class="primary" href="#diagnostic">See where coordination is your constraint →</a>
+        <a class="quiet" href="#diagnostic">See where coordination is your constraint →</a>
         <a class="ghost" href="#category">or how Driftwood answers it</a>
       </div>
     </div>
@@ -287,7 +292,7 @@
       <p class="diag-insight">Most households discover only one or two of these. Institutions look for all of them at once.</p>
       <div class="diag-result" id="diagResult" aria-live="polite"></div>
       <div class="ctas">
-        <a class="primary" href="atlas/2026/">Identify your highest-value coordination opportunities →</a>
+        <a class="quiet" href="atlas/2026/">Identify your highest-value coordination opportunities →</a>
       </div>
     </div>
 
@@ -555,7 +560,7 @@
         <b>coordination decisions.</b> When every part of your financial life works together, you keep more
         of what you've built.</p>
       <div class="ctas">
-        <a class="primary" href="https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting" target="_blank" rel="noopener">Schedule a conversation →</a>
+        <a class="primary" href="https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting" target="_blank" rel="noopener">Schedule a Coordination Review →</a>
         <a class="ghost" href="leakage.html">or see what tax quietly costs</a>
       </div>
     </div>

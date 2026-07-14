@@ -263,6 +263,15 @@ Each item above traces to a specific page and dimension in §5. Close them, then
 - **§6.4 How We Invest — done.** Added the "coordinates alongside your CPA and estate attorney, never
   substituting" sentence.
 
+**2026-07-14 · Pass 2 (homepage visual).** Closed the homepage Journey item:
+
+- **Homepage button-weight hierarchy — done.** The page now carries exactly ONE solid teal primary — the
+  terminal close CTA, renamed "Schedule a Coordination Review →" to match the site-wide language. The two
+  mid-page guided-path CTAs (hero → diagnosis, diagnosis → Atlas) demoted to a new outlined `.quiet`
+  treatment: still buttons, clearly subordinate, so the top-to-bottom argument converges on one step.
+- **Dead CSS dropped** — the orphaned `.onward .d` separator rules on Philosophy, Our Story, and Family
+  Office (left behind by Pass 1's single-link consolidation).
+
 **Deliberately deferred** (voice-significant or out of scope for a copy pass — held for the design pass or
 a directed decision):
 
@@ -271,7 +280,6 @@ a directed decision):
   which state is better"). Left as-is by design; revisit only if the instrument framing changes.
 - **Crossing Brief / Household Record H1 rewrites** — a second-person, name-your-own-move voice shift on two
   flagships; held for a directed editorial call.
-- **Homepage Journey** (button-weight hierarchy) — visual; owned by the design pass.
 - **Tax Diagnostic default persona** — reframing the 371%-turnover caricature needs a representative-household
   data decision, not a copy edit.
 - **Atlas hierarchy → Planning Dynamics / Coordination Opportunity / Methodology** (§1.4) — structural; the

@@ -73,12 +73,14 @@ a { color: inherit; text-decoration: none; }
 
 
 def main() -> int:
-    src = (HERE / "paper1.md").read_text()
+    stem = sys.argv[1] if len(sys.argv) > 1 else "paper1"
+    stem = stem[:-3] if stem.endswith(".md") else stem
+    src = (HERE / f"{stem}.md").read_text()
     body = markdown.markdown(src, extensions=["tables", "footnotes"])
     html = f"<!doctype html><html><head><meta charset='utf-8'><style>{CSS}</style></head><body>{body}</body></html>"
-    out_html = HERE / "paper1.html"
+    out_html = HERE / f"{stem}.html"
     out_html.write_text(html)
-    pdf = HERE / "paper1.pdf"
+    pdf = HERE / f"{stem}.pdf"
     subprocess.run([
         CHROMIUM, "--headless=new", "--no-sandbox", "--disable-gpu",
         "--no-pdf-header-footer", f"--print-to-pdf={pdf}", f"file://{out_html}",

@@ -27,7 +27,7 @@ from pathlib import Path
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
+from matplotlib.patches import Patch, FancyBboxPatch, FancyArrowPatch
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -188,31 +188,67 @@ def fig4_debiasing():
         ("DEBIASED\nearly-window decline", 0.524, 319, fs.PALETTE[0]),
     ]
     fs.setup()
-    fig, ax = plt.subplots(figsize=(7.4, 4.6))
+    fig, (axL, axR) = plt.subplots(1, 2, figsize=(11.2, 5.0),
+                                   gridspec_kw={"width_ratios": [0.95, 1.0]})
+
+    # ---- LEFT: the survivorship flow (why the raw signal is post-treatment) ----
+    axL.set_xlim(0, 10); axL.set_ylim(0, 10); axL.axis("off")
+
+    def _fbox(x, y, w, h, fc, ec=None, lw=1.4):
+        axL.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02,rounding_size=0.12",
+                                     facecolor=fc, edgecolor=ec or "white", linewidth=lw, zorder=3))
+
+    def _farrow(x0, y0, x1, y1, color=None, lw=1.9):
+        axL.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=13,
+                                      color=color or fs.MUTED, linewidth=lw, zorder=2,
+                                      shrinkA=0, shrinkB=0))
+
+    _fbox(1.7, 8.35, 6.6, 1.25, fs.PALETTE[0])
+    axL.text(5.0, 8.97, "100 starters take the mound", ha="center", va="center",
+             color="white", fontsize=9.8, fontweight="bold")
+    _farrow(4.1, 8.35, 2.4, 6.95)
+    _farrow(5.9, 8.35, 7.6, 6.95, color=fs.PASS)
+    _fbox(0.25, 5.5, 3.9, 1.45, "#ECECEC", ec=fs.GRID)
+    axL.text(2.2, 6.42, "pulled or shelled early", ha="center", va="center", color=fs.MUTED,
+             fontsize=8.4, fontweight="bold")
+    axL.text(2.2, 6.02, "(before the 3rd time through)", ha="center", va="center",
+             color=fs.MUTED, fontsize=7.5)
+    axL.text(2.2, 5.05, "✗ leaves the sample", ha="center", va="center", color=fs.FAIL,
+             fontsize=8.0, fontweight="bold")
+    _fbox(5.75, 5.5, 4.0, 1.45, fs.PASS)
+    axL.text(7.75, 6.42, "survive to face the", ha="center", va="center", color="white",
+             fontsize=8.7, fontweight="bold")
+    axL.text(7.75, 6.02, "order a 3rd time", ha="center", va="center", color="white",
+             fontsize=8.7, fontweight="bold")
+    _farrow(7.75, 5.5, 5.85, 3.8)
+    _fbox(1.5, 2.2, 8.3, 1.5, fs.INK)
+    axL.text(5.65, 3.17, "velocity decline measured HERE", ha="center", va="center",
+             color="white", fontsize=9.0, fontweight="bold")
+    axL.text(5.65, 2.68, "only on survivors, pitchers already good enough to last",
+             ha="center", va="center", color="white", fontsize=7.7)
+    axL.text(5.0, 1.15, "the sample is conditioned on survival,\nso the raw signal is post-treatment",
+             ha="center", va="center", color=fs.MUTED, fontsize=8.2, style="italic")
+    axL.set_title("A signal defined only on the survivors", fontsize=10.6, pad=8)
+
+    # ---- RIGHT: the AUC drop under debiasing ----
     x = np.arange(len(bars))
     for xi, (lab, a, n, c) in zip(x, bars):
         se, (lo, hi) = _hanley_mcneil_ci(a, n, prev)
-        ax.bar(xi, a, width=0.6, color=c, zorder=3)
-        ax.errorbar(xi, a, yerr=[[a - lo], [hi - a]], fmt="none",
-                    ecolor=fs.INK, elinewidth=1.4, capsize=5, zorder=4)
-        ax.text(xi, hi + 0.006, f"{a:.3f}", ha="center", va="bottom",
-                fontsize=10, fontweight="bold")
-        ax.text(xi, 0.408, f"n={n}", ha="center", va="bottom", fontsize=8.5,
-                color="white", fontweight="bold", zorder=5)
-    ax.axhline(0.5, color=fs.MUTED, linewidth=1.2, linestyle="--")
-    ax.text(2.42, 0.5, "coin\nflip", va="center", ha="left", fontsize=8.5, color=fs.MUTED)
-    ax.set_xticks(x)
-    ax.set_xticklabels([b[0] for b in bars], fontsize=8.6)
-    ax.set_ylabel("out-of-sample AUC  (P team scores > 4.5)")
-    ax.set_ylim(0.40, 0.72)
-    ax.set_xlim(-0.6, 2.9)
-    ax.set_title("Post-treatment bias inflates the velocity 'signal';\n"
-                 "debiasing collapses it toward a coin flip", fontsize=11.5, pad=10)
-    ax.annotate("conditioning on 3rd-time-through is\npost-treatment: a big drop only exists\n"
-                "if the starter survived to be shelled",
-                xy=(1, 0.590), xytext=(1.32, 0.58), fontsize=8.3, color=fs.MUTED,
-                ha="left", va="top", bbox=HALO,
-                arrowprops=dict(arrowstyle="->", color=fs.MUTED, linewidth=1))
+        axR.bar(xi, a, width=0.6, color=c, zorder=3)
+        axR.errorbar(xi, a, yerr=[[a - lo], [hi - a]], fmt="none",
+                     ecolor=fs.INK, elinewidth=1.4, capsize=5, zorder=4)
+        axR.text(xi, hi + 0.006, f"{a:.3f}", ha="center", va="bottom",
+                 fontsize=10, fontweight="bold")
+        axR.text(xi, 0.408, f"n={n}", ha="center", va="bottom", fontsize=8.5,
+                 color="white", fontweight="bold", zorder=5)
+    axR.axhline(0.5, color=fs.MUTED, linewidth=1.2, linestyle="--")
+    axR.text(2.42, 0.5, "coin\nflip", va="center", ha="left", fontsize=8.5, color=fs.MUTED)
+    axR.set_xticks(x)
+    axR.set_xticklabels([b[0] for b in bars], fontsize=8.6)
+    axR.set_ylabel("out-of-sample AUC  (P team scores > 4.5)")
+    axR.set_ylim(0.40, 0.72)
+    axR.set_xlim(-0.6, 2.9)
+    axR.set_title("Debiasing collapses the signal toward a coin flip", fontsize=10.6, pad=8)
     fig.savefig(FIGDIR / "velocity_post_treatment_bias.png", bbox_inches="tight")
     plt.close(fig)
 

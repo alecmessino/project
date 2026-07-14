@@ -1,5 +1,5 @@
 <div class="titleblock">
-<h1>The Efficient Frontier of Public Information: Evidence from High-Frequency Sports Betting Markets</h1>
+<h1>From Pitcher Fatigue to Market Efficiency: A Forecast-Encompassing Test of Public Information in Live Baseball Wagering Markets</h1>
 <p class="epigraph">This paper asks whether publicly observable baseball information predicts outcomes, or merely predicts what the market already knows.</p>
 <p class="author">Alec Messino<br/><span class="affil">The Third Turn Research Initiative &middot; alec.messino@gmail.com</span></p>
 <p class="wp">Working Paper &middot; July 2026 &middot; Comments welcome</p>
@@ -77,7 +77,7 @@ also a short autobiography.
 
 ![](figures/concept_laboratory.png)
 
-**Figure 1.** Baseball as a clean laboratory for market efficiency. Each contract settles within hours, so the realized final total is a ground truth against which every forecast can be scored; the game arrives as a sequence of events with established run values (RE24 and linear weights), and the live total reprices about once a minute. These properties, largely absent in asset markets where the fundamental is never realized, are what let the efficiency question be posed as a clean forecast comparison.
+**Figure 1.** Why baseball is a clean laboratory for market efficiency. Left: an equity price wanders around a fundamental value that is never realized, and its payoffs must be discounted over an indefinite horizon. Right: a live baseball game is a sequence of events with known run values (RE24 and linear weights), the live total reprices about once a minute, and within hours the game settles at a final total that is an absolute ground truth, Y. The terminal payoff and the clean per-event valuation, largely absent in asset markets, are what let the efficiency question be posed as a clean forecast comparison.
 
 The question that matters, however, is not whether such variables predict scoring. Many of them
 do. The question is whether they carry incremental predictive information once one conditions on
@@ -282,7 +282,7 @@ nothing beyond the market. As it happens, that describes every variable we teste
 
 ![](figures/concept_encompassing.png)
 
-**Figure 3.** The forecast-encompassing test in schematic form. The market's live line B is the incumbent forecast; a public feature set X (times through the order, velocity, bullpen, weather, park) earns its place only if it improves on B out of sample, not merely if it predicts the outcome. Prediction, increment, and profit are three distinct questions, and in this study every candidate clears only the first.
+**Figure 3.** The forecast-encompassing test. The sharp market forecast B already reflects the information in the public features X (times through the order, velocity, bullpen, weather, park), drawn here as X contained within B. The features do predict the outcome Y, remaining runs, out of sample (R² of 0.279); but turned on the market's own forecast error, Y − B, they hit a wall (R² of −0.037), because the market's forecast already exhausts the information they carry. Adding X to B changes the out-of-sample R² by −0.017. Predicting the outcome, improving on the market, and turning a profit are three distinct questions, and every candidate in this study clears only the first.
 
 **Calibration.** We assess the market forecast by binning snapshots on B and comparing mean
 realized Y in each bin against the identity line, and we assess probabilistic forecasts (for
@@ -408,8 +408,12 @@ variable disqualified as a selection artifact never reaches the encompassing sta
 
 ![](figures/velocity_post_treatment_bias.png)
 
-**Figure 7.** Post-treatment bias in the velocity signal. Out-of-sample AUC with Hanley and McNeil
-95 percent intervals; the debiased estimate straddles the coin flip.
+**Figure 7.** Post-treatment bias in the velocity signal. Left: the velocity-decline measure is
+defined only on starters who survive to face the order a third time, so the sample is conditioned on
+survival, precisely the pitchers already effective enough to last. Right: out-of-sample AUC for the
+event that a team scores more than 4.5 runs, with Hanley and McNeil 95 percent intervals.
+Conditioning on the third time through inflates the AUC to 0.610; measuring velocity decline instead
+in a pre-treatment early window collapses it to 0.524, an interval that straddles the coin flip.
 
 Figure 8 turns from whether the market prices information to whether it prices it by the right
 amount. For each of 6,414 in-game events we compute the true change in run expectancy, ΔRE, and

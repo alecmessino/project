@@ -309,8 +309,8 @@ def _meta_description(name: str, rec: dict) -> str:
     rate = f" Top effective long-term rate {cg['tag']}." if (cg and cg["tag"] not in ("0%", "")) else ""
     if cg and cg["tag"] == "0%":
         rate = " No state tax on capital gains."
-    impact = (f" Estimated after-tax coordination opportunity ~{fmt_usd(coordination_opportunity_per_m(a['value']))}"
-              f"/yr per $1M of taxable assets in our illustrative modeling.") if a else ""
+    impact = (f" Illustrative after-tax coordination opportunity ~{fmt_usd(coordination_opportunity_per_m(a['value']))}"
+              f"/yr per $1M of taxable assets in our modeling.") if a else ""
     return (f"How {name} taxes investors: capital gains, estate and inheritance tax, the marriage "
             f"penalty, municipal-bond interest, QSBS, and basis step-up.{rate}{impact} A state tax "
             f"reference. Illustrative, not advice.")[:300]
@@ -369,7 +369,7 @@ def _impact_block(name: str, a: dict | None) -> str:
     return (
         f'<div class="hero">'
         f'<div class="big">~{fmt_usd(usd)}<span class="u">/yr per $1M taxable</span></div>'
-        f'<div class="hlab">Estimated after-tax coordination opportunity in {_esc(name)}<br>'
+        f'<div class="hlab">Illustrative after-tax coordination opportunity in {_esc(name)}<br>'
         f'<span class="hsub">what running the portfolio against {_esc(name)}\'s rules can be worth — about '
         f'+{alpha:.1f}%/yr modeled, as a tax-managed book keeps ~{after:.1f}%/yr after tax vs ~{before:.1f}%/yr '
         f'for a concentrated, naive one; illustrative, over ~30 years, scales with the portfolio</span></div>'

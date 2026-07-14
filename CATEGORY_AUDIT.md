@@ -245,3 +245,34 @@ Work order, highest leverage first:
    Methodology* (§1.4) once the copy work above is settled.
 
 Each item above traces to a specific page and dimension in §5. Close them, then run **v2**.
+
+---
+
+## 7 · Change log
+
+**2026-07-13 · Pass 1 (post-v1, pre-design).** Worked the objective backlog before the visual polish pass:
+
+- **§4 legacy language — done.** Both "reframe" edits shipped: the visible `tax_alpha.py` source label →
+  "Driftwood After-Tax model" (Tax Diagnostic + Atlas Index; real filename kept in code), and "after-tax
+  edge" → "kept after tax" (After-Tax Review + homepage Exhibit III). Zero banned terms now render.
+- **§6.2 Journey consolidation — done (4 pages).** Philosophy (3 links → 1), Our Story (2 → 1), Family
+  Office (the "See it in dollars" row demoted below the single CTA), Fees (primary retargeted from the Tax
+  Diagnostic to "Schedule a Coordination Review," the action the copy already promises).
+- **§6.3 Recognition openers — done (4 pages).** Operating System, After-Tax Review, How It Works, and the
+  Atlas index each gained one situational line that mirrors the reader before the method.
+- **§6.4 How We Invest — done.** Added the "coordinates alongside your CPA and estate attorney, never
+  substituting" sentence.
+
+**Deliberately deferred** (voice-significant or out of scope for a copy pass — held for the design pass or
+a directed decision):
+
+- **Comparison recognition line** — *not* implemented. The audit recommended naming a specific household's
+  decision, but that conflicts with the product's deliberate design as a **symmetric instrument** ("not
+  which state is better"). Left as-is by design; revisit only if the instrument framing changes.
+- **Crossing Brief / Household Record H1 rewrites** — a second-person, name-your-own-move voice shift on two
+  flagships; held for a directed editorial call.
+- **Homepage Journey** (button-weight hierarchy) — visual; owned by the design pass.
+- **Tax Diagnostic default persona** — reframing the 371%-turnover caricature needs a representative-household
+  data decision, not a copy edit.
+- **Atlas hierarchy → Planning Dynamics / Coordination Opportunity / Methodology** (§1.4) — structural; the
+  larger evolution, sequenced after the copy settles.

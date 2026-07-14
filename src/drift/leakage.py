@@ -120,7 +120,7 @@ def build_leakage() -> dict:
     return {
         "header": {
             "generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
-            "source": "scripts/tax_alpha.py · 30y proxy-spliced cache, 1996–2026 (tests/data/matrix_history.json)",
+            "source": "Driftwood After-Tax model · 30y proxy-spliced cache, 1996–2026 (tests/data/matrix_history.json)",
             "horizon_years": 30,
         },
         # The headline recovery range across states (the Structural Alpha (tax) number).

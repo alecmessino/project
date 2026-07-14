@@ -145,16 +145,16 @@
   #capabilities.gal{padding:104px 44px 88px}
   #practice.gal{padding:66px 44px 60px}
   .sec .h{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:18px}
-  .lede2{font-family:var(--serif);font-size:clamp(19px,1vw+15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
+  .lede2{font-family:var(--serif);font-size:clamp(19px,1vw + 15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
   .lede2 b{color:var(--ink);font-weight:500}
   /* ── Gallery II · The Diagnosis — a tactile ledger of symptoms, not a lead form. Native inputs
      stay (visually hidden) so keyboard + counter behavior is unchanged; hovering one statement
      focuses it like a lens and the rest recede; a recognized statement carries a drawn check. ── */
-  .diag{counter-reset:dg;display:block;margin:10px 0 30px;max-width:68ch;border-top:1px solid var(--line)}
-  .diag-item{display:grid;grid-template-columns:46px 1fr;gap:0 16px;align-items:baseline;position:relative;
-    padding:18px 18px 18px 2px;border-bottom:1px solid var(--line2);cursor:pointer;
-    font-family:var(--serif);font-size:17px;line-height:1.5;color:var(--body);
-    transition:opacity .22s ease,color .22s ease}
+  .diag{counter-reset:dg;display:block;margin:14px 0 30px;max-width:60ch;border-top:2px solid var(--ink)}
+  .diag-item{display:grid;grid-template-columns:36px 1fr;gap:0 13px;align-items:baseline;position:relative;
+    padding:12px 30px 12px 2px;border-bottom:1px solid var(--line2);cursor:pointer;
+    font-family:var(--serif);font-size:16px;line-height:1.42;color:var(--body);
+    transition:opacity .2s ease,color .2s ease}
   .diag-item::before{counter-increment:dg;content:counter(dg,decimal-leading-zero);
     font-family:var(--sans);font-variant-numeric:tabular-nums;font-size:11px;font-weight:700;
     letter-spacing:.14em;color:var(--ghost-line);transform:translateY(-2px);transition:color .22s ease}
@@ -167,35 +167,35 @@
   .diag-item:focus-within::after{opacity:1}
   .diag-item input:focus-visible ~ span{outline:2px solid var(--accent);outline-offset:3px}
   .diag-item input:checked ~ span{color:var(--ink);font-weight:500}
-  .diag-item input:checked ~ span::after{content:"✓";font-family:var(--sans);font-size:14px;
-    font-weight:700;color:var(--accent-strike);margin-left:11px}
+  /* selection is checked off in a fixed right-hand column — an item cleared on the ledger */
+  .diag-item input:checked ~ span::after{content:"✓";position:absolute;right:2px;top:50%;
+    transform:translateY(-50%);font-family:var(--sans);font-size:13px;font-weight:700;color:var(--accent-strike)}
   .diag-item:has(input:checked)::before{color:var(--accent-strike)}
   .diag-insight{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.5;color:var(--dim);
     margin:0 0 14px;max-width:56ch;padding-left:16px;border-left:2px solid var(--accent-strike)}
   .diag-result{font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--accent-strike);font-weight:500;margin:0 0 18px;max-width:56ch}
   .diag-result:empty{margin:0}
   /* the plate's product line — a quiet serif framing above the seven-systems headline */
-  .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw+15px,19px);line-height:1.5;color:var(--dim);
+  .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw + 15px,19px);line-height:1.5;color:var(--dim);
     margin:0 auto 20px;max-width:36ch}
-  .sysbody{font-family:var(--sans);font-size:15.5px;line-height:1.65;color:var(--body);margin:0 0 26px;max-width:60ch}
-  .sysbody b{color:var(--ink);font-weight:500}
 
   /* the thesis pull-quote — a carved editorial statement, never a box. The .mid variant centers it as
      the System plate's closing wall-text: no left rule, a single hairline above. */
   .pull{margin:46px 0 0;padding:24px 0 24px 30px;border-left:3px solid var(--ink);
-    font-family:var(--serif);font-size:clamp(22px,1.6vw+14px,30px);line-height:1.35;color:var(--ink);max-width:26ch}
+    font-family:var(--serif);font-size:clamp(22px,1.6vw + 14px,30px);line-height:1.35;color:var(--ink);max-width:26ch}
   .pull.mid{border-left:0;padding:30px 0 0;margin:58px auto 0;border-top:1px solid var(--line2);
     text-align:center;max-width:24ch}
 
-  /* ── Gallery IV · The Method — an architect's index, not a feature grid. Each step hangs from the
-     plumb line: a museum step-label and the verb in the left column, the question and route in the
-     right. Pure alignment — the sequence reads top-to-bottom like a drawing set. ── */
-  .method{list-style:none;margin:38px 0 0;padding:0}
-  .m-row{display:grid;grid-template-columns:minmax(150px,.85fr) 1.6fr;gap:0 44px;align-items:start;
-    padding:34px 0 30px;border-top:1px solid var(--line)}
-  .m-step{display:block;font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.22em;
-    text-transform:uppercase;color:var(--accent-strike);font-variant-numeric:tabular-nums;margin:0 0 14px}
-  .m-verb{font-family:var(--sans);font-weight:700;font-size:clamp(24px,1.5vw+14px,32px);letter-spacing:-.022em;color:var(--ink);margin:0}
+  /* ── Gallery IV · The Method — a specification sheet, deliberately the opposite of the Diagnosis
+     ledger: where that is dense and forensic, this is open and procedural. Each step is a numbered
+     sheet — the label + verb anchor a wide left column, the question and route fill the right, and
+     generous air between steps reads as a drawing set, not a checklist. ── */
+  .method{list-style:none;margin:44px 0 0;padding:0}
+  .m-row{display:grid;grid-template-columns:minmax(168px,.8fr) 1.7fr;gap:0 58px;align-items:start;
+    padding:44px 0 42px;border-top:1px solid var(--line)}
+  .m-step{display:block;font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--accent-strike);font-variant-numeric:tabular-nums;margin:0 0 16px}
+  .m-verb{font-family:var(--sans);font-weight:700;font-size:clamp(25px,1.6vw + 14px,34px);letter-spacing:-.022em;color:var(--ink);margin:0}
   .m-q{font-family:var(--serif);font-size:19px;line-height:1.4;color:var(--ink);margin:0 0 10px;max-width:34ch}
   .m-d{font-family:var(--sans);font-size:14px;line-height:1.58;color:var(--dim);margin:0 0 16px;max-width:48ch}
   .m-go{font-family:var(--sans);font-size:12.5px;font-weight:700;letter-spacing:.02em;color:var(--teal2);text-decoration:none}
@@ -220,7 +220,7 @@
   .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:148px 44px 110px;margin:0;position:relative}
   .sysband-in{max-width:680px;margin:0 auto;text-align:center}
   .sb-eye{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
-  .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.4vw+15px,40px);line-height:1.12;letter-spacing:-.022em;color:var(--ink);margin:0 auto;max-width:20ch}
+  .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.4vw + 15px,40px);line-height:1.12;letter-spacing:-.022em;color:var(--ink);margin:0 auto;max-width:20ch}
   .sysstage{margin:34px auto 0;max-width:590px}
   .sysstage svg{width:100%;height:auto;display:block;overflow:visible}
   .sysstage text{font-family:var(--sans)}
@@ -270,20 +270,22 @@
   @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.diag-item,.m-go::after,.review-cta .rc-main::after{transition:none}}
   @media(max-width:620px){.sysband{padding:64px 22px 56px}.sysstage{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}}
 
-  /* Evidence — the surprise is the headline; the chart is the exhibit; methodology is a footnote. */
-  .ev-head{font-family:var(--sans);font-weight:700;font-size:clamp(26px,2.4vw+15px,36px);line-height:1.08;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
-  /* the outcome — the thirty-year chart demoted to its single conclusion, carved in tabular figures.
+  /* Evidence — the section's climax. A quiet one-line setup, then the two figures own the page as its
+     de-facto headline, and the verdict lands beneath in the editorial voice. Restraint, not volume. */
+  .ev-lead{font-family:var(--serif);font-size:clamp(18px,.7vw + 15px,21px);line-height:1.5;color:var(--dim);margin:0 0 6px;max-width:48ch}
+  .ev-lead b{color:var(--ink);font-weight:500}
+  /* the outcome — the thirty-year chart reduced to its single conclusion, carved in tabular figures.
      Two numbers, the same markets, one difference; the math lives a link away, not on the wall. */
-  .outcome{margin:22px 0 0;border-top:1px solid var(--frame-line)}
-  .outcome-row{display:flex;align-items:baseline;gap:20px;padding:20px 0;border-bottom:1px solid var(--line2)}
+  .outcome{margin:44px 0 0;border-top:1px solid var(--frame-line)}
+  .outcome-row{display:flex;align-items:baseline;gap:24px;padding:22px 0;border-bottom:1px solid var(--line2)}
   .outcome-fig{font-family:var(--sans);font-weight:700;font-variant-numeric:tabular-nums;
-    font-size:clamp(48px,8vw+8px,116px);line-height:.9;letter-spacing:-.04em;color:var(--teal2)}
+    font-size:clamp(52px,9vw + 8px,128px);line-height:.86;letter-spacing:-.042em;color:var(--teal2)}
   .outcome-row.is .outcome-fig{color:var(--dim)}
   .outcome-tag{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.2em;
     text-transform:uppercase;color:var(--muted)}
-  .outcome-note{font-family:var(--serif);font-size:clamp(20px,1.4vw+14px,28px);line-height:1.32;
-    color:var(--ink);margin:28px 0 0;max-width:22ch;letter-spacing:-.01em}
-  .outcome-meta{margin:26px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+  .outcome-note{font-family:var(--serif);font-size:clamp(24px,2vw + 15px,38px);line-height:1.26;
+    color:var(--ink);margin:40px 0 0;max-width:20ch;letter-spacing:-.014em}
+  .outcome-meta{margin:34px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
   .outcome-meta a{font-family:var(--sans);font-size:12.5px;font-weight:700;letter-spacing:.02em;
     color:var(--teal2);text-decoration:none}
   .outcome-meta a:hover{color:var(--teal)}
@@ -303,7 +305,7 @@
 
   /* ── Gallery IX · The Invitation — the exhibition's exit wall: one statement, one action. ────── */
   .close-conv{padding:118px 44px 96px;max-width:780px;border-top:2px solid var(--ink)}
-  .conv{font-family:var(--serif);font-size:clamp(24px,1.9vw+15px,34px);line-height:1.42;color:var(--ink);
+  .conv{font-family:var(--serif);font-size:clamp(24px,1.9vw + 15px,34px);line-height:1.42;color:var(--ink);
     letter-spacing:-.008em;margin:0 0 40px}
   .conv b{font-weight:500}
   /* the exit wall's action — not a button but an intake. The primary opens a structured review; the
@@ -339,6 +341,7 @@
     .foot,.cred{padding-left:22px;padding-right:22px}.cred{margin-left:0;margin-right:0}
     .diag-item::after{left:-10px}
     .hero .ctas,.sec .ctas{margin-top:36px}
+    .ctas a{white-space:normal}
   }
   /* ── Gallery VIII · In Practice — two ruled index entries on an asymmetric split; no card chrome. */
   .rl-cards{display:grid;grid-template-columns:1.618fr 1fr;gap:0 54px;margin-top:14px;border-top:2px solid var(--ink)}
@@ -404,7 +407,7 @@
          touches. The whole argument is visible before a single paragraph. ── -->
     <div class="sysband" id="thesystem">
       <div class="sysband-in">
-        <div class="sb-eye">Plate I · The thesis</div>
+        <div class="sb-eye">Plate I · The system map</div>
         <p class="sb-lead">Driftwood coordinates your financial life as one system.</p>
         <h2 class="sb-h">Seven systems. No decision touches just one.</h2>
         <div class="sysstage" id="sysDiagram">
@@ -476,7 +479,7 @@
           <button class="trig-btn" data-t="2" aria-pressed="false">Gift $50,000 to an adult child</button>
         </div>
         <div class="mstory" id="mstory">
-          <p class="mrest" id="mrest">Hover any system — or trace a decision.</p>
+          <p class="mrest" id="mrest">Each line is a dependency — hover a system, or trace a decision.</p>
           <p class="mlead" id="mlead"></p>
           <p class="mchain" id="mchain"></p>
           <a class="mproof" id="mproof" href="#"></a>
@@ -560,9 +563,8 @@
          in tabular figures; the math lives a link away ── -->
     <div class="sec gal">
       <div class="h">The evidence</div>
-      <p class="ev-head">Here's one place coordination becomes measurable.</p>
-      <p class="sysbody">Two identical portfolios — the same holdings, the same markets, the same pre-tax
-        return. <b>The only difference is whether the pieces were coordinated.</b></p>
+      <p class="ev-lead">Here is one place coordination becomes measurable — two identical portfolios,
+        <b>the same holdings, the same markets, the same pre-tax return.</b></p>
       <!-- the outcome — two numbers, the same markets, one difference. The chart's conclusion carved
            in tabular figures; the thirty-year model and asset-by-asset math live in the After-Tax Review. -->
       <div class="outcome">
@@ -809,7 +811,7 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
     nodes.forEach(function(nd,j){ nd.classList.toggle("active", j===i); nd.classList.remove("lit"); });
     nets.forEach(function(ln){ var inc=(+ln.getAttribute("data-a")===i)||(+ln.getAttribute("data-b")===i);
       ln.classList.remove("lit"); ln.classList.toggle("dim", !inc); });
-    var DUR = 360, ST = 34, k = 0;
+    var DUR = 280, ST = 30, k = 0;
     nets.forEach(function(ln, idx){
       var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b");
       if(a!==i && b!==i) return;
@@ -838,7 +840,7 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
     nets.forEach(function(ln){ var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b");
       var on = set.indexOf(a)>=0 && set.indexOf(b)>=0; ln.classList.remove("lit"); ln.classList.toggle("dim", !on); });
     // trace the consequence through the pathway, one hop at a time, then leave the systems lit
-    var DUR = 360, GAP = 300;
+    var DUR = 280, GAP = 260;
     nodes[set[0]].classList.add("active");
     var hops = [[set[0],set[1]], [set[1],set[2]], [set[0],set[2]]];
     hops.forEach(function(h, hi){

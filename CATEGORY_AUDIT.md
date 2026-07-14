@@ -337,6 +337,29 @@ with no `IntersectionObserver`.
 - **Resting state.** Edges lifted from ~0.10 to 0.15 opacity so the web reads as a structure at rest
   (materially better first-time comprehension); no glow, pulse, particles, or animated nodes.
 
+**Round 5 — the final pre-merge pass** (composition/pacing only, user-directed): four refinements, plus a
+latent CSS bug caught during verification.
+
+- **Propagation timing** cut from 360ms → 280ms — the instrument feels physically responsive, edge-first
+  sequence preserved.
+- **Plate I framing.** The eyebrow now names the artifact — "PLATE I · THE SYSTEM MAP" — and the rest-state
+  prompt reads "Each line is a dependency — hover a system, or trace a decision." A first-time visitor
+  recognises a map of interconnected systems before interacting, via label + legend, not marketing prose.
+- **Grid fatigue.** Diagnosis and Method were sharing too much visual DNA. Diagnosis became a tighter,
+  denser **forensic ledger** (heavy ink header rule, running 01–06 line numbers, selection checked off in a
+  fixed right-hand column); Method opened into an airy **specification sheet** (wide two-column steps, big
+  verbs, generous air). Contrast by composition, not ornament.
+- **Evidence authority.** The preamble collapsed to one quiet setup line so the two figures own the page as
+  the section's de-facto headline; the verdict lands beneath in a large serif; provenance shrank to a
+  whisper. The typographic outcome now reads as the conceptual climax.
+- **Latent clamp bug (fixed).** Verification found that nine `font-size:clamp(A, Nvw+Mpx, B)` rules in the
+  homepage's inline CSS were **invalid** — CSS requires whitespace around `+`/`-` inside math, so those
+  declarations were silently dropped and the elements fell back to the inherited 16.5px. The intended
+  institutional scale (the plate headline, the method verbs, the Evidence figures at up to 128px) had never
+  actually rendered; tight section crops had masked it. Adding the required spaces restored the real
+  typography. `driftwood.css` was clean; the bug was confined to hub.html. **Guard for future authoring:
+  always write `clamp(A, calc(Nvw + Mpx), B)` or keep spaces around the operator.**
+
 **Deliberately deferred** (voice-significant or out of scope for a copy pass — held for the design pass or
 a directed decision):
 

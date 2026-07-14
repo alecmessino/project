@@ -72,8 +72,12 @@ is a profitable bet. This belief is our entry point: concrete, popular, and plau
 [^1]: We came to the question honestly. The project began as an attempt to trade the
 times-through-order penalty, and the data infrastructure behind this paper was originally built to
 generate betting alerts. The name Third Turn refers to that third time through the batting order.
-Readers curious how the trading project became an efficiency paper may consult Figure 1, which is
+Readers curious how the trading project became an efficiency paper may consult Figure 2, which is
 also a short autobiography.
+
+![](figures/concept_laboratory.png)
+
+**Figure 1.** Baseball as a clean laboratory for market efficiency. Each contract settles within hours, so the realized final total is a ground truth against which every forecast can be scored; the game arrives as a sequence of events with established run values (RE24 and linear weights), and the live total reprices about once a minute. These properties, largely absent in asset markets where the fundamental is never realized, are what let the efficiency question be posed as a clean forecast comparison.
 
 The question that matters, however, is not whether such variables predict scoring. Many of them
 do. The question is whether they carry incremental predictive information once one conditions on
@@ -241,11 +245,11 @@ encompassing rung conditions on the market forecast itself and asks whether the 
 anything to it. The transfer function rung, finally, asks not whether the market prices the
 variable but whether it prices it by the correct magnitude. One principle organizes the sequence:
 a betting hypothesis should be evaluated against the market, not merely against the outcome. The
-last two rungs are what enforce it. Figure 1 traces the study's actual path through the ladder.
+last two rungs are what enforce it. Figure 2 traces the study's actual path through the ladder.
 
 ![](figures/research_process.png)
 
-**Figure 1.** The research process. Each surviving explanation was handed to a stricter test. The
+**Figure 2.** The research process. Each surviving explanation was handed to a stricter test. The
 sequence ends at a boundary, not at an edge.
 
 ### 3.4 Statistical evaluation
@@ -275,6 +279,10 @@ in an existing forecast. Encompassing answers the second question directly, by c
 the market forecast before evaluating the variable, so that what is being measured is incremental
 information rather than raw predictive power. A variable can predict the outcome while adding
 nothing beyond the market. As it happens, that describes every variable we tested.
+
+![](figures/concept_encompassing.png)
+
+**Figure 3.** The forecast-encompassing test in schematic form. The market's live line B is the incumbent forecast; a public feature set X (times through the order, velocity, bullpen, weather, park) earns its place only if it improves on B out of sample, not merely if it predicts the outcome. Prediction, increment, and profit are three distinct questions, and in this study every candidate clears only the first.
 
 **Calibration.** We assess the market forecast by binning snapshots on B and comparing mean
 realized Y in each bin against the identity line, and we assess probabilistic forecasts (for
@@ -320,7 +328,7 @@ the original feeds.
 The result is organized around a single test. We treat the sharp live line as the incumbent
 forecast and ask, following Chong and Hendry (1986), whether any public variable improves on it.
 Figure 4 answers that question directly; the remaining figures explain why the answer takes the
-form it does, and one of them, the velocity case in Figure 5, shows in miniature how a variable can
+form it does, and one of them, the velocity case in Figure 7, shows in miniature how a variable can
 predict the outcome and still add nothing to the price.
 
 Figure 4 shows that publicly observable baseball variables provide no measurable incremental
@@ -348,7 +356,7 @@ improving a forecast that already reflects everything the market knows.
 out-of-sample R² by −0.017. Right: each feature's individual incremental R² beyond the market;
 bars inside the 0.003 band are drawn in neutral gray.
 
-Figure 2 shows that this boundary is a property of the whole class of public variables, not an
+Figure 5 shows that this boundary is a property of the whole class of public variables, not an
 accident of one unlucky choice. It arranges the candidate hypotheses from the public handicapping
 tradition (times through the order, velocity decline, bullpen fatigue multipliers, drop reversion
 in both directions, alternate-line skew, early-run anchoring, weather and park context, a
@@ -364,15 +372,15 @@ motivation and mode of elimination, appears in Appendix Table A1.
 
 ![](figures/hypothesis_elimination.png)
 
-**Figure 2.** Where each public-information candidate fails relative to the market forecast, across
+**Figure 5.** Where each public-information candidate fails relative to the market forecast, across
 successive tests. Green: cleared this test. Red: failed here. Gray: not reached.
 
-Figure 3 restates the same evidence as a funnel, and isolates the one transition that carries the
+Figure 6 restates the same evidence as a funnel, and isolates the one transition that carries the
 paper's economic content. Nine of the ten candidates produce a detectable in-sample association
 with runs, three survive out-of-sample validation, and none adds information beyond the market. The
 collapse at the final step, from variables that predict runs to variables that improve the price,
 is the distinction the encompassing test exists to draw: predicting runs is common, predicting a
-sharp market's error is the wall.[^2] The counts derive directly from the Figure 2 classification,
+sharp market's error is the wall.[^2] The counts derive directly from the Figure 5 classification,
 so the two figures cannot disagree.
 
 [^2]: Predicting runs is not hard. Predicting runs better than a firm that prices them for a
@@ -380,10 +388,10 @@ living, and doing so after the vig, is a different occupation.
 
 ![](figures/incremental_information_funnel.png)
 
-**Figure 3.** The incremental-information funnel: from predicting runs to improving the price.
-Counts derive from the Figure 2 classification.
+**Figure 6.** The incremental-information funnel: from predicting runs to improving the price.
+Counts derive from the Figure 5 classification.
 
-Figure 5 develops the velocity case at length, because it is the clearest illustration in the
+Figure 7 develops the velocity case at length, because it is the clearest illustration in the
 study of how a variable can predict an outcome and still be worthless against the market, and
 because catching it is the single most important thing the protocol does. A model that adds the
 starter's velocity decline, measured from the first to the third time through the order, raises the
@@ -400,10 +408,10 @@ variable disqualified as a selection artifact never reaches the encompassing sta
 
 ![](figures/velocity_post_treatment_bias.png)
 
-**Figure 5.** Post-treatment bias in the velocity signal. Out-of-sample AUC with Hanley and McNeil
+**Figure 7.** Post-treatment bias in the velocity signal. Out-of-sample AUC with Hanley and McNeil
 95 percent intervals; the debiased estimate straddles the coin flip.
 
-Figure 6 turns from whether the market prices information to whether it prices it by the right
+Figure 8 turns from whether the market prices information to whether it prices it by the right
 amount. For each of 6,414 in-game events we compute the true change in run expectancy, ΔRE, and
 the change in the live total five minutes later. Plotted against each other, every positive-run
 event type lies on a single common slope of approximately 0.74 through the origin. The response
@@ -417,10 +425,10 @@ RE24 cannot value the incoming reliever, so we exclude them from the elasticity 
 
 ![](figures/transfer_function.png)
 
-**Figure 6.** The market transfer function. Every positive-run event type lies on one common slope
+**Figure 8.** The market transfer function. Every positive-run event type lies on one common slope
 of roughly 0.74; marker area is proportional to event count.
 
-Figure 7 closes the loop on the model side. The left panel bins the 2,505 snapshots by
+Figure 9 closes the loop on the model side. The left panel bins the 2,505 snapshots by
 market-implied remaining runs and plots mean realized remaining runs in each bin. The points track
 the diagonal, so the market forecast is approximately calibrated within this sample. (The
 underlying leave-one-game-out remaining-runs model, fit on 2,859 snapshots, reaches an R² of
@@ -442,7 +450,7 @@ offering the median. We spent an uncomfortable afternoon on this point.
 
 ![](figures/market_calibration.png)
 
-**Figure 7.** Market calibration. Left: binned market-implied versus realized remaining runs.
+**Figure 9.** Market calibration. Left: binned market-implied versus realized remaining runs.
 Right: the distribution of the market's forecast error.
 
 **Summary.** At every stage of the analysis, variables that predicted runs failed to provide
@@ -616,7 +624,7 @@ the boundary has proved the more useful.
 
 ## Appendix A. The full list of candidate hypotheses
 
-Referenced from Section 4; Figure 2 is the main-text representation.
+Referenced from Section 4; Figure 5 is the main-text representation.
 
 | Hypothesis | Motivation | Test | Outcome | Mode of elimination |
 |---|---|---|---|---|

@@ -321,6 +321,22 @@ thesis pull-quote ("Coordination is the product. What you keep is the result.") 
   State of residence) previewing the onboarding, and a quiet **"Read the methodology →"** secondary. The
   Calendly href and the "coordination decisions" thesis line are preserved.
 
+**Round 4 — the motion pass** (Plate I, user-directed): make the seven-node lattice behave like an
+architectural model, not a static illustration — motion that teaches causality, never decoration. All of
+it is skipped under `prefers-reduced-motion` (end-states shown instantly) and degrades to a drawn lattice
+with no `IntersectionObserver`.
+
+- **Draw-in.** On first entering the viewport the lattice sketches itself once (staggered, ~1.6s, never
+  loops) via `stroke-dashoffset` — the architect drawing the system into existence.
+- **Edge-first propagation.** Hovering/focusing a system now activates the *relationship* first: an accent
+  signal travels outward along each connection (~360ms), and each connected system illuminates as the
+  signal lands — relationships create outcomes, shown not stated. A cloned trace overlay carries the motion
+  so the resting web never flickers.
+- **Decision tracing.** A trigger runs the signal through the affected pathway one hop at a time before the
+  systems settle lit — a traced consequence, not a simultaneous flash.
+- **Resting state.** Edges lifted from ~0.10 to 0.15 opacity so the web reads as a structure at rest
+  (materially better first-time comprehension); no glow, pulse, particles, or animated nodes.
+
 **Deliberately deferred** (voice-significant or out of scope for a copy pass — held for the design pass or
 a directed decision):
 

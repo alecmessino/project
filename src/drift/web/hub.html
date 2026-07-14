@@ -226,9 +226,12 @@
   .sysstage text{font-family:var(--sans)}
   /* the web — 21 hairlines among seven systems, near-silent at rest: the density IS the argument.
      A hovered system lifts only its own links; a traced decision lifts the chords among its set. */
-  .net{stroke:var(--ghost-line);stroke-width:.6;opacity:.1;transition:opacity .34s ease,stroke .34s ease}
+  .net{stroke:var(--ghost-line);stroke-width:.6;opacity:.15;transition:opacity .34s ease,stroke .34s ease}
   .net.lit{stroke:var(--accent-strike);stroke-width:1;opacity:.72}
-  .net.dim{opacity:.02}
+  .net.dim{opacity:.05}
+  /* the signal — an accent stroke that draws along a relationship on demand, then rests. The web
+     itself never redraws (no flicker); this overlay carries all the motion, and reduced-motion skips it. */
+  .trace{stroke:var(--accent-strike);stroke-width:1.5;fill:none;opacity:0;pointer-events:none;stroke-linecap:round}
   .flow{stroke:var(--ghost-line);stroke-width:.8;opacity:.32;transition:opacity .34s ease,stroke .34s ease}
   .flow.on{stroke:var(--accent-strike);opacity:.72}
   .hub{fill:var(--muted);font-size:15px;font-weight:700;letter-spacing:.03em;transition:fill .34s ease}
@@ -264,7 +267,7 @@
     transition:border-color .2s ease,color .2s ease}
   .trig-btn:hover{border-color:var(--ghost-line);color:var(--ink)}
   .trig-btn[aria-pressed="true"]{border-color:var(--accent-strike);color:var(--ink)}
-  @media(prefers-reduced-motion:reduce){.net,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.diag-item,.m-go::after,.review-cta .rc-main::after{transition:none}}
+  @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.diag-item,.m-go::after,.review-cta .rc-main::after{transition:none}}
   @media(max-width:620px){.sysband{padding:64px 22px 56px}.sysstage{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}}
 
   /* Evidence — the surprise is the headline; the chart is the exhibit; methodology is a footnote. */
@@ -668,10 +671,12 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
   boxes.forEach(function(b){ b.addEventListener("change", update); });
 })();
 
-// The Thesis — a museum exhibit. Hovering a system runs three layers at once: the network
-// illuminates what it moves, the centre names the coordination and the flow carries down to the
-// outcome, and a causal micro-story + one proof appear beneath. Opacity + hairline transitions
-// only (~300ms); no motion. Click a system to open its proof.
+// The Thesis — a museum exhibit that behaves like an architectural model. Motion communicates
+// causality: the lattice sketches itself in once on arrival; hovering a system sends a signal along
+// each relationship and the connected systems illuminate as it lands; tracing a decision runs the
+// signal through the affected pathway before the systems settle lit. No glow, no pulse, no loop —
+// edge first, destination second; relationships create outcomes. All of it is skipped under
+// prefers-reduced-motion (end-states shown instantly). Click a system to open its proof.
 (function(){
   var stage = document.getElementById("sysDiagram"); if(!stage) return;
   var svg = stage.querySelector("svg"); if(!svg) return;
@@ -742,35 +747,115 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
     proof.textContent = d.proof + " →"; proof.setAttribute("href", d.href);
     story.classList.add("show");
   }
+
+  // ── Motion layer. Honour prefers-reduced-motion: when set, every path below short-circuits to the
+  //    instant end-state (no draw-in, no travelling signal). Otherwise an accent "signal" overlay
+  //    carries the motion so the resting web never flickers. ──────────────────────────────────────
+  var REDUCE = false;
+  try{ REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+  var timers = [];
+  function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+  // Clone the lattice into a trace overlay (below the centre mask + nodes) and index edges by pair.
+  var traces = [], netIndex = {}, netByPair = {};
+  (function(){
+    var NS = "http://www.w3.org/2000/svg";
+    var g = document.createElementNS(NS, "g"); g.setAttribute("class", "traces"); g.setAttribute("aria-hidden", "true");
+    nets.forEach(function(ln, k){
+      var a = +ln.getAttribute("data-a"), b = +ln.getAttribute("data-b");
+      netByPair[a+"_"+b] = ln; netByPair[b+"_"+a] = ln; netIndex[a+"_"+b] = k; netIndex[b+"_"+a] = k;
+      var tr = ln.cloneNode(false); tr.setAttribute("class", "trace");
+      tr.removeAttribute("data-a"); tr.removeAttribute("data-b");
+      g.appendChild(tr); traces.push(tr);
+    });
+    var anchor = svg.querySelector(".hub-bg") || svg.querySelector(".node");
+    if(anchor) svg.insertBefore(g, anchor); else svg.appendChild(g);
+  })();
+  // Endpoints of an edge, oriented so the signal leaves the source system.
+  function ends(net, src){
+    var a = +net.getAttribute("data-a");
+    var x1=+net.getAttribute("x1"), y1=+net.getAttribute("y1"), x2=+net.getAttribute("x2"), y2=+net.getAttribute("y2");
+    return (a===src) ? {sx:x1,sy:y1,dx:x2,dy:y2} : {sx:x2,sy:y2,dx:x1,dy:y1};
+  }
+  // Draw one signal from (sx,sy) to (dx,dy) over dur ms, after an optional delay.
+  function runTrace(k, sx,sy,dx,dy, dur, delay){
+    var tr = traces[k]; if(!tr) return;
+    tr.setAttribute("x1",sx); tr.setAttribute("y1",sy); tr.setAttribute("x2",dx); tr.setAttribute("y2",dy);
+    var len = Math.sqrt((dx-sx)*(dx-sx) + (dy-sy)*(dy-sy)) || 1;
+    tr.style.transition = "none"; tr.style.strokeDasharray = len; tr.style.strokeDashoffset = len; tr.style.opacity = "0";
+    void tr.getBoundingClientRect();
+    tr.style.transition = "stroke-dashoffset "+dur+"ms cubic-bezier(.45,0,.25,1) "+delay+"ms, opacity 150ms ease "+delay+"ms";
+    tr.style.strokeDashoffset = "0"; tr.style.opacity = "0.92";
+  }
+  function deactivateTraces(){ traces.forEach(function(tr){ tr.style.transition = "opacity 220ms ease"; tr.style.opacity = "0"; }); }
+  // Finish any in-flight draw-in so the web is whole before an interaction reads from it.
+  function snapNets(){ nets.forEach(function(ln){ ln.style.transition = ""; ln.style.strokeDashoffset = "0"; }); }
+
   function show(i){
+    clearTimers();
     pinned = -1; setPressed(-1);
     var d = SYS[i];
-    nodes.forEach(function(nd,j){ nd.classList.toggle("active", j===i); nd.classList.toggle("lit", j!==i); });
-    nets.forEach(function(ln){ var on=(+ln.getAttribute("data-a")===i)||(+ln.getAttribute("data-b")===i);
-      ln.classList.toggle("lit", on); ln.classList.toggle("dim", !on); });
-    if(flow) flow.classList.add("on");
     hub.textContent = d.center; hub.classList.add("on"); fitHub();
     if(keep) keep.classList.add("on");
-    story_fill(d);
+    if(flow) flow.classList.add("on");
+    if(REDUCE){
+      nodes.forEach(function(nd,j){ nd.classList.toggle("active", j===i); nd.classList.toggle("lit", j!==i); });
+      nets.forEach(function(ln){ var on=(+ln.getAttribute("data-a")===i)||(+ln.getAttribute("data-b")===i);
+        ln.classList.toggle("lit", on); ln.classList.toggle("dim", !on); });
+      story_fill(d); return;
+    }
+    snapNets(); deactivateTraces();
+    // the source lights now; connected systems wait for the signal to reach them
+    nodes.forEach(function(nd,j){ nd.classList.toggle("active", j===i); nd.classList.remove("lit"); });
+    nets.forEach(function(ln){ var inc=(+ln.getAttribute("data-a")===i)||(+ln.getAttribute("data-b")===i);
+      ln.classList.remove("lit"); ln.classList.toggle("dim", !inc); });
+    var DUR = 360, ST = 34, k = 0;
+    nets.forEach(function(ln, idx){
+      var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b");
+      if(a!==i && b!==i) return;
+      var e = ends(ln, i), delay = k*ST; k++;
+      runTrace(idx, e.sx,e.sy,e.dx,e.dy, DUR, delay);
+      var dst = (a===i) ? b : a;
+      later(function(){ nodes[dst].classList.add("lit"); }, delay + DUR - 40);
+    });
+    later(function(){ story_fill(d); }, 200);
   }
   function showSet(t){
+    clearTimers();
     var d = TRIG[t], set = d.set;
     pinned = t; setPressed(t);
-    nodes.forEach(function(nd,j){ nd.classList.toggle("active", set.indexOf(j)>=0); nd.classList.remove("lit"); });
-    nets.forEach(function(ln){
-      var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b");
-      var on = set.indexOf(a)>=0 && set.indexOf(b)>=0;
-      ln.classList.toggle("lit", on); ln.classList.toggle("dim", !on); });
-    if(flow) flow.classList.add("on");
     hub.textContent = "One decision · three systems"; hub.classList.add("on"); fitHub();
     if(keep) keep.classList.add("on");
-    story_fill(d);
+    if(flow) flow.classList.add("on");
+    if(REDUCE){
+      nodes.forEach(function(nd,j){ nd.classList.toggle("active", set.indexOf(j)>=0); nd.classList.remove("lit"); });
+      nets.forEach(function(ln){ var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b");
+        var on = set.indexOf(a)>=0 && set.indexOf(b)>=0; ln.classList.toggle("lit", on); ln.classList.toggle("dim", !on); });
+      story_fill(d); return;
+    }
+    snapNets(); deactivateTraces();
+    nodes.forEach(function(nd){ nd.classList.remove("active","lit"); });
+    nets.forEach(function(ln){ var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b");
+      var on = set.indexOf(a)>=0 && set.indexOf(b)>=0; ln.classList.remove("lit"); ln.classList.toggle("dim", !on); });
+    // trace the consequence through the pathway, one hop at a time, then leave the systems lit
+    var DUR = 360, GAP = 300;
+    nodes[set[0]].classList.add("active");
+    var hops = [[set[0],set[1]], [set[1],set[2]], [set[0],set[2]]];
+    hops.forEach(function(h, hi){
+      var src = h[0], dst = h[1], key = src+"_"+dst, ln = netByPair[key]; if(!ln) return;
+      var idx = netIndex[key], e = ends(ln, src), at = hi*GAP;
+      later(function(){ runTrace(idx, e.sx,e.sy,e.dx,e.dy, DUR, 0); }, at);
+      later(function(){ nodes[dst].classList.add("active"); }, at + DUR - 40);
+    });
+    later(function(){ story_fill(d); }, 160);
   }
   function clear(force){
     if(pinned >= 0 && !force) return;
+    clearTimers();
     pinned = -1; setPressed(-1);
     nodes.forEach(function(nd){ nd.classList.remove("active","lit"); });
     nets.forEach(function(ln){ ln.classList.remove("lit","dim"); });
+    deactivateTraces();
     if(flow) flow.classList.remove("on");
     hub.textContent = HUB0; hub.classList.remove("on"); fitHub();
     if(keep) keep.classList.remove("on");
@@ -792,6 +877,24 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
   document.addEventListener("keydown", function(e){ if(e.key==="Escape" && pinned>=0) clear(true); });
   svg.addEventListener("mouseleave", function(){ clear(false); });
   stage.addEventListener("focusout", function(e){ if(!stage.contains(e.relatedTarget)) clear(false); });
+
+  // The one-time draw-in — the architect sketches the system into existence as the plate enters view.
+  // Each connection draws once, staggered, over ~1.6s total; it never loops. Reduced-motion skips it
+  // (the web is simply present), and with no IntersectionObserver the lattice is drawn from the start.
+  var introDone = false;
+  function intro(){
+    if(introDone || REDUCE) return; introDone = true;
+    nets.forEach(function(ln){ var len = ln.getTotalLength();
+      ln.style.transition = "none"; ln.style.strokeDasharray = len; ln.style.strokeDashoffset = len; });
+    void svg.getBoundingClientRect();
+    nets.forEach(function(ln, k){ var delay = 120 + k*44;
+      ln.style.transition = "stroke-dashoffset 640ms cubic-bezier(.4,0,.2,1) "+delay+"ms, opacity .34s ease";
+      ln.style.strokeDashoffset = "0"; });
+  }
+  if(!REDUCE && "IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ intro(); io.disconnect(); } }); }, {threshold:.25});
+    io.observe(stage);
+  }
   fitHub();
 })();
 

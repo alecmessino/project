@@ -131,10 +131,80 @@ def weather_diamond():
     plt.close(fig)
 
 
+def _wilson(k, n, z=1.96):
+    if n == 0:
+        return (0.0, 0.0)
+    p = k / n
+    d = 1 + z * z / n
+    c = (p + z * z / (2 * n)) / d
+    h = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / d
+    return (max(0.0, c - h), min(1.0, c + h))
+
+
+def weather_runs():
+    """Real sample: runs rise with hitter weather, but the over never reliably beats break-even."""
+    rows = json.load(open(OUT / "encompass_cache.json"))
+    byg = defaultdict(list)
+    for r in rows:
+        byg[r["game"]].append(r)
+    G = []
+    for _, s in byg.items():
+        s = sorted(s, key=lambda r: r["inning"])
+        G.append(dict(final=s[0]["Y"], pre=s[0]["B"], temp=s[0]["temp"], wind=s[0]["wind"]))
+    buckets = [
+        ("wind in\n(≤ −4)", [g for g in G if g["wind"] <= -4]),
+        ("calm", [g for g in G if -4 < g["wind"] < 4]),
+        ("wind out\n(≥ +4)", [g for g in G if g["wind"] >= 4]),
+        ("cooler\n(< 75°)", [g for g in G if g["temp"] < 75]),
+        ("warm\n(75–84°)", [g for g in G if 75 <= g["temp"] < 85]),
+        ("hot\n(≥ 85°)", [g for g in G if g["temp"] >= 85]),
+    ]
+    labels = [b[0] for b in buckets]
+    runs = [sum(g["final"] for g in gm) / len(gm) for _, gm in buckets]
+    ns = [len(gm) for _, gm in buckets]
+    hit, lo, hi = [], [], []
+    for _, gm in buckets:
+        dec = [g for g in gm if g["final"] != g["pre"]]
+        k, n = sum(1 for g in dec if g["final"] > g["pre"]), len(dec)
+        hit.append(100 * k / n); a, b = _wilson(k, n); lo.append(100 * a); hi.append(100 * b)
+    cols = [fs.PALETTE[0]] * 3 + [fs.PALETTE[3]] * 3
+
+    fs.setup()
+    fig, (axA, axR) = plt.subplots(1, 2, figsize=(10.8, 4.8))
+    x = np.arange(6)
+
+    axA.bar(x, runs, color=cols, width=0.72, zorder=3)
+    for xi, r, n in zip(x, runs, ns):
+        axA.text(xi, r + 0.12, f"{r:.1f}", ha="center", va="bottom", fontsize=8.4, fontweight="bold")
+        axA.text(xi, 0.35, f"n={n}", ha="center", va="bottom", color="white", fontsize=7.4, fontweight="bold", zorder=4)
+    axA.set_ylabel("mean runs scored per game")
+    axA.set_ylim(0, max(runs) + 1.4)
+    axA.set_xticks(x); axA.set_xticklabels(labels, fontsize=7.7)
+    axA.set_title("Runs rise with hitter-friendly weather", fontsize=10.6, pad=8)
+
+    axR.bar(x, hit, color=cols, width=0.72, alpha=0.85, zorder=3)
+    axR.errorbar(x, hit, yerr=[[h - l for h, l in zip(hit, lo)], [u - h for h, u in zip(hit, hi)]],
+                 fmt="none", ecolor=fs.INK, elinewidth=1.3, capsize=4, zorder=4)
+    axR.axhline(50, color=fs.MUTED, lw=1.1, ls="--")
+    axR.axhline(52.38, color=fs.FAIL, lw=1.3, ls="--")
+    axR.text(5.55, 50, "coin flip", va="center", ha="left", fontsize=7.4, color=fs.MUTED)
+    axR.text(5.55, 52.6, "break-even", va="bottom", ha="left", fontsize=7.4, color=fs.FAIL)
+    axR.set_ylabel("over hit-rate (%)")
+    axR.set_ylim(28, 76)
+    axR.set_xticks(x); axR.set_xticklabels(labels, fontsize=7.7)
+    axR.set_title("...but the over never reliably clears break-even", fontsize=10.6, pad=8)
+
+    fig.suptitle("Weather moves runs; it does not move the price enough to beat it",
+                 fontsize=11.6, fontweight="bold", y=1.10)
+    fig.savefig(FIGDIR / "supp_weather_runs.png", bbox_inches="tight")
+    plt.close(fig)
+
+
 def main() -> int:
     line_movement()
     weather_diamond()
-    print("wrote: supp_line_movement.png, supp_weather_diamond.png")
+    weather_runs()
+    print("wrote: supp_line_movement.png, supp_weather_diamond.png, supp_weather_runs.png")
     return 0
 
 

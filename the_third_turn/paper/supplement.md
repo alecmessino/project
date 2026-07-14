@@ -36,3 +36,19 @@ dense than dry air, so it too adds a little carry. Weather and park genuinely mo
 evidence they do not move the price enough to beat it: in the conditional test, hitter-friendly
 overs hit 46 percent against 50 percent, so if anything the market over-adjusts for exactly the
 conditions a bettor would notice. The effect is real; the edge is not.
+
+## The physical effect, and the market's response, in our own sample
+
+Figure S2 is textbook physics. This one is our 163 games. It shows, in a picture, the same thing the
+paper's conditional test found: weather genuinely moves runs, and the market moves the line with it,
+so the edge a naive bettor expects has already been priced away.
+
+![](figures/supp_weather_runs.png)
+
+**Figure S3.** Left: mean runs per game climb with hitter-friendly weather, from 7.8 with the wind
+blowing in to 10.0 with it blowing out, and with warmer temperatures. Right: the over's hit rate by
+the same buckets, with 95 percent Wilson intervals. No weather bucket reliably clears the 52.4
+percent break-even, and every interval straddles the coin flip; the apparent warm-weather rate is
+small-sample noise, not a signal. The overall over hit rate is 49 percent. With 163 games the
+buckets are small, so read the direction, not the decimals: the paper's conditional test is the
+rigorous version of this picture, and it reaches the same verdict.

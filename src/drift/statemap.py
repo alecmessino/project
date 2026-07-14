@@ -415,7 +415,7 @@ def _state_record(code):
                      f"~{fmt_usd(usd)}/yr for every $1M of taxable assets in our modeling — about +{a['alpha']:.1f}%/yr "
                      f"after tax (a concentrated, naive book keeps ~{a['before']:.1f}%/yr vs ~{a['after']:.1f}%/yr "
                      f"tax-managed). Your actual figure depends on your holdings — the diagnostic computes it."),
-            "source": "scripts/tax_alpha.py · 30y window (1996–2026). Illustrative, hypothetical — diagnostic-gated.",
+            "source": "Driftwood After-Tax model · 30y window (1996–2026). Illustrative, hypothetical — diagnostic-gated.",
             "deeplink": f"leakage.html?state={code}",
         }
     return _attach_citations(code, {k: v for k, v in rec.items() if v is not None})

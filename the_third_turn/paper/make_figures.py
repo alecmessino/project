@@ -455,6 +455,40 @@ def fig1_process():
     plt.close(fig)
 
 
+def fig_power():
+    """Appendix B: every feature's incremental out-of-sample R2 against the detection floor."""
+    inc = _load("encompass.json")["incremental"]
+    mde = _load("revision1.json")["power"]
+    nice = {"vdrop": "velocity decline", "back": "back-tier starter", "mid": "mid-tier starter",
+            "pen": "bullpen quality", "tto": "times through order", "pc": "pitch count",
+            "temp": "temperature", "wind": "wind", "park": "park", "inning": "inning"}
+    items = sorted(inc.items(), key=lambda kv: kv[1])
+    floor = mde["mde_r2_snap"]
+    fs.setup()
+    fig, ax = plt.subplots(figsize=(7.8, 4.8))
+    ys = np.arange(len(items))
+    ax.axvspan(floor, 0.013, color=fs.PALETTE[2], alpha=0.06, zorder=0)
+    for y, (k, v) in zip(ys, items):
+        col = fs.NEUTRAL if abs(v) < 0.003 else (fs.PALETTE[0] if v > 0 else fs.PALETTE[3])
+        ax.plot([0, v], [y, y], color=fs.GRID, lw=1.0, zorder=1)
+        ax.plot([v], [y], marker="o", ms=8, color=col, markeredgecolor="white",
+                markeredgewidth=1.0, zorder=3)
+    ax.axvline(0, color=fs.MUTED, lw=1.0)
+    ax.axvline(floor, color=fs.INK, lw=1.4, ls="--")
+    ax.text(floor + 0.0003, len(items) - 0.4,
+            f"minimum detectable\nincremental R² = {floor:.3f}\n(80% power, snapshots independent)",
+            fontsize=7.8, color=fs.INK, va="top", ha="left")
+    ax.set_yticks(ys); ax.set_yticklabels([nice[k] for k, _ in items], fontsize=8.8)
+    ax.set_xlabel("incremental out-of-sample R²  (beyond the market forecast)")
+    ax.set_xlim(-0.009, 0.013); ax.set_ylim(-0.9, len(items) - 0.1)
+    ax.set_title("Every feature's incremental information falls below the detection floor",
+                 fontsize=11, pad=10)
+    ax.text(0.013, -0.75, f"conservative floor (games independent): {mde['mde_r2_games']:.2f}, off-scale right",
+            ha="right", va="center", fontsize=7.6, color=fs.MUTED, style="italic")
+    fig.savefig(FIGDIR / "appendix_power.png", bbox_inches="tight")
+    plt.close(fig)
+
+
 def main() -> int:
     fig1_process()
     rows = fig2_graveyard()
@@ -463,6 +497,7 @@ def main() -> int:
     fig5_transfer()
     fig6_calibration()
     fig7_funnel(rows)
+    fig_power()
     made = sorted(p.name for p in FIGDIR.glob("*.png"))
     print("wrote:", ", ".join(made))
     return 0

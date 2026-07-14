@@ -173,10 +173,41 @@ def encompassing():
     plt.close(fig)
 
 
+def vig_hurdle():
+    """Appendix C: the break-even (vig) hurdle in win-rate space."""
+    fs.setup()
+    fig, ax = plt.subplots(figsize=(8.8, 4.0))
+    ax.set_xlim(48, 58); ax.set_ylim(-0.55, 1.45); ax.axis("off")
+    y = 0.45
+    ax.add_patch(plt.Rectangle((48.3, y - 0.14), 52.38 - 48.3, 0.28, facecolor=RED, alpha=0.10, zorder=1))
+    ax.add_patch(plt.Rectangle((52.38, y - 0.14), 57.5 - 52.38, 0.28, facecolor=GREEN, alpha=0.12, zorder=1))
+    ax.annotate("", xy=(57.75, y), xytext=(48.1, y),
+                arrowprops=dict(arrowstyle="-|>", color=fs.MUTED, lw=1.6), zorder=2)
+    ax.text(50.35, y + 0.075, "loss", ha="center", va="center", color=RED, fontsize=8.2, alpha=0.75)
+    ax.text(55.0, y + 0.075, "profit", ha="center", va="center", color=fs.PASS, fontsize=8.2, alpha=0.9)
+    for xv, lab, sub, col in [(50.0, "50%", "fair coin", fs.MUTED),
+                              (52.38, "52.38%", "break-even vs −110 vig", fs.INK),
+                              (55.0, "55%", "a marginal edge", fs.PASS)]:
+        ax.plot([xv, xv], [y - 0.17, y + 0.17], color=col, lw=2.4, zorder=3)
+        ax.text(xv, y + 0.24, lab, ha="center", va="bottom", fontsize=9.6, fontweight="bold", color=col)
+        ax.text(xv, y - 0.24, sub, ha="center", va="top", fontsize=7.7, color=fs.MUTED)
+    ax.annotate("", xy=(52.38, y + 0.66), xytext=(50.0, y + 0.66),
+                arrowprops=dict(arrowstyle="<|-|>", color=RED, lw=1.3))
+    ax.text(51.19, y + 0.72, "the vig: 2.38 points to clear just to break even",
+            ha="center", va="bottom", color=RED, fontsize=8.2, fontweight="bold")
+    ax.annotate("public information leaves you here\n(the market's error is unpredictable, R² = −0.037)",
+                xy=(50.0, y - 0.17), xytext=(50.0, y - 0.62), ha="center", va="top", fontsize=8.0,
+                color=fs.INK, arrowprops=dict(arrowstyle="-|>", color=fs.INK, lw=1.2))
+    ax.set_title("The vig hurdle: profitability requires beating 52.4%, not 50%", fontsize=11, pad=14)
+    fig.savefig(FIGDIR / "appendix_vig.png", bbox_inches="tight")
+    plt.close(fig)
+
+
 def main() -> int:
     laboratory()
     encompassing()
-    print("wrote: concept_laboratory.png, concept_encompassing.png")
+    vig_hurdle()
+    print("wrote: concept_laboratory.png, concept_encompassing.png, appendix_vig.png")
     return 0
 
 

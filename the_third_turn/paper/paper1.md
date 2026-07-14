@@ -608,7 +608,11 @@ does the line take to absorb a home run, a pitching change, an injury? Does the 
 for full-game totals move when the market isolates the starters, as first-five-inning totals do?
 Each is a live-data question. None is answerable from one-minute snapshots of a single book, and
 each is the natural subject of the market microstructure study that our forward-collected,
-timestamped price and state streams are being assembled to support.
+timestamped price and state streams are being assembled to support. One conjecture worth stating,
+though we do not test it here, is that thinner or more retail-driven markets, live team totals and
+first-five-inning totals among them, may absorb public information less completely than the heavily
+traded full-game total, if only because lower volume leaves weaker incentive to correct a misprice;
+whether that holds is itself one of the questions the follow-on data are meant to settle.
 
 ---
 
@@ -679,9 +683,17 @@ interval of [−0.036, +0.002].
 **Power.** For the ten-feature test of incremental information, 80 percent power at the 5 percent
 level requires an incremental R² of about 0.007 when the 2,505 snapshots are treated as
 independent, and about 0.10 when only the 163 games are. Every observed per-feature increment
-(at most 0.0018) is below the former. A 55 percent win rate against the 52.4 percent break-even
+(at most 0.0018) is below the former, feature by feature (Figure B1). A 55 percent win rate against the 52.4 percent break-even
 would need roughly 2,000 wagers to detect at 80 percent power. The design excludes moderate
 incremental information, not arbitrarily small amounts.
+
+![](figures/appendix_power.png)
+
+**Figure B1.** Every feature's incremental out-of-sample R² beyond the market forecast, against the
+minimum detectable effect. The largest increment is +0.0018 (bullpen); all fall well short of the
+0.007 detection floor at 80 percent power when snapshots are treated as independent, and further
+still from the conservative floor of about 0.10 when only games are. The design could have detected
+a moderate incremental signal; none is present.
 
 **Penalty sensitivity.** The encompassing conclusion is invariant to the ridge penalty. From
 ordinary least squares through heavy shrinkage, the encompassing gain stays between −0.017 and
@@ -696,6 +708,39 @@ The features never improve on the market.
 | 100 | 0.303 | 0.281 | 0.290 | −0.013 | −0.034 |
 
 All Appendix B numbers are produced by a single committed script from the frozen inputs.
+
+---
+
+## Appendix C. Transaction costs and the magnitude of the efficiency
+
+Statistical detectability and economic profitability set different bars, and it is worth stating
+where the second one sits. Live totals carry a bookmaker's margin. At the standard price of −110 on
+each side, the bettor's break-even win rate is
+
+BR = 110 / (110 + 100) ≈ 52.38 percent,
+
+and the two prices imply an overround of roughly 4.8 percent; live in-play juice is often wider, so
+52.38 percent is a floor on the hurdle rather than the hurdle itself. Profitability therefore
+requires not merely a positive edge but one large enough to move the win rate about 2.4 percentage
+points above a coin flip.
+
+The information we measure does not approach even the weaker, statistical bar, let alone the
+economic one. The largest per-feature incremental out-of-sample R² beyond the market is 0.0018
+(bullpen), and the market's forecast error is not predictable at all (R² of −0.037). Against the
+minimum detectable incremental R² of 0.007, under the optimistic assumption that snapshots are
+independent, every observed increment is smaller by a factor of several; under the conservative
+game-clustered assumption the floor is about 0.10, larger still. A detectable edge is a necessary
+but not a sufficient condition for profit, since profit further requires clearing the vig, so the
+economic hurdle is at least as demanding as the statistical one, and nothing clears even the
+statistical one. No observed variable comes within reach of a profitable edge. Figure C1 places the
+coin flip, the break-even hurdle, and a marginal winning edge on one scale.
+
+![](figures/appendix_vig.png)
+
+**Figure C1.** The vig hurdle in win-rate terms. A bettor must beat not the 50 percent coin flip but
+the 52.38 percent break-even implied by −110 pricing; the 2.38-point gap is the bookmaker's margin.
+The public information tested in this paper leaves the bettor at the coin flip, since the market's
+forecast error is unpredictable.
 
 ---
 

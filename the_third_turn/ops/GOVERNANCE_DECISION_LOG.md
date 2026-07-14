@@ -57,5 +57,14 @@ invalidate inference) · **Confidence Register** (what the evidence justifies be
 
 ---
 
+### GD-7 · 2026-07-14 · Pivot Paper 2 to Avenue 2 (inventory/vig dynamics); defer the temporal hold-out
+- **Decision:** Make the market-microstructure follow-on **Avenue 2 (spread/vig dynamics vs. game leverage)** rather than Avenue 1 (cross-book leader-laggard) or Avenue 3 (PIN/adverse selection). Add a transaction-cost appendix (vig hurdle) and a power/MDE figure to Paper 1. Defer the Paper-1 temporal hold-out.
+- **Evidence:** (a) Avenue 1 (Hasbrouck/VAR) needs a live *sharp* feed and synchronized cross-book series; we have two *recreational* books (Pinnacle stillborn, ED-1) and a sync-lag Candidate defect (RD-1). (b) Avenue 3 (PIN) needs order-flow/volume, which we do not observe. (c) Avenue 2 is within-book and uses data we already collect (vig derivable from over/under odds). (d) Hold-out feasibility check: `pybaseball` present and `.env` keys exist, but **Baseball Savant returns 403 in-session**, so the pipeline cannot reconstruct July play-by-play here; Odds Papi is also metered. Architecturally sound (June used Odds Papi historical Pinnacle), so runnable on a Statcast-reachable host with the keys.
+- **Alternatives rejected:** Start Avenue 1 now (blocked on ED-1/RD-1); force the hold-out in this container (Statcast unreachable); put leader-laggard into Paper 1 (SR-1 BLOCKED, would be an under-powered artifact).
+- **Reasoning:** Pick the microstructure question the current data actually supports; strengthen Paper 1 with cost-context that needs no new data; run the hold-out deliberately where the sources are reachable.
+- **Future implications:** Paper 2 scoped to vig/inventory dynamics. The hold-out remains roadmap item #1, gated on a Statcast-reachable run with the API keys and a budgeted Odds Papi pull. No confidence level moved.
+
+---
+
 *Append new decisions below this line. Never edit a past entry; correct with a new dated entry that
 supersedes it.*

@@ -360,6 +360,18 @@ latent CSS bug caught during verification.
   typography. `driftwood.css` was clean; the bug was confined to hub.html. **Guard for future authoring:
   always write `clamp(A, calc(Nvw + Mpx), B)` or keep spaces around the operator.**
 
+**Round 6 — tactical declutter** (pre-merge, user-directed): the true typographic scale (Round 5) proved
+too aggressive. Dialled the hierarchy back toward restraint.
+
+- **Evidence figures** cut from a 128px max to 82px (mobile floor 38px), fully fluid with a wrapping row
+  so "$410,000" never clips on a phone — authoritative, not ginormous.
+- **Diagnosis ledger** items reduced 16px → 14.5px for more air in the column.
+- **Eyebrow strip.** Removed the five redundant section labels ("A short diagnosis", "How it works",
+  "The evidence", "Coordination in real life", "Plate I · The system map") and the administrative
+  "Updated Jul 2026" meta stamp; the content headlines now carry the wayfinding, so the page reads as one
+  editorial narrative rather than a stack of labelled modules. (The Category section was already gone.)
+- **Mobile.** No horizontal overflow at 390px or 360px; long CTAs wrap.
+
 **Deliberately deferred** (voice-significant or out of scope for a copy pass — held for the design pass or
 a directed decision):
 

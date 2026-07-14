@@ -144,16 +144,15 @@
   #diagnostic.gal{padding:70px 44px 66px}
   #capabilities.gal{padding:104px 44px 88px}
   #practice.gal{padding:66px 44px 60px}
-  .sec .h{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:18px}
   .lede2{font-family:var(--serif);font-size:clamp(19px,1vw + 15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
   .lede2 b{color:var(--ink);font-weight:500}
   /* ── Gallery II · The Diagnosis — a tactile ledger of symptoms, not a lead form. Native inputs
      stay (visually hidden) so keyboard + counter behavior is unchanged; hovering one statement
      focuses it like a lens and the rest recede; a recognized statement carries a drawn check. ── */
   .diag{counter-reset:dg;display:block;margin:14px 0 30px;max-width:60ch;border-top:2px solid var(--ink)}
-  .diag-item{display:grid;grid-template-columns:36px 1fr;gap:0 13px;align-items:baseline;position:relative;
-    padding:12px 30px 12px 2px;border-bottom:1px solid var(--line2);cursor:pointer;
-    font-family:var(--serif);font-size:16px;line-height:1.42;color:var(--body);
+  .diag-item{display:grid;grid-template-columns:32px 1fr;gap:0 12px;align-items:baseline;position:relative;
+    padding:11px 28px 11px 2px;border-bottom:1px solid var(--line2);cursor:pointer;
+    font-family:var(--serif);font-size:14.5px;line-height:1.5;color:var(--body);
     transition:opacity .2s ease,color .2s ease}
   .diag-item::before{counter-increment:dg;content:counter(dg,decimal-leading-zero);
     font-family:var(--sans);font-variant-numeric:tabular-nums;font-size:11px;font-weight:700;
@@ -276,15 +275,17 @@
   .ev-lead b{color:var(--ink);font-weight:500}
   /* the outcome — the thirty-year chart reduced to its single conclusion, carved in tabular figures.
      Two numbers, the same markets, one difference; the math lives a link away, not on the wall. */
-  .outcome{margin:44px 0 0;border-top:1px solid var(--frame-line)}
-  .outcome-row{display:flex;align-items:baseline;gap:24px;padding:22px 0;border-bottom:1px solid var(--line2)}
+  .outcome{margin:40px 0 0;border-top:1px solid var(--frame-line)}
+  /* the figures wrap the tag below on narrow viewports so nothing clips; fluid but capped well under the
+     container so "$410,000" never exceeds a phone's width. Authoritative, not ginormous. */
+  .outcome-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 20px;padding:20px 0;border-bottom:1px solid var(--line2)}
   .outcome-fig{font-family:var(--sans);font-weight:700;font-variant-numeric:tabular-nums;
-    font-size:clamp(52px,9vw + 8px,128px);line-height:.86;letter-spacing:-.042em;color:var(--teal2)}
+    font-size:clamp(38px,5.5vw + 8px,82px);line-height:.92;letter-spacing:-.035em;color:var(--teal2)}
   .outcome-row.is .outcome-fig{color:var(--dim)}
   .outcome-tag{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.2em;
     text-transform:uppercase;color:var(--muted)}
-  .outcome-note{font-family:var(--serif);font-size:clamp(24px,2vw + 15px,38px);line-height:1.26;
-    color:var(--ink);margin:40px 0 0;max-width:20ch;letter-spacing:-.014em}
+  .outcome-note{font-family:var(--serif);font-size:clamp(21px,1.4vw + 13px,31px);line-height:1.3;
+    color:var(--ink);margin:34px 0 0;max-width:22ch;letter-spacing:-.012em}
   .outcome-meta{margin:34px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
   .outcome-meta a{font-family:var(--sans);font-size:12.5px;font-weight:700;letter-spacing:.02em;
     color:var(--teal2);text-decoration:none}
@@ -407,7 +408,6 @@
          touches. The whole argument is visible before a single paragraph. ── -->
     <div class="sysband" id="thesystem">
       <div class="sysband-in">
-        <div class="sb-eye">Plate I · The system map</div>
         <p class="sb-lead">Driftwood coordinates your financial life as one system.</p>
         <h2 class="sb-h">Seven systems. No decision touches just one.</h2>
         <div class="sysstage" id="sysDiagram">
@@ -491,7 +491,6 @@
     <!-- ── GALLERY III · THE DIAGNOSIS — a tactile ledger of symptoms; now that the machine is on the
          wall, the visitor tests it against their own life ── -->
     <div class="sec gal" id="diagnostic">
-      <div class="h">A short diagnosis</div>
       <p class="lede2">Has coordination become your biggest financial constraint?</p>
       <div class="diag" id="diag">
         <label class="diag-item"><input class="vh" type="checkbox"><span>My CPA and advisor rarely talk to each other.</span></label>
@@ -510,7 +509,6 @@
 
     <!-- ── GALLERY IV · THE METHOD (#capabilities) — an architect's index, not a feature grid ── -->
     <div class="sec gal" id="capabilities">
-      <div class="h">How it works</div>
       <p class="lede2">Every client relationship follows the same sequence.</p>
       <ol class="method">
         <li class="m-row">
@@ -562,7 +560,6 @@
     <!-- ── GALLERY V · THE EVIDENCE — the thirty-year chart demoted to its single conclusion, carved
          in tabular figures; the math lives a link away ── -->
     <div class="sec gal">
-      <div class="h">The evidence</div>
       <p class="ev-lead">Here is one place coordination becomes measurable — two identical portfolios,
         <b>the same holdings, the same markets, the same pre-tax return.</b></p>
       <!-- the outcome — two numbers, the same markets, one difference. The chart's conclusion carved
@@ -577,8 +574,7 @@
         <p class="outcome-note">Same markets. Same return. Only the coordination changed.</p>
         <div class="outcome-meta">
           <span class="label mark">Illustrative</span><span class="sep">·</span>
-          <span class="label">$1,000,000 of gains · 30 years · high-tax state</span><span class="sep">·</span>
-          <span class="label">Updated Jul 2026</span>
+          <span class="label">$1,000,000 of gains · 30 years · high-tax state</span>
           <a href="taxlab.html">See the math →</a>
         </div>
       </div>
@@ -588,7 +584,6 @@
 
     <!-- ── GALLERY VI · IN PRACTICE — two lines of proof; the depth lives behind them ── -->
     <div class="sec gal" id="practice">
-      <div class="h">Coordination in real life</div>
       <div class="rl-cards">
         <a class="rl-card feat" href="coordination.html">
           <div class="rl-meta">Worked example · one household, two states</div>

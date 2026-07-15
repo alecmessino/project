@@ -86,7 +86,7 @@ The full site hosts on the domain via GitHub Pages (same repo, same deploy; the 
 domain ROOT, no `/project/` subpath; github.io URLs auto-redirect). **Sequence matters — do not flip
 canonicals before DNS is live:**
 1. Purchase the domain (verify a trademark screen first: "Driftwood Wealth Partners" and
-   "Driftwood Capital/Advisors" are existing, unrelated financial firms).
+   "Driftwood Wealth/Advisors" are existing, unrelated financial firms).
 2. At the registrar: apex `A` records → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`,
    `185.199.111.153`; `www` CNAME → `alecmessino.github.io`. Wait for DNS to resolve.
 3. Repo Settings → Pages → Custom domain = `www.driftwoodplanning.com` (writes `docs/CNAME`) →

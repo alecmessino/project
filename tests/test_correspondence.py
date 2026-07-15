@@ -33,7 +33,7 @@ def test_contact_endpoint_is_the_firm_domain_and_single_sourced():
 
 def test_firm_anchor_renders_the_confirmed_coordinates():
     a = site.firm_anchor_html()
-    assert "DRIFTWOOD CAPITAL" in a
+    assert "DRIFTWOOD WEALTH" in a
     assert "AUSTIN, TEXAS" in a and "FOUNDED 2024" in a
     assert "ADVISERINFO.SEC.GOV" in a and "MODEL DATA AS OF JULY 2026" in a
 

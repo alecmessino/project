@@ -181,7 +181,7 @@ def render_comparison_html(cmp: dict, edition: str = CURRENT_EDITION) -> str:
     jsonld = {
         "@context": "https://schema.org", "@type": "WebPage", "name": f"{a_name} vs {b_name} — Driftwood Atlas",
         "url": url, "description": desc,
-        "isPartOf": {"@type": "WebSite", "name": "Driftwood Capital", "url": f"{BASE_URL}/index.html"},
+        "isPartOf": {"@type": "WebSite", "name": "Driftwood Wealth", "url": f"{BASE_URL}/index.html"},
     }
     import json
     return f"""<!DOCTYPE html>
@@ -199,7 +199,7 @@ def render_comparison_html(cmp: dict, edition: str = CURRENT_EDITION) -> str:
 <meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="Driftwood Capital" />
+<meta property="og:site_name" content="Driftwood Wealth" />
 <meta property="og:title" content="{_esc(title)}" />
 <meta property="og:description" content="{_esc(desc)}" />
 <meta property="og:url" content="{url}" />
@@ -376,7 +376,7 @@ def render_compare_index_html(edition: str = CURRENT_EDITION) -> str:
 <meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="Driftwood Capital" />
+<meta property="og:site_name" content="Driftwood Wealth" />
 <meta property="og:title" content="{_esc(title)}" />
 <meta property="og:description" content="{_esc(desc)}" />
 <meta property="og:url" content="{url}" />

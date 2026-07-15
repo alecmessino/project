@@ -1,6 +1,6 @@
 # Phase Ω — Institutional Experience Audit
 
-**Driftwood Capital · public site · July 2026.**
+**Driftwood Wealth · public site · July 2026.**
 Auditor stance: creative director, editorial director, product designer, UX researcher,
 conversion strategist, information architect — and a partner deciding whether to hand this
 firm a nine-figure family. Benchmark set: Bessemer Trust, Rockefeller, ICONIQ, Howard
@@ -82,8 +82,8 @@ Ranked by perceived-quality-per-effort.
     jargon a client shouldn't need); `familyoffice`'s "THE OPERATING MODEL" collides with
     the Operating System vocabulary. Three small renames.
 14. **Title-tag grammar.** `<title>` endings vary ("— a sample", "— a sample.", none) and
-    the "Driftwood Capital" suffix is inconsistent. One pattern:
-    `Page Name — Driftwood Capital`, samples as `Page Name — a sample — Driftwood Capital`.
+    the "Driftwood Wealth" suffix is inconsistent. One pattern:
+    `Page Name — Driftwood Wealth`, samples as `Page Name — a sample — Driftwood Wealth`.
 15. **Apply the 20% test to the six heaviest pages.** coordination (1,640 words), ledger
     (1,528), decision-register (1,510), capital-allocation (1,471), constitution (1,354),
     opportunity-register (1,264) — each far over its family's reading budget. Every one

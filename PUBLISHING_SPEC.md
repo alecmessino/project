@@ -111,7 +111,7 @@ Surveyed all 40 shipped pages. Findings, worst first:
 |---|---|
 | **Triple naming** | `insights.html` opens **Insights** (running bar) · **Insights** (eyebrow) · **Insights** (title) before one idea. |
 | **Double naming** | `about.html`: **Our Story** in the running bar *and* the eyebrow. Also `statemap`, `review`, `workspace` repeat their name across marker + title. |
-| **Firm named twice** | The thin `.run` bar above the nav repeats "Driftwood Capital," which is already the nav lockup — on ~20 pages. |
+| **Firm named twice** | The thin `.run` bar above the nav repeats "Driftwood Wealth," which is already the nav lockup — on ~20 pages. |
 | **~6 header systems** | `run+doc`, `run` only, Record masthead (`run+doc+masthead+foliobar`), `doc` only, `hero`, and pages with *no* standard header (`philosophy`, `report`, `tearsheet`). |
 | **Eyebrow semantics vary** | Sometimes the family ("Coordination Library"), sometimes the page name, sometimes a descriptive phrase ("Too much of a good thing"), sometimes absent. |
 | **Decks inconsistent** | Present on ~25 pages, absent on the rest with no rule. |
@@ -169,7 +169,7 @@ One grammar. Read top to bottom:
 
 ```
 ┌ NAV ─────────────────────────────────────────────────────────┐
-│  ⟜ Driftwood Capital  ·  Understand / Discover  ·  CTA        │   ← the ONLY place the firm names itself
+│  ⟜ Driftwood Wealth  ·  Understand / Discover  ·  CTA        │   ← the ONLY place the firm names itself
 └──────────────────────────────────────────────────────────────┘
    [ family folio ]        ← documents only (§4B); never on narrative pages
    EYEBROW                 ← the family or section, in tracked caps. Never the title.
@@ -180,7 +180,7 @@ One grammar. Read top to bottom:
 ```
 
 **Absolute rules**
-- The firm names itself **once** — in the nav lockup. Kill the `.run` bar's "Driftwood Capital."
+- The firm names itself **once** — in the nav lockup. Kill the `.run` bar's "Driftwood Wealth."
 - The page names itself **once** — in the title. The eyebrow is the *family*, never a repeat of the title.
 - Exactly **one deck**, 1–2 sentences. No page opens straight into body; none stacks three paragraphs before the first idea.
 - Everything below the hairline is body.
@@ -266,7 +266,7 @@ measure, and only for a diagram or table.
 
 ## 7 · Navigation & wayfinding
 
-- The nav lockup (mark + Driftwood Capital) is the sole firm identity per page.
+- The nav lockup (mark + Driftwood Wealth) is the sole firm identity per page.
 - Narrative pages rely on the nav alone.
 - Document pages add the **family folio** so a record always says "I am one of the
   Driftwood Record."
@@ -322,11 +322,11 @@ Every other page conforms.
 ## 10 · Before → After (representative)
 
 **`insights.html`**
-- *Before:* `Driftwood Capital · Insights` (running bar) → `INSIGHTS` (eyebrow) → **Insights** (title) → deck. The word "Insights" three times; the firm twice.
+- *Before:* `Driftwood Wealth · Insights` (running bar) → `INSIGHTS` (eyebrow) → **Insights** (title) → deck. The word "Insights" three times; the firm twice.
 - *After:* nav only → eyebrow `INSIGHTS` (the family) → title **How a financial life fits together.** (the index's own thesis) → deck. Named once. Follows the shipped `library.html` grammar — eyebrow = the collection, title = a thesis — rather than repeating the label as the title (a bare label isn't a thesis; see §3).
 
 **`about.html`**
-- *Before:* running bar `Driftwood Capital · Our Story` → eyebrow `OUR STORY` → title "Why Driftwood exists."
+- *Before:* running bar `Driftwood Wealth · Our Story` → eyebrow `OUR STORY` → title "Why Driftwood exists."
 - *After:* nav only → eyebrow `OUR STORY` → title "Why Driftwood exists." (Good title kept; running bar removed.)
 
 **`manual.html`**

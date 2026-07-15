@@ -331,6 +331,23 @@
     .hero .ctas,.sec .ctas{margin-top:36px}
     .ctas a{white-space:normal}
   }
+  /* ── Wide-desktop hybrid (chosen layout): the left-anchored broadsheet column widens and the display type
+     scales up; the interactive system plate enlarges to command the screen while reading text keeps its own
+     comfortable ch-based measures and the plumb-line rail holds on the left. Below 1180px the layout is
+     unchanged (tablet + mobile untouched). Placed last so it overrides the base rules above. ── */
+  @media(min-width:1180px){
+    .wrap{max-width:1300px}
+    .hero h1{font-size:clamp(50px,3vw + 14px,58px)}
+    .hero-grid{gap:0 44px}
+    .sysstage{max-width:780px}
+    .sysband-in{max-width:880px}
+    .sb-h{font-size:clamp(34px,1.6vw + 22px,48px)}
+  }
+  @media(min-width:1560px){
+    .wrap{max-width:1380px}
+    .sysstage{max-width:880px}
+    .sysband-in{max-width:980px}
+  }
 </style>
 </head>
 <body>

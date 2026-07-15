@@ -482,6 +482,37 @@ narrative flow, institutional confidence, or conversion quality. Five phases shi
   annual review a family office performs (no score/verdict; each item reveals its coordination consequence in
   the quiet institutional voice). Direction chosen; implementation is the next pass.
 
+**Round 9 — the refinement pass** (user-directed): three upgrades — a self-running plate, a warmer nav, an
+editorial-blue conversion color, and the deferred Diagnosis, now built.
+
+- **Lattice → an auto-rotating discovery exhibit.** The one-time self-demo + resting breath became a
+  **self-running rotation**: the plate cycles the common decisions on a 5-second cadence, drawing each web
+  and breathing gently on the *active* systems and their lit chords (pulse gated on a `.rotating` class,
+  suppressed under reduced motion). **Any interaction** (hover / focus / trace, node or scenario) hands full
+  control to the visitor and pauses the loop; after **30s of stillness** it resumes. `showSet` was
+  generalized from a hard-coded 3-node triangle to **any-N** (all intra-set chords), and a **fifth scenario —
+  "Exercise stock options" (5 systems: Investments · Taxes · Liquidity · Professionals · Estate)** — now
+  shows the true depth as a 10-edge sub-web ("One decision · five systems"). Viewport-gated via the existing
+  IntersectionObserver (rotates only while on-screen).
+- **Desktop nav — warmer, more legible.** In `driftwood.css`: link/CTA font 11px→12.5px, letter-spacing
+  .12→.14em, padding 4px→6px, and wider inter-item / inter-group gaps. Reads more spacious and institutional;
+  the mobile stacked menu inherits the more-legible size.
+- **Primary CTA color: teal → editorial blue.** Every filled CTA background moved from `--teal` (`#15463a`)
+  to the logo/accent **`--accent-strike` (`#2c5878`)** — a scoped migration across `hub.html` (2 rules), ~21
+  standalone/case templates, and the Atlas via `statepage.py` + `comparepage.py` — deliberately **not**
+  repointing the `--teal`/`--teal2` tokens (which still color the waterfall total, "kept" text, tally/step
+  fills, and the positive-green). The homepage `.rc-sub` bumped to `--on-dark` for contrast on the lighter
+  blue. Buttons now match the diagram, which already used the accent blue.
+- **Phase 4 built — "The Annual Coordination Review" (Direction D).** The Diagnosis is reframed as the
+  standing review a family office runs each year; each of the six conditions now names its **coordination
+  consequence** in a quiet sub-line (not a second column); the **score/verdict readout and its JS were
+  removed** entirely (the tactile check-off + drawn check remain, pure CSS). Just quiet institutional
+  authority.
+- **Verification.** `pytest -q` 507; `node tests/web/run.js` 38/38; `driftwood.css` byte-identical; CTA sweep
+  clean (no CTA on teal; non-button teals preserved); Playwright confirms the rotation (cycles all four
+  scenarios; hover pauses; 5-node = active 5 / lit 10), the warmer nav, blue CTAs site-wide, the reframed
+  Diagnosis, and zero mobile overflow.
+
 **Deliberately deferred** (voice-significant or out of scope for a copy pass — held for the design pass or
 a directed decision):
 

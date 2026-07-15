@@ -83,7 +83,7 @@ _CMP_CSS = _HEAD_CSS + """
   .picker label{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
   .picker select{font:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--line);background:#fff;border-radius:0;min-width:190px}
   .picker .vs{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding-bottom:11px}
-  .picker button{background:var(--teal);color:#f1ede3;border:0;border-radius:0;font:inherit;font-weight:500;font-size:14px;padding:11px 20px;cursor:pointer;margin-left:auto}
+  .picker button{background:var(--accent-strike);color:#f1ede3;border:0;border-radius:0;font:inherit;font-weight:500;font-size:14px;padding:11px 20px;cursor:pointer;margin-left:auto}
   .picker button:disabled{opacity:.55;cursor:default}
   .corridors{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
   @media(max-width:760px){.corridors{grid-template-columns:1fr 1fr}}

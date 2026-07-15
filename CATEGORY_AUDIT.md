@@ -569,3 +569,37 @@ pre-launch compliance/social checklist. Not a design round — a launch-readines
   wants the contact address on `@driftwoodwealth.com`.
 - **Placeholder legal + disclosure content.** Privacy/Terms copy and the two disclosure PDFs are scaffolds —
   counsel + the compliance principal supply the final language and filings before launch.
+
+---
+
+**Round 11 — the fit-and-finish pass** (user-directed, post-launch): a top-to-bottom "fit and finish"
+sweep of the live homepage at 100% zoom — typography, hierarchy, contrast, and movement. All homepage-local
+(`hub.html`) plus the shared nav/footer/brand sheet (`driftwood.css`); no test pins touched.
+
+- **Header & hero hierarchy.** The nav nameplate now anchors the page: `--logo-mark` 17→22px, `--logo-word`
+  14→16.5px, `--logo-rule` 20→25px — clearly dominant over the 12.5px links. The hero breathes: h1
+  line-height 1.06→1.1, more air around the CTA hairline (`.ctas` margin-top 48→56 / padding-top 26→34).
+  The **primary CTA is now a solid editorial-blue fill with white text** (`.quiet`→`.primary`), so the entry
+  action pops and mirrors the solid-blue close button (two conversion moments, top and bottom).
+- **Accessibility & contrast (all now ≥4.5:1 AA on their backgrounds, verified by computed style).** Darkened
+  the sub-nav links (`--dim`→`--body`, 8.8:1), the nav group labels (`--muted`→`--dim`), the `01–06`
+  consequence subtext (`--muted`→`--dim`, 5.2:1), and the firm-anchor band (`--muted`→`--dim`). The shared
+  footer disclosure — the real governor is `body .foot` in `driftwood.css` — went `--muted`/11px →
+  `--dim`/12px with the lead note bumped to `--body` (8.3:1) and underlined links; legible without squinting,
+  sitewide. The secondary hero link gained a resting hairline underline for link affordance.
+- **Accent consistency.** The "See a sample →" document links moved off the green `--teal2` (4.2:1, **failed
+  AA**) to editorial blue `--accent-strike` (6.6:1, passes) with a distinct underlined hover — matching the
+  CTAs and nav.
+- **Interactive polish.** Smooth transitions + hover affordances swept across nav links, the nav CTA, the
+  secondary hero link, and the document links; each `01–06` condition now lifts on hover (a warmer-cream
+  background + a 1px raise) so the ledger reads as tactile.
+- **Scroll motion (IntersectionObserver, once, reduced-motion-safe).** The Seven-Systems plate now fades the
+  whole exhibit in (central node + labels) alongside the existing line draw-in as it enters view; the six
+  Annual-Review conditions **stagger up** in sequence. Both are progressive enhancement — no-JS and
+  `prefers-reduced-motion` render everything in place (verified: plate + all six items stay opacity 1). The
+  plate also sits tighter to its heading and to "What you keep." (`.sysstage` margin 24→16; SVG viewBox
+  570→546, outcome text pulled up) so the graph reads as one cohesive unit.
+- **Verification.** `pytest -q` 507; `node tests/web/run.js` 38/38; `driftwood.css` byte-identical to
+  `docs/driftwood.css`; every changed color recomputed ≥4.5:1 AA; reduced-motion + no-overflow confirmed at
+  1440/1280/390 across the hub and representative static/atlas pages; an adversarial three-lens review
+  (JS-correctness · a11y/motion · diff/pins/design) run before shipping.

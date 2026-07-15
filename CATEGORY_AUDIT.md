@@ -444,6 +444,44 @@ entry points (as this pass did for "In Practice") risks orphaning them. Findings
   **Atlas**, and/or surface an "Advisor Workspace / Tools" grouping in the nav. This pass shipped only the
   minimal adjunct (the two worked examples into Insights); the fuller consolidation is a follow-up.
 
+**Round 8 — the consolidation pass** (site-wide, user-directed): move the site from "feature-heavy
+dashboard" to "institutional wealth-architecture platform" through subtraction. Every change justified by
+narrative flow, institutional confidence, or conversion quality. Five phases shipped (a sixth deferred).
+
+- **Navigation → three authoritative buckets, site-wide.** The two ad-hoc groups ("Understand" ×7 +
+  "Discover" ×3) became **The Firm** (Our Story · Philosophy · Research) · **The System** (Operating System ·
+  How It Works · How We Invest) · **The Tools** (Tax Diagnostic · After-Tax Review · State Tax Atlas), with a
+  single CTA verb **"Request a Coordination Review"**. Applied by a one-time migration across **42 templates**
+  (`src/drift/web/*.html`, preserving each page's `aria-current`) plus the `NAV`/`NAV_ABS` constants in
+  `statepage.py` (regenerating 99+ atlas pages). The existing nav CSS/JS already handled three groups (flex +
+  adjacent-sibling dividers + generic mobile stacking) — no CSS/JS change. 3×3 = 9 links, fewer than the
+  prior 10.
+- **Insights folded into Research.** No more "Insights" top-level item; **`research.html`** is a new umbrella
+  landing (reusing the editorial index style) with two divisions — **Research & Methodology** (the research
+  ledger, long-history tearsheet, State Tax Atlas) and **Essays & Illustrations** (the worked example, the
+  Coordination Library, and the essays index). `insights.html` and `ledger.html` become sub-pages reachable
+  from it — fewer primary destinations, not fewer pages.
+- **Evidence exhibit removed from the homepage.** The $410k/$90k gallery is gone; the After-Tax Review's
+  Exhibit I already carries the fuller model, so the claim stays backed. One micro-metric hint survives,
+  folded into the Method's "Measure" step ("in one 30-year illustration, that gap was $320,000") — curiosity,
+  not a proof-dump.
+- **Hero CTA → a real conversion.** The scroll link became the high-intent **"Request a Coordination
+  Review →"** (outlined-ink, → the exit wall), with the 90-second diagnosis demoted to the secondary. The
+  reserved-teal hierarchy is intact (teal stays the single terminal button).
+- **Exit wall upgraded through subtraction.** Button renamed to "Request a Coordination Review"; removed the
+  intake ledger, the "Read the methodology" link, and the six-item trust strip; added one quiet scope line
+  ("We'll review structure, taxes, estate, advisor coordination, and account architecture — and identify
+  where coordination is likely creating or destroying value."). An engagement, not a booking form. (Footer
+  disclosures untouched, so the RIA pins hold.)
+- **Whitespace tightened** at the two named handoffs (Method top 76→52, Close top 88→64) so the page reads as
+  one continuous narrative; with Evidence gone the Method now hands directly to the Invitation.
+- **Verification.** `pytest -q` 507; `node tests/web/run.js` 38/38; site-wide nav sweep clean (0 stale
+  labels/CTAs across `docs/`, the 3-group nav on 142 doc pages); `driftwood.css` byte-identical; Playwright
+  confirms the new nav (desktop + mobile stack), hero, exit wall, research umbrella, and zero mobile overflow.
+- **Deferred — Diagnosis "The Annual Coordination Review" (Direction D).** Reframe the checklist as the
+  annual review a family office performs (no score/verdict; each item reveals its coordination consequence in
+  the quiet institutional voice). Direction chosen; implementation is the next pass.
+
 **Deliberately deferred** (voice-significant or out of scope for a copy pass — held for the design pass or
 a directed decision):
 

@@ -143,7 +143,7 @@
   .sec{padding:20px 44px 40px}
   .sec.gal{padding:72px 44px 64px}
   #diagnostic.gal{padding:56px 44px 50px}
-  #capabilities.gal{padding:76px 44px 64px}
+  #capabilities.gal{padding:52px 44px 64px}
   .lede2{font-family:var(--serif);font-size:clamp(19px,1vw + 15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
   .lede2 b{color:var(--ink);font-weight:500}
   /* the diagnosis lead-in — an authoritative prompt into the ledger, not a rhetorical question */
@@ -273,45 +273,14 @@
   @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.diag-item,.review-cta .rc-main::after{transition:none}}
   @media(max-width:620px){.sysband{padding:64px 22px 56px}.sysstage{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}}
 
-  /* Evidence — the section's climax. A quiet one-line setup, then the two figures own the page as its
-     de-facto headline, and the verdict lands beneath in the editorial voice. Restraint, not volume. */
-  .ev-lead{font-family:var(--serif);font-size:clamp(18px,.7vw + 15px,21px);line-height:1.5;color:var(--dim);margin:0 0 6px;max-width:48ch}
-  .ev-lead b{color:var(--ink);font-weight:500}
-  /* the outcome — the thirty-year chart reduced to its single conclusion, carved in tabular figures.
-     Two numbers, the same markets, one difference; the math lives a link away, not on the wall. */
-  .outcome{margin:28px 0 0;border-top:1px solid var(--frame-line)}
-  /* the figures wrap the tag below on narrow viewports so nothing clips; fluid but capped well under the
-     container so "$410,000" never exceeds a phone's width. Authoritative, not ginormous. */
-  .outcome-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 20px;padding:20px 0;border-bottom:1px solid var(--line2)}
-  .outcome-fig{font-family:var(--sans);font-weight:700;font-variant-numeric:tabular-nums;
-    font-size:clamp(38px,5.5vw + 8px,82px);line-height:.92;letter-spacing:-.035em;color:var(--teal2)}
-  .outcome-row.is .outcome-fig{color:var(--dim)}
-  .outcome-tag{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.2em;
-    text-transform:uppercase;color:var(--muted)}
-  .outcome-note{font-family:var(--serif);font-size:clamp(21px,1.4vw + 13px,31px);line-height:1.3;
-    color:var(--ink);margin:26px 0 0;max-width:22ch;letter-spacing:-.012em}
-  .outcome-meta{margin:22px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
-  .outcome-meta a{font-family:var(--sans);font-size:12.5px;font-weight:700;letter-spacing:.02em;
-    color:var(--teal2);text-decoration:none}
-  .outcome-meta a:hover{color:var(--teal)}
-  .outcome-meta .sep{color:var(--ghost-line)}
 
-  /* Credibility — the exit wall's quiet last line, not a standalone band. */
-  .cred{margin:44px 0 0;padding:22px 0 0;border-top:1px solid var(--line);
-    display:flex;flex-wrap:wrap;justify-content:flex-start;gap:10px 14px;font-family:var(--sans);font-size:12px;color:var(--dim)}
-  .cred b{display:inline-flex;align-items:center;font-weight:500;color:var(--dim)}
-  .cred b::before{content:"✓";color:var(--teal2);font-weight:700;margin-right:7px}
-  .cred .dot{color:var(--ghost-line)}
-  @media(max-width:620px){.cred .dot{display:none}}
-
-  /* ── Gallery IX · The Invitation — the exhibition's exit wall: one statement, one action. ────── */
-  .close-conv{padding:88px 44px 72px;max-width:780px;border-top:2px solid var(--ink)}
+  /* ── Gallery V · The Invitation — the exhibition's exit wall: one statement, one action. ────── */
+  .close-conv{padding:64px 44px 72px;max-width:780px;border-top:2px solid var(--ink)}
   .conv{font-family:var(--serif);font-size:clamp(24px,1.9vw + 15px,34px);line-height:1.42;color:var(--ink);
     letter-spacing:-.008em;margin:0 0 28px}
   .conv b{font-weight:500}
-  /* the exit wall's action — not a button but an intake. The primary opens a structured review; the
-     step ledger beneath previews exactly what the thirty minutes covers (tracked, tabular); one quiet
-     line routes the skeptic to the methodology. Confidence conveyed through structure, not urgency. */
+  /* the exit wall's action — one confident primary, then a single quiet line naming the scope of the
+     review. No intake ledger, no methodology link, no trust strip: confidence through subtraction. */
   .review{margin:28px 0 0;max-width:660px}
   .review-cta{display:inline-flex;flex-direction:column;gap:5px;text-decoration:none;
     background:var(--teal);color:var(--on-dark-strong);padding:22px 34px;border-radius:var(--surface-radius);
@@ -321,16 +290,8 @@
   .review-cta .rc-main::after{content:"\00a0→";display:inline-block;transition:transform .2s var(--ease-out)}
   .review-cta:hover .rc-main::after{transform:translateX(4px)}
   .review-cta .rc-sub{font-family:var(--sans);font-size:13px;color:var(--on-dark-dim)}
-  .review-steps{list-style:none;display:flex;flex-wrap:wrap;margin:24px 0 0;padding-top:20px;
-    border-top:1px solid var(--line);gap:14px 0;counter-reset:rs}
-  .review-steps li{display:flex;align-items:baseline;gap:9px;font-family:var(--sans);font-size:13px;
-    color:var(--dim);padding-right:28px}
-  .review-steps li::before{counter-increment:rs;content:counter(rs,decimal-leading-zero);
-    font-size:9.5px;font-weight:700;letter-spacing:.14em;color:var(--accent-strike);font-variant-numeric:tabular-nums}
-  .review-alt{display:inline-block;margin:22px 0 0;font-family:var(--sans);font-size:13px;font-weight:700;
-    letter-spacing:.01em;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ghost-line);padding-bottom:2px}
-  .review-alt:hover{color:var(--accent-strike);border-bottom-color:var(--accent-strike)}
-  @media(max-width:620px){.close-conv{padding:64px 22px 56px}.review-cta{display:flex}.review-steps li{padding-right:20px}}
+  .review-scope{margin:20px 0 0;max-width:60ch;font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--dim)}
+  @media(max-width:620px){.close-conv{padding:64px 22px 56px}.review-cta{display:flex}}
 
   .foot{margin-top:26px;padding:18px 44px 34px;border-top:1px solid var(--line);color:#9a978f;font-size:11px;line-height:1.6}
   .foot .note{color:var(--muted);font-weight:500}
@@ -339,7 +300,7 @@
   @media(max-width:620px){
     .hero{padding:56px 22px 48px}
     .sec,.sec.gal,#diagnostic.gal,#capabilities.gal{padding-left:22px;padding-right:22px;padding-top:44px;padding-bottom:40px}
-    .foot,.cred{padding-left:22px;padding-right:22px}.cred{margin-left:0;margin-right:0}
+    .foot{padding-left:22px;padding-right:22px}
     .diag-item::after{left:-10px}
     .hero .ctas,.sec .ctas{margin-top:36px}
     .ctas a{white-space:normal}
@@ -353,22 +314,23 @@
     <nav class="dwnav" aria-label="Driftwood Capital">
       <a class="brand" href="index.html" aria-label="Driftwood Capital — home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Capital</span></a>
       <div class="dwnav-links">
-        <span class="dwnav-group"><span class="dwnav-label">Understand</span>
+        <span class="dwnav-group"><span class="dwnav-label">The Firm</span>
           <a href="about.html">Our Story</a>
           <a href="principles.html">Philosophy</a>
-          <a href="inside.html">Operating&nbsp;System</a>
-          <a href="thesis.html">How We Invest</a>
-          <a href="howitworks.html">How It Works</a>
-          <a href="insights.html">Insights</a>
-          <a href="ledger.html">Research</a>
+          <a href="research.html">Research</a>
         </span>
-        <span class="dwnav-group"><span class="dwnav-label">Discover</span>
+        <span class="dwnav-group"><span class="dwnav-label">The System</span>
+          <a href="inside.html">Operating&nbsp;System</a>
+          <a href="howitworks.html">How It Works</a>
+          <a href="thesis.html">How We Invest</a>
+        </span>
+        <span class="dwnav-group"><span class="dwnav-label">The Tools</span>
           <a href="leakage.html">Tax&nbsp;Diagnostic</a>
           <a href="taxlab.html">After-Tax&nbsp;Review</a>
           <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
         </span>
       </div>
-      <a class="dwnav-cta" href="index.html#conversation">Schedule a Coordination Review</a>
+      <a class="dwnav-cta" href="index.html#conversation">Request a Coordination Review</a>
     </nav>
 
     <!-- ── GALLERY I · THE CONSTRAINT — an asymmetric broadsheet: the triad carved large, the
@@ -389,7 +351,7 @@
         </div>
       </div>
       <div class="ctas">
-        <a class="quiet" href="#thesystem">See how one decision moves all seven →</a>
+        <a class="quiet" href="#conversation">Request a Coordination Review →</a>
         <a class="ghost" href="#diagnostic">or run the 90-second diagnosis</a>
       </div>
     </header>
@@ -513,7 +475,7 @@
           <div class="m-head"><span class="m-step">02</span><div class="m-verb">Measure</div></div>
           <div class="m-body">
             <p class="m-q">What is coordination worth?</p>
-            <p class="m-d">Put a dollar figure on it — for your bracket, state, and portfolio.</p>
+            <p class="m-d">Put a dollar figure on it — for your bracket, state, and portfolio. In one 30-year illustration, that gap was $320,000.</p>
           </div>
         </li>
         <li class="m-row">
@@ -557,56 +519,19 @@
       </div>
     </div>
 
-    <!-- ── GALLERY V · THE EVIDENCE — the thirty-year chart demoted to its single conclusion, carved
-         in tabular figures; the math lives a link away ── -->
-    <div class="sec gal">
-      <p class="ev-lead">Here is one place coordination becomes measurable — two identical portfolios,
-        <b>the same holdings, the same markets, the same pre-tax return.</b></p>
-      <!-- the outcome — two numbers, the same markets, one difference. The chart's conclusion carved
-           in tabular figures; the thirty-year model and asset-by-asset math live in the After-Tax Review. -->
-      <div class="outcome">
-        <div class="outcome-row">
-          <span class="outcome-fig">$410,000</span><span class="outcome-tag">Coordinated</span>
-        </div>
-        <div class="outcome-row is">
-          <span class="outcome-fig">$90,000</span><span class="outcome-tag">Isolated</span>
-        </div>
-        <p class="outcome-note">Same markets. Same return. Only the coordination changed.</p>
-        <div class="outcome-meta">
-          <span class="label mark">Illustrative</span><span class="sep">·</span>
-          <span class="label">$1,000,000 of gains · 30 years · high-tax state</span>
-          <a href="taxlab.html">See the math →</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── GALLERY VI · THE INVITATION — the exit wall: conviction, one structured action, quiet
-         credibility. Not a "schedule a meeting" button but the first step of a defined intake. ── -->
+    <!-- ── GALLERY V · THE INVITATION — the exit wall: one conviction, one high-intent action, and a
+         single quiet line naming the scope. An engagement, not a booking form. ── -->
     <div class="sec close-conv" id="conversation">
       <p class="conv">The best financial decisions are rarely investment decisions alone. They are
         <b>coordination decisions.</b> When every part of your financial life works together, you keep more
         of what you've built.</p>
       <div class="review">
         <a class="review-cta" href="https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting" target="_blank" rel="noopener">
-          <span class="rc-main">Start a Coordination Review</span>
+          <span class="rc-main">Request a Coordination Review</span>
           <span class="rc-sub">A 30-minute review of your financial architecture.</span>
         </a>
-        <ol class="review-steps" aria-label="What the review covers, in order">
-          <li>Assets</li>
-          <li>Primary question</li>
-          <li>CPA</li>
-          <li>Estate documents</li>
-          <li>State of residence</li>
-        </ol>
-        <a class="review-alt" href="taxlab.html">Read the methodology →</a>
-      </div>
-      <div class="cred">
-        <b>Fee-only fiduciary</b><span class="dot">·</span>
-        <b>Evidence-based</b><span class="dot">·</span>
-        <b>Coordinates with your CPA &amp; attorney</b><span class="dot">·</span>
-        <b>No commissions</b><span class="dot">·</span>
-        <b>Low-turnover</b><span class="dot">·</span>
-        <b>Registered investment adviser</b>
+        <p class="review-scope">We'll review structure, taxes, estate, advisor coordination, and account
+          architecture — and identify where coordination is likely creating or destroying value.</p>
       </div>
     </div>
 

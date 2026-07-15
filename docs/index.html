@@ -147,9 +147,10 @@
   .lede2{font-family:var(--serif);font-size:clamp(19px,1vw + 15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
   .lede2 b{color:var(--ink);font-weight:500}
   /* ── Gallery III · The Annual Review — the standing checklist a family office runs, not a lead form.
-     Native inputs
-     stay (visually hidden) so keyboard + counter behavior is unchanged; hovering one statement
-     focuses it like a lens and the rest recede; a recognized statement carries a drawn check. ── */
+     Native inputs stay (visually hidden) so keyboard behaviour is unchanged; there is no score or
+     verdict — hovering a statement focuses it like a lens, and a recognized one carries a drawn check
+     as a private, unhurried self-audit. ── */
+  .diag-cue{font-family:var(--sans);font-size:12.5px;font-weight:500;letter-spacing:.01em;color:var(--muted);margin:0 0 4px}
   .diag{counter-reset:dg;display:block;margin:14px 0 30px;max-width:60ch;border-top:2px solid var(--ink)}
   .diag-item{display:grid;grid-template-columns:32px 1fr;gap:0 12px;align-items:baseline;position:relative;
     padding:11px 28px 11px 2px;border-bottom:1px solid var(--line2);cursor:pointer;
@@ -259,6 +260,9 @@
   .mproof:hover{text-decoration:underline}
   .mstory.show .mrest{opacity:0}
   .mstory.show .mlead,.mstory.show .mchain,.mstory.show .mproof{opacity:1}
+  /* between auto-rotated scenarios the panel dips out quickly, swaps text, then eases back in — a
+     composed crossfade rather than a hard flash every five seconds. */
+  .mstory.swapping .mlead,.mstory.swapping .mchain,.mstory.swapping .mproof{opacity:0;transition:opacity .18s ease}
   /* the trigger rail — trace a common decision; specimen labels, not software buttons. Sits directly
      under the reading panel (no rule) so the two read as one exhibit block, not two boxed zones. */
   .trig{margin:14px auto 0;max-width:590px;
@@ -268,7 +272,15 @@
     transition:border-color .2s ease,color .2s ease}
   .trig-btn:hover{border-color:var(--ghost-line);color:var(--ink)}
   .trig-btn[aria-pressed="true"]{border-color:var(--accent-strike);color:var(--ink)}
-  @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.diag-item,.review-cta .rc-main::after{transition:none}}
+  /* the tour control — a quiet, keyboard-operable pause/resume for the auto-rotation (WCAG 2.2.2 · Pause,
+     Stop, Hide). Injected by script only when the motion actually runs; centred under the scenario rail. */
+  .rot-toggle{display:inline-flex;align-items:center;gap:7px;margin:12px 0 0;background:none;border:0;cursor:pointer;
+    font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);padding:5px 4px;transition:color .2s ease}
+  .rot-toggle:hover{color:var(--ink)}
+  .rot-toggle:focus-visible{outline:2px solid var(--accent-strike);outline-offset:3px;border-radius:var(--surface-radius)}
+  .rot-ic{font-size:9px;line-height:1;letter-spacing:1px;color:var(--accent-strike)}
+  @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.rot-toggle,.diag-item,.review-cta .rc-main::after{transition:none}}
   @media(max-width:620px){.sysband{padding:64px 22px 56px}.sysstage{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}}
 
 
@@ -350,7 +362,7 @@
       </div>
       <div class="ctas">
         <a class="quiet" href="#conversation">Request a Coordination Review →</a>
-        <a class="ghost" href="#diagnostic">or run the 90-second diagnosis</a>
+        <a class="ghost" href="#diagnostic">or see where coordination breaks down</a>
       </div>
     </header>
 
@@ -444,6 +456,7 @@
       <p class="lede2">Every year, institutional families review the connections between these systems
         before making major financial decisions. The following conditions often reveal where coordination
         has begun to break down.</p>
+      <p class="diag-cue">A private read of your own situation — mark the ones you recognize.</p>
       <div class="diag" id="diag">
         <label class="diag-item"><input class="vh" type="checkbox"><span>My CPA and advisor rarely talk to each other.<span class="diag-why">Tax and investment decisions drift apart.</span></span></label>
         <label class="diag-item"><input class="vh" type="checkbox"><span>I have multiple custodians or account structures.<span class="diag-why">Account structure begins driving decisions instead of strategy.</span></span></label>
@@ -630,14 +643,27 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
   }
   // A traced decision stays pinned until a system is hovered, another trigger is pressed,
   // the same trigger is pressed again, or Escape — a pointer leaving the plate never wipes it.
-  var pinned = -1;
+  var pinned = -1;       // the scenario/node currently shown (by hover, click, or the auto-tour)
+  var userPinned = -1;   // the scenario the visitor explicitly CLICKED — only a click can toggle it off,
+                         // so a hover-preview never turns the next click into an accidental dismiss
   var trigBtns = [].slice.call(document.querySelectorAll("#trig .trig-btn"));
+  // A scenario button is a toggle: aria-pressed reflects whether that scenario is the one currently on the
+  // plate — one honest state for every path (auto-tour, hover, focus, click). aria-pressed changing on an
+  // unfocused button (during the auto-tour) is silent to assistive tech; only a focused button announces.
   function setPressed(t){ trigBtns.forEach(function(b){ b.setAttribute("aria-pressed", String(+b.getAttribute("data-t")===t)); }); }
-  function story_fill(d){
-    lead.textContent = d.lead;
-    chain.textContent = d.body;
+  var storyTimer = 0;
+  function story_apply(d){
+    lead.textContent = d.lead; chain.textContent = d.body;
     proof.textContent = d.proof + " →"; proof.setAttribute("href", d.href);
-    story.classList.add("show");
+    story.classList.remove("swapping"); story.classList.add("show");
+  }
+  // First reveal (or reduced motion) shows at once; swapping between scenarios crossfades briefly, so the
+  // reading panel changes composedly rather than hard-flashing every five seconds.
+  function story_fill(d){
+    if(storyTimer){ clearTimeout(storyTimer); storyTimer = 0; }
+    if(REDUCE || !story.classList.contains("show")){ story_apply(d); return; }
+    story.classList.add("swapping");
+    storyTimer = setTimeout(function(){ storyTimer = 0; story_apply(d); }, 190);
   }
 
   // ── Motion layer. Honour prefers-reduced-motion: when set, every path below short-circuits to the
@@ -685,7 +711,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
 
   function show(i){
     clearTimers();
-    pinned = -1; setPressed(-1);
+    pinned = -1; userPinned = -1; setPressed(-1);
     var d = SYS[i];
     hub.textContent = d.center; hub.classList.add("on"); fitHub();
     if(keep) keep.classList.add("on");
@@ -752,14 +778,15 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
   function clear(force){
     if(pinned >= 0 && !force) return;
     clearTimers();
-    pinned = -1; setPressed(-1);
+    pinned = -1; userPinned = -1; setPressed(-1);
     nodes.forEach(function(nd){ nd.classList.remove("active","lit"); });
     nets.forEach(function(ln){ ln.classList.remove("lit","dim"); });
     deactivateTraces();
     if(flow) flow.classList.remove("on");
     hub.textContent = HUB0; hub.classList.remove("on"); fitHub();
     if(keep) keep.classList.remove("on");
-    story.classList.remove("show");
+    if(storyTimer){ clearTimeout(storyTimer); storyTimer = 0; }
+    story.classList.remove("show","swapping");
   }
   nodes.forEach(function(nd,i){
     nd.addEventListener("mouseenter", function(){ holdForUser(); show(i); });
@@ -774,7 +801,8 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
     b.addEventListener("focus", function(){ holdForUser(); if(pinned !== t) showSet(t); });
     b.addEventListener("click", function(){
       holdForUser();
-      if(pinned === t){ clear(true); } else { showSet(t); }
+      // only a scenario the visitor previously CLICKED toggles off; a hover-preview never does
+      if(userPinned === t){ userPinned = -1; clear(true); } else { userPinned = t; showSet(t); }
       if(window.plausible) plausible("trace_decision", {props: {trigger: t}});
     });
   });
@@ -787,16 +815,16 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
   // interaction (hover / focus / trace) hands full control to the visitor and pauses the loop; after 30s
   // of stillness it resumes. Reduced-motion shows a static web — no draw-in, no rotation, no pulse.
   var ROT_ORDER = [0,1,2,3];
-  var introDone = false, rotIdx = 0, rotTimer = 0, resumeTimer = 0, userHeld = false, inView = false;
+  var introDone = false, rotIdx = 0, rotTimer = 0, resumeTimer = 0, userHeld = false, inView = false, stopped = false;
   function rotStep(){
     rotTimer = 0;
-    if(!inView || userHeld || REDUCE){ stage.classList.remove("rotating"); return; }
+    if(!inView || userHeld || stopped || REDUCE){ stage.classList.remove("rotating"); return; }
     showSet(ROT_ORDER[rotIdx]);
     rotIdx = (rotIdx + 1) % ROT_ORDER.length;
     rotTimer = setTimeout(rotStep, 5000);
   }
   function startRotation(){
-    if(REDUCE || userHeld || !inView || rotTimer) return;
+    if(REDUCE || userHeld || stopped || !inView || rotTimer) return;
     stage.classList.add("rotating");
     rotStep();
   }
@@ -805,6 +833,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
     stage.classList.remove("rotating");
   }
   function scheduleResume(){
+    if(stopped) return;                                    // an explicit pause is honoured indefinitely
     if(resumeTimer) clearTimeout(resumeTimer);
     resumeTimer = setTimeout(function(){
       resumeTimer = 0; userHeld = false; clear(true); rotIdx = 0; startRotation();
@@ -812,6 +841,31 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
   }
   // Every user touch pauses the loop and re-arms the 30s idle timer, so any activity keeps control.
   function holdForUser(){ userHeld = true; stopRotation(); scheduleResume(); }
+  // WCAG 2.2.2 — the auto-motion lasts more than five seconds, so offer a real, discoverable, keyboard-
+  // operable control to stop it for good (a hover-pause isn't discoverable and doesn't persist). Injected
+  // only when motion actually runs (never under reduced-motion / no-JS), and it fits the plate's own idiom.
+  var rotToggle = null;
+  function paintToggle(){
+    if(!rotToggle) return;
+    rotToggle.setAttribute("aria-pressed", String(stopped));
+    rotToggle.setAttribute("aria-label", (stopped ? "Resume" : "Pause") + " the auto-rotating tour of common decisions");
+    rotToggle.innerHTML = (stopped ? '<span class="rot-ic" aria-hidden="true">▶</span>Resume tour'
+                                   : '<span class="rot-ic" aria-hidden="true">❚❚</span>Pause tour');
+  }
+  function toggleStopped(){
+    stopped = !stopped;
+    if(stopped){ if(resumeTimer){ clearTimeout(resumeTimer); resumeTimer = 0; } userHeld = false; stopRotation(); }
+    else { userHeld = false; startRotation(); }
+    paintToggle();
+  }
+  if(!REDUCE){
+    rotToggle = document.createElement("button");
+    rotToggle.className = "rot-toggle"; rotToggle.type = "button";
+    var trigWrap = document.getElementById("trig");
+    if(trigWrap && trigWrap.parentNode) trigWrap.parentNode.insertBefore(rotToggle, trigWrap.nextSibling);
+    rotToggle.addEventListener("click", toggleStopped);
+    paintToggle();
+  }
   function intro(){
     if(introDone || REDUCE) return; introDone = true;
     nets.forEach(function(ln){ var len = ln.getTotalLength();

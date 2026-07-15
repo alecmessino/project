@@ -74,8 +74,8 @@
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;
     padding:12px 24px;margin:7px 7px 0;border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .run .inst{font-weight:500;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .run .marker{font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
   /* ── The registration grid — the exhibition hangs from one continuous plumb line down the left
@@ -92,18 +92,18 @@
   .vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;border:0;
     clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden;white-space:nowrap}
   /* the museum label — the smallest type on the page, a specimen tag: tracked caps, tabular figures */
-  .label{font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  .label{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
     color:var(--muted);font-variant-numeric:tabular-nums}
   .label.mark{color:var(--accent-strike)}
   .tnum{font-variant-numeric:tabular-nums}
 
   /* ── Gallery I · The Constraint — an asymmetric broadsheet, not a centered column. ──────────── */
-  .hero{display:block;padding:88px 44px 56px}
-  .kick{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.22em;
+  .hero{display:block;padding:88px 52px 56px}
+  .kick{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.2em;
     text-transform:uppercase;color:var(--accent-strike);margin:0 0 40px;max-width:none}
   .hero-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:0 34px;align-items:start}
   .hero h1{grid-column:1/9;font-family:var(--sans);font-weight:700;
-    font-size:clamp(38px,4.4vw,58px);line-height:1.04;letter-spacing:-.026em;color:var(--ink);margin:0}
+    font-size:clamp(36px,4vw,50px);line-height:1.06;letter-spacing:-.024em;color:var(--ink);margin:0}
   .hero h1 span{display:block}
   .hero-aside{grid-column:10/-1;margin-top:76px;padding-left:24px;border-left:1px solid var(--line)}
   .lede{font-family:var(--serif);font-size:16.5px;line-height:1.68;color:var(--dim);margin:0}
@@ -140,10 +140,10 @@
 
   /* ── Section scaffold — tiny label, medium statement, generous air. Galleries vary their own
      vertical rhythm deliberately: dense ledger, vast plate, quiet archive — never one template. ── */
-  .sec{padding:20px 44px 40px}
-  .sec.gal{padding:72px 44px 64px}
-  #diagnostic.gal{padding:56px 44px 50px}
-  #capabilities.gal{padding:52px 44px 64px}
+  .sec{padding:20px 52px 40px}
+  .sec.gal{padding:72px 52px 64px}
+  #diagnostic.gal{padding:56px 52px 50px}
+  #capabilities.gal{padding:52px 52px 64px}
   .lede2{font-family:var(--serif);font-size:clamp(19px,1vw + 15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
   .lede2 b{color:var(--ink);font-weight:500}
   /* ── Gallery III · The Annual Review — the standing checklist a family office runs, not a lead form.
@@ -151,9 +151,13 @@
      verdict — hovering a statement focuses it like a lens, and a recognized one carries a drawn check
      as a private, unhurried self-audit. ── */
   .diag-cue{font-family:var(--sans);font-size:12.5px;font-weight:500;letter-spacing:.01em;color:var(--muted);margin:0 0 4px}
-  .diag{counter-reset:dg;display:block;margin:14px 0 30px;max-width:60ch;border-top:2px solid var(--ink)}
-  .diag-item{display:grid;grid-template-columns:32px 1fr;gap:0 12px;align-items:baseline;position:relative;
-    padding:11px 28px 11px 2px;border-bottom:1px solid var(--line2);cursor:pointer;
+  /* the standing review a family office runs each year — laid out as a 2×3 matrix (a board's register,
+     not a to-do list), so it doesn't echo the Method's numbered rows just below. Items stretch to their
+     row's height so the hairline rules align across both columns; collapses to one column on mobile. */
+  .diag{counter-reset:dg;display:grid;grid-template-columns:1fr 1fr;column-gap:46px;align-items:stretch;
+    margin:16px 0 30px;max-width:none;border-top:2px solid var(--ink)}
+  .diag-item{display:grid;grid-template-columns:30px 1fr;gap:0 12px;align-items:baseline;align-content:start;position:relative;
+    padding:14px 28px 15px 2px;border-bottom:1px solid var(--line2);cursor:pointer;
     font-family:var(--serif);font-size:14.5px;line-height:1.5;color:var(--body);
     transition:opacity .2s ease,color .2s ease}
   .diag-item::before{counter-increment:dg;content:counter(dg,decimal-leading-zero);
@@ -178,6 +182,7 @@
     letter-spacing:.01em;color:var(--muted);font-weight:400}
   .diag-insight{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.5;color:var(--dim);
     margin:0 0 14px;max-width:56ch;padding-left:16px;border-left:2px solid var(--accent-strike)}
+  @media(max-width:700px){.diag{grid-template-columns:1fr;max-width:60ch}}
   /* the plate's product line — a quiet serif framing above the seven-systems headline */
   .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw + 15px,19px);line-height:1.5;color:var(--dim);
     margin:0 auto 20px;max-width:36ch}
@@ -213,7 +218,7 @@
      moves, the centre names the coordination, the flow carries down to the outcome, and a causal
      micro-story with one proof appears beneath. Paper under glass: ~300ms opacity + hairline
      transitions only — no motion, no scale, no spring. Teach through interaction, not paragraphs. */
-  .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:100px 44px 76px;margin:0;position:relative}
+  .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:100px 52px 76px;margin:0;position:relative}
   .sysband-in{max-width:680px;margin:0 auto;text-align:center}
   .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.4vw + 15px,40px);line-height:1.12;letter-spacing:-.022em;color:var(--ink);margin:0 auto;max-width:20ch}
   .sysstage{margin:24px auto 0;max-width:590px}
@@ -223,6 +228,11 @@
      A hovered system lifts only its own links; a traced decision lifts the chords among its set. */
   .net{stroke:var(--ghost-line);stroke-width:.6;opacity:.15;transition:opacity .34s ease,stroke .34s ease}
   .net.lit{stroke:var(--accent-strike);stroke-width:1;opacity:.72}
+  /* a decision's web is read as a hierarchy, not a mesh: the chords leaving the originating system are the
+     primary star (full strength); the cross-links among the downstream systems are a quieter secondary
+     matrix — present, so the true depth still shows, but toned down so a five-system web reads structured
+     rather than busy. Applied to every scenario, so the 3-system webs gain the same restraint. */
+  .net.lit.sec{stroke-width:.7;opacity:.3}
   .net.dim{opacity:.05}
   /* the signal — an accent stroke that draws along a relationship on demand, then rests. The web
      itself never redraws (no flicker); this overlay carries all the motion, and reduced-motion skips it. */
@@ -249,7 +259,7 @@
   @keyframes nodePulse{0%,100%{opacity:1}50%{opacity:.66}}
   @keyframes edgePulse{0%,100%{opacity:.72}50%{opacity:.42}}
   .sysstage.rotating .node.active .dot{animation:nodePulse 2.8s ease-in-out infinite}
-  .sysstage.rotating .net.lit{animation:edgePulse 2.8s ease-in-out infinite}
+  .sysstage.rotating .net.lit:not(.sec){animation:edgePulse 2.8s ease-in-out infinite}
   @media(prefers-reduced-motion:reduce){.sysstage.rotating .node.active .dot,.sysstage.rotating .net.lit{animation:none}}
   /* the micro-story — a memorable line, one consequence, and a footnote-quiet proof */
   .mstory{position:relative;max-width:60ch;margin:24px auto 0;min-height:104px;padding-top:20px;border-top:1px solid var(--line2)}
@@ -286,7 +296,7 @@
 
 
   /* ── Gallery V · The Invitation — the exhibition's exit wall: one statement, one action. ────── */
-  .close-conv{padding:64px 44px 72px;max-width:780px;border-top:2px solid var(--ink)}
+  .close-conv{padding:64px 52px 72px;max-width:780px;border-top:2px solid var(--ink)}
   .conv{font-family:var(--serif);font-size:clamp(24px,1.9vw + 15px,34px);line-height:1.42;color:var(--ink);
     letter-spacing:-.008em;margin:0 0 28px}
   .conv b{font-weight:500}
@@ -304,7 +314,7 @@
   .review-scope{margin:20px 0 0;max-width:60ch;font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--dim)}
   @media(max-width:620px){.close-conv{padding:64px 22px 56px}.review-cta{display:flex}}
 
-  .foot{margin-top:26px;padding:18px 44px 34px;border-top:1px solid var(--line);color:#9a978f;font-size:11px;line-height:1.6}
+  .foot{margin-top:26px;padding:18px 52px 34px;border-top:1px solid var(--line);color:#9a978f;font-size:11px;line-height:1.6}
   .foot .note{color:var(--muted);font-weight:500}
   .foot a{color:var(--muted)}
   .foot b{color:var(--muted)}
@@ -727,14 +737,14 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
     if(REDUCE){
       nodes.forEach(function(nd,j){ nd.classList.toggle("active", j===i); nd.classList.toggle("lit", j!==i); });
       nets.forEach(function(ln){ var on=(+ln.getAttribute("data-a")===i)||(+ln.getAttribute("data-b")===i);
-        ln.classList.toggle("lit", on); ln.classList.toggle("dim", !on); });
+        ln.classList.toggle("lit", on); ln.classList.remove("sec"); ln.classList.toggle("dim", !on); });
       story_fill(d); return;
     }
     snapNets(); deactivateTraces();
     // the source lights now; connected systems wait for the signal to reach them
     nodes.forEach(function(nd,j){ nd.classList.toggle("active", j===i); nd.classList.remove("lit"); });
     nets.forEach(function(ln){ var inc=(+ln.getAttribute("data-a")===i)||(+ln.getAttribute("data-b")===i);
-      ln.classList.remove("lit"); ln.classList.toggle("dim", !inc); });
+      ln.classList.remove("lit","sec"); ln.classList.toggle("dim", !inc); });
     var DUR = 280, ST = 30, k = 0;
     nets.forEach(function(ln, idx){
       var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b");
@@ -758,13 +768,13 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
     if(REDUCE){
       nodes.forEach(function(nd,j){ nd.classList.toggle("active", inSet(j)); nd.classList.remove("lit"); });
       nets.forEach(function(ln){ var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b");
-        var on = inSet(a) && inSet(b); ln.classList.toggle("lit", on); ln.classList.toggle("dim", !on); });
+        var on = inSet(a) && inSet(b); ln.classList.toggle("lit", on); ln.classList.toggle("sec", on && a!==set[0] && b!==set[0]); ln.classList.toggle("dim", !on); });
       story_fill(d); return;
     }
     snapNets(); deactivateTraces();
     nodes.forEach(function(nd){ nd.classList.remove("active","lit"); });
     nets.forEach(function(ln){ var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b");
-      ln.classList.remove("lit"); ln.classList.toggle("dim", !(inSet(a) && inSet(b))); });
+      ln.classList.remove("lit","sec"); ln.classList.toggle("dim", !(inSet(a) && inSet(b))); });
     // Draw every chord among the set as a staggered signal; as each lands, that chord lights (.net.lit)
     // and both systems activate. Scales to any set — a triangle for three, a dense sub-web for five — so
     // the plate shows the true depth of the decision, then the travelling signal retires and the lit web
@@ -776,9 +786,9 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
     var DUR = 280, STAG = Math.max(70, Math.round(900 / Math.max(1, edges.length)));
     edges.forEach(function(ed, ei){
       var src = ed[0], dst = ed[1], ln = netByPair[ed[2]], idx = netIndex[ed[2]];
-      var e = ends(ln, src), at = ei*STAG;
+      var e = ends(ln, src), at = ei*STAG, primary = (src === set[0]);   // edges leave the source first (i===0), so primary chords draw before the secondary matrix
       later(function(){ runTrace(idx, e.sx,e.sy,e.dx,e.dy, DUR, 0); }, at);
-      later(function(){ ln.classList.add("lit"); nodes[src].classList.add("active"); nodes[dst].classList.add("active"); }, at + DUR - 40);
+      later(function(){ ln.classList.add("lit"); if(!primary) ln.classList.add("sec"); nodes[src].classList.add("active"); nodes[dst].classList.add("active"); }, at + DUR - 40);
     });
     later(function(){ deactivateTraces(); }, edges.length*STAG + DUR + 60);
     later(function(){ story_fill(d); }, 160);
@@ -788,7 +798,7 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
     clearTimers();
     pinned = -1; userPinned = -1; paintShowing(-1); setPinned();
     nodes.forEach(function(nd){ nd.classList.remove("active","lit"); });
-    nets.forEach(function(ln){ ln.classList.remove("lit","dim"); });
+    nets.forEach(function(ln){ ln.classList.remove("lit","dim","sec"); });
     deactivateTraces();
     if(flow) flow.classList.remove("on");
     hub.textContent = HUB0; hub.classList.remove("on"); fitHub();
@@ -883,8 +893,9 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
     nets.forEach(function(ln, k){ var delay = 120 + k*44;
       ln.style.transition = "stroke-dashoffset 640ms cubic-bezier(.4,0,.2,1) "+delay+"ms, opacity .34s ease";
       ln.style.strokeDashoffset = "0"; });
-    // once the sketch settles (~1.6s of draw-in), begin the self-running rotation
-    rotTimer = setTimeout(function(){ rotTimer = 0; startRotation(); }, 1900);
+    // the sketch draws in, then the exhibit begins promptly — the first decision traces in while the
+    // web is still settling (showSet's snapNets completes it), so the plate feels live soon after it opens
+    rotTimer = setTimeout(function(){ rotTimer = 0; startRotation(); }, 950);
   }
   if(!REDUCE && "IntersectionObserver" in window){
     var io = new IntersectionObserver(function(es){ es.forEach(function(en){

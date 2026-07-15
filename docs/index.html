@@ -936,6 +936,9 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
       else stopRotation();
     }); }, {threshold:.25});
     io.observe(stage);
+    // keyboard safety: focusing a node before the plate crosses the .25 threshold would leave the focus
+    // ring on the opacity:0 stage — reveal on first focus so the ring is always visible.
+    stage.addEventListener("focusin", function(){ if(!introDone) intro(); });
   } else { inView = true; intro(); }   // no IntersectionObserver: run the exhibit outright so the pause control governs real motion
   fitHub();
 })();
@@ -961,21 +964,27 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
   if(!grid || REDUCE || !("IntersectionObserver" in window)) return;
   var items = [].slice.call(grid.querySelectorAll(".diag-item"));
   if(!items.length) return;
+  var io, done = false;
   items.forEach(function(it){ it.style.transition = "none"; it.style.opacity = "0"; it.style.transform = "translateY(14px)"; });
   void grid.getBoundingClientRect();   // commit the hidden state without animating the initial hide
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(en){
-      if(!en.isIntersecting) return;
-      items.forEach(function(it, i){
-        var d = i * 70;
-        it.style.transition = "opacity .5s ease " + d + "ms, transform .55s cubic-bezier(.4,0,.2,1) " + d + "ms";
-        it.style.opacity = ""; it.style.transform = "";
-      });
-      setTimeout(function(){ items.forEach(function(it){ it.style.transition = ""; }); }, items.length * 70 + 650);
-      io.disconnect();
+  function reveal(){
+    if(done) return; done = true;
+    items.forEach(function(it, i){
+      var d = i * 70;
+      it.style.transition = "opacity .5s ease " + d + "ms, transform .55s cubic-bezier(.4,0,.2,1) " + d + "ms";
+      it.style.opacity = ""; it.style.transform = "";
     });
+    setTimeout(function(){ items.forEach(function(it){ it.style.transition = ""; }); }, items.length * 70 + 650);
+    if(io) io.disconnect();
+    grid.removeEventListener("focusin", reveal);
+  }
+  io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting) reveal(); });
   }, {threshold: .18});
   io.observe(grid);
+  // keyboard safety: if a Tab lands on a still-hidden row (its scroll-into-view may not cross the .18
+  // threshold at narrow widths), reveal immediately so the focus ring is never on an opacity:0 element.
+  grid.addEventListener("focusin", reveal);
 })();
 </script>
 </body>

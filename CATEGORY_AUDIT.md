@@ -419,6 +419,13 @@ removed. One unforgettable page, not one that says everything.
   **breath** (opacity oscillation, ~5s, staggered per node), suppressed the instant the plate is engaged (a
   `.busy` class) and under `prefers-reduced-motion`. No spin, bounce, particles, or loops — the plate reads
   as alive, then still.
+- **Plate polish (post-review, user-directed).** Two last refinements before merge: (a) the apex node
+  **"Portfolio" → "Investments"** (name the client's holdings, not "a portfolio" in the abstract; a single
+  word that balances cleanest at the apex — the centre-morph and lead updated to match: "Investment
+  coordination" / "Investments determine taxes."); (b) **reordered the plate panel** so the contextual
+  explanation is encountered *before* the scenario rail (SVG → explanation → "trace a decision" cards), and
+  dropped the trigger rail's top rule so the reading area and the cards read as one exhibit panel rather
+  than two boxed zones. The reserved reading height is unchanged (no layout shift on hover).
 - **Verification.** `pytest -q` 507 passed; `node tests/web/run.js` 38/38; all template pins present, no
   banned strings, one `__STATE__` + one `<!--FIRM_ANCHOR-->`, no malformed `vw+` clamps reintroduced;
   `driftwood.css` byte-identical to `docs/driftwood.css`; Playwright confirms tighter rhythm, zero mobile

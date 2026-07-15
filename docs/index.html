@@ -261,8 +261,9 @@
   .mproof:hover{text-decoration:underline}
   .mstory.show .mrest{opacity:0}
   .mstory.show .mlead,.mstory.show .mchain,.mstory.show .mproof{opacity:1}
-  /* the trigger rail — trace a common decision; specimen labels, not software buttons */
-  .trig{margin:22px auto 0;max-width:590px;padding-top:16px;border-top:1px solid var(--line2);
+  /* the trigger rail — trace a common decision; specimen labels, not software buttons. Sits directly
+     under the reading panel (no rule) so the two read as one exhibit block, not two boxed zones. */
+  .trig{margin:14px auto 0;max-width:590px;
     display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:center}
   .trig-btn{font-family:var(--sans);font-size:12.5px;font-weight:500;color:var(--body);background:none;
     border:1px solid var(--line);border-radius:var(--surface-radius);padding:9px 14px;cursor:pointer;
@@ -401,7 +402,7 @@
         <p class="sb-lead">Driftwood coordinates your financial life as one system.</p>
         <h2 class="sb-h">Seven systems. No decision touches just one.</h2>
         <div class="sysstage" id="sysDiagram">
-          <svg viewBox="0 0 640 570" role="group" aria-label="Seven financial systems — Portfolio, Taxes, Liquidity, Professionals, Estate, Risk and Liability, and Entity Structure — in one coordinated network. Hover a system to see what it moves; what you keep is the result.">
+          <svg viewBox="0 0 640 570" role="group" aria-label="Seven financial systems — Investments, Taxes, Liquidity, Professionals, Estate, Risk and Liability, and Entity Structure — in one coordinated network. Hover a system to see what it moves; what you keep is the result.">
             <!-- the lattice: every system connected to every other (near-silent at rest) -->
             <line class="net" data-a="0" data-b="1" x1="320" y1="65" x2="457" y2="131"/>
             <line class="net" data-a="0" data-b="2" x1="320" y1="65" x2="491" y2="279"/>
@@ -432,9 +433,9 @@
             <!-- the outcome — free, below the network; never boxed -->
             <text class="keep" x="320" y="542" text-anchor="middle">What you keep.</text>
             <!-- the seven systems (DOM order = SYS index) -->
-            <g class="node" data-i="0" tabindex="0" role="button" aria-label="Portfolio — see what it moves">
+            <g class="node" data-i="0" tabindex="0" role="button" aria-label="Investments — see what it moves">
               <circle class="hit" cx="320" cy="65" r="30"/><circle class="dot" cx="320" cy="65" r="5"/>
-              <text class="lbl" x="320" y="41" text-anchor="middle">Portfolio</text>
+              <text class="lbl" x="320" y="41" text-anchor="middle">Investments</text>
             </g>
             <g class="node" data-i="1" tabindex="0" role="button" aria-label="Taxes — see what it moves">
               <circle class="hit" cx="457" cy="131" r="30"/><circle class="dot" cx="457" cy="131" r="5"/>
@@ -462,16 +463,16 @@
             </g>
           </svg>
         </div>
-        <div class="trig" id="trig" role="group" aria-label="Trace a common decision — press one to see the systems it moves">
-          <button class="trig-btn" data-t="0" aria-pressed="false">Move to cash &amp; T-bills</button>
-          <button class="trig-btn" data-t="1" aria-pressed="false">Buy an out-of-state property</button>
-          <button class="trig-btn" data-t="2" aria-pressed="false">Gift $50,000 to an adult child</button>
-        </div>
         <div class="mstory" id="mstory">
           <p class="mrest" id="mrest">Each line is a dependency — hover a system, or trace a decision.</p>
           <p class="mlead" id="mlead"></p>
           <p class="mchain" id="mchain"></p>
           <a class="mproof" id="mproof" href="#"></a>
+        </div>
+        <div class="trig" id="trig" role="group" aria-label="Trace a common decision — press one to see the systems it moves">
+          <button class="trig-btn" data-t="0" aria-pressed="false">Move to cash &amp; T-bills</button>
+          <button class="trig-btn" data-t="1" aria-pressed="false">Buy an out-of-state property</button>
+          <button class="trig-btn" data-t="2" aria-pressed="false">Gift $50,000 to an adult child</button>
         </div>
       </div>
     </div>
@@ -672,7 +673,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
   var HUB0 = "Coordination";
   // Each system: a concise centre label, a memorable lead, one consequence, and the one proof.
   var SYS = [
-    { center:"Portfolio coordination", lead:"Portfolios determine taxes.",
+    { center:"Investment coordination", lead:"Investments determine taxes.",
       body:"What you own also sets asset location, the estate basis, and what’s available to spend.",
       href:"thesis.html", proof:"See how we invest" },
     { center:"Tax coordination", lead:"Taxes never change alone.",

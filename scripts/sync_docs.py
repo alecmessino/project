@@ -61,8 +61,10 @@ def main() -> int:
         rendered = _inject_tokens(template.replace(PLACEHOLDER, data))
         out_p.write_text(rendered)
         print(f"   {tpl:16} -> docs/{out:30} ({len(rendered)} bytes, data {len(data)})")
-    # Plain static assets (not templated) — copy them through.
-    for asset in ("driftwood.css", "dw-context.js", "taxlab.html", "about.html", "principles.html", "philosophy.html",
+    # Plain static assets (not templated) — copy them through. CNAME is the GitHub Pages custom-domain
+    # file: managed here (source of truth in src/) and shipped in every docs/ deploy so automated
+    # publishes never drop the domain.
+    for asset in ("CNAME", "driftwood.css", "dw-context.js", "taxlab.html", "about.html", "principles.html", "philosophy.html",
                   "insights.html", "research.html", "every-portfolio-has-two-returns.html",
                   "the-worlds-largest-investors.html", "enough-is-a-number.html", "howitworks.html",
                   "coordination.html", "library.html", "case-business-sale.html",

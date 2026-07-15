@@ -63,7 +63,7 @@ def main() -> int:
         print(f"   {tpl:16} -> docs/{out:30} ({len(rendered)} bytes, data {len(data)})")
     # Plain static assets (not templated) — copy them through.
     for asset in ("driftwood.css", "dw-context.js", "taxlab.html", "about.html", "principles.html", "philosophy.html",
-                  "insights.html", "every-portfolio-has-two-returns.html",
+                  "insights.html", "research.html", "every-portfolio-has-two-returns.html",
                   "the-worlds-largest-investors.html", "enough-is-a-number.html", "howitworks.html",
                   "coordination.html", "library.html", "case-business-sale.html",
                   "case-vacation-home.html", "case-inheritance.html", "familyoffice.html",

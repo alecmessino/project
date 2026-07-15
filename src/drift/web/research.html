@@ -11,9 +11,9 @@
 </script>
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
-<title>Insights — Driftwood Capital</title>
-<meta name="description" content="Ideas about running a financial life as one system — and what you keep when you do. Writing from Driftwood." />
-<link rel="canonical" href="https://alecmessino.github.io/project/insights.html" />
+<title>Research — Driftwood Capital</title>
+<meta name="description" content="Everything Driftwood publishes in one place — the evidence behind the thesis, and the essays and worked examples that put it to work." />
+<link rel="canonical" href="https://alecmessino.github.io/project/research.html" />
 <link rel="icon" href="favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
@@ -22,13 +22,13 @@
 <meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Capital" />
-<meta property="og:title" content="Insights — Driftwood" />
-<meta property="og:description" content="Ideas about running a financial life as one system — and what you keep when you do." />
-<meta property="og:url" content="https://alecmessino.github.io/project/insights.html" />
+<meta property="og:title" content="Research — Driftwood" />
+<meta property="og:description" content="The evidence behind the thesis, and the essays and worked examples that put it to work." />
+<meta property="og:url" content="https://alecmessino.github.io/project/research.html" />
 <meta property="og:image" content="https://alecmessino.github.io/project/og/index.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Insights — Driftwood" />
-<meta name="twitter:description" content="Ideas about running a financial life as one system — and what you keep when you do." />
+<meta name="twitter:title" content="Research — Driftwood" />
+<meta name="twitter:description" content="The evidence behind the thesis, and the essays and worked examples that put it to work." />
 <meta name="twitter:image" content="https://alecmessino.github.io/project/og/index.png" />
 <style>
   :root{
@@ -42,7 +42,7 @@
   .wrap{max-width:1080px;margin:40px auto;padding:0 20px 60px}
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
 
-  /* Restraint is the design. A dek, then dated titles — nothing else. */
+  /* Restraint is the design. A dek, then two labelled sections — nothing else. */
   .doc{max-width:640px;padding:0 44px;margin:0 auto}
   .eyebrow{font-family:var(--sans);font-weight:500;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
     color:var(--brass);margin:56px 0 14px}
@@ -50,7 +50,12 @@
     letter-spacing:-.02em;color:var(--ink);margin:0 0 12px}
   .dek{font-family:var(--serif);font-size:18px;line-height:1.55;color:var(--muted);margin:0 0 8px;max-width:52ch}
 
-  .list{margin:40px 0 8px;border-top:1px solid var(--line)}
+  /* the two divisions of Driftwood's intellectual capital: evidence, and applied thinking */
+  .sec-head{font-family:var(--sans);font-weight:700;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink);margin:52px 0 6px}
+  .sec-note{font-family:var(--serif);font-size:15.5px;line-height:1.5;color:var(--muted);margin:0;max-width:56ch}
+
+  .list{margin:18px 0 8px;border-top:1px solid var(--line)}
   .item{display:block;text-decoration:none;color:inherit;padding:22px 0;border-bottom:1px solid var(--line)}
   .item .meta{font-family:var(--sans);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
     color:var(--muted);margin-bottom:7px;font-variant-numeric:tabular-nums}
@@ -62,9 +67,6 @@
   .item:hover .t .arw{opacity:1}
   .item .dek{font-family:var(--serif);font-size:15.5px;line-height:1.55;color:var(--body);margin:6px 0 0;max-width:60ch}
   @media(max-width:620px){ .item .t{font-size:21px} }
-
-  .after{margin:30px 0 0;font-size:14.5px;line-height:1.6;color:var(--muted)}
-  .after a{color:var(--teal2)}
 
   .foot{margin-top:52px;padding:20px 44px 40px;border-top:1px solid var(--line);
     color:var(--muted);font-size:12.5px;line-height:1.65}
@@ -81,7 +83,7 @@
         <span class="dwnav-group"><span class="dwnav-label">The Firm</span>
           <a href="about.html">Our Story</a>
           <a href="principles.html">Philosophy</a>
-          <a href="research.html">Research</a>
+          <a href="research.html" aria-current="page">Research</a>
         </span>
         <span class="dwnav-group"><span class="dwnav-label">The System</span>
           <a href="inside.html">Operating&nbsp;System</a>
@@ -98,50 +100,49 @@
     </nav>
 
     <div class="doc">
-      <div class="eyebrow">Insights</div>
-      <h1>How a financial life fits together.</h1>
-      <p class="dek">Ideas, guides, and worked examples on treating money, taxes, and time as a single system — and what you keep when you do.</p>
+      <div class="eyebrow">Research</div>
+      <h1>Evidence, and the thinking behind it.</h1>
+      <p class="dek">Everything Driftwood publishes, in one place — the evidence behind the thesis, and the essays and worked examples that put it to work.</p>
 
+      <div class="sec-head">Research &amp; Methodology</div>
+      <p class="sec-note">The evidence behind the thesis — the model portfolio, the long-history record, and the state-by-state tax map.</p>
+      <div class="list">
+        <a class="item" href="ledger.html">
+          <div class="meta">Model Portfolio · <span class="rt">append-only</span></div>
+          <div class="t">The Research Ledger <span class="arw" aria-hidden="true">→</span></div>
+          <p class="dek">The hypothetical Model Portfolio, tracked forward — every rebalance and the reasoning behind it, kept as an append-only record.</p>
+        </a>
+        <a class="item" href="tearsheet.html">
+          <div class="meta">Track record · <span class="rt">long history</span></div>
+          <div class="t">The Long-History Tearsheet <span class="arw" aria-hidden="true">→</span></div>
+          <p class="dek">Decades of simulated results for the strategy — drawdowns, recoveries, and exactly what the numbers do and don't claim.</p>
+        </a>
+        <a class="item" href="statemap.html">
+          <div class="meta">Reference · <span class="rt">51 states + DC</span></div>
+          <div class="t">The State Tax Atlas <span class="arw" aria-hidden="true">→</span></div>
+          <p class="dek">How income, capital-gains, and estate rules differ across every state — the map behind the coordination decisions.</p>
+        </a>
+      </div>
+
+      <div class="sec-head">Essays &amp; Illustrations</div>
+      <p class="sec-note">Applied thinking — how coordination shows up in a real financial life.</p>
       <div class="list">
         <a class="item" href="coordination.html">
           <div class="meta">Worked example · <span class="rt">6 min read</span></div>
           <div class="t">What Coordination Is Worth <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">One household, two state lines. The Illinois estate-tax trap, the Texas income-tax opening, and an interactive map of the ripple every financial move sets off. The clearest case for why coordination, not any single decision, is the product.</p>
+          <p class="dek">One household, two state lines, and the ripple a single financial move sets off across taxes, estate, and liquidity — the clearest case for why coordination, not any one decision, is the product.</p>
         </a>
         <a class="item" href="library.html">
           <div class="meta">Reference · <span class="rt">browse</span></div>
           <div class="t">The Coordination Library <span class="arw" aria-hidden="true">→</span></div>
           <p class="dek">One decision, many consequences — a browsable library of the ripples a single financial move sets off across taxes, estate, liquidity, and the professionals who advise on them.</p>
         </a>
-        <a class="item" href="every-portfolio-has-two-returns.html">
-          <div class="meta">July 2026 · <span class="rt">4 min read</span></div>
-          <div class="t">Every Portfolio Has Two Returns <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">The one it earns, and the one you keep. The gap between them is the most expensive line on no statement.</p>
-        </a>
-        <a class="item" href="the-worlds-largest-investors.html">
-          <div class="meta">July 2026 · <span class="rt">3 min read</span></div>
-          <div class="t">The World's Largest Investors Pay Attention Differently <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">They don't have access to different markets — they pay attention to different things. What an endowment actually discusses, and why it compounds.</p>
-        </a>
-        <a class="item" href="enough-is-a-number.html">
-          <div class="meta">July 2026 · <span class="rt">2 min read</span></div>
-          <div class="t">Enough Is a Number <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">A portfolio exists to fund a life, so enough can be calculated. Once it can, winning every year stops being the point.</p>
-        </a>
-        <a class="item" href="concentration.html">
-          <div class="meta">Guide · <span class="rt">5 min read</span></div>
-          <div class="t">How to De-risk a Concentrated Stock Position <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">Every way to unwind a concentrated, low-basis position — selling, harvesting, hedging, deferring, and giving — scored across liquidity, speed, and tax.</p>
-        </a>
-        <a class="item" href="principles.html">
-          <div class="meta">Reference · <span class="rt">2 min read</span></div>
-          <div class="t">The Driftwood Principles <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">Five beliefs about money, markets, and time. Return is not wealth. Compounding hates interruptions. Behavior is the multiplier.</p>
+        <a class="item" href="insights.html">
+          <div class="meta">Collection · <span class="rt">essays &amp; notes</span></div>
+          <div class="t">Essays &amp; Notes <span class="arw" aria-hidden="true">→</span></div>
+          <p class="dek">Short writing on treating money, taxes, and time as a single system — two returns, enough as a number, how the largest investors pay attention, and more.</p>
         </a>
       </div>
-
-      <p class="after">The evidence behind the ideas lives in the
-        <a href="ledger.html">research ledger</a> and the <a href="tearsheet.html">tearsheet</a>.</p>
     </div>
 
     <div class="foot">

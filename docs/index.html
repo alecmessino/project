@@ -98,7 +98,7 @@
   .tnum{font-variant-numeric:tabular-nums}
 
   /* ── Gallery I · The Constraint — an asymmetric broadsheet, not a centered column. ──────────── */
-  .hero{display:block;padding:128px 44px 88px}
+  .hero{display:block;padding:88px 44px 56px}
   .kick{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.22em;
     text-transform:uppercase;color:var(--accent-strike);margin:0 0 40px;max-width:none}
   .hero-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:0 34px;align-items:start}
@@ -108,7 +108,7 @@
   .hero-aside{grid-column:10/-1;margin-top:76px;padding-left:24px;border-left:1px solid var(--line)}
   .lede{font-family:var(--serif);font-size:16.5px;line-height:1.68;color:var(--dim);margin:0}
   .lede b{color:var(--ink);font-weight:500}
-  .hero .ctas{margin-top:72px;padding-top:28px;border-top:1px solid var(--line)}
+  .hero .ctas{margin-top:48px;padding-top:26px;border-top:1px solid var(--line)}
   @media(max-width:900px){
     .hero{padding-top:64px}
     .hero-grid{display:block}
@@ -132,20 +132,22 @@
   /* Quiet — the guided-path step (outlined, ink). The solid teal primary is reserved for the ONE
      terminal action per page (the coordination review at the close), so the top-to-bottom argument
      converges on a single next step instead of three same-weight buttons competing. */
-  .ctas .quiet{color:var(--ink);padding:14px 25px;border:1px solid var(--ghost-line);border-radius:var(--surface-radius)}
-  .ctas .quiet:hover{border-color:var(--teal)}
+  .ctas .quiet{color:var(--ink);padding:14px 25px;border:1.5px solid var(--ink);border-radius:var(--surface-radius);
+    transition:background var(--t-fast),color var(--t-fast)}
+  .ctas .quiet:hover{background:var(--ink);color:var(--bg)}
   .ctas .ghost{color:var(--ink);padding:15px 10px;font-weight:500;border-bottom:2px solid transparent}
   .ctas .ghost:hover{border-bottom-color:var(--teal)}
 
   /* ── Section scaffold — tiny label, medium statement, generous air. Galleries vary their own
      vertical rhythm deliberately: dense ledger, vast plate, quiet archive — never one template. ── */
-  .sec{padding:20px 44px 44px}
-  .sec.gal{padding:96px 44px 92px}
-  #diagnostic.gal{padding:70px 44px 66px}
-  #capabilities.gal{padding:104px 44px 88px}
-  #practice.gal{padding:66px 44px 60px}
+  .sec{padding:20px 44px 40px}
+  .sec.gal{padding:72px 44px 64px}
+  #diagnostic.gal{padding:56px 44px 50px}
+  #capabilities.gal{padding:76px 44px 64px}
   .lede2{font-family:var(--serif);font-size:clamp(19px,1vw + 15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
   .lede2 b{color:var(--ink);font-weight:500}
+  /* the diagnosis lead-in — an authoritative prompt into the ledger, not a rhetorical question */
+  .diag-prompt{font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--accent-strike);margin:0 0 8px}
   /* ── Gallery II · The Diagnosis — a tactile ledger of symptoms, not a lead form. Native inputs
      stay (visually hidden) so keyboard + counter behavior is unchanged; hovering one statement
      focuses it like a lens and the rest recede; a recognized statement carries a drawn check. ── */
@@ -178,49 +180,41 @@
   .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw + 15px,19px);line-height:1.5;color:var(--dim);
     margin:0 auto 20px;max-width:36ch}
 
-  /* the thesis pull-quote — a carved editorial statement, never a box. The .mid variant centers it as
-     the System plate's closing wall-text: no left rule, a single hairline above. */
-  .pull{margin:46px 0 0;padding:24px 0 24px 30px;border-left:3px solid var(--ink);
-    font-family:var(--serif);font-size:clamp(22px,1.6vw + 14px,30px);line-height:1.35;color:var(--ink);max-width:26ch}
-  .pull.mid{border-left:0;padding:30px 0 0;margin:58px auto 0;border-top:1px solid var(--line2);
-    text-align:center;max-width:24ch}
-
   /* ── Gallery IV · The Method — a specification sheet, deliberately the opposite of the Diagnosis
      ledger: where that is dense and forensic, this is open and procedural. Each step is a numbered
      sheet — the label + verb anchor a wide left column, the question and route fill the right, and
      generous air between steps reads as a drawing set, not a checklist. ── */
-  .method{list-style:none;margin:44px 0 0;padding:0}
+  .method{list-style:none;margin:30px 0 0;padding:0}
   .m-row{display:grid;grid-template-columns:minmax(168px,.8fr) 1.7fr;gap:0 58px;align-items:start;
-    padding:44px 0 42px;border-top:1px solid var(--line)}
+    padding:32px 0 28px;border-top:1px solid var(--line)}
   .m-step{display:block;font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.24em;
     text-transform:uppercase;color:var(--accent-strike);font-variant-numeric:tabular-nums;margin:0 0 16px}
   .m-verb{font-family:var(--sans);font-weight:700;font-size:clamp(25px,1.6vw + 14px,34px);letter-spacing:-.022em;color:var(--ink);margin:0}
   .m-q{font-family:var(--serif);font-size:19px;line-height:1.4;color:var(--ink);margin:0 0 10px;max-width:34ch}
   .m-d{font-family:var(--sans);font-size:14px;line-height:1.58;color:var(--dim);margin:0 0 16px;max-width:48ch}
-  .m-go{font-family:var(--sans);font-size:12.5px;font-weight:700;letter-spacing:.02em;color:var(--teal2);text-decoration:none}
-  .m-go::after{content:"\00a0→";display:inline-block;transition:transform .2s var(--ease-out)}
-  .m-go:hover{color:var(--teal)}
-  .m-go:hover::after{transform:translateX(4px)}
   @media(max-width:700px){.m-row{grid-template-columns:1fr;gap:6px 0}.m-body{margin-top:4px}}
-  /* the method's coda — its paper trail, titles only; the samples carry the depth */
-  .trail{margin-top:56px;padding-top:22px;border-top:1px solid var(--line)}
-  .trail-cap{font-family:var(--sans);font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 14px;max-width:60ch}
-  .trail-list{display:flex;flex-wrap:wrap;gap:8px 0}
-  .trail-list a{font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:-.005em;color:var(--ink);
-    text-decoration:none;border-bottom:1px solid var(--ghost-line);padding-bottom:2px;transition:border-color .2s ease,color .2s ease}
-  .trail-list a:hover{color:var(--accent-strike);border-bottom-color:var(--accent-strike)}
-  .trail-list a + a{margin-left:26px}
-  @media(max-width:620px){.trail-list{flex-direction:column;gap:12px}.trail-list a{align-self:flex-start}.trail-list a + a{margin-left:0}}
+  /* the centerpiece — the four proprietary standing records the method produces, given real weight:
+     the firm's infrastructure is the differentiator, not the process. A 2×2 vitrine of named artifacts. */
+  .docs{margin-top:40px;padding-top:28px;border-top:2px solid var(--ink)}
+  .docs-cap{font-family:var(--serif);font-size:clamp(18px,.6vw + 15px,21px);line-height:1.5;color:var(--ink);margin:0 0 22px;max-width:52ch}
+  .docs-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 54px}
+  .doc{border-top:1px solid var(--line2)}
+  .doc a{display:block;padding:20px 0 22px;text-decoration:none;color:inherit}
+  .doc-t{display:block;font-family:var(--sans);font-weight:700;font-size:19px;letter-spacing:-.012em;color:var(--ink);margin-bottom:8px;transition:color .2s ease}
+  .doc-d{display:block;font-family:var(--serif);font-size:15px;line-height:1.45;color:var(--dim);margin-bottom:12px;max-width:36ch}
+  .doc-go{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--teal2);transition:color .2s ease}
+  .doc a:hover .doc-t{color:var(--accent-strike)}
+  .doc a:hover .doc-go{color:var(--teal)}
+  @media(max-width:700px){.docs-list{grid-template-columns:1fr;gap:0}}
 
   /* THE THESIS — a museum exhibit. Five systems in a faint web; hovering one illuminates what it
      moves, the centre names the coordination, the flow carries down to the outcome, and a causal
      micro-story with one proof appears beneath. Paper under glass: ~300ms opacity + hairline
      transitions only — no motion, no scale, no spring. Teach through interaction, not paragraphs. */
-  .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:148px 44px 110px;margin:0;position:relative}
+  .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:100px 44px 76px;margin:0;position:relative}
   .sysband-in{max-width:680px;margin:0 auto;text-align:center}
-  .sb-eye{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
   .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.4vw + 15px,40px);line-height:1.12;letter-spacing:-.022em;color:var(--ink);margin:0 auto;max-width:20ch}
-  .sysstage{margin:34px auto 0;max-width:590px}
+  .sysstage{margin:24px auto 0;max-width:590px}
   .sysstage svg{width:100%;height:auto;display:block;overflow:visible}
   .sysstage text{font-family:var(--sans)}
   /* the web — 21 hairlines among seven systems, near-silent at rest: the density IS the argument.
@@ -247,8 +241,19 @@
   .node.active .lbl{fill:var(--ink);font-weight:700}
   .node:focus{outline:none}
   .node:focus-visible .hit{stroke:var(--accent-strike);stroke-width:2}
+  /* idle life — a very soft, staggered breath on the resting dots so the plate reads as alive, not
+     decorative. Suppressed the instant the plate is interacted with (.busy) and under reduced-motion. */
+  @keyframes dotBreath{0%,100%{opacity:.62}50%{opacity:1}}
+  .sysstage:not(.busy) .node .dot{animation:dotBreath 5s ease-in-out infinite}
+  .node[data-i="1"] .dot{animation-delay:-.7s}
+  .node[data-i="2"] .dot{animation-delay:-1.4s}
+  .node[data-i="3"] .dot{animation-delay:-2.1s}
+  .node[data-i="4"] .dot{animation-delay:-2.8s}
+  .node[data-i="5"] .dot{animation-delay:-3.5s}
+  .node[data-i="6"] .dot{animation-delay:-4.2s}
+  @media(prefers-reduced-motion:reduce){.node .dot{animation:none}}
   /* the micro-story — a memorable line, one consequence, and a footnote-quiet proof */
-  .mstory{position:relative;max-width:60ch;margin:32px auto 0;min-height:110px;padding-top:24px;border-top:1px solid var(--line2)}
+  .mstory{position:relative;max-width:60ch;margin:24px auto 0;min-height:104px;padding-top:20px;border-top:1px solid var(--line2)}
   .mrest{position:absolute;top:24px;left:0;right:0;font-family:var(--sans);font-size:12px;color:var(--muted);letter-spacing:.03em;margin:0;transition:opacity .34s ease}
   .mlead{font-family:var(--serif);font-size:18px;line-height:1.4;color:var(--ink);margin:0 0 11px;opacity:0;transition:opacity .34s ease}
   .mchain{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--muted);margin:0 auto;max-width:52ch;opacity:0;transition:opacity .34s ease}
@@ -256,17 +261,16 @@
   .mproof:hover{text-decoration:underline}
   .mstory.show .mrest{opacity:0}
   .mstory.show .mlead,.mstory.show .mchain,.mstory.show .mproof{opacity:1}
-  /* the trigger rail — trace a common decision; specimen labels, not software buttons */
-  .trig{margin:30px auto 0;max-width:590px;padding-top:18px;border-top:1px solid var(--line2);
+  /* the trigger rail — trace a common decision; specimen labels, not software buttons. Sits directly
+     under the reading panel (no rule) so the two read as one exhibit block, not two boxed zones. */
+  .trig{margin:14px auto 0;max-width:590px;
     display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:center}
-  .trig-cap{flex-basis:100%;font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.2em;
-    text-transform:uppercase;color:var(--muted);margin-bottom:6px}
   .trig-btn{font-family:var(--sans);font-size:12.5px;font-weight:500;color:var(--body);background:none;
     border:1px solid var(--line);border-radius:var(--surface-radius);padding:9px 14px;cursor:pointer;
     transition:border-color .2s ease,color .2s ease}
   .trig-btn:hover{border-color:var(--ghost-line);color:var(--ink)}
   .trig-btn[aria-pressed="true"]{border-color:var(--accent-strike);color:var(--ink)}
-  @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.diag-item,.m-go::after,.review-cta .rc-main::after{transition:none}}
+  @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.diag-item,.review-cta .rc-main::after{transition:none}}
   @media(max-width:620px){.sysband{padding:64px 22px 56px}.sysstage{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}}
 
   /* Evidence — the section's climax. A quiet one-line setup, then the two figures own the page as its
@@ -275,7 +279,7 @@
   .ev-lead b{color:var(--ink);font-weight:500}
   /* the outcome — the thirty-year chart reduced to its single conclusion, carved in tabular figures.
      Two numbers, the same markets, one difference; the math lives a link away, not on the wall. */
-  .outcome{margin:40px 0 0;border-top:1px solid var(--frame-line)}
+  .outcome{margin:28px 0 0;border-top:1px solid var(--frame-line)}
   /* the figures wrap the tag below on narrow viewports so nothing clips; fluid but capped well under the
      container so "$410,000" never exceeds a phone's width. Authoritative, not ginormous. */
   .outcome-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 20px;padding:20px 0;border-bottom:1px solid var(--line2)}
@@ -285,34 +289,30 @@
   .outcome-tag{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.2em;
     text-transform:uppercase;color:var(--muted)}
   .outcome-note{font-family:var(--serif);font-size:clamp(21px,1.4vw + 13px,31px);line-height:1.3;
-    color:var(--ink);margin:34px 0 0;max-width:22ch;letter-spacing:-.012em}
-  .outcome-meta{margin:34px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+    color:var(--ink);margin:26px 0 0;max-width:22ch;letter-spacing:-.012em}
+  .outcome-meta{margin:22px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
   .outcome-meta a{font-family:var(--sans);font-size:12.5px;font-weight:700;letter-spacing:.02em;
     color:var(--teal2);text-decoration:none}
   .outcome-meta a:hover{color:var(--teal)}
   .outcome-meta .sep{color:var(--ghost-line)}
 
   /* Credibility — the exit wall's quiet last line, not a standalone band. */
-  .cred{margin:72px 0 0;padding:22px 0 0;border-top:1px solid var(--line);
+  .cred{margin:44px 0 0;padding:22px 0 0;border-top:1px solid var(--line);
     display:flex;flex-wrap:wrap;justify-content:flex-start;gap:10px 14px;font-family:var(--sans);font-size:12px;color:var(--dim)}
   .cred b{display:inline-flex;align-items:center;font-weight:500;color:var(--dim)}
   .cred b::before{content:"✓";color:var(--teal2);font-weight:700;margin-right:7px}
   .cred .dot{color:var(--ghost-line)}
   @media(max-width:620px){.cred .dot{display:none}}
-  /* the evidence teaser — the depth is a link away, not another exhibit */
-  .ev-tease{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--muted);margin:26px 0 0;max-width:62ch}
-  .ev-tease a{color:var(--teal2);font-weight:600;text-decoration:none}
-  .ev-tease a:hover{color:var(--teal)}
 
   /* ── Gallery IX · The Invitation — the exhibition's exit wall: one statement, one action. ────── */
-  .close-conv{padding:118px 44px 96px;max-width:780px;border-top:2px solid var(--ink)}
+  .close-conv{padding:88px 44px 72px;max-width:780px;border-top:2px solid var(--ink)}
   .conv{font-family:var(--serif);font-size:clamp(24px,1.9vw + 15px,34px);line-height:1.42;color:var(--ink);
-    letter-spacing:-.008em;margin:0 0 40px}
+    letter-spacing:-.008em;margin:0 0 28px}
   .conv b{font-weight:500}
   /* the exit wall's action — not a button but an intake. The primary opens a structured review; the
      step ledger beneath previews exactly what the thirty minutes covers (tracked, tabular); one quiet
      line routes the skeptic to the methodology. Confidence conveyed through structure, not urgency. */
-  .review{margin:38px 0 0;max-width:660px}
+  .review{margin:28px 0 0;max-width:660px}
   .review-cta{display:inline-flex;flex-direction:column;gap:5px;text-decoration:none;
     background:var(--teal);color:var(--on-dark-strong);padding:22px 34px;border-radius:var(--surface-radius);
     transition:filter var(--t-fast)}
@@ -338,21 +338,12 @@
   .foot b{color:var(--muted)}
   @media(max-width:620px){
     .hero{padding:56px 22px 48px}
-    .sec,.sec.gal,#diagnostic.gal,#capabilities.gal,#practice.gal{padding-left:22px;padding-right:22px;padding-top:56px;padding-bottom:50px}
+    .sec,.sec.gal,#diagnostic.gal,#capabilities.gal{padding-left:22px;padding-right:22px;padding-top:44px;padding-bottom:40px}
     .foot,.cred{padding-left:22px;padding-right:22px}.cred{margin-left:0;margin-right:0}
     .diag-item::after{left:-10px}
     .hero .ctas,.sec .ctas{margin-top:36px}
     .ctas a{white-space:normal}
   }
-  /* ── Gallery VIII · In Practice — two ruled index entries on an asymmetric split; no card chrome. */
-  .rl-cards{display:grid;grid-template-columns:1.618fr 1fr;gap:0 54px;margin-top:14px;border-top:2px solid var(--ink)}
-  @media(max-width:700px){.rl-cards{grid-template-columns:1fr;gap:0}}
-  a.rl-card{padding:26px 0 26px;display:flex;flex-direction:column;text-decoration:none;color:inherit;
-    border-bottom:1px solid var(--line2)}
-  .rl-meta{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--brass);margin-bottom:12px}
-  .rl-t{font-family:var(--serif);font-size:25px;font-weight:600;letter-spacing:-.014em;color:var(--ink);line-height:1.22;margin-bottom:16px;max-width:22ch}
-  .rl-go{margin-top:auto;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--teal2)}
-  a.rl-card:hover .rl-go{color:var(--teal)}
 </style>
 </head>
 <body>
@@ -398,8 +389,8 @@
         </div>
       </div>
       <div class="ctas">
-        <a class="quiet" href="#thesystem">See how the seven systems connect →</a>
-        <a class="ghost" href="#diagnostic">or run a short diagnosis</a>
+        <a class="quiet" href="#thesystem">See how one decision moves all seven →</a>
+        <a class="ghost" href="#diagnostic">or run the 90-second diagnosis</a>
       </div>
     </header>
 
@@ -411,7 +402,7 @@
         <p class="sb-lead">Driftwood coordinates your financial life as one system.</p>
         <h2 class="sb-h">Seven systems. No decision touches just one.</h2>
         <div class="sysstage" id="sysDiagram">
-          <svg viewBox="0 0 640 570" role="group" aria-label="Seven financial systems — Portfolio, Taxes, Liquidity, Professionals, Estate, Risk and Liability, and Entity Structure — in one coordinated network. Hover a system to see what it moves; what you keep is the result.">
+          <svg viewBox="0 0 640 570" role="group" aria-label="Seven financial systems — Investments, Taxes, Liquidity, Professionals, Estate, Risk and Liability, and Entity Structure — in one coordinated network. Hover a system to see what it moves; what you keep is the result.">
             <!-- the lattice: every system connected to every other (near-silent at rest) -->
             <line class="net" data-a="0" data-b="1" x1="320" y1="65" x2="457" y2="131"/>
             <line class="net" data-a="0" data-b="2" x1="320" y1="65" x2="491" y2="279"/>
@@ -442,9 +433,9 @@
             <!-- the outcome — free, below the network; never boxed -->
             <text class="keep" x="320" y="542" text-anchor="middle">What you keep.</text>
             <!-- the seven systems (DOM order = SYS index) -->
-            <g class="node" data-i="0" tabindex="0" role="button" aria-label="Portfolio — see what it moves">
+            <g class="node" data-i="0" tabindex="0" role="button" aria-label="Investments — see what it moves">
               <circle class="hit" cx="320" cy="65" r="30"/><circle class="dot" cx="320" cy="65" r="5"/>
-              <text class="lbl" x="320" y="41" text-anchor="middle">Portfolio</text>
+              <text class="lbl" x="320" y="41" text-anchor="middle">Investments</text>
             </g>
             <g class="node" data-i="1" tabindex="0" role="button" aria-label="Taxes — see what it moves">
               <circle class="hit" cx="457" cy="131" r="30"/><circle class="dot" cx="457" cy="131" r="5"/>
@@ -472,26 +463,26 @@
             </g>
           </svg>
         </div>
-        <div class="trig" id="trig" role="group" aria-label="Trace a common decision — press one to see the systems it moves">
-          <span class="trig-cap">Trace a common decision</span>
-          <button class="trig-btn" data-t="0" aria-pressed="false">Move to cash &amp; T-bills</button>
-          <button class="trig-btn" data-t="1" aria-pressed="false">Buy an out-of-state property</button>
-          <button class="trig-btn" data-t="2" aria-pressed="false">Gift $50,000 to an adult child</button>
-        </div>
         <div class="mstory" id="mstory">
           <p class="mrest" id="mrest">Each line is a dependency — hover a system, or trace a decision.</p>
           <p class="mlead" id="mlead"></p>
           <p class="mchain" id="mchain"></p>
           <a class="mproof" id="mproof" href="#"></a>
         </div>
-        <blockquote class="pull mid">Coordination is the product. What you keep is the result.</blockquote>
+        <div class="trig" id="trig" role="group" aria-label="Trace a common decision — press one to see the systems it moves">
+          <button class="trig-btn" data-t="0" aria-pressed="false">Move to cash &amp; T-bills</button>
+          <button class="trig-btn" data-t="1" aria-pressed="false">Buy an out-of-state property</button>
+          <button class="trig-btn" data-t="2" aria-pressed="false">Gift $50,000 to an adult child</button>
+        </div>
       </div>
     </div>
 
     <!-- ── GALLERY III · THE DIAGNOSIS — a tactile ledger of symptoms; now that the machine is on the
          wall, the visitor tests it against their own life ── -->
     <div class="sec gal" id="diagnostic">
-      <p class="lede2">Has coordination become your biggest financial constraint?</p>
+      <p class="lede2">Coordination failures rarely arrive all at once. They accumulate quietly — across
+        accounts, taxes, entities, and advisors.</p>
+      <p class="diag-prompt">Look for the signals before they become liabilities.</p>
       <div class="diag" id="diag">
         <label class="diag-item"><input class="vh" type="checkbox"><span>My CPA and advisor rarely talk to each other.</span></label>
         <label class="diag-item"><input class="vh" type="checkbox"><span>I have multiple custodians or account structures.</span></label>
@@ -512,48 +503,57 @@
       <p class="lede2">Every client relationship follows the same sequence.</p>
       <ol class="method">
         <li class="m-row">
-          <div class="m-head"><span class="m-step">Step 01</span><div class="m-verb">Diagnose</div></div>
+          <div class="m-head"><span class="m-step">01</span><div class="m-verb">Diagnose</div></div>
           <div class="m-body">
             <p class="m-q">Where does your return go to tax?</p>
             <p class="m-d">See what taxes quietly take from the same holdings — by your state and bracket.</p>
-            <a class="m-go" href="leakage.html">Tax Diagnostic</a>
           </div>
         </li>
         <li class="m-row">
-          <div class="m-head"><span class="m-step">Step 02</span><div class="m-verb">Measure</div></div>
+          <div class="m-head"><span class="m-step">02</span><div class="m-verb">Measure</div></div>
           <div class="m-body">
             <p class="m-q">What is coordination worth?</p>
             <p class="m-d">Put a dollar figure on it — for your bracket, state, and portfolio.</p>
-            <a class="m-go" href="taxlab.html">After-Tax Review</a>
           </div>
         </li>
         <li class="m-row">
-          <div class="m-head"><span class="m-step">Step 03</span><div class="m-verb">Coordinate</div></div>
+          <div class="m-head"><span class="m-step">03</span><div class="m-verb">Coordinate</div></div>
           <div class="m-body">
             <p class="m-q">How do the pieces work as one plan?</p>
             <p class="m-d">Taxes, accounts, and estate kept consistent — the way institutions coordinate decisions.</p>
-            <a class="m-go" href="howitworks.html">How it works</a>
           </div>
         </li>
         <li class="m-row">
-          <div class="m-head"><span class="m-step">Step 04</span><div class="m-verb">Manage</div></div>
+          <div class="m-head"><span class="m-step">04</span><div class="m-verb">Manage</div></div>
           <div class="m-body">
             <p class="m-q">How is the portfolio built and held?</p>
             <p class="m-d">A low-turnover core, placed by tax and held with discipline — reviewed as one system, not one account at a time.</p>
-            <a class="m-go" href="thesis.html">How we invest</a>
           </div>
         </li>
       </ol>
-      <!-- the coda: the method's paper trail — titles only; the samples carry the depth -->
-      <div class="trail">
-        <p class="trail-cap">You see the method in what it leaves behind — the standing records a coordinated
-          household runs on. Illustrative samples, for a fictional family:</p>
-        <div class="trail-list">
-          <a href="manual.html">Wealth Operating Manual</a>
-          <a href="decision-register.html">Decision Register</a>
-          <a href="opportunity-register.html">Opportunity Register</a>
-          <a href="awor.html">Annual Operating Review</a>
-        </div>
+      <!-- the centerpiece: the standing records the method produces — the firm's actual infrastructure,
+           not another set of tool links. Every coordinated household ends up running on these four. -->
+      <div class="docs">
+        <p class="docs-cap">Every coordinated household eventually runs on the same four standing records.
+          Not advice — infrastructure. Illustrative samples, for a fictional family:</p>
+        <ul class="docs-list">
+          <li class="doc"><a href="manual.html">
+            <span class="doc-t">Wealth Operating Manual</span>
+            <span class="doc-d">The living record — every decision, its reason, and what it touched.</span>
+            <span class="doc-go">See a sample →</span></a></li>
+          <li class="doc"><a href="decision-register.html">
+            <span class="doc-t">Decision Register</span>
+            <span class="doc-d">Every structural decision, its assumptions, and what would reopen it.</span>
+            <span class="doc-go">See a sample →</span></a></li>
+          <li class="doc"><a href="opportunity-register.html">
+            <span class="doc-t">Opportunity Register</span>
+            <span class="doc-d">The standing, prioritized coordination opportunities — owner, dependencies, status.</span>
+            <span class="doc-go">See a sample →</span></a></li>
+          <li class="doc"><a href="awor.html">
+            <span class="doc-t">Annual Operating Review</span>
+            <span class="doc-d">The board-style yearly review of the whole household.</span>
+            <span class="doc-go">See a sample →</span></a></li>
+        </ul>
       </div>
     </div>
 
@@ -578,27 +578,9 @@
           <a href="taxlab.html">See the math →</a>
         </div>
       </div>
-      <p class="ev-tease">The asset-by-asset placement behind this figure — bonds, REITs, equity, cash — is a
-        table in the After-Tax Review. <a href="taxlab.html">See where each holding belongs →</a></p>
     </div>
 
-    <!-- ── GALLERY VI · IN PRACTICE — two lines of proof; the depth lives behind them ── -->
-    <div class="sec gal" id="practice">
-      <div class="rl-cards">
-        <a class="rl-card feat" href="coordination.html">
-          <div class="rl-meta">Worked example · one household, two states</div>
-          <div class="rl-t">The $600,000 conversation nobody had</div>
-          <div class="rl-go">See the worked example →</div>
-        </a>
-        <a class="rl-card" href="library.html">
-          <div class="rl-meta">The Coordination Library</div>
-          <div class="rl-t">One decision, many consequences</div>
-          <div class="rl-go">Browse the library →</div>
-        </a>
-      </div>
-    </div>
-
-    <!-- ── GALLERY VII · THE INVITATION — the exit wall: conviction, one structured action, quiet
+    <!-- ── GALLERY VI · THE INVITATION — the exit wall: conviction, one structured action, quiet
          credibility. Not a "schedule a meeting" button but the first step of a defined intake. ── -->
     <div class="sec close-conv" id="conversation">
       <p class="conv">The best financial decisions are rarely investment decisions alone. They are
@@ -691,7 +673,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
   var HUB0 = "Coordination";
   // Each system: a concise centre label, a memorable lead, one consequence, and the one proof.
   var SYS = [
-    { center:"Portfolio coordination", lead:"Portfolios determine taxes.",
+    { center:"Investment coordination", lead:"Investments determine taxes.",
       body:"What you own also sets asset location, the estate basis, and what’s available to spend.",
       href:"thesis.html", proof:"See how we invest" },
     { center:"Tax coordination", lead:"Taxes never change alone.",
@@ -790,6 +772,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
 
   function show(i){
     clearTimers();
+    stage.classList.add("busy");
     pinned = -1; setPressed(-1);
     var d = SYS[i];
     hub.textContent = d.center; hub.classList.add("on"); fitHub();
@@ -819,6 +802,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
   }
   function showSet(t){
     clearTimers();
+    stage.classList.add("busy");
     var d = TRIG[t], set = d.set;
     pinned = t; setPressed(t);
     hub.textContent = "One decision · three systems"; hub.classList.add("on"); fitHub();
@@ -849,6 +833,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
   function clear(force){
     if(pinned >= 0 && !force) return;
     clearTimers();
+    stage.classList.remove("busy");
     pinned = -1; setPressed(-1);
     nodes.forEach(function(nd){ nd.classList.remove("active","lit"); });
     nets.forEach(function(ln){ ln.classList.remove("lit","dim"); });
@@ -859,13 +844,14 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
     story.classList.remove("show");
   }
   nodes.forEach(function(nd,i){
-    nd.addEventListener("mouseenter", function(){ show(i); });
-    nd.addEventListener("focus", function(){ show(i); });
+    nd.addEventListener("mouseenter", function(){ markEngaged(); show(i); });
+    nd.addEventListener("focus", function(){ markEngaged(); show(i); });
     nd.addEventListener("click", function(){ window.location.href = SYS[i].href; });
     nd.addEventListener("keydown", function(e){ if(e.key==="Enter"){ window.location.href = SYS[i].href; } });
   });
   trigBtns.forEach(function(b){
     b.addEventListener("click", function(){
+      markEngaged();
       var t = +b.getAttribute("data-t");
       if(pinned === t){ clear(true); } else { showSet(t); }
       if(window.plausible) plausible("trace_decision", {props: {trigger: t}});
@@ -878,7 +864,17 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
   // The one-time draw-in — the architect sketches the system into existence as the plate enters view.
   // Each connection draws once, staggered, over ~1.6s total; it never loops. Reduced-motion skips it
   // (the web is simply present), and with no IntersectionObserver the lattice is drawn from the start.
-  var introDone = false;
+  // Latches for the one-time self-demo: it runs at most once, and only if the visitor hasn't already
+  // reached for the plate. Any hover / focus / trace cancels it (markEngaged) — it must never fight a person.
+  var introDone = false, demoRan = false, userEngaged = false, demoTimer = 0;
+  function markEngaged(){ userEngaged = true; if(demoTimer){ clearTimeout(demoTimer); demoTimer = 0; } }
+  function runDemo(){
+    demoTimer = 0;
+    if(demoRan || userEngaged || REDUCE) return;
+    demoRan = true;
+    showSet(2);                                    // one decision, three systems — the gift cascade
+    demoTimer = setTimeout(function(){ demoTimer = 0; if(!userEngaged && pinned === 2) clear(true); }, 3200);
+  }
   function intro(){
     if(introDone || REDUCE) return; introDone = true;
     nets.forEach(function(ln){ var len = ln.getTotalLength();
@@ -887,6 +883,8 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
     nets.forEach(function(ln, k){ var delay = 120 + k*44;
       ln.style.transition = "stroke-dashoffset 640ms cubic-bezier(.4,0,.2,1) "+delay+"ms, opacity .34s ease";
       ln.style.strokeDashoffset = "0"; });
+    // once the sketch settles (~1.6s of draw-in), trace one decision on its own, then rest — never repeats
+    demoTimer = setTimeout(runDemo, 1900);
   }
   if(!REDUCE && "IntersectionObserver" in window){
     var io = new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ intro(); io.disconnect(); } }); }, {threshold:.25});

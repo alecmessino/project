@@ -372,6 +372,78 @@ too aggressive. Dialled the hierarchy back toward restraint.
   editorial narrative rather than a stack of labelled modules. (The Category section was already gone.)
 - **Mobile.** No horizontal overflow at 390px or 360px; long CTAs wrap.
 
+**Round 7 — the editorial polish pass** (post-Round-6, user-directed): a single disciplined pass of
+*subtraction* — restraint, rhythm, and conviction. Not a redesign; when the choice was add-or-remove, we
+removed. One unforgettable page, not one that says everything.
+
+- **Vertical rhythm tightened ~25–30%.** Section padding was never recalibrated after Rounds 5–6 stripped
+  copy, so the page read as disconnected modules. Every gallery's top/bottom padding and internal gaps were
+  pulled in (hero 128/88 → 88/56; system band 148/110 → 100/76; galleries 96/92 → 72/64; Method internals
+  30–44 → 22–30; close 118/96 → 88/72; Evidence internals cut proportionally), with the mobile pair brought
+  down to match. The reduced copy now reads as deliberate.
+- **Hero transition strengthened.** The faint `.quiet` guided-path link became a decisive **outlined
+  1.5px-ink button with a hover fill** ("See how one decision moves all seven →" — tying the CTA to the
+  plate's trace interaction), with the diagnosis path demoted to a quiet text link ("or run the 90-second
+  diagnosis"). Still not the solid teal reserved for the single terminal conversion.
+- **"In Practice" removed entirely.** The two related-resource link-cards were a speed bump between the
+  Evidence climax and the close; the gallery, its markup, and its CSS are gone, and Evidence now flows
+  straight into the Invitation. The two worked examples were relocated to the Insights archive
+  (`insights.html`) so nothing is orphaned.
+- **Pull-quote after the lattice deleted.** "Coordination is the product. What you keep is the result." and
+  its `.pull` CSS were removed — the machine is the argument; it doesn't need a caption.
+- **Label system pruned (authority through rarity).** The tracked-cap exhibit labels had multiplied until
+  they no longer read as rare. Cut the redundant "TRACE A COMMON DECISION" cap (the legend beneath already
+  says it) and the dead `.sb-eye` CSS; lightened the Method step labels from "Step 01–04" to just the
+  numerals **01–04**. Kept only the orientation-critical labels (the audience kicker, the Coordinated/Isolated
+  figure tags, the "Illustrative" provenance mark).
+- **Method reworked — the four operating documents are now the centerpiece.** Dropped every per-step tool
+  link (`leakage`/`taxlab`/`howitworks`/`thesis`); the nav handles process discovery. Below a heavy ink rule,
+  the four standing records — **Wealth Operating Manual · Decision Register · Opportunity Register · Annual
+  Operating Review** — are featured in a 2×2 grid, each with a one-line "what it is" and a "See a sample →"
+  into the existing public illustrative sample. The takeaway is now "these people have an *Operating Manual*,"
+  not "they have a process page." Framing kept: "Not advice — infrastructure. Illustrative samples, for a
+  fictional family."
+- **Evidence trimmed.** Kept the $410k/$90k figures, the verdict, and one link to the After-Tax Review (whose
+  Exhibit I already carries the full 30-year model). Removed the `.ev-tease` paragraph — a second `taxlab.html`
+  link that **promised an asset-by-asset placement table existing nowhere on the site**, so cutting it was
+  both declutter and a correctness fix.
+- **Diagnosis — the rhetorical question became an institutional statement.** "Has coordination become your
+  biggest financial constraint?" was replaced by a declarative lead — **"Coordination failures rarely arrive
+  all at once. They accumulate quietly — across accounts, taxes, entities, and advisors."** — plus a small
+  prompt, "Look for the signals before they become liabilities." The checklist now creates the realization;
+  the insight line and the Atlas CTA are unchanged.
+- **Lattice interaction finished — one-time self-demo + subtle idle life.** After the draw-in settles
+  (~1.9s), the plate traces **one** decision on its own (the gift cascade — "One decision · three systems"),
+  holds ~3s, then clears to rest; a `demoRan` latch means it never repeats, and any hover/focus/trace cancels
+  it (`markEngaged`) so it never fights a visitor. At rest, the resting dots carry a very soft, slow
+  **breath** (opacity oscillation, ~5s, staggered per node), suppressed the instant the plate is engaged (a
+  `.busy` class) and under `prefers-reduced-motion`. No spin, bounce, particles, or loops — the plate reads
+  as alive, then still.
+- **Plate polish (post-review, user-directed).** Two last refinements before merge: (a) the apex node
+  **"Portfolio" → "Investments"** (name the client's holdings, not "a portfolio" in the abstract; a single
+  word that balances cleanest at the apex — the centre-morph and lead updated to match: "Investment
+  coordination" / "Investments determine taxes."); (b) **reordered the plate panel** so the contextual
+  explanation is encountered *before* the scenario rail (SVG → explanation → "trace a decision" cards), and
+  dropped the trigger rail's top rule so the reading area and the cards read as one exhibit panel rather
+  than two boxed zones. The reserved reading height is unchanged (no layout shift on hover).
+- **Verification.** `pytest -q` 507 passed; `node tests/web/run.js` 38/38; all template pins present, no
+  banned strings, one `__STATE__` + one `<!--FIRM_ANCHOR-->`, no malformed `vw+` clamps reintroduced;
+  `driftwood.css` byte-identical to `docs/driftwood.css`; Playwright confirms tighter rhythm, zero mobile
+  overflow at 390px, the self-demo lifecycle, and the reduced-motion static end-state.
+
+**Site-architecture recommendation (§10 — advisory, not built in this pass).** A cluster of substantive
+pages is reachable only through one-off homepage CTAs or the SVG diagram's trace links, so removing homepage
+entry points (as this pass did for "In Practice") risks orphaning them. Findings and the recommended home:
+
+- **Orphaned or near-orphaned:** the Atlas trio (`atlas/2026/`, `/crossing/`, `/household/`),
+  `coordination.html`, `library.html`, `decision-register.html`, and — most orphaned, with no homepage link
+  at all — `concentration.html`. `workspace.html` is itself orphaned and is not a directory to others.
+- **`inside.html` ("Operating System", already in the nav) is the natural hub.** It already groups
+  `manual` / `opportunity-register` / `awor`. Recommendation: extend it to also gather the **Decision
+  Register**, the **two worked examples** (`coordination` / `library`), the **concentration guide**, and the
+  **Atlas**, and/or surface an "Advisor Workspace / Tools" grouping in the nav. This pass shipped only the
+  minimal adjunct (the two worked examples into Insights); the fuller consolidation is a follow-up.
+
 **Deliberately deferred** (voice-significant or out of scope for a copy pass — held for the design pass or
 a directed decision):
 

@@ -263,6 +263,115 @@ Each item above traces to a specific page and dimension in §5. Close them, then
 - **§6.4 How We Invest — done.** Added the "coordinates alongside your CPA and estate attorney, never
   substituting" sentence.
 
+**2026-07-14 · Pass 2 (homepage visual).** Closed the homepage Journey item:
+
+- **Homepage button-weight hierarchy — done.** The page now carries exactly ONE solid teal primary — the
+  terminal close CTA, renamed "Schedule a Coordination Review →" to match the site-wide language. The two
+  mid-page guided-path CTAs (hero → diagnosis, diagnosis → Atlas) demoted to a new outlined `.quiet`
+  treatment: still buttons, clearly subordinate, so the top-to-bottom argument converges on one step.
+- **Dead CSS dropped** — the orphaned `.onward .d` separator rules on Philosophy, Our Story, and Family
+  Office (left behind by Pass 1's single-link consolidation).
+
+**2026-07-14 · Pass 3 (the exhibition overhaul).** Full visual refactor of the homepage under the
+Creative-Director brief — copy locked, information architecture re-curated as nine galleries
+(Constraint → Diagnosis → Category → System → Method → Archive → Evidence → Practice → Invitation):
+
+- **Hero** became an asymmetric broadsheet (triad carved per-sentence, supporting lede as a margin deck,
+  one data footnote in a navy margin note).
+- **Diagnosis** became a tactile ledger (numbered rows, hover-lens, drawn checks) — the approved
+  count-read mechanic and analytics unchanged.
+- **Category** gained the framed pull-quote and the "siloed view / coordinated view" toggle exhibit —
+  demonstrating uncoordinated advice (rust strikethroughs + editorial-blue margin annotations).
+- **The System plate** expanded from five to seven systems (added Risk & Liability, Entity Structure;
+  21-edge lattice) with a **trace-a-common-decision** trigger rail (cash & T-bills / out-of-state
+  property / $50k gift) that lights each decision's cascade; cascades stay pinned until dismissed.
+- **The Method** replaced the four-card grid with a staggered editorial sequence (oversized faint
+  numerals, blueprint watermarks on hover); the pinned verbs kept verbatim.
+- **Archive · Evidence · Practice · Invitation** re-paced with gallery numerals, asymmetric practice
+  split, and the exhibition's exit wall (single primary preserved).
+
+**Round 2 — the curatorial cut** (same pass, user-directed): optimize for a 90-second visit, impact over
+completeness. Nine galleries became **eight**: the Archive merged into the Method as a titles-only
+"paper trail" coda; Evidence kept only the interactive Exhibit III (the placement table became a one-line
+teaser into the After-Tax Review); Practice compressed to two ruled index lines; the credibility strip
+stopped being a section and became the exit wall's quiet last line; the Category dropped its explaining
+paragraph (the toggle demonstrates it) and ends on the pull-quote. Pacing contrast widened — monumental
+hero/category/plate, compressed diagnosis/practice. Net: ~20% shorter page, >25% less content.
+
+**Round 3 — the finalizing pass** (same pass, user-directed): resolve the visual language and first-time
+comprehension. Eight galleries became **seven**, reordered to *Show the Machine First* — Constraint →
+**System** → Diagnosis → Method → Evidence → Practice → Invitation. The interactive seven-node plate now
+sits directly after the hero, so the whole argument is visible before a paragraph is read; the product
+line ("Driftwood coordinates your financial life as one system.") folded in as the plate's lead and the
+thesis pull-quote ("Coordination is the product. What you keep is the result.") became its closing wall-text.
+
+- **Category killed.** The siloed/coordinated toggle was redundant once the trace-a-decision trigger rail
+  demonstrates the same thing on the plate; the whole gallery, its CSS, and its toggle script were removed.
+- **Exhibit III demoted.** The full thirty-year interactive chart (and its crosshair script) were replaced by
+  a massive typographic outcome — **$410,000 coordinated / $90,000 isolated · "Same markets. Same return.
+  Only the coordination changed."** — in tabular figures, with the math one link away (After-Tax Review).
+- **Architectural language.** Oversized Roman numerals (gallery + method) are gone. The page now hangs from
+  one continuous **plumb line** down the left margin, with a small **registration cross** at each gallery's
+  T-intersection; section identity comes from **museum labels** (tracked caps: PLATE I, STEP 01, ILLUSTRATIVE,
+  UPDATED JUL 2026) and `font-variant-numeric: tabular-nums` on every figure. No cards, no boxes — alignment
+  is the ornament. The Method became a two-column spec-sheet index (STEP 01–04 + verb / question + route).
+- **Exit wall & CTA.** The generic "Schedule a Coordination Review" button became a structured intake: a
+  confident primary block **"Start a Coordination Review"** + subtext *"A 30-minute review of your financial
+  architecture."*, a numbered **01–05 intake ledger** (Assets · Primary question · CPA · Estate documents ·
+  State of residence) previewing the onboarding, and a quiet **"Read the methodology →"** secondary. The
+  Calendly href and the "coordination decisions" thesis line are preserved.
+
+**Round 4 — the motion pass** (Plate I, user-directed): make the seven-node lattice behave like an
+architectural model, not a static illustration — motion that teaches causality, never decoration. All of
+it is skipped under `prefers-reduced-motion` (end-states shown instantly) and degrades to a drawn lattice
+with no `IntersectionObserver`.
+
+- **Draw-in.** On first entering the viewport the lattice sketches itself once (staggered, ~1.6s, never
+  loops) via `stroke-dashoffset` — the architect drawing the system into existence.
+- **Edge-first propagation.** Hovering/focusing a system now activates the *relationship* first: an accent
+  signal travels outward along each connection (~360ms), and each connected system illuminates as the
+  signal lands — relationships create outcomes, shown not stated. A cloned trace overlay carries the motion
+  so the resting web never flickers.
+- **Decision tracing.** A trigger runs the signal through the affected pathway one hop at a time before the
+  systems settle lit — a traced consequence, not a simultaneous flash.
+- **Resting state.** Edges lifted from ~0.10 to 0.15 opacity so the web reads as a structure at rest
+  (materially better first-time comprehension); no glow, pulse, particles, or animated nodes.
+
+**Round 5 — the final pre-merge pass** (composition/pacing only, user-directed): four refinements, plus a
+latent CSS bug caught during verification.
+
+- **Propagation timing** cut from 360ms → 280ms — the instrument feels physically responsive, edge-first
+  sequence preserved.
+- **Plate I framing.** The eyebrow now names the artifact — "PLATE I · THE SYSTEM MAP" — and the rest-state
+  prompt reads "Each line is a dependency — hover a system, or trace a decision." A first-time visitor
+  recognises a map of interconnected systems before interacting, via label + legend, not marketing prose.
+- **Grid fatigue.** Diagnosis and Method were sharing too much visual DNA. Diagnosis became a tighter,
+  denser **forensic ledger** (heavy ink header rule, running 01–06 line numbers, selection checked off in a
+  fixed right-hand column); Method opened into an airy **specification sheet** (wide two-column steps, big
+  verbs, generous air). Contrast by composition, not ornament.
+- **Evidence authority.** The preamble collapsed to one quiet setup line so the two figures own the page as
+  the section's de-facto headline; the verdict lands beneath in a large serif; provenance shrank to a
+  whisper. The typographic outcome now reads as the conceptual climax.
+- **Latent clamp bug (fixed).** Verification found that nine `font-size:clamp(A, Nvw+Mpx, B)` rules in the
+  homepage's inline CSS were **invalid** — CSS requires whitespace around `+`/`-` inside math, so those
+  declarations were silently dropped and the elements fell back to the inherited 16.5px. The intended
+  institutional scale (the plate headline, the method verbs, the Evidence figures at up to 128px) had never
+  actually rendered; tight section crops had masked it. Adding the required spaces restored the real
+  typography. `driftwood.css` was clean; the bug was confined to hub.html. **Guard for future authoring:
+  always write `clamp(A, calc(Nvw + Mpx), B)` or keep spaces around the operator.**
+
+**Round 6 — tactical declutter** (pre-merge, user-directed): the true typographic scale (Round 5) proved
+too aggressive. Dialled the hierarchy back toward restraint.
+
+- **Evidence figures** cut from a 128px max to 82px (mobile floor 38px), fully fluid with a wrapping row
+  so "$410,000" never clips on a phone — authoritative, not ginormous.
+- **Diagnosis ledger** items reduced 16px → 14.5px for more air in the column.
+- **Eyebrow strip.** Removed the five redundant section labels ("A short diagnosis", "How it works",
+  "The evidence", "Coordination in real life", "Plate I · The system map") and the administrative
+  "Updated Jul 2026" meta stamp; the content headlines now carry the wayfinding, so the page reads as one
+  editorial narrative rather than a stack of labelled modules. (The Category section was already gone.)
+- **Mobile.** No horizontal overflow at 390px or 360px; long CTAs wrap.
+
 **Deliberately deferred** (voice-significant or out of scope for a copy pass — held for the design pass or
 a directed decision):
 
@@ -271,7 +380,6 @@ a directed decision):
   which state is better"). Left as-is by design; revisit only if the instrument framing changes.
 - **Crossing Brief / Household Record H1 rewrites** — a second-person, name-your-own-move voice shift on two
   flagships; held for a directed editorial call.
-- **Homepage Journey** (button-weight hierarchy) — visual; owned by the design pass.
 - **Tax Diagnostic default persona** — reframing the 371%-turnover caricature needs a representative-household
   data decision, not a copy edit.
 - **Atlas hierarchy → Planning Dynamics / Coordination Opportunity / Methodology** (§1.4) — structural; the

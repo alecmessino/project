@@ -36,3 +36,10 @@ the_third_turn/output/bullpen_cache.json
 
 # Claude Code personal overrides (agent push permission)
 .claude/settings.local.json
+
+# design-sync build output + scratch (durable .design-sync/* stays committed)
+ds-bundle/
+.ds-sync/
+.design-sync/.cache/
+.design-sync/node_modules
+.design-sync/refresh/

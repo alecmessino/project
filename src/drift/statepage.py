@@ -497,7 +497,7 @@ _HEAD_CSS = """
   .cta .ctxt{flex:1;min-width:240px} .cta .ch{font-weight:500;font-size:18px;color:var(--ink);margin-bottom:3px}
   .cta .cd{font-size:12.5px;color:var(--dim)}
   .cta a{text-decoration:none;border-radius:0;font-size:14px;font-weight:500;white-space:nowrap;padding:12px 20px}
-  .cta a.primary{background:var(--teal);color:#f1ede3} .cta a.ghost{border:1px solid var(--frame-line);color:var(--ink);font-weight:500}
+  .cta a.primary{background:var(--accent-strike);color:#f1ede3} .cta a.ghost{border:1px solid var(--frame-line);color:var(--ink);font-weight:500}
   .rel{padding:6px 40px 4px;font-size:12.5px;color:var(--dim)} .rel a{color:var(--teal2);text-decoration:none;font-weight:500}
   .capture{margin:12px 40px 4px}
   .capform{display:flex;gap:8px;flex-wrap:wrap}

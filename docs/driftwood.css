@@ -126,14 +126,14 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
 /* A running index of tracked-caps links, split into two labelled families: Understand (who we are
    and how we think) and Discover (the interactive tools). The current page carries a 2px
    editorial-blue rule. */
-.dwnav-links{ display:flex; gap:8px 22px; align-items:center; flex-wrap:wrap; }
-.dwnav-group{ display:inline-flex; align-items:center; gap:8px 18px; flex-wrap:wrap; }
-.dwnav-label{ font-size:9px; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+.dwnav-links{ display:flex; gap:10px 28px; align-items:center; flex-wrap:wrap; }
+.dwnav-group{ display:inline-flex; align-items:center; gap:10px 22px; flex-wrap:wrap; }
+.dwnav-label{ font-size:9.5px; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
   color:var(--muted,#8a8577); white-space:nowrap; }
-.dwnav-group + .dwnav-group{ margin-left:4px; padding-left:22px;
+.dwnav-group + .dwnav-group{ margin-left:4px; padding-left:26px;
   border-left:1px solid var(--line,#e3dccd); }
-.dwnav-links a{ font-size:11px; font-weight:500; letter-spacing:.12em; text-transform:uppercase;
-  color:var(--dim,#5f5f68); text-decoration:none; padding:4px 0; white-space:nowrap;
+.dwnav-links a{ font-size:12.5px; font-weight:500; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--dim,#5f5f68); text-decoration:none; padding:6px 0; white-space:nowrap;
   border-bottom:2px solid transparent; }
 .dwnav-links a:hover{ color:var(--ink,#1d242d); }
 .dwnav-links a[aria-current="page"]{ color:var(--ink,#1d242d);
@@ -141,9 +141,9 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
 /* One persistent conversation affordance in the chrome — an understated editorial action (no filled
    button), so any page a shared link lands on offers a way to reach the firm. Routes to the single
    conversation moment on the front door rather than repeating a contact value site-wide. */
-.dwnav-cta{ margin-left:auto; align-self:center; white-space:nowrap; font-size:11px; font-weight:700;
-  letter-spacing:.12em; text-transform:uppercase; color:var(--accent-strike,#2c5878); text-decoration:none;
-  padding:5px 0; border-bottom:2px solid transparent; }
+.dwnav-cta{ margin-left:auto; align-self:center; white-space:nowrap; font-size:12.5px; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--accent-strike,#2c5878); text-decoration:none;
+  padding:6px 0; border-bottom:2px solid transparent; }
 .dwnav-cta:hover{ border-bottom-color:var(--accent-strike,#2c5878); color:var(--ink,#1e2833); }
 @media (max-width:620px){ .dwnav{ padding:11px 16px; gap:8px 18px; } .dwnav-links{ gap:8px 18px; }
   .dwnav-cta{ margin-left:0; }

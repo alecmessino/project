@@ -127,7 +127,7 @@
   .ctas{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
   .ctas a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:500;white-space:nowrap;
     transition:filter var(--t-fast),transform var(--t-fast),background var(--t-fast),border-color var(--t-fast)}
-  .ctas .primary{background:var(--teal);color:#f1ede3;padding:15px 26px;border-radius:var(--surface-radius)}
+  .ctas .primary{background:var(--accent-strike);color:#f1ede3;padding:15px 26px;border-radius:var(--surface-radius)}
   .ctas .primary:hover{filter:brightness(1.06)}
   /* Quiet — the guided-path step (outlined, ink). The solid teal primary is reserved for the ONE
      terminal action per page (the coordination review at the close), so the top-to-bottom argument
@@ -146,9 +146,8 @@
   #capabilities.gal{padding:52px 44px 64px}
   .lede2{font-family:var(--serif);font-size:clamp(19px,1vw + 15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
   .lede2 b{color:var(--ink);font-weight:500}
-  /* the diagnosis lead-in — an authoritative prompt into the ledger, not a rhetorical question */
-  .diag-prompt{font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--accent-strike);margin:0 0 8px}
-  /* ── Gallery II · The Diagnosis — a tactile ledger of symptoms, not a lead form. Native inputs
+  /* ── Gallery III · The Annual Review — the standing checklist a family office runs, not a lead form.
+     Native inputs
      stay (visually hidden) so keyboard + counter behavior is unchanged; hovering one statement
      focuses it like a lens and the rest recede; a recognized statement carries a drawn check. ── */
   .diag{counter-reset:dg;display:block;margin:14px 0 30px;max-width:60ch;border-top:2px solid var(--ink)}
@@ -172,10 +171,12 @@
   .diag-item input:checked ~ span::after{content:"✓";position:absolute;right:2px;top:50%;
     transform:translateY(-50%);font-family:var(--sans);font-size:13px;font-weight:700;color:var(--accent-strike)}
   .diag-item:has(input:checked)::before{color:var(--accent-strike)}
+  /* each condition names its own coordination consequence — a quiet, matter-of-fact sub-line (not a
+     second column), and it stays muted even when the statement above it is checked. */
+  .diag-why{display:block;margin-top:5px;font-family:var(--sans);font-size:12.5px;line-height:1.45;
+    letter-spacing:.01em;color:var(--muted);font-weight:400}
   .diag-insight{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.5;color:var(--dim);
     margin:0 0 14px;max-width:56ch;padding-left:16px;border-left:2px solid var(--accent-strike)}
-  .diag-result{font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--accent-strike);font-weight:500;margin:0 0 18px;max-width:56ch}
-  .diag-result:empty{margin:0}
   /* the plate's product line — a quiet serif framing above the seven-systems headline */
   .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw + 15px,19px);line-height:1.5;color:var(--dim);
     margin:0 auto 20px;max-width:36ch}
@@ -241,17 +242,14 @@
   .node.active .lbl{fill:var(--ink);font-weight:700}
   .node:focus{outline:none}
   .node:focus-visible .hit{stroke:var(--accent-strike);stroke-width:2}
-  /* idle life — a very soft, staggered breath on the resting dots so the plate reads as alive, not
-     decorative. Suppressed the instant the plate is interacted with (.busy) and under reduced-motion. */
-  @keyframes dotBreath{0%,100%{opacity:.62}50%{opacity:1}}
-  .sysstage:not(.busy) .node .dot{animation:dotBreath 5s ease-in-out infinite}
-  .node[data-i="1"] .dot{animation-delay:-.7s}
-  .node[data-i="2"] .dot{animation-delay:-1.4s}
-  .node[data-i="3"] .dot{animation-delay:-2.1s}
-  .node[data-i="4"] .dot{animation-delay:-2.8s}
-  .node[data-i="5"] .dot{animation-delay:-3.5s}
-  .node[data-i="6"] .dot{animation-delay:-4.2s}
-  @media(prefers-reduced-motion:reduce){.node .dot{animation:none}}
+  /* Idle life is now the rotation itself: while the plate auto-rotates through the decisions, the active
+     systems and their lit chords breathe gently — enough to read as alive, never enough to fatigue.
+     Suppressed the moment a visitor takes control (the .rotating class is removed) and under reduced-motion. */
+  @keyframes nodePulse{0%,100%{opacity:1}50%{opacity:.66}}
+  @keyframes edgePulse{0%,100%{opacity:.72}50%{opacity:.42}}
+  .sysstage.rotating .node.active .dot{animation:nodePulse 2.8s ease-in-out infinite}
+  .sysstage.rotating .net.lit{animation:edgePulse 2.8s ease-in-out infinite}
+  @media(prefers-reduced-motion:reduce){.sysstage.rotating .node.active .dot,.sysstage.rotating .net.lit{animation:none}}
   /* the micro-story — a memorable line, one consequence, and a footnote-quiet proof */
   .mstory{position:relative;max-width:60ch;margin:24px auto 0;min-height:104px;padding-top:20px;border-top:1px solid var(--line2)}
   .mrest{position:absolute;top:24px;left:0;right:0;font-family:var(--sans);font-size:12px;color:var(--muted);letter-spacing:.03em;margin:0;transition:opacity .34s ease}
@@ -283,13 +281,13 @@
      review. No intake ledger, no methodology link, no trust strip: confidence through subtraction. */
   .review{margin:28px 0 0;max-width:660px}
   .review-cta{display:inline-flex;flex-direction:column;gap:5px;text-decoration:none;
-    background:var(--teal);color:var(--on-dark-strong);padding:22px 34px;border-radius:var(--surface-radius);
+    background:var(--accent-strike);color:var(--on-dark-strong);padding:22px 34px;border-radius:var(--surface-radius);
     transition:filter var(--t-fast)}
   .review-cta:hover{filter:brightness(1.06)}
   .review-cta .rc-main{font-family:var(--sans);font-size:18px;font-weight:700;letter-spacing:-.012em}
   .review-cta .rc-main::after{content:"\00a0→";display:inline-block;transition:transform .2s var(--ease-out)}
   .review-cta:hover .rc-main::after{transform:translateX(4px)}
-  .review-cta .rc-sub{font-family:var(--sans);font-size:13px;color:var(--on-dark-dim)}
+  .review-cta .rc-sub{font-family:var(--sans);font-size:13px;color:var(--on-dark)}
   .review-scope{margin:20px 0 0;max-width:60ch;font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--dim)}
   @media(max-width:620px){.close-conv{padding:64px 22px 56px}.review-cta{display:flex}}
 
@@ -435,26 +433,26 @@
           <button class="trig-btn" data-t="0" aria-pressed="false">Move to cash &amp; T-bills</button>
           <button class="trig-btn" data-t="1" aria-pressed="false">Buy an out-of-state property</button>
           <button class="trig-btn" data-t="2" aria-pressed="false">Gift $50,000 to an adult child</button>
+          <button class="trig-btn" data-t="3" aria-pressed="false">Exercise stock options</button>
         </div>
       </div>
     </div>
 
-    <!-- ── GALLERY III · THE DIAGNOSIS — a tactile ledger of symptoms; now that the machine is on the
-         wall, the visitor tests it against their own life ── -->
+    <!-- ── GALLERY III · THE ANNUAL REVIEW — the standing checklist a family office runs each year;
+         now that the machine is on the wall, the visitor measures their own life against the standard ── -->
     <div class="sec gal" id="diagnostic">
-      <p class="lede2">Coordination failures rarely arrive all at once. They accumulate quietly — across
-        accounts, taxes, entities, and advisors.</p>
-      <p class="diag-prompt">Look for the signals before they become liabilities.</p>
+      <p class="lede2">Every year, institutional families review the connections between these systems
+        before making major financial decisions. The following conditions often reveal where coordination
+        has begun to break down.</p>
       <div class="diag" id="diag">
-        <label class="diag-item"><input class="vh" type="checkbox"><span>My CPA and advisor rarely talk to each other.</span></label>
-        <label class="diag-item"><input class="vh" type="checkbox"><span>I have multiple custodians or account structures.</span></label>
-        <label class="diag-item"><input class="vh" type="checkbox"><span>My estate plan hasn't been reviewed alongside my investments.</span></label>
-        <label class="diag-item"><input class="vh" type="checkbox"><span>I'm considering relocating, or I keep more than one residence.</span></label>
-        <label class="diag-item"><input class="vh" type="checkbox"><span>A business, equity compensation, or trusts have added moving parts.</span></label>
-        <label class="diag-item"><input class="vh" type="checkbox"><span>No one person is responsible for how it all fits together.</span></label>
+        <label class="diag-item"><input class="vh" type="checkbox"><span>My CPA and advisor rarely talk to each other.<span class="diag-why">Tax and investment decisions drift apart.</span></span></label>
+        <label class="diag-item"><input class="vh" type="checkbox"><span>I have multiple custodians or account structures.<span class="diag-why">Account structure begins driving decisions instead of strategy.</span></span></label>
+        <label class="diag-item"><input class="vh" type="checkbox"><span>My estate plan hasn't been reviewed alongside my investments.<span class="diag-why">Estate and portfolio decisions gradually diverge.</span></span></label>
+        <label class="diag-item"><input class="vh" type="checkbox"><span>I'm considering relocating, or I keep more than one residence.<span class="diag-why">A move can reopen income, estate, and residency questions at once.</span></span></label>
+        <label class="diag-item"><input class="vh" type="checkbox"><span>A business, equity compensation, or trusts have added moving parts.<span class="diag-why">Each new structure multiplies the connections to keep aligned.</span></span></label>
+        <label class="diag-item"><input class="vh" type="checkbox"><span>No one person is responsible for how it all fits together.<span class="diag-why">Coordination becomes no one's job — until it's expensive.</span></span></label>
       </div>
-      <p class="diag-insight">Most households discover only one or two of these. Institutions look for all of them at once.</p>
-      <div class="diag-result" id="diagResult" aria-live="polite"></div>
+      <p class="diag-insight">Institutions review all six every year. Most households discover one or two only after they've become expensive.</p>
       <div class="ctas">
         <a class="quiet" href="atlas/2026/">Identify your highest-value coordination opportunities →</a>
       </div>
@@ -558,22 +556,9 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
   // The systems diagram is a static ink schematic — no scroll-driven draw-in.
 })();
 
-// The diagnosis — recognition, not a lead form. Checking prompts reveals a non-promotional read of
-// how many decisions now depend on each other; the CTA into the Atlas is always present.
-(function(){
-  var diag = document.getElementById("diag"); if(!diag) return;
-  var boxes = diag.querySelectorAll('input[type=checkbox]');
-  var out = document.getElementById("diagResult");
-  function update(){
-    var n = 0; boxes.forEach(function(b){ if(b.checked) n++; });
-    if(!n){ out.textContent = ""; return; }
-    out.textContent = (n >= 3)
-      ? "You recognize " + n + " of six. When this many decisions depend on one another, coordination — not any single specialist — is the constraint."
-      : "You recognize " + n + " of six. Most households map one or two on their own; the opportunity is in reading them as one system.";
-    if(window.plausible) plausible("diagnostic", {props: {checked: n}});
-  }
-  boxes.forEach(function(b){ b.addEventListener("change", update); });
-})();
+// The Annual Review — the six conditions are a family-office standard the visitor measures against, not
+// a scored quiz. The tactile check-off (drawn check, hover-lens) and per-item consequences are pure CSS;
+// there is no count, verdict, or readout to compute — the checklist itself creates the recognition.
 
 // The Thesis — a museum exhibit that behaves like an architectural model. Motion communicates
 // causality: the lattice sketches itself in once on arrival; hovering a system sends a signal along
@@ -631,7 +616,10 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
       href:"atlas/2026/crossing/", proof:"Plan a move — the Crossing Brief" },
     { set:[2,1,3], lead:"A gift is never just a transfer.",
       body:"The balance sheet gives up liquid reserve; the recipient inherits the giver’s cost basis (IRC 1015); and above the annual exclusion, the CPA files a Form 709 gift-tax return.",
-      href:"decision-register.html", proof:"See the Decision Register" }
+      href:"decision-register.html", proof:"See the Decision Register" },
+    { set:[0,1,2,3,4], lead:"One exercise. Five systems.",
+      body:"An exercise is never just a transaction. The decision ripples instantly through your tax brackets, concentration risk, cash reserves, and gifting strategy.",
+      href:"case-stock-options.html", proof:"Model the Exercise Strategy" }
   ];
   function fitHub(){
     if(!hubBg || !hub.getBBox) return;
@@ -697,7 +685,6 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
 
   function show(i){
     clearTimers();
-    stage.classList.add("busy");
     pinned = -1; setPressed(-1);
     var d = SYS[i];
     hub.textContent = d.center; hub.classList.add("on"); fitHub();
@@ -725,40 +712,46 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
     });
     later(function(){ story_fill(d); }, 200);
   }
+  function word(n){ return n===3?"three":n===4?"four":n===5?"five":n===6?"six":n===7?"seven":String(n); }
   function showSet(t){
     clearTimers();
-    stage.classList.add("busy");
     var d = TRIG[t], set = d.set;
+    var inSet = function(k){ return set.indexOf(k) >= 0; };
     pinned = t; setPressed(t);
-    hub.textContent = "One decision · three systems"; hub.classList.add("on"); fitHub();
+    hub.textContent = "One decision · " + word(set.length) + " systems"; hub.classList.add("on"); fitHub();
     if(keep) keep.classList.add("on");
     if(flow) flow.classList.add("on");
     if(REDUCE){
-      nodes.forEach(function(nd,j){ nd.classList.toggle("active", set.indexOf(j)>=0); nd.classList.remove("lit"); });
+      nodes.forEach(function(nd,j){ nd.classList.toggle("active", inSet(j)); nd.classList.remove("lit"); });
       nets.forEach(function(ln){ var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b");
-        var on = set.indexOf(a)>=0 && set.indexOf(b)>=0; ln.classList.toggle("lit", on); ln.classList.toggle("dim", !on); });
+        var on = inSet(a) && inSet(b); ln.classList.toggle("lit", on); ln.classList.toggle("dim", !on); });
       story_fill(d); return;
     }
     snapNets(); deactivateTraces();
     nodes.forEach(function(nd){ nd.classList.remove("active","lit"); });
     nets.forEach(function(ln){ var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b");
-      var on = set.indexOf(a)>=0 && set.indexOf(b)>=0; ln.classList.remove("lit"); ln.classList.toggle("dim", !on); });
-    // trace the consequence through the pathway, one hop at a time, then leave the systems lit
-    var DUR = 280, GAP = 260;
+      ln.classList.remove("lit"); ln.classList.toggle("dim", !(inSet(a) && inSet(b))); });
+    // Draw every chord among the set as a staggered signal; as each lands, that chord lights (.net.lit)
+    // and both systems activate. Scales to any set — a triangle for three, a dense sub-web for five — so
+    // the plate shows the true depth of the decision, then the travelling signal retires and the lit web
+    // remains (and, while auto-rotating, breathes).
     nodes[set[0]].classList.add("active");
-    var hops = [[set[0],set[1]], [set[1],set[2]], [set[0],set[2]]];
-    hops.forEach(function(h, hi){
-      var src = h[0], dst = h[1], key = src+"_"+dst, ln = netByPair[key]; if(!ln) return;
-      var idx = netIndex[key], e = ends(ln, src), at = hi*GAP;
+    var edges = [];
+    for(var i=0;i<set.length;i++){ for(var j=i+1;j<set.length;j++){
+      var key = set[i]+"_"+set[j]; if(netByPair[key]) edges.push([set[i], set[j], key]); } }
+    var DUR = 280, STAG = Math.max(70, Math.round(900 / Math.max(1, edges.length)));
+    edges.forEach(function(ed, ei){
+      var src = ed[0], dst = ed[1], ln = netByPair[ed[2]], idx = netIndex[ed[2]];
+      var e = ends(ln, src), at = ei*STAG;
       later(function(){ runTrace(idx, e.sx,e.sy,e.dx,e.dy, DUR, 0); }, at);
-      later(function(){ nodes[dst].classList.add("active"); }, at + DUR - 40);
+      later(function(){ ln.classList.add("lit"); nodes[src].classList.add("active"); nodes[dst].classList.add("active"); }, at + DUR - 40);
     });
+    later(function(){ deactivateTraces(); }, edges.length*STAG + DUR + 60);
     later(function(){ story_fill(d); }, 160);
   }
   function clear(force){
     if(pinned >= 0 && !force) return;
     clearTimers();
-    stage.classList.remove("busy");
     pinned = -1; setPressed(-1);
     nodes.forEach(function(nd){ nd.classList.remove("active","lit"); });
     nets.forEach(function(ln){ ln.classList.remove("lit","dim"); });
@@ -769,37 +762,56 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
     story.classList.remove("show");
   }
   nodes.forEach(function(nd,i){
-    nd.addEventListener("mouseenter", function(){ markEngaged(); show(i); });
-    nd.addEventListener("focus", function(){ markEngaged(); show(i); });
+    nd.addEventListener("mouseenter", function(){ holdForUser(); show(i); });
+    nd.addEventListener("focus", function(){ holdForUser(); show(i); });
     nd.addEventListener("click", function(){ window.location.href = SYS[i].href; });
     nd.addEventListener("keydown", function(e){ if(e.key==="Enter"){ window.location.href = SYS[i].href; } });
   });
   trigBtns.forEach(function(b){
+    var t = +b.getAttribute("data-t");
+    // hovering or focusing a scenario hands full control to the visitor and previews it; clicking toggles.
+    b.addEventListener("mouseenter", function(){ holdForUser(); if(pinned !== t) showSet(t); });
+    b.addEventListener("focus", function(){ holdForUser(); if(pinned !== t) showSet(t); });
     b.addEventListener("click", function(){
-      markEngaged();
-      var t = +b.getAttribute("data-t");
+      holdForUser();
       if(pinned === t){ clear(true); } else { showSet(t); }
       if(window.plausible) plausible("trace_decision", {props: {trigger: t}});
     });
   });
-  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && pinned>=0) clear(true); });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && pinned>=0){ holdForUser(); clear(true); } });
   svg.addEventListener("mouseleave", function(){ clear(false); });
   stage.addEventListener("focusout", function(e){ if(!stage.contains(e.relatedTarget)) clear(false); });
 
-  // The one-time draw-in — the architect sketches the system into existence as the plate enters view.
-  // Each connection draws once, staggered, over ~1.6s total; it never loops. Reduced-motion skips it
-  // (the web is simply present), and with no IntersectionObserver the lattice is drawn from the start.
-  // Latches for the one-time self-demo: it runs at most once, and only if the visitor hasn't already
-  // reached for the plate. Any hover / focus / trace cancels it (markEngaged) — it must never fight a person.
-  var introDone = false, demoRan = false, userEngaged = false, demoTimer = 0;
-  function markEngaged(){ userEngaged = true; if(demoTimer){ clearTimeout(demoTimer); demoTimer = 0; } }
-  function runDemo(){
-    demoTimer = 0;
-    if(demoRan || userEngaged || REDUCE) return;
-    demoRan = true;
-    showSet(2);                                    // one decision, three systems — the gift cascade
-    demoTimer = setTimeout(function(){ demoTimer = 0; if(!userEngaged && pinned === 2) clear(true); }, 3200);
+  // Motion identity: the plate sketches itself in once, then becomes a slow, self-running exhibit — it
+  // rotates through the common decisions on a 5s cadence, breathing gently on the active systems. Any
+  // interaction (hover / focus / trace) hands full control to the visitor and pauses the loop; after 30s
+  // of stillness it resumes. Reduced-motion shows a static web — no draw-in, no rotation, no pulse.
+  var ROT_ORDER = [0,1,2,3];
+  var introDone = false, rotIdx = 0, rotTimer = 0, resumeTimer = 0, userHeld = false, inView = false;
+  function rotStep(){
+    rotTimer = 0;
+    if(!inView || userHeld || REDUCE){ stage.classList.remove("rotating"); return; }
+    showSet(ROT_ORDER[rotIdx]);
+    rotIdx = (rotIdx + 1) % ROT_ORDER.length;
+    rotTimer = setTimeout(rotStep, 5000);
   }
+  function startRotation(){
+    if(REDUCE || userHeld || !inView || rotTimer) return;
+    stage.classList.add("rotating");
+    rotStep();
+  }
+  function stopRotation(){
+    if(rotTimer){ clearTimeout(rotTimer); rotTimer = 0; }
+    stage.classList.remove("rotating");
+  }
+  function scheduleResume(){
+    if(resumeTimer) clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(function(){
+      resumeTimer = 0; userHeld = false; clear(true); rotIdx = 0; startRotation();
+    }, 30000);
+  }
+  // Every user touch pauses the loop and re-arms the 30s idle timer, so any activity keeps control.
+  function holdForUser(){ userHeld = true; stopRotation(); scheduleResume(); }
   function intro(){
     if(introDone || REDUCE) return; introDone = true;
     nets.forEach(function(ln){ var len = ln.getTotalLength();
@@ -808,13 +820,17 @@ window.__STATE__ = {"header": {"generated": "2026-07-14 23:13:48 UTC"}, "hero": 
     nets.forEach(function(ln, k){ var delay = 120 + k*44;
       ln.style.transition = "stroke-dashoffset 640ms cubic-bezier(.4,0,.2,1) "+delay+"ms, opacity .34s ease";
       ln.style.strokeDashoffset = "0"; });
-    // once the sketch settles (~1.6s of draw-in), trace one decision on its own, then rest — never repeats
-    demoTimer = setTimeout(runDemo, 1900);
+    // once the sketch settles (~1.6s of draw-in), begin the self-running rotation
+    rotTimer = setTimeout(function(){ rotTimer = 0; startRotation(); }, 1900);
   }
   if(!REDUCE && "IntersectionObserver" in window){
-    var io = new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ intro(); io.disconnect(); } }); }, {threshold:.25});
+    var io = new IntersectionObserver(function(es){ es.forEach(function(en){
+      inView = en.isIntersecting;
+      if(inView){ if(!introDone) intro(); else if(!userHeld) startRotation(); }
+      else stopRotation();
+    }); }, {threshold:.25});
     io.observe(stage);
-  }
+  } else { inView = true; }
   fitHub();
 })();
 

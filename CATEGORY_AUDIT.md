@@ -612,3 +612,15 @@ untouched). Logo dialed back (mark 22→20px). Cut the section whitespace hard: 
 `.kick` 44→28, the CTA rule 56/34→38/26, `.sysband` 100/76→56/60, `.sec.gal` 72/64→52/52, close 64/72→52/60.
 Verified: 507 tests, 38/38 harness, css byte-mirror, zero overflow at 1440/1280/1024/390 across hub + static
 + atlas pages.
+
+**Round 11b — share card, spacing, nav alignment** (user-directed, live feedback):
+- **OG share card elevated.** Rebuilt `og_cards.mjs` from a flat text slab into a premium branded lockup —
+  the confluence mark + tracked "DRIFTWOOD WEALTH" nameplate, an editorial-blue accent, an Erode serif
+  headline, and a "Registered Investment Adviser · Austin, Texas" colophon on a hairline. All nine cards
+  regenerated. Added the completeness meta on the homepage (`og:image:width/height/type/alt`, `twitter:image:alt`,
+  `og:image:secure_url`) so previews render instantly and accessibly.
+- **Seven named gaps removed.** hero top 44→26, sysband 56/60→30/38, #diagnostic top 44→26, #capabilities
+  44/52→26/32, `.docs` margin 40→20, plus matching mobile section paddings.
+- **Nav alignment fixed.** Mobile: the nameplate + MENU wrapped to two rows at 375–393px; pinned them to one
+  centred line (`.dwnav--menu:not(.dwnav--open){flex-wrap:nowrap}` + a snugger mobile wordmark) — verified
+  single-row with no overflow at 320/360/375/393/430. Desktop nav (two-row grid) unchanged and neat.

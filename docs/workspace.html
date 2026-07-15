@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Advisor Workspace — Driftwood Capital</title>
+<title>Advisor Workspace — Driftwood Wealth</title>
 <meta name="robots" content="noindex, nofollow" />
 <meta name="description" content="Driftwood Advisor Workspace — internal after-tax planning tooling (estate, Roth, asset-location, proposal and CPA-brief generation). Not a public page." />
-<link rel="canonical" href="https://alecmessino.github.io/project/workspace.html" />
+<link rel="canonical" href="https://driftwoodwealth.com/workspace.html" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Driftwood Advisor Workspace" />
 <meta property="og:description" content="After-tax return, tax-loss-harvesting value, and the asset-location benefit — Structural Alpha from mechanical tax management, personalized by federal bracket and state. Research only, not tax advice." />
-<meta property="og:url" content="https://alecmessino.github.io/project/workspace.html" />
-<meta property="og:site_name" content="Driftwood Capital" />
-<meta property="og:image" content="https://alecmessino.github.io/project/og/taxlab.png" />
+<meta property="og:url" content="https://driftwoodwealth.com/workspace.html" />
+<meta property="og:site_name" content="Driftwood Wealth" />
+<meta property="og:image" content="https://driftwoodwealth.com/og/taxlab.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Driftwood Advisor Workspace" />
 <meta name="twitter:description" content="After-tax return, tax-loss-harvesting value, and the asset-location benefit — Structural Alpha from mechanical tax management, personalized by federal bracket and state. Research only, not tax advice." />
-<meta name="twitter:image" content="https://alecmessino.github.io/project/og/taxlab.png" />
+<meta name="twitter:image" content="https://driftwoodwealth.com/og/taxlab.png" />
 <link rel="icon" href="favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
@@ -480,8 +480,8 @@
 <div class="wrap">
   <div class="frame">
     <div class="inner">
-    <nav class="dwnav" aria-label="Driftwood Capital">
-      <a class="brand" href="index.html" aria-label="Driftwood Capital — home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Capital</span></a>
+    <nav class="dwnav" aria-label="Driftwood Wealth">
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth — home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-links">
         <span class="dwnav-group"><span class="dwnav-label">The Firm</span>
           <a href="about.html">Our Story</a>
@@ -730,7 +730,7 @@
   <!-- Print-only formal disclosures — a generated proposal/brief is an advertisement (SEC Rule 204-2: retain copies). -->
   <div id="printdisc">
     <div class="es-h">Important disclosures</div>
-    <p><b>Driftwood Capital is a registered investment adviser.</b> Form ADV and Form CRS are
+    <p><b>Driftwood Wealth is a registered investment adviser.</b> Form ADV and Form CRS are
       available at adviserinfo.sec.gov. This proposal is for discussion only — it is not investment, tax, or legal advice,
       and not an offer or solicitation, and it does not create an advisory relationship.</p>
     <p><b>Estimated Structural Alpha is illustrative tax &amp; fee modeling</b> on the inputs shown — it is not a performance
@@ -784,9 +784,9 @@ const CONFIG={
   firmName:"Driftwood",               // operating firm — tags inbound lead emails (page brand stays "Driftwood")
   calendlyUrl:"https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting",  // booking embed on success
   leadPortfolio:1000000,                 // default headline portfolio for the lead-gen hook (overridable via ?port=)
-  analytics:{ provider:"plausible", domain:"alecmessino.github.io" },  // Plausible script is loaded in <head>
-  formCrsUrl:"#",                        // institutional disclosures (placeholder hooks; dead "#" links are hidden)
-  formAdvUrl:"#",
+  analytics:{ provider:"plausible", domain:"driftwoodwealth.com" },  // Plausible script is loaded in <head>
+  formCrsUrl:"disclosures/form-crs.pdf",  // institutional disclosures — drop the real PDFs at these paths (or repoint to a hosted URL)
+  formAdvUrl:"disclosures/adv-part-2a.pdf",
 };
 // Privacy-first analytics: no-op until a provider script is present. Routes to Plausible, Umami, or Fathom.
 function track(name, props){
@@ -1771,7 +1771,7 @@ function render(){
   $("compliance").innerHTML=`<b>Illustrative and educational only — not investment, tax, or legal advice, and not an offer or
     solicitation. Using this tool does not create an advisory relationship. Coordinate all final estate filings with a qualified attorney.</b>
     Past performance and projections do not guarantee future results.
-    Driftwood Capital is a <b>registered investment adviser</b>; Form ADV and Form CRS are available at
+    Driftwood Wealth is a <b>registered investment adviser</b>; Form ADV and Form CRS are available at
     <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>${discLinks?" · "+discLinks:""}.`;
 
   // Layer 2: keep the disclosure ledger and the map's selected-state outline in sync.

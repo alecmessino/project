@@ -1,6 +1,6 @@
 # Identity System v1 — rollout
 
-The Driftwood Capital visual identity, frozen July 2026. The mark is the **Streams
+The Driftwood Wealth visual identity, frozen July 2026. The mark is the **Streams
 confluence** — five tributaries (Investments · Taxes · Estate · Liquidity ·
 Relationships) gathering gradually into one coordinated river ("what you keep"),
 the outflow one step heavier so coordination, not direction, reads first.
@@ -28,11 +28,11 @@ Canonical files: `brand/mark.svg` (editorial blue), `brand/mark-reversed.svg`
 
 | Lockup | Contents | Use |
 |---|---|---|
-| **Primary** | mark · hairline · `DRIFTWOOD CAPITAL` / `PRIVATE WEALTH ADVISORY` | hero, reports, PDFs, proposals |
-| **Secondary** | mark · hairline · `DRIFTWOOD CAPITAL` | site navigation, headers, email |
-| **Micro** | mark · `DRIFTWOOD CAPITAL` (no divider) | browser chrome, dashboard, Advisor Workspace, mobile, footers |
+| **Primary** | mark · hairline · `DRIFTWOOD WEALTH` / `PRIVATE WEALTH ADVISORY` | hero, reports, PDFs, proposals |
+| **Secondary** | mark · hairline · `DRIFTWOOD WEALTH` | site navigation, headers, email |
+| **Micro** | mark · `DRIFTWOOD WEALTH` (no divider) | browser chrome, dashboard, Advisor Workspace, mobile, footers |
 | **Avatar** | mark only (favicon cut ≤ 32px) | favicon, social, app/workspace icon |
-| **Signature** | `DRIFTWOOD CAPITAL` / *Private Wealth Advisory* / Fee-Only Fiduciary · Austin, Texas | document colophon — proposals, letters, AWOR, Operating Manual |
+| **Signature** | `DRIFTWOOD WEALTH` / *Private Wealth Advisory* / Fee-Only Fiduciary · Austin, Texas | document colophon — proposals, letters, AWOR, Operating Manual |
 
 Metrics live in `driftwood.css` `:root` as `--logo-*` tokens (gap, mark, rule,
 word size, word spacing). Clear-space = the mark's height on every side. Below the

@@ -525,3 +525,47 @@ a directed decision):
   data decision, not a copy edit.
 - **Atlas hierarchy → Planning Dynamics / Coordination Opportunity / Methodology** (§1.4) — structural; the
   larger evolution, sequenced after the copy settles.
+
+---
+
+**Round 10 — the rebrand + pre-launch pass** (user-directed): the firm name was finalized as **Driftwood
+Wealth** and the custom domain **driftwoodwealth.com** went live, so this pass is a global rename plus the
+pre-launch compliance/social checklist. Not a design round — a launch-readiness pass.
+
+- **Global rename `Driftwood Capital` → `Driftwood Wealth`.** Every case and `&nbsp;` variant across all
+  tracked source (`src/`, `scripts/`, `tests/`, root docs): the JSON-LD legal schema (`name`, `legalName`,
+  `disambiguatingDescription`), meta/OG/Twitter titles + descriptions, the nav brand mark and `aria-label`s,
+  footer disclosures, the `firm_anchor` band (`FIRM_LEGAL_NAME` in `site.py`), the brand SVGs' `aria-label`,
+  and the brand-exploration pages (`brand.html`, `mark-sandbox.html`). `package.json` carries no firm name,
+  so nothing to change there. Zero stray old-name instances remain in the tracked repo (any case). The
+  correspondence test pin moved `DRIFTWOOD CAPITAL` → `DRIFTWOOD WEALTH`.
+- **Domain cutover to `driftwoodwealth.com`.** `scripts/set_domain.py` rewrote every canonical / `og:url` /
+  `og:image` / sitemap / JSON-LD URL off `alecmessino.github.io/project`; the atlas/comparison/crossing/
+  household pages picked it up on regeneration (`BASE_URL`). `docs/CNAME` + `docs/robots.txt` on the new
+  domain. Zero old-domain references remain in `docs/`.
+- **Privacy Policy + Terms of Use.** New `privacy.html` / `terms.html` — structured, on-brand placeholder
+  pages (three-bucket nav + disclosure footer, a visible *draft — pending counsel* banner, bracketed
+  guidance). The Privacy page states the site's analytics are **Plausible, cookieless — no consent banner
+  required**. Both are `noindex`, added to `sync_docs.py`, and linked from the footer site-wide.
+- **Form ADV / Form CRS — hostable, not the SEC homepage.** The footer disclosure across all templates now
+  links **Form ADV Part 2A → `disclosures/adv-part-2a.pdf`** and **Form CRS → `disclosures/form-crs.pdf`**
+  (the firm's public record still cited at `adviserinfo.sec.gov`). `docs/disclosures/` holds honest
+  placeholder PDFs + a README documenting the drop-in contract (host the real filings at those paths, or
+  repoint the `href`s / the Advisor Workspace `CONFIG.formAdvUrl`/`formCrsUrl`). The JS-built footers
+  (`leakage.html`, `statemap.html`) were restructured in place and verified to execute with no page errors.
+- **Open Graph refreshed for launch.** `og_cards.mjs` + `og_states.mjs` re-render the share cards with the
+  full **Driftwood Wealth** wordmark in the real **Satoshi** brand face (the scripts referenced an absent
+  `inter-*.woff2` and fell back to a system font) and drop the retired "engineered beta" line for the
+  one-system positioning. All 60 cards regenerated (`index` + 8 page cards + 51 state cards). Hub `og:title`
+  / `og:description` / `og:image` + Twitter tags confirmed on the new name and domain.
+- **Verification.** `pytest -q` 507; `node tests/web/run.js` 38/38; `driftwood.css` byte-identical to
+  `docs/driftwood.css`; Playwright confirms Privacy/Terms render (nav + footer links resolve), the placeholder
+  disclosure PDFs open, and the restructured JS footers execute cleanly.
+
+**Noted for the firm** (not changed — out of the rename's scope, flagged for a decision):
+
+- **Contact email domain.** The single-sourced contact stays `hello@driftwoodplanning.com` (a separate,
+  test-pinned operating-entity address, distinct from the marketing domain). Left as-is; revisit if the firm
+  wants the contact address on `@driftwoodwealth.com`.
+- **Placeholder legal + disclosure content.** Privacy/Terms copy and the two disclosure PDFs are scaffolds —
+  counsel + the compliance principal supply the final language and filings before launch.

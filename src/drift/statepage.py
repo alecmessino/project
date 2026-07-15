@@ -216,8 +216,8 @@ def _esc(s: str) -> str:
 
 
 NAV = (
-    '<nav class="dwnav" aria-label="Driftwood Capital">\n'
-    '  <a class="brand" href="index.html" aria-label="Driftwood Capital — home">'
+    '<nav class="dwnav" aria-label="Driftwood Wealth">\n'
+    '  <a class="brand" href="index.html" aria-label="Driftwood Wealth — home">'
     '<svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true">'
     '<path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/>'
     '<path d="M1.5 8 H8 L27 15" stroke-width="2.4"/>'
@@ -226,7 +226,7 @@ NAV = (
     '<path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/>'
     '<path d="M27 15 H44.5" stroke-width="3.4"/></svg>'
     '<span class="brand-rule" aria-hidden="true"></span>'
-    '<span class="brand-word">Driftwood Capital</span></a>\n'
+    '<span class="brand-word">Driftwood Wealth</span></a>\n'
     '  <div class="dwnav-links">\n'
     '    <span class="dwnav-group"><span class="dwnav-label">The Firm</span>\n'
     '      <a href="about.html">Our Story</a>\n'
@@ -297,7 +297,7 @@ DISCLOSURE = (
     '<b>no client capital was invested</b>, and hypothetical performance <b>does not guarantee future '
     'results</b>. Intended for sophisticated investors; it may not be relevant to your situation, and '
     'your actual figure depends on your own holdings, basis, and bracket. State tax facts reflect tax '
-    'year 2025 and can change — confirm with a tax advisor. Driftwood Capital is a '
+    'year 2025 and can change — confirm with a tax advisor. Driftwood Wealth is a '
     '<b>registered investment adviser</b>; <b>Form ADV</b> and <b>Form CRS</b> are available at '
     '<a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.'
     '</div>'
@@ -394,12 +394,12 @@ def _jsonld(name: str, code: str, rec: dict, faq: list[dict], edition: str = CUR
     url = atlas_url(code, edition)  # the editioned canonical
     blocks = [
         {"@context": "https://schema.org", "@type": "FinancialService",
-         "name": f"Driftwood Capital — {name} tax-aware investing", "legalName": "Driftwood Capital",
+         "name": f"Driftwood Wealth — {name} tax-aware investing", "legalName": "Driftwood Wealth",
          "url": url, "areaServed": {"@type": "State", "name": name}, "feeBasis": "Fee-only",
          "description": f"Tax-aware investment management for {name} investors — asset location, "
                         f"tax-loss harvesting, and lot protection. Illustrative modeling, not advice."},
         {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Driftwood Capital", "item": f"{BASE_URL}/index.html"},
+            {"@type": "ListItem", "position": 1, "name": "Driftwood Wealth", "item": f"{BASE_URL}/index.html"},
             {"@type": "ListItem", "position": 2, "name": "The State Atlas", "item": edition_url(edition)},
             {"@type": "ListItem", "position": 3, "name": name, "item": url}]},
     ]
@@ -669,7 +669,7 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
 <meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="Driftwood Capital" />
+<meta property="og:site_name" content="Driftwood Wealth" />
 <meta property="og:title" content="{_esc(title)}" />
 <meta property="og:description" content="{_esc(desc)}" />
 <meta property="og:url" content="{url}" />
@@ -760,13 +760,13 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
 <meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="Driftwood Capital" />
-<meta property="og:title" content="State Capital Gains & Estate Tax — Driftwood Capital" />
+<meta property="og:site_name" content="Driftwood Wealth" />
+<meta property="og:title" content="State Capital Gains & Estate Tax — Driftwood Wealth" />
 <meta property="og:description" content="A tax reference for all 50 states + DC: top long-term capital-gains rate and how each state taxes investors." />
 <meta property="og:url" content="{url}" />
 <meta property="og:image" content="{BASE_URL}/og/statemap.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="State Tax Reference — Driftwood Capital" />
+<meta name="twitter:title" content="State Tax Reference — Driftwood Wealth" />
 <meta name="twitter:description" content="How every state taxes investors — capital gains, estate, and more." />
 <meta name="twitter:image" content="{BASE_URL}/og/statemap.png" />
 <link rel="stylesheet" href="{_ABS}driftwood.css">

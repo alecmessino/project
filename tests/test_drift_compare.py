@@ -130,7 +130,7 @@ def test_comparison_page_renders_without_unfilled_placeholders():
     assert 'class="cmp-tally"' in html and 'class="tally"' not in html
     assert "{" not in html.split("<body>")[1].replace("{", "", 0)  # no stray f-string braces in body
     # RIA identity uses the full legal name; disclosure present
-    assert "Driftwood Capital is a" in html and "adviserinfo.sec.gov" in html
+    assert "Driftwood Wealth is a" in html and "adviserinfo.sec.gov" in html
 
 
 def test_index_embeds_the_graph_and_the_picker():

@@ -9,7 +9,7 @@ scripts/set_domain.py (guarded by tests/test_site_domain.py) — flip the domain
 then rebuild (see OPERATIONS.md 'Moving to the custom domain'). Do NOT flip before DNS is live.
 """
 
-BASE_URL = "https://alecmessino.github.io/project"
+BASE_URL = "https://driftwoodwealth.com"
 
 
 # ── Firm identity facts — the single insertion point for the deferred operational facts ──────────
@@ -32,7 +32,7 @@ CONTACT_EMAIL = "hello@driftwoodplanning.com"
 BOOKING_URL = "https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting"
 
 # Confirmed firm facts (principal-directed, July 2026):
-FIRM_LEGAL_NAME = "Driftwood Capital"
+FIRM_LEGAL_NAME = "Driftwood Wealth"
 FIRM_LOCATION = "Austin, Texas"  # the firm's city/state — an intentional part of the presentation
 FIRM_SINCE = "2024"              # founding year, for the "Founded" line
 
@@ -64,7 +64,7 @@ _ANCHOR_SEP = "&nbsp;&nbsp;·&nbsp;&nbsp;"
 
 def firm_anchor_html() -> str:
     """The coordinates band (Launch Standard, item D): a restrained institution + provenance strip for
-    page footers — 'DRIFTWOOD CAPITAL · AUSTIN, TEXAS · FOUNDED 2024' left, provenance right. Renders
+    page footers — 'DRIFTWOOD WEALTH · AUSTIN, TEXAS · FOUNDED 2024' left, provenance right. Renders
     only confirmed facts, so an unset fact (CRD, custodian) simply does not appear — never a placeholder.
     One source; change a fact in site.py and every footer follows on the next build."""
     f = firm_facts()

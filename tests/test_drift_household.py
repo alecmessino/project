@@ -79,7 +79,7 @@ def test_record_page_indexes_and_links_out_not_duplicates():
     assert compare.compare_url("IL", "FL") in html and "decision-register.html" in html
     assert "awor.html" in html and "constitution.html" in html
     # institutional footer + no unfilled f-string braces in the body
-    assert "Driftwood Capital is a" in html and "adviserinfo.sec.gov" in html
+    assert "Driftwood Wealth is a" in html and "adviserinfo.sec.gov" in html
     assert "{" not in html.split("<body>")[1]
 
 

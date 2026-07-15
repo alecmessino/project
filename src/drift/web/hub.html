@@ -293,6 +293,11 @@
   @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.rot-toggle,.diag-item,.review-cta .rc-main::after{transition:none}}
   @media(prefers-reduced-motion:reduce){.mstory.swapping .mlead,.mstory.swapping .mchain,.mstory.swapping .mproof{transition:none;opacity:1}}
   @media(max-width:620px){.sysband{padding:64px 22px 56px}.sysstage{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}}
+  /* the reading panel wraps taller as the column narrows; reserve the tallest scenario at each phone tier so
+     the scenario buttons never shift while the plate auto-rotates (the 166px desktop reservation holds >=560px). */
+  @media(max-width:555px){.mstory{min-height:186px}}
+  @media(max-width:459px){.mstory{min-height:210px}}
+  @media(max-width:370px){.mstory{min-height:230px}}
 
 
   /* ── Gallery V · The Invitation — the exhibition's exit wall: one statement, one action. ────── */
@@ -314,7 +319,7 @@
   .review-scope{margin:20px 0 0;max-width:60ch;font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--dim)}
   @media(max-width:620px){.close-conv{padding:64px 22px 56px}.review-cta{display:flex}}
 
-  .foot{margin-top:26px;padding:18px 52px 34px;border-top:1px solid var(--line);color:#9a978f;font-size:11px;line-height:1.6}
+  .foot{margin-top:26px;padding:18px 52px 34px;border-top:1px solid var(--line);border-left:1px solid transparent;color:#9a978f;font-size:11px;line-height:1.6}
   .foot .note{color:var(--muted);font-weight:500}
   .foot a{color:var(--muted)}
   .foot b{color:var(--muted)}

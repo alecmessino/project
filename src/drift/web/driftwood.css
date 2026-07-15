@@ -24,11 +24,11 @@
   --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6; --brass:#2c5878; --gold:#a9c2d6;
   /* ── Identity system — the Streams confluence lockup. One place for every lockup metric so the
      nav/chrome brand stays consistent site-wide; see brand.html for the full standard. ───────── */
-  --logo-mark:17px;             /* nav mark height */
-  --logo-gap:14px;              /* space around mark · divider · wordmark */
-  --logo-rule:20px;             /* divider height */
+  --logo-mark:22px;             /* nav mark height — a stronger nameplate anchor vs the 12.5px links */
+  --logo-gap:15px;              /* space around mark · divider · wordmark */
+  --logo-rule:25px;             /* divider height */
   --logo-rule-color:var(--line);/* architectural hairline */
-  --logo-word:14px;             /* wordmark size in the nav */
+  --logo-word:16.5px;           /* wordmark size in the nav */
   --logo-word-spacing:.15em;    /* wordmark tracking */
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:22px; --s6:30px;
   /* ── Institutional surface system — single source of truth, frozen 2026-07 ──────────────────
@@ -129,13 +129,13 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
 .dwnav-links{ display:flex; gap:10px 28px; align-items:center; flex-wrap:wrap; }
 .dwnav-group{ display:inline-flex; align-items:center; gap:10px 22px; flex-wrap:wrap; }
 .dwnav-label{ font-size:10.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--muted,#8a8577); white-space:nowrap; }
+  color:var(--dim,#4c5560); white-space:nowrap; }
 .dwnav-group + .dwnav-group{ margin-left:4px; padding-left:26px;
   border-left:1px solid var(--line,#e3dccd); }
 .dwnav-links a{ font-size:12.5px; font-weight:500; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--dim,#5f5f68); text-decoration:none; padding:6px 0; white-space:nowrap;
-  border-bottom:2px solid transparent; }
-.dwnav-links a:hover{ color:var(--ink,#1d242d); }
+  color:var(--body,#3d4650); text-decoration:none; padding:6px 0; white-space:nowrap;
+  border-bottom:2px solid transparent; transition:color .18s ease, border-color .18s ease; }
+.dwnav-links a:hover{ color:var(--ink,#1d242d); border-bottom-color:var(--frame-line,#c3bcab); }
 .dwnav-links a[aria-current="page"]{ color:var(--ink,#1d242d);
   border-bottom-color:var(--accent-strike,#2c5878); }
 /* One persistent conversation affordance in the chrome — an understated editorial action (no filled
@@ -143,7 +143,7 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
    conversation moment on the front door rather than repeating a contact value site-wide. */
 .dwnav-cta{ margin-left:auto; align-self:center; white-space:nowrap; font-size:12.5px; font-weight:700;
   letter-spacing:.14em; text-transform:uppercase; color:var(--accent-strike,#2c5878); text-decoration:none;
-  padding:6px 0; border-bottom:2px solid transparent; }
+  padding:6px 0; border-bottom:2px solid transparent; transition:color .18s ease, border-color .18s ease; }
 .dwnav-cta:hover{ border-bottom-color:var(--accent-strike,#2c5878); color:var(--ink,#1e2833); }
 @media (max-width:620px){ .dwnav{ padding:11px 16px; gap:8px 18px; } .dwnav-links{ gap:8px 18px; }
   .dwnav-cta{ margin-left:0; }
@@ -513,7 +513,7 @@ table.exhibit-table{ width:100%; border-collapse:collapse; font-family:var(--san
 .firm-anchor{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px 24px; align-items:baseline;
   margin:0 0 16px; padding:11px 18px; background:var(--soft); border:1px solid var(--line);
   border-radius:var(--surface-radius); font-family:var(--sans); font-weight:600; font-size:10px;
-  letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-variant-numeric:tabular-nums; }
+  letter-spacing:.14em; text-transform:uppercase; color:var(--dim); font-variant-numeric:tabular-nums; }
 @media(max-width:620px){ .firm-anchor{ font-size:9px; letter-spacing:.1em; padding:10px 14px; gap:4px 16px; } }
 
 /* ── Footer disclosure line — one canonical treatment ─────────────────────────────────────────
@@ -525,8 +525,8 @@ table.exhibit-table{ width:100%; border-collapse:collapse; font-family:var(--san
    editorial · 40px Atlas · 48px wide tools). Renders below the firm-anchor band, matching that
    pattern on every public page. */
 body .foot{ margin-top:42px; padding-top:20px; padding-bottom:38px;
-  border-top:1px solid var(--line); color:var(--muted); font-size:11px; line-height:1.65; }
-body .foot .note{ color:var(--dim); font-weight:500; }
+  border-top:1px solid var(--line); color:var(--dim); font-size:12px; line-height:1.62; }
+body .foot .note{ color:var(--body); font-weight:500; }
 
 /* Decision ledger — a ruled journal that only grows */
 .ledger-head,.ledger-row{ display:grid; grid-template-columns:96px 1fr 132px 116px 116px; gap:16px; }

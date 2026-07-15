@@ -25,6 +25,13 @@ const CARDS = {
   equities:  ['Research dashboard', 'Momentum signals, relative-strength ranking, and per-name backtests.'],
 };
 
+// The confluence mark — the same nameplate lockup the site nav uses, so the share card is unmistakably
+// the brand rather than a text slab. Editorial-blue on warm paper, tracked-caps wordmark, one hairline
+// accent, a serif headline, and a quiet compliance colophon.
+const MARK = `<svg class="mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true">
+    <path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/>
+    <path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/>
+    <path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg>`;
 const card = (title, sub) => `<!doctype html><html><head><meta charset="utf-8"><style>
   @font-face{font-family:'Erode';font-weight:400;src:url("${FONTS}/erode-400.woff2") format("woff2")}
   @font-face{font-family:'Erode';font-weight:600;src:url("${FONTS}/erode-600.woff2") format("woff2")}
@@ -34,24 +41,31 @@ const card = (title, sub) => `<!doctype html><html><head><meta charset="utf-8"><
   @font-face{font-family:'Satoshi';font-weight:700;src:url("${FONTS}/satoshi-700.woff2") format("woff2")}
   *{margin:0;box-sizing:border-box}
   html,body{width:1200px;height:630px}
-  body{background:#f4f0e6;color:#1b1b1f;font-family:'Satoshi',system-ui,sans-serif;
-    padding:74px 80px;display:flex;flex-direction:column;position:relative}
-  .rule{position:absolute;top:0;left:0;right:0;height:10px;background:#15806a}
-  .brand{font-family:'Satoshi';font-weight:700;font-size:30px;letter-spacing:-.01em}
-  .brand .w{color:#15806a}
-  .kicker{margin-top:54px;color:#9a7b3e;font-weight:700;font-size:21px;letter-spacing:.14em;text-transform:uppercase}
-  h1{font-family:'Erode','Georgia',serif;font-weight:700;font-size:78px;line-height:1.04;letter-spacing:-.02em;margin-top:18px;max-width:1010px}
-  .sub{margin-top:26px;font-family:'Erode','Georgia',serif;font-size:30px;line-height:1.4;color:#41454c;max-width:1000px}
-  .foot{margin-top:auto;display:flex;align-items:center;gap:14px;font-size:21px;color:#5f5f68}
-  .pill{border:1px solid #c9b27e;color:#9a7b3e;border-radius:999px;padding:6px 16px;font-weight:500;font-size:18px}
+  body{background:#f1efe9;color:#1e2833;font-family:'Satoshi',system-ui,sans-serif;
+    padding:60px 72px 54px;display:flex;flex-direction:column;position:relative;
+    background-image:radial-gradient(120% 140% at 100% 0%, #f7f5f0 0%, #f1efe9 46%, #eceae2 100%)}
+  .accent{position:absolute;top:0;left:0;right:0;height:6px;background:#2c5878}
+  .lockup{display:flex;align-items:center;gap:15px}
+  .lockup .mark{height:38px;width:auto;color:#2c5878;overflow:visible}
+  .lockup .rule{width:1px;height:30px;background:#c3bcab}
+  .lockup .wm{font-family:'Satoshi';font-weight:600;font-size:25px;letter-spacing:.16em;text-transform:uppercase;color:#1e2833}
+  .body{flex:1;display:flex;flex-direction:column;justify-content:center}
+  .kicker{color:#2c5878;font-weight:700;font-size:18px;letter-spacing:.2em;text-transform:uppercase}
+  h1{font-family:'Erode','Georgia',serif;font-weight:700;font-size:74px;line-height:1.045;letter-spacing:-.021em;color:#1e2833;margin-top:20px;max-width:1010px}
+  .sub{margin-top:24px;font-family:'Erode','Georgia',serif;font-size:29px;line-height:1.42;color:#48525e;max-width:960px}
+  .foot{display:flex;align-items:center;gap:16px;padding-top:22px;border-top:1px solid #d8d3c6;
+    font-size:18.5px;letter-spacing:.01em;color:#5c6470}
+  .pill{border:1px solid #c3bcab;color:#6b6e6a;border-radius:999px;padding:7px 17px;font-weight:600;font-size:15.5px;letter-spacing:.06em;text-transform:uppercase}
 </style></head><body>
-  <div class="rule"></div>
-  <div class="brand">Drift<span class="w">wood</span> Wealth</div>
-  <div class="kicker">Private wealth architecture</div>
-  <h1>${title}</h1>
-  <div class="sub">${sub}</div>
+  <div class="accent"></div>
+  <div class="lockup">${MARK}<span class="rule"></span><span class="wm">Driftwood&nbsp;Wealth</span></div>
+  <div class="body">
+    <div class="kicker">Private Wealth Architecture</div>
+    <h1>${title}</h1>
+    <div class="sub">${sub}</div>
+  </div>
   <div class="foot"><span class="pill">Illustrative modeling</span>
-    <span>Driftwood Wealth · registered investment adviser</span></div>
+    <span>Registered Investment Adviser&nbsp;&nbsp;·&nbsp;&nbsp;Austin, Texas</span></div>
 </body></html>`;
 
 const b = await chromium.launch({ executablePath: EXE });

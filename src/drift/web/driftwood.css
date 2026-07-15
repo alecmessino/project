@@ -24,11 +24,11 @@
   --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6; --brass:#2c5878; --gold:#a9c2d6;
   /* ── Identity system — the Streams confluence lockup. One place for every lockup metric so the
      nav/chrome brand stays consistent site-wide; see brand.html for the full standard. ───────── */
-  --logo-mark:22px;             /* nav mark height — a stronger nameplate anchor vs the 12.5px links */
-  --logo-gap:15px;              /* space around mark · divider · wordmark */
-  --logo-rule:25px;             /* divider height */
+  --logo-mark:20px;             /* nav mark height — anchors the brand row over the 12.5px links */
+  --logo-gap:14px;              /* space around mark · divider · wordmark */
+  --logo-rule:23px;             /* divider height */
   --logo-rule-color:var(--line);/* architectural hairline */
-  --logo-word:16.5px;           /* wordmark size in the nav */
+  --logo-word:15.5px;           /* wordmark size in the nav */
   --logo-word-spacing:.15em;    /* wordmark tracking */
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:22px; --s6:30px;
   /* ── Institutional surface system — single source of truth, frozen 2026-07 ──────────────────
@@ -145,6 +145,20 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
   letter-spacing:.14em; text-transform:uppercase; color:var(--accent-strike,#2c5878); text-decoration:none;
   padding:6px 0; border-bottom:2px solid transparent; transition:color .18s ease, border-color .18s ease; }
 .dwnav-cta:hover{ border-bottom-color:var(--accent-strike,#2c5878); color:var(--ink,#1e2833); }
+/* Desktop: a deliberate two-row bar. Brand + the single conversation CTA share the top line; the three
+   link families drop to a ruled second row as tidy labelled columns (label as a quiet kicker above its
+   links). Reads as an intentional index instead of a list that happened to wrap. */
+@media (min-width:621px){
+  .dwnav{ align-items:baseline; padding:16px 30px 15px; row-gap:0; }
+  .dwnav-cta{ order:2; align-self:baseline; }
+  /* the three families as even columns on one ruled row — a grid guarantees the single-row alignment */
+  .dwnav-links{ order:3; flex-basis:100%; width:100%; display:grid; grid-template-columns:repeat(3,1fr);
+    gap:14px 30px; margin-top:12px; padding-top:13px; border-top:1px solid var(--line2,#e9e5db); }
+  .dwnav-group{ display:flex; flex-wrap:wrap; align-items:baseline; gap:7px 14px; }
+  .dwnav-label{ flex-basis:100%; font-size:8.5px; letter-spacing:.18em; color:var(--muted,#6b6e6a); margin-bottom:2px; }
+  .dwnav-group + .dwnav-group{ margin-left:0; padding-left:0; border-left:none; }
+  .dwnav-links a{ font-size:11.5px; letter-spacing:.06em; padding:2px 0; }
+}
 @media (max-width:620px){ .dwnav{ padding:11px 16px; gap:8px 18px; } .dwnav-links{ gap:8px 18px; }
   .dwnav-cta{ margin-left:0; }
   .dwnav-group{ gap:8px 16px; } .dwnav-group + .dwnav-group{ margin-left:0; padding-left:0;

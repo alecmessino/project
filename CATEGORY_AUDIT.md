@@ -603,3 +603,12 @@ sweep of the live homepage at 100% zoom — typography, hierarchy, contrast, and
   `docs/driftwood.css`; every changed color recomputed ≥4.5:1 AA; reduced-motion + no-overflow confirmed at
   1440/1280/390 across the hub and representative static/atlas pages; an adversarial three-lens review
   (JS-correctness · a11y/motion · diff/pins/design) run before shipping.
+
+**Round 11a — nav + whitespace correction** (user-directed, live feedback): the three-bucket nav had been
+wrapping into four ragged rows (labels dumped inline) and the vertical rhythm was cavernous. Rebuilt the
+desktop nav as a deliberate two-row bar — brand + the conversation CTA on the top line, the three families
+as even labelled columns on a ruled second row (a `min-width:621px` CSS grid, so the mobile hamburger is
+untouched). Logo dialed back (mark 22→20px). Cut the section whitespace hard: hero padding 88/64→44/44,
+`.kick` 44→28, the CTA rule 56/34→38/26, `.sysband` 100/76→56/60, `.sec.gal` 72/64→52/52, close 64/72→52/60.
+Verified: 507 tests, 38/38 harness, css byte-mirror, zero overflow at 1440/1280/1024/390 across hub + static
++ atlas pages.

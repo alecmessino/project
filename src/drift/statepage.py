@@ -396,7 +396,7 @@ def _jsonld(name: str, code: str, rec: dict, faq: list[dict], edition: str = CUR
     blocks = [
         {"@context": "https://schema.org", "@type": "FinancialService",
          "name": f"Driftwood Wealth, {name} tax-aware investing", "legalName": "Driftwood Wealth",
-         "url": url, "areaServed": {"@type": "State", "name": name}, "feeBasis": "Fee-only",
+         "url": url, "areaServed": {"@type": "State", "name": name},
          "description": f"Tax-aware investment management for {name} investors, asset location, "
                         f"tax-loss harvesting, and lot protection. Illustrative modeling, not advice."},
         {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [

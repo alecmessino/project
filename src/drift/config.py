@@ -1,6 +1,6 @@
 """Load and validate Driftwood settings (pydantic).
 
-Every threshold and model parameter lives here / in the YAML — nothing is
+Every threshold and model parameter lives here / in the YAML, nothing is
 hardcoded in the engine or the math modules, mirroring mrbet's convention.
 """
 
@@ -62,7 +62,7 @@ class CrossSectionSettings(BaseModel):
 
     Instead of trading each instrument on its own absolute trend (time-series
     momentum), rank the universe each bar and go long the strongest / short the
-    weakest names — classic Jegadeesh-Titman cross-sectional momentum.
+    weakest names, classic Jegadeesh-Titman cross-sectional momentum.
     """
 
     quantile: float = 0.50          # top/bottom fraction of the universe per leg (sweep-best)
@@ -71,9 +71,9 @@ class CrossSectionSettings(BaseModel):
     weighting: str = "inv_vol"      # "equal" | "inv_vol" | "score"
     min_universe: int = 3           # need at least this many ranked names to trade
     max_weight: float = 0.50        # per-name |weight| cap
-    # Turnover controls — keep the book agile without churning it (and paying for it):
+    # Turnover controls, keep the book agile without churning it (and paying for it):
     rebalance_bars: int = 21        # re-rank only every N bars (1 = every bar); cuts turnover ~Nx
-    min_score: float = 0.0          # only hold a name whose (demeaned) trend z clears this —
+    min_score: float = 0.0          # only hold a name whose (demeaned) trend z clears this,
                                     # when nothing is trending the book lightens up rather than
                                     # holding the "least-bad", i.e. flexible vs a static index
     # Trend throttle: scale total invested exposure by the breadth of POSITIVE absolute
@@ -84,7 +84,7 @@ class CrossSectionSettings(BaseModel):
     exposure_floor: float = 0.0     # minimum exposure even in a broad bear (0 = fully defensive ok)
     # Strategic forward-looking tilt (applied to the long book, fully invested): each
     # held name's risk-balanced weight is multiplied by the PRODUCT of its region/size/
-    # style factors below, then the long leg is renormalized back to full gross — so the
+    # style factors below, then the long leg is renormalized back to full gross, so the
     # tilt redistributes capital toward favored segments without adding cash or leverage.
     # Empty dicts (or a missing segment key) = neutral (factor 1.0). Tilting toward EM /
     # international / value / small expresses a forward valuation view, anchored by the
@@ -95,11 +95,11 @@ class CrossSectionSettings(BaseModel):
     # Dynamic valuation dial. The static tilt above is the long-run ANCHOR (the value/
     # size/region premia that persist across decades and regions). This dial makes the
     # tilt TIME-VARYING: it scales each name's anchor by how cheap the segment looks
-    # right now — proxied by long-horizon relative reversal (a segment that has LAGGED
+    # right now, proxied by long-horizon relative reversal (a segment that has LAGGED
     # the cross-section over `tilt_reversion_bars` reads as cheap and is leaned into;
     # one that has LED strongly is faded back toward market weight). So the book tilts
     # hard when a favored segment is beaten down and drifts to neutral as the spread
-    # compresses — and if the richly-priced corner gets cheap, its underweight eases
+    # compresses, and if the richly-priced corner gets cheap, its underweight eases
     # toward market weight too. 0 strength = pure static anchor; the dial is bounded to
     # [1/cap, cap] so it leans, never lurches. (Value × momentum, cf. AMP 2013.)
     tilt_dynamic: bool = False            # off by default; the headline YAML book turns it on
@@ -111,31 +111,31 @@ class CrossSectionSettings(BaseModel):
     # band suppresses small target changes (only act when a name's target moves more than
     # `no_trade_band`, or it leaves the held set entirely), cutting turnover so more gains
     # age into long-term treatment. The bigger lever is a slower `rebalance_bars`; this
-    # band trims the residual churn on top. Off by default — turn on for a taxable sleeve.
+    # band trims the residual churn on top. Off by default, turn on for a taxable sleeve.
     tax_aware: bool = False
     no_trade_band: float = 0.03           # min target-weight change to act on a held name
-    # "Meaningful turnover" — conviction (rank-hysteresis) selection. A held name is KEPT
+    # "Meaningful turnover", conviction (rank-hysteresis) selection. A held name is KEPT
     # while it stays within the top (quantile + buffer); a new name ENTERS only if it clears
     # the stricter top (quantile - buffer), so the book reacts to a real signal but ignores
     # boundary noise. It works as intended (turnover 349%->187%, holds 72->135 days,
     # short-term share 96%->63%) but, like a slower cadence, it LOWERS after-tax return on
-    # the 40-yr backtest (vanilla +947% vs +843-889% after-tax) — this momentum signal's
+    # the 40-yr backtest (vanilla +947% vs +843-889% after-tax), this momentum signal's
     # alpha is inseparable from its turnover, so trading less can't help after-tax in ANY
     # form. Kept OFF. The after-tax levers are asset location + TLH; native tax-efficiency
     # would need a slower / longer-half-life base SIGNAL, not a rebalance gate.
     conviction: bool = False
     conviction_buffer: float = 0.15       # rank hysteresis as a fraction of the universe
     # Slow / multi-factor tax-efficient sleeve (taxable accounts). This is NOT a gate bolted
-    # onto the fast book — it is a different, natively-slow base signal. When `slow_sleeve_mode`
+    # onto the fast book, it is a different, natively-slow base signal. When `slow_sleeve_mode`
     # is on: (1) the trend score is measured over a longer `slow_lookback` (12-month drift)
     # instead of `signal.lookback`, blended natively with the same region/size/style tilt so the
     # cross-sectional ranking is stable and turns over slowly by construction; (2) selection uses
-    # ASYMMETRIC rank hysteresis — a name ENTERS only in the top `buy_quantile` (top 40%) but a
+    # ASYMMETRIC rank hysteresis, a name ENTERS only in the top `buy_quantile` (top 40%) but a
     # HELD name is kept until it falls out of the top `hold_quantile` (top 60%), so boundary noise
     # never churns the book; (3) a tax-lot holding-period cushion (the execution layer below)
     # delays liquidating a winner that is within `lt_protection_window_bars` of the 365-day
     # long-term mark, unless its rank breaks down catastrophically (bottom `catastrophic_quantile`),
-    # pushing the realized gain into long-term treatment. Off by default — the headline fast book
+    # pushing the realized gain into long-term treatment. Off by default, the headline fast book
     # is unaffected.
     slow_sleeve_mode: bool = False
     buy_quantile: float = 0.40            # enter only if ranked in the top this fraction
@@ -143,16 +143,16 @@ class CrossSectionSettings(BaseModel):
     slow_lookback: int = 252              # 12-month drift horizon for the slow-sleeve trend score
     lt_protection_window_bars: int = 30   # delay a sale within this many bars of the LT threshold
     catastrophic_quantile: float = 0.10   # a held name in the bottom this fraction is sold anyway
-    # Continuous TILT OVERLAY (OFFLINE RESEARCH — off by default; the live/slow books are unaffected).
+    # Continuous TILT OVERLAY (OFFLINE RESEARCH, off by default; the live/slow books are unaffected).
     # Instead of selecting the top quantile, hold the WHOLE universe at weight = base·(1 + k·z), where
     # base = gross/N and z is the cross-sectional z-score of the trend score; floor at 0 (long-only),
     # cap at `max_weight`, renormalize to the gross budget. Far lower turnover and more tax-efficient
-    # than concentrated selection, at the cost of a diluted signal — quantified by scripts/tilt_sweep.py
+    # than concentrated selection, at the cost of a diluted signal, quantified by scripts/tilt_sweep.py
     # and NEVER wired into the shipped configs.
     tilt_overlay: bool = False
     tilt_strength: float = 0.5            # k: how hard the signal pushes weights off the equal-weight base
     # Apply the tax-lot capital-gains protection (the execution layer below) WITHOUT the rest of the
-    # slow sleeve — so the continuous-tilt book can delay near-long-term sales the same way the slow
+    # slow sleeve, so the continuous-tilt book can delay near-long-term sales the same way the slow
     # sleeve does. Offline research; off in every shipped config, never wired into the live signal.
     lot_protect: bool = False
     # Neutralize the ranking within a grouping before ranking: "none", "region",

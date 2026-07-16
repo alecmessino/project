@@ -1,13 +1,13 @@
-/* Driftwood — the shared household profile (privacy-first, cross-page).
+/* Driftwood: the shared household profile (privacy-first, cross-page).
  *
- * One household — state, federal bracket, and taxable portfolio — set once, in-browser only
+ * One household (state, federal bracket, and taxable portfolio) set once, in-browser only
  * (localStorage; nothing is ever transmitted), and carried across the three tools that consume it:
  * the Tax Diagnostic, the State Tax Atlas, and the After-Tax Review. It renders as an editable
  * "Your household" bar at the top of each tool: set it anywhere and every tool follows, so the site
  * behaves like one coordinated system rather than three separate calculators.
  *
  * Precedence guardrail: URL search params ALWAYS win. A personalized link
- * (?state=IL&bracket=37&port=2000000) overrides — and refreshes — whatever this browser had stored.
+ * (?state=IL&bracket=37&port=2000000) overrides, and refreshes, whatever this browser had stored.
  */
 (function () {
   var KEY = "dw_tax_context";
@@ -143,7 +143,7 @@
         "</div>" +
         '<div class="right"><span class="links">' + sibs + "</span>" +
           '<button type="button" class="reset">Reset</button></div>' +
-        '<span class="note">Set once — carried across the Tax Diagnostic, State Atlas, and After-Tax Review. Saved in this browser only, never transmitted.</span>';
+        '<span class="note">Set once, carried across the Tax Diagnostic, State Atlas, and After-Tax Review. Saved in this browser only, never transmitted.</span>';
       el.querySelectorAll("select").forEach(function (s) {
         s.addEventListener("change", function () {
           var patch = {}; patch[s.getAttribute("data-k")] = s.value;
@@ -171,12 +171,12 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ready); else ready();
 })();
 
-/* Mobile navigation disclosure — progressive enhancement.
+/* Mobile navigation disclosure: progressive enhancement.
  *
  * The shared chrome carries a two-family running index (Understand · Discover). On a phone it wraps
  * to seven rows and pushes the hero and its CTA below the fold. This wires a single disclosure control
  * so the first screen leads with content; the collapse itself is CSS (scoped to .dwnav--menu). It lives
- * here — one file every page already loads — so no per-template markup changes are needed, and it
+ * here (one file every page already loads) so no per-template markup changes are needed, and it
  * degrades cleanly: with the script absent the full index simply stays visible. */
 (function () {
   if (typeof document === "undefined") return;

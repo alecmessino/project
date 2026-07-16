@@ -1,6 +1,6 @@
 """Build the dashboard/exhibit state and render the static page.
 
-`build_state` turns a universe of price series into a single JSON-able dict — the
+`build_state` turns a universe of price series into a single JSON-able dict, the
 time-series signal per instrument, the cross-sectional ranking, and both backtests
 with (downsampled) equity curves. It is pure and side-effect-free, so the live
 server (`web/server.py`) and the static exporter share one code path and one
@@ -41,7 +41,7 @@ def _spark(curve: Sequence[float], n: int = 90) -> list[float]:
 
 def latest_rebalance_blotter(series: dict[str, list[Bar]], settings: Settings) -> dict | None:
     """Fallback blotter: recompute the book fresh and diff its last weight change. Only used when the
-    forward ledger isn't available — the recomputation's window/boundaries can differ from the
+    forward ledger isn't available, the recomputation's window/boundaries can differ from the
     ledger's persisted path, so `ledger_blotter` is ALWAYS preferred (single source of truth)."""
     try:
         entries = cross_book_entries(series, settings)
@@ -55,7 +55,7 @@ def latest_rebalance_blotter(series: dict[str, list[Bar]], settings: Settings) -
 
 def ledger_blotter(ledger_path: str | Path) -> dict | None:
     """The dashboard blotter derived from the SAME entries the Model Portfolio ledger publishes
-    (docs/ledger.json) — so 'the trades the book just made' can never contradict the ledger page."""
+    (docs/ledger.json), so 'the trades the book just made' can never contradict the ledger page."""
     try:
         j = json.loads(Path(ledger_path).read_text())
         entries = j.get("entries", [])
@@ -69,7 +69,7 @@ def ledger_blotter(ledger_path: str | Path) -> dict | None:
 
 def blotter_from_entries(entries: list[dict]) -> dict | None:
     """The most recent rebalance as a trade blotter: what the book actually did at its last
-    turn — names entered, exited, and weights raised/trimmed — plus the P&L since.
+    turn, names entered, exited, and weights raised/trimmed, plus the P&L since.
 
     Built by diffing a per-session weight book (entries need date/weights/equity) at its last change,
     so it answers the dashboard's missing question ("what changed, and what to do now") straight from
@@ -78,7 +78,7 @@ def blotter_from_entries(entries: list[dict]) -> dict | None:
     if len(entries) < 2:
         return None
     cur = entries[-1]["weights"]
-    # Walk back to the last session whose weights differ from the one before it — that's the rebalance.
+    # Walk back to the last session whose weights differ from the one before it, that's the rebalance.
     reb = None
     for i in range(len(entries) - 1, 0, -1):
         if entries[i]["weights"] != entries[i - 1]["weights"]:
@@ -119,7 +119,7 @@ def blotter_from_entries(entries: list[dict]) -> dict | None:
 
 
 def build_dashboard_state(ledger_path: str | Path, settings: Settings, tax=None) -> dict | None:
-    """The operational-dashboard state (`equities.html`) — a projection of the ONE canonical portfolio
+    """The operational-dashboard state (`equities.html`), a projection of the ONE canonical portfolio
     object (`drift.portfolio.build_portfolio_state`) built from the Model Portfolio ledger.
 
     Single source of truth: the dashboard's holdings, signal strengths, statuses, the last rebalance,
@@ -151,7 +151,7 @@ def export_html(ledger_path: str | Path, settings: Settings, out: str | Path, ta
     """Build the operational dashboard state from the ledger and write a self-contained HTML to `out`."""
     state = build_dashboard_state(ledger_path, settings, tax)
     if state is None:
-        raise ValueError(f"no ledger entries at {ledger_path} — build the Model Portfolio ledger first")
+        raise ValueError(f"no ledger entries at {ledger_path}, build the Model Portfolio ledger first")
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render_html(state))
@@ -201,8 +201,8 @@ def export_ledger(state: dict, out: str | Path) -> Path:
 def render_hub(state: dict) -> str:
     """Static, self-contained markets-only landing hub with state embedded.
 
-    The firm-anchor coordinates band is injected here as well — not only in
-    scripts/sync_docs.py — so every build path (the `drift hub` CLI, the nightly
+    The firm-anchor coordinates band is injected here as well, not only in
+    scripts/sync_docs.py, so every build path (the `drift hub` CLI, the nightly
     pages job, and any test that renders the hub) resolves the <!--FIRM_ANCHOR-->
     token instead of shipping it raw.
     """
@@ -246,7 +246,7 @@ def export_taxlab(state: dict, out: str | Path) -> Path:
 
 
 def render_workspace(state: dict) -> str:
-    """The Advisor Workspace — the full after-tax toolset (estate, Roth, asset-location, proposal and
+    """The Advisor Workspace, the full after-tax toolset (estate, Roth, asset-location, proposal and
     CPA-brief generation), fed by the same build_taxlab() engine as the public exhibit. Internal,
     noindex; kept a separate template so it can graduate into its own application without a rewrite."""
     template = WORKSPACE_TEMPLATE.read_text()

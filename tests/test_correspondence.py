@@ -34,8 +34,9 @@ def test_contact_endpoint_is_the_firm_domain_and_single_sourced():
 def test_firm_anchor_renders_the_confirmed_coordinates():
     a = site.firm_anchor_html()
     assert "DRIFTWOOD WEALTH" in a
-    assert "AUSTIN, TEXAS" in a and "FOUNDED 2024" in a
-    assert "ADVISERINFO.SEC.GOV" in a and "MODEL DATA AS OF JULY 2026" in a
+    assert "AUSTIN, TEXAS" in a and "A PRACTICE OF ALEC MESSINO" in a
+    assert "FOUNDED 2024" not in a
+    assert "ADVISERINFO.SEC.GOV" not in a and "MODEL DATA AS OF JULY 2026" in a
 
 
 def test_firm_anchor_omits_unset_facts_never_a_placeholder():

@@ -11,8 +11,8 @@
 </script>
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
-<title>Driftwood Wealth — Model Portfolio (Hypothetical)</title>
-<meta name="description" content="A hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; its tax-efficient Tax-Managed Core Strategy companion is offline-validated) — benchmarked against VT (global) and VTI (US) buy-and-hold, with risk stats, regional and style-box exposure, and costs shown. Research only, not investment advice." />
+<title>Driftwood Wealth, Model Portfolio (Hypothetical)</title>
+<meta name="description" content="A hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy, a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; its tax-efficient Tax-Managed Core Strategy companion is offline-validated), benchmarked against VT (global) and VTI (US) buy-and-hold, with risk stats, regional and style-box exposure, and costs shown. Research only, not investment advice." />
 <link rel="canonical" href="https://driftwoodwealth.com/ledger.html" />
 <link rel="icon" href="favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
@@ -22,14 +22,14 @@
 <meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Wealth" />
-<meta property="og:title" content="Driftwood Wealth — Model Portfolio (Hypothetical)" />
-<meta property="og:description" content="A hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Tax-Managed Core Strategy companion for taxable accounts), benchmarked vs VT (global) and VTI (US) buy-and-hold — risk stats, regional + style-box exposure, and costs. Research only." />
+<meta property="og:title" content="Driftwood Wealth, Model Portfolio (Hypothetical)" />
+<meta property="og:description" content="A hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy, a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Tax-Managed Core Strategy companion for taxable accounts), benchmarked vs VT (global) and VTI (US) buy-and-hold, risk stats, regional + style-box exposure, and costs. Research only." />
 <meta property="og:url" content="https://driftwoodwealth.com/ledger.html" />
 <meta property="og:image" content="https://driftwoodwealth.com/og/ledger.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content="https://driftwoodwealth.com/og/ledger.png" />
-<meta name="twitter:title" content="Driftwood Wealth — Model Portfolio (Hypothetical)" />
-<meta name="twitter:description" content="Hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy — a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Tax-Managed Core Strategy for taxable accounts), benchmarked vs VT & VTI buy-and-hold. Research only, not advice." />
+<meta name="twitter:title" content="Driftwood Wealth, Model Portfolio (Hypothetical)" />
+<meta name="twitter:description" content="Hypothetical Model Portfolio backtest of the Unconstrained Core Alpha Strategy, a long-only, fully-invested global ETF cross-sectional momentum rotation (unbiased, no factor tilt; offline Tax-Managed Core Strategy for taxable accounts), benchmarked vs VT & VTI buy-and-hold. Research only, not advice." />
 <style>
   :root{
     --bg:#f1efe9; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6; --soft:#f7f5f0; --line:#d8d3c6; --ink:#1e2833; --dim:#5c6470;
@@ -84,7 +84,7 @@
   .expo h3{font-size:12px;color:var(--dim);font-weight:500;margin:0 0 10px;letter-spacing:.3px}
   .bar{display:flex;align-items:center;gap:9px;margin:6px 0;font-size:12.5px}
   .bar .lbl{width:118px;color:var(--ink)}
-  .bar .barwrap{flex:1;height:9px}                                  /* transparent track — no grey box */
+  .bar .barwrap{flex:1;height:9px}                                  /* transparent track, no grey box */
   .bar .fill{display:block;height:100%;background:var(--slate);border-radius:var(--surface-radius)}
   .bar .pct{width:38px;text-align:right;color:var(--dim);font-variant-numeric:tabular-nums}
   .box{display:grid;grid-template-columns:52px 1fr 1fr 1fr;gap:4px;font-size:11px;width:100%;max-width:340px}
@@ -134,7 +134,7 @@
   .figband img{width:100%;height:204px;object-fit:contain;display:block}
   .figcap{font-size:11.5px;color:var(--dim);margin:6px 2px 0;line-height:1.5}
   /* SEC-grade hypothetical-performance disclosure, placed at the performance numbers */
-  /* Calm "illustrative" ribbon — disclosure present but quiet (brass, not a wall of red caps) */
+  /* Calm "illustrative" ribbon, disclosure present but quiet (brass, not a wall of red caps) */
   /* Maximal-subtle: the full hypothetical-performance disclosure renders as a quiet small-print
      footnote at the FOOT of the page; the "HYPOTHETICAL" header pill + the summary card's
      "Hypothetical backtest" line keep the point-of-performance label. Required language unchanged. */
@@ -167,7 +167,7 @@
 <div class="wrap">
   <div class="frame">
   <nav class="dwnav" aria-label="Driftwood Wealth">
-      <a class="brand" href="index.html" aria-label="Driftwood Wealth — home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-links">
         <span class="dwnav-group"><span class="dwnav-label">The Firm</span>
           <a href="about.html">Our Story</a>
@@ -193,10 +193,10 @@
     <div class="sub" id="sub"></div>
   </header>
   <div class="research-banner">
-    <b>Core Alpha Research — a hypothetical Model Portfolio.</b> This is the Core Alpha strategy: the
+    <b>Core Alpha Research, a hypothetical Model Portfolio.</b> This is the Core Alpha strategy: the
     high-turnover, opportunistic momentum book built for <b>tax-advantaged</b> accounts. The flagship
-    <b>Structural Alpha</b> book — diversified, low-turnover, tax-managed — is the taxable-account
-    strategy. This is a hypothetical backtest of one model portfolio, marked daily — not a client
+    <b>Structural Alpha</b> book, diversified, low-turnover, tax-managed, is the taxable-account
+    strategy. This is a hypothetical backtest of one model portfolio, marked daily, not a client
     account and not an executed order.
   </div>
   <div id="body"></div>
@@ -210,15 +210,14 @@
     </ol>
   </nav>
   <div class="foot">
-    <span class="note">Hypothetical Model Portfolio — backtested; research only, not investment advice.</span>
-    The model is the <b>Unconstrained Core Alpha Strategy</b> — a long-only, fully-invested cross-sectional momentum
+    <span class="note">Hypothetical Model Portfolio, backtested; research only, not investment advice.</span>
+    The model is the <b>Unconstrained Core Alpha Strategy</b>, a long-only, fully-invested cross-sectional momentum
     rotation (unbiased, no factor tilt; a tax-efficient Tax-Managed Core Strategy is the offline-validated taxable
-    companion) — marked daily net of cost, vs
+    companion), marked daily net of cost, vs
     buy-and-hold VT (global) and VTI (US) on the same total-return basis. Append-only:
-    history is never recomputed. The full curve is a <b>hypothetical backtest</b> — the strategy
+    history is never recomputed. The full curve is a <b>hypothetical backtest</b>, the strategy
     applied retroactively to historical data, not actual trading and not any client account.
-    <div style="margin-top:8px">Driftwood Wealth is a
-    <b>registered investment adviser</b>; <a href="disclosures/adv-part-2a.pdf">Form ADV Part 2A</a> and <a href="disclosures/form-crs.pdf">Form CRS</a> are available directly; the firm’s public record is at <a href="https://adviserinfo.sec.gov/" style="color:var(--slate)">adviserinfo.sec.gov</a>. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.</div>
+    <div style="margin-top:8px">Driftwood Wealth is the private-wealth practice of Alec Messino. It is not currently a registered investment adviser, and this site is not a solicitation for advisory services. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.</div>
     <div style="margin-top:6px;color:var(--dim)">Intended for sophisticated investors; these are
     hypothetical model results, not advice, and may not be relevant to your situation.</div>
     <div id="gen" style="margin-top:6px"></div>
@@ -230,23 +229,23 @@
 window.__STATE__ = /*__STATE__*/null/*__END__*/;
 const BDESC={VT:"global market", VTI:"US total market"};
 const SCOLOR="#15806a";   // strategy line: strong teal, drawn thick on top
-const BENCH_GREYS=["#b8bcc2","#cdd0d6","#dcdee2"];  // benchmarks recede to neutral grey — never a competing hue
+const BENCH_GREYS=["#b8bcc2","#cdd0d6","#dcdee2"];  // benchmarks recede to neutral grey, never a competing hue
 const PERLABEL={ALL:"full backtest",YTD:"year to date","1M":"last month","3M":"last 3 months",
   "6M":"last 6 months","1Y":"last year"};
 let ST=null;
 // Tier 1: plain-English definitions surfaced as hover/focus tooltips on metric labels.
 const TIPS={
- "Total return":"Cumulative gain across the full backtest, net of trading cost — not annualized.",
- "Sharpe":"Return earned per unit of volatility — higher means a smoother ride. It uses a 0% cash baseline here, so read it against the benchmark's Sharpe, not on its own.",
- "Max DD":"Maximum drawdown: the worst peak-to-trough drop along the way — the loss you'd have had to sit through.",
+ "Total return":"Cumulative gain across the full backtest, net of trading cost, not annualized.",
+ "Sharpe":"Return earned per unit of volatility, higher means a smoother ride. It uses a 0% cash baseline here, so read it against the benchmark's Sharpe, not on its own.",
+ "Max DD":"Maximum drawdown: the worst peak-to-trough drop along the way, the loss you'd have had to sit through.",
  "Sessions":"Number of trading days simulated in this hypothetical backtest.",
  "Beta (vs VT)":"Market sensitivity: how much of the model's return is explained by simply moving with the global benchmark. ~1.0 means it rides the market; the rest is the model's own edge.",
- "Alpha (ann.)":"Annualized return NOT explained by market beta — the estimated momentum / structure component, over and above passive drift. Hypothetical, and on a backtest of this length often not statistically distinguishable from zero (see the t-stat below the panel).",
+ "Alpha (ann.)":"Annualized return NOT explained by market beta, the estimated momentum / structure component, over and above passive drift. Hypothetical, and on a backtest of this length often not statistically distinguishable from zero (see the t-stat below the panel).",
  "R² (vs VT)":"How much of the model's variance the benchmark explains. Lower means more of the return is idiosyncratic to the strategy, not the market.",
- "Info ratio":"Active return (model minus benchmark) per unit of its volatility — the consistency of the edge.",
+ "Info ratio":"Active return (model minus benchmark) per unit of its volatility, the consistency of the edge.",
  "Long / short":"Positions held long vs short. This book is long-only, so the short count is always 0.",
  "After-tax return":"What a taxable investor keeps after capital-gains tax on realized gains.",
- "Tax drag":"Pre-tax return minus after-tax return — the slice handed to taxes each year.",
+ "Tax drag":"Pre-tax return minus after-tax return, the slice handed to taxes each year.",
 };
 let TERM_SEQ=0;   // unique id per rendered tooltip so aria-describedby always points at its own tip
 function term(label){
@@ -346,7 +345,7 @@ function applyPeriod(key){
   drawChart(document.getElementById("eq"), dts, lines, -1);
   const st=winStats(stratEq, bpy);
   let rows=`<tr class="me"><td>Strategy</td><td class="${cls(st.tr)}">${pct(st.tr)}</td>
-    <td>${st.sh.toFixed(2)}</td><td>${pct(-st.mdd)}</td><td class="ex">—</td></tr>`;
+    <td>${st.sh.toFixed(2)}</td><td>${pct(-st.mdd)}</td><td class="ex"></td></tr>`;
   (s.benchmarks||[]).forEach(b=>{
     const ws=winStats(b.equity.slice(start), bpy), edge=st.tr-ws.tr;
     rows+=`<tr><td><span class="dot" style="color:${b.color}">●</span>${b.label} · ${BDESC[b.label]||""}</td>
@@ -382,7 +381,7 @@ function stylebox(box, sm){
 function render(s){
   ST=s;
   // Data-colour standard: the strategy is the only saturated line; benchmarks recede to neutral
-  // greys (VT primary, then lighter) — never competing hues. Set once here so the chart, the
+  // greys (VT primary, then lighter), never competing hues. Set once here so the chart, the
   // comparison table, and the legend all read the same colour back off ST.benchmarks.
   (s.benchmarks||[]).forEach((b,i)=>{ b.color = BENCH_GREYS[i] || BENCH_GREYS[BENCH_GREYS.length-1]; });
   const h=s.header;
@@ -390,7 +389,7 @@ function render(s){
     `<b>Hypothetical backtest</b> · <b>${h.universe.length}</b> instruments · modeled from <b>${h.inception||"—"}</b>`;
   document.getElementById("gen").textContent = "Model data as of July 2026.";
   if(!s.equity.length){
-    document.getElementById("body").innerHTML='<p class="empty">No entries yet — the ledger begins on the next run.</p>';
+    document.getElementById("body").innerHTML='<p class="empty">No entries yet, the ledger begins on the next run.</p>';
     return;
   }
   const benches = s.benchmarks||[];
@@ -410,36 +409,36 @@ function render(s){
     <h2 class="sec">Performance vs buy-and-hold · <span id="perlabel" style="text-transform:none;letter-spacing:0">full backtest</span></h2>
     <div class="tscroll"><table class="cmp stickcol" style="--stick-bg:var(--bg)"><thead><tr><th scope="col">Track</th><th scope="col">Return</th><th scope="col">Sharpe</th>
       <th scope="col">Max DD</th><th scope="col">Edge</th></tr></thead><tbody id="cmpbody"></tbody></table></div>
-    <div class="note-box"><b>How the book is built — two strategies, one system.</b> The model above is the
+    <div class="note-box"><b>How the book is built, two strategies, one system.</b> The model above is the
       <b>Unconstrained Core Alpha Strategy</b>: long-only and <b>always fully invested</b> (no cash, no leverage). Each month it ranks
       the global region/size/style ETF matrix by volatility-normalized momentum (~60-bar lookback) and holds the
-      trending top half, inverse-volatility weighted — <b>unbiased cross-sectional momentum with no discretionary
+      trending top half, inverse-volatility weighted, <b>unbiased cross-sectional momentum with no discretionary
       factor bet</b> (a 40-year test of an EM/value/small overweight showed it added risk, not risk-adjusted
       return, so the book carries none). Its turnover is high, so it belongs in <b>tax-advantaged</b> space
-      (IRA/Roth). A separate, natively-slow companion — the <b>Tax-Managed Core Strategy</b> — is built for <b>taxable</b>
+      (IRA/Roth). A separate, natively-slow companion, the <b>Tax-Managed Core Strategy</b>, is built for <b>taxable</b>
       accounts: a 12-month (252-bar) drift signal, asymmetric rank hysteresis (enter the top 40%, hold until a
       name leaves the top 60%), and a tax-lot holding-period cushion that ages near-one-year winners into
       long-term treatment. In an <b>illustrative</b> 40-year validation sweep (<code>scripts/slow_sweep.py</code>,
       proxy-spliced or synthetic history) the Tax-Managed Core Strategy retained a meaningfully larger after-tax fraction than the
-      Unconstrained Core Alpha Strategy (roughly <b>~2×</b> in that run) — a <b>mechanism demonstration, not a live or audited track
-      record</b> — making the case for unifying the two strategies by <b>asset location</b>: fast where gains are
+      Unconstrained Core Alpha Strategy (roughly <b>~2×</b> in that run), a <b>mechanism demonstration, not a live or audited track
+      record</b>, making the case for unifying the two strategies by <b>asset location</b>: fast where gains are
       sheltered, slow where they are taxed. (The Tax-Managed Core Strategy is offline-validated and is not part of the
       Model Portfolio above; its figures are hypothetical.) <b>Diversification
       note:</b> the book holds the full global region×size×style matrix, so by construction it is far less
-      US-mega-cap-concentrated than VT (~<b>62% US</b> as of mid-2026) — diversification, not a tactical bet.
+      US-mega-cap-concentrated than VT (~<b>62% US</b> as of mid-2026), diversification, not a tactical bet.
       It can still lag in a narrow mega-cap-growth melt-up; use the buttons above to see led-versus-lagged windows.</div>
     ${h.after_tax_total_return!=null ? `<div class="note-box"><b>Tax efficiency (illustrative${s.tax&&s.tax.state&&s.tax.state!=="—"?", "+s.tax.state:""}).</b>
       In a taxable account this book is <b>not</b> tax-efficient: monthly momentum runs
       ~<b>${(h.annual_turnover*100).toFixed(0)}%</b> annual turnover (avg holding ~${h.avg_holding_days} trading days),
       so <b>${(h.short_term_share*100).toFixed(0)}%</b> of realized gains are <b>short-term</b> (taxed at
       ${s.tax?(s.tax.rate_st*100).toFixed(1):"—"}% vs ${s.tax?(s.tax.rate_lt*100).toFixed(1):"—"}% long-term). A lot-level
-      model trims <b>${pct(h.total_return)}</b> pre-tax to <b>${pct(h.after_tax_total_return)}</b> after-tax — a
-      <b>${(h.tax_drag*100).toFixed(1)}%</b> drag — with another ${s.tax?pct(s.tax.liquidation_tax*-1):""} owed if liquidated today.
-      <b>The fix is not to slow the strategy down</b> — the 40-yr backtest shows that <i>lowers</i> after-tax return
+      model trims <b>${pct(h.total_return)}</b> pre-tax to <b>${pct(h.after_tax_total_return)}</b> after-tax, a
+      <b>${(h.tax_drag*100).toFixed(1)}%</b> drag, with another ${s.tax?pct(s.tax.liquidation_tax*-1):""} owed if liquidated today.
+      <b>The fix is not to slow the strategy down</b>, the 40-yr backtest shows that <i>lowers</i> after-tax return
       (the momentum alpha is too cadence-sensitive). The levers are <b>asset location</b> (hold this sleeve in a
       tax-advantaged account) and <b>tax-loss harvesting</b> via wash-sale-safe substitutes (IVV→SCHX, IWN→VBR…).
       <span class="note">Lot-level model on the book's own marks, not custodian accounting; top-bracket federal,
-      no state unless shown — set a client's actual rates. Not tax advice.</span></div>` : ""}` : "";
+      no state unless shown, set a client's actual rates. Not tax advice.</span></div>` : ""}` : "";
   const positions = s.positions.map(p=>`<tr><td>${p.instrument}</td>
     <td><span class="tag ${p.leg==='—'?'--':p.leg}">${p.leg}</span></td>
     <td>${p.portfolio_weight>=0?"+":""}${p.portfolio_weight.toFixed(2)}</td></tr>`).join("");
@@ -451,18 +450,18 @@ function render(s){
     ${stylebox(b.exposure.style_box,true)}<p class="bcap">${regionLine(b.exposure.by_region)}</p></div>`).join("");
   const exposureHTML = x ? `
     <figure class="figband"><img src="assets/orrery.png" loading="lazy"
-      alt="Hand-drawn orrery — interlocking gears turning the size by style by region matrix"></figure>
+      alt="Hand-drawn orrery, interlocking gears turning the size by style by region matrix"></figure>
     <p class="figcap">The book as an orrery: region × size × style as interlocking wheels, each name turning at its own momentum within the whole.</p>
     <h2 class="sec">Current exposure</h2>
     <div class="expo">
       <div><h3>By region</h3>${bars(x.by_region)}
-        <p class="invested">Net invested: <b>${(x.gross*100).toFixed(0)}%</b> — long-only, no cash, no leverage</p></div>
+        <p class="invested">Net invested: <b>${(x.gross*100).toFixed(0)}%</b>, long-only, no cash, no leverage</p></div>
       <div><h3>Size &amp; style map</h3>${stylebox(x.style_box)}</div>
     </div>
     ${benches.length?`<h2 class="sec">Benchmark size &amp; style</h2><div class="boxes">${benchBoxes}</div>`:""}
     <p class="bcap" style="margin-top:13px">Size/style weights are representative Morningstar-style
       classifications per fund (e.g. IVE ≈ 33% large-value / 27% large-blend / 17% mid-blend / 13% mid-value …),
-      blended by current book weight — approximate, for exposure shape rather than precision.</p>` : "";
+      blended by current book weight, approximate, for exposure shape rather than precision.</p>` : "";
   // Tier 1 · after-tax vs benchmarks (since inception): the pre-tax edge inverts after tax.
   let atCmp = "";
   if (h.after_tax_total_return != null && benches.some(b=>b.after_tax_return!=null)) {
@@ -477,70 +476,70 @@ function render(s){
     atCmp=`<h2 class="sec">After-tax, in a taxable account · <span style="text-transform:none;letter-spacing:0">full backtest</span></h2>
       <table class="cmp"><thead><tr><th scope="col">Track</th><th scope="col">Pre-tax</th><th scope="col">${term("After-tax return")}</th><th scope="col">${term("Tax drag")}</th></tr></thead><tbody>${rows}</tbody></table>
       <p class="bcap" style="margin-top:8px">Same model portfolio, after capital-gains tax. The strategy's small pre-tax edge
-      <b>inverts</b> after tax in a taxable account — a buy-and-hold index realizes almost nothing until it's sold, while this
+      <b>inverts</b> after tax in a taxable account, a buy-and-hold index realizes almost nothing until it's sold, while this
       book turns over ~<b>${(h.annual_turnover*100).toFixed(0)}%</b> a year. That gap is the case for <b>asset location</b>:
       hold this sleeve tax-advantaged and the drag goes away. Size the dollar benefit in the <a href="taxlab.html" style="color:var(--slate)">After-Tax&nbsp;Review</a>.
-      Benchmarks modeled with dividend drag only — illustrative, not tax advice.</p>`;
+      Benchmarks modeled with dividend drag only, illustrative, not tax advice.</p>`;
   }
-  // Tier 1 · suitability ("where this fits") — turns the track record into honest guidance.
+  // Tier 1 · suitability ("where this fits"), turns the track record into honest guidance.
   const ddPct=(Math.abs(h.max_drawdown||0.18)*100).toFixed(0);
   const fitsHTML=`<div class="fits"><h3>Where this fits</h3><ul>
-    <li><b>Horizon —</b> a 10-year-plus holding. Momentum is volatile and rotates; it needs time to compound through drawdowns.</li>
-    <li><b>Role &amp; size —</b> a satellite growth sleeve (think ~10–30% of an equity allocation), not a whole portfolio. It stays <b>fully invested</b> — there is no de-risking glide path.</li>
-    <li><b>Best account —</b> tax-advantaged (IRA / Roth), where its short-term gains are sheltered; model the dollar benefit in the <a href="taxlab.html">After-Tax&nbsp;Review</a>.</li>
-    <li><b>Minimum size —</b> below roughly $50–100k, fixed trading and rebalancing friction erode the edge.</li>
-    <li><b>Not for —</b> money needed within ~5 years, or anyone who couldn't sit through a ~${ddPct}%-type drawdown.</li>
+    <li><b>Horizon:</b> a 10-year-plus holding. Momentum is volatile and rotates; it needs time to compound through drawdowns.</li>
+    <li><b>Role &amp; size:</b> a satellite growth sleeve (think ~10–30% of an equity allocation), not a whole portfolio. It stays <b>fully invested</b>, there is no de-risking glide path.</li>
+    <li><b>Best account:</b> tax-advantaged (IRA / Roth), where its short-term gains are sheltered; model the dollar benefit in the <a href="taxlab.html">After-Tax&nbsp;Review</a>.</li>
+    <li><b>Minimum size:</b> below roughly $50–100k, fixed trading and rebalancing friction erode the edge.</li>
+    <li><b>Not for:</b> money needed within ~5 years, or anyone who couldn't sit through a ~${ddPct}%-type drawdown.</li>
   </ul></div>`;
   // Tier 1 · plain-English glossary (collapsible).
   const GLOSS=[
-    ["Cross-sectional momentum","Rank a universe by recent trend strength and hold the leaders — the bet is relative: the strongest names beat the weakest."],
+    ["Cross-sectional momentum","Rank a universe by recent trend strength and hold the leaders, the bet is relative: the strongest names beat the weakest."],
     ["Inverse-volatility weighting","Give quieter holdings more weight so each position contributes a similar amount of risk."],
     ["Turnover","How much of the book is traded per year. High turnover means more short-term taxable gains."],
     ["Short-term share","The fraction of realized gains held under a year, taxed at the higher ordinary-income rate."],
-    ["After-tax return","What you keep after capital-gains tax on realized gains — the number that matters in a taxable account."],
+    ["After-tax return","What you keep after capital-gains tax on realized gains, the number that matters in a taxable account."],
     ["Tax drag","Pre-tax return minus after-tax return: the slice handed to taxes."],
     ["Asset location","Placing tax-inefficient strategies in tax-advantaged accounts and tax-efficient ones in taxable."],
     ["Tax-loss harvesting","Selling a loser to bank a loss that offsets gains, swapping into a near-identical fund to stay invested."],
-    ["Sharpe ratio","Return per unit of volatility — higher means a smoother ride."],
+    ["Sharpe ratio","Return per unit of volatility, higher means a smoother ride."],
     ["Drawdown","A peak-to-trough loss; max drawdown is the worst such drop in the record."],
   ];
-  const glossHTML=`<details class="glossary"><summary>Glossary — plain English</summary><dl>${GLOSS.map(([t,d])=>`<dt>${t}</dt><dd>${d}</dd>`).join("")}</dl></details>`;
-  // SEC-grade hypothetical-performance disclosure — sits directly above the dollar/percentage outputs.
+  const glossHTML=`<details class="glossary"><summary>Glossary, plain English</summary><dl>${GLOSS.map(([t,d])=>`<dt>${t}</dt><dd>${d}</dd>`).join("")}</dl></details>`;
+  // SEC-grade hypothetical-performance disclosure, sits directly above the dollar/percentage outputs.
   const disclaimerHTML=`<div class="disclaimer">
-    <b>Hypothetical / backtested performance — not a real track record.</b>
+    <b>Hypothetical / backtested performance, not a real track record.</b>
     <div class="body">These figures reflect the <b>retroactive application</b> of a quantitative model to
     historical data. They are <b>hypothetical</b>: they do <b>not</b> represent actual trading, any actual
     client account, or actual client capital, and <b>no client capital was invested</b>. Results were prepared
     with the full benefit of hindsight, do not reflect the impact material economic and market factors might have
-    had on decision-making in a live account, and the model itself may be revised. <b>Past performance — whether
-    hypothetical or actual — does not guarantee future results.</b> Marked net of modeled trading cost; benchmarks
+    had on decision-making in a live account, and the model itself may be revised. <b>Past performance, whether
+    hypothetical or actual, does not guarantee future results.</b> Marked net of modeled trading cost; benchmarks
     are buy-and-hold. For research and illustration only; not investment, tax, or legal advice.</div></div>`;
-  // F2 · plain-English TL;DR card — answers "what is this / who is it for / the trade-off" up front,
+  // F2 · plain-English TL;DR card, answers "what is this / who is it for / the trade-off" up front,
   // so a prospect isn't forced through beta/R²/style-box before learning if it even suits them.
   const summaryHTML=`<div class="summary">
-    <h3>What this is — the short version</h3>
+    <h3>What this is, the short version</h3>
     <p><b>A hypothetical Model Portfolio</b> of a long-only, fully-invested global region/size/style ETF
       momentum rotation (the Unconstrained Core Alpha Strategy). Across the backtest it returned <b>${pct(h.total_return)}</b> with a
-      worst peak-to-trough drawdown near <b>~${ddPct}%</b> — more volatile than buy-and-hold, in exchange for
+      worst peak-to-trough drawdown near <b>~${ddPct}%</b>, more volatile than buy-and-hold, in exchange for
       the trend premium.</p>
     <ul>
-      <li><b>Who it's for —</b> a satellite growth sleeve (~10–30% of an equity allocation), a 10-year-plus
+      <li><b>Who it's for:</b> a satellite growth sleeve (~10–30% of an equity allocation), a 10-year-plus
         horizon, ideally in a tax-advantaged account.</li>
-      <li><b>Not for —</b> money needed within ~5 years, or anyone who couldn't sit through a ~${ddPct}%-type drawdown.</li>
+      <li><b>Not for:</b> money needed within ~5 years, or anyone who couldn't sit through a ~${ddPct}%-type drawdown.</li>
     </ul>
-    <p class="muted">Hypothetical backtest — not advice. The full method, attribution, after-tax, and exposure are below.</p></div>`;
-  // Alpha/beta attribution — splits the model's return into market drift (beta) vs the strategy's own
+    <p class="muted">Hypothetical backtest, not advice. The full method, attribution, after-tax, and exposure are below.</p></div>`;
+  // Alpha/beta attribution, splits the model's return into market drift (beta) vs the strategy's own
   // estimated edge (alpha), with a significance test and an out-of-sample-only readout (honest framing).
   const a=s.attribution, ao=s.attribution_oos;
   const sigNote = (a && a.alpha_t!=null)
-    ? `Alpha <b>t-stat ${a.alpha_t.toFixed(2)}</b> over ${a.n_obs} sessions — ${a.alpha_significant
+    ? `Alpha <b>t-stat ${a.alpha_t.toFixed(2)}</b> over ${a.n_obs} sessions, ${a.alpha_significant
         ? "significant at ~95% (|t|≥1.96)"
         : "<b>not statistically distinguishable from zero</b> at this sample size, so read it as a hypothesis, not a proven edge"}.`
     : "Sample too short to test alpha significance.";
   const oosNote = ao
     ? ` <b>Out-of-sample only</b> (the ${ao.n_obs} live, no-hindsight sessions): beta <b>${ao.beta.toFixed(2)}</b>,
         alpha <b>${pct(ao.alpha_annual)}</b>${ao.alpha_t!=null?` (t ${ao.alpha_t.toFixed(2)}, ${ao.alpha_significant?"significant":"not significant"})`:""}.`
-    : ` The out-of-sample window is still too short (&lt;8 live sessions) to attribute on its own — the figures
+    : ` The out-of-sample window is still too short (&lt;8 live sessions) to attribute on its own, the figures
         above are dominated by the seeded walk-forward backtest, not live forward performance.`;
   const attribHTML = (a && a.beta!=null) ? `
     <h2 class="sec">Return attribution · model vs ${a.benchmark} (passive)</h2>
@@ -552,7 +551,7 @@ function render(s){
     </div>
     <p class="cap">Single-factor (rf=0) regression of the model's daily returns on <b>${a.benchmark}</b>'s over the
     full backtest. <b>Beta</b> is the slice of return that is plain market drift; <b>alpha</b> is the annualized
-    remainder — the momentum / structure component beta does not explain. A low <b>R²</b> means most of the
+    remainder, the momentum / structure component beta does not explain. A low <b>R²</b> means most of the
     return is idiosyncratic to the strategy rather than the market. ${sigNote}${oosNote} Hypothetical; see disclosures at the foot of the page.</p></div>` : "";
   document.getElementById("body").innerHTML = `
     ${summaryHTML}

@@ -1,15 +1,15 @@
-"""The Comparison instrument — rendered.
+"""The Comparison instrument, rendered.
 
 A product renders a query over the graph; it authors nothing. This module takes the structured diff
 from `drift.compare.build_comparison` and lays it out as an instrument for weighing two operating
-environments — the Decision Framework read side by side on identical lenses, the Coordination
+environments, the Decision Framework read side by side on identical lenses, the Coordination
 Priorities that change, and the facts underneath. It reuses the state-page visual system verbatim
 (nav, frame, eyebrow, dot-meters, disclosure, firm-anchor) so a Comparison is unmistakably the same
 Atlas, one level up.
 
-    render_comparison_html(cmp, edition)   — one canonical pair page (SSR)
-    render_compare_index_html(edition)     — the picker: weigh any two, plus the featured corridors
-    export_comparisons(out_dir, edition)   — write the index + featured pages + reverse-slug redirects
+    render_comparison_html(cmp, edition)  , one canonical pair page (SSR)
+    render_compare_index_html(edition)    , the picker: weigh any two, plus the featured corridors
+    export_comparisons(out_dir, edition)  , write the index + featured pages + reverse-slug redirects
 
 The page is SYMMETRIC (it does not say which environment is "better"); the directional transition memo
 is the Crossing Brief.
@@ -56,7 +56,7 @@ _CMP_CSS = _HEAD_CSS + """
   .wread .r .who{font-family:var(--sans);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:3px}
   .wrow.chg .wtop .lens .ll{color:var(--accent-strike)}
   @media(max-width:640px){.wtop{grid-template-columns:1fr}.wtop .end.a,.wtop .end.b{justify-content:flex-start}.wread{grid-template-columns:1fr}}
-  /* Coordination priorities that change — three columns: only-A, shared, only-B. */
+  /* Coordination priorities that change, three columns: only-A, shared, only-B. */
   .cmp-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
   @media(max-width:760px){.cmp-cols{grid-template-columns:1fr}}
   .cmp-col{border:1px solid var(--line);background:var(--soft);padding:13px 15px}
@@ -68,7 +68,7 @@ _CMP_CSS = _HEAD_CSS + """
   .cmp-col li .pw{font-size:10.5px;color:var(--brass);font-weight:500}
   .cmp-col li p{margin:3px 0 0;font-size:11.5px;color:var(--body);line-height:1.45}
   .cmp-col .none{font-size:12px;color:var(--muted);font-style:italic}
-  /* The facts underneath — a compact two-environment table of the dimensions that differ. */
+  /* The facts underneath, a compact two-environment table of the dimensions that differ. */
   .facts{width:calc(100% - 80px);margin:4px 40px 0;border-collapse:collapse;font-size:12.5px}
   .facts th,.facts td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line2)}
   .facts thead th{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;font-family:var(--sans)}
@@ -160,7 +160,7 @@ def _impact_line(cmp: dict) -> str:
         f'<p class="lede" style="margin:2px 40px 0;max-width:none">Because the rules differ, so does what coordination '
         f'is worth. On an illustrative 30-year path, running a portfolio against each state\'s rules is worth an '
         f'estimated <b>~{fmt_usd(a_usd)}/yr per $1M taxable</b> in {_esc(a_name)} versus <b>~{fmt_usd(b_usd)}/yr</b> '
-        f'in {_esc(b_name)} — the coordination gap between the two (about +{ia["a_alpha"]:.1f}%/yr vs +{ia["b_alpha"]:.1f}%/yr '
+        f'in {_esc(b_name)}, the coordination gap between the two (about +{ia["a_alpha"]:.1f}%/yr vs +{ia["b_alpha"]:.1f}%/yr '
         f'modeled). A hypothetical, illustrative figure; the household\'s own depends on bracket, holdings, and '
         f'residency (see the full basis of the estimate below).</p>')
 
@@ -168,7 +168,7 @@ def _impact_line(cmp: dict) -> str:
 def render_comparison_html(cmp: dict, edition: str = CURRENT_EDITION) -> str:
     a, b = cmp["a"], cmp["b"]
     a_name, b_name = a["name"], b["name"]
-    title = f"{a_name} vs {b_name} — Capital Gains, Estate & Coordination | Driftwood Atlas"
+    title = f"{a_name} vs {b_name}, Capital Gains, Estate & Coordination | Driftwood Atlas"
     desc = (f"{a_name} vs {b_name}, weighed as two operating environments: {cmp['signals_changed']} of "
             f"{cmp['signals_total']} decision signals read differently and {cmp['priorities_changed']} "
             f"coordination priorities change. Capital-gains rate, estate tax, basis step-up, and more. "
@@ -179,7 +179,7 @@ def render_comparison_html(cmp: dict, edition: str = CURRENT_EDITION) -> str:
     tally = (f'<b>{cmp["signals_changed"]}</b> of {cmp["signals_total"]} decision signals read differently<br>'
              f'<b>{cmp["priorities_changed"]}</b> coordination priorit{"y" if cmp["priorities_changed"]==1 else "ies"} change')
     jsonld = {
-        "@context": "https://schema.org", "@type": "WebPage", "name": f"{a_name} vs {b_name} — Driftwood Atlas",
+        "@context": "https://schema.org", "@type": "WebPage", "name": f"{a_name} vs {b_name}, Driftwood Atlas",
         "url": url, "description": desc,
         "isPartOf": {"@type": "WebSite", "name": "Driftwood Wealth", "url": f"{BASE_URL}/index.html"},
     }
@@ -223,7 +223,7 @@ def render_comparison_html(cmp: dict, edition: str = CURRENT_EDITION) -> str:
     <div class="hd">
       <div class="eyebrow">The State Atlas · Comparison</div>
       <h1>{_esc(a_name)} and {_esc(b_name)}, weighed as two operating environments.</h1>
-      <p class="lede">Not which state is better — the wrong question. This instrument weighs both environments
+      <p class="lede">Not which state is better, the wrong question. This instrument weighs both environments
         on the same five decision lenses and shows <b>which coordination priorities change</b> when the
         environment does. Same reasoning every state is read through; here, side by side.</p>
     </div>
@@ -261,7 +261,7 @@ def render_comparison_html(cmp: dict, edition: str = CURRENT_EDITION) -> str:
     {_provenance_block()}
     {DISCLOSURE}
     {firm_anchor_html()}
-    <div class="colophon">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}. A comparison is a view of the reasoning graph — it authors no facts of its own.</div>
+    <div class="colophon">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}. A comparison is a view of the reasoning graph, it authors no facts of its own.</div>
   </div>
 </div>
 </body>
@@ -269,7 +269,7 @@ def render_comparison_html(cmp: dict, edition: str = CURRENT_EDITION) -> str:
 """
 
 
-# The browser presenter — it LAYS OUT the already-decided reasoning embedded as window.__CMP__; it does
+# The browser presenter, it LAYS OUT the already-decided reasoning embedded as window.__CMP__; it does
 # not reason (every level/reading was decided in Python). Kept deliberately parallel to _weigh_row /
 # _pri_items above so the live instrument and the static corridor pages render the identical graph.
 _INDEX_JS = r"""
@@ -352,10 +352,10 @@ def render_compare_index_html(edition: str = CURRENT_EDITION) -> str:
     into the full static comparisons."""
     import json
     data = _cmp.index_dataset(edition)
-    title = "Compare Any Two States — Capital Gains, Estate & Coordination | Driftwood Atlas"
+    title = "Compare Any Two States, Capital Gains, Estate & Coordination | Driftwood Atlas"
     desc = ("Weigh any two states as operating environments: which of five decision signals read "
             "differently, and which coordination priorities change. Capital-gains rate, estate tax, "
-            "basis step-up, harvesting, and residency — side by side. Illustrative, not advice.")
+            "basis step-up, harvesting, and residency, side by side. Illustrative, not advice.")
     url = _cmp.compare_index_url(edition)
     cfg = {"base": BASE_URL, "edition": edition, "defaultA": "CA", "defaultB": "TX"}
     corridors = "\n".join(
@@ -395,7 +395,7 @@ def render_compare_index_html(edition: str = CURRENT_EDITION) -> str:
       <div class="eyebrow">The State Atlas · Comparison</div>
       <h1>Weigh any two operating environments.</h1>
       <p class="lede">Pick two states. This instrument reads both through the same five decision lenses and
-        shows <b>which coordination priorities change</b> when the environment does — not which state is
+        shows <b>which coordination priorities change</b> when the environment does, not which state is
         "better," but what a household would coordinate differently. Every reading is the same reasoning
         the state pages render.</p>
     </div>
@@ -407,7 +407,7 @@ def render_compare_index_html(edition: str = CURRENT_EDITION) -> str:
     </div>
     <div id="cmpOut" aria-live="polite"></div>
     <div class="sec"><div class="sh">High-intent corridors</div>
-      <p class="lede" style="margin-bottom:12px">The routes households weigh most often — each a full comparison
+      <p class="lede" style="margin-bottom:12px">The routes households weigh most often, each a full comparison
         with the facts underneath.</p>
       <div class="corridors">{corridors}</div>
     </div>
@@ -448,7 +448,7 @@ def export_comparisons(out_dir: str | Path = "docs", edition: str = CURRENT_EDIT
     return written
 
 
-# The corridors that belong in the sitemap (canonical, deduped) — the instrument index + featured pages.
+# The corridors that belong in the sitemap (canonical, deduped), the instrument index + featured pages.
 def sitemap_entries(edition: str = CURRENT_EDITION) -> list[tuple[str, str, str]]:
     entries = [(f"atlas/{edition}/compare/", "0.6", "monthly")]
     seen = set()

@@ -1,14 +1,14 @@
-"""The Household Record — rendered as an operating file.
+"""The Household Record, rendered as an operating file.
 
 The Record is an INDEX, so its rendering is an index: a short orientation ("begin here"), then the
-household's operating system as a set of reference entries — each a one-line summary of one part of the
+household's operating system as a set of reference entries, each a one-line summary of one part of the
 system and a link to the document that holds it in full. Nothing is authored twice. The visual job is
 to make the reference-not-duplicate principle legible: every card points outward to an authoritative
 artifact (an Atlas page, the Crossing Brief, the Decision / Opportunity Registers, the Annual Review).
 
-    render_household_html(rec, edition)     — one household's operating file
-    render_household_index_html(edition)    — the sample households
-    export_households(out_dir, edition)     — the index + one file per sample household
+    render_household_html(rec, edition)    , one household's operating file
+    render_household_index_html(edition)   , the sample households
+    export_households(out_dir, edition)    , the index + one file per sample household
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ from .site import BASE_URL, firm_anchor_html
 from . import household as _hh
 
 _HH_CSS = _HEAD_CSS + """
-  /* ── Household Record — the operating file ──────────────────────────────────────────────────── */
+  /* ── Household Record, the operating file ──────────────────────────────────────────────────── */
   .hhband{margin:16px 40px 4px;padding:16px 24px;background:var(--navy);color:#eef1f4;display:flex;
     align-items:center;gap:10px 26px;flex-wrap:wrap}
   .hhband .leg{display:flex;flex-direction:column;gap:2px}
@@ -32,7 +32,7 @@ _HH_CSS = _HEAD_CSS + """
   .hhband .status{margin-left:auto;font-size:11px;color:#aeb7c1;text-align:right;max-width:28ch;line-height:1.5}
   .begin{font-family:var(--serif);font-size:15.5px;line-height:1.6;color:var(--body);margin:0 40px;max-width:none}
   .begin b{color:var(--ink);font-weight:500}
-  /* Reference entries — each points outward to the authoritative artifact */
+  /* Reference entries, each points outward to the authoritative artifact */
   .refs{display:grid;gap:10px}
   .ref{border:1px solid var(--line);border-left:3px solid var(--brass);background:#fff;padding:13px 16px}
   .ref .rh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -77,7 +77,7 @@ def render_household_html(rec: dict, edition: str = CURRENT_EDITION) -> str:
     name = rec["name"]
     cur, pot = rec["current"], rec["potential"]
     R = rec["references"]
-    title = f"{name} — Household Record | Driftwood Atlas"
+    title = f"{name}, Household Record | Driftwood Atlas"
     desc = (f"{name}'s operating file: the tax environment in force ({cur['name']}), the coordination "
             f"priorities and standing decisions, {'a move under consideration, ' if pot else ''}and the "
             f"index to every authoritative artifact. Illustrative sample, not advice.")[:300]
@@ -90,11 +90,11 @@ def render_household_html(rec: dict, edition: str = CURRENT_EDITION) -> str:
         mini = "".join(f'<li><b>{_esc(c["title"])}</b> · {_esc(c["coordinate_with"])}</li>' for c in rec["coordination"])
         coord = _ref("Coordination priorities in force", R["atlas_current"]["url"],
                      f"The operating-system domains {name} coordinates in the {_esc(cur['name'])} environment. "
-                     f"The full reasoning — how each is read and what opens it — lives in the Atlas.",
+                     f"The full reasoning, how each is read and what opens it, lives in the Atlas.",
                      go=f"{_esc(cur['name'])} Atlas →", mini=mini)
     else:
         coord = _ref("Coordination priorities in force", R["atlas_current"]["url"],
-                     f"The {_esc(cur['name'])} environment triggers no standing coordination priority — the file is simple.",
+                     f"The {_esc(cur['name'])} environment triggers no standing coordination priority, the file is simple.",
                      go=f"{_esc(cur['name'])} Atlas →")
 
     # Standing decisions (summary + reference to the Decision Register).
@@ -108,7 +108,7 @@ def render_household_html(rec: dict, edition: str = CURRENT_EDITION) -> str:
         standing = _ref("Standing decisions", R["decision_register"]["url"],
                         "No standing decision is on file yet.", go="Decision Register →")
 
-    # Under consideration — the crossing (only if a potential move).
+    # Under consideration, the crossing (only if a potential move).
     considering = ""
     if rec["crossing"]:
         x = rec["crossing"]
@@ -138,7 +138,7 @@ def render_household_html(rec: dict, edition: str = CURRENT_EDITION) -> str:
     if "annual_review" in R:
         annual = ('<div class="sec"><div class="sh">Annual review</div></div>' +
                   _ref("The latest Annual Wealth Operating Review", R["annual_review"]["url"],
-                       f"The prepared review of the household's operating system — kept each year, none overwritten.",
+                       f"The prepared review of the household's operating system, kept each year, none overwritten.",
                        go="Annual Review →"))
 
     docs = "".join(
@@ -175,7 +175,7 @@ def render_household_html(rec: dict, edition: str = CURRENT_EDITION) -> str:
     <div class="hd">
       <div class="eyebrow">The State Atlas · Household Record</div>
       <h1>{_esc(name)}.</h1>
-      <p class="lede">The operating file for one household — not a folder of documents, but the index to
+      <p class="lede">The operating file for one household, not a folder of documents, but the index to
         how the family's financial life is coordinated. Begin here; each entry summarises one part of the
         system and links to the document that holds it in full.</p>
     </div>
@@ -184,10 +184,10 @@ def render_household_html(rec: dict, edition: str = CURRENT_EDITION) -> str:
       {'<span class="sep">→</span><div class="leg"><span class="lbl">Under consideration</span><span class="st">' + _esc(pot["name"]) + '</span></div>' if pot else ''}
       <span class="status">Household Record · {_esc(rec["as_of"])} · illustrative sample</span>
     </div>
-    <p class="begin">{_esc(rec["sketch"])} Where to begin: the environment in force is <b>{_esc(cur["name"])}</b>; {'a move to <b>' + _esc(pot["name"]) + '</b> is on the table.' if pot else 'the household is settled where it is.'} Each artifact below remains authoritative in its own right — the Record is the standing context, not a copy.</p>
+    <p class="begin">{_esc(rec["sketch"])} Where to begin: the environment in force is <b>{_esc(cur["name"])}</b>; {'a move to <b>' + _esc(pot["name"]) + '</b> is on the table.' if pot else 'the household is settled where it is.'} Each artifact below remains authoritative in its own right, the Record is the standing context, not a copy.</p>
     <div class="sec"><div class="sh">The operating system in force</div></div>
     <div class="refs" style="margin:2px 40px 0">
-      {_ref("The tax environment", R["atlas_current"]["url"], f"How {_esc(cur['name'])} taxes the household — capital gains, estate, basis step-up, and the rest. The authoritative reference is the state's Atlas page.", go=f"{_esc(cur['name'])} Atlas →")}
+      {_ref("The tax environment", R["atlas_current"]["url"], f"How {_esc(cur['name'])} taxes the household, capital gains, estate, basis step-up, and the rest. The authoritative reference is the state's Atlas page.", go=f"{_esc(cur['name'])} Atlas →")}
       {coord}
       {standing}
     </div>
@@ -195,22 +195,22 @@ def render_household_html(rec: dict, edition: str = CURRENT_EDITION) -> str:
     {opps}
     {annual}
     <div class="sec"><div class="sh">Governing documents</div>
-      <p class="lede" style="margin-bottom:8px">The standing documents that hold the family's operating rules — authored once, referenced here.</p>
+      <p class="lede" style="margin-bottom:8px">The standing documents that hold the family's operating rules, authored once, referenced here.</p>
       <div class="docrow">{docs}</div>
     </div>
     <div class="cta">
       <div class="ctxt">
         <div class="ch">This is how one household's system is coordinated.</div>
-        <div class="cd">Yours would begin the same way — as a standing record, not a folder. We start with your highest-value coordination opportunities.</div>
+        <div class="cd">Yours would begin the same way, as a standing record, not a folder. We start with your highest-value coordination opportunities.</div>
       </div>
       <a class="primary" href="{MEETING_URL}">Review your coordination opportunities with Driftwood →</a>
       <a class="ghost" href="{_hh.household_index_url(edition)}">See another record</a>
     </div>
-    <div class="principle"><b>Reference, not duplicate.</b> The Household Record is the institutional index and the permanent context for {_esc(name)}. Every summary above is a pointer; the linked artifact — the Atlas reasoning, the Crossing Brief, the Registers, the Annual Review — remains the single authoritative source. The Record never re-authors what those documents hold.</div>
+    <div class="principle"><b>Reference, not duplicate.</b> The Household Record is the institutional index and the permanent context for {_esc(name)}. Every summary above is a pointer; the linked artifact, the Atlas reasoning, the Crossing Brief, the Registers, the Annual Review, remains the single authoritative source. The Record never re-authors what those documents hold.</div>
     {_provenance_block()}
     {DISCLOSURE}
     {firm_anchor_html()}
-    <div class="colophon">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}. The Household Record indexes the reasoning graph for one household — it authors no facts of its own.</div>
+    <div class="colophon">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}. The Household Record indexes the reasoning graph for one household, it authors no facts of its own.</div>
   </div>
 </div>
 </body>
@@ -219,7 +219,7 @@ def render_household_html(rec: dict, edition: str = CURRENT_EDITION) -> str:
 
 
 def render_household_index_html(edition: str = CURRENT_EDITION) -> str:
-    title = "Household Record — the operating file for one household | Driftwood Atlas"
+    title = "Household Record, the operating file for one household | Driftwood Atlas"
     desc = ("The Household Record binds the reasoning graph to a household: the environment in force, the "
             "coordination priorities and standing decisions, any move under consideration, and the index to "
             "every authoritative artifact. Illustrative samples, not advice.")
@@ -264,8 +264,8 @@ def render_household_index_html(edition: str = CURRENT_EDITION) -> str:
       <div class="eyebrow">The State Atlas · Household Record</div>
       <h1>Where a household's financial operating system lives.</h1>
       <p class="lede">Every other product renders the reasoning; the Household Record binds it to a family.
-        It answers one question — if someone needed to understand this household's financial operating
-        system, where would they begin? — and indexes every authoritative artifact from there. These are
+        It answers one question, if someone needed to understand this household's financial operating
+        system, where would they begin?, and indexes every authoritative artifact from there. These are
         illustrative sample households.</p>
     </div>
     <div class="sec"><div class="sh">Sample operating files</div></div>
@@ -273,11 +273,11 @@ def render_household_index_html(edition: str = CURRENT_EDITION) -> str:
     <div class="cta">
       <div class="ctxt">
         <div class="ch">If your household spans more than one state, entity, or advisor, this is the file we build first.</div>
-        <div class="cd">It is where the reasoning becomes personal — your standing decisions, coordination priorities, and the specialists who hold each.</div>
+        <div class="cd">It is where the reasoning becomes personal, your standing decisions, coordination priorities, and the specialists who hold each.</div>
       </div>
       <a class="primary" href="{MEETING_URL}">Review your coordination opportunities with Driftwood →</a>
     </div>
-    <div class="principle" style="margin-top:16px"><b>Reference, not duplicate.</b> A Household Record is an index and standing context — it points to the Atlas reasoning, the Crossing Brief, the Registers, and the Annual Review, each of which remains the single authoritative source.</div>
+    <div class="principle" style="margin-top:16px"><b>Reference, not duplicate.</b> A Household Record is an index and standing context, it points to the Atlas reasoning, the Crossing Brief, the Registers, and the Annual Review, each of which remains the single authoritative source.</div>
     {_provenance_block()}
     {DISCLOSURE}
     {firm_anchor_html()}

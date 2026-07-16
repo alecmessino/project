@@ -1,6 +1,6 @@
 """Driftwood institutional model portfolios (firm IPS layer).
 
-These are the firm's *standard allocation models* — the destination a prospect's legacy
+These are the firm's *standard allocation models*, the destination a prospect's legacy
 portfolio transitions into. They are deliberately SEPARATE from the Driftwood momentum
 backtest (`ledger.py`): Driftwood is one hypothetical, high-turnover satellite sleeve; these
 are diversified, low-cost strategic allocations built primarily on Avantis funds. The
@@ -34,18 +34,18 @@ _HOLDING_CLASS = {
     "AVIG": "fixed_income", "BIL": "cash", "DRIFT": "equity",
 }
 
-# (ticker, weight) — weights are fractions and must sum to 1.0 per model (asserted in tests).
+# (ticker, weight), weights are fractions and must sum to 1.0 per model (asserted in tests).
 _MODELS_RAW = [
     {
         "id": "aggressive_growth",
         "name": "Aggressive Growth",
-        "tagline": "95% equity / 5% liquidity — maximal diversified equity exposure.",
+        "tagline": "95% equity / 5% liquidity, maximal diversified equity exposure.",
         "holdings": [("AVUS", 0.45), ("AVUV", 0.20), ("AVDE", 0.18), ("AVES", 0.12), ("BIL", 0.05)],
     },
     {
         "id": "growth",
         "name": "Growth",
-        "tagline": "85% equity / 15% fixed income — a fixed-income ballast via Avantis Core.",
+        "tagline": "85% equity / 15% fixed income, a fixed-income ballast via Avantis Core.",
         "holdings": [("AVUS", 0.38), ("AVUV", 0.15), ("AVDE", 0.17), ("AVES", 0.15), ("AVIG", 0.15)],
     },
     {
@@ -55,7 +55,7 @@ _MODELS_RAW = [
         "holdings": [("AVUS", 0.40), ("AVUV", 0.12), ("AVDE", 0.20), ("AVES", 0.15),
                      ("DRIFT", 0.08), ("BIL", 0.05)],
         # Structure split (distinct from the asset-class mix below): the self-directed satellite
-        # is the Driftwood momentum sleeve — the one place the firm's engine enters a model.
+        # is the Driftwood momentum sleeve, the one place the firm's engine enters a model.
         "structure": {"core": 0.87, "satellite": 0.08, "cash": 0.05},
     },
 ]
@@ -79,7 +79,7 @@ def _expand(model: dict) -> dict:
         "holdings": holdings,
         "blended_er": round(blended_er, 5),
         "asset_mix": {k: round(v, 4) for k, v in mix.items()},
-        "note": "Illustrative target weights — confirm against the firm's signed IPS.",
+        "note": "Illustrative target weights, confirm against the firm's signed IPS.",
     }
     if "structure" in model:
         out["structure"] = model["structure"]

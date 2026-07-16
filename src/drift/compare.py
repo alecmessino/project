@@ -1,16 +1,16 @@
-"""The Comparison instrument — a query over the reasoning graph (PUBLISHING_SPEC §16–17).
+"""The Comparison instrument, a query over the reasoning graph (PUBLISHING_SPEC §16–17).
 
 Comparison is a PRODUCT, and a product is a thin query over the graph: it authors no facts and no
 reasoning of its own. It takes two `atlas.build_state_edition` records and computes the *difference*
-between two operating environments — which Decision Framework signals read differently, which
+between two operating environments, which Decision Framework signals read differently, which
 Coordination Priorities are unique to each, which Actions follow, and the environment facts that
 drive each difference.
 
-It is deliberately SYMMETRIC — it weighs two environments, it does not say which is "better" and it
+It is deliberately SYMMETRIC, it weighs two environments, it does not say which is "better" and it
 does not imply a move. The directional "your household operating system is changing" reading is the
 Crossing Brief's job (drift.crossing, planned); both will build on this same engine.
 
-    build_comparison(a, b) -> a structured diff over the two graph records — every entry references a
+    build_comparison(a, b) -> a structured diff over the two graph records, every entry references a
     reasoning primitive by id, so the Comparison, the state pages, and the Crossing Brief all render
     the same reasoning. Nothing here re-derives a fact or a signal level.
 """
@@ -50,7 +50,7 @@ def compare_index_url(edition: str = CURRENT_EDITION) -> str:
     return f"{BASE_URL}/atlas/{edition}/compare/"
 
 
-# High-intent comparison corridors — the pairs households actually weigh (relocation routes and
+# High-intent comparison corridors, the pairs households actually weigh (relocation routes and
 # high-tax/no-tax contrasts). These get their own canonical, crawlable pages and sit in the sitemap;
 # the instrument itself compares ANY two jurisdictions. Ordered by real search intent (origin→magnet);
 # the rendered page is symmetric, and the URL is canonicalised regardless.
@@ -64,9 +64,9 @@ FEATURED_CORRIDORS: list[tuple[str, str]] = [
 
 
 def _delta_signal(a_node: dict, b_node: dict) -> dict:
-    """Align one Decision Framework signal across the two environments — its level on each side and the
+    """Align one Decision Framework signal across the two environments, its level on each side and the
     signed score delta. The signal definition (id/title/question) is canonical; only the reading and
-    level are state-bound, so a comparison never re-evaluates — it reads both already-decided nodes."""
+    level are state-bound, so a comparison never re-evaluates, it reads both already-decided nodes."""
     return {
         "id": a_node["id"], "title": a_node["title"], "question": a_node["question"],
         "a_level": a_node["level"], "b_level": b_node["level"],
@@ -87,7 +87,7 @@ _DIFF_DIMS = [
 
 
 def _environment_diffs(env_a: dict, env_b: dict) -> list[dict]:
-    """The settled tax FACTS that differ between the two environments — the evidence under the signal
+    """The settled tax FACTS that differ between the two environments, the evidence under the signal
     deltas. A dimension is included only when the two states' tag or regime actually diverges; the
     citations come straight off the canonical dimensions (an edge to the Facts layer)."""
     out = []
@@ -109,7 +109,7 @@ def _environment_diffs(env_a: dict, env_b: dict) -> list[dict]:
 
 def build_comparison(a: str, b: str, edition: str = CURRENT_EDITION) -> dict:
     """The Comparison query: a structured, symmetric diff of two operating environments, computed
-    entirely from the reasoning graph. Nothing is authored here — every field is projected from the
+    entirely from the reasoning graph. Nothing is authored here, every field is projected from the
     two `atlas.build_state_edition` records, so the Comparison can never disagree with a state page.
 
     The pair is canonicalised (order-independent), so build_comparison(a, b) == build_comparison(b, a)
@@ -119,12 +119,12 @@ def build_comparison(a: str, b: str, edition: str = CURRENT_EDITION) -> dict:
     ra = atlas.build_state_edition(a, edition)
     rb = atlas.build_state_edition(b, edition)
 
-    # Decision Framework — align all five canonical lenses (same order every state is read through).
+    # Decision Framework, align all five canonical lenses (same order every state is read through).
     sb = {s["id"]: s for s in rb["framework"]}
     signals = [_delta_signal(sa, sb[sa["id"]]) for sa in ra["framework"]]
     changed = [s for s in signals if s["changed"]]
 
-    # Coordination Priorities — a set-diff by id: shared, unique-to-A, unique-to-B. These are the
+    # Coordination Priorities, a set-diff by id: shared, unique-to-A, unique-to-B. These are the
     # household's operating-system domains, so "which priorities change" is the instrument's headline.
     pa = {c["id"]: c for c in ra["coordination"]}
     pb = {c["id"]: c for c in rb["coordination"]}
@@ -132,7 +132,7 @@ def build_comparison(a: str, b: str, edition: str = CURRENT_EDITION) -> dict:
     only_a = [pa[i] for i in pa if i not in pb]
     only_b = [pb[i] for i in pb if i not in pa]
 
-    # Action Register — follows the priorities, same set-diff.
+    # Action Register, follows the priorities, same set-diff.
     xa = {x["id"]: x for x in ra["actions"]}
     xb = {x["id"]: x for x in rb["actions"]}
     act_shared = [xa[i] for i in xa if i in xb]
@@ -161,11 +161,11 @@ def build_comparison(a: str, b: str, edition: str = CURRENT_EDITION) -> dict:
 
 
 def index_dataset(edition: str = CURRENT_EDITION) -> dict:
-    """The data the browser instrument LAYS OUT to weigh any two states live — the canonical Decision
+    """The data the browser instrument LAYS OUT to weigh any two states live, the canonical Decision
     Framework and Coordination Priority definitions, plus every state's ALREADY-DECIDED reasoning
     (levels, readings, active priorities). The browser presents this; it does not reason. Every level
     and reading here was decided in Python (drift.reasoning), so the live instrument and the static
-    corridor pages render the identical graph — the diff is a set operation over decided outputs, not
+    corridor pages render the identical graph, the diff is a set operation over decided outputs, not
     a re-evaluation of the rules."""
     from .reasoning import FRAMEWORK_SIGNALS, COORDINATION_PRIORITIES
     signals = [{"id": s["id"], "title": s["title"], "question": s["question"]} for s in FRAMEWORK_SIGNALS]

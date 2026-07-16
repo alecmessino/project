@@ -33,7 +33,7 @@ GRID_CONTINUATION = (0.10, 0.25)
 
 # Committed, proxy-spliced 40-year MATRIX cache (built by scripts/tilt_sweep.py / the
 # tilt-real-sweep workflow). The long-history tearsheet builds from this by default so it is
-# DETERMINISTIC and COMPLETE — a fragile partial live pull can otherwise ship a degraded book
+# DETERMINISTIC and COMPLETE, a fragile partial live pull can otherwise ship a degraded book
 # (e.g. only the few names whose proxies reach the 1980s), leaving the early decades flat.
 _MATRIX_CACHE = Path(__file__).resolve().parents[2] / "tests" / "data" / "matrix_history.json"
 
@@ -44,7 +44,7 @@ def _load_matrix_cache(years: Optional[float] = None) -> tuple[Optional[dict], d
     When `years` is given, the series is sliced to the most recent `years` years. The DEFAULT
     tearsheet horizon is 30y (1996-present): the first decade of the 40y cache is only 4-9 names and
     ~100% mutual-fund proxy splice, whereas 30y is a fully-diversified 10+ name book across three real
-    bear markets (dot-com, GFC, COVID) whose in-sample and out-of-sample Sharpe match — the more
+    bear markets (dot-com, GFC, COVID) whose in-sample and out-of-sample Sharpe match, the more
     defensible, institutional-grade track (40y barely differs but leans on the proxied decade)."""
     try:
         payload = json.loads(_MATRIX_CACHE.read_text())
@@ -66,7 +66,7 @@ def _splice(fund: list[Bar], proxy: list[Bar]) -> list[Bar]:
     The proxy is scaled so its level connects continuously at the fund's first bar,
     so pre-inception *returns* are the proxy's and post-inception returns are the
     fund's. Because the strategy reads returns / log-returns, the trend z-score is
-    continuous across the join — exactly the point of a tight-tracking proxy.
+    continuous across the join, exactly the point of a tight-tracking proxy.
     """
     from .models import Bar as _Bar
     if not fund or not proxy:
@@ -103,7 +103,7 @@ def _pull(symbols: Sequence[str], years: float = 40.0, pause: float = 0.2,
         return pull_symbol(sym, feeds, min_bars=1)   # accept any history; the >=252 gate is below
 
     # Cache proxy pulls: several cells share a proxy (e.g. VWO and FNDE both use
-    # VEIEX), so fetch each legacy series once — fewer requests, gentler on Yahoo.
+    # VEIEX), so fetch each legacy series once, fewer requests, gentler on Yahoo.
     pcache: dict[str, Optional[list[Bar]]] = {}
 
     def _fetch_proxy(psym: str) -> Optional[list[Bar]]:
@@ -267,8 +267,8 @@ from .universes import EQUITIES as EQUITY_UNIVERSE  # noqa: E402
 def build_tearsheet(settings: Settings, equities: Sequence[str] = EQUITY_UNIVERSE,
                     years: float = 30.0, train_frac: float = 0.6,
                     _series: Optional[dict] = None) -> dict:
-    """Assemble the (equity-only) tearsheet report. Defaults to a 30-year (1996-present) window — the
-    defensible, fully-diversified, IS=OOS-consistent track — over the committed proxy-spliced cache."""
+    """Assemble the (equity-only) tearsheet report. Defaults to a 30-year (1996-present) window, the
+    defensible, fully-diversified, IS=OOS-consistent track, over the committed proxy-spliced cache."""
     books = []
     proxied: dict[str, str] = {}
     market = None
@@ -299,7 +299,7 @@ def build_tearsheet(settings: Settings, equities: Sequence[str] = EQUITY_UNIVERS
                 span_years = int(sp[1][:4]) - int(sp[0][:4])
     return {
         "header": {
-            "title": "Driftwood — Model Portfolio (Hypothetical)",
+            "title": "Driftwood, Model Portfolio (Hypothetical)",
             "generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
             "method": f"{span_years}-year multi-cycle backtest · params fit on first "
                       f"{int(train_frac*100)}% (in-sample), reported on the held-out remainder "

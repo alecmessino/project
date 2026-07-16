@@ -4,7 +4,7 @@ clears every configured threshold.
 The gate is deliberately conjunctive, exactly like mrbet's: a strong trend score
 alone never fires. The breakout must independently confirm the direction AND the
 expected edge must survive the round-trip transaction cost. That is the guard
-against chasing noise — a big move is necessary but not sufficient.
+against chasing noise, a big move is necessary but not sufficient.
 """
 
 from __future__ import annotations

@@ -1,19 +1,19 @@
-"""One canonical, dated portfolio state — every research page projects from this.
+"""One canonical, dated portfolio state, every research page projects from this.
 
 The Model Portfolio ledger (`docs/ledger.json`, append-only) is the single source of truth for the
 **Core Alpha** book. This module turns it into ONE object; the operational dashboard (`equities.html`)
 and the historical ledger page (`ledger.html`) are both thin projections of it, so their universe,
-date, holdings and weights agree **by construction** — no more three-universes / three-weights /
+date, holdings and weights agree **by construction**, no more three-universes / three-weights /
 "held 8 vs 9" contradictions.
 
 Three DISTINCT weight-like fields, never conflated (the old code reused the word "weight" for all three):
 
-  * ``portfolio_weight`` — the allocation the book actually holds (``entries[-1].weights``).
-  * ``signal_strength``  — the volatility-normalized trend z-score (the ranking); context, not allocation.
-  * ``target_weight``    — per-name single-name sizing; a research-only concept, NOT surfaced here.
+  * ``portfolio_weight``, the allocation the book actually holds (``entries[-1].weights``).
+  * ``signal_strength`` , the volatility-normalized trend z-score (the ranking); context, not allocation.
+  * ``target_weight``   , per-name single-name sizing; a research-only concept, NOT surfaced here.
 
 ``signal_strength`` is single-sourced from the ledger: preferring a persisted ``entry["signals"]`` when
-present, else reconstructed from the ledger's own per-session marking ``prices`` — so it is computed over
+present, else reconstructed from the ledger's own per-session marking ``prices``, so it is computed over
 exactly the book's universe and dates, with no independent data fetch.
 """
 
@@ -33,7 +33,7 @@ CANON_VERSION = 1
 # recompute), so a name can never read both "held" and "waiting".
 #   in book  + last-turn action  -> Buy(NEW) / Increase(ADD) / Reduce(TRIM) / Hold(untouched)
 #   not held + EXIT              -> Sell (it just left the book; shown in the rebalance panel)
-#   not held + —                 -> Waiting (a universe member below the cut)
+#   not held +,                 -> Waiting (a universe member below the cut)
 _IN_BOOK_STATUS = {"NEW": "Buy", "ADD": "Increase", "TRIM": "Reduce"}
 
 

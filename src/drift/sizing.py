@@ -1,13 +1,13 @@
 """Position sizing and the expected-edge / Kelly math.
 
-Pure, side-effect-free functions — the trading-domain analog of mrbet's
+Pure, side-effect-free functions, the trading-domain analog of mrbet's
 `probability.py`. Betting priced a binary over/under at fixed odds; a trend
 position has a *continuous* payoff, so the over/under-CDF machinery is replaced
 by two ideas:
 
-* **Volatility targeting** — scale the position so each holding contributes a
+* **Volatility targeting**, scale the position so each holding contributes a
   roughly constant volatility budget, the standard managed-futures sizing.
-* **Continuous Kelly** — the growth-optimal leverage for a continuous return is
+* **Continuous Kelly**, the growth-optimal leverage for a continuous return is
   ``f* = mu / sigma^2`` (mean over variance). We apply a fractional-Kelly scaler
   and a hard leverage cap, mirroring mrbet's fractional, bankroll-capped Kelly.
 
@@ -70,7 +70,7 @@ def expected_edge_per_bar(drift_per_bar: float, continuation: float) -> float:
     Momentum's predictive content is the assumption that a fraction of the recent
     drift *continues*: ``E[r_next] ~= continuation * drift_per_bar``. The
     `continuation` coefficient is the trend-following analog of mrbet's reversion
-    weight beta — and, like beta, it ships as an UNVALIDATED default that must be
+    weight beta, and, like beta, it ships as an UNVALIDATED default that must be
     fit against logged data before the expected-edge numbers mean anything.
     """
     return continuation * drift_per_bar

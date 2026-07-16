@@ -1,22 +1,22 @@
-"""The Atlas reasoning graph — composable knowledge primitives (PUBLISHING_SPEC §16–17).
+"""The Atlas reasoning graph, composable knowledge primitives (PUBLISHING_SPEC §16–17).
 
 Driftwood is three layers: FACTS (drift.state_facts) → REASONING (this module) → OUTPUTS (Atlas pages,
 comparisons, Crossing Briefs, the Opportunity Register, the Household Record, the Annual Review, future
 AI). Everything derives from the first two.
 
 The reasoning layer is a GRAPH, not a chain. Each Impact, Decision Signal, Coordination Priority, and
-Action is an ADDRESSABLE, STRUCTURED object — a node carrying typed reference edges to the other layers
+Action is an ADDRESSABLE, STRUCTURED object, a node carrying typed reference edges to the other layers
 (never prose). A node is a canonical, state-independent definition; a state's reasoning is that node
 INSTANTIATED against its environment, with a stable per-state id (e.g. "IL:signal:estate_exposure").
-Presented top-to-bottom on a page —
+Presented top-to-bottom on a page,
 
     environment → household impact → DECISION FRAMEWORK → coordination priorities → action register
 
-— but stored as a graph so any consumer can traverse it: a page renders the objects, the Household
+but it is stored as a graph so any consumer can traverse it: a page renders the objects, the Household
 Record references them by id, an AI walks the edges. No consumer re-authors the reasoning.
 
 Every node is organised from EXISTING approved Driftwood thinking (the environment dimensions, the Tax
-Diagnostic, the State Context, the Moving States ripple, the coordination philosophy) — clarity, not
+Diagnostic, the State Context, the Moving States ripple, the coordination philosophy), clarity, not
 new philosophy.
 """
 from __future__ import annotations
@@ -26,7 +26,7 @@ from dataclasses import dataclass, field
 from .state_facts import RATES, ESTATE
 from .leakage import STATE_ALPHA, coordination_opportunity_per_m, fmt_usd
 
-# The reasoning-chain order — the Decision Framework is the centrepiece (§16).
+# The reasoning-chain order, the Decision Framework is the centrepiece (§16).
 CHAIN = ("environment", "impact", "framework", "coordination", "actions")
 
 _FED_ESTATE_EXEMPTION = 13_990_000
@@ -64,64 +64,64 @@ class _Ctx:
         return out
 
 
-# ── Layer 3 · DECISION FRAMEWORK — signals (the centrepiece: how to evaluate the environment) ──────
+# ── Layer 3 · DECISION FRAMEWORK, signals (the centrepiece: how to evaluate the environment) ──────
 # Each signal is a structured node: it reads environment dimensions, evaluates to a level + reading,
 # and edges to the coordination priority it opens. `evaluate` returns (level, reading).
 def _s_rate_pressure(ctx: _Ctx):
     if ctx.lt <= 0:
-        return "none", "No state tax on gains — every realized gain keeps its full federal-only outcome."
+        return "none", "No state tax on gains, every realized gain keeps its full federal-only outcome."
     lvl = "low" if ctx.lt < 0.04 else "moderate" if ctx.lt < 0.07 else "high" if ctx.lt < 0.10 else "severe"
-    return lvl, f"The state takes {ctx.rate_display} of every long-term gain at the top — {lvl} drag on what a realized return keeps."
+    return lvl, f"The state takes {ctx.rate_display} of every long-term gain at the top, {lvl} drag on what a realized return keeps."
 
 
 def _s_estate_exposure(ctx: _Ctx):
     e = ctx.estate
     if not e:
-        return "none", "No state estate or inheritance tax — only the federal estate tax reaches the estate."
+        return "none", "No state estate or inheritance tax, only the federal estate tax reaches the estate."
     if e["regime"] == "inheritance":
-        return "moderate", ("An inheritance tax applies by the heir's relationship, not the estate's size — "
+        return "moderate", ("An inheritance tax applies by the heir's relationship, not the estate's size, "
                             "exposure turns on who inherits, and close heirs are usually exempt.")
     exm = e.get("exemption_usd") or 0
     steep = bool(e.get("cliff")) or exm <= 4_000_000
     lvl = "severe" if steep else "high" if exm < _FED_ESTATE_EXEMPTION else "moderate"
     cliff = " a cliff then taxes the whole estate, not just the excess;" if e.get("cliff") else ""
-    return lvl, (f"A state estate tax exempts only {e['exemption_display']} — far below the federal "
-                 f"~$14M;{cliff} {lvl} exposure at death that federal-only planning misses.")
+    return lvl, (f"A state estate tax exempts only {e['exemption_display']}, far below the federal "
+                 f"~$15M;{cliff} {lvl} exposure at death that federal-only planning misses.")
 
 
 def _s_harvest_leverage(ctx: _Ctx):
     if ctx.lt <= 0:
         if "losses still deduct" in (ctx.env.get("cg") or {}).get("note", ""):
-            return "moderate", ("Gains are exempt here, yet a capital loss still deducts against income — "
+            return "moderate", ("Gains are exempt here, yet a capital loss still deducts against income, "
                                 "a rare one-sided value that keeps harvesting worthwhile.")
-        return "low", "With no state tax on gains, a harvested loss recovers only its federal value — the state adds no rate for it to offset."
+        return "low", "With no state tax on gains, a harvested loss recovers only its federal value, the state adds no rate for it to offset."
     loss_regime = (ctx.env.get("loss") or {}).get("regime")
     if loss_regime in ("nonconforming", "none"):
         return "moderate", ("The rate rewards harvesting, but non-conforming loss rules can strand a banked "
-                            "loss before it reaches the state bill — the timing has to be coordinated.")
+                            "loss before it reaches the state bill, the timing has to be coordinated.")
     lvl = "high" if ctx.lt >= 0.06 else "moderate"
-    return lvl, f"A harvested loss is worth the {ctx.rate_display} state rate it offsets, on top of federal — {lvl} harvesting leverage."
+    return lvl, f"A harvested loss is worth the {ctx.rate_display} state rate it offsets, on top of federal, {lvl} harvesting leverage."
 
 
 def _s_mobility_value(ctx: _Ctx):
     if ctx.lt <= 0 and not ctx.estate:
-        return "none", "Already a no-income-tax, no-estate-tax state — the destination other households move toward, not from."
+        return "none", "Already a no-income-tax, no-estate-tax state, the destination other households move toward, not from."
     if ctx.lt >= 0.09 or (ctx.estate and (ctx.estate.get("cliff") or (ctx.estate.get("exemption_usd") or 0) < _FED_ESTATE_EXEMPTION)):
-        return "high", "Both the rate and the estate regime make relocation genuinely valuable — but domicile is a fact pattern, not a mailing address."
+        return "high", "Both the rate and the estate regime make relocation genuinely valuable, but domicile is a fact pattern, not a mailing address."
     if ctx.lt >= 0.05:
         return "moderate", "The rate makes a change of residency worth modelling against the life and family cost of moving."
-    return "low", "The rate is modest — residency is unlikely to be the lever that moves the household's outcome."
+    return "low", "The rate is modest, residency is unlikely to be the lever that moves the household's outcome."
 
 
 def _s_basis_coordination(ctx: _Ctx):
     su = (ctx.env.get("stepup") or {}).get("regime")
     if su == "community":
-        return "high", "Community-property state: community assets get a FULL step-up at the first death — title them so the survivor keeps that basis."
+        return "high", "Community-property state: community assets get a FULL step-up at the first death, title them so the survivor keeps that basis."
     if su == "optin":
-        return "moderate", "An elective community-property trust can unlock a full first-death step-up here — worth electing before it is needed."
+        return "moderate", "An elective community-property trust can unlock a full first-death step-up here, worth electing before it is needed."
     if su == "udcprda":
-        return "low", "Adopted the UDCPRDA — community-property basis treatment can be imported by trust for couples who plan for it."
-    return "low", "Common-law basis: only the decedent's half steps up at the first death — plan titling so the survivor is not left with low-basis lots."
+        return "low", "Adopted the UDCPRDA, community-property basis treatment can be imported by trust for couples who plan for it."
+    return "low", "Common-law basis: only the decedent's half steps up at the first death, plan titling so the survivor is not left with low-basis lots."
 
 
 FRAMEWORK_SIGNALS = [
@@ -137,21 +137,21 @@ FRAMEWORK_SIGNALS = [
      "question": "What basis-step-up opportunity does the marital-property regime create?", "evaluate": _s_basis_coordination},
 ]
 
-# ── Layer 4 · COORDINATION PRIORITIES — the operating-system domains each signal opens ─────────────
+# ── Layer 4 · COORDINATION PRIORITIES, the operating-system domains each signal opens ─────────────
 # Structured nodes with edges: `trigger` (which signal at what level activates it), `related_signals`,
-# `related_actions`, `affected_dimensions`, and a `priority` rank. Not advisor copy — the household's
+# `related_actions`, `affected_dimensions`, and a `priority` rank. Not advisor copy, the household's
 # coordination map. Renamed from "planning considerations" (§17).
 COORDINATION_PRIORITIES = [
     {"id": "residency_planning", "title": "Residency & domicile", "domain": "Residency", "coordinate_with": "advisor + CPA",
      "trigger": ("mobility_value", "moderate"), "affected_dimensions": ["cg", "estate"], "priority": 1,
      "related_signals": ["mobility_value"], "related_actions": ["confirm_domicile"],
-     "rationale": "Whether — and how — a change of domicile is worth pursuing, and the facts (days, home, ties) that make it real rather than nominal.",
-     "crossing_question": "Which domicile facts — days present, primary home, the ties that follow you — will substantiate the move if a former state examines it?"},
+     "rationale": "Whether, and how, a change of domicile is worth pursuing, and the facts (days, home, ties) that make it real rather than nominal.",
+     "crossing_question": "Which domicile facts, days present, primary home, the ties that follow you, will substantiate the move if a former state examines it?"},
     {"id": "estate_structure", "title": "Estate structure", "domain": "Estate", "coordinate_with": "estate attorney",
      "trigger": ("estate_exposure", "high"), "affected_dimensions": ["estate"], "priority": 1,
      "related_signals": ["estate_exposure"], "related_actions": ["review_estate_titling"],
      "rationale": "Whether the state's estate exposure warrants credit-shelter / QTIP titling or lifetime gifting to move value below the state threshold.",
-     "crossing_question": "Does the existing estate plan still assume the prior state's exemption and rate — and should any trust now be governed elsewhere?"},
+     "crossing_question": "Does the existing estate plan still assume the prior state's exemption and rate, and should any trust now be governed elsewhere?"},
     {"id": "basis_titling", "title": "Asset titling for step-up", "domain": "Estate", "coordinate_with": "estate attorney",
      "trigger": ("basis_coordination", "moderate"), "affected_dimensions": ["stepup"], "priority": 2,
      "related_signals": ["basis_coordination"], "related_actions": ["set_basis_titling"],
@@ -169,8 +169,8 @@ COORDINATION_PRIORITIES = [
      "crossing_question": "Does the investment policy statement still assume the prior tax environment when it places the high-turnover sleeve?"},
 ]
 
-# ── Layer 5 · ACTION REGISTER — sequenced next steps, each edged to a coordination priority ────────
-# `crossing_phase` sequences an action relative to a relocation (before · during · after the move) —
+# ── Layer 5 · ACTION REGISTER, sequenced next steps, each edged to a coordination priority ────────
+# `crossing_phase` sequences an action relative to a relocation (before · during · after the move),
 # structured timing the Crossing Brief reads; state pages and the Comparison ignore it.
 ACTIONS = [
     {"id": "confirm_domicile", "title": "Model domicile alternatives", "owner": "advisor", "priority_ref": "residency_planning",
@@ -190,20 +190,20 @@ ACTIONS = [
      "step": "Locate the high-turnover sleeve into tax-advantaged accounts and confirm the taxable book is the low-turnover core."},
 ]
 
-# Registries — every primitive is addressable by id (the canonical definition consumers reference).
+# Registries, every primitive is addressable by id (the canonical definition consumers reference).
 SIGNAL_BY_ID = {s["id"]: s for s in FRAMEWORK_SIGNALS}
 PRIORITY_BY_ID = {p["id"]: p for p in COORDINATION_PRIORITIES}
 ACTION_BY_ID = {a["id"]: a for a in ACTIONS}
 
 
 def build_impact(ctx: _Ctx) -> dict:
-    """Layer 2 — the Household Impact node: what the environment does to a household's after-tax
+    """Layer 2, the Household Impact node: what the environment does to a household's after-tax
     system, sourced from the Tax Diagnostic (STATE_ALPHA), edged to the dimensions it summarises."""
     a = STATE_ALPHA.get(ctx.code)
     reading = (
         (f"This environment leaks after-tax return on an uncoordinated book; coordinating how the portfolio is "
          f"built and run against it is the opportunity. On an illustrative 30-year path that is worth about "
-         f"~{fmt_usd(coordination_opportunity_per_m(a['alpha']))}/yr for every $1M of taxable assets here — "
+         f"~{fmt_usd(coordination_opportunity_per_m(a['alpha']))}/yr for every $1M of taxable assets here, "
          f"about +{a['alpha']:.1f}%/yr modeled ({a['before']:.1f}% → {a['after']:.1f}%/yr kept). The household's "
          f"own figure depends on bracket, holdings, and residency; the Tax Diagnostic computes it.") if a else
         "The household's after-tax figure depends on bracket, holdings, and residency; the Tax Diagnostic computes it.")
@@ -216,7 +216,7 @@ def build_impact(ctx: _Ctx) -> dict:
 
 
 def build_framework(ctx: _Ctx) -> list[dict]:
-    """Layer 3 — evaluate every Decision Framework signal, recording each level so downstream nodes can
+    """Layer 3, evaluate every Decision Framework signal, recording each level so downstream nodes can
     read it, and returning structured signal nodes with their edges + traversed citations."""
     out = []
     for sig in FRAMEWORK_SIGNALS:
@@ -230,7 +230,7 @@ def build_framework(ctx: _Ctx) -> list[dict]:
 
 
 def build_coordination(ctx: _Ctx) -> list[dict]:
-    """Layer 4 — the coordination priorities whose signal triggers fired, as structured nodes with
+    """Layer 4, the coordination priorities whose signal triggers fired, as structured nodes with
     their edges (related signals/actions, affected dimensions, priority rank)."""
     out = []
     for p in COORDINATION_PRIORITIES:
@@ -246,7 +246,7 @@ def build_coordination(ctx: _Ctx) -> list[dict]:
 
 
 def build_actions(ctx: _Ctx, active_priority_ids: set[str]) -> list[dict]:
-    """Layer 5 — the actions whose coordination priority fired, as structured nodes edged back to the
+    """Layer 5, the actions whose coordination priority fired, as structured nodes edged back to the
     priority and the signals that drove them, in registry order."""
     return [{"node_id": ctx.node_id("action", a["id"]), "id": a["id"], "kind": "action", "title": a["title"],
              "owner": a["owner"], "references": a["priority_ref"], "related_signals": a["related_signals"],
@@ -255,7 +255,7 @@ def build_actions(ctx: _Ctx, active_priority_ids: set[str]) -> list[dict]:
 
 
 def build_reasoning(code: str, environment: dict) -> dict:
-    """Instantiate the reasoning graph for one state from its `environment` record — structured nodes
+    """Instantiate the reasoning graph for one state from its `environment` record, structured nodes
     with typed edges, every entry addressable by id. Consumed by atlas.build_state_edition; the same
     graph renders on pages, comparisons, briefs, and registers, and can be traversed by an AI."""
     lt = RATES.get(code, (0.0, 0.0))[0]

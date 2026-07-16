@@ -15,7 +15,7 @@ PAGES = SP.build_state_pages()
 
 # The disclosure strings the Marketing Rule guards (mirrors tests/test_drift_disclosures.py).
 _REQUIRED_DISCLOSURE = [
-    "registered investment adviser", "adviserinfo.sec.gov", "Form ADV", "Form CRS",
+    "not currently a registered investment adviser",
     "Intended for sophisticated investors", "may not be relevant to your situation",
     "no client capital was invested", "retroactive application", "does not guarantee future results",
 ]
@@ -85,8 +85,8 @@ def test_states_index_links_every_editioned_page_and_discloses():
     idx = SP.render_states_index(PAGES)
     for code in SP.STATE_PAGE_CODES:
         assert f'href="{SP.atlas_url(code)}"' in idx, f"index missing {code}"
-    for s in ("registered investment adviser", "adviserinfo.sec.gov"):
-        assert s in idx
+    assert "not currently a registered investment adviser" in idx
+    assert "adviserinfo.sec.gov" not in idx
 
 
 def test_flat_slugs_are_permanent_redirects_to_the_editioned_canonical():

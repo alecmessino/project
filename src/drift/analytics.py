@@ -70,7 +70,7 @@ def cagr(equity: Sequence[float], bars_per_year: float) -> float:
 
 
 def calmar(cagr_: float, max_dd: float) -> float:
-    """CAGR per unit of max drawdown — pain-adjusted return."""
+    """CAGR per unit of max drawdown, pain-adjusted return."""
     return (cagr_ / max_dd) if max_dd > 0 else 0.0
 
 

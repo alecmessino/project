@@ -1,4 +1,4 @@
-"""The thesis page state — equities-first narrative with live headline numbers.
+"""The thesis page state, equities-first narrative with live headline numbers.
 
 Reads the already-generated tearsheet (for the Equities & ETFs and Crypto books)
 and the forward ledger, so the figures quoted on the page stay current as the

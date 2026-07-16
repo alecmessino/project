@@ -1,18 +1,18 @@
 """Model-portfolio ledger: an append-only HYPOTHETICAL backtest of the strategy.
 
-This is the retroactive application of a quantitative model to historical data — a
+This is the retroactive application of a quantitative model to historical data, a
 hypothetical Model Portfolio, NOT actual trading and NOT any client account. Each
 session it (a) marks the positions held from the prior session against the prices that
 printed, (b) advances a cumulative equity, and (c) records the next target positions.
-It only ever appends — history is never recomputed.
+It only ever appends, history is never recomputed.
 
 The live book is the **Unconstrained Core Alpha Strategy**: the long-only, fully-invested cross-sectional
-momentum rotation — the trending top half of the region/size/style ETF matrix,
+momentum rotation, the trending top half of the region/size/style ETF matrix,
 inverse-volatility weighted, with NO discretionary factor tilt (a 40-year test of an
-EM/value/small overweight showed it added risk, not risk-adjusted return) — marked daily.
+EM/value/small overweight showed it added risk, not risk-adjusted return), marked daily.
 No cash and no leverage: always ~100% invested. Its high turnover suits tax-advantaged
 accounts; a separate, offline-validated **Tax-Managed Core Strategy**
-(12-month drift, asymmetric rank hysteresis, and tax-lot aging — config/slow.yaml) is the
+(12-month drift, asymmetric rank hysteresis, and tax-lot aging, config/slow.yaml) is the
 taxable-located companion and is **not** part of this live track. Weekends/holidays fall
 out naturally: an instrument is marked from its last close on-or-before the prior ledger
 date to its latest close, so a Friday→Monday move lands on the next run.
@@ -74,7 +74,7 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
     prev_bench: dict[str, float] = (prev.get("bench_equity") if prev else None) or {}
 
     # 1) Realize the previously-held cross-sectional book (weights sum to exposure,
-    #    so the portfolio return is the weighted sum — not an average).
+    #    so the portfolio return is the weighted sum, not an average).
     realized = 0.0
     if prev:
         for i in insts:
@@ -84,7 +84,7 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
                 realized += prev_w.get(i, 0.0) * (p_now / p_prev - 1.0)
 
     # 2) New target = the long-only, fully-invested cross-sectional momentum rotation
-    #    (unbiased — tilt multipliers ship neutral), re-ranked on the rebalance cadence
+    #    (unbiased, tilt multipliers ship neutral), re-ranked on the rebalance cadence
     #    (held between rebalances so turnover stays low). The per-name trend z + vol are computed
     #    EVERY session (not just on rebalances) so they can be persisted as the book's signal strength.
     cs = settings.cross_section
@@ -104,7 +104,7 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
         raw = rank_weights(scores, vols, cs, _groups_for(cs), _combined_tilt(closes_now, cs), held)
         raw = _tax_aware_weights(raw, prev_w, cs)   # no-trade band (taxable sleeve); no-op when off
         new_w = {i: round(raw.get(i, 0.0), 4) for i in insts}
-    # Signal strength (trend z) + annualized vol per name — persisted so the dashboard projects them
+    # Signal strength (trend z) + annualized vol per name, persisted so the dashboard projects them
     # over the book's exact universe/date with no independent fetch (single source of truth).
     signals = {i: {"z": round(scores[i], 4), "vol": round(vols[i], 4)} for i in insts}
 
@@ -130,9 +130,9 @@ def update_ledger(ledger: dict, series: dict[str, list[Bar]], settings: Settings
     entries.append({
         "date": latest[:10],
         "weights": new_w,
-        # Per-name close used to mark this session — the lot basis for after-tax modeling.
+        # Per-name close used to mark this session, the lot basis for after-tax modeling.
         "prices": {i: round(series[i][-1].close, 6) for i in insts},
-        # Per-name signal strength (trend z) + annualized vol — the dashboard's Signal-strength column.
+        # Per-name signal strength (trend z) + annualized vol, the dashboard's Signal-strength column.
         "signals": signals,
         "realized_return": round(net, 6),
         "equity": equity,
@@ -154,7 +154,7 @@ def seed_ledger(series: dict[str, list[Bar]], settings: Settings, sessions: int 
     """Bootstrap a ledger by replaying the last `sessions` trading days walk-forward.
 
     This is a faithful out-of-sample replay (each step sees only data up to that
-    date — no lookahead), so the inception curve is meaningful rather than empty.
+    date, no lookahead), so the inception curve is meaningful rather than empty.
     Live runs append the newest day on top via `update_ledger`.
     """
     ledger = new_ledger()
@@ -168,7 +168,7 @@ def seed_ledger(series: dict[str, list[Bar]], settings: Settings, sessions: int 
 
 
 _REGION_NAME = {"US": "United States", "DEV": "Developed intl", "EM": "Emerging mkts"}
-# Benchmarks recede to neutral grey (VT primary, VTI lighter) — the strategy is the only saturated
+# Benchmarks recede to neutral grey (VT primary, VTI lighter), the strategy is the only saturated
 # line on any chart. The web charts also enforce this at render, so this is the data-model default.
 _BENCH_COLORS = {"VT": "#b8bcc2", "VTI": "#cdd0d6"}
 _BENCH_DIV_YIELD = 0.018   # ~qualified-dividend yield of a broad market index (for after-tax)
@@ -250,7 +250,7 @@ def _bench_exposure(label: str) -> dict:
 
 def _benchmarks_state(entries: list[dict], eq: list[float], idx: list[int],
                       bars_per_year: float, tax: Optional[TaxSettings] = None) -> list[dict]:
-    """Per-benchmark equity curve, total/excess return, and risk stats — plus an
+    """Per-benchmark equity curve, total/excess return, and risk stats, plus an
     after-tax total return (dividend drag only, buy-and-hold) when a tax profile is given."""
     labels = list((entries[-1].get("bench_equity") or {}).keys())
     out = []
@@ -276,7 +276,7 @@ def _benchmarks_state(entries: list[dict], eq: list[float], idx: list[int],
 
 def _attribution(rets: list[float], brets: list[float], bpy: float) -> Optional[dict]:
     """Decompose the model's return vs a passive benchmark (rf=0 OLS): market beta, annualized
-    alpha (the part NOT explained by beta — the strategy's selection/structure edge), R², and the
+    alpha (the part NOT explained by beta, the strategy's selection/structure edge), R², and the
     information ratio of the active return. Aligns the two series on their last min(len) points."""
     n = min(len(rets), len(brets))
     if n < 8:
@@ -335,7 +335,7 @@ def _after_tax(entries: list[dict], tax: TaxSettings, bars_per_year: float):
     basis. Each rebalance realizes a share of the book's accumulated gain proportional
     to its sell-side turnover and pays tax on it from the portfolio (long-term rate if
     the turnover-implied average holding period clears `lt_holding_bars`, else short).
-    Conservative — gains are taxed; it does not assume speculative loss-harvest credits
+    Conservative, gains are taxed; it does not assume speculative loss-harvest credits
     (the TLH substitute map quantifies that upside separately). Distributions/dividends
     are inside the total-return marks and not taxed separately here.
     """

@@ -76,15 +76,15 @@ def test_cross_pages_drop_the_live_track_framing():
         assert "live forward ledger" not in t, f"{tmpl.name} still says 'live forward ledger'"
 
 
-# Every client-facing surface must identify the registered adviser and surface where Form ADV /
-# Form CRS can be retrieved — a prospect should never reach the funnel without that (P0-1 / F3).
-def test_every_exhibit_carries_the_ria_identity_and_form_links():
+# Driftwood is NOT a registered investment adviser. Every client-facing surface must carry the corrected
+# registration disclosure, and the old registration claim (ADV/CRS/adviserinfo links) must never reappear.
+def test_every_exhibit_carries_the_registration_disclosure():
     for tmpl in (LEDGER_TEMPLATE, TEARSHEET_TEMPLATE, HUB_TEMPLATE, THESIS_TEMPLATE,
                  TEMPLATE, TAXLAB_TEMPLATE, LEAKAGE_TEMPLATE):
         t = _read(tmpl)
-        assert "registered investment adviser" in t, f"{tmpl.name}: no RIA identity disclosure"
-        assert "adviserinfo.sec.gov" in t, f"{tmpl.name}: no public adviser-lookup link"
-        assert "Form ADV" in t and "Form CRS" in t, f"{tmpl.name}: Form ADV/CRS not referenced"
+        assert "not currently a registered investment adviser" in t, f"{tmpl.name}: missing the corrected registration disclosure"
+        assert "adviserinfo.sec.gov" not in t, f"{tmpl.name}: stale adviserinfo link (the entity is not registered)"
+        assert "Form ADV" not in t and "Form CRS" not in t, f"{tmpl.name}: stale Form ADV/CRS reference"
 
 
 def test_no_cws_planning_brand_anywhere():

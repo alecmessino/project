@@ -1,11 +1,11 @@
-"""The Crossing Brief — an operating document, computed as a directional query over the graph.
+"""The Crossing Brief, an operating document, computed as a directional query over the graph.
 
 Where the Comparison is analytical ("how do two environments differ?"), the Crossing Brief is
 OPERATIONAL: "what must this household change because it is moving?" It is the memo an institution
-hands a decision-maker before a transition — its purpose is to COORDINATE, not to educate.
+hands a decision-maker before a transition, its purpose is to COORDINATE, not to educate.
 
 It is DIRECTIONAL (origin → destination is a different brief than destination → origin) and, like
-every product here, a thin query over the reasoning graph — it authors no facts and no reasoning.
+every product here, a thin query over the reasoning graph, it authors no facts and no reasoning.
 It reads the two `atlas.build_state_edition` records and re-frames their diff as a transition:
 
     thesis                 one-sentence executive summary
@@ -15,7 +15,7 @@ It reads the two `atlas.build_state_edition` records and re-frames their diff as
     decisions              which standing decisions the move makes stale (the changed signals)
     opportunities          which reviews the move opens
     actions                the action register, sequenced before · during · after the move
-    questions              Questions Worth Asking — to open the client conversation, not close it
+    questions              Questions Worth Asking, to open the client conversation, not close it
 
 Every field projects from the graph (drift.reasoning primitives, now carrying `crossing_phase` and
 `crossing_question`); the only crossing-specific text is the mechanics of relocating itself.
@@ -32,7 +32,7 @@ from .statepage import state_slug
 
 
 def crossing_slug(o: str, d: str) -> str:
-    """Directional slug: ('IL','FL') -> 'illinois-to-florida'. Order matters — a move has a direction."""
+    """Directional slug: ('IL','FL') -> 'illinois-to-florida'. Order matters, a move has a direction."""
     return f"{state_slug(o)}-to-{state_slug(d)}"
 
 
@@ -48,7 +48,7 @@ def crossing_index_url(edition: str = CURRENT_EDITION) -> str:
     return f"{BASE_URL}/atlas/{edition}/crossing/"
 
 
-# The relocation corridors households actually make — directional, high-tax → magnet. Each gets a
+# The relocation corridors households actually make, directional, high-tax → magnet. Each gets a
 # canonical static brief + a sitemap entry; the instrument itself briefs ANY origin → destination.
 FEATURED_CROSSINGS: list[tuple[str, str]] = [
     ("IL", "FL"), ("NY", "FL"), ("CA", "TX"), ("CA", "NV"), ("NJ", "FL"), ("CA", "FL"),
@@ -78,17 +78,17 @@ _CHANGE_PHRASE = {
     ("mobility_value", "up"): "raises the standing value of where the household is domiciled",
 }
 
-# The one during-the-move step — the mechanics of relocating, anchored to the residency priority.
+# The one during-the-move step, the mechanics of relocating, anchored to the residency priority.
 _DURING_ESTABLISH = {
     "id": "establish_domicile", "title": "Establish the new domicile", "owner": "household",
     "references": "residency_planning", "crossing_phase": "during",
-    "step": "Take up residence at the destination and begin severing origin-state ties — days present, "
-            "the primary home, registrations, and affiliations — so the change of domicile is a fact "
+    "step": "Take up residence at the destination and begin severing origin-state ties, days present, "
+            "the primary home, registrations, and affiliations, so the change of domicile is a fact "
             "pattern, not a mailing address.",
 }
 # Move-universal questions every crossing raises, appended after the graph-derived ones.
 _UNIVERSAL_QUESTIONS = [
-    "Which advisors — CPA, estate attorney, custodian — need updated instructions reflecting the new domicile?",
+    "Which advisors, CPA, estate attorney, custodian, need updated instructions reflecting the new domicile?",
     "Should the timing of charitable gifts or large realizations shift across the move?",
 ]
 
@@ -98,7 +98,7 @@ def _dep_labels(dims: list[str]) -> str:
 
 
 def _dominant_change(changed: list[dict]) -> dict | None:
-    """The signal whose level moved most — the headline of the move. Mobility is excluded: it is a
+    """The signal whose level moved most, the headline of the move. Mobility is excluded: it is a
     meta-signal about moving itself, circular in a document that already assumes the move."""
     pool = [c for c in changed if c["id"] != "mobility_value"] or changed
     return max(pool, key=lambda c: abs(c["b_score"] - c["a_score"]), default=None)
@@ -107,7 +107,7 @@ def _dominant_change(changed: list[dict]) -> dict | None:
 def _thesis(o_name: str, d_name: str, changed: list[dict], opened: list[dict]) -> str:
     if not changed:
         return (f"Relocating from {o_name} to {d_name} changes little in the household's tax operating "
-                f"environment — the coordination priorities carry over largely unchanged.")
+                f"environment, the coordination priorities carry over largely unchanged.")
     dom = _dominant_change(changed)
     direction = "down" if dom["b_score"] < dom["a_score"] else "up"
     phrase = _CHANGE_PHRASE.get((dom["id"], direction), "changes the household's tax operating environment")
@@ -125,7 +125,7 @@ def _join(items: list[str]) -> str:
 
 def build_crossing(origin: str, destination: str, edition: str = CURRENT_EDITION) -> dict:
     """The Crossing Brief query: a directional, operational re-framing of the graph diff between the
-    origin and destination environments. Authors nothing — every section is projected from the two
+    origin and destination environments. Authors nothing, every section is projected from the two
     `atlas.build_state_edition` records and the reasoning primitives."""
     ro = atlas.build_state_edition(origin, edition)
     rd = atlas.build_state_edition(destination, edition)
@@ -156,7 +156,7 @@ def build_crossing(origin: str, destination: str, edition: str = CURRENT_EDITION
     coordination = ([_row(p, True) for p in opened] + [_row(p, False) for p in continuing])
     coordination.sort(key=lambda r: (not r["new"], SIGNAL_ORDER.get(r["id"], 9)))
 
-    # Standing decisions the move makes stale — the signals that changed reading (the decision category
+    # Standing decisions the move makes stale, the signals that changed reading (the decision category
     # is the priority each opens).
     decisions = []
     for s in changed:
@@ -169,13 +169,13 @@ def build_crossing(origin: str, destination: str, edition: str = CURRENT_EDITION
     # Opportunities the move opens (each newly-relevant priority) and simplifications it removes.
     opportunities = [{"opens": p["title"] + " review", "reason": f"the {p['domain'].lower()} environment changed on the move",
                       "kind": "opens", "domain": p["domain"]} for p in opened]
-    opportunities += [{"opens": p["title"], "reason": "no longer triggered at the destination — one fewer thing to coordinate",
+    opportunities += [{"opens": p["title"], "reason": "no longer triggered at the destination, one fewer thing to coordinate",
                        "kind": "closes", "domain": p["domain"]} for p in closed]
 
-    # Action register, sequenced before · during · after — the graph's actions, phased.
-    #  · before : the move-planning actions (from origin OR destination — you model the move from where
+    # Action register, sequenced before · during · after, the graph's actions, phased.
+    #  · before : the move-planning actions (from origin OR destination, you model the move from where
     #             domicile mattered), e.g. modelling domicile alternatives.
-    #  · during : the mechanics of relocating — one step, anchored to the residency priority, present
+    #  · during : the mechanics of relocating, one step, anchored to the residency priority, present
     #             whenever the move crosses a domicile boundary that mattered on either side.
     #  · after  : setting up what the DESTINATION now makes relevant. The unwinding of what the origin
     #             required is told by "decisions to reconsider", not duplicated here.
@@ -192,7 +192,7 @@ def build_crossing(origin: str, destination: str, edition: str = CURRENT_EDITION
     during = [{k: _DURING_ESTABLISH[k] for k in ("title", "owner", "step", "references")}] if residency_relevant else []
     phases = {"before": before, "during": during, "after": after}
 
-    # Questions Worth Asking — the graph's per-priority questions (opened first), then the universals.
+    # Questions Worth Asking, the graph's per-priority questions (opened first), then the universals.
     seen, questions = set(), []
     for p in opened + continuing:
         q = p.get("crossing_question")

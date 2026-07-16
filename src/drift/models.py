@@ -37,7 +37,7 @@ class Side(str, Enum):
 class Bar:
     """One OHLC(V) observation for an instrument at a point in time.
 
-    `asof` is an opaque ordering key (ISO date string, epoch, or bar index) — the
+    `asof` is an opaque ordering key (ISO date string, epoch, or bar index), the
     engine never parses it, it only preserves order. `high`/`low` default to
     `close` so a close-only series still works for the momentum signal (the
     Donchian breakout simply degenerates to the close path).
@@ -64,7 +64,7 @@ class Evaluation:
     random-walk null); `breakout` is the Donchian confirmation in {-1, 0, +1};
     `target_weight` is the signed, vol-targeted, fractional-Kelly-capped portfolio
     weight the model would hold. `edge_after_cost` is the expected return over the
-    assumed holding horizon net of round-trip cost — the EV analog.
+    assumed holding horizon net of round-trip cost, the EV analog.
     """
 
     instrument: str
@@ -83,7 +83,7 @@ class Evaluation:
 
 @dataclass
 class Signal:
-    """An Evaluation that cleared every trigger threshold — worth alerting on."""
+    """An Evaluation that cleared every trigger threshold, worth alerting on."""
 
     evaluation: Evaluation
     strong: bool

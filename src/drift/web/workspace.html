@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Advisor Workspace — Driftwood Wealth</title>
+<title>Advisor Workspace, Driftwood Wealth</title>
 <meta name="robots" content="noindex, nofollow" />
-<meta name="description" content="Driftwood Advisor Workspace — internal after-tax planning tooling (estate, Roth, asset-location, proposal and CPA-brief generation). Not a public page." />
+<meta name="description" content="Driftwood Advisor Workspace, internal after-tax planning tooling (estate, Roth, asset-location, proposal and CPA-brief generation). Not a public page." />
 <link rel="canonical" href="https://driftwoodwealth.com/workspace.html" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Driftwood Advisor Workspace" />
-<meta property="og:description" content="After-tax return, tax-loss-harvesting value, and the asset-location benefit — Structural Alpha from mechanical tax management, personalized by federal bracket and state. Research only, not tax advice." />
+<meta property="og:description" content="After-tax return, tax-loss-harvesting value, and the asset-location benefit, Structural Alpha from mechanical tax management, personalized by federal bracket and state. Research only, not tax advice." />
 <meta property="og:url" content="https://driftwoodwealth.com/workspace.html" />
 <meta property="og:site_name" content="Driftwood Wealth" />
 <meta property="og:image" content="https://driftwoodwealth.com/og/taxlab.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Driftwood Advisor Workspace" />
-<meta name="twitter:description" content="After-tax return, tax-loss-harvesting value, and the asset-location benefit — Structural Alpha from mechanical tax management, personalized by federal bracket and state. Research only, not tax advice." />
+<meta name="twitter:description" content="After-tax return, tax-loss-harvesting value, and the asset-location benefit, Structural Alpha from mechanical tax management, personalized by federal bracket and state. Research only, not tax advice." />
 <meta name="twitter:image" content="https://driftwoodwealth.com/og/taxlab.png" />
 <link rel="icon" href="favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
@@ -23,7 +23,7 @@
 <link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
 <meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
-<!-- Privacy-first analytics (Plausible) — pageviews + the custom funnel events fired via track(). -->
+<!-- Privacy-first analytics (Plausible), pageviews + the custom funnel events fired via track(). -->
 <script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
 <script>
   window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
@@ -45,7 +45,7 @@
     /* Retired brass/gold names alias to editorial blue so legacy selectors inherit the rebrand. */
     --brass:#2c5878; --gold:#a9c2d6;
   }
-  /* The plate frame: a bound plate — 1px edge, near-square corners, an inset double rule, a flat desk
+  /* The plate frame: a bound plate, 1px edge, near-square corners, an inset double rule, a flat desk
      shadow. Replaces the traffic-light browser chrome, matching the front door. */
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;margin-top:6px;}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
@@ -55,7 +55,7 @@
   .inner{margin:0 7px 7px}
   /* Nav (the Nameplate + running-index links) is defined once in driftwood.css so every page
      matches; --accent-strike in this page's :root drives the active-link rule. */
-  /* Crisp, printerly register — square the primary card/panel/control surfaces in this frame to match
+  /* Crisp, printerly register, square the primary card/panel/control surfaces in this frame to match
      the plate frame (which stays at 3px); pills and toggles keep their shape. */
   .cards,.struct-alpha,.opt-card,.disc,.opt-result,.ctl select{border-radius:var(--surface-radius)}
   .fbody{padding:34px 38px 30px}
@@ -64,8 +64,8 @@
   .hyp-pill{font-size:11px;color:var(--muted);border:1px solid var(--line);background:var(--soft);padding:5px 11px;
     border-radius:0;letter-spacing:.02em;white-space:nowrap}
   @media screen and (max-width:620px){ .fbody{padding:22px 16px 24px} }
-  /* Mobile state picker (F1): a tappable, tax-severity-coloured chip grid — the same heat-map
-     language as the desktop map — replaces the bare native select, so the high-intent mobile
+  /* Mobile state picker (F1): a tappable, tax-severity-coloured chip grid, the same heat-map
+     language as the desktop map, replaces the bare native select, so the high-intent mobile
      prospect gets the premium control, not a 50-row dropdown. One source of truth via selectState. */
   .leadstate{display:none;margin:0 auto var(--s4);max-width:520px}
   .leadstate .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px}
@@ -215,7 +215,7 @@
   .savings .amt{font-variant-numeric:tabular-nums;font-weight:680;white-space:nowrap}
   .savings .amt.save{font-size:20px;color:var(--pos);letter-spacing:-.3px}
   .savings .amt.fee{font-size:14px;color:var(--slate)}
-  .savings .sbar{height:8px;border-radius:var(--surface-radius);overflow:hidden}      /* bare bar — no empty grey track */
+  .savings .sbar{height:8px;border-radius:var(--surface-radius);overflow:hidden}      /* bare bar, no empty grey track */
   .savings .bfill{display:block;height:100%;border-radius:var(--surface-radius)}
   .savings .bfill.save{background:var(--pos)}
   .savings .bfill.fee{background:var(--neg)}
@@ -267,9 +267,9 @@
   .checklist button.on{color:var(--ink);text-decoration:underline;text-underline-offset:6px;
     text-decoration-thickness:2px;text-decoration-color:var(--teal)}
   .checklist button.on .ck{color:var(--teal)}
-  /* "N of 6 sections reviewed" — the checklist tracks which sections you've opened. */
+  /* "N of 6 sections reviewed", the checklist tracks which sections you've opened. */
   .secprog{font-family:var(--sans);font-size:11px;color:var(--muted);margin:2px 0 0;letter-spacing:.02em}
-  /* Guided review — the outcome leads: a live one-line summary + coordinated-vs-naive comparison. */
+  /* Guided review, the outcome leads: a live one-line summary + coordinated-vs-naive comparison. */
   .rev-lead{border:1px solid var(--line);border-top:2px solid var(--ink);background:#fff;padding:16px 18px 18px;margin:24px 0 6px}
   .rl-sum{font-family:var(--serif);font-size:16px;line-height:1.55;color:var(--body);margin:0 0 16px;max-width:76ch}
   .rl-sum b{color:var(--ink);font-weight:500}
@@ -283,7 +283,7 @@
   .rl-delta{font-family:var(--sans);font-size:12.5px;color:var(--body);margin-top:13px;padding-top:12px;border-top:1px solid var(--line2);line-height:1.55}
   .rl-delta b{color:var(--teal2);font-weight:700}
   @media(max-width:620px){ .rl-row{grid-template-columns:1fr;gap:3px} .rl-track{height:20px} .rl-val{text-align:left} }
-  /* Guided flow — a pager under the visible section that walks through the six in order. */
+  /* Guided flow, a pager under the visible section that walks through the six in order. */
   .rev-pager{display:flex;align-items:center;gap:12px;margin:30px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
   .rev-pager button{font:inherit;font-family:var(--sans);font-size:13px;font-weight:500;background:none;border:0;cursor:pointer;color:var(--dim);padding:6px 0}
   .rev-pager button:hover{color:var(--ink)}
@@ -308,7 +308,7 @@
   .bp .bh{font-size:13px;font-weight:700;color:var(--ink)}
   .bp p{margin:6px 0 0;font-size:11.8px;color:var(--slate);line-height:1.5}
   .bp b{color:var(--ink)}
-  /* The funnel is now an understated close at the end of Implementation — not a hero. */
+  /* The funnel is now an understated close at the end of Implementation, not a hero. */
   #leadgen{margin:34px auto 0;max-width:600px;text-align:center;border-top:1px solid var(--line);padding-top:26px}
   .lead-close{max-width:540px;margin:0 auto 4px}
   .lead-close h2{font-size:20px;margin:0 0 8px}
@@ -351,7 +351,7 @@
   /* C3: branded pre-call context, so the booking reads as advisory onboarding (not a bare scheduler) */
   .precall{margin:14px 0 4px} .precall .pc-h{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);font-weight:500}
   .precall ul{margin:7px 0 0;padding-left:18px;font-size:13px;color:var(--ink);line-height:1.5} .precall li{margin:3px 0}
-  /* F4: portfolio transition — current legacy vs proposed institutional model */
+  /* F4: portfolio transition, current legacy vs proposed institutional model */
   .trans-models{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
   .trans-models button{font:inherit;font-size:13px;font-weight:500;color:var(--ink);background:#fff;
     border:1px solid var(--line);border-radius:0;padding:7px 15px;cursor:pointer}
@@ -373,7 +373,7 @@
   .struct-alpha .big{font-size:26px;font-weight:680;color:var(--pos);letter-spacing:-.4px}
   .struct-alpha .lbl{font-size:13px;font-weight:500;color:var(--ink);margin-top:2px}
   .struct-alpha .brk{font-size:12px;color:var(--slate);margin-top:8px;line-height:1.6}
-  /* The seven structural decisions — the notebook's output, read as permanent categories */
+  /* The seven structural decisions, the notebook's output, read as permanent categories */
   .imp-thesis{font-family:var(--serif);font-weight:500;font-size:20px;line-height:1.4;color:var(--ink);margin:11px 0 2px;max-width:44ch}
   .imp-lede{font-size:14.5px;color:var(--dim);line-height:1.6;margin:4px 0 0;max-width:60ch}
   .decisions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 6px}
@@ -384,7 +384,7 @@
   .dcard .dfig{margin-left:auto;font-size:12.5px;font-weight:700;color:var(--teal);font-variant-numeric:tabular-nums}
   .dcard p{margin:0;font-size:12.8px;line-height:1.55;color:var(--slate)}
   .dcard a{color:var(--teal2);cursor:pointer}
-  /* F2: wealth-architecture decision tree — lives in the Holdings section */
+  /* F2: wealth-architecture decision tree, lives in the Holdings section */
   .dtree{margin:14px 0 2px}
   .dtree .root{display:inline-block;background:var(--ink);color:#fff;border-radius:var(--surface-radius);padding:9px 16px;font-weight:500;font-size:13px}
   .dtree .flow{font-size:11px;color:var(--dim);margin:8px 0 4px}
@@ -467,7 +467,7 @@
     details.fold[open]>summary{margin-bottom:var(--s2)} details.fold{break-inside:avoid}
     h2{margin-top:20px}
     h2,h3,.strat-h{break-after:avoid}                /* never strand a heading at the foot of a page */
-    /* Protect atomic cards (not whole sections — strategy/estate now exceed one page) so the
+    /* Protect atomic cards (not whole sections, strategy/estate now exceed one page) so the
        401(k) rollover cards, Roth optimizer, blueprint tiles and the estate-cliff visualizer
        each stay intact across the page break. */
     .geo,.cards,.wf,.optgrid,.frontgrid,.estgrid,.est-params,.opt-card,.est-cliff,
@@ -481,7 +481,7 @@
   <div class="frame">
     <div class="inner">
     <nav class="dwnav" aria-label="Driftwood Wealth">
-      <a class="brand" href="index.html" aria-label="Driftwood Wealth — home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-links">
         <span class="dwnav-group"><span class="dwnav-label">The Firm</span>
           <a href="about.html">Our Story</a>
@@ -524,7 +524,7 @@
     <button type="button" id="resetbtn" class="resetbtn" onclick="resetDefaults()">↺ Reset inputs to defaults</button>
   </header>
 
-  <!-- Guided review: lead with the outcome — a plain-English summary + coordinated-vs-naive comparison
+  <!-- Guided review: lead with the outcome, a plain-English summary + coordinated-vs-naive comparison
        that recompute live from the household controls below. Filled by reviewLead(). -->
   <div class="rev-lead" id="rev-lead" aria-live="polite"></div>
 
@@ -549,7 +549,7 @@
     <div class="map-wrap">
       <div class="smtabs" id="smtabs" role="tablist"></div>
       <h3 id="maphdr">Which state do you pay taxes in? <span class="hint">· click your state to localize the review</span></h3>
-      <svg id="usmap" viewBox="0 0 110 80" role="group" aria-label="US state tax map — select your state"></svg>
+      <svg id="usmap" viewBox="0 0 110 80" role="group" aria-label="US state tax map, select your state"></svg>
       <div class="legend" id="legend"></div>
     </div>
     <aside class="disc" id="disc">
@@ -564,7 +564,7 @@
     <div class="estgrid">
       <div class="opt-card entity">
         <div class="hb"><span class="toggle" id="hb2601" role="switch" tabindex="0" aria-checked="false" aria-label="Model proposed HB2601"><span class="knob"></span></span>
-          <span>Model proposed <b>HB2601</b> — double the IL exemption to $8M</span></div>
+          <span>Model proposed <b>HB2601</b>, double the IL exemption to $8M</span></div>
         <div class="slider"><div class="top"><label>Individual</label><output id="estindv"></output></div>
           <input type="range" id="estind" aria-label="Assets owned individually" /></div>
         <div class="slider"><div class="top"><label>Joint (spouses)</label><output id="estjointv"></output></div>
@@ -578,7 +578,7 @@
         <div class="slider"><div class="top"><label>Life insurance death benefit</label><output id="estliv"></output></div>
           <input type="range" id="estli" aria-label="Life insurance death benefit" />
           <label style="display:flex;gap:7px;align-items:center;font-size:12px;color:var(--dim);margin-top:7px">
-            <input type="checkbox" id="estliown" checked style="width:auto" /> Owned by the insured — counts in the taxable estate (§2042)</label></div>
+            <input type="checkbox" id="estliown" checked style="width:auto" /> Owned by the insured, counts in the taxable estate (§2042)</label></div>
         <div class="est-warn" id="esttrustwarn" style="display:none"></div>
       </div>
       <div class="opt-card" id="estresult"></div>
@@ -595,7 +595,7 @@
   <section id="implementation-intro" class="sec-implementation">
     <h2>Implementation <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· the structural decisions</span></h2>
     <p class="imp-thesis">Markets determine returns. Structure determines how much you keep.</p>
-    <p class="imp-lede">A review comes down to a handful of decisions — the same ones, for every household.
+    <p class="imp-lede">A review comes down to a handful of decisions, the same ones, for every household.
       Here is where each nets out for the profile above.</p>
     <div class="decisions" id="decisions"></div>
   </section>
@@ -631,7 +631,7 @@
   </section>
 
   <section id="optim" class="sec-portfolio">
-    <h2>Your Portfolio <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· taxable, Traditional, and Roth — and where each dollar belongs</span></h2>
+    <h2>Your Portfolio <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)">· taxable, Traditional, and Roth, and where each dollar belongs</span></h2>
     <div class="optgrid">
       <div class="opt-card">
         <div class="slider">
@@ -678,7 +678,7 @@
     <div class="lead-close">
       <h2>Run this on your actual portfolio</h2>
       <p>Everything above is illustrative. A short, private review of your real accounts turns these
-        decisions into your numbers — by bracket, state, and holdings.</p>
+        decisions into your numbers, by bracket, state, and holdings.</p>
     </div>
     <div class="lead-port">
       <div class="top"><label>Your portfolio</label><output id="leadportv"></output></div>
@@ -727,15 +727,15 @@
 
   <!-- Print-only proposal appendix: the selected model + Structural Alpha (filled by renderTransition). -->
   <div id="printproposal"></div>
-  <!-- Print-only formal disclosures — a generated proposal/brief is an advertisement (SEC Rule 204-2: retain copies). -->
+  <!-- Print-only formal disclosures, a generated proposal/brief is an advertisement (SEC Rule 204-2: retain copies). -->
   <div id="printdisc">
     <div class="es-h">Important disclosures</div>
-    <p><b>Driftwood Wealth is a registered investment adviser.</b> Form ADV and Form CRS are
-      available at adviserinfo.sec.gov. This proposal is for discussion only — it is not investment, tax, or legal advice,
-      and not an offer or solicitation, and it does not create an advisory relationship.</p>
-    <p><b>Estimated Structural Alpha is illustrative tax &amp; fee modeling</b> on the inputs shown — it is not a performance
+    <p><b>Driftwood Wealth is the private-wealth practice of Alec Messino.</b> It is not currently a registered investment adviser, and this site is not a
+      solicitation for advisory services. This proposal is for discussion
+      only, it is not investment, tax, or legal advice, and not an offer or solicitation, and it does not create an advisory relationship.</p>
+    <p><b>Estimated Structural Alpha is illustrative tax &amp; fee modeling</b> on the inputs shown, it is not a performance
       forecast and not a representation that any allocation or fund will out-perform. Hypothetical model results do not reflect
-      actual trading or any client account, and <b>past performance — hypothetical or actual — does not guarantee future
+      actual trading or any client account, and <b>past performance, hypothetical or actual, does not guarantee future
       results.</b> Tax and estate figures are illustrative, not a filing computation; coordinate with your CPA and estate attorney.</p>
   </div>
 
@@ -750,7 +750,7 @@
     </div><!-- .inner -->
   </div><!-- .frame -->
 </div>
-<div id="printfoot">Driftwood · a registered investment adviser · adviserinfo.sec.gov — Illustrative; not investment, tax, or legal advice</div>
+<div id="printfoot">Driftwood · a practice of Alec Messino · Illustrative; not investment, tax, or legal advice</div>
 <div class="fabwrap sec-implementation">
   <button class="fabx" type="button" aria-label="Hide the export buttons" title="Hide">×</button>
   <button id="genbrief" type="button" class="fab brief" title="Generate a CPA / attorney execution brief">
@@ -762,16 +762,16 @@
 <script>
 window.__STATE__ = /*__STATE__*/null/*__END__*/;
 // ===========================================================================================
-//  CONFIG — client-acquisition infrastructure (static-only; drop in endpoints, no code changes).
+//  CONFIG, client-acquisition infrastructure (static-only; drop in endpoints, no code changes).
 //  • Lead capture:  set formEndpoint to your Formspree URL (else the email form falls back to a
 //    mailto: to contactEmail). set calendlyUrl to embed your booking iframe on the success step.
 //  • Analytics:     set analytics.provider to "plausible" or "fathom" and add the matching script
 //    tag in <head> (commented hook below). track() then fires privacy-first funnel events
-//    (state_selected / lead_submitted / mode_view) with {state, portfolio} props — so you can see
+//    (state_selected / lead_submitted / mode_view) with {state, portfolio} props, so you can see
 //    which states and portfolio slices convert. No PII beyond what the prospect submits.
 // ===========================================================================================
 const CONFIG={
-  // Lead capture — pick ONE backend, no other code changes needed:
+  // Lead capture, pick ONE backend, no other code changes needed:
   //   Web3Forms (recommended, free/effectively-unlimited): formEndpoint="https://api.web3forms.com/submit",
   //     formAccessKey="<your public key>", formHoneypot="botcheck".
   //   Formspree:                                          formEndpoint="https://formspree.io/f/abcmyform",
@@ -781,12 +781,12 @@ const CONFIG={
   formAccessKey:"cf6b1c2d-9971-4256-9ff9-72d6918c84e6",  // Web3Forms public access key (safe in client code)
   formHoneypot:"botcheck",               // spam honeypot field name (Web3Forms uses "botcheck")
   contactEmail:"hello@driftwoodplanning.com",  // mailto fallback + error-recovery address
-  firmName:"Driftwood",               // operating firm — tags inbound lead emails (page brand stays "Driftwood")
+  firmName:"Driftwood",               // operating firm, tags inbound lead emails (page brand stays "Driftwood")
   calendlyUrl:"https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting",  // booking embed on success
   leadPortfolio:1000000,                 // default headline portfolio for the lead-gen hook (overridable via ?port=)
   analytics:{ provider:"plausible", domain:"driftwoodwealth.com" },  // Plausible script is loaded in <head>
-  formCrsUrl:"disclosures/form-crs.pdf",  // institutional disclosures — drop the real PDFs at these paths (or repoint to a hosted URL)
-  formAdvUrl:"disclosures/adv-part-2a.pdf",
+  formCrsUrl:"#",  // no disclosure links while unregistered (dead "#" links are hidden)
+  formAdvUrl:"#",
 };
 // Privacy-first analytics: no-op until a provider script is present. Routes to Plausible, Umami, or Fathom.
 function track(name, props){
@@ -811,8 +811,8 @@ const apct=(x,d=1)=>(x==null||!Number.isFinite(x))?"—":(x*100).toFixed(d)+"%";
 // a11y: mirror each slider's friendly <output> (id = sliderId+"v") into aria-valuetext, so a screen reader
 // announces "$2 Million" / "4.5%" instead of the raw number. Runs after the render handlers set the output.
 function syncValueText(){ document.querySelectorAll('input[type=range]').forEach(el=>{ const o=document.getElementById(el.id+"v"); if(o&&o.textContent) el.setAttribute("aria-valuetext", o.textContent); }); }
-// P1: type an EXACT figure into any slider's readout (click or keyboard) — and lift the slider's cap
-// when the typed value exceeds it — since a slider alone can't express a known number like $4.3M or a
+// P1: type an EXACT figure into any slider's readout (click or keyboard), and lift the slider's cap
+// when the typed value exceeds it, since a slider alone can't express a known number like $4.3M or a
 // $30M estate, and the $10M ceiling silently understated UHNW prospects.
 function parseAmt(s){
   s=String(s).trim().toLowerCase().replace(/[$,\s]/g,"");
@@ -829,7 +829,7 @@ function enableTypeIn(el){
   const out=document.getElementById(el.id+"v");
   if(!out) return;
   out.style.cursor="text"; out.tabIndex=0; out.setAttribute("role","button");
-  out.setAttribute("aria-label","Edit value — type an exact figure");
+  out.setAttribute("aria-label","Edit value, type an exact figure");
   function open(){
     if(out.querySelector("input")) return;
     let closed=false;
@@ -843,7 +843,7 @@ function enableTypeIn(el){
       if(closed) return; closed=true;                 // guard against the blur+keydown double fire
       const v = commit ? parseAmt(inp.value) : null;
       if(inp.parentNode===out) out.removeChild(inp);
-      out.textContent=prev;                           // restore a real label first — never leave it blank
+      out.textContent=prev;                           // restore a real label first, never leave it blank
       if(commit && v!=null){
         if(v > Number(el.max)) el.max=String(v);
         el.value=String(v < Number(el.min) ? el.min : v);
@@ -895,11 +895,11 @@ function fmt$big(x){
 }
 // Tier 1: plain-English tooltips on the summary cards.
 const TIPS={
- "Pre-tax return":"What the sleeve earned before any tax — the headline backtest/track number.",
+ "Pre-tax return":"What the sleeve earned before any tax, the headline backtest/track number.",
  "After-tax (this account)":"What a taxable investor keeps after capital-gains tax on realized gains.",
  "After-tax (tax-advantaged)":"In an IRA/Roth, gains aren't taxed as they're realized, so after-tax equals pre-tax.",
- "Tax drag":"Pre-tax return minus after-tax — the slice handed to taxes, before fees.",
- "After tax & fees":"After-tax return minus an all-in annual fee (advisory + fund expense ratio) over the track — the most honest take-home figure.",
+ "Tax drag":"Pre-tax return minus after-tax, the slice handed to taxes, before fees.",
+ "After tax & fees":"After-tax return minus an all-in annual fee (advisory + fund expense ratio) over the track, the most honest take-home figure.",
  "If liquidated today":"After-tax return if you sold everything now, paying tax on the embedded unrealized gain too.",
 };
 function term(label){
@@ -951,14 +951,14 @@ function bucketOf(slt,sst){
   return 1;
 }
 function advisory(code,slt,sst,bi){
-  if(code==="—") return "No state-level tax is modeled — federal and NIIT only. The cleanest jurisdiction for a taxable sleeve, and the baseline every other state is measured against.";
+  if(code==="—") return "No state-level tax is modeled, federal and NIIT only. The cleanest jurisdiction for a taxable sleeve, and the baseline every other state is measured against.";
   const nm=NAMES[code]||code;
-  if(code==="NYC") return `New York City residents stack a <b>~3.88% local income tax</b> on New York State's 10.9% — a combined <b>14.78%</b> top marginal rate on capital gains, the steepest in the nation. Asset location and tax-loss harvesting deliver their largest dollar value here; a high-turnover sleeve held in a taxable NYC account is the textbook case for moving into a shelter.`;
-  if(code==="WA") return `${nm} is a <b>zero-income-tax</b> state, but levies a <b>7% excise on realized long-term capital gains</b> above a ~$270k annual statutory threshold; short-term gains and dividends stay untaxed by the state. So high-velocity rebalancing escapes state tax, but <b>long-term liquidations</b> of an appreciated passive core do not — an unusual split that favors the high-turnover sleeve over a buy-and-hold one in taxable.`;
-  if(sst<=0) return `${nm} levies no income tax, so capital gains escape state tax entirely. A harvested loss here is worth only the federal rate — tax-loss harvesting delivers its <b>least</b> value in a no-tax state.`;
-  if(code==="MA") return `${nm} taxes <b>short-term</b> gains at 8.5%, far above its 5% long-term rate. Aging a lot past one year is unusually valuable here — exactly what the Tax-Managed Core Strategy does by construction.`;
-  if(slt<sst) return `${nm} taxes long-term gains <b>below</b> short-term (a partial long-term exclusion), so every lot that crosses the one-year line banks the spread — the Tax-Managed Core Strategy's structural edge.`;
-  if(bi>=4) return `${nm} taxes capital gains as ordinary income at up to <b>${apct(slt)}</b> — among the steepest in the nation. Asset location (hold the fast book tax-advantaged) and harvesting deliver their largest dollar value in high-rate states like this one.`;
+  if(code==="NYC") return `New York City residents stack a <b>~3.88% local income tax</b> on New York State's 10.9%, a combined <b>14.78%</b> top marginal rate on capital gains, the steepest in the nation. Asset location and tax-loss harvesting deliver their largest dollar value here; a high-turnover sleeve held in a taxable NYC account is the textbook case for moving into a shelter.`;
+  if(code==="WA") return `${nm} is a <b>zero-income-tax</b> state, but levies a <b>7% excise on realized long-term capital gains</b> above a ~$270k annual statutory threshold; short-term gains and dividends stay untaxed by the state. So high-velocity rebalancing escapes state tax, but <b>long-term liquidations</b> of an appreciated passive core do not, an unusual split that favors the high-turnover sleeve over a buy-and-hold one in taxable.`;
+  if(sst<=0) return `${nm} levies no income tax, so capital gains escape state tax entirely. A harvested loss here is worth only the federal rate, tax-loss harvesting delivers its <b>least</b> value in a no-tax state.`;
+  if(code==="MA") return `${nm} taxes <b>short-term</b> gains at 8.5%, far above its 5% long-term rate. Aging a lot past one year is unusually valuable here, exactly what the Tax-Managed Core Strategy does by construction.`;
+  if(slt<sst) return `${nm} taxes long-term gains <b>below</b> short-term (a partial long-term exclusion), so every lot that crosses the one-year line banks the spread, the Tax-Managed Core Strategy's structural edge.`;
+  if(bi>=4) return `${nm} taxes capital gains as ordinary income at up to <b>${apct(slt)}</b>, among the steepest in the nation. Asset location (hold the fast book tax-advantaged) and harvesting deliver their largest dollar value in high-rate states like this one.`;
   return `${nm} taxes capital gains at <b>${apct(slt)}</b> (as ordinary income). A harvested loss here is worth that rate on every dollar of gain it offsets, stacked on top of the federal rate.`;
 }
 function selectState(code){ $("state").value=code; paintLeadSel(code); render(); reviewLead(); flashDisc(); track("state_selected",{state:code,view:SEC});
@@ -972,7 +972,7 @@ function buildLeadStates(){
     const lbl=(code==="—")?"None":code;                           // NYC/DC keep their codes
     const nm=SLABEL[code]||NAMES[code]||code;
     return `<button type="button" data-st="${code}" style="background:${b.fill}" title="${nm} · ${b.lab}"`+
-      ` aria-label="${nm} — ${b.lab} tax severity">${lbl}</button>`;
+      ` aria-label="${nm}, ${b.lab} tax severity">${lbl}</button>`;
   }).join("");
   host.innerHTML=`<div class="grid">${chips}</div>`+
     `<div class="lgd">${BUCKETS.map(b=>`<span><i style="background:${b.fill}"></i>${b.lab}</span>`).join("")}</div>`;
@@ -1005,7 +1005,7 @@ function buildMap(){
     } else {
       const [slt,sst]=S.states[code], b=BUCKETS[bucketOf(slt,sst)]; fill=b.fill; lab=b.lab;
     }
-    parts+=`<rect class="st" role="button" tabindex="0" data-st="${code}" aria-label="${(NAMES[code]||code)} — ${lab}" x="${x}" y="${y}" width="9" height="9" rx="1.3" fill="${fill}" vector-effect="non-scaling-stroke"><title>${code} · ${lab}</title></rect>`+
+    parts+=`<rect class="st" role="button" tabindex="0" data-st="${code}" aria-label="${(NAMES[code]||code)}, ${lab}" x="${x}" y="${y}" width="9" height="9" rx="1.3" fill="${fill}" vector-effect="non-scaling-stroke"><title>${code} · ${lab}</title></rect>`+
       `<text class="lab" x="${x+4.5}" y="${y+4.6}" text-anchor="middle" aria-hidden="true">${code}</text>`;
   }
   $("usmap").innerHTML=parts;
@@ -1046,7 +1046,7 @@ function renderDimDisc(code){
   $("discbody").innerHTML=html;
 }
 function paintSel(code){
-  const tile = code==="NYC" ? "NY" : code;     // NYC has no tile of its own — light up NY
+  const tile = code==="NYC" ? "NY" : code;     // NYC has no tile of its own, light up NY
   $("usmap").querySelectorAll("rect.st").forEach(r=>r.classList.toggle("sel", r.dataset.st===tile));
 }
 function renderDisc(r){
@@ -1078,7 +1078,7 @@ function locAlpha3(taxable,traditional,roth,mdr,pdr,g,H){
   const fv=g>0?((Math.pow(1+g,H)-1)/g):H;
   return {annual,terminal:annual*fv,overlap,sleeve:a};
 }
-// --- Feature 4: portfolio transition — current legacy vs proposed institutional model ----------
+// --- Feature 4: portfolio transition, current legacy vs proposed institutional model ----------
 let TMODEL=0;
 function allocBar(mix){
   const eq=(mix.equity||0)*100, fi=(mix.fixed_income||0)*100, cash=(mix.cash||0)*100;
@@ -1096,11 +1096,11 @@ function renderTransition(){
   const legBps=+$("legfee").value||A.legacy_fee_bps; $("legfeev").textContent=legBps+" bps";
   // Proposed all-in = the firm's advisory fee + the model's low blended fund ER (vs the legacy all-in).
   const legRate=legBps/1e4, propRate=(+$("advfee").value||0)/1e4 + m.blended_er, feeSaved=Math.max(0,(legRate-propRate))*W;
-  // Tax / asset-location saving — same basis as the optimizer (location_alpha3).
+  // Tax / asset-location saving, same basis as the optimizer (location_alpha3).
   const c=calc(r), mdr=c.drag/yrs, pdr=A.passive_div_yield*r.r_lt;
   const taxSaved=locAlpha3(T,Tr,Ro,mdr,pdr,A.growth_rate,A.horizon_years).annual;
   const structural=feeSaved+taxSaved;
-  // M3: sensitivity band — flex the sleeve's drag (effective tax rate × turnover × gain rate) ±25%
+  // M3: sensitivity band, flex the sleeve's drag (effective tax rate × turnover × gain rate) ±25%
   // to bound the tax component; the fee component is contractual. A defensible interval, not a point.
   const DRAG_BAND=0.25;
   const taxLo=locAlpha3(T,Tr,Ro,mdr*(1-DRAG_BAND),pdr,A.growth_rate,A.horizon_years).annual;
@@ -1114,20 +1114,20 @@ function renderTransition(){
   $("structalpha").innerHTML=
     `<div class="big" title="Range ${fmt$(saLo)} – ${fmt$(saHi)}/yr across the assumption band">+${fmt$(structural)}/yr</div>
      <div class="lbl"><span class="term" tabindex="0">Estimated Structural Alpha (Tax + Fee Optimization)<span class="tip">Sensitivity range
-       <b>${fmt$(saLo)} – ${fmt$(saHi)}/yr</b>, flexing the effective tax rate, turnover, and market return ±. Illustrative — not a forecast.</span></span></div>
+       <b>${fmt$(saLo)} – ${fmt$(saHi)}/yr</b>, flexing the effective tax rate, turnover, and market return ±. Illustrative, not a forecast.</span></span></div>
      <div class="brk">Range <b>${fmt$(saLo)} – ${fmt$(saHi)}/yr</b> across the assumption band (effective tax rate · turnover · market return).
        Base ≈ ${fmt$(taxSaved)}/yr from asset-location placement + ${fmt$(feeSaved)}/yr from a lower all-in cost
        (legacy ${legBps} bps → ${(propRate*1e4).toFixed(0)} bps), on a ${fmt$big(W)} household.
-       <b>This is structural tax &amp; fee management — not a forecast that these funds out-perform.</b></div>`;
-  $("transnote").innerHTML=`<b>${m.note}</b> The Proposed Allocation is a Driftwood institutional model — a diversified,
+       <b>This is structural tax &amp; fee management, not a forecast that these funds out-perform.</b></div>`;
+  $("transnote").innerHTML=`<b>${m.note}</b> The Proposed Allocation is a Driftwood institutional model, a diversified,
     low-cost strategic allocation, <b>distinct from</b> the hypothetical Driftwood momentum backtest${m.structure?`, which enters only as the ${Math.round(m.structure.satellite*100)}% self-directed satellite sleeve`:""}.
     Estimated Structural Alpha is illustrative tax + fee modeling on the inputs shown; actual results depend on account structure,
     rates, and execution. Not investment, tax, or legal advice.`;
   // Feed the print-only proposal appendix so the generated PDF names the recommended structure.
   if($("printproposal")) $("printproposal").innerHTML=`<div class="es-h">Recommended structure</div>
-    <p><b>${m.name}</b> — ${m.tagline} Blended fund cost ${(m.blended_er*1e4).toFixed(0)} bps. Estimated Structural Alpha
+    <p><b>${m.name}</b>, ${m.tagline} Blended fund cost ${(m.blended_er*1e4).toFixed(0)} bps. Estimated Structural Alpha
       (Tax &amp; Fee savings): <b>+${fmt$(structural)}/yr</b> (range ${fmt$(saLo)} – ${fmt$(saHi)}/yr across the tax-rate /
-      turnover / market-return band) on a ${fmt$big(W)} household — illustrative tax + fee modeling, not a performance forecast.</p>`;
+      turnover / market-return band) on a ${fmt$big(W)} household, illustrative tax + fee modeling, not a performance forecast.</p>`;
 }
 // --- Feature 2: wealth-architecture decision tree (visualizes the existing placement + estate gate) ---
 function grossEstate(){
@@ -1152,8 +1152,8 @@ function renderDecisionTree(){
     ? `<div class="estate-node"><b>⚠ Gross estate ${fmt$big(ge)} exceeds the ${fmt$big(binding)} ${stExcl<fed?"state":"federal"} exclusion.</b>
         Structures your estate attorney may discuss: a <b>Credit Shelter / Bypass Trust</b> (preserves both spouses' exclusions) or a
         <b>SLAT</b> (moves appreciating assets out of the estate while a spouse retains access). The Roth-located sleeve already passes to
-        heirs tax-free; the taxable core gets a §1014 step-up at death. <b>Educational only — your attorney determines suitability and drafts the documents.</b></div>`
-    : `<div class="estate-node clear">Gross estate ${fmt$big(ge)} is within the ${fmt$big(binding)} exclusion — no trust is indicated today. Revisit as assets grow.</div>`;
+        heirs tax-free; the taxable core gets a §1014 step-up at death. <b>Educational only, your attorney determines suitability and drafts the documents.</b></div>`
+    : `<div class="estate-node clear">Gross estate ${fmt$big(ge)} is within the ${fmt$big(binding)} exclusion, no trust is indicated today. Revisit as assets grow.</div>`;
   $("dtreebody").innerHTML=`<div class="dtree">
     <span class="root">Household capital · ${fmt$big(W)}</span>
     <div class="flow">↓ located by tax treatment ↓</div>
@@ -1163,7 +1163,7 @@ function renderDecisionTree(){
       <div class="dnode trad"><h5>Traditional IRA <span class="amt">${fmt$(inTrad)}</span></h5>
         <p>High-turnover overflow.</p><div class="why">Shelters short-term gains now; withdrawals taxed as ordinary income later.</div></div>
       <div class="dnode tax"><h5>Taxable <span class="amt">${fmt$(T)}</span></h5>
-        <p>Low-turnover index core.</p><div class="why">Held for the §1014 step-up in basis at death — heirs inherit the embedded gain wiped clean.</div></div>
+        <p>Low-turnover index core.</p><div class="why">Held for the §1014 step-up in basis at death, heirs inherit the embedded gain wiped clean.</div></div>
     </div>
     ${estateHTML}</div>`;
 }
@@ -1181,7 +1181,7 @@ function renderLocation(){
   const feeAnnual=feeRate()*W;
   const stname=r.state==="—"?"a no-tax state":(NAMES[r.state]||r.state);
 
-  // Phase C — optimized three-account placement. The high-turnover Driftwood sleeve fills the Roth
+  // Phase C, optimized three-account placement. The high-turnover Driftwood sleeve fills the Roth
   // first (tax-free compounding of its short-term gains), then the Traditional IRA; the low-drag VT
   // benchmark fills taxable (tiny drag, and the embedded gain steps up in basis at death).
   let momLeft=la.sleeve;
@@ -1192,14 +1192,14 @@ function renderLocation(){
        <div><span class="chip ${chip}">${chiplab}</span></div>${estate||""}</div>` : "";
   $("placement").innerHTML=
     acct("Roth IRA · tax-free", inRoth, "mom", "Driftwood sleeve",
-      `<span class="estate"><span class="ico">✓</span><b>Tax-free compounding &amp; zero RMDs for heirs</b> — the most tax-inefficient sleeve in your most valuable, never-taxed account.</span>`)
+      `<span class="estate"><span class="ico">✓</span><b>Tax-free compounding &amp; zero RMDs for heirs</b>, the most tax-inefficient sleeve in your most valuable, never-taxed account.</span>`)
     + acct("Traditional IRA · pre-tax", inTrad, "mom", "Driftwood sleeve",
       `<span class="estate"><span class="ico">✓</span>Shelters the sleeve's short-term gains now; withdrawals taxed as ordinary income later.</span>`)
     + acct("Taxable brokerage", T, "bench", "VT buy-and-hold",
-      `<span class="estate"><span class="ico">✓</span><b>Optimized for step-up in basis at death</b> — heirs inherit the low-turnover index with the embedded gain wiped clean.</span>`)
+      `<span class="estate"><span class="ico">✓</span><b>Optimized for step-up in basis at death</b>, heirs inherit the low-turnover index with the embedded gain wiped clean.</span>`)
     + (la.sleeve<=0 ? `<div class="acct"><span class="estate">Add a Traditional or Roth balance to shelter the high-turnover sleeve.</span></div>` : "");
 
-  // Tax-loss-harvesting structural alpha per year — computed dynamically from the track's harvested
+  // Tax-loss-harvesting structural alpha per year, computed dynamically from the track's harvested
   // losses, ranged from a no-income-tax state (low) to the highest-tax state in the table (high).
   let maxSlt=0, maxSst=0;
   for(const k in S.states){ const [l,sst]=S.states[k]; if(l>maxSlt)maxSlt=l; if(sst>maxSst)maxSst=sst; }
@@ -1210,7 +1210,7 @@ function renderLocation(){
   const mx=Math.max(savedR,feeR,1);
   $("locresult").innerHTML=
     `<div class="recovered">+${fmt$big(la.terminal)}</div>
-     <div class="recsub"><b>Location Alpha</b> — the after-tax wealth optimized placement keeps versus a naive equal
+     <div class="recsub"><b>Location Alpha</b>, the after-tax wealth optimized placement keeps versus a naive equal
        split across all three accounts, over ${H} years (the tax saved, reinvested at ${apct(g,0)}). About
        <b>${fmt$(savedR)}/yr</b> for a ${stname} resident.</div>
      <div class="savings">
@@ -1223,22 +1223,22 @@ function renderLocation(){
        <div class="net"><span>Net value to you, every year</span>
          <b style="color:${netR>=0?'var(--pos)':'var(--neg)'}">${netR>=0?"+":"−"}${fmt$(Math.abs(netR))}/yr</b></div>
        <div class="tlh"><span class="ico">✓</span><b>Tax-loss harvesting adds an estimated ${apct(tlhLow,1)}–${apct(tlhHigh,1)}/yr</b>
-         in structural alpha (from the track's harvested losses, no-tax to high-tax state) — ${neutralizes
+         in structural alpha (from the track's harvested losses, no-tax to high-tax state), ${neutralizes
            ? `<b>designed to offset</b> the effective cost of advisory services through tax-efficient positioning`
            : `offsetting much of the ${Math.round(feeRate()*1e4)} bps advisory fee`}.</div>
      </div>`;
 
-  // Phase C — the retirement-income flexibility / drawdown talking point (advisor mode).
+  // Phase C, the retirement-income flexibility / drawdown talking point (advisor mode).
   $("flexcard").innerHTML=`<h4>Retirement-income flexibility</h4>
     <p>Three tax buckets let us <b>blend taxable, tax-deferred, and tax-free withdrawals</b> year by year to manage
-      your future bracket — pulling taxable and Roth dollars to stay under IRMAA and capital-gains thresholds, funding
+      your future bracket, pulling taxable and Roth dollars to stay under IRMAA and capital-gains thresholds, funding
       <b>Roth conversions</b> in low-income years, and smoothing <b>RMDs</b>. The Roth-located sleeve also passes to
       heirs tax-free with no lifetime required distributions.</p>`;
 
-  $("dixnote").innerHTML=`<b>Going deeper — direct indexing.</b> Holding the taxable core as a <b>direct-indexed SMA</b>
+  $("dixnote").innerHTML=`<b>Going deeper, direct indexing.</b> Holding the taxable core as a <b>direct-indexed SMA</b>
     (the index replicated as individual securities) rather than one ETF lets you harvest losses at the <b>security</b>
     level: in most years dozens of individual names fall even when the index rises, so the wrapper banks structural
-    losses an ETF simply can't — a fund only throws off a harvestable loss when the <i>whole</i> index is down. Those
+    losses an ETF simply can't, a fund only throws off a harvestable loss when the <i>whole</i> index is down. Those
     banked losses offset the high-turnover sleeve's short-term gains at up to <b>${apct(r.r_st)}</b>, compounding the
     benefit above.`;
 
@@ -1247,21 +1247,21 @@ function renderLocation(){
   const bword = (+$("bracket").value===S.brackets.length-1) ? "top-bracket" : (r.blabel.split("·")[0].trim()+" federal");
   $("execsummary").innerHTML=`<div class="es-h">Executive summary</div>
     <p>For a <b>${bword}</b> resident of <b>${stName}</b>, locating the high-turnover sleeve into the
-    tax-advantaged accounts — <b>${fmt$(inRoth)}</b> in the Roth and <b>${fmt$(inTrad)}</b> in the Traditional IRA —
+    tax-advantaged accounts, <b>${fmt$(inRoth)}</b> in the Roth and <b>${fmt$(inTrad)}</b> in the Traditional IRA,
     and isolating a low-turnover ${fmt$(T)} VT core in taxable recovers about <b>${fmt$(savedR)}/yr</b> in
     capital-gains tax versus a naive equal split, a <b>${fmt$big(la.terminal)}</b> Location Alpha over ${H} years.
     A <b>${Math.round(feeRate()*1e4)} bps</b> all-in fee (about <b>${fmt$(feeR)}/yr</b>) ${savedR>feeR
-      ? `is a fraction of that — net value to the client is about <b>${fmt$(netR)}/yr</b>`
+      ? `is a fraction of that, net value to the client is about <b>${fmt$(netR)}/yr</b>`
       : `is comparable at this size; the case strengthens with a larger sleeve or a higher-tax state`}. The taxable
     core is positioned for a step-up in basis at death; the Roth sleeve compounds tax-free with no RMDs for heirs.
-    Illustrative only — not tax advice.</p>`;
+    Illustrative only, not tax advice.</p>`;
   $("cpabrief").innerHTML=`<div class="es-h">CPA / Attorney execution &amp; coordination brief</div>
     <p><b>Placement (execution).</b> Driftwood satellite sleeve → Roth IRA ${fmt$(inRoth)}, then Traditional IRA
       ${fmt$(inTrad)}. VT buy-and-hold core → taxable ${fmt$(T)}. Use <b>specific-identification</b> cost basis on the
       taxable core; harvest losses with wash-sale-safe substitutes (VT↔VTI/VXUS sleeves).</p>
     <ul>
       <li><b>For the CPA:</b> the sleeve realizes ~${apct(S.header.short_term_share||0.95,0)} short-term gains at
-        ~${Math.round((S.header.annual_turnover||4)*100)}% turnover — but only inside the IRAs, so there is no annual
+        ~${Math.round((S.header.annual_turnover||4)*100)}% turnover, but only inside the IRAs, so there is no annual
         taxable event from it. Model estimated taxes/withholding off the taxable VT core (qualified dividends only)
         and any harvested losses (~${apct(p.harvested_st+p.harvested_lt)} of NAV available to offset other gains).</li>
       <li><b>For the estate attorney:</b> name the Roth as the residuary to heirs (tax-free, no inherited RMDs under
@@ -1270,19 +1270,19 @@ function renderLocation(){
       <li><b>Drawdown coordination:</b> blend taxable, Traditional, and Roth withdrawals to manage bracket, IRMAA, and
         RMDs; fund Roth conversions in low-income years.</li>
     </ul>
-    <p style="color:var(--dim)">Illustrative coordination brief generated from the model portfolio's realized-gain profile — confirm with the client's actual cost basis, plan documents, and current law.</p>`;
+    <p style="color:var(--dim)">Illustrative coordination brief generated from the model portfolio's realized-gain profile, confirm with the client's actual cost basis, plan documents, and current law.</p>`;
 }
 
 // --- Phase B: lead-gen funnel (the hook -> capture -> booking flow) --------
 function leadPortfolio(){ return (+$("leadport").value) || CONFIG.leadPortfolio; }
 function stateBleed(){
   // The dollar tax the PROSPECT'S OWN portfolio (the lead-port slider) bleeds in the selected state,
-  // at the top bracket — split into the state increment and the full (fed+state) total. Strictly
+  // at the top bracket, split into the state increment and the full (fed+state) total. Strictly
   // driven by the prospect-view inputs; the advisor optimizer's numbers come from its own sliders.
   const r=rates(), yrs=(S.profile.years||1), P=leadPortfolio(), H=S.assumptions.horizon_years;
   const cThis=calc(r);
   const rNo={...r, r_st:r.b.ord+r.b.niit, r_lt:r.b.lt+r.b.niit};   // strip state tax
-  const fedAnnual=(calc(rNo).drag/yrs)*P;                          // pure federal — identical for a P, any state
+  const fedAnnual=(calc(rNo).drag/yrs)*P;                          // pure federal, identical for a P, any state
   const totalAnnual=(cThis.drag/yrs)*P;                           // = fedAnnual + stateAnnual, by construction
   const stateAnnual=Math.max(0,totalAnnual-fedAnnual);
   return {P, horizon:H, fedAnnual, stateAnnual, totalAnnual,
@@ -1295,21 +1295,21 @@ function renderLead(){
   if(name && b.stateAnnual>1){
     $("leadhero").innerHTML=`${name} residents with a ${fmt$big(b.P)} taxable portfolio in a high-turnover
       strategy pay an estimated <span class="num">${fmt$big(b.totalTotal)}</span> in capital-gains tax over ${b.horizon} years
-      (${fmt$big(b.fedTotal)} federal + ${fmt$big(b.stateTotal)} to ${name}) — about
+      (${fmt$big(b.fedTotal)} federal + ${fmt$big(b.stateTotal)} to ${name}), about
       ${fmt$(b.totalAnnual)}/year in estimated capital-gains tax.
-      <span class="small"><b>Illustrative</b> — the annual drag at today's balance, projected flat over
-      ${b.horizon} years (no growth assumed); not a forecast. The federal base is the same in every state —
+      <span class="small"><b>Illustrative</b>, the annual drag at today's balance, projected flat over
+      ${b.horizon} years (no growth assumed); not a forecast. The federal base is the same in every state,
       ${name} just stacks its layer on top. Most of it is recoverable by coordinating where those holdings sit and how their gains are realized.</span>`;
   } else {
     $("leadhero").innerHTML=`A ${fmt$big(b.P)} taxable portfolio in a high-turnover strategy pays an estimated
       <span class="num">${fmt$big(b.totalTotal)}</span> in <b>federal</b> capital-gains tax over ${b.horizon} years.
-      <span class="small"><b>Illustrative</b> — the annual drag at today's balance, projected flat over ${b.horizon} years
-      (no growth assumed); not a forecast. ${st==="—"?"Tap your state above to add your local layer — then":"About "+fmt$(b.totalAnnual)+"/yr."} we'll quantify how much is recoverable through asset location and harvesting.</span>`;
+      <span class="small"><b>Illustrative</b>, the annual drag at today's balance, projected flat over ${b.horizon} years
+      (no growth assumed); not a forecast. ${st==="—"?"Tap your state above to add your local layer, then":"About "+fmt$(b.totalAnnual)+"/yr."} we'll quantify how much is recoverable through asset location and harvesting.</span>`;
   }
 }
 function ctaInitial(){
   $("leadcta").innerHTML=`<button type="button" class="lead-btn" onclick="ctaForm()">See my personalized analysis →</button>
-    <div class="lead-note">A short, private read on how much coordination recovers — and the two decisions that do it.</div>`;
+    <div class="lead-note">A short, private read on how much coordination recovers, and the two decisions that do it.</div>`;
 }
 function ctaForm(){
   $("leadcta").innerHTML=`<form class="lead-form" onsubmit="return submitLead(event)">
@@ -1336,7 +1336,7 @@ function submitLead(ev){
     _leadBusy=true;
     const btn=$("leadsend"); if(btn){ btn.disabled=true; btn.textContent="Sending…"; }
     const payload={email, state:st, portfolio:b.P, state_tax_30y:Math.round(b.stateTotal), total_tax_30y:Math.round(b.totalTotal),
-      _subject:`New After-Tax Review lead — ${where}`};
+      _subject:`New After-Tax Review lead, ${where}`};
     Object.assign(payload, LEAD_UTM);                                   // campaign attribution (utm_*) into the lead email
     if(CONFIG.firmName) payload.from_name=CONFIG.firmName;               // tags the inbound notification (Web3Forms)
     payload[CONFIG.formHoneypot]=($("leadhp")&&$("leadhp").value)||"";   // Formspree _gotcha / Web3Forms botcheck
@@ -1350,7 +1350,7 @@ function submitLead(ev){
     const usrc=LEAD_UTM.utm_source?`\nCampaign: ${[LEAD_UTM.utm_campaign,LEAD_UTM.utm_source,LEAD_UTM.utm_medium].filter(Boolean).join(" / ")}`:"";
     const body=encodeURIComponent(`I'd like my tax recovery plan.\n\nEmail: ${email}\nState: ${where}\nPortfolio: ${fmt$big(b.P)}\nProjected ${b.horizon}-yr capital-gains tax: ${fmt$big(b.totalTotal)}${usrc}`);
     window.location.href=`mailto:${CONFIG.contactEmail}?subject=${subj}&body=${body}`;
-    ctaMailto();                                                        // mailto only *opens* a draft — say so honestly
+    ctaMailto();                                                        // mailto only *opens* a draft, say so honestly
   }
   return false;
 }
@@ -1365,7 +1365,7 @@ function ctaError(){
 function ctaSuccess(){
   _leadBusy=false;
   track("lead_submitted", leadProps());   // count verified conversions only (carries utm_* attribution)
-  // C2 · deliver the analysis instantly — the prospect's own computed figures, not a black-box wait.
+  // C2 · deliver the analysis instantly, the prospect's own computed figures, not a black-box wait.
   const b=stateBleed(), st=$("state").value, name=(st==="—"||!NAMES[st])?null:(NAMES[st]||st);
   const recap=`<div class="lead-recap">
       <div class="r"><span>Projected ${b.horizon}-yr capital-gains tax</span><b>${fmt$big(b.totalTotal)}</b></div>
@@ -1384,7 +1384,7 @@ function ctaSuccess(){
   $("leadcta").innerHTML=`<div class="lead-success" role="status" aria-live="polite">
       <div class="h" tabindex="-1">Your analysis ✓</div>
       ${recap}
-      <p>That's the drag a high-turnover strategy throws off in a taxable account — and most of it is addressable
+      <p>That's the drag a high-turnover strategy throws off in a taxable account, and most of it is addressable
         through <b>asset location</b> and <b>tax-loss harvesting</b>. We'll email a personalized written plan; to
         walk through it together, grab a time below.</p>
       <div id="calendly-slot">${cal}</div></div>`;
@@ -1392,16 +1392,16 @@ function ctaSuccess(){
 }
 function ctaMailto(){
   _leadBusy=false;
-  track("lead_mailto_opened", leadProps());   // opening a draft is NOT a verified submit — don't count it as a conversion
+  track("lead_mailto_opened", leadProps());   // opening a draft is NOT a verified submit, don't count it as a conversion
   $("leadcta").innerHTML=`<div class="lead-note" role="status" aria-live="polite" style="text-align:left">
-      <div class="h" tabindex="-1" style="font-weight:500;color:var(--ink)">Your email app should open — your message isn't sent until you hit Send.</div>
+      <div class="h" tabindex="-1" style="font-weight:500;color:var(--ink)">Your email app should open, your message isn't sent until you hit Send.</div>
       <p>Once you send it, we'll follow up by email with your personalized analysis. If nothing opened, email us at
         <a href="mailto:${CONFIG.contactEmail}">${CONFIG.contactEmail}</a>.</p></div>`;
   const h=$("leadcta").querySelector(".h"); if(h) h.focus();
 }
 // --- Estate Planning View (entity-level architecture + IL cliff + HB2601) ---
 // The Illinois AG estate-tax curve is the canonical drift.state_facts.IL_AG_CURVE, injected as
-// S.assumptions.estate.il_ag_curve (rows: excess_breakpoint, tax, marginal_rate) — read here rather
+// S.assumptions.estate.il_ag_curve (rows: excess_breakpoint, tax, marginal_rate), read here rather
 // than hand-mirrored, so Python and the browser render the one source. The tax is on the amount OVER
 // the exclusion, so the HB2601 toggle just shifts the baseline.
 function ilAgTax(excess){ if(excess<=0)return 0; const curve=(S.assumptions.estate.il_ag_curve)||[]; let bp=0,base=0,r=0; for(const row of curve){ if(excess>=row[0]){bp=row[0];base=row[1];r=row[2];} else break; } return base+r*(excess-bp); }
@@ -1414,7 +1414,7 @@ function renderEstate(){
   const ind=+$("estind").value||0, joint=+$("estjoint").value||0, trust=+$("esttrust").value||0;
   const re=+$("estre").value||0, biz=+$("estbiz").value||0, li=+$("estli").value||0;
   const liInEstate=$("estliown")?$("estliown").checked:true, liCount=liInEstate?li:0;   // §2042: in-estate only if owned
-  const total=ind+joint+trust+re+biz+liCount;   // True Net Worth gross estate — illiquid assets often trigger the cliff
+  const total=ind+joint+trust+re+biz+liCount;   // True Net Worth gross estate, illiquid assets often trigger the cliff
   $("estindv").textContent=fmt$(ind); $("estjointv").textContent=fmt$(joint); $("esttrustv").textContent=fmt$(trust);
   $("estrev").textContent=fmt$(re); $("estbizv").textContent=fmt$(biz); $("estliv").textContent=fmt$(li);
   const st=$("state").value, cls=estateKind(st), isIL=(cls.kind==="illinois");
@@ -1429,19 +1429,19 @@ function renderEstate(){
   let card;
   if(cls.kind==="none"){
     card=`<div class="est-cliff safe"><div class="lbl">${sname}: No State Estate Tax</div><div class="big">${fmt$(fedTax)}</div>
-      <p>${sname} levies <b>no state estate or inheritance tax</b> — only the federal estate tax applies, and only on the amount above the ${fmt$big(fedExempt)} federal exemption.</p></div>`;
+      <p>${sname} levies <b>no state estate or inheritance tax</b>, only the federal estate tax applies, and only on the amount above the ${fmt$big(fedExempt)} federal exemption.</p></div>`;
   } else if(cls.kind==="levy"){
     const envt=cls.type==="inheritance"?"an inheritance tax (paid by heirs)":(cls.type==="both"?"both a state estate tax and an inheritance tax":"a state estate tax");
     card=`<div class="est-cliff neutral"><div class="lbl">${sname}: State-Level Death Tax</div><div class="big">${fmt$(fedTax)}</div>
-      <p>${sname} levies <b>${envt}</b>. The precise exposure follows ${sname}'s own schedule and exemption — your estate attorney files the exact figure. The figure shown is the <b>federal</b> estate tax only.</p></div>`;
+      <p>${sname} levies <b>${envt}</b>. The precise exposure follows ${sname}'s own schedule and exemption, your estate attorney files the exact figure. The figure shown is the <b>federal</b> estate tax only.</p></div>`;
   } else if(total<=excl){
     card=`<div class="est-cliff safe"><div class="lbl">Illinois estate · under the exclusion</div><div class="big">$0</div>
-      <p>A ${fmt$big(total)} estate sits under Illinois' ${fmt$big(excl)} exclusion${hb?" (HB2601)":""} — no Illinois estate tax.
+      <p>A ${fmt$big(total)} estate sits under Illinois' ${fmt$big(excl)} exclusion${hb?" (HB2601)":""}, no Illinois estate tax.
       ${hb?"":`Cross ${fmt$big(excl)} and Illinois' graduated tax begins, reaching a 16% top rate.`}</p></div>`;
   } else {
     card=`<div class="est-cliff"><div class="lbl">⚠ Illinois Estate Tax Cliff</div><div class="big">${fmt$(ilWithTrust)}</div>
       <p>A ${fmt$big(total)} estate is <b>${fmt$big(total-excl)} over</b> Illinois' ${fmt$big(excl)} exclusion${hb?" (HB2601)":""},
-      a projected <b>${fmt$(ilWithTrust)}</b> Illinois estate tax — while federal is ${fmt$(fedTax)} (exemption ${fmt$big(fedExempt)}).
+      a projected <b>${fmt$(ilWithTrust)}</b> Illinois estate tax, while federal is ${fmt$(fedTax)} (exemption ${fmt$big(fedExempt)}).
       Illinois, not the IRS, is the binding constraint.</p>
       ${prevented>0?`<div class="est-prevented"><span>Tax prevented via Credit Shelter Trust</span><b>−${fmt$(prevented)}</b></div>`:""}</div>`;
   }
@@ -1449,20 +1449,20 @@ function renderEstate(){
   if(trust>0){
     $("esttrustwarn").style.display="block";
     $("esttrustwarn").innerHTML=`<b>⚠ Trust tax-compression flag (for the CPA).</b> Non-grantor trusts reach the top 37%
-      bracket at only ~${fmt$(E.trust_compression_top_threshold)} of retained income — so a <b>high-turnover sleeve</b> in
+      bracket at only ~${fmt$(E.trust_compression_top_threshold)} of retained income, so a <b>high-turnover sleeve</b> in
       this trust realizes its ~${apct(S.header.short_term_share||0.95,0)} short-term gains at the compressed trust rates.
       Locate the high-turnover Driftwood sleeve in <b>individual / grantor</b> structures; keep low-turnover, step-up-eligible assets in the trust.`;
   } else $("esttrustwarn").style.display="none";
   $("estfed").innerHTML=`Federal estate tax: <b>${fmt$(fedTax)}</b> (exemption ${fmt$big(fedExempt)}, ${apct(E.fed_rate,0)} top).${isIL?` Federal sits far above most Illinois estates, so the ${fmt$big(E.il_exclusion)} Illinois exclusion usually bites first.`:""}`;
   $("estnote").innerHTML=isIL?`<b>Method &amp; caveats.</b> Illinois estate tax is estimated from the §2011 graduated schedule
-    (0.8%–16%) on the amount above the exclusion — <b>illustrative only</b>. Illinois' actual computation (Illinois QTIP
+    (0.8%–16%) on the amount above the exclusion, <b>illustrative only</b>. Illinois' actual computation (Illinois QTIP
     elections, the Attorney General's calculator, deductions) can differ materially; the estate attorney produces the
-    filing figure. <b>HB2601 is proposed legislation, not enacted</b> — figures with the sandbox on assume it passes as
+    filing figure. <b>HB2601 is proposed legislation, not enacted</b>, figures with the sandbox on assume it passes as
     drafted and may not reflect final law. Not tax or legal advice.`:`<b>Illustrative only.</b> State death-tax treatment varies by jurisdiction and these figures are not a filing computation; your estate attorney produces the exact number. Not tax or legal advice.`;
   const liNote = li>0 ? (liInEstate
     ? ` <b>Life insurance</b> (${fmt$(li)}) is included in the gross estate because the insured owns the policy (§2042); moving it to an <b>ILIT</b> removes it from the estate.`
-    : ` <b>Life insurance</b> (${fmt$(li)}) is <b>excluded</b> — assumed held in an ILIT outside the estate (§2042).`) : "";
-  const bizNote = biz>0 ? ` <b>Business equity</b> is shown at full value; valuation discounts (lack of marketability / minority interest) and §6166 deferral may lower the actual estate figure — your attorney and appraiser size these.` : "";
+    : ` <b>Life insurance</b> (${fmt$(li)}) is <b>excluded</b>, assumed held in an ILIT outside the estate (§2042).`) : "";
+  const bizNote = biz>0 ? ` <b>Business equity</b> is shown at full value; valuation discounts (lack of marketability / minority interest) and §6166 deferral may lower the actual estate figure, your attorney and appraiser size these.` : "";
   if(liNote||bizNote) $("estnote").innerHTML += `<br>${liNote}${bizNote}`;
   renderDecisionTree();   // keep the capital-flow map + CST/SLAT gate synced with the estate inputs
 }
@@ -1481,7 +1481,7 @@ function renderStrategy(){
   $("rolloverres").innerHTML=
     `<div class="recovered">+${fmt$big(locGain)}</div>
      <div class="recsub">10-year <b>location alpha</b> from rolling this ${fmt$big(k401)} into the Driftwood IRA and
-       sheltering the high-turnover sleeve — versus <b>${fmt$big(feeDrag)}</b> lost to the ${(k401fee*1e4).toFixed(0)} bps
+       sheltering the high-turnover sleeve, versus <b>${fmt$big(feeDrag)}</b> lost to the ${(k401fee*1e4).toFixed(0)} bps
        target-date fee by leaving it in the old plan.</div>
      <div class="savings">
        <div class="srow"><div class="sl"><span class="rl">Location alpha · roll over</span><span class="amt save">${fmt$(locGain)}</span></div>
@@ -1498,7 +1498,7 @@ function renderStrategy(){
   const fed=conv*fedOrd, wouldState=conv*stateOrd, stateT=exempt?0:wouldState;
   const years=conv>0?Math.ceil(trad/conv):0;
   $("rothres").innerHTML=
-    `<div class="recsub" style="margin-top:0"><b>Converting ${fmt$(conv)}/yr</b> of a ${fmt$(trad)} Traditional IRA${years?` — ~${years} years to convert it all`:""}.</div>
+    `<div class="recsub" style="margin-top:0"><b>Converting ${fmt$(conv)}/yr</b> of a ${fmt$(trad)} Traditional IRA${years?`, ~${years} years to convert it all`:""}.</div>
      <div class="savings">
        <div class="srow"><div class="sl"><span class="rl">Federal tax / yr</span><span class="amt fee">${fmt$(fed)}</span></div></div>
        <div class="srow"><div class="sl"><span class="rl">${r.state==="—"?"State":(NAMES[r.state]||r.state)} tax / yr</span><span class="amt ${exempt?'save':'fee'}">${exempt?"$0":fmt$(stateT)}</span></div></div>
@@ -1508,30 +1508,30 @@ function renderStrategy(){
     $("ilarb").style.display="block"; $("ilarb").className="est-cliff safe";
     $("ilarb").innerHTML=`<div class="lbl">${NAMES[r.state]||r.state} conversion arbitrage</div><div class="big">$0 state tax</div>
       <p>${NAMES[r.state]||r.state} <b>exempts retirement distributions</b> from state income tax, so a Roth conversion pays
-      <b>federal only</b>. Converting ${fmt$(conv)}/yr saves <b>${fmt$(wouldState)}/yr</b> in state tax — about
-      <b>${fmt$big(trad*stateOrd)}</b> over the full ${fmt$(trad)} balance — versus a state that taxes it.
+      <b>federal only</b>. Converting ${fmt$(conv)}/yr saves <b>${fmt$(wouldState)}/yr</b> in state tax, about
+      <b>${fmt$big(trad*stateOrd)}</b> over the full ${fmt$(trad)} balance, versus a state that taxes it.
       Conversions are taxable events; whether and how much to convert depends on your bracket, IRMAA, the 5-year rules, residency, and timing.
-      <b>Illustrative, not tax advice — confirm with your CPA.</b></p>`;
+      <b>Illustrative, not tax advice, confirm with your CPA.</b></p>`;
   } else $("ilarb").style.display="none";
   // 3) asset-location blueprint
   $("blueprint").innerHTML=
     `<div class="bp"><span class="bt tax">Taxable brokerage</span><div class="bh">Low-yield, step-up assets</div>
        <p>A buy-and-hold index core (qualified dividends), held for the <b>step-up in basis at death</b>, with tax-loss-harvesting pairs (VT↔VTI/VXUS).</p></div>
      <div class="bp"><span class="bt trad">Traditional IRA</span><div class="bh">Moderate-turnover &amp; fixed income</div>
-       <p>Tax-deferred sleeves and bond/fixed-income exposure — interest and moderate turnover are sheltered now; withdrawals taxed as ordinary income later.</p></div>
+       <p>Tax-deferred sleeves and bond/fixed-income exposure, interest and moderate turnover are sheltered now; withdrawals taxed as ordinary income later.</p></div>
      <div class="bp"><span class="bt roth">Roth IRA / Roth 401(k)</span><div class="bh">High-turnover Driftwood momentum</div>
-       <p>The high-turnover sleeve — <b>designed to grow free of annual capital-gains tax under current law</b>, with no RMDs for heirs.</p></div>`;
+       <p>The high-turnover sleeve, <b>designed to grow free of annual capital-gains tax under current law</b>, with no RMDs for heirs.</p></div>`;
 }
-// Per-section lede — the page reads like an advisor working through a review, not a wizard with steps.
+// Per-section lede, the page reads like an advisor working through a review, not a wizard with steps.
 const LEDES={
-  portfolio:`Start with what you hold, and where — <b>taxable, Traditional, and Roth</b>. How a portfolio is built decides how much of its return survives tax.`,
+  portfolio:`Start with what you hold, and where, <b>taxable, Traditional, and Roth</b>. How a portfolio is built decides how much of its return survives tax.`,
   taxes:`Your federal bracket sets the price of every realized gain. Here is <b>where the tax actually goes</b> across the track, and what tax-loss harvesting is worth at your bracket, state by state.`,
-  state:`Which state do you pay taxes in? Your state is <b>one input</b> — it changes the rates, the harvesting math, and the estate picture. Click your state to localize every figure.`,
-  holdings:`What you own, and how often it turns over — where each dollar is <b>located</b>, and the point at which turnover starts to eat the return.`,
-  estate:`What happens at death — the state estate cliff, the credit-shelter trust, and the basis step-up. Illustrative; confirm the filing figure with your estate attorney.`,
-  implementation:`The handful of <b>structural decisions</b> a review comes down to — and the <b>estimated after-tax improvement</b> they add up to. Illustrative; confirm figures with your CPA and estate attorney.`
+  state:`Which state do you pay taxes in? Your state is <b>one input</b>, it changes the rates, the harvesting math, and the estate picture. Click your state to localize every figure.`,
+  holdings:`What you own, and how often it turns over, where each dollar is <b>located</b>, and the point at which turnover starts to eat the return.`,
+  estate:`What happens at death, the state estate cliff, the credit-shelter trust, and the basis step-up. Illustrative; confirm the filing figure with your estate attorney.`,
+  implementation:`The handful of <b>structural decisions</b> a review comes down to, and the <b>estimated after-tax improvement</b> they add up to. Illustrative; confirm figures with your CPA and estate attorney.`
 };
-// Guided review — the outcome banner: a plain-English summary + a coordinated-vs-naive comparison,
+// Guided review, the outcome banner: a plain-English summary + a coordinated-vs-naive comparison,
 // computed live from the household controls using the tool's own model (rates/calc/locAlpha3), so the
 // headline figure always matches the working paper below. Data-ink only; teal = coordinated.
 function reviewLead(){
@@ -1551,16 +1551,16 @@ function reviewLead(){
   host.innerHTML =
     `<div class="rl-sum">${where}, coordinating where this `+
       `<b>${fmt$big(T)}</b> taxable book is held and how its gains are realized is worth about `+
-      `<b>${fmt$(taxSaved)}/yr</b> after tax — the same holdings, handled deliberately.</div>`+
+      `<b>${fmt$(taxSaved)}/yr</b> after tax, the same holdings, handled deliberately.</div>`+
     `<div class="rl-row"><span class="rl-lab">Coordinated with Driftwood</span>`+
       `<span class="rl-track"><span class="rl-fill us" style="width:${wC.toFixed(1)}%"></span></span>`+
       `<span class="rl-val us">${apct(coord)}</span></div>`+
     `<div class="rl-row"><span class="rl-lab">The same holdings, taxed naively</span>`+
       `<span class="rl-track"><span class="rl-fill" style="width:${wN.toFixed(1)}%"></span></span>`+
       `<span class="rl-val">${apct(naive)}</span></div>`+
-    `<div class="rl-delta">The gap is an illustrative <b>+${apct(alphaFrac)}/yr</b> kept after tax — about `+
+    `<div class="rl-delta">The gap is an illustrative <b>+${apct(alphaFrac)}/yr</b> kept after tax, about `+
       `<b>${fmt$(taxSaved)}/yr</b> on this book. Pre-tax was ${apct(pre)}/yr; the point isn't the highest `+
-      `pre-tax return — it's what you keep. Illustrative modeling, not advice.</div>`;
+      `pre-tax return, it's what you keep. Illustrative modeling, not advice.</div>`;
 }
 
 const VISITED=new Set();
@@ -1578,7 +1578,7 @@ function showSection(sec){
   });
   // The checklist tracks progress: how many of the six sections you've opened so far.
   const prog=$("secprog"); if(prog) prog.textContent=VISITED.size+" of "+S6.length+" sections reviewed";
-  // Guided pager — walk the six sections in order (prev left, next right).
+  // Guided pager, walk the six sections in order (prev left, next right).
   const pgr=$("secpager");
   if(pgr){ const LBL={portfolio:"Portfolio",taxes:"Taxes",state:"State",holdings:"Holdings",estate:"Estate",implementation:"Implementation"};
     const i=S6.indexOf(SEC);
@@ -1620,7 +1620,7 @@ function drawFrontier(){
   const line=(rate,cls,col)=>{const [t,a]=beEnd(rate,g);return `<line class="be ${cls}" x1="${fx(0)}" y1="${fy(0)}" x2="${fx(t)}" y2="${fy(a)}" stroke="${col}"/>`;};
   const lab=(rate,txt,col,dy)=>{const [t,a]=beEnd(rate,g);return `<text class="belab" x="${fx(t)-2}" y="${fy(a)+dy}" text-anchor="end" fill="${col}">${txt}</text>`;};
   // Dynamic annotations: the federal-only baseline plus the SELECTED state's line, labelled by its
-  // code ("CA top", "NY top") — or just "Federal only" when the state levies no income tax.
+  // code ("CA top", "NY top"), or just "Federal only" when the state levies no income tax.
   s+=line(rNo,"dim","var(--slate)");
   const hasState = rSel > rNo + 1e-9;
   if(hasState){
@@ -1647,14 +1647,14 @@ function plotClient(){
   if(neg){
     al.style.display="block";
     al.innerHTML=`<b>Net-negative drag zone.</b> At ${apct(a)} alpha and ${Math.round(t*100)}% turnover, ${who} taxable
-      account hands the whole alpha back as short-term tax — breakeven needs <b>${apct(be)}</b>. Shelter this sleeve in a
+      account hands the whole alpha back as short-term tax, breakeven needs <b>${apct(be)}</b>. Shelter this sleeve in a
       <b>tax-advantaged account</b>, or run it inside an <b>SMA / asset-located shell</b> where the gains are deferred or harvested.`;
     if(!_fNeg){ al.classList.remove("flash"); void al.offsetWidth; al.classList.add("flash"); }
   } else { al.style.display="none"; al.classList.remove("flash"); }
   _fNeg=neg;
-  $("ftcap").innerHTML=`Breakeven alpha here: <b>${apct(be)}</b> at ${Math.round(t*100)}% turnover — the line steepens with
+  $("ftcap").innerHTML=`Breakeven alpha here: <b>${apct(be)}</b> at ${Math.round(t*100)}% turnover, the line steepens with
     state tax. The model portfolio runs near <b>${Math.round((S.header.annual_turnover||4)*100)}%</b> turnover,
-    <b>${apct(S.header.short_term_share||0.95,0)}</b> short-term — which is why it belongs in a shelter, not a taxable account.`;
+    <b>${apct(S.header.short_term_share||0.95,0)}</b> short-term, which is why it belongs in a shelter, not a taxable account.`;
 }
 
 let S=null;
@@ -1674,7 +1674,7 @@ function calc(r){
   const liq=p.embedded_st*r.r_st+p.embedded_lt*r.r_lt;
   return {net_st,net_lt,tax_st,tax_lt,tlh,drag,after_tax,liq,after_tax_liq:after_tax-liq,pretax:p.pretax_return};
 }
-// The seven structural decisions — the architecture of the review. Each is a permanent category, not a
+// The seven structural decisions, the architecture of the review. Each is a permanent category, not a
 // transient "recommendation"; figures reuse the same computed values as the detail sections below.
 function renderDecisions(){
   const host=$("decisions"); if(!host) return;
@@ -1685,19 +1685,19 @@ function renderDecisions(){
   const tlh=c.tlh>0?`≈${apct(c.tlh/yrs)}/yr`:null;
   const D=[
     ["Asset Location", null,
-     `Which account each holding lives in — bonds and high-turnover sleeves sheltered, the buy-and-hold index left to step up. Set in <a data-goto="portfolio">Portfolio</a>.`],
+     `Which account each holding lives in, bonds and high-turnover sleeves sheltered, the buy-and-hold index left to step up. Set in <a data-goto="portfolio">Portfolio</a>.`],
     ["Tax-Loss Harvesting", tlh,
-     `Turning red positions into a carryforward that offsets future gains — worth more the higher the bracket. Detailed in <a data-goto="taxes">Taxes</a>.`],
+     `Turning red positions into a carryforward that offsets future gains, worth more the higher the bracket. Detailed in <a data-goto="taxes">Taxes</a>.`],
     ["Withdrawal Order", null,
      `Which account to spend first, and when to convert to Roth, to smooth the bracket across retirement. Detailed just below.`],
     ["State Considerations", `${apct(r.r_lt)} LT · ${apct(r.r_st)} ST`,
-     `What ${nm} adds on top of federal — and whether a move or a trust would change it. Explored in <a data-goto="state">State</a>.`],
+     `What ${nm} adds on top of federal, and whether a move or a trust would change it. Explored in <a data-goto="state">State</a>.`],
     ["Estate Planning", null,
      `The step-up at death, the state estate cliff, and whether a credit-shelter trust is warranted. Modeled in <a data-goto="estate">Estate</a>.`],
     ["Charitable Giving", null,
-     `Gifting appreciated stock instead of cash, a donor-advised fund to bunch deductions, or a QCD from an IRA after 70½ — each takes a gain out of the tax base. Your advisor and CPA determine suitability.`],
+     `Gifting appreciated stock instead of cash, a donor-advised fund to bunch deductions, or a QCD from an IRA after 70½, each takes a gain out of the tax base. Your advisor and CPA determine suitability.`],
     ["Transition Plan", sa?`${sa} est.`:null,
-     `Moving from the legacy book to a diversified, low-turnover model — sequencing sales so the tax of switching never outweighs the benefit. Detailed below; the <b>estimated after-tax improvement</b> is the sum of every decision here.`]
+     `Moving from the legacy book to a diversified, low-turnover model, sequencing sales so the tax of switching never outweighs the benefit. Detailed below; the <b>estimated after-tax improvement</b> is the sum of every decision here.`]
   ];
   host.innerHTML=D.map((x,i)=>
     `<div class="dcard"><div class="dh"><span class="dn">${i+1}</span>${x[0]}${x[1]?`<span class="dfig">${x[1]}</span>`:""}</div><p>${x[2]}</p></div>`).join("");
@@ -1725,14 +1725,14 @@ function render(){
     ["Short-term gains tax", c.tax_st, "var(--neg)"],
     ["Long-term gains tax", c.tax_lt, "var(--neg)"],
     ["Tax-loss harvesting (saved)", -c.tlh, "var(--pos)"],
-    ["Embedded gain — tax if sold", c.liq, "var(--neg)"],
+    ["Embedded gain, tax if sold", c.liq, "var(--neg)"],
   ];
   const mx=Math.max(...rows.map(x=>Math.abs(x[1])),1e-9);
   $("waterfall").innerHTML=rows.map(([l,v,col])=>`<div class="row"><span class="lbl">${l}</span>
     <span class="bar"><span class="fill" style="width:${Math.abs(v)/mx*100}%;background:${col}"></span></span>
     <span class="amt">${v>=0?"−":"+"}${apct(Math.abs(v))}</span></div>`).join("");
 
-  // TLH value by state — a representative spread (all 50+DC are in the dropdown),
+  // TLH value by state, a representative spread (all 50+DC are in the dropdown),
   // always including the currently selected state so its row is visible.
   const order=["—","TX","WA","PA","CO","IL","MA","MN","NJ","NY","CA"].filter(s=>s in S.states);
   if(!order.includes(r.state)) order.push(r.state);
@@ -1746,33 +1746,29 @@ function render(){
 
   $("note").innerHTML=`<b>Method &amp; caveats.</b> After-tax is a lot-level model run on the book's own daily
     marks (FIFO lots, short vs long-term by holding period, harvested losses offsetting same-character gains
-    first) — illustrative, <b>not</b> a substitute for the custodian's cost basis or for tax advice. The
+    first), illustrative, <b>not</b> a substitute for the custodian's cost basis or for tax advice. The
     interactive figures apply your selected rates to the book's realized-gain decomposition and ignore the
     second-order compounding of taxes paid, so they're close to but not identical to the ledger's paid-as-you-go
     curve. State rates are representative top-of-bracket values; confirm a client's actual situation.`;
   $("gen").textContent="Generated "+(S.header.generated||"")+" · figures from the latest model-ledger snapshot.";
   $("phsub").textContent="Prepared "+(S.header.generated||"")+" · "+S.header.sessions+" sessions (snapshot) · illustrative, not tax advice";
 
-  // Assumptions & methodology expander (Task 2) — reflects the real model inputs + ledger profile.
+  // Assumptions & methodology expander (Task 2), reflects the real model inputs + ledger profile.
   const gpt=(S.header&&S.header.gain_per_turn)||(S.assumptions&&S.assumptions.gain_per_turn);
   $("methodsbody").innerHTML=`<dl>
     <dt>Asset growth / reinvestment</dt><dd>${apct(S.assumptions.growth_rate,0)}/yr assumed reinvestment rate when compounding recovered tax into the terminal Location Alpha.</dd>
-    <dt>Gain-per-turn (calibrated)</dt><dd>~${apct(gpt,1)} of NAV realized as short-term gain per 1.0× of annual turnover — calibrated from the model portfolio, not assumed.</dd>
+    <dt>Gain-per-turn (calibrated)</dt><dd>~${apct(gpt,1)} of NAV realized as short-term gain per 1.0× of annual turnover, calibrated from the model portfolio, not assumed.</dd>
     <dt>Tax rates (top-bracket)</dt><dd>At the selected bracket/state: <b>${apct(r.r_st)}</b> short-term / ordinary and <b>${apct(r.r_lt)}</b> long-term (federal + NIIT + state).</dd>
     <dt>Real realized-gain profile</dt><dd>From the model ledger: ${pct(p.pretax_return)} pre-tax over ~${p.years}y, ${apct(S.header.annual_turnover)} annual turnover, ${apct(S.header.short_term_share)} short-term (~${S.header.avg_holding_days}-day holds), ${apct(p.harvested_st+p.harvested_lt)} of NAV harvested as losses.</dd>
-    <dt>Two distinct illustrations</dt><dd>This After-Tax Review models a live, aggressive sleeve (the ${pct(p.pretax_return)}/~${p.years}y ledger above) to size the tax drag; the <a href="leakage.html">Tax Diagnostic</a> uses a separate long-horizon proxy series (≈9.4% pretax over 30y) to isolate lifetime after-tax alpha. Two different datasets and horizons — not one history quoted two ways.</dd>
-    <dt>Illinois estate tax</dt><dd>Calibrated to the Illinois AG calculator (single estate) on the amount over the exclusion; the HB2601 sandbox shifts the baseline to $8M. Illustrative — QTIP elections/deductions are the attorney's to file.</dd>
+    <dt>Two distinct illustrations</dt><dd>This After-Tax Review models a live, aggressive sleeve (the ${pct(p.pretax_return)}/~${p.years}y ledger above) to size the tax drag; the <a href="leakage.html">Tax Diagnostic</a> uses a separate long-horizon proxy series (≈9.4% pretax over 30y) to isolate lifetime after-tax alpha. Two different datasets and horizons, not one history quoted two ways.</dd>
+    <dt>Illinois estate tax</dt><dd>Calibrated to the Illinois AG calculator (single estate) on the amount over the exclusion; the HB2601 sandbox shifts the baseline to $8M. Illustrative, QTIP elections/deductions are the attorney's to file.</dd>
     <dt>Simplifications</dt><dd>After-tax applies the selected rates to the book's realized-gain decomposition and ignores second-order tax-on-tax compounding; estate/fee/growth figures are illustrative projections, not guarantees.</dd>
   </dl>`;
-  const discLinks=[
-    (CONFIG.formCrsUrl&&CONFIG.formCrsUrl!=="#")?`<a href="${CONFIG.formCrsUrl}">Form CRS</a>`:"",
-    (CONFIG.formAdvUrl&&CONFIG.formAdvUrl!=="#")?`<a href="${CONFIG.formAdvUrl}">Form ADV</a>`:"",
-  ].filter(Boolean).join(" · ");   // never surface a dead "#" disclosure link
-  $("compliance").innerHTML=`<b>Illustrative and educational only — not investment, tax, or legal advice, and not an offer or
+  $("compliance").innerHTML=`<b>Illustrative and educational only, not investment, tax, or legal advice, and not an offer or
     solicitation. Using this tool does not create an advisory relationship. Coordinate all final estate filings with a qualified attorney.</b>
     Past performance and projections do not guarantee future results.
-    Driftwood Wealth is a <b>registered investment adviser</b>; Form ADV and Form CRS are available at
-    <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>${discLinks?" · "+discLinks:""}.`;
+    Driftwood Wealth is the private-wealth practice of Alec Messino. It is not currently a registered investment adviser, and this site is not a
+    solicitation for advisory services.`;
 
   // Layer 2: keep the disclosure ledger and the map's selected-state outline in sync.
   renderDisc(r);
@@ -1786,10 +1782,10 @@ function render(){
   // Layer 3: redraw the frontier (breakeven lines depend on the selected rates).
   drawFrontier();
   // Notebook: populate every section on each change so all are complete regardless of which is open.
-  renderLead();       // Implementation close — the funnel invitation
-  renderEstate();     // Estate — the IL cliff depends on the selected state
-  renderStrategy();   // Implementation — the Roth-conversion arbitrage depends on the selected state
-  renderDecisions();  // Implementation — the seven decision cards (reads figures the renderers just set)
+  renderLead();       // Implementation close, the funnel invitation
+  renderEstate();     // Estate, the IL cliff depends on the selected state
+  renderStrategy();   // Implementation, the Roth-conversion arbitrage depends on the selected state
+  renderDecisions();  // Implementation, the seven decision cards (reads figures the renderers just set)
 }
 function init(){
   S=window.__STATE__;
@@ -1807,7 +1803,7 @@ function init(){
   // and the CPA/attorney execution brief (body.brief swaps which print block is shown).
   $("genpdf").addEventListener("click",()=>{ document.body.classList.remove("brief"); window.print(); });
   $("genbrief").addEventListener("click",()=>{
-    document.body.classList.add("brief"); $("phtitle").textContent="Asset Location — CPA / Attorney Coordination Brief";
+    document.body.classList.add("brief"); $("phtitle").textContent="Asset Location, CPA / Attorney Coordination Brief";
     window.print();
     setTimeout(()=>{ document.body.classList.remove("brief"); $("phtitle").textContent="Asset Location & Tax-Efficiency Analysis"; },300);
   });
@@ -1818,9 +1814,9 @@ function init(){
     // Slider drags only touch the optimizer, not the whole page (streamlined interaction path).
     ["taxbal","tradbal","rothbal"].forEach(id=>$(id).addEventListener("input",renderLocation));
     ["taxbal","tradbal","rothbal"].forEach(id=>$(id).addEventListener("input",reviewLead));  // keep the outcome banner live
-    // Household: the taxable book is the shared "portfolio" — save it so the Atlas & Diagnostic follow.
+    // Household: the taxable book is the shared "portfolio", save it so the Atlas & Diagnostic follow.
     $("taxbal").addEventListener("input",()=>window.dwTaxContext&&dwTaxContext.save({portfolio:+$("taxbal").value}));
-    // Prospect-view portfolio slider — drives the lead-gen bleed off the prospect's OWN number.
+    // Prospect-view portfolio slider, drives the lead-gen bleed off the prospect's OWN number.
     $("leadport").max=A.wealth_max; $("leadport").step=A.wealth_step; $("leadport").value=CONFIG.leadPortfolio;
     $("leadport").addEventListener("input",renderLead);
     let _portT; $("leadport").addEventListener("input",()=>{ clearTimeout(_portT);   // debounced: one funnel event per settle, not per drag tick
@@ -1862,7 +1858,7 @@ function init(){
   //   ?view=lead&state=IL&port=2000000   |   ?view=estate&state=IL&port=6000000
   const qp=new URLSearchParams(location.search);
   // Cold-outreach attribution: capture utm_* so they ride along on the lead email + conversion event.
-  // (Plausible also reads these natively for its traffic/acquisition reports — no code needed there.)
+  // (Plausible also reads these natively for its traffic/acquisition reports, no code needed there.)
   ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(k=>{ const v=qp.get(k); if(v) LEAD_UTM[k]=v; });
   // Clamp into each slider's own [min,max] so one URL localizes every view consistently
   // (a raw value below a slider's min is silently clamped by the browser, desyncing the views).
@@ -1871,7 +1867,7 @@ function init(){
   const qPort=parseFloat(qp.get("portfolio")||qp.get("port"));       // ?portfolio= (alias of legacy ?port=)
   const qHome=parseFloat(qp.get("home")), qLi=parseFloat(qp.get("li")), qBiz=parseFloat(qp.get("biz"));
   const qBracket=parseInt(qp.get("bracket"),10);                     // plain federal ordinary-rate %, e.g. 37
-  // Hydrate from the browser-local context (dw-context.js) ONLY where the URL is silent — a
+  // Hydrate from the browser-local context (dw-context.js) ONLY where the URL is silent, a
   // personalized deep-link always wins over what this browser remembered.
   const dwc=(window.dwTaxContext&&dwTaxContext.get())||{};
   if(qState && S.states && (qState in S.states)) $("state").value=qState;
@@ -1888,13 +1884,13 @@ function init(){
     setClamped("leadport",wantPort);                                 // prospect dollar-bleed hook
     setClamped("taxbal",wantPort);                                   // advisor optimizer (taxable seed)
   }
-  if(qPort>0 && $("estind")){ setClamped("estind",qPort); $("estjoint").value=0; $("esttrust").value=0; }  // estate cliff (unmitigated) — explicit deep-links only
+  if(qPort>0 && $("estind")){ setClamped("estind",qPort); $("estjoint").value=0; $("esttrust").value=0; }  // estate cliff (unmitigated), explicit deep-links only
   // Illiquid / true-net-worth params feed the estate cliff directly (home equity, policies, business).
   setClamped("estre",qHome); setClamped("estli",qLi); setClamped("estbiz",qBiz);
   buildSmTabs();
   buildMap();
   render();
-  // Working paper — seed the funnel, wire the section nav, open on the current section.
+  // Working paper, seed the funnel, wire the section nav, open on the current section.
   ctaInitial();
   $("secnav").querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>showSection(btn.dataset.sec)));
   showSection(SEC);

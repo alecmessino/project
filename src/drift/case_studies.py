@@ -1,14 +1,14 @@
 """Run the model across a set of backtest case studies and assemble a report.
 
-The studies are chosen to show the strategy honestly — not just a single flattering
+The studies are chosen to show the strategy honestly, not just a single flattering
 curve, but how it behaves across instruments, across parameters, against cost, and
 against a no-trend null:
 
-1. Trend-following (time-series) — each instrument on its own trend, equal-weighted.
-2. Relative-strength (cross-sectional) — long strongest / short weakest.
-3. Lookback sensitivity — is the edge robust to the window, or curve-fit to one?
-4. Transaction-cost sensitivity — where does the net edge decay to zero?
-5. Trend vs. random walk — the control: momentum should profit on a trend and
+1. Trend-following (time-series), each instrument on its own trend, equal-weighted.
+2. Relative-strength (cross-sectional), long strongest / short weakest.
+3. Lookback sensitivity, is the edge robust to the window, or curve-fit to one?
+4. Transaction-cost sensitivity, where does the net edge decay to zero?
+5. Trend vs. random walk, the control: momentum should profit on a trend and
    make ~nothing (net of cost) on a driftless walk.
 
 Everything here is pure given the input series, so it is fully unit-testable; the
@@ -143,7 +143,7 @@ def study_cross_neutral(series: dict[str, list[Bar]], settings: Settings,
     return {
         "name": f"{dim.capitalize()}-neutral relative-strength",
         "description": f"The cross-section with each {dim}'s mean trend removed, so it "
-                       f"bets purely on which {other} is leading WITHIN every {dim} — "
+                       f"bets purely on which {other} is leading WITHIN every {dim}, "
                        f"isolating {other} rotation from {dim} rotation.",
         "metrics": [
             _metric("Net return", f"{xbt.net_return*100:+.1f}%", _tone(xbt.net_return)),
@@ -246,7 +246,7 @@ def build_report(series: dict[str, list[Bar]], settings: Settings, source: str =
     n_bars = max((len(b) for b in series.values()), default=0)
     return {
         "header": {
-            "title": "Driftwood — Core Alpha research studies",
+            "title": "Driftwood, Core Alpha research studies",
             "source": source,
             "universe": ", ".join(sorted(series)) or "synthetic only",
             "n_instruments": len(series),

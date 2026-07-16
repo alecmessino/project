@@ -1,4 +1,4 @@
-"""After-tax modeling for the forward ledger — lot-aware, personalized by tax profile.
+"""After-tax modeling for the forward ledger, lot-aware, personalized by tax profile.
 
 This is the wealth-management layer. The plain ledger reports a pre-tax curve; in a
 taxable account what a client keeps is the *after-tax* curve, and that depends on how
@@ -13,7 +13,7 @@ splits them short- vs long-term by holding period, nets losses into a carryforwa
 (the harvesting benefit), and pays tax from the book. It needs per-instrument prices on
 each entry (`entry["prices"]`); without them it returns None and the caller falls back.
 
-Illustrative — modeled on the book's marks, NOT the custodian's lot accounting, and not
+Illustrative, modeled on the book's marks, NOT the custodian's lot accounting, and not
 tax advice. Rates come from `config.TaxSettings` (federal + NIIT + state).
 """
 
@@ -24,11 +24,11 @@ from typing import Optional
 
 from .config import TaxSettings
 
-# State long-/short-term capital-gains rates — top-effective figures a high-income resident pays,
+# State long-/short-term capital-gains rates, top-effective figures a high-income resident pays,
 # including millionaire/NIIT surtaxes and long-term exclusions. These are the CANONICAL source of
 # truth and now live in drift.state_facts (PUBLISHING_SPEC §15.4); the after-tax calculator projects
 # them here so it can never disagree with the Atlas display. Each 2025 figure changed from the prior
-# encoding is reconciled to a primary/official source in RECONCILIATION_LOG.md. Illustrative — an
+# encoding is reconciled to a primary/official source in RECONCILIATION_LOG.md. Illustrative, an
 # advisor confirms a client's actual situation. (Mirrors TaxAlphaInsider's point that the value of
 # tax-loss harvesting is state-dependent.)
 from .state_facts import RATES, TERRITORY_CODES  # noqa: E402
@@ -58,7 +58,7 @@ class AfterTax:
     harvested_losses: float            # gross losses realized (the harvesting raw material)
     annual_turnover: float             # one-sided, per year
     avg_holding_days: Optional[float]
-    short_term_share: float            # ST / (ST+LT) of realized gains — the rate-arb knob
+    short_term_share: float            # ST / (ST+LT) of realized gains, the rate-arb knob
     embedded_gain: float               # unrealized gain still in the book (deferral asset)
     liquidation_tax: float             # tax to fully liquidate today
     after_tax_liquidated: float        # after-tax return if liquidated today (post-liquidation)
@@ -137,7 +137,7 @@ def after_tax_track(entries: list[dict], tax: TaxSettings,
             lt_real += max(0.0, sess_lt)
             harvested += max(0.0, -sess_st) + max(0.0, -sess_lt)
             # Net losses bank into the carryforward; gains are offset (short-term first,
-            # the higher rate = the most valuable offset — the rate-arbitrage point),
+            # the higher rate = the most valuable offset, the rate-arbitrage point),
             # then taxed at the remaining character's rate.
             carry_loss += max(0.0, -sess_st) + max(0.0, -sess_lt)
             g_st, g_lt = max(0.0, sess_st), max(0.0, sess_lt)
@@ -214,7 +214,7 @@ class GainProfile:
 def gain_profile(entries: list[dict], lt_holding_bars: int = 252,
                  bars_per_year: float = 252.0) -> Optional[GainProfile]:
     """FIFO dollar-lot walk on the PRE-TAX path (no tax deducted), returning the gross
-    realized/embedded gains split short- vs long-term. Rate-independent — apply any
+    realized/embedded gains split short- vs long-term. Rate-independent, apply any
     rates downstream. None if the entries carry no per-name prices."""
     if not entries or "prices" not in entries[-1] or not entries[-1].get("prices"):
         return None

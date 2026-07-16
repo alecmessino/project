@@ -82,7 +82,7 @@ def test_every_exhibit_carries_the_registration_disclosure():
     for tmpl in (LEDGER_TEMPLATE, TEARSHEET_TEMPLATE, HUB_TEMPLATE, THESIS_TEMPLATE,
                  TEMPLATE, TAXLAB_TEMPLATE, LEAKAGE_TEMPLATE):
         t = _read(tmpl)
-        assert "not currently a registered investment adviser" in t, f"{tmpl.name}: missing the corrected registration disclosure"
+        assert "Park Avenue Securities" in t, f"{tmpl.name}: missing the PAS/Guardian disclosure"
         assert "adviserinfo.sec.gov" not in t, f"{tmpl.name}: stale adviserinfo link (the entity is not registered)"
         assert "Form ADV" not in t and "Form CRS" not in t, f"{tmpl.name}: stale Form ADV/CRS reference"
 

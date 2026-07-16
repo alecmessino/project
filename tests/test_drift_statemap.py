@@ -87,7 +87,7 @@ def test_template_is_original_and_carries_compliance_framing():
     # compliance: not advice; the alpha dimension is illustrative/hypothetical + RIA identity
     assert "not tax, legal, or investment advice" in t
     assert "illustrative" in t and "not a forecast that any fund out-perform" in t
-    assert "not currently a registered investment adviser" in t and "adviserinfo.sec.gov" not in t
+    assert "Park Avenue Securities" in t and "adviserinfo.sec.gov" not in t
     # the rendered page bakes the per-state diagnostic deep-links + drops the placeholder
     html = render_statemap(build_statemap())
     assert "/*__STATE__*/null/*__END__*/" not in html

@@ -664,7 +664,7 @@ def test_pdf_proposal_print_template_and_disclosures():
     assert "@media print" in css and "@page" in css
     assert "#printfoot" in css and "position:fixed" in css     # running footer on every page
     assert 'id="printdisc"' in tx and 'id="printproposal"' in tx
-    assert "not currently a registered investment adviser" in tx and "adviserinfo.sec.gov" not in tx
+    assert "Park Avenue Securities" in tx and "adviserinfo.sec.gov" not in tx
     assert "not a performance forecast" in tx
     assert "does not guarantee future\n      results" in tx or "does not guarantee future results" in tx
     assert "Recommended structure" in tx

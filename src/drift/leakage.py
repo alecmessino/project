@@ -1,4 +1,4 @@
-"""The Tax-Leakage Diagnostic state — a one-page Before/After pitch artifact.
+"""The Tax-Leakage Diagnostic state, a one-page Before/After pitch artifact.
 
 A concentrated, high-turnover portfolio quietly leaks return to tax via short-term gains; the
 Structural Alpha engine plugs those leaks (lot protection + hysteresis, harvesting + rate arbitrage,
@@ -6,9 +6,9 @@ asset location). This module holds the diagnostic's numbers in ONE place and ass
 state the page renders.
 
 The figures are the committed real-cache outputs of `scripts/tax_alpha.py` (the Tax-Alpha
-decomposition) over the **30-year window (1996–2026)** — the SAME horizon the long-history tearsheet
+decomposition) over the **30-year window (1996–2026)**, the SAME horizon the long-history tearsheet
 uses, so every client artifact is calibrated to one headline horizon. They are ILLUSTRATIVE,
-after-tax, paid-as-you-go on a single proxy-spliced path — a tax-efficiency result, NOT a pre-tax
+after-tax, paid-as-you-go on a single proxy-spliced path, a tax-efficiency result, NOT a pre-tax
 return claim (the structural book's pre-tax CAGR is slightly LOWER). Nothing here is a forecast that
 any fund out-performs; `tilt_overlay`/`lot_protect` are OFF in every shipped config and not wired
 into the live signal.
@@ -58,11 +58,11 @@ STATE_ALPHA = {
 
 def coordination_opportunity_per_m(alpha_pct: float) -> int:
     """The illustrative after-tax *coordination opportunity*, expressed as dollars per year for every
-    $1M of taxable assets — i.e. `alpha_pct`% of $1,000,000, rounded to the nearest $100.
+    $1M of taxable assets, i.e. `alpha_pct`% of $1,000,000, rounded to the nearest $100.
 
     This is the public-facing translation of the modeled return figure: a scale-free dollar rate that
     needs no assumed household size (it multiplies out to the visitor's own number the moment they set
-    a portfolio). +4.0%/yr → $40,000/yr per $1M. Illustrative, hypothetical — the same caveats as the
+    a portfolio). +4.0%/yr → $40,000/yr per $1M. Illustrative, hypothetical, the same caveats as the
     underlying STATE_ALPHA apply."""
     return int(round(alpha_pct / 100.0 * 1_000_000, -2))
 
@@ -100,7 +100,7 @@ _DISPLAY = [("Federal only", "—"), ("Illinois", "IL"), ("New York", "NY"), ("C
 _LEVERS = [
     {"name": "Asset location",
      "share": "the coordination",
-     "desc": "The bridge between how you invest and how the household is structured — placing the "
+     "desc": "The bridge between how you invest and how the household is structured, placing the "
              "higher-turnover strategy in Roth and Traditional accounts, where its short-term gains escape "
              "tax entirely. Coordination itself; quantified for each household in the After-Tax Review."},
     {"name": "Patient trading and lot selection",
@@ -109,7 +109,7 @@ _LEVERS = [
              "would be taxed as ordinary income into long-term gains taxed roughly 17 points lower."},
     {"name": "Loss harvesting",
      "share": "≈ 35–40%",
-     "desc": "Realizes losses and applies them against the highest-taxed gains first — capturing a spread "
+     "desc": "Realizes losses and applies them against the highest-taxed gains first, capturing a spread "
              "a simple buy-and-hold fund never reaches."},
 ]
 

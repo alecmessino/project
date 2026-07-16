@@ -1,9 +1,9 @@
-"""Tax Lab state — the interactive after-tax / TLH / asset-location exhibit.
+"""Tax Lab state, the interactive after-tax / TLH / asset-location exhibit.
 
 Reads the live forward ledger, decomposes its gains rate-independently (drift.tax.
 gain_profile), and embeds the pieces a client-side page needs to recompute after-tax
 return, tax-loss-harvesting value, and the asset-location benefit for ANY federal
-bracket and state. Personalized but self-contained — the math runs in the browser, so
+bracket and state. Personalized but self-contained, the math runs in the browser, so
 the page is shareable with no server (the apres.tax pattern, made portfolio-specific).
 """
 
@@ -18,7 +18,7 @@ from .tax import STATE_RATES, gain_profile
 from .state_facts import ESTATE as _ESTATE_FACTS, IL_AG_CURVE
 
 # Death-tax environment by state, projected from the canonical estate table (drift.state_facts). IL is
-# excluded — it is the precise engine (il_estate_tax), not a neutral card — and NYC is overlaid (a NYC
+# excluded, it is the precise engine (il_estate_tax), not a neutral card, and NYC is overlaid (a NYC
 # resident faces NY's estate tax). One source, no separate estate membership.
 _STATE_ESTATE = {code: e["regime"] for code, e in _ESTATE_FACTS.items() if code != "IL"}
 _STATE_ESTATE["NYC"] = "estate"
@@ -39,10 +39,10 @@ FED_BRACKETS = [
 ASSUMPTIONS = {
     "passive_div_yield": 0.018,        # qualified-dividend yield of the taxable passive core
     "horizon_years": 30,               # projection horizon for the terminal-wealth boost
-    "default_taxable": 1_500_000,      # starting slider value — taxable brokerage balance
+    "default_taxable": 1_500_000,      # starting slider value, taxable brokerage balance
     "default_advantaged": 1_000_000,   # (legacy two-bucket default; superseded by the three below)
-    "default_traditional": 600_000,    # starting slider value — Traditional IRA / pre-tax 401(k)
-    "default_roth": 400_000,           # starting slider value — Roth IRA / tax-free
+    "default_traditional": 600_000,    # starting slider value, Traditional IRA / pre-tax 401(k)
+    "default_roth": 400_000,           # starting slider value, Roth IRA / tax-free
     "wealth_max": 10_000_000,          # slider ceiling
     "wealth_step": 50_000,
     "growth_rate": 0.07,               # illustrative reinvestment rate for the terminal location alpha
@@ -70,12 +70,12 @@ ASSUMPTIONS = {
         "fed_exemption_couple": 30_000_000,  # couple (portable)
         "fed_rate": 0.40,                    # federal top rate
         "il_exclusion": _ESTATE_FACTS["IL"]["exemption_usd"],   # canonical IL exclusion (no portability)
-        "il_hb2601_exclusion": 8_000_000,    # HB 2601 (to $8M) — stalled in Rules, not enacted; a what-if toggle
+        "il_hb2601_exclusion": 8_000_000,    # HB 2601 (to $8M), stalled in Rules, not enacted; a what-if toggle
         "il_top_rate": _ESTATE_FACTS["IL"]["top_rate"],         # canonical IL top marginal rate
         "default_individual": 3_000_000,
         "default_joint": 0,                  # individual-first; joint>0 unlocks the $30M portable exemption
         "default_trust": 1_000_000,
-        # "True Net Worth" illiquid assets — these, not the liquid book, often trigger the state cliff.
+        # "True Net Worth" illiquid assets, these, not the liquid book, often trigger the state cliff.
         "default_real_estate": 1_500_000,    # primary residence + real estate
         "default_business": 0,               # closely-held business equity (full value; discounts apply)
         "default_life_insurance": 0,         # death benefit; in-estate only if owned by the insured (§2042)
@@ -99,7 +99,7 @@ ASSUMPTIONS = {
         "default_trad_ira": 800_000,
         "default_conversion": 100_000,
         "conversion_max": 500_000,
-        # States that broadly exempt IRA/pension distributions from state income tax — so a Roth
+        # States that broadly exempt IRA/pension distributions from state income tax, so a Roth
         # conversion there incurs federal tax only (the "conversion arbitrage", led by Illinois).
         "states_exempt_retirement": ["IL", "PA", "MS"],
     },
@@ -127,7 +127,7 @@ def compounded_fee_drag(balance: float, fee_rate: float, growth_rate: float, yea
 def roth_conversion(conversion: float, fed_ord_rate: float, state_rate: float,
                     state_exempts_retirement: bool) -> dict:
     """Tax on a Roth conversion: federal ordinary income on the converted amount, plus state
-    ordinary tax UNLESS the state exempts retirement distributions (e.g. Illinois) — in which case
+    ordinary tax UNLESS the state exempts retirement distributions (e.g. Illinois), in which case
     only federal applies and `state_saved` is the state tax avoided (the conversion arbitrage)."""
     conv = max(0.0, conversion)
     fed = conv * max(0.0, fed_ord_rate)
@@ -136,7 +136,7 @@ def roth_conversion(conversion: float, fed_ord_rate: float, state_rate: float,
     return {"federal": fed, "state": state, "total": fed + state,
             "state_saved": would_owe_state if state_exempts_retirement else 0.0}
 
-# The Illinois AG estate-tax curve is canonical in drift.state_facts (IL_AG_CURVE) — the same rows
+# The Illinois AG estate-tax curve is canonical in drift.state_facts (IL_AG_CURVE), the same rows
 # feed this Python calculator and the workspace JS (injected via il_ag_curve above). Illustrative;
 # the real AG figure depends on QTIP elections/deductions and the estate attorney files the exact one.
 _IL_AG_CURVE = IL_AG_CURVE
@@ -159,7 +159,7 @@ def il_estate_tax(estate: float, exclusion: float) -> float:
     """Illustrative Illinois estate tax, calibrated to the Illinois AG calculator: $0 at or below
     the exclusion (the cliff into taxability), then the calibrated curve on the amount above it
     (top marginal 16%). The HB2601 toggle raises the exclusion, shifting the whole curve's
-    baseline. Illustrative only — Illinois' actual computation (QTIP elections, deductions) can
+    baseline. Illustrative only, Illinois' actual computation (QTIP elections, deductions) can
     differ; the estate attorney produces the filing figure. Mirrors the JS on the Tax Lab page."""
     return _il_ag_tax(max(0.0, estate - exclusion))
 
@@ -194,11 +194,11 @@ def location_alpha3_range(taxable: float, traditional: float, roth: float,
                           drag_band: float = 0.25, growth_band: float = 0.02) -> dict:
     """A defensible sensitivity interval around location_alpha3 (M3).
 
-    The annual tax saved scales with the momentum sleeve's drag — itself the product of the
-    effective tax rate, turnover, and realized-gain rate — so we flex that drag by ±`drag_band`
+    The annual tax saved scales with the momentum sleeve's drag, itself the product of the
+    effective tax rate, turnover, and realized-gain rate, so we flex that drag by ±`drag_band`
     (relative) to bound the annual figure. The terminal value also rides the reinvestment / market
     return, flexed by ±`growth_band` (absolute). Returns base / low / high for both the annual saving
-    and the terminal location alpha — a range a CPA or examiner can interrogate, not a point claim.
+    and the terminal location alpha, a range a CPA or examiner can interrogate, not a point claim.
     Illustrative; mirrors the JS on the Tax Lab page.
     """
     base = location_alpha3(taxable, traditional, roth, mom_drag_rate, passive_drag_rate, growth_rate, years)
@@ -215,7 +215,7 @@ def location_alpha3_range(taxable: float, traditional: float, roth: float,
 
 def after_fee(after_tax_return: float, annual_fee_rate: float, years: float) -> float:
     """Reduce an after-tax total return by an all-in annual fee (advisory + expense ratio)
-    applied over the track. First-order: fee_rate · years on the base — illustrative, like
+    applied over the track. First-order: fee_rate · years on the base, illustrative, like
     the page's other linear approximations. Mirrors the JS on the Tax Lab page."""
     return after_tax_return - annual_fee_rate * max(0.0, years)
 
@@ -227,7 +227,7 @@ def breakeven_alpha(turnover: float, r_st: float, gain_per_turn: float) -> float
 
     `turnover` is annual (1.0 = 100%), `r_st` the effective short-term rate, `gain_per_turn`
     the NAV fraction realized short-term per unit of turnover. A point (alpha, turnover)
-    below this line — more turnover, less alpha — has net-negative after-tax alpha. Mirrors
+    below this line, more turnover, less alpha, has net-negative after-tax alpha. Mirrors
     the JS on the Tax Lab page; kept here for automated coverage.
     """
     return turnover * gain_per_turn * max(0.0, r_st)
@@ -243,7 +243,7 @@ def location_alpha(taxable: float, advantaged: float,
         alpha$ = (A·T / (A+T)) · (mom_drag_rate − passive_drag_rate)
 
     The (A·T/(A+T)) term is the momentum dollars that land in taxable under the naive
-    (proportional) split — maximized at an equal balance, zero when either account is empty.
+    (proportional) split, maximized at an equal balance, zero when either account is empty.
     The rate spread is the drag that misplacement incurs. This mirrors the JS on the Tax Lab
     page; it lives here so the headline math has automated test coverage.
     """
@@ -264,7 +264,7 @@ def build_taxlab(docs_dir: str | Path = "docs") -> dict:
         "profile": None, "states": STATE_RATES, "brackets": FED_BRACKETS,
         "assumptions": ASSUMPTIONS, "models": models_state(),
     }
-    _attach_statemap(state)        # static dimension dataset — independent of the ledger
+    _attach_statemap(state)        # static dimension dataset, independent of the ledger
     led_path = docs / "ledger.json"
     if not led_path.exists():
         return state

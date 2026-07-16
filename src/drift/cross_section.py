@@ -4,8 +4,8 @@ extremes.
 The time-series model in `triggers.py` trades each instrument on its *own*
 absolute trend. This is the other classic momentum form (Jegadeesh & Titman,
 1993): at each bar, rank every instrument by trend score and go long the top
-quantile / short the bottom quantile. The bet is *relative* — the strongest names
-beat the weakest — which is naturally dollar-neutral and sheds market direction.
+quantile / short the bottom quantile. The bet is *relative*, the strongest names
+beat the weakest, which is naturally dollar-neutral and sheds market direction.
 
 `rank_weights` is pure; `cross_backtest` walks a multi-instrument universe forward
 with no lookahead and charges transaction cost on every per-name weight change.
@@ -47,7 +47,7 @@ def _leg_weights(
 
 def _demean_within_groups(scores: dict[str, float], groups: dict[str, str]) -> dict[str, float]:
     """Subtract each group's mean trend score, so the ranking reflects within-group
-    relative strength only — i.e. neutral to the group-level (region or factor) tilt."""
+    relative strength only, i.e. neutral to the group-level (region or factor) tilt."""
     members: dict[str, list[str]] = {}
     for k, s in scores.items():
         if s is not None:
@@ -80,7 +80,7 @@ def rank_weights(
     within each group first, so the long/short book is neutral to that grouping.
 
     When `tilt` (a per-name multiplier) is supplied, the long leg's risk-balanced
-    weights are scaled by it and renormalized back to the long budget — a strategic
+    weights are scaled by it and renormalized back to the long budget, a strategic
     overweight of favored segments that keeps the book fully invested (no cash added).
     """
     # Breadth of POSITIVE absolute trend (pre-demean) drives the exposure throttle.
@@ -99,7 +99,7 @@ def rank_weights(
         return out
 
     # Continuous tilt overlay (offline research): hold the whole universe, weight = base·(1 + k·z),
-    # floored long-only, capped, renormalized to gross. No top-quantile selection — a different book
+    # floored long-only, capped, renormalized to gross. No top-quantile selection, a different book
     # entirely. Returns early so none of the selection logic below runs.
     if cs.tilt_overlay:
         mu = sum(s for _, s in ranked) / n
@@ -119,12 +119,12 @@ def rank_weights(
 
     cap_k = n // 2 if cs.long_short else n
     k = max(1, min(round(n * cs.quantile), cap_k))
-    # A name is only held if its (demeaned) trend clears min_score — so when nothing
+    # A name is only held if its (demeaned) trend clears min_score, so when nothing
     # is trending the book lightens up rather than holding the least-bad name.
     if cs.slow_sleeve_mode:
         # Asymmetric rank hysteresis (the slow sleeve): a name ENTERS only in the top
         # `buy_quantile`, but a HELD name is kept until it leaves the top `hold_quantile`
-        # — so boundary names never churn the book by construction. The held set is the
+        #, so boundary names never churn the book by construction. The held set is the
         # last period's positions (`current_weights`), unioned with any explicit `held`.
         held_set = {k for k, w in (current_weights or {}).items() if w > 0} | (held or set())
         enter_k = max(1, min(round(n * cs.buy_quantile), cap_k))
@@ -133,7 +133,7 @@ def rank_weights(
                  if s >= cs.min_score and (rank_i < enter_k or key in held_set)]
     elif cs.conviction and held:
         # Rank hysteresis: enter only in the stricter top (q - buffer); keep a held name
-        # while it stays within the looser top (q + buffer) — suppresses boundary churn.
+        # while it stays within the looser top (q + buffer), suppresses boundary churn.
         buf = cs.conviction_buffer
         enter_k = max(1, min(round(n * (cs.quantile - buf)), cap_k))
         exit_k = max(k, min(round(n * (cs.quantile + buf)), cap_k))
@@ -153,7 +153,7 @@ def rank_weights(
 
     # Strategic forward tilt: redistribute the long leg toward favored segments
     # (e.g. EM / international / value / small) by multiplying each long weight by
-    # its per-name factor, then renormalizing the leg back to its budget — so the
+    # its per-name factor, then renormalizing the leg back to its budget, so the
     # book stays fully invested rather than parking the tilt difference in cash.
     if tilt and long_budget > 0:
         tilted = {key: out[key] * tilt.get(key, 1.0) for key in out if out[key] > 0}
@@ -171,7 +171,7 @@ def rank_weights(
             out[key] = -cs.max_weight
 
     # Trend throttle: scale total exposure by positive-trend breadth (full in a broad
-    # uptrend, light in a broad bear) — the time-series overlay for drawdown control.
+    # uptrend, light in a broad bear), the time-series overlay for drawdown control.
     if cs.trend_throttle:
         expo = max(cs.exposure_floor, min(1.0, breadth))
         out = {key: w * expo for key, w in out.items()}
@@ -258,13 +258,13 @@ def _lot_protected_weights(target: dict[str, float], prev: dict[str, float],
     """Tax-lot capital-gains protection (execution layer, slow sleeve only).
 
     A name the ranking wants to LIQUIDATE/REDUCE is held back when its lot is within
-    `lt_protection_window_bars` of the 365-day long-term threshold — letting the gain age
-    into long-term treatment — UNLESS its rank has broken down catastrophically (it has
+    `lt_protection_window_bars` of the 365-day long-term threshold, letting the gain age
+    into long-term treatment, UNLESS its rank has broken down catastrophically (it has
     fallen into the bottom `catastrophic_quantile` of the cross-section), in which case it
     is sold regardless. Frozen names keep their prior weight; the rest of the long book is
     renormalized to fill the residual gross budget so the book stays fully invested (mirrors
     the residual logic in `_tax_aware_weights`). No-op unless (`slow_sleeve_mode` or `lot_protect`)
-    and `prev` — the latter lets the continuous-tilt hybrid reuse this protection without the rest of
+    and `prev`, the latter lets the continuous-tilt hybrid reuse this protection without the rest of
     the slow sleeve."""
     if not ((cs.slow_sleeve_mode or cs.lot_protect) and prev):
         return target
@@ -316,7 +316,7 @@ def _tax_aware_weights(target: dict[str, float], prev: dict[str, float],
         else:
             traded[k] = t
     # Hold the kept names exactly (zero turnover); fill the remaining gross budget with
-    # the traded names, rescaled — so only names that actually move incur a trade.
+    # the traded names, rescaled, so only names that actually move incur a trade.
     resid = cs.gross_exposure - sum(kept.values())
     traded_sum = sum(v for v in traded.values() if v > 0)
     out = dict(kept)
@@ -339,8 +339,8 @@ def cross_book_streams(series: dict[str, list[Bar]], settings: Settings) -> list
     """Dated net returns of the cross-sectional rotation over the FULL history.
 
     Unlike `cross_backtest` (which aligns to the shortest series), this handles
-    ragged histories — at each rebalance it ranks only the instruments that have
-    enough history by that date — so the book spans the whole period (incl. 2008)
+    ragged histories, at each rebalance it ranks only the instruments that have
+    enough history by that date, so the book spans the whole period (incl. 2008)
     rather than truncating to the youngest name. Long-only/L-S, rebalance cadence,
     min_score gate, and neutralization all apply via `rank_weights`.
     """
@@ -399,7 +399,7 @@ def cross_book_streams(series: dict[str, list[Bar]], settings: Settings) -> list
 
 def cross_book_entries(series: dict[str, list[Bar]], settings: Settings) -> list[dict]:
     """Like `cross_book_streams`, but records the full per-session book (date, weights,
-    per-name prices, net return, equity) over the whole ragged history — the same shape
+    per-name prices, net return, equity) over the whole ragged history, the same shape
     the forward ledger stores, so `drift.tax.after_tax_track` can run an after-tax
     simulation over decades. Efficient single pass (no O(n^2) sub-slicing)."""
     s = settings.signal

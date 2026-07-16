@@ -11,7 +11,7 @@
 </script>
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
-<title>Driftwood Wealth — Core Alpha book (research)</title>
+<title>Driftwood Wealth, Core Alpha book (research)</title>
 <meta name="description" content="The Core Alpha book: what the hypothetical Model Portfolio holds now, its trend strength by sleeve, the last rebalance in and out, and the dated track. Research only, not investment advice." />
 <link rel="canonical" href="https://driftwoodwealth.com/equities.html" />
 <link rel="icon" href="favicon.svg" />
@@ -22,16 +22,16 @@
 <meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Wealth" />
-<meta property="og:title" content="Driftwood Wealth — Core Alpha book (research)" />
+<meta property="og:title" content="Driftwood Wealth, Core Alpha book (research)" />
 <meta property="og:description" content="The Core Alpha book: current holdings, trend strength by sleeve, the last rebalance in and out, and the dated track. Research only, not investment advice." />
 <meta property="og:url" content="https://driftwoodwealth.com/equities.html" />
 <meta property="og:image" content="https://driftwoodwealth.com/og/equities.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Driftwood Wealth — Core Alpha book (research)" />
+<meta name="twitter:title" content="Driftwood Wealth, Core Alpha book (research)" />
 <meta name="twitter:description" content="The Core Alpha book: current holdings, trend strength, last rebalance, and dated track. Research only, not investment advice." />
 <meta name="twitter:image" content="https://driftwoodwealth.com/og/equities.png" />
 <style>
-  /* Institutional Editorial — paper, ink, brass. An operational book view: one source of truth. */
+  /* Institutional Editorial, paper, ink, brass. An operational book view: one source of truth. */
   :root{
     --paper:#f1efe9; --card:#ffffff; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6;
     --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
@@ -73,7 +73,7 @@
   table.book tr.waiting td{color:#8a8892}
   table.book tr.waiting td.sym{color:#8a8892}
   .pw{font-weight:500;color:var(--ink)}
-  /* status chips — the one thing an advisor reads: Buy / Increase / Reduce / Hold / Sell / Waiting */
+  /* status chips, the one thing an advisor reads: Buy / Increase / Reduce / Hold / Sell / Waiting */
   .st{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:3px 9px;border-radius:0;white-space:nowrap}
   .st-Buy,.st-Increase{color:#125a49;background:#e6f1ea;border:1px solid #bcd8cb}
   .st-Reduce{color:var(--brass);background:var(--soft);border:1px solid var(--gold)}
@@ -117,7 +117,7 @@
 <body>
 <div class="frame">
   <nav class="dwnav" aria-label="Driftwood Wealth">
-      <a class="brand" href="index.html" aria-label="Driftwood Wealth — home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-links">
         <span class="dwnav-group"><span class="dwnav-label">The Firm</span>
           <a href="about.html">Our Story</a>
@@ -140,14 +140,14 @@
 
   <div class="pad top">
     <div class="eyebrow">Core Alpha Research · Nº 001 · The Dashboard <span class="hyp-pill">HYPOTHETICAL</span></div>
-    <h1 class="hero">The current book — and what just changed.</h1>
+    <h1 class="hero">The current book, and what just changed.</h1>
     <p class="asof" id="asof"></p>
     <div class="research-banner">
-      <b>Core Alpha Research — a hypothetical Model Portfolio.</b> This is the Core Alpha strategy: the
+      <b>Core Alpha Research, a hypothetical Model Portfolio.</b> This is the Core Alpha strategy: the
       high-turnover, opportunistic momentum book built for <b>tax-advantaged</b> accounts. The flagship
-      <b>Structural Alpha</b> book — diversified, low-turnover, tax-managed — is the taxable-account
+      <b>Structural Alpha</b> book, diversified, low-turnover, tax-managed, is the taxable-account
       strategy (see Approach). Everything below is a hypothetical backtest of one model portfolio, marked
-      daily — not a client account and not an executed order.
+      daily, not a client account and not an executed order.
     </div>
   </div>
 
@@ -155,7 +155,7 @@
     <div class="statstrip" id="statstrip"></div>
     <svg class="chart" id="chart" preserveAspectRatio="none" role="img"
       aria-label="Model Portfolio equity over time versus buy-and-hold benchmarks"></svg>
-    <div class="chartcap">Model Portfolio equity, rebased to its start and marked daily against buy-and-hold benchmarks — a hypothetical backtest, not a track record.</div>
+    <div class="chartcap">Model Portfolio equity, rebased to its start and marked daily against buy-and-hold benchmarks, a hypothetical backtest, not a track record.</div>
   </div>
 
   <div class="pad">
@@ -167,8 +167,8 @@
       <th scope="col">Sleeve</th><th scope="col">What it is</th><th scope="col">Trend strength</th><th scope="col">Portfolio weight</th><th scope="col">Status</th>
     </tr></thead><tbody id="bookbody"></tbody></table></div>
     <div class="blotnote">Held sleeves first (by portfolio weight), then the waiting list (universe members below the
-      cut, by trend strength). <b>Status</b> is what the last rebalance did to each name — Buy / Increase / Reduce /
-      Hold — or Waiting. One book, one date; nothing here is an executed order.</div>
+      cut, by trend strength). <b>Status</b> is what the last rebalance did to each name, Buy / Increase / Reduce /
+      Hold, or Waiting. One book, one date; nothing here is an executed order.</div>
   </div>
 
   <div class="pad" id="rebwrap" style="display:none">
@@ -177,8 +177,8 @@
       <div class="hint" id="rebhint"></div>
     </div>
     <div class="reb" id="reb"></div>
-    <div class="blotnote">What the book did at its most recent monthly turn — names bought or sold, weights raised or
-      trimmed — held forward since. Hypothetical model output for research; not advice and not an executed order.</div>
+    <div class="blotnote">What the book did at its most recent monthly turn, names bought or sold, weights raised or
+      trimmed, held forward since. Hypothetical model output for research; not advice and not an executed order.</div>
   </div>
 
   <nav class="series-rail" aria-label="The Core Alpha research series">
@@ -191,12 +191,11 @@
     </ol>
   </nav>
   <div class="foot">
-    <span class="note">Research only — not investment advice.</span> The Core Alpha model flags and sizes trends; it
+    <span class="note">Research only, not investment advice.</span> The Core Alpha model flags and sizes trends; it
     does not place trades. Walk-forward, net of modeled transaction cost; the retroactive application of the model to
-    historical data, not actual trading or any client account. Past performance — hypothetical or actual — does not
+    historical data, not actual trading or any client account. Past performance, hypothetical or actual, does not
     guarantee future results. Data: Yahoo Finance daily bars.
-    <div style="margin-top:8px">Driftwood Wealth is a
-    <b>registered investment adviser</b>; <a href="disclosures/adv-part-2a.pdf">Form ADV Part 2A</a> and <a href="disclosures/form-crs.pdf">Form CRS</a> are available directly; the firm’s public record is at <a href="https://adviserinfo.sec.gov/" style="color:var(--teal)">adviserinfo.sec.gov</a>. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.</div>
+    <div style="margin-top:8px">Driftwood Wealth is the private-wealth practice of Alec Messino. It is not currently a registered investment adviser, and this site is not a solicitation for advisory services. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.</div>
     <div style="margin-top:6px;color:var(--dim)">Intended for sophisticated investors; these are hypothetical model
     results, not advice, and may not be relevant to your situation.</div>
     <span id="gen"></span>
@@ -206,7 +205,7 @@
 <script>
 window.__STATE__ = /*__STATE__*/null/*__END__*/;
 
-// Plain-English names for the region/size/style sleeves — "IJR" → "US Small-Cap".
+// Plain-English names for the region/size/style sleeves, "IJR" → "US Small-Cap".
 const NAMES = {
   IVE:"US Large Value", IVV:"US Large-Cap", IVW:"US Large Growth",
   IWS:"US Mid Value", IWR:"US Mid-Cap", IWP:"US Mid Growth",
@@ -217,7 +216,7 @@ const NAMES = {
   VT:"Global market", VTI:"US total market"
 };
 const nameOf = t => NAMES[t] || t;
-function pct(x){ return (x==null)?"—":(x>=0?"+":"") + (x*100).toFixed(1) + "%"; }
+function pct(x){ return (x==null)?"–":(x>=0?"+":"") + (x*100).toFixed(1) + "%"; }
 function cls(x){ return x>0 ? "pos" : x<0 ? "neg" : "neutral"; }
 
 function niceStep(span, n){
@@ -272,18 +271,18 @@ function render(s){
     + " · static snapshot of the Model Portfolio ledger, not a live feed.";
 
   document.getElementById("asof").innerHTML =
-    `As of <b>${s.date||"—"}</b> the book holds <b>${hd.n_held} of ${hd.n_universe}</b> sleeves, `+
-    `inverse-volatility weighted; it rebalances every <b>${hd.rebalance_bars||"—"}</b> sessions and holds forward between turns.`;
+    `As of <b>${s.date||"–"}</b> the book holds <b>${hd.n_held} of ${hd.n_universe}</b> sleeves, `+
+    `inverse-volatility weighted; it rebalances every <b>${hd.rebalance_bars||"–"}</b> sessions and holds forward between turns.`;
 
   document.getElementById("statstrip").innerHTML = [
     ["Net return", pct(ph.total_return), cls(ph.total_return)],
-    ["Sharpe", (ph.sharpe==null?"—":ph.sharpe.toFixed(2)), cls(ph.sharpe)],
+    ["Sharpe", (ph.sharpe==null?"–":ph.sharpe.toFixed(2)), cls(ph.sharpe)],
     ["Max drawdown", pct(ph.max_drawdown==null?null:-ph.max_drawdown), "neg"],
     ["Sleeves held", hd.n_held+" / "+hd.n_universe, "neutral"],
     ["Sessions", (ph.days||0)+"", "neutral"],
   ].map(([l,v,c])=>`<div class="cell"><div class="v ${c}">${v}</div><div class="l">${l}</div></div>`).join("");
 
-  // Dated performance chart: the book vs its buy-and-hold benchmarks. Data-colour standard —
+  // Dated performance chart: the book vs its buy-and-hold benchmarks. Data-colour standard,
   // the strategy is the only saturated line (#15806a); benchmarks recede to neutral greys.
   const BENCH_GREYS=["#b8bcc2","#cdd0d6","#dcdee2"];
   const lines=[{label:"Model", values:p.equity, color:"#15806a", width:2.5}];
@@ -296,7 +295,7 @@ function render(s){
     const waiting = r.status==="Waiting";
     const z = (r.signal_strength>=0?"+":"")+(r.signal_strength||0).toFixed(2);
     const zsr = (r.signal_strength||0)>=0 ? "positive trend" : "below-average trend";
-    const pw = r.portfolio_weight>0 ? (r.portfolio_weight*100).toFixed(1)+"%" : "—";
+    const pw = r.portfolio_weight>0 ? (r.portfolio_weight*100).toFixed(1)+"%" : "–";
     return `<tr class="${waiting?'waiting':''}">
       <td class="sym">${r.instrument}</td>
       <td>${nameOf(r.instrument)}</td>
@@ -306,15 +305,15 @@ function render(s){
     </tr>`;
   }).join("");
 
-  // Last rebalance — in and out, using the operational status verbs (Buy/Increase/Reduce/Sell).
+  // Last rebalance, in and out, using the operational status verbs (Buy/Increase/Reduce/Sell).
   const rb = s.rebalance, rw = document.getElementById("rebwrap");
   if(rb && rb.trades && rb.trades.length){
     rw.style.display = "";
     document.getElementById("rebhint").innerHTML =
       `${rb.date} · held forward since · <b class="${cls(rb.since_return)}">${pct(rb.since_return)}</b> since`;
     document.getElementById("reb").innerHTML = rb.trades.map(t=>{
-      const wcur = t.weight>0 ? (t.weight*100).toFixed(1)+"%" : "—";
-      const wprev = t.prev_weight>0 ? (t.prev_weight*100).toFixed(1)+"%" : "—";
+      const wcur = t.weight>0 ? (t.weight*100).toFixed(1)+"%" : "–";
+      const wprev = t.prev_weight>0 ? (t.prev_weight*100).toFixed(1)+"%" : "–";
       const d = (t.delta>=0?"+":"")+(t.delta*100).toFixed(1)+" pts";
       const st = t.status||"Hold";
       return `<div class="trade ${st}">

@@ -1,12 +1,12 @@
-"""Canonical per-jurisdiction tax facts — the single source of truth (PUBLISHING_SPEC §15.4).
+"""Canonical per-jurisdiction tax facts, the single source of truth (PUBLISHING_SPEC §15.4).
 
 Every surface projects from here: the after-tax calculator (``tax.STATE_RATES``), the Atlas
 display (``statemap._income``), the state pages, the templates, and the JS. No rate or threshold
-is authored anywhere else — that is the whole point of this module.
+is authored anywhere else, that is the whole point of this module.
 
 2026 edition (2025 tax-year law). RATES are TOP-OF-BRACKET *effective* capital-gains rates a
-high-income resident ($1M+ of gains) actually pays — INCLUDING any millionaire / net-investment
-surtax and reflecting any long-term exclusion — so the calculator and the Atlas headline agree by
+high-income resident ($1M+ of gains) actually pays, INCLUDING any millionaire / net-investment
+surtax and reflecting any long-term exclusion, so the calculator and the Atlas headline agree by
 construction. Each figure changed from the prior encoding is reconciled against a primary/official
 source in RECONCILIATION_LOG.md (previous value → adopted value → authority → effective date);
 the per-state citations for the 2025 reconciliation live in RATE_SOURCES below.
@@ -82,78 +82,78 @@ RATE_SOURCES: dict[str, dict] = {
            "authority": "GA HB 111 (2025), retroactive to Jan 1 2025",
            "url": "https://taxnews.ey.com/news/2025-0930-georgia-law-lowers-personal-income-tax-retroactive-to-january-1-2025-allows-for-future-tax-cuts", "effective": "Jan 1 2025"},
     "IA": {"prev_tax": "5.70/5.70", "prev_map": "3.80%", "adopted": "3.80/3.80",
-           "authority": "Iowa DOR — 2025 flat 3.8% individual rate",
+           "authority": "Iowa DOR, 2025 flat 3.8% individual rate",
            "url": "https://revenue.iowa.gov/press-release/2024-10-16/idr-announces-2025-individual-income-tax-brackets-and-interest-rates", "effective": "Jan 1 2025"},
     "ID": {"prev_tax": "5.80/5.80", "prev_map": "5.30%", "adopted": "5.30/5.30",
            "authority": "Idaho HB 40 (2025), retroactive to Jan 1 2025",
            "url": "https://legislature.idaho.gov/wp-content/uploads/sessioninfo/2025/legislation/H0040.pdf", "effective": "Jan 1 2025"},
     "IN": {"prev_tax": "3.05/3.05", "prev_map": "3%", "adopted": "3.00/3.00",
-           "authority": "Indiana DOR — 3.0% flat for 2025",
+           "authority": "Indiana DOR, 3.0% flat for 2025",
            "url": "https://www.in.gov/dor/resources/tax-rates-and-reports/rates-fees-and-penalties/", "effective": "TY2025"},
     "KS": {"prev_tax": "5.70/5.70", "prev_map": "5.58%", "adopted": "5.58/5.58",
-           "authority": "Kansas DOR — two-bracket top 5.58% (2024 SB 1)",
+           "authority": "Kansas DOR, two-bracket top 5.58% (2024 SB 1)",
            "url": "https://www.ksrevenue.gov/taxrates.html", "effective": "TY2025"},
     "LA": {"prev_tax": "4.25/4.25", "prev_map": "3%", "adopted": "3.00/3.00",
-           "authority": "Louisiana DOR RIB 25-012 — flat 3%, cap-gains deduction repealed",
+           "authority": "Louisiana DOR RIB 25-012, flat 3%, cap-gains deduction repealed",
            "url": "https://revenue.louisiana.gov/tax-education-and-faqs/faqs/income-tax-reform/what-are-the-individual-income-tax-rates-and-brackets/", "effective": "Jan 1 2025"},
     "MA": {"prev_tax": "5.00/8.50", "prev_map": "9%", "adopted": "9.00/12.50",
-           "authority": "Mass.gov — 4% surtax over $1,083,150 on LT (5%) and ST (8.5%)",
+           "authority": "Mass.gov, 4% surtax over $1,083,150 on LT (5%) and ST (8.5%)",
            "url": "https://www.mass.gov/info-details/massachusetts-4-surtax-on-taxable-income", "effective": "TY2025"},
     "MD": {"prev_tax": "5.75/5.75", "prev_map": "8.50%", "adopted": "8.50/6.50",
            "authority": "MD Comptroller TB-58 + 2025 Budget Recon. Act (6.5% top + 2% cap-gains surtax on LT)",
            "url": "https://www.marylandcomptroller.gov/content/dam/mdcomp/tax/legal-publications/technical-bulletins/tb-58.pdf", "effective": "TY2025"},
     "MN": {"prev_tax": "9.85/9.85", "prev_map": "10.8%", "adopted": "10.85/10.85",
-           "authority": "MN DOR — 9.85% top + 1% NIIT surtax over $1M",
+           "authority": "MN DOR, 9.85% top + 1% NIIT surtax over $1M",
            "url": "https://www.revenue.state.mn.us/net-investment-income-tax-niit", "effective": "TY2024+"},
     "MO": {"prev_tax": "4.80/4.80", "prev_map": "0%", "adopted": "0.00/0.00",
-           "authority": "MO HB 594 (2025) — 100% capital-gains exemption",
+           "authority": "MO HB 594 (2025), 100% capital-gains exemption",
            "url": "https://dor.mo.gov/news/newsitem/uuid/15044650-59dd-48f4-975a-01988d485255", "effective": "Jan 1 2025"},
     "MS": {"prev_tax": "4.70/4.70", "prev_map": "4.40%", "adopted": "4.40/4.40",
-           "authority": "MS DOR — flat 4.4% for 2025",
+           "authority": "MS DOR, flat 4.4% for 2025",
            "url": "https://www.dor.ms.gov/general-information", "effective": "TY2025"},
     "NC": {"prev_tax": "4.50/4.50", "prev_map": "4.25%", "adopted": "4.25/4.25",
-           "authority": "NCDOR — flat 4.25% for 2025",
+           "authority": "NCDOR, flat 4.25% for 2025",
            "url": "https://www.ncdor.gov/taxes-forms/individual-income-tax/tax-rate-schedules", "effective": "TY2025"},
     "NE": {"prev_tax": "5.84/5.84", "prev_map": "5.20%", "adopted": "5.20/5.20",
-           "authority": "Nebraska LB 754 / R.S. 77-2715.03 — 5.20% top for 2025",
+           "authority": "Nebraska LB 754 / R.S. 77-2715.03, 5.20% top for 2025",
            "url": "https://www.nebraskalegislature.gov/laws/statutes.php?statute=77-2715.03", "effective": "TY2025"},
     "NM": {"prev_tax": "3.54/5.90", "prev_map": "5.90%", "adopted": "5.90/5.90",
-           "authority": "NM Stat. 7-2-34 (eff. 1/1/2025, HB 252) — general 40% LT exclusion repealed",
+           "authority": "NM Stat. 7-2-34 (eff. 1/1/2025, HB 252), general 40% LT exclusion repealed",
            "url": "https://law.justia.com/codes/new-mexico/chapter-7/article-2/section-7-2-34/", "effective": "Jan 1 2025"},
     "OH": {"prev_tax": "3.50/3.50", "prev_map": "3.13%", "adopted": "3.125/3.125",
-           "authority": "Ohio Dept. of Taxation — 3.125% top for 2025 (flat 2.75% in 2026)",
+           "authority": "Ohio Dept. of Taxation, 3.125% top for 2025 (flat 2.75% in 2026)",
            "url": "https://tax.ohio.gov/individual/resources/annual-tax-rates", "effective": "TY2025"},
     "SC": {"prev_tax": "3.47/6.20", "prev_map": "3.36%", "adopted": "3.36/6.00",
-           "authority": "SC DOR — 2025 top rate 6.0%; 44% LT deduction (§12-6-1150) → LT 3.36%",
+           "authority": "SC DOR, 2025 top rate 6.0%; 44% LT deduction (§12-6-1150) → LT 3.36%",
            "url": "https://dor.sc.gov/iit", "effective": "TY2025"},
     "UT": {"prev_tax": "4.55/4.55", "prev_map": "4.50%", "adopted": "4.50/4.50",
-           "authority": "Utah HB 106 (2025) — flat 4.50%, retroactive to Jan 1 2025",
+           "authority": "Utah HB 106 (2025), flat 4.50%, retroactive to Jan 1 2025",
            "url": "https://incometax.utah.gov/paying/tax-rates", "effective": "Jan 1 2025"},
     "VT": {"prev_tax": "5.25/8.75", "prev_map": "8.75%", "adopted": "8.75/8.75",
-           "authority": "VT Dept. of Taxes / Reg. 1.5811(21)(B)(ii) — 40% LT exclusion unavailable for listed securities",
+           "authority": "VT Dept. of Taxes / Reg. 1.5811(21)(B)(ii), 40% LT exclusion unavailable for listed securities",
            "url": "https://tax.vermont.gov/individuals/personal-income-tax/taxable-income", "effective": "TY2025"},
     "WA": {"prev_tax": "7.00/0.00", "prev_map": "9.90%", "adopted": "9.90/0.00",
-           "authority": "WA DOR — SB 5813 added a 2.9% tier over $1M to the 7% LT excise",
+           "authority": "WA DOR, SB 5813 added a 2.9% tier over $1M to the 7% LT excise",
            "url": "https://dor.wa.gov/forms-publications/publications-subject/special-notices/new-tiered-rates-washingtons-capital-gains-tax", "effective": "Jan 1 2025"},
     "WV": {"prev_tax": "5.12/5.12", "prev_map": "4.82%", "adopted": "4.82/4.82",
-           "authority": "WV Tax Division — 2025 IT-140 top rate 4.82% (triggered cut)",
+           "authority": "WV Tax Division, 2025 IT-140 top rate 4.82% (triggered cut)",
            "url": "https://tax.wv.gov/Documents/PIT/2025/it140.TaxRateSchedules.2025.pdf", "effective": "Jan 1 2025"},
 }
 
 
-# ── Estate / inheritance ("death") tax — canonical, 2025 tax-year law ───────────────────────────────
+# ── Estate / inheritance ("death") tax, canonical, 2025 tax-year law ───────────────────────────────
 # The single source for statemap (the Atlas display), taxlab (the estate calculator), and the
 # workspace JS. Each entry: regime ∈ estate/inheritance/both; top_rate (decimal); exemption_usd (None
 # for inheritance-only states, which key off heir class); exemption_display; cliff (whole estate taxed
 # once the exemption is cleared); note. Exemptions are the 2025 figure a 2025 death faces; where a
 # state indexes for inflation the 2026 figure is stated in the note. Absent states have no death tax.
 _ESTATE_NOTE_IL = (
-    "Illinois estate tax: a $4,000,000 exemption — not indexed, administered by the Attorney General "
+    "Illinois estate tax: a $4,000,000 exemption, not indexed, administered by the Attorney General "
     "(Form 700), not IDOR, and not portable between spouses. It is a cliff threshold: once the estate "
     "clears $4M the frozen IRC 2011 state death-tax credit table (0.8–16% over 21 brackets) applies to "
     "essentially the whole taxable estate, so the first dollars over $4M carry a ~29% effective cost. "
-    "Broad-raise bills are pending but NOT enacted — HB 2601 (to $8M) stalled in Rules; SB 2970's $6M "
-    "applies only to qualified farm property — so $4M stands. Confirm the filing figure with counsel."
+    "Broad-raise bills are pending but NOT enacted, HB 2601 (to $8M) stalled in Rules; SB 2970's $6M "
+    "applies only to qualified farm property, so $4M stands. Confirm the filing figure with counsel."
 )
 ESTATE: dict[str, dict] = {
     "CT": {"regime": "estate", "top_rate": 0.12, "exemption_usd": 13_990_000, "exemption_display": "$13.99M",
@@ -161,7 +161,7 @@ ESTATE: dict[str, dict] = {
     "DC": {"regime": "estate", "top_rate": 0.16, "exemption_usd": 4_873_200, "exemption_display": "$4.87M",
            "cliff": False, "note": "Inflation-indexed zero-bracket amount; no portability."},
     "HI": {"regime": "estate", "top_rate": 0.20, "exemption_usd": 5_490_000, "exemption_display": "$5.49M",
-           "cliff": False, "note": "Graduated 10–20% over the exemption — the nation's highest top rate; not indexed."},
+           "cliff": False, "note": "Graduated 10–20% over the exemption, the nation's highest top rate; not indexed."},
     "IL": {"regime": "estate", "top_rate": 0.16, "exemption_usd": 4_000_000, "exemption_display": "$4M",
            "cliff": True, "note": _ESTATE_NOTE_IL},
     "MA": {"regime": "estate", "top_rate": 0.16, "exemption_usd": 2_000_000, "exemption_display": "$2M",
@@ -179,7 +179,7 @@ ESTATE: dict[str, dict] = {
     "VT": {"regime": "estate", "top_rate": 0.16, "exemption_usd": 5_000_000, "exemption_display": "$5M",
            "cliff": False, "note": "Flat $5M exclusion; flat 16% over it."},
     "WA": {"regime": "estate", "top_rate": 0.35, "exemption_usd": 3_000_000, "exemption_display": "$3M",
-           "cliff": False, "note": "ESSB 5813 (deaths on/after Jul 1 2025): $3M exclusion, graduated to 35% — the highest state rate; $3M indexed from 2026."},
+           "cliff": False, "note": "ESSB 5813 (deaths on/after Jul 1 2025): $3M exclusion, graduated to 35%, the highest state rate; $3M indexed from 2026."},
     "MD": {"regime": "both", "top_rate": 0.16, "exemption_usd": 5_000_000, "exemption_display": "$5M",
            "cliff": False, "note": "The only state with both an estate tax ($5M exemption, portable, to 16%) and a 10% inheritance tax on non-close heirs."},
     "KY": {"regime": "inheritance", "top_rate": 0.16, "exemption_usd": None, "exemption_display": "—",
@@ -187,12 +187,12 @@ ESTATE: dict[str, dict] = {
     "NE": {"regime": "inheritance", "top_rate": 0.15, "exemption_usd": None, "exemption_display": "—",
            "cliff": False, "note": "County inheritance tax; 1–15% by heir class (post-LB 310)."},
     "NJ": {"regime": "inheritance", "top_rate": 0.16, "exemption_usd": None, "exemption_display": "—",
-           "cliff": False, "note": "Estate tax repealed 2018; inheritance tax only — Class A exempt, others 11–16%."},
+           "cliff": False, "note": "Estate tax repealed 2018; inheritance tax only, Class A exempt, others 11–16%."},
     "PA": {"regime": "inheritance", "top_rate": 0.15, "exemption_usd": None, "exemption_display": "—",
            "cliff": False, "note": "Inheritance tax only; lineal heirs 4.5%, siblings 12%, others 15%."},
 }
 
-# Illinois AG estate-tax computation curve — a calibrated fit to the Attorney General's calculator
+# Illinois AG estate-tax computation curve, a calibrated fit to the Attorney General's calculator
 # (the true cliff mechanics are subtler). Rows: (excess_over_exclusion, tax_at_that_excess,
 # marginal_rate_above). Anchors: $5M estate → ~$285k, $8M → ~$690k, $10M → ~$980k at the $4M exclusion.
 # Canonical here so the Python calculator and the workspace JS render the same curve.
@@ -206,15 +206,15 @@ IL_AG_CURVE = [
 
 # Per-state estate reconciliation records (2025 tax-year); drives RECONCILIATION_LOG.md §2.
 ESTATE_SOURCES: dict[str, dict] = {
-    "CT": {"prev": "$15M exemption", "adopted": "$13.99M", "authority": "CT DRS / Tax Foundation 2025 — $15M is the liability cap, not the exemption",
+    "CT": {"prev": "$15M exemption", "adopted": "$13.99M", "authority": "CT DRS / Tax Foundation 2025, $15M is the liability cap, not the exemption",
            "url": "https://taxfoundation.org/data/all/state/estate-inheritance-taxes/", "effective": "TY2025"},
-    "DC": {"prev": "$4.99M", "adopted": "$4.87M", "authority": "DC OTR — indexed 2025 exclusion $4,873,200",
+    "DC": {"prev": "$4.99M", "adopted": "$4.87M", "authority": "DC OTR, indexed 2025 exclusion $4,873,200",
            "url": "https://taxfoundation.org/data/all/state/estate-inheritance-taxes/", "effective": "TY2025"},
-    "ME": {"prev": "$7.16M", "adopted": "$7.0M", "authority": "Maine Revenue Services (706ME) — 2025 exclusion $7.0M ($7.16M is 2026)",
+    "ME": {"prev": "$7.16M", "adopted": "$7.0M", "authority": "Maine Revenue Services (706ME), 2025 exclusion $7.0M ($7.16M is 2026)",
            "url": "https://www.maine.gov/revenue/taxes/income-estate-tax/estate-tax-706me", "effective": "TY2025"},
-    "NY": {"prev": "$7.35M", "adopted": "$7.16M", "authority": "NY Dept. of Taxation — 2025 basic exclusion $7.16M ($7.35M is 2026)",
+    "NY": {"prev": "$7.35M", "adopted": "$7.16M", "authority": "NY Dept. of Taxation, 2025 basic exclusion $7.16M ($7.35M is 2026)",
            "url": "https://www.tax.ny.gov/pit/estate/etidx.htm", "effective": "TY2025"},
-    "RI": {"prev": "$1.84M", "adopted": "$1.8M", "authority": "RI Division of Taxation — 2025 threshold $1,802,431 ($1.84M is 2026)",
+    "RI": {"prev": "$1.84M", "adopted": "$1.8M", "authority": "RI Division of Taxation, 2025 threshold $1,802,431 ($1.84M is 2026)",
            "url": "https://taxfoundation.org/data/all/state/estate-inheritance-taxes/", "effective": "TY2025"},
     "IL": {"prev": "SB 2970 → $6M (general) pending", "adopted": "$4M stands; HB 2601 $8M stalled, SB 2970 $6M is farm-only",
            "authority": "Illinois AG estate tax + ILGA bill status (HB 2601, SB 2970)",

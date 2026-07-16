@@ -11,8 +11,8 @@
 </script>
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
-<title>Driftwood Wealth — your financial life, run as one system</title>
-<meta name="description" content="Most households already have the pieces of a good plan — a portfolio, a CPA, an estate attorney. What's missing is someone coordinating them as one system. Driftwood manages that system; what you keep is the result. Fee-only, fiduciary." />
+<title>Driftwood Wealth, your financial life, run as one system</title>
+<meta name="description" content="Most households already have the pieces of a good plan, a portfolio, a CPA, an estate attorney. What's missing is someone coordinating them as one system. Driftwood manages that system; what you keep is the result. Fee-only, fiduciary." />
 <link rel="canonical" href="https://driftwoodwealth.com/index.html" />
 <link rel="icon" href="favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
@@ -22,27 +22,27 @@
 <meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Wealth" />
-<meta property="og:title" content="Driftwood Wealth — your financial life, run as one system" />
-<meta property="og:description" content="Most advisors manage investments. Driftwood manages the system those investments live in — coordinating taxes, accounts, estate, and cash flow as one after-tax system. Fee-only, fiduciary." />
+<meta property="og:title" content="Driftwood Wealth, your financial life, run as one system" />
+<meta property="og:description" content="Most advisors manage investments. Driftwood manages the system those investments live in, coordinating taxes, accounts, estate, and cash flow as one after-tax system. Fee-only, fiduciary." />
 <meta property="og:url" content="https://driftwoodwealth.com/index.html" />
 <meta property="og:image" content="https://driftwoodwealth.com/og/index.png" />
 <meta property="og:image:secure_url" content="https://driftwoodwealth.com/og/index.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Driftwood Wealth — Private Wealth Architecture. Keep more of what you've earned." />
+<meta property="og:image:alt" content="Driftwood Wealth, Private Wealth Architecture. Keep more of what you've earned." />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Driftwood Wealth — your financial life, run as one system" />
+<meta name="twitter:title" content="Driftwood Wealth, your financial life, run as one system" />
 <meta name="twitter:description" content="Most advisors manage investments. Driftwood manages the system those investments live in. Fee-only, fiduciary." />
 <meta name="twitter:image" content="https://driftwoodwealth.com/og/index.png" />
-<meta name="twitter:image:alt" content="Driftwood Wealth — Private Wealth Architecture." />
+<meta name="twitter:image:alt" content="Driftwood Wealth, Private Wealth Architecture." />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FinancialService",
   "name": "Driftwood Wealth",
   "legalName": "Driftwood Wealth",
-  "description": "Fee-only, fiduciary private wealth management — evidence-based, tax-aware portfolio management and asset location coordinated into one after-tax plan.",
+  "description": "Fee-only, fiduciary private wealth management, evidence-based, tax-aware portfolio management and asset location coordinated into one after-tax plan.",
   "url": "https://driftwoodwealth.com/index.html",
   "areaServed": "US",
   "serviceType": [
@@ -51,14 +51,12 @@
     "Financial planning"
   ],
   "feeBasis": "Fee-only",
-  "disambiguatingDescription": "Driftwood Wealth is a fee-only registered investment adviser.",
-  "sameAs": [
-    "https://adviserinfo.sec.gov/"
-  ]
+  "disambiguatingDescription": "Driftwood Wealth is the private-wealth practice of Alec Messino.",
+  "sameAs": []
 }
 </script>
 <style>
-  /* Institutional Editorial — limestone, ink, editorial blue (rebrand, July 2026). One argument, in
+  /* Institutional Editorial, limestone, ink, editorial blue (rebrand, July 2026). One argument, in
      order: problem → category → how → why → evidence → act. The systems diagram is the emotional
      centre; the tax chart is evidence for it, not the claim itself. Coordination is the product;
      what you keep is the result. Restraint over completeness. */
@@ -84,26 +82,32 @@
   .run .marker{font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
   .inner{margin:0 7px 7px}
 
-  /* ── The registration grid — the exhibition hangs from one continuous plumb line down the left
+  /* ── The registration grid, the exhibition hangs from one continuous plumb line down the left
      margin; each gallery opens where a hairline top-rule crosses it, marked by a small registration
      cross (the T-intersection). No cards, no boxes: alignment is the only ornament, the grid the
-     language. Museum labels — tiny, tracked, tabular — name the room and cite its provenance. ── */
+     language. Museum labels, tiny, tracked, tabular, name the room and cite its provenance. ── */
   .gal{position:relative;border-top:1px solid var(--line);border-left:1px solid var(--frame-line)}
   .gal::before,.sysband::before{content:"";position:absolute;left:0;top:0;width:11px;height:11px;
     pointer-events:none;transform:translate(-50%,-50%);opacity:.9;
     background:linear-gradient(var(--accent-strike),var(--accent-strike)) center/1px 11px no-repeat,
       linear-gradient(var(--accent-strike),var(--accent-strike)) center/11px 1px no-repeat}
-  /* the plumb line continues through the full-bleed plate and the exit wall — the rail never breaks */
+  /* the plumb line continues through the full-bleed plate and the exit wall, the rail never breaks */
   .hero,.sysband,.close-conv{border-left:1px solid var(--frame-line)}
   .vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;border:0;
     clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden;white-space:nowrap}
-  /* the museum label — the smallest type on the page, a specimen tag: tracked caps, tabular figures */
+  /* Skip link: off-screen until keyboard focus, then a solid ink chip at the top-left. */
+  .skip-link{position:absolute;left:12px;top:-48px;z-index:100;background:var(--ink);color:var(--bg);
+    font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.01em;padding:10px 16px;
+    border-radius:var(--surface-radius);text-decoration:none;transition:top var(--t-fast)}
+  .skip-link:focus{top:12px}
+  main:focus{outline:none}
+  /* the museum label, the smallest type on the page, a specimen tag: tracked caps, tabular figures */
   .label{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
     color:var(--muted);font-variant-numeric:tabular-nums}
   .label.mark{color:var(--accent-strike)}
   .tnum{font-variant-numeric:tabular-nums}
 
-  /* ── Gallery I · The Constraint — an asymmetric broadsheet, not a centered column. ──────────── */
+  /* ── Gallery I · The Constraint, an asymmetric broadsheet, not a centered column. ──────────── */
   .hero{display:block;padding:26px 52px 44px}
   .kick{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.2em;
     text-transform:uppercase;color:var(--accent-strike);margin:0 0 28px;max-width:none}
@@ -121,7 +125,7 @@
     .hero-aside{margin-top:28px;padding-left:20px;max-width:56ch}
     .hero .ctas{margin-top:32px}
   }
-  /* Editorial data footnote — a bracketed superscript that opens a dark margin note. */
+  /* Editorial data footnote, a bracketed superscript that opens a dark margin note. */
   .fn{line-height:0}
   .fn-btn{font-family:var(--sans);font-size:10.5px;font-weight:700;color:var(--accent-strike);
     background:none;border:0;border-bottom:1px solid var(--accent-strike-soft);cursor:pointer;
@@ -135,32 +139,32 @@
     transition:filter var(--t-fast),transform var(--t-fast),background var(--t-fast),border-color var(--t-fast)}
   .ctas .primary{background:var(--accent-strike);color:#fff;padding:15px 26px;border-radius:var(--surface-radius);font-weight:600}
   .ctas .primary:hover{filter:brightness(1.08)}
-  /* Quiet — the outlined-ink guided-path step, used for the mid-page Atlas link. The SOLID
-     editorial-blue primary now anchors both the hero (entry) and the close (exit) — the two conversion
-     moments — while mid-page links stay quiet, so the eye still lands on one confident action top and bottom. */
+  /* Quiet, the outlined-ink guided-path step, used for the mid-page Atlas link. The SOLID
+     editorial-blue primary now anchors both the hero (entry) and the close (exit), the two conversion
+     moments, while mid-page links stay quiet, so the eye still lands on one confident action top and bottom. */
   .ctas .quiet{color:var(--ink);padding:14px 25px;border:1.5px solid var(--ink);border-radius:var(--surface-radius);
     transition:background var(--t-fast),color var(--t-fast)}
   .ctas .quiet:hover{background:var(--ink);color:var(--bg)}
-  /* Secondary — a demoted text link; a resting hairline underline gives it link affordance so it reads as
+  /* Secondary, a demoted text link; a resting hairline underline gives it link affordance so it reads as
      an action (not faint body copy), and it warms to editorial blue on hover. */
   .ctas .ghost{color:var(--ink);padding:15px 10px;font-weight:500;border-bottom:2px solid var(--ghost-line);
     transition:border-color var(--t-fast),color var(--t-fast)}
   .ctas .ghost:hover{border-bottom-color:var(--accent-strike)}
 
-  /* ── Section scaffold — tiny label, medium statement, generous air. Galleries vary their own
-     vertical rhythm deliberately: dense ledger, vast plate, quiet archive — never one template. ── */
+  /* ── Section scaffold, tiny label, medium statement, generous air. Galleries vary their own
+     vertical rhythm deliberately: dense ledger, vast plate, quiet archive, never one template. ── */
   .sec{padding:20px 52px 40px}
   .sec.gal{padding:52px 52px 52px}
   #diagnostic.gal{padding:26px 52px 44px}
   #capabilities.gal{padding:26px 52px 32px}
   .lede2{font-family:var(--serif);font-size:clamp(19px,1vw + 15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
   .lede2 b{color:var(--ink);font-weight:500}
-  /* ── Gallery III · The Annual Review — the standing checklist a family office runs, not a lead form.
+  /* ── Gallery III · The Annual Review, the standing checklist a family office runs, not a lead form.
      Native inputs stay (visually hidden) so keyboard behaviour is unchanged; there is no score or
-     verdict — hovering a statement focuses it like a lens, and a recognized one carries a drawn check
+     verdict, hovering a statement focuses it like a lens, and a recognized one carries a drawn check
      as a private, unhurried self-audit. ── */
   .diag-cue{font-family:var(--sans);font-size:12.5px;font-weight:500;letter-spacing:.01em;color:var(--muted);margin:0 0 4px}
-  /* the standing review a family office runs each year — laid out as a 2×3 matrix (a board's register,
+  /* the standing review a family office runs each year, laid out as a 2×3 matrix (a board's register,
      not a to-do list), so it doesn't echo the Method's numbered rows just below. Items stretch to their
      row's height so the hairline rules align across both columns; collapses to one column on mobile. */
   .diag{counter-reset:dg;display:grid;grid-template-columns:1fr 1fr;column-gap:46px;align-items:stretch;
@@ -176,7 +180,7 @@
     background:var(--accent-strike);opacity:0;transition:opacity .22s ease}
   @media(hover:hover){
     .diag:hover .diag-item:not(:hover):not(:focus-within){opacity:.32}
-    /* the hovered condition lifts off the ledger — a touch of warmer cream + a 1px raise, so it reads
+    /* the hovered condition lifts off the ledger, a touch of warmer cream + a 1px raise, so it reads
        as a tactile, selectable row (the left accent bar joins it). */
     .diag-item:hover{background:#ece8df;transform:translateY(-1px)}
     .diag-item:hover::after{opacity:1}
@@ -184,24 +188,24 @@
   .diag-item:focus-within::after{opacity:1}
   .diag-item input:focus-visible ~ span{outline:2px solid var(--accent);outline-offset:3px}
   .diag-item input:checked ~ span{color:var(--ink);font-weight:500}
-  /* selection is checked off in a fixed right-hand column — an item cleared on the ledger */
+  /* selection is checked off in a fixed right-hand column, an item cleared on the ledger */
   .diag-item input:checked ~ span::after{content:"✓";position:absolute;right:2px;top:50%;
     transform:translateY(-50%);font-family:var(--sans);font-size:13px;font-weight:700;color:var(--accent-strike)}
   .diag-item:has(input:checked)::before{color:var(--accent-strike)}
-  /* each condition names its own coordination consequence — a quiet, matter-of-fact sub-line (not a
+  /* each condition names its own coordination consequence, a quiet, matter-of-fact sub-line (not a
      second column), and it stays muted even when the statement above it is checked. */
   .diag-why{display:block;margin-top:5px;font-family:var(--sans);font-size:12.5px;line-height:1.45;
     letter-spacing:.01em;color:var(--dim);font-weight:400}
   .diag-insight{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.5;color:var(--dim);
     margin:0 0 14px;max-width:56ch;padding-left:16px;border-left:2px solid var(--accent-strike)}
   @media(max-width:700px){.diag{grid-template-columns:1fr;max-width:60ch}}
-  /* the plate's product line — a quiet serif framing above the seven-systems headline */
+  /* the plate's product line, a quiet serif framing above the seven-systems headline */
   .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw + 15px,19px);line-height:1.5;color:var(--dim);
     margin:0 auto 20px;max-width:36ch}
 
-  /* ── Gallery IV · The Method — a specification sheet, deliberately the opposite of the Diagnosis
+  /* ── Gallery IV · The Method, a specification sheet, deliberately the opposite of the Diagnosis
      ledger: where that is dense and forensic, this is open and procedural. Each step is a numbered
-     sheet — the label + verb anchor a wide left column, the question and route fill the right, and
+     sheet, the label + verb anchor a wide left column, the question and route fill the right, and
      generous air between steps reads as a drawing set, not a checklist. ── */
   .method{list-style:none;margin:30px 0 0;padding:0}
   .m-row{display:grid;grid-template-columns:minmax(168px,.8fr) 1.7fr;gap:0 58px;align-items:start;
@@ -212,7 +216,7 @@
   .m-q{font-family:var(--serif);font-size:19px;line-height:1.4;color:var(--ink);margin:0 0 10px;max-width:34ch}
   .m-d{font-family:var(--sans);font-size:14px;line-height:1.58;color:var(--dim);margin:0 0 16px;max-width:48ch}
   @media(max-width:700px){.m-row{grid-template-columns:1fr;gap:6px 0}.m-body{margin-top:4px}}
-  /* the centerpiece — the four proprietary standing records the method produces, given real weight:
+  /* the centerpiece, the four proprietary standing records the method produces, given real weight:
      the firm's infrastructure is the differentiator, not the process. A 2×2 vitrine of named artifacts. */
   .docs{margin-top:20px;padding-top:24px;border-top:2px solid var(--ink)}
   .docs-cap{font-family:var(--serif);font-size:clamp(18px,.6vw + 15px,21px);line-height:1.5;color:var(--ink);margin:0 0 22px;max-width:52ch}
@@ -226,27 +230,27 @@
   .doc a:hover .doc-go{color:#1e4666;text-decoration:underline;text-underline-offset:2px}
   @media(max-width:700px){.docs-list{grid-template-columns:1fr;gap:0}}
 
-  /* THE THESIS — a museum exhibit. Five systems in a faint web; hovering one illuminates what it
+  /* THE THESIS, a museum exhibit. Five systems in a faint web; hovering one illuminates what it
      moves, the centre names the coordination, the flow carries down to the outcome, and a causal
      micro-story with one proof appears beneath. Paper under glass: ~300ms opacity + hairline
-     transitions only — no motion, no scale, no spring. Teach through interaction, not paragraphs. */
+     transitions only, no motion, no scale, no spring. Teach through interaction, not paragraphs. */
   .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:30px 52px 38px;margin:0;position:relative}
   .sysband-in{max-width:680px;margin:0 auto;text-align:center}
   .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.4vw + 15px,40px);line-height:1.12;letter-spacing:-.022em;color:var(--ink);margin:0 auto;max-width:20ch}
   .sysstage{margin:16px auto 0;max-width:590px;opacity:1}
   .sysstage svg{width:100%;height:auto;display:block;overflow:visible}
   .sysstage text{font-family:var(--sans)}
-  /* the web — 21 hairlines among seven systems, near-silent at rest: the density IS the argument.
+  /* the web, 21 hairlines among seven systems, near-silent at rest: the density IS the argument.
      A hovered system lifts only its own links; a traced decision lifts the chords among its set. */
   .net{stroke:var(--ghost-line);stroke-width:.6;opacity:.15;transition:opacity .34s ease,stroke .34s ease}
   .net.lit{stroke:var(--accent-strike);stroke-width:1;opacity:.72}
   /* a decision's web is read as a hierarchy, not a mesh: the chords leaving the originating system are the
      primary star (full strength); the cross-links among the downstream systems are a quieter secondary
-     matrix — present, so the true depth still shows, but toned down so a five-system web reads structured
+     matrix, present, so the true depth still shows, but toned down so a five-system web reads structured
      rather than busy. Applied to every scenario, so the 3-system webs gain the same restraint. */
   .net.lit.sec{stroke-width:.7;opacity:.3}
   .net.dim{opacity:.05}
-  /* the signal — an accent stroke that draws along a relationship on demand, then rests. The web
+  /* the signal, an accent stroke that draws along a relationship on demand, then rests. The web
      itself never redraws (no flicker); this overlay carries all the motion, and reduced-motion skips it. */
   .trace{stroke:var(--accent-strike);stroke-width:1.5;fill:none;opacity:0;pointer-events:none;stroke-linecap:round}
   .flow{stroke:var(--ghost-line);stroke-width:.8;opacity:.32;transition:opacity .34s ease,stroke .34s ease}
@@ -263,17 +267,24 @@
   .node.lit .lbl{fill:var(--body)}
   .node.active .dot{fill:var(--ink)}
   .node.active .lbl{fill:var(--ink);font-weight:700}
+  /* Static fallback: with JS off or motion reduced, seed one decision tracing to its five systems
+     (Investments, Taxes, Liquidity, Professionals, Estate) so the plate makes its point with no animation.
+     JS clears .seeded before it takes over, so full interactivity is unaffected for everyone else. */
+  .sysstage.seeded .net:not([data-a="5"]):not([data-b="5"]):not([data-a="6"]):not([data-b="6"]){
+    stroke:var(--accent-strike);stroke-width:1;opacity:.72}
+  .sysstage.seeded .node:not([data-i="5"]):not([data-i="6"]) .dot{fill:var(--ink)}
+  .sysstage.seeded .node:not([data-i="5"]):not([data-i="6"]) .lbl{fill:var(--ink);font-weight:700}
   .node:focus{outline:none}
   .node:focus-visible .hit{stroke:var(--accent-strike);stroke-width:2}
   /* Idle life is now the rotation itself: while the plate auto-rotates through the decisions, the active
-     systems and their lit chords breathe gently — enough to read as alive, never enough to fatigue.
+     systems and their lit chords breathe gently, enough to read as alive, never enough to fatigue.
      Suppressed the moment a visitor takes control (the .rotating class is removed) and under reduced-motion. */
   @keyframes nodePulse{0%,100%{opacity:1}50%{opacity:.66}}
   @keyframes edgePulse{0%,100%{opacity:.72}50%{opacity:.42}}
   .sysstage.rotating .node.active .dot{animation:nodePulse 2.8s ease-in-out infinite}
   .sysstage.rotating .net.lit:not(.sec){animation:edgePulse 2.8s ease-in-out infinite}
   @media(prefers-reduced-motion:reduce){.sysstage.rotating .node.active .dot,.sysstage.rotating .net.lit{animation:none}}
-  /* the micro-story — a memorable line, one consequence, and a footnote-quiet proof */
+  /* the micro-story, a memorable line, one consequence, and a footnote-quiet proof */
   .mstory{position:relative;max-width:60ch;margin:24px auto 0;min-height:166px;padding-top:20px;border-top:1px solid var(--line2)}
   .mrest{position:absolute;top:24px;left:0;right:0;font-family:var(--sans);font-size:12px;color:var(--muted);letter-spacing:.03em;margin:0;transition:opacity .34s ease}
   .mlead{font-family:var(--serif);font-size:18px;line-height:1.4;color:var(--ink);margin:0 0 11px;opacity:0;transition:opacity .34s ease}
@@ -282,10 +293,10 @@
   .mproof:hover{text-decoration:underline}
   .mstory.show .mrest{opacity:0}
   .mstory.show .mlead,.mstory.show .mchain,.mstory.show .mproof{opacity:1}
-  /* between auto-rotated scenarios the panel dips out quickly, swaps text, then eases back in — a
+  /* between auto-rotated scenarios the panel dips out quickly, swaps text, then eases back in, a
      composed crossfade rather than a hard flash every five seconds. */
   .mstory.swapping .mlead,.mstory.swapping .mchain,.mstory.swapping .mproof{opacity:0;transition:opacity .18s ease}
-  /* the trigger rail — trace a common decision; specimen labels, not software buttons. Sits directly
+  /* the trigger rail, trace a common decision; specimen labels, not software buttons. Sits directly
      under the reading panel (no rule) so the two read as one exhibit block, not two boxed zones. */
   .trig{margin:14px auto 0;max-width:590px;
     display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:center}
@@ -294,9 +305,9 @@
     transition:border-color .2s ease,color .2s ease}
   .trig-btn:hover{border-color:var(--ghost-line);color:var(--ink)}
   .trig-btn.showing{border-color:var(--accent-strike);color:var(--ink)}
-  /* the pause control — a quiet, keyboard-operable pause/resume for the auto-rotation (WCAG 2.2.2 · Pause,
+  /* the pause control, a quiet, keyboard-operable pause/resume for the auto-rotation (WCAG 2.2.2 · Pause,
      Stop, Hide). Injected by script only when the motion actually runs; centred under the scenario rail.
-     A plain text control (no media-player glyph); its accessible name flips Pause/Resume — no aria-pressed. */
+     A plain text control (no media-player glyph); its accessible name flips Pause/Resume, no aria-pressed. */
   .rot-toggle{display:inline-block;margin:12px 0 0;background:none;border:0;cursor:pointer;
     font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
     color:var(--muted);padding:5px 4px;transition:color .2s ease}
@@ -312,12 +323,12 @@
   @media(max-width:370px){.mstory{min-height:230px}}
 
 
-  /* ── Gallery V · The Invitation — the exhibition's exit wall: one statement, one action. ────── */
+  /* ── Gallery V · The Invitation, the exhibition's exit wall: one statement, one action. ────── */
   .close-conv{padding:52px 52px 60px;max-width:780px;border-top:2px solid var(--ink)}
   .conv{font-family:var(--serif);font-size:clamp(24px,1.9vw + 15px,34px);line-height:1.42;color:var(--ink);
     letter-spacing:-.008em;margin:0 0 28px}
   .conv b{font-weight:500}
-  /* the exit wall's action — one confident primary, then a single quiet line naming the scope of the
+  /* the exit wall's action, one confident primary, then a single quiet line naming the scope of the
      review. No intake ledger, no methodology link, no trust strip: confidence through subtraction. */
   .review{margin:28px 0 0;max-width:660px}
   .review-cta{display:inline-flex;flex-direction:column;gap:5px;text-decoration:none;
@@ -329,7 +340,20 @@
   .review-cta:hover .rc-main::after{transform:translateX(4px)}
   .review-cta .rc-sub{font-family:var(--sans);font-size:13px;color:var(--on-dark)}
   .review-scope{margin:20px 0 0;max-width:60ch;font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--dim)}
-  @media(max-width:620px){.close-conv{padding:64px 22px 56px}.review-cta{display:flex}}
+  /* Founder specimen-tag: a compact museum-label colophon closing the invitation, a face for the
+     conversation. Square photo, tracked-caps credentials, one line of philosophy. Not a bio. */
+  .founder-tag{display:flex;align-items:center;gap:18px;margin:44px 0 0;padding-top:26px;
+    border-top:1px solid var(--ghost-line);max-width:660px}
+  .founder-tag .ft-photo{width:66px;height:66px;flex:none;object-fit:cover;object-position:center 22%;
+    border:1px solid var(--line);border-radius:0}
+  .founder-tag.no-photo .ft-photo{display:none}
+  .founder-tag .ft-cap{display:flex;flex-direction:column;gap:4px}
+  .founder-tag .ft-name{font-family:var(--sans);font-weight:700;font-size:14px;letter-spacing:-.005em;color:var(--ink)}
+  .founder-tag .ft-cred{font-family:var(--sans);font-weight:700;font-size:9.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--muted)}
+  .founder-tag .ft-say{font-family:var(--serif);font-style:italic;font-size:14px;line-height:1.5;color:var(--dim);margin-top:2px;max-width:52ch}
+  @media(max-width:620px){.close-conv{padding:64px 22px 56px}.review-cta{display:flex}
+    .founder-tag{gap:14px}.founder-tag .ft-photo{width:56px;height:56px}}
 
   .foot{margin-top:26px;padding:18px 52px 34px;border-top:1px solid var(--line);border-left:1px solid transparent;color:var(--dim);font-size:12px;line-height:1.62}
   .foot .note{color:var(--body);font-weight:500}
@@ -363,11 +387,12 @@
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to main content</a>
 <div class="wrap">
   <div class="frame">
     <div class="inner">
     <nav class="dwnav" aria-label="Driftwood Wealth">
-      <a class="brand" href="index.html" aria-label="Driftwood Wealth — home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-links">
         <span class="dwnav-group"><span class="dwnav-label">The Firm</span>
           <a href="about.html">Our Story</a>
@@ -388,7 +413,8 @@
       <a class="dwnav-cta" href="index.html#conversation">Request a Coordination Review</a>
     </nav>
 
-    <!-- ── GALLERY I · THE CONSTRAINT — an asymmetric broadsheet: the triad carved large, the
+    <main id="main" tabindex="-1">
+    <!-- ── GALLERY I · THE CONSTRAINT, an asymmetric broadsheet: the triad carved large, the
          supporting argument set as a margin deck, one footnote for the deep reader ── -->
     <header class="hero">
       <p class="kick">For households whose financial lives have outgrown disconnected advice.</p>
@@ -396,11 +422,11 @@
         <h1><span>Wealth compounds.</span> <span>Complexity compounds with it.</span> <span>Eventually, coordination becomes the constraint.</span></h1>
         <div class="hero-aside">
           <p class="lede">It doesn't arrive all at once. It arrives one account, one entity, one advisor, one
-            state, one trust at a time — until every important financial decision depends on <b>three
+            state, one trust at a time, until every important financial decision depends on <b>three
             others</b>.<sup class="fn"><button class="fn-btn" id="fn1btn" aria-expanded="false" aria-controls="fn1">[1]</button></sup></p>
           <aside class="fn-note" id="fn1" hidden>
-            <b>[1]</b>&nbsp; One example from the Atlas: Illinois exempts an estate only to $4M — far below the
-            federal ~$14M — so a single titling or residency decision can move income, estate, and filing
+            <b>[1]</b>&nbsp; One example from the Atlas: Illinois exempts an estate only to $4M, far below the
+            federal ~$15M, so a single titling or residency decision can move income, estate, and filing
             outcomes at once. Illustrative, not advice.
           </aside>
         </div>
@@ -411,15 +437,15 @@
       </div>
     </header>
 
-    <!-- ── GALLERY II · THE SYSTEM (Plate I) — the machine first: seven systems in one lattice;
+    <!-- ── GALLERY II · THE SYSTEM (Plate I), the machine first: seven systems in one lattice;
          hovering a system teaches what it moves, and tracing a common decision lights everything it
          touches. The whole argument is visible before a single paragraph. ── -->
     <div class="sysband" id="thesystem">
       <div class="sysband-in">
         <p class="sb-lead">Driftwood coordinates your financial life as one system.</p>
         <h2 class="sb-h">Seven systems. No decision touches just one.</h2>
-        <div class="sysstage" id="sysDiagram">
-          <svg viewBox="0 0 640 546" role="group" aria-label="Seven financial systems — Investments, Taxes, Liquidity, Professionals, Estate, Risk and Liability, and Entity Structure — in one coordinated network. Hover a system to see what it moves; what you keep is the result.">
+        <div class="sysstage seeded" id="sysDiagram">
+          <svg viewBox="0 0 640 546" role="group" aria-label="Seven financial systems, Investments, Taxes, Liquidity, Professionals, Estate, Risk and Liability, and Entity Structure, in one coordinated network. Hover a system to see what it moves; what you keep is the result.">
             <!-- the lattice: every system connected to every other (near-silent at rest) -->
             <line class="net" data-a="0" data-b="1" x1="320" y1="65" x2="457" y2="131"/>
             <line class="net" data-a="0" data-b="2" x1="320" y1="65" x2="491" y2="279"/>
@@ -447,46 +473,46 @@
             <!-- the centre: coordination (an invisible paper mask keeps it legible over the lattice) -->
             <rect class="hub-bg" x="266" y="230" width="108" height="24" fill="var(--bg)"/>
             <text class="hub" x="320" y="246" text-anchor="middle">Coordination</text>
-            <!-- the outcome — free, below the network; never boxed -->
+            <!-- the outcome, free, below the network; never boxed -->
             <text class="keep" x="320" y="518" text-anchor="middle">What you keep.</text>
             <!-- the seven systems (DOM order = SYS index) -->
-            <g class="node" data-i="0" tabindex="0" role="button" aria-label="Investments — see what it moves">
+            <g class="node" data-i="0" tabindex="0" role="button" aria-label="Investments, see what it moves">
               <circle class="hit" cx="320" cy="65" r="30"/><circle class="dot" cx="320" cy="65" r="5"/>
               <text class="lbl" x="320" y="41" text-anchor="middle">Investments</text>
             </g>
-            <g class="node" data-i="1" tabindex="0" role="button" aria-label="Taxes — see what it moves">
+            <g class="node" data-i="1" tabindex="0" role="button" aria-label="Taxes, see what it moves">
               <circle class="hit" cx="457" cy="131" r="30"/><circle class="dot" cx="457" cy="131" r="5"/>
               <text class="lbl" x="475" y="122" text-anchor="start">Taxes</text>
             </g>
-            <g class="node" data-i="2" tabindex="0" role="button" aria-label="Liquidity — see what it moves">
+            <g class="node" data-i="2" tabindex="0" role="button" aria-label="Liquidity, see what it moves">
               <circle class="hit" cx="491" cy="279" r="30"/><circle class="dot" cx="491" cy="279" r="5"/>
               <text class="lbl" x="511" y="284" text-anchor="start">Liquidity</text>
             </g>
-            <g class="node" data-i="3" tabindex="0" role="button" aria-label="Professionals — see what they move">
+            <g class="node" data-i="3" tabindex="0" role="button" aria-label="Professionals, see what they move">
               <circle class="hit" cx="244" cy="398" r="30"/><circle class="dot" cx="244" cy="398" r="5"/>
               <text class="lbl" x="238" y="430" text-anchor="middle">Professionals</text>
             </g>
-            <g class="node" data-i="4" tabindex="0" role="button" aria-label="Estate — see what it moves">
+            <g class="node" data-i="4" tabindex="0" role="button" aria-label="Estate, see what it moves">
               <circle class="hit" cx="149" cy="279" r="30"/><circle class="dot" cx="149" cy="279" r="5"/>
               <text class="lbl" x="129" y="284" text-anchor="end">Estate</text>
             </g>
-            <g class="node" data-i="5" tabindex="0" role="button" aria-label="Risk and liability — see what it moves">
+            <g class="node" data-i="5" tabindex="0" role="button" aria-label="Risk and liability, see what it moves">
               <circle class="hit" cx="183" cy="131" r="30"/><circle class="dot" cx="183" cy="131" r="5"/>
               <text class="lbl" x="165" y="122" text-anchor="end">Risk &amp; Liability</text>
             </g>
-            <g class="node" data-i="6" tabindex="0" role="button" aria-label="Entity structure — see what it moves">
+            <g class="node" data-i="6" tabindex="0" role="button" aria-label="Entity structure, see what it moves">
               <circle class="hit" cx="396" cy="398" r="30"/><circle class="dot" cx="396" cy="398" r="5"/>
               <text class="lbl" x="402" y="430" text-anchor="middle">Entity Structure</text>
             </g>
           </svg>
         </div>
         <div class="mstory" id="mstory">
-          <p class="mrest" id="mrest">Each line is a dependency — hover a system, or trace a decision.</p>
+          <p class="mrest" id="mrest">Each line is a dependency, hover a system, or trace a decision.</p>
           <p class="mlead" id="mlead"></p>
           <p class="mchain" id="mchain"></p>
           <a class="mproof" id="mproof" href="#"></a>
         </div>
-        <div class="trig" id="trig" role="group" aria-label="Trace a common decision — press one to see the systems it moves">
+        <div class="trig" id="trig" role="group" aria-label="Trace a common decision, press one to see the systems it moves">
           <button class="trig-btn" data-t="0" aria-pressed="false">Move to cash &amp; T-bills</button>
           <button class="trig-btn" data-t="1" aria-pressed="false">Buy an out-of-state property</button>
           <button class="trig-btn" data-t="2" aria-pressed="false">Gift $50,000 to an adult child</button>
@@ -495,7 +521,7 @@
       </div>
     </div>
 
-    <!-- ── GALLERY III · THE ANNUAL REVIEW — the standing checklist a family office runs each year;
+    <!-- ── GALLERY III · THE ANNUAL REVIEW, the standing checklist a family office runs each year;
          now that the machine is on the wall, the visitor measures their own life against the standard ── -->
     <div class="sec gal" id="diagnostic">
       <p class="lede2">Every year, institutional families review the connections between these systems
@@ -508,7 +534,7 @@
         <label class="diag-item"><input class="vh" type="checkbox"><span>My estate plan hasn't been reviewed alongside my investments.<span class="diag-why">Estate and portfolio decisions gradually diverge.</span></span></label>
         <label class="diag-item"><input class="vh" type="checkbox"><span>I'm considering relocating, or I keep more than one residence.<span class="diag-why">A move can reopen income, estate, and residency questions at once.</span></span></label>
         <label class="diag-item"><input class="vh" type="checkbox"><span>A business, equity compensation, or trusts have added moving parts.<span class="diag-why">Each new structure multiplies the connections to keep aligned.</span></span></label>
-        <label class="diag-item"><input class="vh" type="checkbox"><span>No one person is responsible for how it all fits together.<span class="diag-why">Coordination becomes no one's job — until it's expensive.</span></span></label>
+        <label class="diag-item"><input class="vh" type="checkbox"><span>No one person is responsible for how it all fits together.<span class="diag-why">Coordination becomes no one's job, until it's expensive.</span></span></label>
       </div>
       <p class="diag-insight">Institutions review all six every year. Most households discover one or two only after they've become expensive.</p>
       <div class="ctas">
@@ -516,7 +542,7 @@
       </div>
     </div>
 
-    <!-- ── GALLERY IV · THE METHOD (#capabilities) — an architect's index, not a feature grid ── -->
+    <!-- ── GALLERY IV · THE METHOD (#capabilities), an architect's index, not a feature grid ── -->
     <div class="sec gal" id="capabilities">
       <p class="lede2">Every client relationship follows the same sequence.</p>
       <ol class="method">
@@ -524,40 +550,40 @@
           <div class="m-head"><span class="m-step">01</span><div class="m-verb">Diagnose</div></div>
           <div class="m-body">
             <p class="m-q">Where does your return go to tax?</p>
-            <p class="m-d">See what taxes quietly take from the same holdings — by your state and bracket.</p>
+            <p class="m-d">See what taxes quietly take from the same holdings, by your state and bracket.</p>
           </div>
         </li>
         <li class="m-row">
           <div class="m-head"><span class="m-step">02</span><div class="m-verb">Measure</div></div>
           <div class="m-body">
             <p class="m-q">What is coordination worth?</p>
-            <p class="m-d">Put a dollar figure on it — for your bracket, state, and portfolio. In one 30-year illustration, that gap was $320,000.</p>
+            <p class="m-d">Put a dollar figure on it, for your bracket, state, and portfolio. In one 30-year illustration, that gap was $320,000.</p>
           </div>
         </li>
         <li class="m-row">
           <div class="m-head"><span class="m-step">03</span><div class="m-verb">Coordinate</div></div>
           <div class="m-body">
             <p class="m-q">How do the pieces work as one plan?</p>
-            <p class="m-d">Taxes, accounts, and estate kept consistent — the way institutions coordinate decisions.</p>
+            <p class="m-d">Taxes, accounts, and estate kept consistent, the way institutions coordinate decisions.</p>
           </div>
         </li>
         <li class="m-row">
           <div class="m-head"><span class="m-step">04</span><div class="m-verb">Manage</div></div>
           <div class="m-body">
             <p class="m-q">How is the portfolio built and held?</p>
-            <p class="m-d">A low-turnover core, placed by tax and held with discipline — reviewed as one system, not one account at a time.</p>
+            <p class="m-d">A low-turnover core, placed by tax and held with discipline, reviewed as one system, not one account at a time.</p>
           </div>
         </li>
       </ol>
-      <!-- the centerpiece: the standing records the method produces — the firm's actual infrastructure,
+      <!-- the centerpiece: the standing records the method produces, the firm's actual infrastructure,
            not another set of tool links. Every coordinated household ends up running on these four. -->
       <div class="docs">
         <p class="docs-cap">Every coordinated household eventually runs on the same four standing records.
-          Not advice — infrastructure. Illustrative samples, for a fictional family:</p>
+          Not advice, infrastructure. Illustrative samples, for a fictional family:</p>
         <ul class="docs-list">
           <li class="doc"><a href="manual.html">
             <span class="doc-t">Wealth Operating Manual</span>
-            <span class="doc-d">The living record — every decision, its reason, and what it touched.</span>
+            <span class="doc-d">The living record, every decision, its reason, and what it touched.</span>
             <span class="doc-go">See a sample →</span></a></li>
           <li class="doc"><a href="decision-register.html">
             <span class="doc-t">Decision Register</span>
@@ -565,7 +591,7 @@
             <span class="doc-go">See a sample →</span></a></li>
           <li class="doc"><a href="opportunity-register.html">
             <span class="doc-t">Opportunity Register</span>
-            <span class="doc-d">The standing, prioritized coordination opportunities — owner, dependencies, status.</span>
+            <span class="doc-d">The standing, prioritized coordination opportunities, owner, dependencies, status.</span>
             <span class="doc-go">See a sample →</span></a></li>
           <li class="doc"><a href="awor.html">
             <span class="doc-t">Annual Operating Review</span>
@@ -575,7 +601,7 @@
       </div>
     </div>
 
-    <!-- ── GALLERY V · THE INVITATION — the exit wall: one conviction, one high-intent action, and a
+    <!-- ── GALLERY V · THE INVITATION, the exit wall: one conviction, one high-intent action, and a
          single quiet line naming the scope. An engagement, not a booking form. ── -->
     <div class="sec close-conv" id="conversation">
       <p class="conv">The best financial decisions are rarely investment decisions alone. They are
@@ -584,19 +610,29 @@
       <div class="review">
         <a class="review-cta" href="https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting" target="_blank" rel="noopener">
           <span class="rc-main">Request a Coordination Review</span>
-          <span class="rc-sub">A 30-minute review of your financial architecture.</span>
+          <span class="rc-sub">A 15-minute introductory conversation about your financial architecture.</span>
         </a>
         <p class="review-scope">We'll review structure, taxes, estate, advisor coordination, and account
-          architecture — and identify where coordination is likely creating or destroying value.</p>
+          architecture, and identify where coordination is likely creating or destroying value.</p>
       </div>
+      <figure class="founder-tag" aria-label="Alec Messino, founder of Driftwood Wealth">
+        <img class="ft-photo" src="Headshot.jpg" width="120" height="120" loading="lazy"
+             alt="Alec Messino, founder of Driftwood Wealth"
+             onerror="this.closest('.founder-tag').classList.add('no-photo')">
+        <figcaption class="ft-cap">
+          <span class="ft-name">Alec Messino</span>
+          <span class="ft-cred">Founder · Series 7/66 · CFA Level III Candidate</span>
+          <span class="ft-say">The work is the coordination between decisions, not any single decision itself.</span>
+        </figcaption>
+      </figure>
     </div>
+    </main>
 
-    <div class="firm-anchor" role="contentinfo"><span>DRIFTWOOD WEALTH&nbsp;&nbsp;·&nbsp;&nbsp;AUSTIN, TEXAS&nbsp;&nbsp;·&nbsp;&nbsp;FOUNDED 2024</span><span>MODEL DATA AS OF JULY 2026&nbsp;&nbsp;·&nbsp;&nbsp;FORM ADV &amp; CRS AT ADVISERINFO.SEC.GOV</span></div>
+    <div class="firm-anchor" role="contentinfo"><span>DRIFTWOOD WEALTH&nbsp;&nbsp;·&nbsp;&nbsp;AUSTIN, TEXAS&nbsp;&nbsp;·&nbsp;&nbsp;A PRACTICE OF ALEC MESSINO</span><span>MODEL DATA AS OF JULY 2026</span></div>
     <div class="foot" id="disclosures">
-      <span class="note">Research &amp; illustrative modeling — not investment, tax, or legal advice.</span>
-      The Model Portfolio referenced across this site is a hypothetical, append-only backtest — not actual trading or
-      any client account. Past performance — hypothetical or actual — does not guarantee future results. Driftwood Wealth is a
-      <b>registered investment adviser</b>; <a href="disclosures/adv-part-2a.pdf">Form ADV Part 2A</a> and <a href="disclosures/form-crs.pdf">Form CRS</a> are available directly; the firm’s public record is at <a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
+      <span class="note">Research &amp; illustrative modeling, not investment, tax, or legal advice.</span>
+      The Model Portfolio referenced across this site is a hypothetical, append-only backtest, not actual trading or
+      any client account. Past performance, hypothetical or actual, does not guarantee future results. Driftwood Wealth is the private-wealth practice of Alec Messino. It is not currently a registered investment adviser, and this site is not a solicitation for advisory services. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
       <div id="gen" style="margin-top:6px"></div>
     </div>
     </div>
@@ -605,22 +641,22 @@
 
 <script>
 window.__STATE__ = {"header": {"generated": "2026-07-15 23:15:58 UTC"}, "hero": {"keep_before": 9, "keep_after": 41, "alpha_low": 3.7, "alpha_high": 4.7, "horizon": 30, "pretax_before": 9.4, "pretax_after": 9.1}, "headline": [], "value_adds": [{"tag": "Keep more", "title": "A portfolio built to be held \u2014 and taxed lightly.", "stat": "$90,000 \u2192 $410,000", "stat_label": "kept from $1 million of realized gains over 30 years, after tax \u2014 an illustrative +3.7\u20134.7%/yr (modeled; federal to a high-tax state)", "note": "A diversified, low-turnover portfolio, with harvesting, lot selection, and account placement handing less of it to taxes. Driftwood calls the cumulative benefit of those implementation decisions Structural Alpha. Illustrative; your figure depends on your bracket and holdings."}, {"tag": "Build better", "title": "One portfolio, built as a system.", "stat": "", "stat_label": "", "note": "A diversified, low-turnover core, placed by account and coordinated across taxable, Traditional, and Roth \u2014 so allocation, location, harvesting, and withdrawals work together, not apart. Implementation, not prediction."}, {"tag": "Stay invested", "title": "The best portfolio is one you're glad to own in twenty years.", "stat": "", "stat_label": "", "note": "Most of the damage in investing is done by leaving at the wrong time. A portfolio built to be held \u2014 diversified, low-cost, and understood \u2014 is one you can stay with long enough for compounding to do its work."}], "exhibits": [{"title": "How we invest", "href": "thesis.html", "desc": "How Driftwood invests: evidence over prediction, taxes treated as part of investing, and a diversified core placed alongside a focused complement \u2014 one portfolio, measured after tax.", "present": true, "appendix": false}, {"title": "After-Tax Review", "href": "taxlab.html", "desc": "See your after-tax return, and where each holding belongs \u2014 taxable, Traditional, or Roth \u2014 with estate step-up and tax-loss harvesting, by your bracket and state.", "present": true, "appendix": false}, {"title": "The Tax Diagnostic", "href": "leakage.html", "desc": "The one-page before/after: where a concentrated, high-turnover account loses return to tax, and how much careful placement puts back on an identical exposure.", "present": true, "appendix": false}, {"title": "State Tax Atlas", "href": "statemap.html", "desc": "Fifty states across eight dimensions \u2014 capital gains, marriage, estate, munis, QSBS, losses, and basis step-up, plus what careful tax management can change in each.", "present": true, "appendix": false}, {"title": "State tax guides (50 states + DC)", "href": "states.html", "desc": "A capital-gains, estate, marriage, and basis-step-up profile for every state \u2014 each with what careful tax management can recover there, and a one-click personalized diagnostic.", "present": true, "appendix": false}, {"title": "Single asset risk", "href": "concentration.html", "desc": "How to de-risk a concentrated stock position: 22 strategies across selling, harvesting, hedging, deferring, and giving \u2014 scored on liquidity, speed, fees, tax cost, customization, and simplicity.", "present": true, "appendix": false}, {"title": "Current model portfolio", "href": "equities.html", "desc": "What the hypothetical model portfolio holds now \u2014 its sleeves, the last rebalance in and out, and the dated track. A research model, not a client account.", "present": true, "appendix": true}, {"title": "Model portfolio ledger", "href": "ledger.html", "desc": "The append-only historical record: every change, every mark, with attribution. A hypothetical backtest, not actual trading or any client account.", "present": true, "appendix": true}, {"title": "Model portfolio \u00b7 long history", "href": "tearsheet.html", "desc": "The model across decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample. Hypothetical.", "present": true, "appendix": true}, {"title": "Research studies", "href": "equities_case_studies.html", "desc": "Educational backtests on why the approach behaves as it does: time-series, cross-sectional, lookback & cost sensitivity, and a no-trend control.", "present": true, "appendix": true}]};
-// The refined front door is a static narrative — one argument, one guided path. Only the "generated
+// The refined front door is a static narrative, one argument, one guided path. Only the "generated
 // on" stamp is data-driven, when a build injects state.
 (function(){
   var s = window.__STATE__, gen = document.getElementById("gen");
   if(gen) gen.textContent = "Model data as of July 2026.";
-  // The systems diagram is a static ink schematic — no scroll-driven draw-in.
+  // The systems diagram is a static ink schematic, no scroll-driven draw-in.
 })();
 
-// The Annual Review — the six conditions are a family-office standard the visitor measures against, not
+// The Annual Review, the six conditions are a family-office standard the visitor measures against, not
 // a scored quiz. The tactile check-off (drawn check, hover-lens) and per-item consequences are pure CSS;
-// there is no count, verdict, or readout to compute — the checklist itself creates the recognition.
+// there is no count, verdict, or readout to compute, the checklist itself creates the recognition.
 
-// The Thesis — a museum exhibit that behaves like an architectural model. Motion communicates
+// The Thesis, a museum exhibit that behaves like an architectural model. Motion communicates
 // causality: the lattice sketches itself in once on arrival; hovering a system sends a signal along
 // each relationship and the connected systems illuminate as it lands; tracing a decision runs the
-// signal through the affected pathway before the systems settle lit. No glow, no pulse, no loop —
+// signal through the affected pathway before the systems settle lit. No glow, no pulse, no loop,
 // edge first, destination second; relationships create outcomes. All of it is skipped under
 // prefers-reduced-motion (end-states shown instantly). Click a system to open its proof.
 (function(){
@@ -650,7 +686,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-15 23:15:58 UTC"}, "hero": 
       body:"A cash need moves which lots are sold, the bracket you land in, and the portfolio’s balance.",
       href:"opportunity-register.html", proof:"See the Opportunity Register" },
     { center:"Advisor coordination", lead:"Specialists optimize the parts.",
-      body:"Coordination aligns the whole — one plan across the CPA, the attorney, and the advisor.",
+      body:"Coordination aligns the whole, one plan across the CPA, the attorney, and the advisor.",
       href:"decision-register.html", proof:"See the Decision Register" },
     { center:"Estate coordination", lead:"Estate planning reshapes the portfolio.",
       body:"Beneficiaries, taxes, liquidity, and investment decisions all change together.",
@@ -662,7 +698,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-15 23:15:58 UTC"}, "hero": 
       body:"Trusts, LLCs, and partnerships decide titling, taxes, protection, and what the estate plan can even reach.",
       href:"atlas/2026/household/", proof:"See a Household Record" }
   ];
-  // Common decisions, traced: each lights the set of systems it moves at once. Facts, hedged —
+  // Common decisions, traced: each lights the set of systems it moves at once. Facts, hedged,
   // never invented statistics; the disclosure block below the page governs all of it.
   var TRIG = [
     { set:[0,1,2,3,5], lead:"One allocation. Five systems.",
@@ -686,16 +722,16 @@ window.__STATE__ = {"header": {"generated": "2026-07-15 23:15:58 UTC"}, "hero": 
     }catch(e){}
   }
   // A traced decision stays pinned until a system is hovered, another trigger is pressed,
-  // the same trigger is pressed again, or Escape — a pointer leaving the plate never wipes it.
+  // the same trigger is pressed again, or Escape, a pointer leaving the plate never wipes it.
   var pinned = -1;       // the scenario/node currently shown (by hover, click, or the auto-tour)
-  var userPinned = -1;   // the scenario the visitor explicitly CLICKED — only a click can toggle it off,
+  var userPinned = -1;   // the scenario the visitor explicitly CLICKED, only a click can toggle it off,
                          // so a hover-preview never turns the next click into an accidental dismiss
   var trigBtns = [].slice.call(document.querySelectorAll("#trig .trig-btn"));
   // Two independent signals, kept honest and separate:
-  //  · .showing  — a purely visual highlight of the scenario currently on the plate, whatever put it there
+  //  · .showing , a purely visual highlight of the scenario currently on the plate, whatever put it there
   //    (auto-tour, hover-preview, or click). It carries no ARIA meaning; it only helps the eye correlate the
   //    active button with the lattice.
-  //  · aria-pressed — reserved for a scenario the visitor actually PINNED by clicking. The auto-tour and
+  //  · aria-pressed, reserved for a scenario the visitor actually PINNED by clicking. The auto-tour and
   //    hover-previews never assert it, so a button the reader hasn't touched never announces as "pressed"
   //    and a first click on it produces a real, perceptible state change.
   function paintShowing(t){ trigBtns.forEach(function(b){ b.classList.toggle("showing", +b.getAttribute("data-t")===t); }); }
@@ -721,9 +757,11 @@ window.__STATE__ = {"header": {"generated": "2026-07-15 23:15:58 UTC"}, "hero": 
   var REDUCE = false;
   try{ REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
   // Progressive-enhancement reveal: hold the plate hidden until it scrolls into view, then fade it in
-  // alongside the line draw-in (so the central node + labels ease in too). JS + motion-OK only —
+  // alongside the line draw-in (so the central node + labels ease in too). JS + motion-OK only,
   // no-JS and reduced-motion keep it visible from the start (CSS default opacity:1).
-  if(!REDUCE){ stage.style.opacity = "0"; }
+  // Non-reduced-motion + JS: hand the plate to the interactive/rotation layer, so drop the static seed
+  // (the five-system fallback). No-JS and reduced-motion keep .seeded, i.e. the meaningful static default.
+  if(!REDUCE){ stage.classList.remove("seeded"); stage.style.opacity = "0"; }
   var timers = [];
   function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
   // Cancels the trace/story stagger AND any pending crossfade, so an interaction never lets a stale
@@ -813,7 +851,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-15 23:15:58 UTC"}, "hero": 
     nets.forEach(function(ln){ var a=+ln.getAttribute("data-a"), b=+ln.getAttribute("data-b");
       ln.classList.remove("lit","sec"); ln.classList.toggle("dim", !(inSet(a) && inSet(b))); });
     // Draw every chord among the set as a staggered signal; as each lands, that chord lights (.net.lit)
-    // and both systems activate. Scales to any set — a triangle for three, a dense sub-web for five — so
+    // and both systems activate. Scales to any set, a triangle for three, a dense sub-web for five, so
     // the plate shows the true depth of the decision, then the travelling signal retires and the lit web
     // remains (and, while auto-rotating, breathes).
     nodes[set[0]].classList.add("active");
@@ -865,10 +903,10 @@ window.__STATE__ = {"header": {"generated": "2026-07-15 23:15:58 UTC"}, "hero": 
   svg.addEventListener("mouseleave", function(){ clear(false); });
   stage.addEventListener("focusout", function(e){ if(!stage.contains(e.relatedTarget)) clear(false); });
 
-  // Motion identity: the plate sketches itself in once, then becomes a slow, self-running exhibit — it
+  // Motion identity: the plate sketches itself in once, then becomes a slow, self-running exhibit, it
   // rotates through the common decisions on a 5s cadence, breathing gently on the active systems. Any
   // interaction (hover / focus / trace) hands full control to the visitor and pauses the loop; after 30s
-  // of stillness it resumes. Reduced-motion shows a static web — no draw-in, no rotation, no pulse.
+  // of stillness it resumes. Reduced-motion shows a static web, no draw-in, no rotation, no pulse.
   var ROT_ORDER = [0,1,2,3];
   var introDone = false, rotIdx = 0, rotTimer = 0, resumeTimer = 0, userHeld = false, inView = false, stopped = false;
   function rotStep(){
@@ -896,13 +934,13 @@ window.__STATE__ = {"header": {"generated": "2026-07-15 23:15:58 UTC"}, "hero": 
   }
   // Every user touch pauses the loop and re-arms the 30s idle timer, so any activity keeps control.
   function holdForUser(){ userHeld = true; stopRotation(); scheduleResume(); }
-  // WCAG 2.2.2 — the auto-motion lasts more than five seconds, so offer a real, discoverable, keyboard-
+  // WCAG 2.2.2, the auto-motion lasts more than five seconds, so offer a real, discoverable, keyboard-
   // operable control to stop it for good (a hover-pause isn't discoverable and doesn't persist). Injected
-  // only when the motion actually runs (never under reduced-motion / no-JS) — a quiet text pause/resume.
+  // only when the motion actually runs (never under reduced-motion / no-JS), a quiet text pause/resume.
   var rotToggle = null;
   function paintToggle(){
     if(!rotToggle) return;
-    // Play/pause pattern: the accessible NAME flips — no aria-pressed, which would both contradict the
+    // Play/pause pattern: the accessible NAME flips, no aria-pressed, which would both contradict the
     // label ("Resume" while announcing "pressed") and over-specify a two-state control. The visible word is
     // contained in the aria-label, so voice control's "click Pause"/"click Resume" resolves (WCAG 2.5.3).
     rotToggle.textContent = stopped ? "Resume" : "Pause";
@@ -931,7 +969,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-15 23:15:58 UTC"}, "hero": 
     nets.forEach(function(ln, k){ var delay = 120 + k*44;
       ln.style.transition = "stroke-dashoffset 640ms cubic-bezier(.4,0,.2,1) "+delay+"ms, opacity .34s ease";
       ln.style.strokeDashoffset = "0"; });
-    // the sketch draws in, then the exhibit begins promptly — the first decision traces in while the
+    // the sketch draws in, then the exhibit begins promptly, the first decision traces in while the
     // web is still settling (showSet's snapNets completes it), so the plate feels live soon after it opens
     rotTimer = setTimeout(function(){ rotTimer = 0; startRotation(); }, 950);
   }
@@ -943,13 +981,13 @@ window.__STATE__ = {"header": {"generated": "2026-07-15 23:15:58 UTC"}, "hero": 
     }); }, {threshold:.25});
     io.observe(stage);
     // keyboard safety: focusing a node before the plate crosses the .25 threshold would leave the focus
-    // ring on the opacity:0 stage — reveal on first focus so the ring is always visible.
+    // ring on the opacity:0 stage, reveal on first focus so the ring is always visible.
     stage.addEventListener("focusin", function(){ if(!introDone) intro(); });
   } else { inView = true; intro(); }   // no IntersectionObserver: run the exhibit outright so the pause control governs real motion
   fitHub();
 })();
 
-// Gallery I — the data footnote: a bracketed superscript opens a dark margin note.
+// Gallery I, the data footnote: a bracketed superscript opens a dark margin note.
 (function(){
   var btn = document.getElementById("fn1btn"), note = document.getElementById("fn1");
   if(!btn || !note) return;
@@ -960,7 +998,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-15 23:15:58 UTC"}, "hero": 
   });
 })();
 
-// Gallery III — the six conditions stagger up as the ledger first scrolls into view (once). JS +
+// Gallery III, the six conditions stagger up as the ledger first scrolls into view (once). JS +
 // motion-OK only; no-JS and reduced-motion render them in place. The inline transition is cleared once
 // settled so the hover-dim keeps its snappy base timing, and each item's checkbox stays keyboard-usable.
 (function(){

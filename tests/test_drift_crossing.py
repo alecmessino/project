@@ -121,7 +121,7 @@ def test_crossing_page_renders_the_operating_document():
                     "Standing decisions to reconsider", "action register", "Questions worth asking"):
         assert section in html
     assert "Before the move" in html and "During the move" in html and "After the move" in html
-    assert "Driftwood Wealth is a" in html and "adviserinfo.sec.gov" in html
+    assert "not currently a registered investment adviser" in html and "adviserinfo.sec.gov" not in html
     assert "{" not in html.split("<body>")[1]   # no unfilled f-string braces in the body
 
 

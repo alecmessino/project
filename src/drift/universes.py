@@ -14,7 +14,7 @@ value uses FNDE (fundamentally-weighted, value-tilted) since cap-weighted EM val
 ETFs are not reliably tradeable.
 
 History varies (the pure-factor funds AVDV/AVEE are younger); the date-aligned books
-handle ragged histories — a name simply joins once it has enough bars.
+handle ragged histories, a name simply joins once it has enough bars.
 """
 
 from __future__ import annotations
@@ -49,7 +49,7 @@ BASELINES = ["VTI", "VEA", "VWO"]
 # volatility-normalized z-score stays continuous across the join. The traded ETFs
 # in the matrix mostly launched 2000-2011; splicing them onto these legacy index
 # funds (Vanguard/DFA/WisdomTree, several with daily history back to 1986) is what
-# lets the long-history tearsheet span ~40 years instead of truncating at 2000 —
+# lets the long-history tearsheet span ~40 years instead of truncating at 2000,
 # and avoids hammering Yahoo with deep queries on funds that simply lack the data.
 # Live exhibits (the 2y ledger) use the real fund and never touch these.
 # First-bar years (verified on Yahoo) are noted for each proxy.
@@ -61,7 +61,7 @@ PROXY = {
     # --- US mid (iShares Russell Midcap, 2001) ---
     "IWR":  "VIMSX",  # US mid blend      <- Vanguard Mid-Cap Index (1998)
     # mid value/growth have no faithful pre-2001 index fund, so they join at native
-    # inception (2001) — the ragged-history books handle the later start.
+    # inception (2001), the ragged-history books handle the later start.
     # --- US small (iShares, 2000) ---
     "IWN":  "DFSVX",  # US small value    <- DFA US Small Cap Value (1993)
     "IJR":  "NAESX",  # US small blend    <- Vanguard Small-Cap Index (1986)
@@ -81,11 +81,11 @@ PROXY = {
 
 # Tax-loss-harvesting substitutes. For each traded fund, a liquid alternative that
 # gives ~the same region/size/style exposure while tracking a DIFFERENT underlying
-# index/provider — so a position at a loss can be sold to realize the loss and the
+# index/provider, so a position at a loss can be sold to realize the loss and the
 # proceeds immediately reinvested in the substitute, keeping market exposure without
 # triggering the wash-sale rule (which disallows repurchasing a "substantially
 # identical" security within 30 days). Funds on different indexes are generally
-# treated as not substantially identical, but this is an unsettled area — an advisor
+# treated as not substantially identical, but this is an unsettled area, an advisor
 # should confirm for a client's facts. After ~31 days the book can rotate back.
 # Pairs deliberately cross index families (S&P<->Russell<->CRSP<->FTSE<->MSCI).
 TLH_SUBSTITUTE: dict[str, str] = {
@@ -140,7 +140,7 @@ LABELS.update({"VTI": "US total market", "VEA": "Intl developed core", "VWO": "E
 # the fund's stock holdings that fall in each of the 9 boxes (large/mid/small ×
 # value/blend/growth). Unlike SIZE_OF/STYLE_OF (one nominal cell per fund), these
 # spread a fund across the box the way Morningstar actually classifies its holdings
-# — e.g. IShares S&P 500 Value (IVE) is not purely "large value", it spills into
+#, e.g. IShares S&P 500 Value (IVE) is not purely "large value", it spills into
 # large blend and mid. Blended by current book weight, these give the portfolio's
 # true style-box footprint. Values are approximate (exposure shape, not precision)
 # and are normalized in code, so they need only be proportional.
@@ -152,7 +152,7 @@ def _sb(lv=0, lb=0, lg=0, mv=0, mb=0, mg=0, sv=0, sb=0, sg=0) -> dict[str, float
             "small|value": sv, "small|blend": sb, "small|growth": sg}
 
 
-# EXACT Morningstar style vectors for the live-traded sleeve funds — verified against
+# EXACT Morningstar style vectors for the live-traded sleeve funds, verified against
 # each fund's published style box (not the representative approximations above). These
 # are the SOURCE OF TRUTH for the live book's blended exposure grid: _blend_style_box
 # takes the weight-weighted dot product of these against the active book. Order is

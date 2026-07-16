@@ -1,10 +1,10 @@
-"""Per-state SEO landing pages — the organic-search front door to the funnel.
+"""Per-state SEO landing pages, the organic-search front door to the funnel.
 
 Each of the 50 states + DC gets its own **server-side-rendered** page (content baked into the HTML,
 not JS-rendered like the interactive exhibits) so search engines index the state's real tax facts.
-These are reference pages — they answer "how does this state tax investors?" — and the Driftwood
+These are reference pages, they answer "how does this state tax investors?", and the Driftwood
 modeling is demoted to a quiet secondary section, not the hero. The content is assembled entirely from
-existing sources of truth — `statemap._state_record` and `leakage.STATE_ALPHA` — so a state page can
+existing sources of truth, `statemap._state_record` and `leakage.STATE_ALPHA`, so a state page can
 never disagree with the map or the diagnostic.
 
 Every page carries: a keyword title/H1/meta, canonical + Open Graph, FAQPage + BreadcrumbList +
@@ -110,49 +110,49 @@ def _related(code: str) -> list[tuple[str, str]]:
 
 
 # ── Hand-authored, factual per-state context ──────────────────────────────────────────────────────
-# The no-income-tax states (AK/FL/NV/NH/SD/TN/TX/WY) are IDENTICAL on every regime dimension — even the
-# new muni/QSBS/loss ones — so the dataset alone can't give their pages distinct body copy (a real SEO
+# The no-income-tax states (AK/FL/NV/NH/SD/TN/TX/WY) are IDENTICAL on every regime dimension, even the
+# new muni/QSBS/loss ones, so the dataset alone can't give their pages distinct body copy (a real SEO
 # duplicate-content risk). This is a genuinely unique, verifiable 1–2 sentence nugget per state
-# (relocation drivers, homestead/asset-protection, trust-jurisdiction notes) — no invented law, and the
+# (relocation drivers, homestead/asset-protection, trust-jurisdiction notes), no invented law, and the
 # "not advice" framing is preserved by the page's global disclosure. Every no-tax state MUST be covered.
 _STATE_CONTEXT = {
     "AK": ("Alaska levies no state income tax and no statewide sales tax, and is the only no-income-tax "
            "state that also pays residents an annual Permanent Fund Dividend. It offers an elective "
            "community-property trust, so a couple can opt in to a full basis step-up at the first death."),
-    "FL": ("Florida has no state income tax and a constitutional bar against one, which — paired with an "
+    "FL": ("Florida has no state income tax and a constitutional bar against one, which, paired with an "
            "unlimited-value homestead creditor exemption and tenancy-by-the-entireties protection for "
-           "married couples — makes it a leading inbound-migration state for retirees and high earners."),
+           "married couples, makes it a leading inbound-migration state for retirees and high earners."),
     "NV": ("Nevada has no state income tax and no corporate income tax, and is a well-known "
            "asset-protection venue for its self-settled spendthrift (Nevada Asset Protection) trusts. "
            "It is also a community-property state, so community assets get a full step-up at the first death."),
     "NH": ("New Hampshire taxes neither wages nor capital gains, and its former Interest & Dividends tax "
-           "was fully repealed effective 2025 — so investment income is now untaxed at the state level. "
+           "was fully repealed effective 2025, so investment income is now untaxed at the state level. "
            "There is no general sales tax either."),
     "SD": ("South Dakota has no state income tax and is a premier trust jurisdiction: it allows perpetual "
-           "(dynasty) trusts, imposes no state tax on trust income, and offers strong privacy — which is "
+           "(dynasty) trusts, imposes no state tax on trust income, and offers strong privacy, which is "
            "why a large volume of out-of-state trust assets is administered there."),
     "TN": ("Tennessee has no state income tax on wages, and its Hall tax on interest and dividends was "
-           "fully repealed effective 2021 — so investment income is now untaxed at the state level. It "
+           "fully repealed effective 2021, so investment income is now untaxed at the state level. It "
            "leans instead on one of the higher combined sales-tax rates in the country."),
     "TX": ("Texas has no state income tax, constitutionally restricted, and pairs a strong homestead "
-           "exemption with a community-property regime — so community assets receive a full basis step-up "
+           "exemption with a community-property regime, so community assets receive a full basis step-up "
            "at the first spouse's death. Property and sales taxes carry more of the state's revenue."),
     "WY": ("Wyoming has no state income tax and no corporate income tax, and is a highly regarded trust "
-           "and LLC jurisdiction — perpetual-trust statutes, strong privacy, and robust asset-protection "
+           "and LLC jurisdiction, perpetual-trust statutes, strong privacy, and robust asset-protection "
            "law draw significant out-of-state planning."),
     # A few higher-traffic states with a genuinely distinctive regime note (not required for dedup):
     "CA": ("California applies the nation's highest top marginal rate and taxes capital gains as ordinary "
            "income, with no preferential long-term rate. It is a community-property state (full step-up at "
            "the first death) but is decoupled from the federal §1202 QSBS exclusion."),
     "WA": ("Washington has no tax on wages but, since 2022, levies a 7% (plus a 2.9% surcharge) excise on "
-           "long-term capital gains above an annual threshold — the newest and most unusual regime in the "
+           "long-term capital gains above an annual threshold, the newest and most unusual regime in the "
            "country. Because that excise falls on long-term gains only, while short-term gains go untaxed, "
-           "careful tax management — which works largely by turning short-term gains into long-term — helps "
+           "careful tax management, which works largely by turning short-term gains into long-term, helps "
            "less here than almost anywhere: Washington is the rare state where the usual playbook partly "
            "reverses. It is a community-property state, so community assets get a full step-up."),
     "NY": ("New York stacks a high state rate with a New York City surcharge for city residents, and its "
-           "estate tax has a notorious 'cliff': clear the exemption by more than 5% and the entire estate — "
-           "not just the excess — becomes taxable."),
+           "estate tax has a notorious 'cliff': clear the exemption by more than 5% and the entire estate, "
+           "not just the excess, becomes taxable."),
     "MA": ("Massachusetts applies a flat 5% rate plus a 4% surtax on income over ~$1.1 million, and has "
            "one of the lowest state estate-tax exemptions (~$2 million), so estate exposure reaches well "
            "into the merely-affluent."),
@@ -164,7 +164,7 @@ def _state_context(code: str) -> str:
 
 
 def _faq(code: str, name: str, rec: dict) -> list[dict]:
-    """Factual Q&A drawn from the dataset — unique per state, eligible for FAQ rich snippets."""
+    """Factual Q&A drawn from the dataset, unique per state, eligible for FAQ rich snippets."""
     faq = []
     cg = rec.get("cg")
     if cg:
@@ -217,7 +217,7 @@ def _esc(s: str) -> str:
 
 NAV = (
     '<nav class="dwnav" aria-label="Driftwood Wealth">\n'
-    '  <a class="brand" href="index.html" aria-label="Driftwood Wealth — home">'
+    '  <a class="brand" href="index.html" aria-label="Driftwood Wealth, home">'
     '<svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true">'
     '<path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/>'
     '<path d="M1.5 8 H8 L27 15" stroke-width="2.4"/>'
@@ -291,15 +291,16 @@ PLAUSIBLE = (
 
 DISCLOSURE = (
     '<div class="disc">'
-    '<b>Illustrative / hypothetical — not a real track record and not advice.</b> The tax-management '
+    '<b>Illustrative / hypothetical, not a real track record and not advice.</b> The tax-management '
     'impact figure is a hypothetical, after-tax result from the <b>retroactive application</b> of a '
     'tax-management model to ~30 years of proxy-spliced market data on a single illustrative path; '
     '<b>no client capital was invested</b>, and hypothetical performance <b>does not guarantee future '
     'results</b>. Intended for sophisticated investors; it may not be relevant to your situation, and '
     'your actual figure depends on your own holdings, basis, and bracket. State tax facts reflect tax '
-    'year 2025 and can change — confirm with a tax advisor. Driftwood Wealth is a '
-    '<b>registered investment adviser</b>; <b>Form ADV</b> and <b>Form CRS</b> are available at '
-    '<a href="https://adviserinfo.sec.gov/">adviserinfo.sec.gov</a>.'
+    'year 2025 and can change, confirm with a tax advisor. Driftwood Wealth is the private-wealth '
+    'practice of Alec Messino. It is not currently a registered investment adviser, and this site is '
+    'not a solicitation for advisory services. All figures are illustrative models for educational '
+    'purposes, not investment, tax, or legal advice, and not a recommendation.'
     '</div>'
 )
 
@@ -320,13 +321,13 @@ def _meta_description(name: str, rec: dict) -> str:
 def _src_line(d: dict) -> str:
     """Citation-aware provenance for a dimension card, making the evidence hierarchy visible: a verified
     statute renders 'Prove it' with the primary source; an as-yet-uncited fact is labeled honestly as a
-    summary — never dressed as a citation it doesn't have."""
+    summary, never dressed as a citation it doesn't have."""
     cites = d.get("citation")
     if cites:
         links = " · ".join(
             f'<a href="{_esc(c["url"])}" target="_blank" rel="noopener">{_esc(c["label"])}</a>' for c in cites)
         return f'<div class="dsrc"><b>Statute:</b> {links}</div>'
-    return (f'<div class="dsrc"><b>Summary of state law</b> — primary-source citation in progress. '
+    return (f'<div class="dsrc"><b>Summary of state law</b>, primary-source citation in progress. '
             f'{_esc(d.get("source", ""))}</div>')
 
 
@@ -346,9 +347,9 @@ def _dim_cards(rec: dict) -> str:
 
 
 def _provenance_block() -> str:
-    """The 'as of / last reviewed' stamp + a short 'what changed' log — the freshness signals a citable
+    """The 'as of / last reviewed' stamp + a short 'what changed' log, the freshness signals a citable
     reference lives on. State-agnostic: every page carries the currency of the whole Atlas."""
-    items = "\n".join(f'<li><b>{_esc(d)}</b> — {_esc(t)}</li>' for d, t in _CHANGELOG)
+    items = "\n".join(f'<li><b>{_esc(d)}</b>, {_esc(t)}</li>' for d, t in _CHANGELOG)
     return (
         f'<p class="asofline">State law reflects <b>{_esc(AS_OF_LAW)}</b>; last reviewed '
         f'<b>{_esc(LAST_REVIEWED)}</b>. Every classification is a summary of state law; where a '
@@ -358,7 +359,7 @@ def _provenance_block() -> str:
 
 
 def _impact_block(name: str, a: dict | None) -> str:
-    """The demoted (secondary-section) illustrative figure — reference, not hero. Public-facing, it
+    """The demoted (secondary-section) illustrative figure, reference, not hero. Public-facing, it
     now leads with the *coordination opportunity* in dollars-per-$1M rather than a return percentage;
     the modeled +X.X%/yr and the before/after kept-rate stay as the underlying methodology (and satisfy
     the source-of-truth numbers the state-page tests require)."""
@@ -371,7 +372,7 @@ def _impact_block(name: str, a: dict | None) -> str:
         f'<div class="hero">'
         f'<div class="big">~{fmt_usd(usd)}<span class="u">/yr per $1M taxable</span></div>'
         f'<div class="hlab">Illustrative after-tax coordination opportunity in {_esc(name)}<br>'
-        f'<span class="hsub">what running the portfolio against {_esc(name)}\'s rules can be worth — about '
+        f'<span class="hsub">what running the portfolio against {_esc(name)}\'s rules can be worth, about '
         f'+{alpha:.1f}%/yr modeled, as a tax-managed book keeps ~{after:.1f}%/yr after tax vs ~{before:.1f}%/yr '
         f'for a concentrated, naive one; illustrative, over ~30 years, scales with the portfolio</span></div>'
         f'<div class="hbar" aria-hidden="true">'
@@ -387,16 +388,16 @@ def _faq_html(faq: list[dict]) -> str:
         f'<details class="faq"><summary>{_esc(f["q"])}</summary><p>{_esc(f["a"])}</p></details>'
         for f in faq
     )
-    return f'<div class="sec"><div class="sh">Frequently asked — {len(faq)} on {{}}</div>{items}</div>'
+    return f'<div class="sec"><div class="sh">Frequently asked, {len(faq)} on {{}}</div>{items}</div>'
 
 
 def _jsonld(name: str, code: str, rec: dict, faq: list[dict], edition: str = CURRENT_EDITION) -> str:
     url = atlas_url(code, edition)  # the editioned canonical
     blocks = [
         {"@context": "https://schema.org", "@type": "FinancialService",
-         "name": f"Driftwood Wealth — {name} tax-aware investing", "legalName": "Driftwood Wealth",
+         "name": f"Driftwood Wealth, {name} tax-aware investing", "legalName": "Driftwood Wealth",
          "url": url, "areaServed": {"@type": "State", "name": name}, "feeBasis": "Fee-only",
-         "description": f"Tax-aware investment management for {name} investors — asset location, "
+         "description": f"Tax-aware investment management for {name} investors, asset location, "
                         f"tax-loss harvesting, and lot protection. Illustrative modeling, not advice."},
         {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Driftwood Wealth", "item": f"{BASE_URL}/index.html"},
@@ -422,7 +423,7 @@ _HEAD_CSS = """
     box-shadow:0 1px 2px rgba(20,18,12,.04),0 30px 70px -36px rgba(20,18,12,.46)}
   .bcrumb{padding:12px 40px 0;font-size:11.5px;color:var(--muted)}
   .bcrumb a{color:var(--brass);text-decoration:none} .bcrumb a:hover{text-decoration:underline}
-  /* The narrative process spine — where you are in the coordination journey (not the page tree). */
+  /* The narrative process spine, where you are in the coordination journey (not the page tree). */
   .procbar{display:flex;flex-wrap:wrap;align-items:center;gap:5px 9px;padding:13px 40px 2px;
     font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
   .procbar a{color:var(--muted);text-decoration:none;padding:2px 0}
@@ -465,7 +466,7 @@ _HEAD_CSS = """
   @media(max-width:760px){.levers{grid-template-columns:1fr}}
   .lv{border:1px solid var(--line);border-left:3px solid var(--teal2);border-radius:0;padding:13px 15px;background:var(--soft)}
   .lv .n{font-weight:500;font-size:13px;color:var(--ink)} .lv .d{font-size:12px;color:var(--body);line-height:1.45;margin-top:4px}
-  /* Reasoning chain (§16): Decision Framework signals, considerations, action register. Quiet — the
+  /* Reasoning chain (§16): Decision Framework signals, considerations, action register. Quiet, the
      level is a dot meter, not an alarm colour; hierarchy comes from weight and rule, not hue. */
   .fw{display:grid;gap:10px}
   .fsig{border:1px solid var(--line);border-left:3px solid var(--brass);background:#fff;padding:12px 15px}
@@ -509,7 +510,7 @@ _HEAD_CSS = """
   .vh{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
   .disc{margin:16px 40px 6px;font-size:10.5px;line-height:1.55;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
   .disc a{color:var(--teal2)}
-  /* Trailing colophon under the firm-anchor — a light one-line provenance note, deliberately NOT
+  /* Trailing colophon under the firm-anchor, a light one-line provenance note, deliberately NOT
      the .foot disclosure treatment (the real disclosure is the .disc block above the anchor). Named
      apart from .foot so the shared body .foot rule doesn't impose the heavy disclosure spacing. */
   .colophon{margin:14px 40px 26px;color:var(--muted);font-size:11px;line-height:1.6}
@@ -522,7 +523,7 @@ _HEAD_CSS = """
   @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}
 """
 
-# Web3Forms lead-capture (public key — safe in client code; mirrors taxlab.html CONFIG).
+# Web3Forms lead-capture (public key, safe in client code; mirrors taxlab.html CONFIG).
 _FORM_EP = "https://api.web3forms.com/submit"
 _FORM_KEY = "cf6b1c2d-9971-4256-9ff9-72d6918c84e6"
 _FORM_HP = "botcheck"
@@ -530,7 +531,7 @@ _CONTACT = "hello@driftwoodplanning.com"
 
 
 def _capture(code: str, name: str, alpha, rate: str) -> str:
-    """An inline email capture so a state page converts in place — no click-through required. Posts to
+    """An inline email capture so a state page converts in place, no click-through required. Posts to
     Web3Forms tagged with the state + a lead-quality flag; honest manual-follow-up copy (no auto-report
     promise). Falls back to a mailto on failure."""
     a = f"{alpha:.1f}" if alpha is not None else ""
@@ -542,7 +543,7 @@ def _capture(code: str, name: str, alpha, rate: str) -> str:
         <input type="text" id="caphp" name="{_FORM_HP}" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <button type="submit" id="capsend">Email me {nm}'s brief →</button>
       </form>
-      <div class="capnote" id="capnote">A one-page, {nm}-specific after-tax breakdown — we'll follow up by email, usually within a business day. We never share your address.</div>
+      <div class="capnote" id="capnote">A one-page, {nm}-specific after-tax breakdown, we'll follow up by email, usually within a business day. We never share your address.</div>
     </div>
     <script>
     (function(){{
@@ -561,17 +562,17 @@ def _capture(code: str, name: str, alpha, rate: str) -> str:
         p["{_FORM_HP}"]=(document.getElementById("caphp").value||"");
         fetch("{_FORM_EP}",{{method:"POST",headers:{{"Content-Type":"application/json",Accept:"application/json"}},body:JSON.stringify(p)}})
           .then(function(r){{ if(!r.ok) throw 0;
-            document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Thanks — we\\'ll email your {nm} after-tax breakdown, usually within a business day.</div>';
+            document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Thanks, we\\'ll email your {nm} after-tax breakdown, usually within a business day.</div>';
             if(window.plausible) plausible("lead_submitted",{{props:{{source:"state_page",state:"{code}"}}}}); }})
           .catch(function(){{ btn.disabled=false; btn.textContent="Email me {nm}'s brief →";
-            document.getElementById("capnote").innerHTML='Sorry — that didn\\'t send. Email us at <a href="mailto:{_CONTACT}">{_CONTACT}</a>.'; }});
+            document.getElementById("capnote").innerHTML='Sorry, that didn\\'t send. Email us at <a href="mailto:{_CONTACT}">{_CONTACT}</a>.'; }});
       }});
     }})();
     </script>"""
 
 
 def _summary(name: str, rec: dict) -> str:
-    """A one-sentence synthesis of the state's tax profile across the dimensions — gives each page a
+    """A one-sentence synthesis of the state's tax profile across the dimensions, gives each page a
     distinct body paragraph (not just a swapped name) and explains unusual regimes (e.g. WA's excise)."""
     cg, est, su = rec.get("cg"), rec.get("estate"), rec.get("stepup")
     income = ""
@@ -600,7 +601,7 @@ _LEVEL_DOTS = {"none": 0, "low": 1, "moderate": 2, "high": 3, "severe": 4}
 def _reasoning_html(r: dict, name: str) -> str:
     """Render the reasoning chain (§16) from the composable primitives: the Decision Framework (the
     centrepiece), the planning considerations it opens, and the sequenced action register. The
-    objects come from drift.reasoning — this only renders them."""
+    objects come from drift.reasoning, this only renders them."""
     sigs = []
     for s in r["framework"]:
         n = _LEVEL_DOTS.get(s["level"], 0)
@@ -608,12 +609,12 @@ def _reasoning_html(r: dict, name: str) -> str:
         cls = f' lv-{s["level"]}' if s["level"] in ("severe", "none") else ""
         sigs.append(
             f'<div class="fsig{cls}"><div class="fh"><span class="fl">{_esc(s["title"])}</span>'
-            f'<span class="fm" role="img" aria-label="{_esc(s["level"])} — {_esc(s["question"])}">{dots}</span></div>'
+            f'<span class="fm" role="img" aria-label="{_esc(s["level"])}, {_esc(s["question"])}">{dots}</span></div>'
             f'<p>{_esc(s["reading"])}</p></div>')
     framework = (
         f'<div class="sec"><div class="sh">How to think about {_esc(name)}</div>'
         f'<p class="lede" style="margin-bottom:14px">Five lenses turn {_esc(name)}\'s tax environment into a '
-        f'household decision — the same lenses every state is read through, so any two states weigh on '
+        f'household decision, the same lenses every state is read through, so any two states weigh on '
         f'identical terms.</p><div class="fw">{chr(10).join(sigs)}</div></div>')
     coordination = ""
     if r["coordination"]:
@@ -634,7 +635,7 @@ def _reasoning_html(r: dict, name: str) -> str:
 def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
     code, name, slug = data["code"], data["name"], data["slug"]
     rec, a, faq = data["rec"], data["alpha"], data["faq"]
-    title = f"{name} Capital Gains & Estate Tax — Tax-Leakage Diagnostic | Driftwood"
+    title = f"{name} Capital Gains & Estate Tax, Tax-Leakage Diagnostic | Driftwood"
     desc = _meta_description(name, rec)
     url = atlas_url(code, edition)   # editioned canonical (the page lives at /atlas/{edition}/{slug}/)
     og = f"{BASE_URL}/og/states/{code.lower()}.png"
@@ -648,7 +649,7 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
     capture = _capture(code, name, (a or {}).get("value"), rate)
     lede = (f"Every state taxes investors differently. Here is how {name} treats capital gains at the top "
             f"rate, the marriage penalty, estate and inheritance tax at death, municipal-bond interest, "
-            f"the §1202 QSBS exclusion, and a harvested loss — a plain reference to the state's tax code.")
+            f"the §1202 QSBS exclusion, and a harvested loss, a plain reference to the state's tax code.")
     summary = _summary(name, rec)
     summary_p = f'<p class="lede" style="margin-top:10px">{_esc(summary)}</p>' if summary else ""
     context = data.get("context", "")
@@ -701,18 +702,18 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
     {faq_html}
     <div class="sec"><div class="sh">What careful tax management can change</div>
       <p class="lede" style="margin:2px 0 14px">Tax law is only half the picture. How a portfolio is
-        built and run — where each holding sits, how losses are used, how gains are timed — decides how
+        built and run, where each holding sits, how losses are used, how gains are timed, decides how
         much of {_esc(name)}'s tax code you actually pay. An illustrative estimate for a portfolio here:</p>
       {_impact_block(name, a)}
       <p class="mnote">How this is modeled: a single 30-year proxy-spliced path (1996–2026), comparing a
-        concentrated, high-turnover book with a tax-managed one — illustrative and coarse; treat it as
+        concentrated, high-turnover book with a tax-managed one, illustrative and coarse; treat it as
         directional, not a precise figure.</p>
       <div class="levers">{levers}</div></div>
     {_reasoning_html(data.get("reasoning") or {"framework": [], "considerations": [], "actions": []}, name)}
     <div class="cta">
       <div class="ctxt">
         <div class="ch">See the figure on your own {_esc(name)} portfolio.</div>
-        <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture — by bracket and holdings.</div>
+        <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture, by bracket and holdings.</div>
       </div>
       <a class="primary" href="{_ABS}leakage.html?state={code}">Run my {_esc(name)} diagnostic →</a>
       <a class="ghost" href="{MEETING_URL}">Schedule a Coordination Review</a>
@@ -738,8 +739,8 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
         d = pages[code]
         a = d["alpha"]
         cg = d["rec"].get("cg")
-        rate = _esc(cg["tag"]) if cg else "—"
-        alpha = f'~{fmt_usd_compact(coordination_opportunity_per_m(a["value"]))}/$1M' if a else "—"
+        rate = _esc(cg["tag"]) if cg else "–"
+        alpha = f'~{fmt_usd_compact(coordination_opportunity_per_m(a["value"]))}/$1M' if a else "–"
         rows.append(f'<tr><td><a href="{atlas_url(code, edition)}">{_esc(d["name"])}</a></td>'
                     f'<td>{rate}</td><td class="al">{alpha}</td></tr>')
     body = "\n".join(rows)
@@ -750,8 +751,8 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 {PLAUSIBLE}
-<title>State Capital Gains & Estate Tax — all 50 states + DC | Driftwood</title>
-<meta name="description" content="How every state taxes investors — top long-term capital-gains rate, estate and inheritance tax, munis, QSBS, and basis step-up for all 50 states and DC. A state tax reference. Illustrative, not advice." />
+<title>State Capital Gains & Estate Tax, all 50 states + DC | Driftwood</title>
+<meta name="description" content="How every state taxes investors, top long-term capital-gains rate, estate and inheritance tax, munis, QSBS, and basis step-up for all 50 states and DC. A state tax reference. Illustrative, not advice." />
 <link rel="canonical" href="{url}" />
 <link rel="icon" href="{_ABS}favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="{_ABS}favicon-32.png" />
@@ -761,13 +762,13 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
 <meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftwood Wealth" />
-<meta property="og:title" content="State Capital Gains & Estate Tax — Driftwood Wealth" />
+<meta property="og:title" content="State Capital Gains & Estate Tax, Driftwood Wealth" />
 <meta property="og:description" content="A tax reference for all 50 states + DC: top long-term capital-gains rate and how each state taxes investors." />
 <meta property="og:url" content="{url}" />
 <meta property="og:image" content="{BASE_URL}/og/statemap.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="State Tax Reference — Driftwood Wealth" />
-<meta name="twitter:description" content="How every state taxes investors — capital gains, estate, and more." />
+<meta name="twitter:title" content="State Tax Reference, Driftwood Wealth" />
+<meta name="twitter:description" content="How every state taxes investors, capital gains, estate, and more." />
 <meta name="twitter:image" content="{BASE_URL}/og/statemap.png" />
 <link rel="stylesheet" href="{_ABS}driftwood.css">
 <script src="{_ABS}dw-context.js"></script>
@@ -790,7 +791,7 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
       <div class="eyebrow">The State Atlas · state tax reference</div>
       <h1>How every state taxes investors.</h1>
       <p class="lede">Whether you're weighing a move, holding a concentrated position, or settling an estate, your
-        state sets the terms. Pick yours for its capital-gains, estate, marriage, and basis-step-up profile —
+        state sets the terms. Pick yours for its capital-gains, estate, marriage, and basis-step-up profile,
         and an illustrative estimate of the after-tax coordination opportunity its rules create.</p>
     </div>
     <table class="st">
@@ -818,8 +819,8 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
 
 
 def render_redirect(target: str, title: str) -> str:
-    """A static permanent-redirect stub (GitHub Pages serves no true 301s): an instant meta-refresh —
-    which search engines treat as a permanent redirect — reinforced by rel=canonical so the flat URL's
+    """A static permanent-redirect stub (GitHub Pages serves no true 301s): an instant meta-refresh,
+    which search engines treat as a permanent redirect, reinforced by rel=canonical so the flat URL's
     SEO equity consolidates onto the editioned canonical. A visible link covers no-JS and humans."""
     return (f'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8" />\n'
             f'<title>{_esc(title)}</title>\n'
@@ -846,7 +847,7 @@ def export_state_pages(out_dir: str | Path = "docs", edition: str = CURRENT_EDIT
         written.append(f"{atlas_path(code, edition)}/index.html")
         # The flat legacy slug lives on as a permanent redirect to the editioned canonical.
         (out_dir / page_path(code)).write_text(
-            render_redirect(atlas_url(code, edition), f"{data['name']} tax — moved to {edition} edition"))
+            render_redirect(atlas_url(code, edition), f"{data['name']} tax, moved to {edition} edition"))
         written.append(page_path(code))
     # The edition index, and the flat states.html as its permanent redirect alias.
     edir = out_dir / "atlas" / edition
@@ -854,7 +855,7 @@ def export_state_pages(out_dir: str | Path = "docs", edition: str = CURRENT_EDIT
     (edir / "index.html").write_text(render_states_index(pages, edition))
     written.append(f"atlas/{edition}/index.html")
     (out_dir / "states.html").write_text(
-        render_redirect(edition_url(edition), "State tax reference — moved"))
+        render_redirect(edition_url(edition), "State tax reference, moved"))
     written.append("states.html")
     # /atlas/ always resolves to the current edition.
     (out_dir / "atlas" / "index.html").write_text(
@@ -879,7 +880,7 @@ _CORE_SITEMAP = [
 
 
 def render_sitemap(edition: str = CURRENT_EDITION, extra: list[tuple[str, str, str]] = ()) -> str:
-    # The sitemap lists CANONICAL URLs only — the editioned pages and the edition index — never the
+    # The sitemap lists CANONICAL URLs only, the editioned pages and the edition index, never the
     # flat redirect aliases (which would be duplicate content). states.html → the edition index.
     # `extra` lets a caller (the CLI) append other canonical Atlas surfaces (e.g. the Comparison
     # instrument index + featured corridors) without statepage importing those modules.
@@ -890,7 +891,7 @@ def render_sitemap(edition: str = CURRENT_EDITION, extra: list[tuple[str, str, s
         f"  <url><loc>{BASE_URL}/{loc}</loc><changefreq>{cf}</changefreq><priority>{pr}</priority></url>"
         for loc, pr, cf in (core + state_urls + list(extra)))
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
-            "<!-- Driftwood — generated by drift states (src/drift/statepage.py). -->\n"
+            "<!-- Driftwood, generated by drift states (src/drift/statepage.py). -->\n"
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
             f"{body}\n</urlset>\n")
 

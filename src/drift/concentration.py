@@ -1,4 +1,4 @@
-"""The "Single asset risk" dataset — de-risking a concentrated, low-basis stock position.
+"""The "Single asset risk" dataset, de-risking a concentrated, low-basis stock position.
 
 A concentrated single-stock holding is one of the hardest problems in taxable wealth: sell and a low
 basis triggers a heavy tax bill; hold and you carry idiosyncratic risk the market never pays you to bear.
@@ -6,13 +6,13 @@ Every approach trades off along the same six axes, and the strategies sort into 
 
 This module is the single source of truth for the interactive heatmap (`concentration.html`):
 
-  * AXES     — the six scored tradeoffs (higher score = more favorable on that axis).
-  * BUCKETS  — the five strategy families (selling / harvesting / hedging / deferring / giving).
-  * STRATEGIES — 22 approaches, each with a 1–5 score + human label per axis, a factual "how it works"
+  * AXES    , the six scored tradeoffs (higher score = more favorable on that axis).
+  * BUCKETS , the five strategy families (selling / harvesting / hedging / deferring / giving).
+  * STRATEGIES, 22 approaches, each with a 1–5 score + human label per axis, a factual "how it works"
                  blurb (written from the mechanics, no fabricated specifics), and filter tags
                  (primary goals, suitable timelines, turnkey-simple flag, insider-safe flag).
 
-The per-axis scores are one analyst's read of *typical* tradeoffs — orientation, not advice, and not a
+The per-axis scores are one analyst's read of *typical* tradeoffs, orientation, not advice, and not a
 statement about any specific holding. The page carries the not-advice disclosure.
 """
 
@@ -59,7 +59,7 @@ STRATEGIES = [
      "scores": {"liq": (5, "High"), "spd": (5, "Immediate"), "cost": (5, "Low"), "tax": (1, "Very High"),
                 "cust": (1, "Low"), "simp": (5, "Simple")},
      "goals": ["liq"], "timelines": ["now"], "simple": True, "insider_ok": True,
-     "blurb": "Liquidate the whole position at once — the cleanest, cheapest, most immediate way to remove "
+     "blurb": "Liquidate the whole position at once, the cleanest, cheapest, most immediate way to remove "
               "single-stock risk. A low basis means the entire gain is realized and taxed in one year."},
     {"key": "staged", "name": "Staged selling", "bucket": "selling",
      "scores": {"liq": (4, "Above average"), "spd": (2, "Slow"), "cost": (5, "Low"), "tax": (3, "Moderate"),
@@ -98,7 +98,7 @@ STRATEGIES = [
      "scores": {"liq": (4, "Above average"), "spd": (5, "Immediate"), "cost": (3, "Moderate"), "tax": (4, "Below average"),
                 "cust": (5, "High"), "simp": (1, "Complex")},
      "goals": ["hedge"], "timelines": ["now"], "simple": False, "insider_ok": True,
-     "blurb": "A collar written on a correlated index or ETF rather than the single stock — useful when "
+     "blurb": "A collar written on a correlated index or ETF rather than the single stock, useful when "
               "options on the stock are illiquid or restricted. Hedges market risk but leaves the "
               "idiosyncratic, company-specific risk in place."},
     {"key": "covcall", "name": "Covered call", "bucket": "hedging",
@@ -113,7 +113,7 @@ STRATEGIES = [
                 "cust": (4, "Above average"), "simp": (4, "Above average")},
      "goals": ["hedge"], "timelines": ["now"], "simple": True, "insider_ok": False,
      "blurb": "Buy put options as insurance against a decline while keeping full upside. Immediate, "
-              "tailored downside protection — but the premium is a recurring cost and it offers no tax "
+              "tailored downside protection, but the premium is a recurring cost and it offers no tax "
               "deferral."},
     {"key": "exrep", "name": "Synthetic exchange fund", "bucket": "hedging",
      "scores": {"liq": (4, "Above average"), "spd": (5, "Immediate"), "cost": (3, "Moderate"), "tax": (4, "Below average"),
@@ -168,8 +168,8 @@ STRATEGIES = [
      "scores": {"liq": (5, "High"), "spd": (1, "Gradual"), "cost": (3, "Moderate"), "tax": (5, "Low"),
                 "cust": (2, "Below average"), "simp": (4, "Above average")},
      "goals": ["liq", "tax"], "timelines": ["lock"], "simple": True, "insider_ok": True,
-     "blurb": "Borrow against the position instead of selling, accessing cash while the shares — and the "
-              "unrealized gain — stay in place. Highly liquid and tax-free at inception, but it leaves the "
+     "blurb": "Borrow against the position instead of selling, accessing cash while the shares, and the "
+              "unrealized gain, stay in place. Highly liquid and tax-free at inception, but it leaves the "
               "concentration risk intact and adds leverage."},
     {"key": "crut", "name": "Charitable remainder unitrust", "bucket": "giving",
      "scores": {"liq": (3, "Moderate"), "spd": (5, "Immediate"), "cost": (3, "Moderate"), "tax": (3, "Moderate"),
@@ -190,7 +190,7 @@ STRATEGIES = [
                 "cust": (1, "Low"), "simp": (5, "Simple")},
      "goals": ["give", "tax"], "timelines": ["now"], "simple": True, "insider_ok": True,
      "blurb": "Give the appreciated shares directly to a public charity, avoiding the gain entirely and "
-              "deducting fair market value. The simplest, lowest-cost charitable route — but you part with "
+              "deducting fair market value. The simplest, lowest-cost charitable route, but you part with "
               "the asset and get no income back."},
     {"key": "famgift", "name": "Family or foundation gift", "bucket": "giving",
      "scores": {"liq": (2, "Restricted"), "spd": (5, "Immediate"), "cost": (4, "Below average"), "tax": (4, "Below average"),
@@ -208,13 +208,13 @@ STRATEGIES = [
               "lifetime income, but little control and an irrevocable gift."},
 ]
 
-# Investment-committee "fit" notes — how a large, tax-aware holder would think about each approach:
+# Investment-committee "fit" notes, how a large, tax-aware holder would think about each approach:
 # when it's typically on the table, where it fits, and where it doesn't. Qualitative orientation drawn
-# from each strategy's mechanics (the same "one analyst's read" caveat as the scores) — not a
+# from each strategy's mechanics (the same "one analyst's read" caveat as the scores), not a
 # recommendation about any specific holding.
 FIT = {
     "sellall": {
-        "inst": "Rarely — only when the position no longer fits the mandate at any tax cost.",
+        "inst": "Rarely, only when the position no longer fits the mandate at any tax cost.",
         "when": "The risk has to be gone now and the basis is high, so little gain is taxed.",
         "less": "The basis is low and realizing the whole gain in one year is punitive."},
     "staged": {
@@ -240,7 +240,7 @@ FIT = {
     "proxycollar": {
         "inst": "Used when direct options are illiquid, restricted, or too costly.",
         "when": "You want market-risk protection and the stock tracks a liquid index.",
-        "less": "The company-specific risk is the real worry — a proxy won't hedge it."},
+        "less": "The company-specific risk is the real worry, a proxy won't hedge it."},
     "covcall": {
         "inst": "An income overlay, not a primary de-risking tool, for large holders.",
         "when": "You're comfortable being called away gradually and want premium income.",
@@ -262,7 +262,7 @@ FIT = {
         "when": "You want liquidity and gain deferral and can manage a complex trade.",
         "less": "You want simplicity, or don't need to borrow against the position."},
     "completion": {
-        "inst": "A core technique — build the rest of the book around the position's risk.",
+        "inst": "A core technique, build the rest of the book around the position's risk.",
         "when": "You'll hold the stock a while and want to cut its marginal risk without selling.",
         "less": "You need the underlying gain resolved, not just diluted."},
     "351": {
@@ -280,17 +280,17 @@ FIT = {
     "margin": {
         "inst": "Treasury-style borrowing against securities to raise cash without selling.",
         "when": "You need liquidity now and intend to keep the position.",
-        "less": "You want the concentration reduced — this leaves it intact and adds leverage."},
+        "less": "You want the concentration reduced, this leaves it intact and adds leverage."},
     "crut": {
         "inst": "A classic planned-giving vehicle for appreciated, low-basis stock.",
         "when": "You're charitably inclined and want lifetime income plus an upfront deduction.",
-        "less": "You may need the principal back — the gift is irrevocable."},
+        "less": "You may need the principal back, the gift is irrevocable."},
     "daf": {
         "inst": "The simplest institutional-grade way to donate appreciated shares.",
         "when": "You plan to give and want the deduction now, with grants made over time.",
-        "less": "You might want the assets back — they're permanently earmarked for charity."},
+        "less": "You might want the assets back, they're permanently earmarked for charity."},
     "directgift": {
-        "inst": "The plainest charitable route — shares straight to a public charity.",
+        "inst": "The plainest charitable route, shares straight to a public charity.",
         "when": "You want to give a set amount simply and avoid the gain entirely.",
         "less": "You want income back or ongoing control of the gift."},
     "famgift": {
@@ -318,7 +318,7 @@ ARTICLE = {
         "drag, how much you can tailor it, and how complex it is to run.",
         "The strategies sort into five families. Sell outright or in stages. Harvest losses to fund a "
         "tax-neutral exit. Hedge the position with options or forwards. Defer the gain by diversifying "
-        "in-kind. Or give the shares away — to family, a foundation, or charity.",
+        "in-kind. Or give the shares away, to family, a foundation, or charity.",
         "The interactive guide below scores each strategy across those tradeoffs. Filter to what matters "
         "to you, sort by any column, and tap a row to read how it works.",
     ],

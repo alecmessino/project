@@ -23,7 +23,7 @@ from .feed.base import collect_series, get_feed
 from .feed.replay import ReplayFeed
 from .feed.synthetic import SyntheticFeed
 
-app = typer.Typer(add_completion=False, help="Driftwood — trend-following signal system.")
+app = typer.Typer(add_completion=False, help="Driftwood, trend-following signal system.")
 console = Console()
 
 
@@ -38,13 +38,13 @@ def _print_signal(res: Result) -> None:
     e = sig.evaluation
     tag = "[bold red]STRONG[/]" if sig.strong else "[yellow]signal[/]"
     console.print(
-        f"{tag} {e.instrument} {e.side.value.upper()} @ {e.asof} — "
+        f"{tag} {e.instrument} {e.side.value.upper()} @ {e.asof}, "
         f"weight {e.target_weight:+.2f}  ({'; '.join(sig.reasons)})"
     )
 
 
 def _print_backtest(res) -> None:
-    t = Table(title=f"Driftwood backtest — {res.instrument}", show_header=False)
+    t = Table(title=f"Driftwood backtest, {res.instrument}", show_header=False)
     t.add_row("bars", str(res.n_bars))
     t.add_row("trades", str(res.n_trades))
     t.add_row("net return", f"{res.net_return*100:+.1f}%")
@@ -164,7 +164,7 @@ def xbacktest(
     settings.cross_section.neutralize = neutralize
     instruments = [s.strip() for s in instrument.split(",") if s.strip()]
     res = cross_backtest(_universe(source, instruments, series), settings)
-    t = Table(title=f"Driftwood cross-sectional backtest — {len(res.instruments)} names", show_header=False)
+    t = Table(title=f"Driftwood cross-sectional backtest, {len(res.instruments)} names", show_header=False)
     t.add_row("universe", ", ".join(res.instruments))
     t.add_row("bars", str(res.n_bars))
     t.add_row("net return", f"{res.net_return*100:+.1f}%")
@@ -185,10 +185,10 @@ def export(
     config: Optional[str] = typer.Option(None, "--config"),
     out: str = typer.Option("docs/equities.html", "--out", help="static HTML dashboard path"),
     ledger: str = typer.Option("docs/ledger.json", "--ledger",
-                               help="Model Portfolio ledger JSON — the single source of truth the "
+                               help="Model Portfolio ledger JSON, the single source of truth the "
                                     "operational dashboard projects (holdings, signals, rebalance, track)"),
 ):
-    """Build the operational Core Alpha dashboard — a projection of the Model Portfolio ledger.
+    """Build the operational Core Alpha dashboard, a projection of the Model Portfolio ledger.
 
     No independent data pull: the dashboard's holdings, signal strengths, statuses, last rebalance, and
     performance chart all derive from the ledger, so they can never contradict the ledger page. Build the
@@ -197,7 +197,7 @@ def export(
     from .exhibit import export_html
     settings = _load_settings(config)
     if not _P(ledger).exists():
-        console.print(f"[yellow]no ledger at {ledger} — run `drift ledger` first. Keeping existing exhibit.[/]")
+        console.print(f"[yellow]no ledger at {ledger}, run `drift ledger` first. Keeping existing exhibit.[/]")
         raise typer.Exit()
     path = export_html(ledger, settings, out)
     console.print(f"[green]wrote[/] {path}")
@@ -225,7 +225,7 @@ def studies(
     console.print(f"[dim]pulling {len(instruments)} symbols via {_src} …[/]")
     series = _universe(source, instruments, None, pause=pause)
     if not series and source != "synthetic":
-        console.print("[yellow]no data pulled (rate-limited?) — keeping existing report.[/]")
+        console.print("[yellow]no data pulled (rate-limited?), keeping existing report.[/]")
         raise typer.Exit()
     report = build_report(series, settings, source=source)
     path = export_report(report, out)
@@ -277,7 +277,7 @@ def taxlab(
 def leakage(
     out: str = typer.Option("docs/leakage.html", "--out", help="Tax-Leakage Diagnostic page"),
 ):
-    """Build the Tax-Leakage Diagnostic — the one-page Before/After pitch artifact."""
+    """Build the Tax-Leakage Diagnostic, the one-page Before/After pitch artifact."""
     from .leakage import build_leakage
     from .exhibit import export_leakage
     state = build_leakage()
@@ -302,7 +302,7 @@ def statemap(
 def concentration(
     out: str = typer.Option("docs/concentration.html", "--out", help="Single-asset-risk heatmap exhibit"),
 ):
-    """Build the "Single asset risk" tool — de-risking a concentrated stock position, scored 22 ways."""
+    """Build the "Single asset risk" tool, de-risking a concentrated stock position, scored 22 ways."""
     from .concentration import build_concentration
     from .exhibit import export_concentration
     state = build_concentration()
@@ -356,12 +356,12 @@ def ledger(
     out: str = typer.Option("docs/ledger.html", "--out", help="ledger exhibit HTML"),
     seed_sessions: int = typer.Option(504, "--seed-sessions", help="walk-forward seed length on first run (~2y of sessions)"),
     config: Optional[str] = typer.Option(None, "--config"),
-    min_coverage: float = typer.Option(0.6, "--min-coverage", help="abort (exit 1) if fewer than this fraction of symbols fetch — a rate-limit/outage guard"),
+    min_coverage: float = typer.Option(0.6, "--min-coverage", help="abort (exit 1) if fewer than this fraction of symbols fetch, a rate-limit/outage guard"),
     pause: float = typer.Option(0.25, "--pause", help="jittered seconds between per-symbol fetches to dodge 429 choking (0 disables)"),
 ):
     """Advance the forward paper-trade ledger by one session and render it.
 
-    The headline book is the equities region/factor rotation only — crypto is too
+    The headline book is the equities region/factor rotation only, crypto is too
     thin to rank cross-sectionally, so it's not in this book. First run seeds from a
     walk-forward replay (no lookahead); later runs append the newest session. Keyless.
     """
@@ -375,7 +375,7 @@ def ledger(
     feeds = equity_feeds()
     console.print(f"[dim]source chain: {', '.join(n for n, _ in feeds)}[/]")
     series = pull_universe(syms, feeds, min_bars=settings.signal.min_history, pause=pause)
-    # Buy-and-hold benchmarks, total return: VT (global, ~62/28/10 US/dev/EM — US ~62% as of mid-2026) and
+    # Buy-and-hold benchmarks, total return: VT (global, ~62/28/10 US/dev/EM, US ~62% as of mid-2026) and
     # VTI (US total market). Both fetched on the same adjusted-close basis as the book.
     benchmarks: dict = {}
     for label in ("VT", "VTI"):
@@ -389,7 +389,7 @@ def ledger(
     coverage = (len(series) / len(syms)) if syms else 0.0
     if coverage < min_coverage:
         console.print(f"[red]ledger: only {len(series)}/{len(syms)} symbols fetched "
-                      f"({coverage:.0%} < {min_coverage:.0%} required) — likely rate-limited or an outage. "
+                      f"({coverage:.0%} < {min_coverage:.0%} required), likely rate-limited or an outage. "
                       f"Aborting WITHOUT writing.[/]")
         raise typer.Exit(code=1)
 
@@ -401,7 +401,7 @@ def ledger(
         if len(led["entries"]) > n_before:
             console.print(f"appended one session ({len(led['entries'])} total)")
         else:
-            console.print("no new session — healthy fetch, latest close already recorded (clean no-op)")
+            console.print("no new session, healthy fetch, latest close already recorded (clean no-op)")
     else:
         led = seed_ledger(series, settings, sessions=seed_sessions, benchmarks=benchmarks)
         console.print(f"seeded {len(led['entries'])} sessions (walk-forward)")
@@ -432,7 +432,7 @@ def tearsheet(
     console.print(f"[dim]pulling daily history (~{years:.0f}y) for {len(eq)} equities …[/]")
     report = build_tearsheet(settings, equities=eq, years=years, train_frac=train_frac)
     if not report["books"]:
-        console.print("[yellow]no data pulled (rate-limited?) — keeping existing tearsheet.[/]")
+        console.print("[yellow]no data pulled (rate-limited?), keeping existing tearsheet.[/]")
         raise typer.Exit()
     path = export_tearsheet(report, out)
     for bk in report["books"]:

@@ -1,6 +1,6 @@
 """The time-series-momentum signal: how strongly, and which way, is this trending?
 
-Pure functions, no I/O — the mirror of mrbet's `reversion.py`. The thesis is the
+Pure functions, no I/O, the mirror of mrbet's `reversion.py`. The thesis is the
 opposite one: rather than projecting a final total under a reversion-to-baseline
 assumption, we measure how persistently an instrument has been drifting and bet
 that the drift continues over the near horizon.
@@ -75,7 +75,7 @@ def momentum_score(closes: Sequence[float], lookback: int, vol_window: int) -> f
 
 
 def drift_per_bar(closes: Sequence[float], lookback: int) -> float:
-    """Average per-bar log return over the lookback — the raw drift estimate."""
+    """Average per-bar log return over the lookback, the raw drift estimate."""
     if lookback <= 0:
         return 0.0
     return trailing_log_return(closes, lookback) / lookback
@@ -88,12 +88,12 @@ def information_discreteness(closes: Sequence[float], lookback: int) -> float:
         ID = sign(PRET) * (%neg - %pos)
 
     where PRET is the formation-period return and %pos / %neg are the fractions of up /
-    down bars within it. A *low* (negative) ID means the move arrived **continuously** —
-    many small same-direction bars — which the paper finds produces momentum that is
+    down bars within it. A *low* (negative) ID means the move arrived **continuously**,
+    many small same-direction bars, which the paper finds produces momentum that is
     stronger and does not reverse; a *high* (positive) ID means a few large **discrete**
     jumps. Returns 0.0 on insufficient history.
 
-    RESEARCH ONLY — intentionally NOT wired into the live signal. The effect is documented
+    RESEARCH ONLY, intentionally NOT wired into the live signal. The effect is documented
     on individual stocks, where investor inattention to gradual firm-level news drives it;
     its transfer to a cross-sectional ETF book (which averages away idiosyncratic
     information paths) is UNVALIDATED. See scripts/id_sweep.py for the validation harness.
@@ -139,7 +139,7 @@ def donchian_breakout(
 def trend_agrees(score: float, breakout: int) -> bool:
     """Whether the momentum score and the breakout point the same way.
 
-    A breakout of 0 (inside the channel) never agrees — the conjunctive trigger
+    A breakout of 0 (inside the channel) never agrees, the conjunctive trigger
     treats "no fresh breakout" as a failed confirmation, just as mrbet treated a
     sub-threshold line move as a non-event.
     """

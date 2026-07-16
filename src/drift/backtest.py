@@ -3,7 +3,7 @@
 No lookahead: at each bar the target weight is computed from history up to and
 including that bar, then applied to the *next* bar's return. Transaction cost is
 charged on every change in weight. This is the harness that decides whether the
-strategy survives frictions — the single most important check from the
+strategy survives frictions, the single most important check from the
 feasibility note, so cost is on by default and reported explicitly.
 """
 
@@ -91,13 +91,13 @@ class Step:
 def strategy_steps(instrument: str, bars: Sequence[Bar], settings: Settings) -> list[Step]:
     """Walk the gated, hysteresis-held momentum strategy bar by bar (no lookahead).
 
-    Single source of truth for the position logic — `backtest`, the tearsheet, and
+    Single source of truth for the position logic, `backtest`, the tearsheet, and
     the forward ledger all read these steps so they can never disagree.
     """
     cost = settings.sizing.cost_bps_per_side / 1e4
     exit_thresh = settings.triggers.exit_score_threshold
     # evaluate() depends only on the recent tail, so feed it a bounded window:
-    # identical results, but O(n) over the series instead of O(n^2) — this is what
+    # identical results, but O(n) over the series instead of O(n^2), this is what
     # makes a multi-decade daily backtest tractable.
     window = settings.signal.min_history + settings.signal.lookback
     prev_weight = 0.0

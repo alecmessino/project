@@ -1,7 +1,7 @@
 """The canonical {state, edition} spine for the State Tax Atlas.
 
-One record per jurisdiction per edition; every Atlas surface projects from it — state pages, the
-comparison spread, the Crossing Brief, remembered home state, and future annual editions — so no
+One record per jurisdiction per edition; every Atlas surface projects from it, state pages, the
+comparison spread, the Crossing Brief, remembered home state, and future annual editions, so no
 fact is authored twice (PUBLISHING_SPEC §14.3 / §15).
 
 The record models the reasoning chain of §14.3 as five layers:
@@ -13,8 +13,8 @@ The record models the reasoning chain of §14.3 as five layers:
     actions        → the sequenced execution register        (the Crossing Brief)
 
 Only `environment` is populated today; the other four are declared as empty-but-typed structures
-so every consumer can rely on the record's shape while the layers are filled in — the planning
-content under the RIA principal's authority — one reviewable step at a time. This module adds no
+so every consumer can rely on the record's shape while the layers are filled in, the planning
+content under the RIA principal's authority, one reviewable step at a time. This module adds no
 facts of its own: it composes what `statemap` already owns.
 """
 from __future__ import annotations
@@ -29,7 +29,7 @@ from .statemap import (
 )
 from . import reasoning
 
-# The reasoning-chain layer keys, in order — the Decision Framework is the centrepiece (§16).
+# The reasoning-chain layer keys, in order, the Decision Framework is the centrepiece (§16).
 CHAIN = ("environment", "impact", "framework", "coordination", "actions")
 
 

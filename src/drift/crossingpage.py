@@ -1,14 +1,14 @@
-"""The Crossing Brief — rendered as an operating document.
+"""The Crossing Brief, rendered as an operating document.
 
 Takes the structured brief from `drift.crossing.build_crossing` and lays it out as an institutional
 transition memo: a document handed to a decision-maker before a move, whose job is to COORDINATE.
-It shares the limestone Atlas system but reads as a prepared brief — a transition band, a one-sentence
+It shares the limestone Atlas system but reads as a prepared brief, a transition band, a one-sentence
 executive summary, and operating sections (environment changed · coordination · decisions ·
 opportunities · a before/during/after action register · questions worth asking).
 
-    render_crossing_html(brief, edition)      — one directional brief (SSR)
-    render_crossing_index_html(edition)       — the routes households make most often
-    export_crossings(out_dir, edition)        — the featured briefs + the index
+    render_crossing_html(brief, edition)     , one directional brief (SSR)
+    render_crossing_index_html(edition)      , the routes households make most often
+    export_crossings(out_dir, edition)       , the featured briefs + the index
 
 Every Crossing Brief is prepared for a SPECIFIC move; the featured corridors demonstrate the product,
 and the Household Record (planned) prepares one bound to a household's own crossing.
@@ -27,7 +27,7 @@ from .site import BASE_URL, firm_anchor_html
 from . import crossing as _xing
 
 _XING_CSS = _HEAD_CSS + """
-  /* ── Crossing Brief — the transition memo ───────────────────────────────────────────────────── */
+  /* ── Crossing Brief, the transition memo ───────────────────────────────────────────────────── */
   .xband{margin:16px 40px 4px;padding:20px 26px;background:var(--navy);color:#eef1f4;display:flex;
     align-items:center;gap:12px 26px;flex-wrap:wrap}
   .xband .leg{display:flex;flex-direction:column;gap:3px}
@@ -57,7 +57,7 @@ _XING_CSS = _HEAD_CSS + """
   .ptab .u-immediate{color:var(--neg)} .ptab .u-near-term{color:var(--brass)} .ptab .u-ongoing{color:var(--muted)}
   .ptab .rz{color:var(--body);line-height:1.4} .ptab .dep{color:var(--muted);font-size:11px}
   @media(max-width:820px){.ptab{width:100%;margin:2px 0 0}.ptab .hide-sm{display:none}}
-  /* Decisions to reconsider + opportunities — ruled cards */
+  /* Decisions to reconsider + opportunities, ruled cards */
   .rlist{list-style:none;margin:0;padding:0;display:grid;gap:9px}
   .sec .rlist{margin:2px 0 0}
   .rlist li{border:1px solid var(--line);border-left:3px solid var(--brass);background:#fff;padding:11px 15px}
@@ -65,7 +65,7 @@ _XING_CSS = _HEAD_CSS + """
   .rlist .rt{font-family:var(--sans);font-weight:700;font-size:12.5px;color:var(--ink)}
   .rlist .rm{font-size:10.5px;font-family:var(--sans);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-left:8px}
   .rlist p{margin:4px 0 0;font-size:12px;color:var(--body);line-height:1.45}
-  /* Action register — before · during · after, the software of the move */
+  /* Action register, before · during · after, the software of the move */
   .phases{display:grid;gap:12px}
   .phase{border:1px solid var(--line);background:var(--soft)}
   .phase h4{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
@@ -75,7 +75,7 @@ _XING_CSS = _HEAD_CSS + """
   .phase li .at{font-family:var(--sans);font-weight:700;color:var(--ink)}
   .phase li .ao{font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-left:8px}
   .phase .empty{padding:12px 16px;color:var(--muted);font-style:italic;font-size:12px}
-  /* Questions worth asking — the closing page */
+  /* Questions worth asking, the closing page */
   .qwrap{margin:2px 40px 0;padding:18px 22px;border:1px solid var(--frame-line);background:var(--soft)}
   .qwrap ol{margin:0;padding-left:20px;display:grid;gap:10px}
   .qwrap li{font-family:var(--serif);font-size:14.5px;line-height:1.5;color:var(--ink)}
@@ -104,14 +104,14 @@ def _changed_table(brief: dict) -> str:
                     f'<td class="arr">→</td>'
                     f'<td>{cell(x["b_tag"], x["b_note"])}</td></tr>')
     if not rows:
-        return '<p class="lede" style="margin:2px 40px 0">The move changes nothing across the taxed dimensions — the two environments read alike.</p>'
+        return '<p class="lede" style="margin:2px 40px 0">The move changes nothing across the taxed dimensions, the two environments read alike.</p>'
     return (f'<table class="xtab"><thead><tr><th>What changed</th><th>In {_esc(o)}</th><th></th><th>In {_esc(d)}</th></tr></thead>'
             f'<tbody>{chr(10).join(rows)}</tbody></table>')
 
 
 def _priority_table(brief: dict) -> str:
     if not brief["coordination"]:
-        return '<p class="lede" style="margin:2px 40px 0">No standing coordination priorities are triggered at the destination — the environment is simple.</p>'
+        return '<p class="lede" style="margin:2px 40px 0">No standing coordination priorities are triggered at the destination, the environment is simple.</p>'
     rows = []
     for r in brief["coordination"]:
         newchip = '<span class="new">New</span>' if r["new"] else ""
@@ -160,7 +160,7 @@ def _phase(title: str, actions: list[dict]) -> str:
 def render_crossing_html(brief: dict, edition: str = CURRENT_EDITION) -> str:
     o, d = brief["origin"], brief["destination"]
     o_name, d_name = o["name"], d["name"]
-    title = f"Crossing Brief — moving from {o_name} to {d_name} | Driftwood Atlas"
+    title = f"Crossing Brief, moving from {o_name} to {d_name} | Driftwood Atlas"
     desc = (brief["thesis"] + " An operating brief: coordination priorities, standing decisions to "
             "reconsider, and a before/during/after action register. Illustrative, not advice.")[:300]
     url = _xing.crossing_url(o["code"], d["code"], edition)
@@ -168,7 +168,7 @@ def render_crossing_html(brief: dict, edition: str = CURRENT_EDITION) -> str:
     questions = "\n".join(f'<li>{_esc(q)}</li>' for q in brief["questions"])
     import json
     jsonld = {"@context": "https://schema.org", "@type": "WebPage",
-              "name": f"Crossing Brief — {o_name} to {d_name}", "url": url, "description": desc,
+              "name": f"Crossing Brief, {o_name} to {d_name}", "url": url, "description": desc,
               "isPartOf": {"@type": "WebSite", "name": "Driftwood Wealth", "url": f"{BASE_URL}/index.html"}}
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -206,7 +206,7 @@ def render_crossing_html(brief: dict, edition: str = CURRENT_EDITION) -> str:
     <div class="hd">
       <div class="eyebrow">The State Atlas · Crossing Brief</div>
       <h1>What changes when a household crosses state lines.</h1>
-      <p class="lede">An operating brief for one move — not an explainer. It reads the reasoning graph
+      <p class="lede">An operating brief for one move, not an explainer. It reads the reasoning graph
         from origin to destination and returns what the household must coordinate: the priorities that
         change, the standing decisions the move makes stale, and the actions to take before, during, and
         after the crossing.</p>
@@ -220,21 +220,21 @@ def render_crossing_html(brief: dict, edition: str = CURRENT_EDITION) -> str:
     <div class="sec"><div class="sh">Executive summary</div></div>
     <p class="thesis">{_esc(brief["thesis"])}</p>
     <div class="sec"><div class="sh">The operating environment that changed</div>
-      <p class="lede" style="margin-bottom:8px">Only the dimensions the move actually changes — origin on the left, destination on the right.</p>
+      <p class="lede" style="margin-bottom:8px">Only the dimensions the move actually changes, origin on the left, destination on the right.</p>
     </div>
     {_changed_table(brief)}
     <div class="sec"><div class="sh">Coordination priorities</div>
-      <p class="lede" style="margin-bottom:8px">What the household coordinates in the new environment — who owns it, how soon, and what it depends on. <b>New</b> marks a priority the move opens.</p>
+      <p class="lede" style="margin-bottom:8px">What the household coordinates in the new environment, who owns it, how soon, and what it depends on. <b>New</b> marks a priority the move opens.</p>
     </div>
     {_priority_table(brief)}
     <div class="sec"><div class="sh">Standing decisions to reconsider</div>
-      <p class="lede" style="margin-bottom:8px">Decisions calibrated to the origin's environment that the move makes stale — worth revisiting, not assuming.</p>
+      <p class="lede" style="margin-bottom:8px">Decisions calibrated to the origin's environment that the move makes stale, worth revisiting, not assuming.</p>
     </div>
     {_decisions(brief)}
     <div class="sec"><div class="sh">Opportunities the move opens</div></div>
     {_opportunities(brief)}
     <div class="sec"><div class="sh">The action register</div>
-      <p class="lede" style="margin-bottom:8px">Sequenced by the move — what to do before, during, and after the crossing.</p>
+      <p class="lede" style="margin-bottom:8px">Sequenced by the move, what to do before, during, and after the crossing.</p>
       <div class="phases">
         {_phase("Before the move", ph["before"])}
         {_phase("During the move", ph["during"])}
@@ -242,13 +242,13 @@ def render_crossing_html(brief: dict, edition: str = CURRENT_EDITION) -> str:
       </div>
     </div>
     <div class="sec"><div class="sh">Questions worth asking</div>
-      <p class="lede" style="margin-bottom:8px">Not answers — the questions this move puts on the table, to open the conversation with the household's advisors.</p>
+      <p class="lede" style="margin-bottom:8px">Not answers, the questions this move puts on the table, to open the conversation with the household's advisors.</p>
     </div>
     <div class="qwrap"><ol>{questions}</ol></div>
     <div class="cta">
       <div class="ctxt">
         <div class="ch">This brief becomes one entry in a household's operating file.</div>
-        <div class="cd">The Household Record binds the move to the family's standing decisions, coordination priorities, and advisors — the place this brief is coordinated, not filed.</div>
+        <div class="cd">The Household Record binds the move to the family's standing decisions, coordination priorities, and advisors, the place this brief is coordinated, not filed.</div>
       </div>
       <a class="primary" href="{BASE_URL}/atlas/{edition}/household/">Prepare this as your Household Record →</a>
       <a class="ghost" href="{MEETING_URL}">Start a conversation</a>
@@ -257,7 +257,7 @@ def render_crossing_html(brief: dict, edition: str = CURRENT_EDITION) -> str:
     {_provenance_block()}
     {DISCLOSURE}
     {firm_anchor_html()}
-    <div class="colophon">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}. A Crossing Brief is a view of the reasoning graph — it authors no facts of its own.</div>
+    <div class="colophon">Driftwood. State tax law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}. A Crossing Brief is a view of the reasoning graph, it authors no facts of its own.</div>
   </div>
 </div>
 </body>
@@ -270,9 +270,9 @@ def _compare_slug(a: str, b: str) -> str:
     return compare_slug(a, b)
 
 
-# Index gallery — the featured routes grouped by destination magnet.
+# Index gallery, the featured routes grouped by destination magnet.
 def render_crossing_index_html(edition: str = CURRENT_EDITION) -> str:
-    title = "Crossing Briefs — what changes when you move between states | Driftwood Atlas"
+    title = "Crossing Briefs, what changes when you move between states | Driftwood Atlas"
     desc = ("The operating brief for a household changing states: which coordination priorities change, "
             "which standing decisions to reconsider, and the actions to take before, during, and after "
             "the move. The routes households make most often. Illustrative, not advice.")
@@ -318,7 +318,7 @@ def render_crossing_index_html(edition: str = CURRENT_EDITION) -> str:
     <div class="hd">
       <div class="eyebrow">The State Atlas · Crossing Brief</div>
       <h1>When a household crosses state lines, its operating system changes.</h1>
-      <p class="lede">A Crossing Brief is prepared for one move — the memo an institution hands a household
+      <p class="lede">A Crossing Brief is prepared for one move, the memo an institution hands a household
         before a transition. Its job is to coordinate, not to educate: which priorities change, which
         standing decisions to revisit, and what to do before, during, and after. These are the routes
         households make most often; the <a href="{BASE_URL}/atlas/{edition}/household/">Household Record</a>
@@ -328,7 +328,7 @@ def render_crossing_index_html(edition: str = CURRENT_EDITION) -> str:
     <div class="cta">
       <div class="ctxt">
         <div class="ch">Considering a move that isn't here?</div>
-        <div class="cd">Every state pair has a brief in the graph — start a conversation and we'll prepare the one for your household's crossing.</div>
+        <div class="cd">Every state pair has a brief in the graph, start a conversation and we'll prepare the one for your household's crossing.</div>
       </div>
       <a class="primary" href="{MEETING_URL}">Start a conversation →</a>
       <a class="ghost" href="{BASE_URL}/atlas/{edition}/compare/">Weigh two states →</a>

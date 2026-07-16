@@ -73,7 +73,7 @@ def test_template_renders_and_carries_compliance_framing():
     assert "Single asset risk" in t
     # not-advice + RIA identity
     assert "not tax, legal, or investment advice" in t
-    assert "registered investment adviser" in t and "adviserinfo.sec.gov" in t
+    assert "not currently a registered investment adviser" in t and "adviserinfo.sec.gov" not in t
     # ORIGINALITY: our own JS, not the third party's external asset
     assert "taxalphainsider" not in t.lower()
 

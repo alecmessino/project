@@ -169,20 +169,27 @@ function personalizeInPage({ state, port, bracket }) {
     }
   } catch (e) { /* ignore */ }
 
-  // 2 · Portfolio Size slider(s) — clamp into each slider's own [min,max]
+  // 2 · Portfolio Size slider(s) — clamp into each slider's own [min,max].
+  //     Guard on a finite, positive port: setting a range input to a non-numeric
+  //     value silently RESETS it to its (min+max)/2 midpoint, which would clobber
+  //     the value the URL already hydrated. Never write NaN.
   try {
     let moved = false;
-    ['leadport', 'taxbal'].forEach((id) => {
-      const el = $(id);
-      if (!el) return;
-      const mn = parseFloat(el.min) || 0;
-      const mx = parseFloat(el.max) || port;
-      el.value = String(Math.min(Math.max(port, mn), mx));
-      el.dispatchEvent(new Event('input', { bubbles: true }));
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-      moved = true;
-    });
-    if (window.dwTaxContext) dwTaxContext.save({ portfolio: port, state, bracket });
+    if (Number.isFinite(port) && port > 0) {
+      ['leadport', 'taxbal'].forEach((id) => {
+        const el = $(id);
+        if (!el) return;
+        const mn = parseFloat(el.min) || 0;
+        const mx = parseFloat(el.max) || port;
+        el.value = String(Math.min(Math.max(port, mn), mx));
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+        moved = true;
+      });
+      if (window.dwTaxContext) dwTaxContext.save({ portfolio: port, state, bracket });
+    } else if (window.dwTaxContext) {
+      dwTaxContext.save({ state, bracket });
+    }
     out.portfolio = moved;
   } catch (e) { /* ignore */ }
 
@@ -261,7 +268,8 @@ function personalizeInPage({ state, port, bracket }) {
     try {
       await pg.goto(url, { waitUntil: 'load', timeout: 30000 });
       await pg.evaluate(() => document.fonts && document.fonts.ready);
-      const applied = await pg.evaluate(personalizeInPage, lead);
+      const applied = await pg.evaluate(personalizeInPage,
+        { state: lead.state, port: lead.portfolio, bracket: lead.bracket });
 
       // Best-effort wait for the Asset-Location result to populate (workspace.html only).
       await pg.waitForFunction(() => {
@@ -273,7 +281,14 @@ function personalizeInPage({ state, port, bracket }) {
       const analysisPath = path.join(OUT, `${stem}_Driftwood_Analysis.png`);
       await pg.screenshot({ path: analysisPath, fullPage: true });
 
-      // Focused close-up of the Alpha-Turnover Frontier chart, if present.
+      // Compact, share-friendly close-ups of the two headline elements (element clips
+      // are far smaller than the full-page dossier). Best-effort — skipped if absent.
+      let assetPath = null;
+      const opt = await pg.$('#optim');
+      if (opt && await opt.isVisible()) {
+        assetPath = path.join(OUT, `${stem}_Driftwood_AssetLocation.png`);
+        await opt.screenshot({ path: assetPath });
+      }
       let frontierPath = null;
       const fr = await pg.$('#frontier');
       if (fr && await fr.isVisible()) {

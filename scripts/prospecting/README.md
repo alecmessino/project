@@ -10,9 +10,14 @@ After-Tax Review and screenshots it to `outputs/`:
 
 - `outputs/<Prospect_Name>_Driftwood_Analysis.png` — full-page personalized dossier
   (household bar, Asset Location & Capital-Flow, Tax-Drag metrics, Estate cliff, the
-  Alpha-Turnover Frontier — all sections revealed in one image).
+  Alpha-Turnover Frontier — all sections revealed in one image). Note: this shot is very
+  tall; the two crops below are the share-friendly ones.
+- `outputs/<Prospect_Name>_Driftwood_AssetLocation.png` — compact close-up of the
+  Asset-Location / Tax-Drag panel (taxable/Traditional/Roth placement, Location Alpha,
+  tax saved vs fee).
 - `outputs/<Prospect_Name>_Driftwood_Frontier.png` — a focused close-up of the
-  Alpha-Turnover Frontier chart.
+  Alpha-Turnover Frontier chart (identical for same-state/bracket leads, since it depends
+  on tax rates, not portfolio size).
 
 ## Which page it drives — and why it is *not* `taxlab.html`
 

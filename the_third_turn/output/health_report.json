@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-18T01:24:15+00:00",
+  "generated": "2026-07-18T01:39:31+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 180697,
+    "rows": 181851,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 52060,
-      "live_total": 18908,
-      "live_today": 1343,
-      "last_row_age_min": -0.0
+      "rows_total": 52646,
+      "live_total": 19174,
+      "live_today": 1609,
+      "last_row_age_min": 0.0
     },
     "fanduel": {
-      "rows_total": 128631,
-      "live_total": 20690,
-      "live_today": 1191,
-      "last_row_age_min": -0.0
+      "rows_total": 129199,
+      "live_total": 20949,
+      "live_today": 1450,
+      "last_row_age_min": 0.0
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 16979.3
+      "last_row_age_min": 16994.5
     }
   },
   "books_reporting_live": [
@@ -37,18 +37,19 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 18908,
-    "OPEN": 18854,
-    "SUSPENDED": 1774,
+    "unset": 19174,
+    "OPEN": 19100,
+    "SUSPENDED": 1787,
     "REMOVED": 62
   },
   "overlap": {
-    "simultaneous_pairs_total": 21411,
-    "simultaneous_pairs_today": 1286,
+    "simultaneous_pairs_total": 21670,
+    "simultaneous_pairs_today": 1545,
     "overlap_games": 55,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
-      "0_books": 11,
+      "0_books": 10,
+      "1_books": 1,
       "2_books": 55
     }
   },
@@ -64,9 +65,9 @@
     "verified": true
   },
   "coverage": {
-    "live_games_seen": 58,
+    "live_games_seen": 59,
     "book_panel_games": 66,
-    "team_total_rows": 9192,
+    "team_total_rows": 9230,
     "innings_seen": [
       1,
       2,
@@ -85,7 +86,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 21411,
+        "current": 21670,
         "target": 2000,
         "pass": true,
         "progress": 1.0

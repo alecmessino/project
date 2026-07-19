@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-19T19:51:14+00:00",
+  "generated": "2026-07-19T20:06:33+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 219138,
+    "rows": 219181,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 63182,
-      "live_total": 23414,
-      "live_today": 1455,
-      "last_row_age_min": 0.2
+      "rows_total": 63192,
+      "live_total": 23421,
+      "live_today": 1462,
+      "last_row_age_min": 14.0
     },
     "fanduel": {
-      "rows_total": 155950,
-      "live_total": 27762,
-      "live_today": 1493,
-      "last_row_age_min": 0.2
+      "rows_total": 155983,
+      "live_total": 27794,
+      "live_today": 1525,
+      "last_row_age_min": 0.8
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 19526.2
+      "last_row_age_min": 19541.6
     }
   },
   "books_reporting_live": [
@@ -37,18 +37,18 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 23414,
-    "OPEN": 25338,
-    "SUSPENDED": 2319,
+    "unset": 23421,
+    "OPEN": 25367,
+    "SUSPENDED": 2322,
     "REMOVED": 105
   },
   "overlap": {
-    "simultaneous_pairs_total": 28353,
-    "simultaneous_pairs_today": 1548,
+    "simultaneous_pairs_total": 28392,
+    "simultaneous_pairs_today": 1587,
     "overlap_games": 60,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
-      "0_books": 19,
+      "0_books": 20,
       "2_books": 60
     }
   },
@@ -65,7 +65,7 @@
   },
   "coverage": {
     "live_games_seen": 61,
-    "book_panel_games": 79,
+    "book_panel_games": 80,
     "team_total_rows": 12098,
     "innings_seen": [
       1,
@@ -85,7 +85,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 28353,
+        "current": 28392,
         "target": 2000,
         "pass": true,
         "progress": 1.0

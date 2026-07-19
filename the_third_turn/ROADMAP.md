@@ -41,55 +41,51 @@ The near-term gating constraint is SR-1 Criterion 3 (overlap games, 60/100), whi
 
 ---
 
-## 1. Paper 1 — action items to submission-ready
+## 1. Paper 1 (Frozen) — disseminate; Paper 1.1 — validate independently
 
-Ranked. Items 1-2 are load-bearing; the rest strengthen the paper or preempt a referee.
+**Mindset: Paper 1 is done, not being finished.** The paper, benchmark, methodology, and numbers
+are frozen at the June-2026 sample. There are **no further empirical changes to Paper 1.** All work
+splits into two buckets: *disseminate the frozen paper now*, and *validate it independently later*
+as a separate output (Paper 1.1). Any new empirical content belongs to Paper 1.1 or a revision —
+never back into Paper 1.
 
-### Must-do (gates a serious-venue submission)
+### Paper 1 (Frozen) — dissemination (do now; no new data)
 
-1. **Add the second month of live data as a temporal hold-out.** *(empirical, data-gated)*
-   The paper's single biggest exposure is that the sample is one month (June 2026). The manuscript
-   already promises a second month "before journal submission." Collect it, then re-run the frozen
-   pipeline on the pooled two months and report whether the encompassing gain stays at or below
-   zero out of sample in the new month. Completion is defined by **observed behavior, not elapsed
-   time**: the collector has logged enough matched live snapshots in the new month to re-estimate
-   the encompassing test at comparable power (target on the order of the current ~2,500 snapshots
-   over ~150+ games). Do not peek at the July estimate before the sample is closed.
+- Post the **SSRN preprint** (q-fin.ST primary, econ.EM cross-list).
+- Post the **arXiv preprint** (same categories).
+- **Archive the frozen benchmark + code** (public release bundle, already built).
+- **Mint the dataset DOI** (Benchmark v1 → Zenodo; resolves the "DOI pending" line).
+- **Solicit referee feedback** — three readers (forecasting econometrician · sports-analytics ·
+  markets); budget two weeks.
+- **Plain-language summary** for the SSRN page (three-questions frame).
+- **No further empirical changes.**
 
-2. **Freeze Draft 1.1 on the pooled data and regenerate every number and figure.** *(mechanical)*
-   Re-run `revision1.py`, the encompassing/calibration/transfer scripts, `make_figures.py`, then
-   `build_pdf.py`. Update the sample-size lines (163 games, 2,505 / 2,859 / 6,414 units) and the
-   "single month" limitation. Bump `BENCHMARK_DATASET` to `2026.07` (or `2026.q3`) and note the
-   change in the dataset CHANGELOG. This is the version that goes to a journal.
+### Paper 1.1 — *independent* temporal validation *(data-gated; NOT a rewrite of Paper 1)*
 
-### Should-do (referee-anticipating; a Chicago-school reader will ask)
+A second month is **validation, not a pooled re-draft.** Paper 1 stays June-only. Paper 1.1 is a
+separate, short output: *"Independent temporal validation of the Third Turn encompassing result."*
 
-3. **State the multiple-testing posture explicitly.** Ten candidate hypotheses invite the "of
-   course one looked alive" objection. The answer is already in the design (the velocity
-   deconstruction is exactly that objection, answered), but say it out loud: cite the protocol's
-   stopping rules and safeguard registry in Methods, note that no hypothesis was added after seeing
-   the encompassing result, and frame the joint encompassing test as the family-wise control. One
-   paragraph.
+1. **Collect the second month and run the frozen pipeline on that month ALONE.** *(empirical,
+   data-gated)* Report whether the encompassing gain stays at or below zero **out of sample in the
+   new month** — a genuine hold-out, not a pooled re-fit. Completion is **observed behavior, not
+   elapsed time**: enough matched live snapshots in the new month to re-estimate at comparable power
+   (~2,500 snapshots over ~150+ games). Do not peek before the month closes.
 
-4. **Second-book robustness for the encompassing benchmark.** *(data-gated, shares Paper 2 data)*
-   The single-book benchmark is a named limitation. As the multi-book live streams accrue, re-run
-   the error-on-features regression against a second sharp book (or a two-book consensus) and report
-   that the null holds. This converts a limitation into a robustness result.
+2. **Write Paper 1.1 as its own artifact.** New benchmark slice (`2026.07`) with its own CHANGELOG
+   entry; Paper 1's `2026.06` benchmark is untouched. The validation either replicates the null out
+   of sample (strong) or does not (also publishable, and more important). This is scientifically
+   stronger than folding a second month into Paper 1.
 
-5. **External read before submission.** Circulate to three readers with distinct lenses: a
-   forecasting econometrician (does the Clark-West / Diebold-Mariano usage hold up?), a
-   sports-analytics reader (are the baseball claims fair?), and a markets reader (is the
-   asset-pricing framing credible?). Budget two weeks.
+### Deferred to Paper 1.1 / a revision (NOT changes to frozen Paper 1)
 
-### Polish (do now; none blocks the above)
-
-6. **Post to SSRN and arXiv immediately.** The paper is written for it and needs no new data.
-   Establishes priority and starts collecting comments while the second month accrues. See §2.
-7. **Mint the dataset DOI.** Package Benchmark Dataset v1 to Zenodo so the "persistent DOI pending
-   publication" line in Data-and-code-availability resolves to a real identifier.
-8. **Plain-language summary.** One paragraph for the SSRN abstract page and any thread/blog, in the
-   three-questions frame (predicting runs, beating the price, and turning a profit are different
-   problems).
+- **Multiple-testing posture, stated explicitly.** A one-paragraph Methods addition for the
+  validation/revision: cite the protocol's stopping rules and safeguard registry, note no hypothesis
+  was added after seeing the encompassing result, frame the joint encompassing test as the
+  family-wise control. (Text clarification only — no number changes; ships with Paper 1.1 or a v-note.)
+- **Second-book robustness for the encompassing benchmark.** *(data-gated, shares Paper 2 data)* As
+  multi-book live streams accrue and a validated main-line series exists (RD-3), re-run the
+  error-on-features regression against a two-book consensus and report the null holds — converting a
+  named limitation into a robustness result. Belongs to Paper 1.1, not Paper 1.
 
 ---
 
@@ -127,8 +123,17 @@ single most persuasive exhibit that the protocol earns its keep; put it early in
 
 ## 3. Forthcoming papers and program strategy
 
-### Paper 2 — Market microstructure of live information *(the follow-on Paper 1 advertises)*
-The §7 "Remaining Questions" are the outline: does information propagate across books with a
+### Paper 2 — *When can information leadership be identified from live betting markets?*
+The question has sharpened from "measure information leadership" to **"under what conditions is
+cross-book information leadership even identifiable, and when is an apparent leader an artifact of
+update frequency or feed latency?"** Half the paper may be about **identification**, not results —
+which is stronger, not weaker: it inherits Paper 1's character (the contribution is method and honest
+limits, not a positive finding). The naive-leadership traps already found (frequency confound,
+main-line-definition sensitivity, latency-vs-information) are the paper's raw material. It stays
+**frozen** under GD-12 until measurement/protocol are de-risked or SR-1 clears.
+
+The §7 "Remaining Questions" remain the substantive menu once identification is settled: does
+information propagate across books with a
 measurable lag, and is a laggard ever tradable? What is the information half-life of a shock (home
 run, pitching change, injury)? Does the market update the *shape* of the implied run distribution
 (variance, skew, tails) as well as its mean, or is higher-moment miscalibration where a residual

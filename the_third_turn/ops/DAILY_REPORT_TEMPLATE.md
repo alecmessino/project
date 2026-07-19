@@ -32,6 +32,18 @@ metrics for redesign, never silently revise them.
 
 ---
 
+## Research Program Health (five-second read — refresh daily)
+
+```
+Paper 1    ✅ Frozen · ready for dissemination
+Collector  ✅ Stable · autonomous
+Benchmark  ✅ Growing · healthy
+Measurement 🟡 Active refinement (primary: RD-3)
+Sci. inference 🔒 Intentionally paused (GD-12)
+```
+*Stewardship phase: a good day is boring — collector healthy, dataset larger, no protocol
+regression, no new inference. Flip a line off its default only on specific evidence, and say why.*
+
 ## Operational Status (at-a-glance)
 
 ```

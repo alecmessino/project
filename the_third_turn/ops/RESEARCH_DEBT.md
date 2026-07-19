@@ -7,6 +7,17 @@ be **wrong or unidentifiable** even if the machine runs perfectly." Many items h
 fix and a research consequence; this register states the **inference threat**, the analysis it
 endangers, and the mechanism of the bias — not the code fix.
 
+## The one question (avoid bouncing between debts)
+
+> **What measurement uncertainty, if resolved, would most increase confidence in *every* future paper?**
+>
+> **Answer: RD-3 — a single, validated definition of "the live price" per book.** Every downstream
+> inference (temporal validation, second-book robustness, leadership identification, line-movement)
+> depends on knowing *which line* we mean; three reasonable extraction rules currently disagree 71%
+> of the time and flip results (E-017). Until a trustworthy main-line series exists, no cross-book or
+> line-based number is defensible. **RD-3 is the primary measurement debt; all others are
+> subordinate** and are worked only if they block RD-3 or a frozen-Paper-1 dissemination task.
+
 **Why this list matters more as Paper 2 approaches.** These are the threats to valid inference that
 must be *cleared or explicitly bounded before any gated analysis is run* — a pre-analysis threat
 list, in the spirit of pre-registration. Clearing this backlog is worth more than another day of

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>The Driftwood Letter, a quarterly note on coordinating the whole picture</title>
+<meta name="description" content="The Driftwood Letter: a quarterly, educational note on running a financial life as one system, taxes, estate, liquidity, and investments coordinated. Read the latest, browse back issues, and subscribe. Educational, not an offer or advice." />
+<link rel="canonical" href="https://driftwoodwealth.com/letter.html" />
+<link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftwood Wealth" />
+<meta property="og:title" content="The Driftwood Letter" />
+<meta property="og:description" content="A quarterly, educational note on running a financial life as one system. Read the latest and subscribe." />
+<meta property="og:url" content="https://driftwoodwealth.com/letter.html" />
+<meta property="og:image" content="https://driftwoodwealth.com/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="The Driftwood Letter" />
+<meta name="twitter:description" content="A quarterly, educational note on running a financial life as one system." />
+<meta name="twitter:image" content="https://driftwoodwealth.com/og/index.png" />
+<style>
+  :root{
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4;
+    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a; --navy:#1a2330; --on-dark:#e7ecf2;
+    --brass:#2c5878; --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6; --teal:#15463a; --teal2:#15806a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.62 var(--sans);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:28px auto 90px;padding:0 22px}
+  .frame{background:var(--bg)}
+  .doc{padding:44px 0 6px;max-width:680px}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:15px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(30px,3vw+15px,44px);line-height:1.08;letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
+  .dek{font-family:var(--serif);font-size:18.5px;line-height:1.55;color:var(--dim);margin:0 0 6px;max-width:60ch}
+  .cadence{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:18px}
+  .rule{height:1px;background:var(--frame-line);border:0;margin:36px 0}
+  .sh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 16px}
+
+  /* Latest issue, read-first: an excerpt so the value is on the page before the ask. */
+  .latest .kicker{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 8px}
+  .latest h2{font-family:var(--sans);font-weight:700;font-size:26px;line-height:1.14;letter-spacing:-.018em;color:var(--ink);margin:0 0 14px;max-width:24ch}
+  .latest p{font-size:16px;line-height:1.7;color:var(--body);margin:0 0 14px;max-width:62ch}
+  .latest .more{display:inline-block;font-family:var(--sans);font-weight:700;font-size:13px;color:var(--teal2);text-decoration:none;margin-top:2px}
+  .latest .more:hover{text-decoration:underline}
+
+  /* Subscribe module: one quiet field, honest microcopy, Web3Forms (no backend). */
+  .sub{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:28px 0;margin:36px 0}
+  .sub .st{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 8px}
+  .sub .sl{font-family:var(--serif);font-size:18px;line-height:1.5;color:var(--ink);margin:0 0 16px;max-width:52ch}
+  .sub form{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;max-width:520px}
+  .sub input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:0;padding:13px 14px}
+  .sub input[type=email]:focus-visible{outline:2px solid var(--accent-strike);outline-offset:1px}
+  .sub button{font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--accent-strike);border:0;border-radius:0;padding:13px 22px;cursor:pointer}
+  .sub button:hover{filter:brightness(1.08)}
+  .sub .fine{font-size:12px;line-height:1.55;color:var(--muted);margin:12px 0 0;max-width:60ch}
+  .sub .ok{display:none;font-family:var(--serif);font-size:17px;color:var(--ink);line-height:1.5;max-width:54ch}
+  .sub.done form{display:none} .sub.done .fine{display:none} .sub.done .ok{display:block}
+
+  /* Back issues: the Nº-numbered ruled index (illustrative). */
+  .issues{list-style:none;margin:0;padding:0}
+  .issues li{border-top:1px solid var(--line2);padding:15px 0}
+  .issues li:last-child{border-bottom:1px solid var(--line2)}
+  .issues .meta{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+  .issues .t{font-family:var(--sans);font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
+  .issues .t:hover{color:var(--teal2)}
+
+  .foot{margin-top:48px;padding:20px 0 40px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.65}
+  .foot .note{color:#5a5a62;font-weight:500}
+  .foot a{color:var(--muted)}
+  @media(max-width:620px){.wrap{padding:0 16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="frame">
+    <nav class="dwnav" aria-label="Driftwood Wealth">
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 15 H44.5" stroke-width="3.4"/><path d="M1.5 1 H4.5 L27 15" stroke-width="2"/><path d="M1.5 8 H8 L27 15" stroke-width="2"/><path d="M1.5 22 H8 L27 15" stroke-width="2"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <div class="dwnav-links">
+        <div class="dwnav-drop">
+          <button class="dwnav-trigger" type="button">The Firm<span class="caret" aria-hidden="true"></span></button>
+          <div class="dwnav-panel">
+            <a href="about.html">Our Story</a>
+            <a href="principles.html">Philosophy</a>
+            <a href="fees.html">Fees</a>
+          </div>
+        </div>
+        <div class="dwnav-drop">
+          <button class="dwnav-trigger" type="button">The System<span class="caret" aria-hidden="true"></span></button>
+          <div class="dwnav-panel">
+            <a href="inside.html">Operating&nbsp;System</a>
+            <a href="howitworks.html">How It Works</a>
+            <a href="thesis.html">How We Invest</a>
+          </div>
+        </div>
+        <div class="dwnav-drop">
+          <button class="dwnav-trigger" type="button">The Tools<span class="caret" aria-hidden="true"></span></button>
+          <div class="dwnav-panel">
+            <a href="leakage.html">Tax&nbsp;Diagnostic</a>
+            <a href="taxlab.html">After-Tax&nbsp;Review</a>
+            <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
+          </div>
+        </div>
+        <div class="dwnav-drop dwnav-drop--current">
+          <button class="dwnav-trigger" type="button">Research<span class="caret" aria-hidden="true"></span></button>
+          <div class="dwnav-panel">
+            <a href="research.html">Research&nbsp;Hub</a>
+            <a href="letter.html" aria-current="page">The&nbsp;Letter</a>
+            <a href="ledger.html">Model&nbsp;Ledger</a>
+            <a href="tearsheet.html">Tearsheet</a>
+          </div>
+        </div>
+      </div>
+      <a class="dwnav-access" href="private.html">Client Access</a>
+      <a class="dwnav-cta" href="index.html#conversation">Request a Coordination Review</a>
+    </nav>
+
+    <main id="main">
+    <div class="doc">
+      <p class="eyebrow">The Driftwood Letter</p>
+      <h1>A quarterly note on coordinating the whole picture.</h1>
+      <p class="dek">Four issues a year on running a financial life as one system: how investments, taxes,
+        liquidity, estate, and the professionals around them move together, and what it costs when they don't.</p>
+      <p class="cadence">Quarterly, since 2026 &middot; educational, not an offer or advice</p>
+    </div>
+
+    <hr class="rule">
+
+    <section class="latest" aria-label="The latest issue">
+      <p class="kicker">Latest &middot; Nº 01 &middot; 2026</p>
+      <h2>Every portfolio has two returns.</h2>
+      <p>There is the return your statement shows, and the return you actually keep after tax. For most
+        households the gap between them is not decided by which funds they own; it is decided by where those
+        funds are held, the order gains are realized, and whether the estate and the portfolio were designed in
+        view of each other. A good year, uncoordinated, quietly leaks. The same year, coordinated, compounds.</p>
+      <p>This first letter walks one illustrative household through that gap, and the three places coordination
+        tends to fail: asset location, the sequence of realized gains, and an estate plan that has never met the
+        investment plan.</p>
+      <a class="more" href="every-portfolio-has-two-returns.html">Read the full essay &rarr;</a>
+    </section>
+
+    <section class="sub" id="subscribe" aria-label="Subscribe to the Letter">
+      <p class="st">Subscribe</p>
+      <p class="sl">If this was useful, the next one comes quarterly.</p>
+      <form id="letterForm" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="cf6b1c2d-9971-4256-9ff9-72d6918c84e6">
+        <input type="hidden" name="subject" value="New Driftwood Letter subscriber">
+        <input type="hidden" name="from_name" value="Driftwood Letter">
+        <input type="hidden" name="source" value="letter">
+        <input type="text" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+        <label for="letterEmail" class="vh" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Email address</label>
+        <input id="letterEmail" type="email" name="email" required placeholder="you@email.com" autocomplete="email">
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="fine">Four issues a year on how the seven systems fit together. This is an interest list and
+        educational sign-up, not an offer, solicitation, or the start of an advisory relationship. We never share
+        your address, and every issue unsubscribes in one click.</p>
+      <p class="ok">You are on the list. We'll send the next issue when it's ready, and be in touch personally,
+        no automated sequence.</p>
+    </section>
+
+    <section aria-label="Back issues">
+      <p class="sh">Back issues</p>
+      <ul class="issues">
+        <li>
+          <div class="meta">Nº 01 &middot; 2026</div>
+          <a class="t" href="every-portfolio-has-two-returns.html">Every portfolio has two returns</a>
+        </li>
+        <li>
+          <div class="meta">Editorial &middot; 2026</div>
+          <a class="t" href="enough-is-a-number.html">Enough is a number</a>
+        </li>
+        <li>
+          <div class="meta">Editorial &middot; 2026</div>
+          <a class="t" href="the-worlds-largest-investors.html">What the world's largest investors do differently</a>
+        </li>
+      </ul>
+    </section>
+
+    </main>
+
+    <div class="foot" id="disclosures">
+      <span class="note">Educational and illustrative, not an offer, solicitation, or investment, tax, or legal advice.</span>
+      The Driftwood Letter is educational content; subscribing is not the start of an advisory relationship. Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS and a Financial Representative of The Guardian Life Insurance Company of America® (Guardian), New York, NY. PAS is a wholly owned subsidiary of Guardian. Capitol Wealth Strategies, LLC is not an affiliate or subsidiary of PAS or Guardian. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
+    </div>
+  </div>
+</div>
+<script>
+  (function(){
+    var f = document.getElementById("letterForm");
+    if(!f) return;
+    f.addEventListener("submit", function(e){
+      e.preventDefault();
+      var data = new FormData(f);
+      fetch("https://api.web3forms.com/submit", {method:"POST", body:data})
+        .then(function(){ document.getElementById("subscribe").classList.add("done"); if(window.plausible) plausible("letter_subscribe"); })
+        .catch(function(){ document.getElementById("subscribe").classList.add("done"); });
+    });
+  })();
+</script>
+</body>
+</html>

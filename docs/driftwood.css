@@ -277,6 +277,32 @@ body{ overflow-wrap:break-word; max-width:100%; min-height:100dvh; }
 .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
   clip:rect(0,0,0,0); white-space:nowrap; border-width:0; }
 
+/* Inline Letter subscribe strip: the quiet foot-of-essay invitation, shared across the long-reads.
+   One field, honest educational microcopy, Web3Forms (no backend, wired in dw-context.js). Fluid
+   clamp() spacing so it breathes at reading width and compresses cleanly on a phone. */
+.essay-sub{ border-top:1px solid var(--line,#d8d3c6); margin:clamp(34px,5vw,58px) 0 0;
+  padding:clamp(22px,3.2vw,34px) 0 0; max-width:70ch; }
+.essay-sub .es-eyebrow{ font-family:var(--sans); font-weight:700; font-size:11px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--accent-strike,#2c5878); margin:0 0 9px; }
+.essay-sub .es-lead{ font-family:var(--serif); font-size:clamp(17px,1.4vw,19px); line-height:1.5;
+  color:var(--ink,#1e2833); margin:0 0 clamp(14px,1.8vw,18px); max-width:52ch; }
+.essay-sub .es-form{ display:flex; flex-wrap:wrap; gap:clamp(8px,1vw,12px); align-items:stretch; max-width:520px; }
+.essay-sub input[type=email]{ flex:1; min-width:220px; font-family:var(--sans); font-size:15px;
+  color:var(--ink,#1e2833); background:#fff; border:1px solid var(--line,#d8d3c6);
+  border-radius:var(--surface-radius,0); padding:13px 14px; }
+.essay-sub input[type=email]:focus-visible{ outline:2px solid var(--accent-strike,#2c5878); outline-offset:1px; }
+.essay-sub .es-bot{ display:none; }
+.essay-sub button{ font-family:var(--sans); font-size:13px; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; color:#fff; background:var(--accent-strike,#2c5878); border:0;
+  border-radius:var(--surface-radius,0); padding:13px clamp(18px,2vw,24px); cursor:pointer;
+  transition:filter .15s ease-in-out; }
+.essay-sub button:hover{ filter:brightness(1.08); }
+.essay-sub .es-fine{ font-size:12px; line-height:1.55; color:var(--muted,#6b6e6a); margin:12px 0 0; max-width:60ch; }
+.essay-sub .es-ok{ display:none; font-family:var(--serif); font-size:16.5px; line-height:1.5;
+  color:var(--ink,#1e2833); max-width:54ch; }
+.essay-sub.done .es-form, .essay-sub.done .es-fine{ display:none; }
+.essay-sub.done .es-ok{ display:block; }
+
 /* Apple HIG: comfortable ≥44px touch targets for the primary interactive controls on touch
    devices — nav links, buttons, selects, tabs — without changing their look for mouse users.
    min-height (not height) leaves already-tall controls alone; range/checkbox inputs are excluded

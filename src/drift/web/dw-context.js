@@ -215,13 +215,58 @@
         links.addEventListener("click", function (e) { if (e.target.closest && e.target.closest("a")) setOpen(false); });
         document.addEventListener("keydown", function (e) { if (e.key === "Escape" || e.keyCode === 27) setOpen(false); });
         try {
-          var mq = window.matchMedia("(min-width:621px)");
+          var mq = window.matchMedia("(min-width:1200px)");
           var onChange = function () { if (mq.matches) setOpen(false); };
           if (mq.addEventListener) mq.addEventListener("change", onChange);
           else if (mq.addListener) mq.addListener(onChange);
         } catch (e) {}
       })(navs[i], i);
     }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", enhance);
+  else enhance();
+})();
+
+/* Primary-nav dropdowns (desktop): each .dwnav-drop opens its panel on hover, focus, or click, keeping
+ * aria-expanded in sync; one family open at a time; Escape and outside-click close. Progressive
+ * enhancement, with JS off the panels are still reachable, and on a phone or tablet the shared hamburger
+ * shows every link stacked, so this desktop layer stays out of the way (open() is a no-op below 1200px). */
+(function () {
+  if (typeof document === "undefined") return;
+  function desktop() { try { return window.matchMedia("(min-width:1200px)").matches; } catch (e) { return true; } }
+  function enhance() {
+    var drops = [].slice.call(document.querySelectorAll(".dwnav-drop"));
+    if (!drops.length) return;
+    var wired = [];
+    drops.forEach(function (drop, i) {
+      var trigger = drop.querySelector(".dwnav-trigger");
+      var panel = drop.querySelector(".dwnav-panel");
+      if (!trigger || !panel) return;
+      if (!panel.id) panel.id = "dwnav-panel-" + (i + 1);
+      trigger.setAttribute("aria-haspopup", "true");
+      trigger.setAttribute("aria-expanded", "false");
+      trigger.setAttribute("aria-controls", panel.id);
+      function open() { if (!desktop()) return; closeOthers(drop); drop.classList.add("dwnav-drop--open"); trigger.setAttribute("aria-expanded", "true"); }
+      function close() { drop.classList.remove("dwnav-drop--open"); trigger.setAttribute("aria-expanded", "false"); }
+      drop._close = close;
+      trigger.addEventListener("click", function (e) { if (!desktop()) return; e.preventDefault(); if (drop.classList.contains("dwnav-drop--open")) close(); else open(); });
+      drop.addEventListener("mouseenter", open);
+      drop.addEventListener("mouseleave", function () { if (!drop.contains(document.activeElement)) close(); });
+      trigger.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" || e.keyCode === 27) { close(); trigger.focus(); }
+        else if (e.key === "ArrowDown" || e.key === "Down") { e.preventDefault(); open(); var a = panel.querySelector("a"); if (a) a.focus(); }
+      });
+      drop.addEventListener("focusout", function (e) { if (!drop.contains(e.relatedTarget)) close(); });
+      panel.addEventListener("keydown", function (e) { if (e.key === "Escape" || e.keyCode === 27) { close(); trigger.focus(); } });
+      wired.push(drop);
+    });
+    function closeOthers(except) { wired.forEach(function (d) { if (d !== except && d._close) d._close(); }); }
+    document.addEventListener("click", function (e) { if (!(e.target.closest && e.target.closest(".dwnav-drop"))) closeOthers(null); });
+    try {
+      var mq = window.matchMedia("(max-width:1199px)");
+      var onMob = function () { if (mq.matches) closeOthers(null); };
+      if (mq.addEventListener) mq.addEventListener("change", onMob); else if (mq.addListener) mq.addListener(onMob);
+    } catch (e) {}
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", enhance);
   else enhance();

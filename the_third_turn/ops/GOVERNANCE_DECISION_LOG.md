@@ -89,5 +89,14 @@ invalidate inference) · **Confidence Register** (what the evidence justifies be
 
 ---
 
+### GD-11 · 2026-07-19 · Adopt the Scientific > Measurement > Implementation hierarchy; freeze A-11; leadership is the frontier
+- **Decision:** Adopt the owner's selection rule for the falsification program: classify each candidate assumption **Scientific / Measurement / Implementation**; prefer Scientific over Measurement over Implementation; keep attacking a Measurement assumption **only** if resolving it materially changes a Scientific answer, else freeze it and move up. Applied today: **freeze A-11** (main-line extraction) with its limitation recorded; **promote the Scientific identifiability question** (A-12) as the current frontier.
+- **Evidence:** The leadership verdict (E-018) is **byte-identical** under the modal and balanced main-line definitions — so the Scientific answer does not depend on the frozen Measurement choice, which is exactly the test the rule requires before freezing. Continuing to attack A-11 would have been Measurement work with no Scientific payoff.
+- **Alternatives rejected:** Keep drilling A-11's remedy (a validated discriminator) now — deferred to only-if-a-level-based-Scientific-answer-needs-it; run the leadership analysis on a single extraction rule without the invariance check (would leave the confound unaddressed).
+- **Reasoning:** The hierarchy prevents the program from drifting into measurement rabbit holes. Freeze-and-record is the correct disposition for a Measurement assumption that does not gate a Scientific one.
+- **Future implications:** A-11 stays frozen (odds-anchored, transition-invariant) until a *level-based* Scientific question depends on it. The live frontier is A-12 and specifically the **feed-latency vs information** distinction, which decides whether cross-book leadership is economically interesting. **SR-1 remains BLOCKED**: E-018 is an identifiability/feasibility result, explicitly **not** a gated efficiency finding, and no market-efficiency confidence level was moved.
+
+---
+
 *Append new decisions below this line. Never edit a past entry; correct with a new dated entry that
 supersedes it.*

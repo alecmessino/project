@@ -42,8 +42,9 @@
   .wrap{max-width:1080px;margin:40px auto;padding:0 20px 60px}
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
 
-  /* Restraint is the design. A dek, then two labelled sections, nothing else. */
-  .doc{max-width:640px;padding:0 44px;margin:0 auto}
+  /* A magazine of Driftwood's intellectual capital: a dek, then two labelled divisions, each a row of
+     covered cards. Generative editorial-blue vector covers, never stock photography. */
+  .doc{max-width:1000px;padding:0 44px;margin:0 auto}
   .eyebrow{font-family:var(--sans);font-weight:500;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
     color:var(--brass);margin:56px 0 14px}
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(32px,3vw+16px,42px);line-height:1.06;
@@ -52,21 +53,29 @@
 
   /* the two divisions of Driftwood's intellectual capital: evidence, and applied thinking */
   .sec-head{font-family:var(--sans);font-weight:700;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--ink);margin:52px 0 6px}
+    color:var(--ink);margin:58px 0 6px}
   .sec-note{font-family:var(--serif);font-size:15.5px;line-height:1.5;color:var(--muted);margin:0;max-width:56ch}
 
-  .list{margin:18px 0 8px;border-top:1px solid var(--line)}
-  .item{display:block;text-decoration:none;color:inherit;padding:22px 0;border-bottom:1px solid var(--line)}
-  .item .meta{font-family:var(--sans);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+  /* the card grid: three covered cards per division, balanced across the wide canvas */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(22px,2.6vw,36px);margin:26px 0 8px}
+  @media(max-width:860px){.grid{grid-template-columns:repeat(2,1fr);gap:26px}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr;gap:30px}}
+  .card{display:flex;flex-direction:column;text-decoration:none;color:inherit}
+  .card .cover{aspect-ratio:3/2;background:var(--soft);border:1px solid var(--frame-line);
+    color:var(--accent-strike);overflow:hidden;margin-bottom:16px;border-radius:var(--surface-radius,0);
+    transition:border-color .15s ease}
+  .card .cover svg{display:block;width:100%;height:100%}
+  .card:hover .cover{border-color:var(--accent-strike)}
+  .card .meta{font-family:var(--sans);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
     color:var(--muted);margin-bottom:7px;font-variant-numeric:tabular-nums}
-  .item .meta .rt{color:var(--dim)}
-  .item .t{font-family:var(--sans);font-weight:500;font-size:24px;line-height:1.2;letter-spacing:-.015em;
+  .card .meta .rt{color:var(--dim)}
+  .card .t{font-family:var(--sans);font-weight:500;font-size:20px;line-height:1.22;letter-spacing:-.015em;
     color:var(--ink);transition:color .12s ease}
-  .item .t .arw{color:var(--accent-strike);font-weight:400;opacity:0;transition:opacity .12s ease}
-  .item:hover .t{color:var(--teal2)}
-  .item:hover .t .arw{opacity:1}
-  .item .dek{font-family:var(--serif);font-size:15.5px;line-height:1.55;color:var(--body);margin:6px 0 0;max-width:60ch}
-  @media(max-width:620px){ .item .t{font-size:21px} }
+  .card .t .arw{color:var(--accent-strike);font-weight:400;opacity:0;transition:opacity .12s ease}
+  .card:hover .t{color:var(--teal2)}
+  .card:hover .t .arw{opacity:1}
+  .card .cdek{font-family:var(--serif);font-size:14.5px;line-height:1.55;color:var(--body);margin:7px 0 0}
+  @media(max-width:620px){ .card .t{font-size:19px} }
 
   .foot{margin-top:52px;padding:20px 44px 40px;border-top:1px solid var(--line);
     color:var(--muted);font-size:12.5px;line-height:1.65}
@@ -125,41 +134,96 @@
 
       <div class="sec-head">Research &amp; Methodology</div>
       <p class="sec-note">The evidence behind the thesis, the model portfolio, the long-history record, and the state-by-state tax map.</p>
-      <div class="list">
-        <a class="item" href="ledger.html">
+      <div class="grid">
+        <a class="card" href="ledger.html">
+          <span class="cover"><svg viewBox="0 0 360 240" fill="none" stroke="currentColor" aria-hidden="true">
+            <line x1="72" y1="58" x2="72" y2="182" stroke-width="2" opacity=".4"/>
+            <g stroke-width="1.75" stroke-linecap="round">
+              <line x1="72" y1="82" x2="288" y2="82"/><line x1="72" y1="114" x2="288" y2="114"/>
+              <line x1="72" y1="146" x2="288" y2="146"/><line x1="72" y1="178" x2="248" y2="178" opacity=".5"/>
+            </g>
+            <g stroke-width="5" stroke-linecap="round">
+              <line x1="240" y1="72" x2="288" y2="72"/><line x1="210" y1="104" x2="288" y2="104"/><line x1="256" y1="136" x2="288" y2="136"/>
+            </g>
+            <g stroke-width="2.5" stroke-linecap="round" opacity=".85">
+              <line x1="84" y1="72" x2="102" y2="72"/><line x1="84" y1="104" x2="102" y2="104"/><line x1="84" y1="136" x2="102" y2="136"/>
+            </g>
+            <g stroke-width="2" stroke-linecap="round" opacity=".7">
+              <line x1="272" y1="170" x2="272" y2="186"/><line x1="264" y1="178" x2="280" y2="178"/>
+            </g>
+          </svg></span>
           <div class="meta">Model Portfolio · <span class="rt">append-only</span></div>
           <div class="t">The Research Ledger <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">The hypothetical Model Portfolio, tracked forward, every rebalance and the reasoning behind it, kept as an append-only record.</p>
+          <p class="cdek">The hypothetical Model Portfolio, tracked forward, every rebalance and the reasoning behind it, kept as an append-only record.</p>
         </a>
-        <a class="item" href="tearsheet.html">
+        <a class="card" href="tearsheet.html">
+          <span class="cover"><svg viewBox="0 0 360 240" fill="none" stroke="currentColor" aria-hidden="true">
+            <g stroke-width="1.5" opacity=".3">
+              <line x1="48" y1="188" x2="312" y2="188"/><line x1="114" y1="60" x2="114" y2="188"/>
+              <line x1="180" y1="60" x2="180" y2="188"/><line x1="246" y1="60" x2="246" y2="188"/>
+            </g>
+            <polyline points="48,168 90,150 132,116 168,130 198,150 232,108 270,86 312,70" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="312" cy="70" r="4.5" fill="currentColor" stroke="none"/>
+          </svg></span>
           <div class="meta">Track record · <span class="rt">long history</span></div>
           <div class="t">The Long-History Tearsheet <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">Decades of simulated results for the strategy, drawdowns, recoveries, and exactly what the numbers do and don't claim.</p>
+          <p class="cdek">Decades of simulated results for the strategy, drawdowns, recoveries, and exactly what the numbers do and don't claim.</p>
         </a>
-        <a class="item" href="statemap.html">
+        <a class="card" href="statemap.html">
+          <span class="cover"><svg viewBox="0 0 360 240" fill="none" stroke="currentColor" aria-hidden="true">
+            <g stroke-width="1.75" opacity=".5">
+              <rect x="52" y="48" width="56" height="44" rx="3"/><rect x="124" y="48" width="56" height="44" rx="3"/><rect x="196" y="48" width="56" height="44" rx="3"/><rect x="268" y="48" width="56" height="44" rx="3"/>
+              <rect x="52" y="110" width="56" height="44" rx="3"/><rect x="196" y="110" width="56" height="44" rx="3"/><rect x="268" y="110" width="56" height="44" rx="3"/>
+              <rect x="52" y="172" width="56" height="44" rx="3"/><rect x="124" y="172" width="56" height="44" rx="3"/><rect x="196" y="172" width="56" height="44" rx="3"/><rect x="268" y="172" width="56" height="44" rx="3"/>
+            </g>
+            <rect x="124" y="110" width="56" height="44" rx="3" stroke-width="2.5" fill="currentColor" fill-opacity=".12"/>
+          </svg></span>
           <div class="meta">Reference · <span class="rt">51 states + DC</span></div>
           <div class="t">The State Tax Atlas <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">How income, capital-gains, and estate rules differ across every state, the map behind the coordination decisions.</p>
+          <p class="cdek">How income, capital-gains, and estate rules differ across every state, the map behind the coordination decisions.</p>
         </a>
       </div>
 
       <div class="sec-head">Essays &amp; Illustrations</div>
       <p class="sec-note">Applied thinking, how coordination shows up in a real financial life.</p>
-      <div class="list">
-        <a class="item" href="coordination.html">
+      <div class="grid">
+        <a class="card" href="coordination.html">
+          <span class="cover"><svg viewBox="0 0 360 240" fill="none" stroke="currentColor" aria-hidden="true">
+            <g stroke-width="1.75" opacity=".55">
+              <line x1="180" y1="120" x2="180" y2="54"/><line x1="180" y1="120" x2="286" y2="94"/>
+              <line x1="180" y1="120" x2="254" y2="186"/><line x1="180" y1="120" x2="106" y2="186"/><line x1="180" y1="120" x2="74" y2="94"/>
+            </g>
+            <g fill="#f7f5f0" stroke-width="2">
+              <circle cx="180" cy="54" r="9"/><circle cx="286" cy="94" r="9"/><circle cx="254" cy="186" r="9"/><circle cx="106" cy="186" r="9"/><circle cx="74" cy="94" r="9"/>
+            </g>
+            <circle cx="180" cy="120" r="12" fill="currentColor" stroke="none"/>
+          </svg></span>
           <div class="meta">Worked example · <span class="rt">6 min read</span></div>
           <div class="t">What Coordination Is Worth <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">One household, two state lines, and the ripple a single financial move sets off across taxes, estate, and liquidity, the clearest case for why coordination, not any one decision, is the product.</p>
+          <p class="cdek">One household, two state lines, and the ripple a single financial move sets off across taxes, estate, and liquidity, the clearest case for why coordination, not any one decision, is the product.</p>
         </a>
-        <a class="item" href="library.html">
+        <a class="card" href="library.html">
+          <span class="cover"><svg viewBox="0 0 360 240" fill="none" stroke="currentColor" aria-hidden="true">
+            <line x1="60" y1="60" x2="60" y2="180" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+            <g stroke-width="1.75">
+              <rect x="76" y="64" width="200" height="20" rx="2"/><rect x="76" y="94" width="168" height="20" rx="2"/>
+              <rect x="76" y="124" width="220" height="20" rx="2"/><rect x="76" y="154" width="152" height="20" rx="2" opacity=".55"/>
+            </g>
+          </svg></span>
           <div class="meta">Reference · <span class="rt">browse</span></div>
           <div class="t">The Coordination Library <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">One decision, many consequences, a browsable library of the ripples a single financial move sets off across taxes, estate, liquidity, and the professionals who advise on them.</p>
+          <p class="cdek">One decision, many consequences, a browsable library of the ripples a single financial move sets off across taxes, estate, liquidity, and the professionals who advise on them.</p>
         </a>
-        <a class="item" href="insights.html">
+        <a class="card" href="insights.html">
+          <span class="cover"><svg viewBox="0 0 360 240" fill="none" stroke="currentColor" aria-hidden="true">
+            <text x="58" y="150" font-family="Georgia, 'Times New Roman', serif" font-size="130" fill="currentColor" stroke="none" opacity=".85">&#8220;</text>
+            <g stroke-width="2" stroke-linecap="round" opacity=".5">
+              <line x1="150" y1="98" x2="298" y2="98"/><line x1="150" y1="122" x2="306" y2="122"/><line x1="150" y1="146" x2="272" y2="146"/>
+            </g>
+          </svg></span>
           <div class="meta">Collection · <span class="rt">essays &amp; notes</span></div>
           <div class="t">Essays &amp; Notes <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">Short writing on treating money, taxes, and time as a single system, two returns, enough as a number, how the largest investors pay attention, and more.</p>
+          <p class="cdek">Short writing on treating money, taxes, and time as a single system, two returns, enough as a number, how the largest investors pay attention, and more.</p>
         </a>
       </div>
     </div>

@@ -108,18 +108,10 @@
 
   /* ── Gallery I · The Constraint, an asymmetric broadsheet, not a centered column. ──────────── */
   .hero{display:block;padding:26px 52px 44px}
-  .kick{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.2em;
-    text-transform:uppercase;color:var(--accent-strike);margin:0 0 28px;max-width:none}
   .hero-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:0 34px;align-items:start}
   .hero h1{grid-column:1/8;font-family:var(--sans);font-weight:700;
     font-size:clamp(36px,4vw,50px);line-height:1.1;letter-spacing:-.024em;color:var(--ink);margin:0}
   .hero h1 span{display:block}
-  /* Rhetorical escalation: the two setup clauses are quieter (lighter weight, dimmer ink), the
-     conclusion lands darker, heavier, and larger, so the triad reads as a crescendo, not a flat block.
-     Sizes are em-relative to the clamped h1 so the escalation scales cleanly down to mobile. */
-  .hero h1 .c1{font-size:.82em;font-weight:500;color:var(--dim)}
-  .hero h1 .c2{font-size:.92em;font-weight:500;color:var(--body)}
-  .hero h1 .c3{font-size:1.08em;font-weight:700;color:var(--ink);letter-spacing:-.03em;margin-top:.1em}
   .hero-aside{grid-column:9/-1;margin-top:76px;padding-left:24px;border-left:1px solid var(--line)}
   .lede{font-family:var(--serif);font-size:16.5px;line-height:1.68;color:var(--dim);margin:0}
   .lede b{color:var(--ink);font-weight:500}
@@ -155,6 +147,10 @@
   .ctas .ghost{color:var(--ink);padding:15px 10px;font-weight:500;border-bottom:2px solid var(--ghost-line);
     transition:border-color var(--t-fast),color var(--t-fast)}
   .ctas .ghost:hover{border-bottom-color:var(--accent-strike)}
+  /* Mobile restraint: the first fold shows one pristine action. The secondary text link stacks into
+     visual chatter on a phone, so it is suppressed under 768px (the section it points to is still one
+     scroll away). */
+  @media(max-width:767px){.hero .ctas .ghost{display:none}}
 
   /* ── Section scaffold, tiny label, medium statement, generous air. Galleries vary their own
      vertical rhythm deliberately: dense ledger, vast plate, quiet archive, never one template. ── */
@@ -242,16 +238,7 @@
   .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:30px 52px 38px;margin:0;position:relative}
   .sysband-in{max-width:680px;margin:0 auto;text-align:center}
   .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.4vw + 15px,40px);line-height:1.12;letter-spacing:-.022em;color:var(--ink);margin:0 auto;max-width:20ch}
-  .sysstage{margin:10px auto 0;max-width:590px;opacity:1}
-  /* Archival plate header: the diagram is labeled like a scientific plate, a taxonomic marker on the
-     left, provenance on the right, on a hairline that frames the exhibit at the same width as the plate. */
-  .plate-cap{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
-    max-width:590px;margin:26px auto 0;padding-bottom:9px;border-bottom:1px solid var(--frame-line);text-align:left}
-  .plate-cap .pc-id{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.24em;
-    text-transform:uppercase;color:var(--ink)}
-  .plate-cap .pc-meta{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.2em;
-    text-transform:uppercase;color:var(--muted);white-space:nowrap}
-  @media(max-width:520px){.plate-cap{gap:10px}.plate-cap .pc-id,.plate-cap .pc-meta{font-size:9px;letter-spacing:.16em}}
+  .sysstage{margin:16px auto 0;max-width:590px;opacity:1}
   .sysstage svg{width:100%;height:auto;display:block;overflow:visible}
   .sysstage text{font-family:var(--sans)}
   /* the web, 21 hairlines among seven systems, near-silent at rest: the density IS the argument.
@@ -327,9 +314,12 @@
     color:var(--muted);padding:5px 4px;transition:color .2s ease}
   .rot-toggle:hover{color:var(--ink)}
   .rot-toggle:focus-visible{outline:2px solid var(--accent-strike);outline-offset:3px;border-radius:var(--surface-radius)}
+  /* On phones the plate is paused by default; this quiet hint replaces the pause control and invites the tap. */
+  .rot-hint{margin:12px 0 0;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);text-align:center}
   @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.rot-toggle,.diag-item,.review-cta .rc-main::after{transition:none}}
   @media(prefers-reduced-motion:reduce){.mstory.swapping .mlead,.mstory.swapping .mchain,.mstory.swapping .mproof{transition:none;opacity:1}}
-  @media(max-width:620px){.sysband{padding:32px 22px 40px}.sysstage{max-width:410px}.plate-cap{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}}
+  @media(max-width:620px){.sysband{padding:32px 22px 40px}.sysstage{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}}
   /* the reading panel wraps taller as the column narrows; reserve the tallest scenario at each phone tier so
      the scenario buttons never shift while the plate auto-rotates (the 166px desktop reservation holds >=560px). */
   @media(max-width:555px){.mstory{min-height:186px}}
@@ -390,14 +380,12 @@
     .hero h1{font-size:clamp(50px,3vw + 14px,58px)}
     .hero-grid{gap:0 44px}
     .sysstage{max-width:780px}
-    .plate-cap{max-width:780px}
     .sysband-in{max-width:880px}
     .sb-h{font-size:clamp(34px,1.6vw + 22px,48px)}
   }
   @media(min-width:1560px){
     .wrap{max-width:1380px}
     .sysstage{max-width:880px}
-    .plate-cap{max-width:880px}
     .sysband-in{max-width:980px}
   }
 </style>
@@ -408,7 +396,7 @@
   <div class="frame">
     <div class="inner">
     <nav class="dwnav" aria-label="Driftwood Wealth">
-      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true"><path d="M1.5 15 H44.5" stroke-width="3.4"/><path d="M1.5 1 H4.5 L27 15" stroke-width="2"/><path d="M1.5 8 H8 L27 15" stroke-width="2"/><path d="M1.5 22 H8 L27 15" stroke-width="2"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-links">
         <span class="dwnav-group"><span class="dwnav-label">The Firm</span>
           <a href="about.html">Our Story</a>
@@ -433,9 +421,8 @@
     <!-- ── GALLERY I · THE CONSTRAINT, an asymmetric broadsheet: the triad carved large, the
          supporting argument set as a margin deck, one footnote for the deep reader ── -->
     <header class="hero">
-      <p class="kick">For households whose financial lives have outgrown disconnected advice.</p>
       <div class="hero-grid">
-        <h1><span class="c1">Wealth compounds.</span> <span class="c2">Complexity compounds with it.</span> <span class="c3">Eventually, coordination becomes the constraint.</span></h1>
+        <h1><span>Wealth compounds.</span> <span>Complexity compounds with it.</span> <span>Eventually, coordination becomes the constraint.</span></h1>
         <div class="hero-aside">
           <p class="lede">It doesn't arrive all at once. It arrives one account, one entity, one advisor, one
             state, one trust at a time, until every important financial decision depends on <b>three
@@ -460,10 +447,6 @@
       <div class="sysband-in">
         <p class="sb-lead">Driftwood coordinates your financial life as one system.</p>
         <h2 class="sb-h">Seven systems. No decision touches just one.</h2>
-        <div class="plate-cap">
-          <span class="pc-id">Plate I &middot; The Household Financial System</span>
-          <span class="pc-meta">Illustrative</span>
-        </div>
         <div class="sysstage seeded" id="sysDiagram">
           <svg viewBox="0 0 640 546" role="group" aria-label="Seven financial systems, Investments, Taxes, Liquidity, Professionals, Estate, Risk and Liability, and Entity Structure, in one coordinated network. Hover a system to see what it moves; what you keep is the result.">
             <!-- the lattice: every system connected to every other (near-silent at rest) -->
@@ -776,12 +759,16 @@ window.__STATE__ = {"header": {"generated": "2026-07-16 23:14:09 UTC"}, "hero": 
   //    carries the motion so the resting web never flickers. ──────────────────────────────────────
   var REDUCE = false;
   try{ REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+  // On phones a constantly moving lattice is cognitive friction, so hold it paused by default: the plate
+  // stays a static exhibit until the visitor taps a scenario. Evaluated once at load, like REDUCE.
+  var MOBILE = false;
+  try{ MOBILE = window.matchMedia && window.matchMedia("(max-width:767px)").matches; }catch(e){}
   // Progressive-enhancement reveal: hold the plate hidden until it scrolls into view, then fade it in
   // alongside the line draw-in (so the central node + labels ease in too). JS + motion-OK only,
   // no-JS and reduced-motion keep it visible from the start (CSS default opacity:1).
   // Non-reduced-motion + JS: hand the plate to the interactive/rotation layer, so drop the static seed
   // (the five-system fallback). No-JS and reduced-motion keep .seeded, i.e. the meaningful static default.
-  if(!REDUCE){ stage.classList.remove("seeded"); stage.style.opacity = "0"; }
+  if(!REDUCE && !MOBILE){ stage.classList.remove("seeded"); stage.style.opacity = "0"; }
   var timers = [];
   function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
   // Cancels the trace/story stagger AND any pending crossfade, so an interaction never lets a stale
@@ -824,6 +811,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-16 23:14:09 UTC"}, "hero": 
 
   function show(i){
     clearTimers();
+    stage.classList.remove("seeded");
     pinned = -1; userPinned = -1; paintShowing(-1); setPinned();
     var d = SYS[i];
     hub.textContent = d.center; hub.classList.add("on"); fitHub();
@@ -854,6 +842,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-16 23:14:09 UTC"}, "hero": 
   function word(n){ return n===3?"three":n===4?"four":n===5?"five":n===6?"six":n===7?"seven":String(n); }
   function showSet(t){
     clearTimers();
+    stage.classList.remove("seeded");
     var d = TRIG[t], set = d.set;
     var inSet = function(k){ return set.indexOf(k) >= 0; };
     pinned = t; paintShowing(t); setPinned();
@@ -931,13 +920,13 @@ window.__STATE__ = {"header": {"generated": "2026-07-16 23:14:09 UTC"}, "hero": 
   var introDone = false, rotIdx = 0, rotTimer = 0, resumeTimer = 0, userHeld = false, inView = false, stopped = false;
   function rotStep(){
     rotTimer = 0;
-    if(!inView || userHeld || stopped || REDUCE){ stage.classList.remove("rotating"); return; }
+    if(!inView || userHeld || stopped || REDUCE || MOBILE){ stage.classList.remove("rotating"); return; }
     showSet(ROT_ORDER[rotIdx]);
     rotIdx = (rotIdx + 1) % ROT_ORDER.length;
     rotTimer = setTimeout(rotStep, 5000);
   }
   function startRotation(){
-    if(REDUCE || userHeld || stopped || !inView || rotTimer) return;
+    if(REDUCE || MOBILE || userHeld || stopped || !inView || rotTimer) return;
     stage.classList.add("rotating");
     rotStep();
   }
@@ -972,16 +961,23 @@ window.__STATE__ = {"header": {"generated": "2026-07-16 23:14:09 UTC"}, "hero": 
     else { userHeld = false; clear(true); rotIdx = 0; startRotation(); }   // resume from a clean state, exactly like the idle-resume path
     paintToggle();
   }
-  if(!REDUCE){
+  if(!REDUCE && !MOBILE){
     rotToggle = document.createElement("button");
     rotToggle.className = "rot-toggle"; rotToggle.type = "button";
     var trigWrap = document.getElementById("trig");
     if(trigWrap && trigWrap.parentNode) trigWrap.parentNode.insertBefore(rotToggle, trigWrap.nextSibling);
     rotToggle.addEventListener("click", toggleStopped);
     paintToggle();
+  } else if(!REDUCE && MOBILE){
+    // no auto-motion on phones, so there is no pause control; a quiet hint invites the tap instead
+    var rotHint = document.createElement("p");
+    rotHint.className = "rot-hint";
+    rotHint.textContent = "Tap a system to explore.";
+    var tw = document.getElementById("trig");
+    if(tw && tw.parentNode) tw.parentNode.insertBefore(rotHint, tw.nextSibling);
   }
   function intro(){
-    if(introDone || REDUCE) return; introDone = true;
+    if(introDone || REDUCE || MOBILE) return; introDone = true;
     stage.style.transition = "opacity .7s ease"; stage.style.opacity = "1";   // whole plate eases in with the draw
     nets.forEach(function(ln){ var len = ln.getTotalLength();
       ln.style.transition = "none"; ln.style.strokeDasharray = len; ln.style.strokeDashoffset = len; });

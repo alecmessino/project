@@ -139,7 +139,7 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
   border-left:1px solid var(--line,#e3dccd); }
 .dwnav-links a{ font-size:12.5px; font-weight:500; letter-spacing:.14em; text-transform:uppercase;
   color:var(--body,#3d4650); text-decoration:none; padding:6px 0; white-space:nowrap;
-  border-bottom:2px solid transparent; transition:color .18s ease, border-color .18s ease; }
+  border-bottom:2px solid transparent; transition:color .15s ease-in-out, border-color .15s ease-in-out; }
 .dwnav-links a:hover{ color:var(--ink,#1d242d); border-bottom-color:var(--frame-line,#c3bcab); }
 .dwnav-links a[aria-current="page"]{ color:var(--ink,#1d242d);
   border-bottom-color:var(--accent-strike,#2c5878); }
@@ -148,7 +148,7 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
    conversation moment on the front door rather than repeating a contact value site-wide. */
 .dwnav-cta{ margin-left:auto; align-self:center; white-space:nowrap; font-size:12.5px; font-weight:700;
   letter-spacing:.14em; text-transform:uppercase; color:var(--accent-strike,#2c5878); text-decoration:none;
-  padding:6px 0; border-bottom:2px solid transparent; transition:color .18s ease, border-color .18s ease; }
+  padding:6px 0; border-bottom:2px solid transparent; transition:color .15s ease-in-out, border-color .15s ease-in-out; }
 .dwnav-cta:hover{ border-bottom-color:var(--accent-strike,#2c5878); color:var(--ink,#1e2833); }
 /* Desktop: a deliberate two-row bar. Brand + the single conversation CTA share the top line; the three
    link families drop to a ruled second row as tidy labelled columns (label as a quiet kicker above its

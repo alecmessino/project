@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-18T23:46:04+00:00",
+  "generated": "2026-07-19T00:01:23+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 209492,
+    "rows": 209782,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -16,20 +16,20 @@
     "bovada": {
       "rows_total": 58881,
       "live_total": 21959,
-      "live_today": 4394,
-      "last_row_age_min": 23.4
+      "live_today": 0,
+      "last_row_age_min": 38.7
     },
     "fanduel": {
-      "rows_total": 150605,
-      "live_total": 26248,
-      "live_today": 6749,
-      "last_row_age_min": 0.5
+      "rows_total": 150895,
+      "live_total": 26269,
+      "live_today": 0,
+      "last_row_age_min": 0.0
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 18321.1
+      "last_row_age_min": 18336.4
     }
   },
   "books_reporting_live": [
@@ -38,13 +38,13 @@
   ],
   "market_status": {
     "unset": 21959,
-    "OPEN": 23953,
-    "SUSPENDED": 2197,
+    "OPEN": 23972,
+    "SUSPENDED": 2199,
     "REMOVED": 98
   },
   "overlap": {
-    "simultaneous_pairs_total": 26784,
-    "simultaneous_pairs_today": 6659,
+    "simultaneous_pairs_total": 26805,
+    "simultaneous_pairs_today": 0,
     "overlap_games": 60,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
@@ -66,7 +66,7 @@
   "coverage": {
     "live_games_seen": 61,
     "book_panel_games": 66,
-    "team_total_rows": 10695,
+    "team_total_rows": 10868,
     "innings_seen": [
       1,
       2,
@@ -85,7 +85,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 26784,
+        "current": 26805,
         "target": 2000,
         "pass": true,
         "progress": 1.0

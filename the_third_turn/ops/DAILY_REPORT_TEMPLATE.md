@@ -73,6 +73,22 @@ is *engineering / measurement / data accumulation / scientific evidence*. **Neve
 passed unless every criterion is actually satisfied.** Keep separate: *Engineering complete ≠
 Production verified ≠ Research unlocked.*
 
+**Block-type classification (required per unmet criterion).** For every criterion that is *not*
+passing, tag *why* it is blocked — this determines whether waiting fixes it:
+
+| Block type | Meaning | Self-resolving by time? |
+|---|---|---|
+| **Dataset** | needs more observations | yes |
+| **Scientific sampling** | needs more independent units (games) | yes |
+| **Measurement** | needs a valid/instrumented metric | no — needs redesign |
+| **Engineering** | needs a system capability that does not exist | no — needs a build/decision |
+
+A criterion blocked for a *self-resolving* reason needs only patience; one blocked for an
+*engineering* or *measurement* reason never clears on its own and must be flagged for a decision —
+**not** silently converted into a recommendation to lower the gate. Conflating these is a governance
+error (see the 07-19 review's premature third-book recommendation, corrected in
+`SR1_GATE_DESIGN_REVIEW.md`).
+
 ## 5. Research Debt Review *(threats to valid inference)*
 
 For every `RESEARCH_DEBT.md` item: current status, risk, trend, blocking analyses, estimated
@@ -103,6 +119,25 @@ Classify today's work into **exactly one** of: Engineering · Measurement · Ins
 Infrastructure · Dataset maturation · Scientific evidence · Methodological improvement · Protocol
 improvement. Explain why. (Almost every day is not "Scientific evidence" — and that is fine.)
 
+## 8b. Inference Readiness *(permanent standing metric)*
+
+The question is **not** "do we have enough data to analyze?" It is: **if we drew a conclusion today,
+would it survive peer review?** Inference Readiness is the *conjunction* of five pillars — it is only
+as strong as its weakest one, and a single red pillar makes the whole thing NOT READY regardless of
+how much data has accumulated. Report each pillar 🟢/🟡/🔴 with one line, then the overall verdict.
+
+| Pillar | Ready when… |
+|---|---|
+| **Engineering** | the collector is trustworthy, unattended, integrity-clean |
+| **Measurement** | every metric in the intended analysis is validated, not implementation-dependent |
+| **Dataset** | enough *independent units* (games), not just observations, for the target effect size |
+| **Protocol** | the analysis is pre-registered / gate-defined; no post-hoc mining |
+| **Research Debt** | no open threat to inference (selection, survivorship, sync artifact, interchangeability) |
+
+Overall: **NOT READY / APPROACHING / READY.** This metric shifts the standard from "can we analyze?"
+to "can we *trust* the analysis if we do?" — and it is the honest answer to "Paper 2 readiness,"
+which is retired in favor of this.
+
 ## 9. Decision Log
 
 Record every decision made today — decision, evidence, alternatives rejected, reasoning, future
@@ -120,6 +155,7 @@ Confidence in collector:
 Confidence in protocol:
 Confidence in future Paper 2:
 Confidence in research program:
+Inference Readiness (NOT READY / APPROACHING / READY):
 Highest-leverage next action:
 ```
 

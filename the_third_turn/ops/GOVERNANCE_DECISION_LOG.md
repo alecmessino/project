@@ -66,5 +66,28 @@ invalidate inference) · **Confidence Register** (what the evidence justifies be
 
 ---
 
+### GD-8 · 2026-07-19 · Adopt block-type gate classification + Inference Readiness; retire "Paper 2 readiness"
+- **Decision:** Amend the daily governance format (v4) with two permanent additions: (a) a **block-type classification** on every unmet stopping-rule criterion — Dataset / Scientific sampling (self-resolving) vs Measurement / Engineering (never self-resolving); (b) a standing **Inference Readiness** metric — the conjunction of Engineering, Measurement, Dataset, Protocol, and Research Debt pillars, answering "would a conclusion drawn today survive peer review?" Retire "Paper 2 readiness" language in favor of it.
+- **Evidence:** The 07-19 review conflated an engineering block (dead third book) with a self-resolving one (overlap-game accrual) and jumped to "replace the book or amend the gate" — a governance error the owner caught. Block-typing makes that error structurally hard to repeat. "Enough data to analyze?" is the wrong question; "can we trust the analysis?" is the right one.
+- **Alternatives rejected:** Keep the v4 format unchanged (repeats the conflation); add Inference Readiness as prose only (not enforced each day).
+- **Reasoning:** Both additions satisfy the artifact-admission rule (reduce false discovery + improve auditability) without new documents — they are amendments to an existing artifact, not new ones.
+- **Future implications:** Every review now block-types unmet criteria and reports Inference Readiness (a sixth Executive-Verdict line). No confidence level moved.
+
+### GD-9 · 2026-07-19 · SR-1 Gate Design Review — no criterion changed
+- **Decision:** Complete a formal five-question design review of all four SR-1 criteria (`SR1_GATE_DESIGN_REVIEW.md`). **Change nothing.** Establish the *property* each criterion defends; do not touch thresholds.
+- **Evidence:** Reframed the third-book question from "should SR-1 require 3 books?" to "what property does ≥3 books guarantee?" Answer: **single-book-artifact protection** (majority-vote outlier rejection). That property is real and not yet satisfiable another way. Criteria 1–2 pass; Criterion 3 (overlap games) is self-resolving scientific sampling; Criterion 2 remains a flagged measurement-redesign candidate (RD-1).
+- **Alternatives rejected:** Recommend replacing Pinnacle or amending to a two-book gate (both premature — remedies before the property was even named); lower Criterion 3.
+- **Reasoning:** A criterion is a proxy for a property; we defend properties, not thresholds. Revisiting Criterion 4 is gated on the Book Characterization establishing two-book independence + an outlier-detection substitute.
+- **Future implications:** SR-1 unchanged. The third-book question is dormant until Criterion 3 (60/100) nears satisfaction; the Book Characterization is its prerequisite evidence. No confidence level moved.
+
+### GD-10 · 2026-07-19 · Book Characterization v0.1 — books provisionally non-interchangeable; leadership deferred
+- **Decision:** Produce the first-edition Book Characterization (`BOOK_CHARACTERIZATION.md`, `book_characterization.py`) as instrument measurement only. Report the measured behavioral split; **defer** the leadership ("who moves first") question rather than report a confounded number; open **RD-8** (non-interchangeability).
+- **Evidence:** FanDuel = high-frequency/tight-vig (31 s cadence, IQR 0.36 pp); Bovada = coarse/sticky (8 min cadence, IQR 1.80 pp); Pinnacle absent (ED-1). The naive first-arrival leadership metric flips leader entirely under two reasonable definitions (69% Bovada vs 76% FanDuel) with nonsensical ~24 h gaps — proof it is granularity-confounded, not price discovery. Suspend/reopen ordering is structurally un-measurable (Bovada emits no status, RD-4).
+- **Alternatives rejected:** Report the first-arrival leader as a finding (confounded); claim a benchmark/noisy designation (requires the deferred event-aligned test).
+- **Reasoning:** Characterizing the instrument before trusting it is measurement, permitted under the discipline mandate and explicitly commissioned. Leadership requires an event-aligned `book_panel × game_state_panel` join (edition v0.2), which is also what the RD-1 sync redesign needs.
+- **Future implications:** Any future cross-book statistic must account for RD-8. Edition v0.2 (event-aligned leadership) is the next characterization step, not Paper 2. **No scientific conclusion drawn; no confidence level in any finding moved** — this raised Measurement/Instrumentation maturity only.
+
+---
+
 *Append new decisions below this line. Never edit a past entry; correct with a new dated entry that
 supersedes it.*

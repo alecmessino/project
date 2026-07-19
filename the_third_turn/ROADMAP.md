@@ -11,6 +11,21 @@ market-`inPlay` fix + status capture) · Benchmark Dataset **2026.06** (the froz
 
 ---
 
+## Operating cadence — set 2026-07-19 (two-week horizon)
+
+Owner directive. The project is in disciplined accumulation, not output.
+
+1. Continue daily governance reviews (v4 format + block-typing + Inference Readiness).
+2. Keep the collector **untouched** unless an Engineering-Debt or Research-Debt item requires it.
+3. Produce **one SR-1 Gate Design Review** — ✅ done (`ops/SR1_GATE_DESIGN_REVIEW.md`, no change).
+4. Produce **one Book Characterization Report** — ✅ v0.1 done (`ops/BOOK_CHARACTERIZATION.md`);
+   v0.2 (event-aligned leadership) is the next characterization step.
+5. **Do not begin Paper 2.** Everything else is data accumulation.
+
+The near-term gating constraint is SR-1 Criterion 3 (overlap games, 60/100), which only time fixes.
+
+---
+
 ## 0. Where things stand
 
 - **Paper 1** — "The Efficient Frontier of Public Information: Evidence from High-Frequency Sports

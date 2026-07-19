@@ -15,8 +15,11 @@
 > falsification** and was an artifact of alt-line mixing (RD-3). Isolating the balanced main line
 > *reverses* it: Bovada's main-line vig is tighter (0.05 pp IQR) than FanDuel's (0.31 pp); Bovada's
 > wide pooled spread came entirely from its alternate lines. What **survives** is only the
-> *update-frequency* difference: on identical 30 s polling, FanDuel re-prices its main line **4.7×
-> more often** than Bovada (53/60 games). Read the tables below with this correction in force.
+> *update-frequency* difference: on identical 30 s polling, FanDuel re-prices its main line more
+> often than Bovada (a majority of games under every definition). **Second correction (E-017):** the
+> "4.7×" magnitude is *not* robust — it ranges 1.1×–9.5× depending on how the main line is extracted
+> (three reasonable definitions agree only 28.6% of the time; A-11/RD-3), so only the *direction*
+> survives, not the factor. Read the tables below with both corrections in force.
 
 ## Headline
 

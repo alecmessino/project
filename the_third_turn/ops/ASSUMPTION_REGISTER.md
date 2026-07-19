@@ -20,7 +20,8 @@ trigger. This becomes load-bearing when Paper 2 is written: an assumption that i
 | **A-07** | A **sharp single-book incumbent forecast is available live** (for SR-2 / real-line work) | — | E-007 (Pinnacle stillborn) | Weak | Refuted (currently) | With ED-1 diagnosis |
 | **A-08** | Static **RE24 / run values transfer** across parks and seasons (Paper 1 transfer benchmark) | Paper 1 uses published values with a stated limitation | Park/temp/wind residuals noted in Paper 1 | Moderate | Supported (with stated limitation) | If Paper 1 is revisited |
 | **A-09** | Results **generalize** beyond June 2026 / MLB / single-book benchmark (external validity) | — | Untested by construction | Weak | Open | Post Paper-2 data accrual |
-| **A-10** | The live books are **behaviorally interchangeable** as pricing instruments (a consensus can weight them symmetrically) | — | E-016 (falsification-tested: FanDuel re-prices its main line 4.7× more often than Bovada, 53/60 games, controlling for alt-lines + poll cadence) | Weak | **Refuted** (frequency axis, confirmed) | With Book Characterization v0.2 (event-aligned leadership) |
+| **A-10** | The live books are **behaviorally interchangeable** as pricing instruments (a consensus can weight them symmetrically) | — | E-016 / E-017 (FanDuel re-prices at least as often as Bovada in a majority of games under every main-line definition; *direction* robust, *magnitude* 1.1×–9.5× and definition-dependent) | Weak | **Refuted on direction** (magnitude uncertain) | With Book Characterization v0.2 (event-aligned leadership) |
+| **A-11** | **Main-line extraction is a well-defined operation** (the "main line" is unambiguous) | — | E-017 (3 reasonable definitions agree only 28.6%; the choice flips downstream magnitudes) | Weak | **Refuted** | When a validated discriminator is fixed (RD-3) |
 
 ## How this register is used
 

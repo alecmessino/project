@@ -98,5 +98,14 @@ invalidate inference) · **Confidence Register** (what the evidence justifies be
 
 ---
 
+### GD-12 · 2026-07-19 · Doctrine: de-risk the measurement system, do not discover results
+- **Decision:** Standing directive supersedes the "attack the highest assumption" cadence where they conflict. **The job is to make future results impossible to fool, not to discover results.** If a day's work would raise confidence in a *future conclusion* without first reducing uncertainty in the **measurement system or protocol**, do not do it — **collect instead.** Identifiability/leadership probes of the E-018 kind are paused under this rule until they de-risk measurement/protocol or a gate clears.
+- **Evidence:** The last three attacks produced two refutations and one preliminary signal (E-016/17/18); the signal (E-018) is precisely a "confidence in a future conclusion" result, and it stalled on an unresolved measurement question (feed-latency vs information). The owner judged the marginal value of more such probes to be negative versus reducing measurement uncertainty and accumulating the hold-out.
+- **Alternatives rejected:** Continue up the assumption hierarchy into feed-latency-vs-information now (would build confidence in a Paper-2 conclusion before the measurement system is trustworthy or SR-1 clears).
+- **Reasoning:** A result is only as trustworthy as the instrument. Priority order is now: (1) reduce measurement/protocol uncertainty, (2) collect, (3) publish already-frozen work (Paper 1). Discovery is last and gated.
+- **Future implications:** Daily reviews default to health + collection unless a measurement/protocol de-risking is available. Paper 1 (frozen) publishing proceeds — it is not "discovery." Paper 2 stays frozen. No confidence level moved.
+
+---
+
 *Append new decisions below this line. Never edit a past entry; correct with a new dated entry that
 supersedes it.*

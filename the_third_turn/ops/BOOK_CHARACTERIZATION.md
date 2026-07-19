@@ -6,9 +6,17 @@
   it. It is measurement only: **no inference about market efficiency, no trading conclusions.**
 - **Source:** `output/book_panel.jsonl`, 218,069 rows, 2026-07-03 → 2026-07-19 (post-All-Star
   slate included). Reproducible via `python3 the_third_turn/book_characterization.py`.
-- **Status:** First edition. Numbers will firm up as games accumulate (60 live games so far). Two of
-  the eight questions cannot be answered with the current panel and are flagged as instrumentation
-  gaps, not guesses.
+- **Status:** First edition + **falsification pass (2026-07-19, E-016)**. Numbers will firm up as
+  games accumulate (60 live games so far). Two of the eight questions cannot be answered with the
+  current panel and are flagged as instrumentation gaps, not guesses.
+
+> **Correction (E-016).** The v0.1 pricing-consistency claim below (that FanDuel is the more
+> internally consistent / tightly-priced book, vig IQR 0.36 vs 1.80 pp) **did not survive
+> falsification** and was an artifact of alt-line mixing (RD-3). Isolating the balanced main line
+> *reverses* it: Bovada's main-line vig is tighter (0.05 pp IQR) than FanDuel's (0.31 pp); Bovada's
+> wide pooled spread came entirely from its alternate lines. What **survives** is only the
+> *update-frequency* difference: on identical 30 s polling, FanDuel re-prices its main line **4.7×
+> more often** than Bovada (53/60 games). Read the tables below with this correction in force.
 
 ## Headline
 
@@ -72,7 +80,7 @@ event-alignment the sync-lag design review needs, so the two converge.
 | Which book updates most often? | **FanDuel** (0.65 vs 0.07 change rate) | High |
 | Which book posts the widest menu? | Tie live (60 each); Bovada lists a few more pregame (66) | High |
 | Which book has the fewest stale quotes? | **FanDuel** by cadence (31 s vs 8 min between changes) — but "stale" ≠ "wrong" for a sticky book | Medium |
-| Which book is most internally consistent (pricing)? | **FanDuel** (vig IQR 0.36 pp vs 1.80 pp) | High |
+| Which book is most internally consistent (pricing)? | ~~FanDuel~~ → **REFUTED (E-016):** on the main line Bovada is tighter (0.05 vs 0.31 pp); v0.1 read alt-line noise | corrected |
 | Which book updates first (leads)? | **Unresolved — confounded; deferred to event-aligned test** | — |
 | Which book suspends first? | **Instrumentation gap** — needs the market-status stream (OPEN/SUSPENDED/REMOVED), not in `book_panel` | — |
 | Which book reopens first? | **Instrumentation gap** — same status stream | — |

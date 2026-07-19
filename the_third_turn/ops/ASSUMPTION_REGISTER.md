@@ -20,7 +20,7 @@ trigger. This becomes load-bearing when Paper 2 is written: an assumption that i
 | **A-07** | A **sharp single-book incumbent forecast is available live** (for SR-2 / real-line work) | — | E-007 (Pinnacle stillborn) | Weak | Refuted (currently) | With ED-1 diagnosis |
 | **A-08** | Static **RE24 / run values transfer** across parks and seasons (Paper 1 transfer benchmark) | Paper 1 uses published values with a stated limitation | Park/temp/wind residuals noted in Paper 1 | Moderate | Supported (with stated limitation) | If Paper 1 is revisited |
 | **A-09** | Results **generalize** beyond June 2026 / MLB / single-book benchmark (external validity) | — | Untested by construction | Weak | Open | Post Paper-2 data accrual |
-| **A-10** | The live books are **behaviorally interchangeable** as pricing instruments (a consensus can weight them symmetrically) | — | BOOK_CHARACTERIZATION v0.1 / RD-8 (FanDuel 31 s cadence & 0.36 pp vig IQR vs Bovada 8 min & 1.80 pp — different instrument classes) | Weak | Refuted (provisional) | With Book Characterization v0.2 (event-aligned) |
+| **A-10** | The live books are **behaviorally interchangeable** as pricing instruments (a consensus can weight them symmetrically) | — | E-016 (falsification-tested: FanDuel re-prices its main line 4.7× more often than Bovada, 53/60 games, controlling for alt-lines + poll cadence) | Weak | **Refuted** (frequency axis, confirmed) | With Book Characterization v0.2 (event-aligned leadership) |
 
 ## How this register is used
 

@@ -194,12 +194,9 @@
   .diag-insight{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.5;color:var(--dim);
     margin:0 0 14px;max-width:56ch;padding-left:16px;border-left:2px solid var(--accent-strike)}
   /* the bridge from the six conditions to the State Atlas: quiet serif connective tissue naming the
-     state as the environment those conditions play out in. Its trailing link carries the promise, so the
-     path onward (removed from the hero) lives here, where it is actually earned. */
+     state as the environment those conditions play out in. Prose only — it frames the single action
+     (the .quiet CTA directly below), so no second link competes with it. */
   .diag-bridge{font-family:var(--serif);font-size:15.5px;line-height:1.6;color:var(--dim);margin:0 0 20px;max-width:58ch}
-  .diag-bridge a{color:var(--accent-strike);font-weight:500;text-decoration:none;
-    border-bottom:1px solid var(--accent-strike-soft);transition:border-color var(--t-fast),color var(--t-fast)}
-  .diag-bridge a:hover{border-bottom-color:var(--accent-strike);color:var(--ink)}
   @media(max-width:700px){.diag{grid-template-columns:1fr;max-width:60ch}}
   /* the plate's product line, a quiet serif framing above the seven-systems headline */
   .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw + 15px,19px);line-height:1.5;color:var(--dim);
@@ -535,8 +532,7 @@
       </div>
       <p class="diag-insight">Institutions review all six every year. Most households discover one or two only after they've become expensive.</p>
       <p class="diag-bridge">These six are where coordination breaks down. Your state's rules are the
-        environment they play out in — <a href="statemap.html?tab=coordination">see how yours shapes them,
-        ranked by the after-tax opportunity →</a></p>
+        environment they play out in — see how yours shapes them, ranked by the after-tax opportunity.</p>
       <div class="ctas">
         <a class="quiet" href="statemap.html?tab=coordination">Identify your highest-value coordination opportunities →</a>
       </div>
@@ -924,9 +920,11 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
   });
 })();
 
-// Gallery III, the six conditions stagger up as the ledger first scrolls into view (once). JS +
-// motion-OK only; no-JS and reduced-motion render them in place. The inline transition is cleared once
-// settled so the hover-dim keeps its snappy base timing, and each item's checkbox stays keyboard-usable.
+// Gallery III, the six conditions fade in (opacity only, no transform) as the ledger first scrolls into
+// view (once), a staggered fade that stays consistent with the now-static plate above (which bans
+// transform motion). JS + motion-OK only; no-JS and reduced-motion render them in place. The inline
+// transition is cleared once settled so the hover-dim keeps its snappy base timing, and each item's
+// checkbox stays keyboard-usable.
 (function(){
   var REDUCE = false;
   try{ REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
@@ -935,14 +933,14 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
   var items = [].slice.call(grid.querySelectorAll(".diag-item"));
   if(!items.length) return;
   var io, done = false;
-  items.forEach(function(it){ it.style.transition = "none"; it.style.opacity = "0"; it.style.transform = "translateY(14px)"; });
+  items.forEach(function(it){ it.style.transition = "none"; it.style.opacity = "0"; });
   void grid.getBoundingClientRect();   // commit the hidden state without animating the initial hide
   function reveal(){
     if(done) return; done = true;
     items.forEach(function(it, i){
       var d = i * 70;
-      it.style.transition = "opacity .5s ease " + d + "ms, transform .55s cubic-bezier(.4,0,.2,1) " + d + "ms";
-      it.style.opacity = ""; it.style.transform = "";
+      it.style.transition = "opacity .5s ease " + d + "ms";
+      it.style.opacity = "";
     });
     setTimeout(function(){ items.forEach(function(it){ it.style.transition = ""; }); }, items.length * 70 + 650);
     if(io) io.disconnect();

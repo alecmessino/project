@@ -61,6 +61,20 @@
     padding:12px 16px;background:var(--soft);border-left:2px solid var(--accent-strike-soft);border-radius:6px}
   .pband[hidden]{display:none}
   .pband b{color:var(--ink);font-weight:600}
+  /* Advisory guardrail: a thin, honest Level-1 (statute) vs Level-2 (model) qualifier. */
+  .guardrail{margin:12px 44px 0;font-size:12px;line-height:1.5;color:var(--muted);
+    display:flex;gap:10px;align-items:baseline;max-width:80ch}
+  .guardrail .gk{flex:none;font-family:var(--sans);font-weight:700;font-size:9.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--dim)}
+  .guardrail b{color:var(--dim);font-weight:600}
+  /* A first-person note from the principal — human context near the ask. */
+  .pnote{margin:8px 44px 0;padding:18px 20px;background:var(--soft);border:1px solid var(--line);
+    border-radius:var(--surface-radius);max-width:72ch}
+  .pnote .pn-k{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--accent-strike);margin-bottom:8px}
+  .pnote p{font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--ink);margin:0 0 10px}
+  .pnote .pn-sig{font-family:var(--sans);font-size:12.5px;color:var(--dim)}
+  .pnote .pn-sig b{color:var(--ink);font-weight:600}
 
   .sec{padding:18px 44px 8px;max-width:900px}
   .sec .h{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:14px}
@@ -126,6 +140,7 @@
       <a class="dwnav-access" aria-label="Client Access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="index.html#conversation">Request Review</a>
     </nav>
+    <div id="dw-household" data-page="taxlab"></div>
 
     <!-- ── The one idea ── -->
     <div class="doc">
@@ -138,6 +153,8 @@
     </div>
 
     <p class="pband" id="tl-pband" hidden></p>
+
+    <p class="guardrail"><span class="gk">How to read this</span><span>The state &amp; federal <b>rates</b> come from current tax code; the <b>coordination figure</b> is an illustrative model of what disciplined tax management has recovered over time — a diagnostic, not a forecast, and not a robo-advisor's black box.</span></p>
 
     <!-- ── The single exhibit, coordinated vs isolated, isolated from market return ── -->
     <div class="sec">
@@ -212,6 +229,12 @@
       <b>No commissions</b>
     </div>
 
+    <div class="pnote" id="tl-pnote">
+      <div class="pn-k">A note from the founder</div>
+      <p>The figure above is illustrative and deliberately conservative — it counts only the portfolio layer of coordination. The private After-Tax Review computes it on your actual holdings, and a short call is where we'd look at the estate, gifting, and residency coordination this exhibit leaves at zero.</p>
+      <div class="pn-sig">— <b>Alec Messino</b>, Founder · Driftwood Wealth</div>
+    </div>
+
     <!-- ── One CTA ── -->
     <div class="close">
       <p class="conv">The difference between the two lines is not a market call. It is a set of decisions made
@@ -239,7 +262,7 @@
 // alpha and the portfolio translates to an annual figure in the caption. The full, computed review stays
 // private (the internal Advisor Workspace consumes the shared build_taxlab() engine for a specific balance
 // sheet). Personalizing an illustration is not a per-holdings computation, and every disclosure is preserved.
-window.__STATE__ = {"header": {"generated": "2026-07-20 17:40:18 UTC", "horizon_years": 30}, "state_alpha": {"\u2014": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "AK": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "FL": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "NV": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "NH": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "SD": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "TN": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "TX": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "WY": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "WA": {"before": 2.6, "after": 5.9, "alpha": 3.3}, "AZ": {"before": 2.2, "after": 6.1, "alpha": 3.9}, "CO": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "GA": {"before": 1.8, "after": 5.8, "alpha": 4.1}, "ID": {"before": 1.8, "after": 5.8, "alpha": 4.1}, "IL": {"before": 1.8, "after": 5.9, "alpha": 4.0}, "IN": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "IA": {"before": 2.0, "after": 6.0, "alpha": 4.0}, "KY": {"before": 2.0, "after": 6.0, "alpha": 4.0}, "MA": {"before": 0.6, "after": 5.3, "alpha": 4.8}, "MI": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "MS": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "NC": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "PA": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "UT": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "AL": {"before": 1.8, "after": 5.9, "alpha": 4.1}, "AR": {"before": 2.0, "after": 6.0, "alpha": 4.0}, "CA": {"before": 0.4, "after": 5.1, "alpha": 4.7}, "CT": {"before": 1.5, "after": 5.7, "alpha": 4.2}, "DE": {"before": 1.5, "after": 5.7, "alpha": 4.2}, "DC": {"before": 0.8, "after": 5.4, "alpha": 4.5}, "HI": {"before": 0.8, "after": 5.5, "alpha": 4.7}, "KS": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "LA": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "ME": {"before": 1.5, "after": 5.7, "alpha": 4.2}, "MD": {"before": 1.5, "after": 5.7, "alpha": 4.1}, "MN": {"before": 0.8, "after": 5.3, "alpha": 4.5}, "MO": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "MT": {"before": 1.7, "after": 5.9, "alpha": 4.2}, "NE": {"before": 1.8, "after": 5.8, "alpha": 4.1}, "NJ": {"before": 0.8, "after": 5.4, "alpha": 4.5}, "NM": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "NY": {"before": 0.8, "after": 5.3, "alpha": 4.5}, "ND": {"before": 2.2, "after": 6.1, "alpha": 3.9}, "NYC": {"before": 0.2, "after": 5.0, "alpha": 4.8}, "OH": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "OK": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "OR": {"before": 1.0, "after": 5.4, "alpha": 4.4}, "RI": {"before": 1.6, "after": 5.8, "alpha": 4.1}, "SC": {"before": 1.7, "after": 5.9, "alpha": 4.2}, "VT": {"before": 1.2, "after": 5.5, "alpha": 4.4}, "VA": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "WV": {"before": 1.8, "after": 5.9, "alpha": 4.0}, "WI": {"before": 1.4, "after": 5.7, "alpha": 4.3}}, "state_names": {"\u2014": "a no-income-tax state", "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California", "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "DC": "Washington DC", "FL": "Florida", "GA": "Georgia", "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa", "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland", "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri", "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey", "NM": "New Mexico", "NY": "New York", "NYC": "New York City", "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio", "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina", "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont", "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"}};
+window.__STATE__ = {"header": {"generated": "2026-07-20 21:04:23 UTC", "horizon_years": 30}, "state_alpha": {"\u2014": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "AK": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "FL": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "NV": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "NH": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "SD": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "TN": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "TX": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "WY": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "WA": {"before": 2.6, "after": 5.9, "alpha": 3.3}, "AZ": {"before": 2.2, "after": 6.1, "alpha": 3.9}, "CO": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "GA": {"before": 1.8, "after": 5.8, "alpha": 4.1}, "ID": {"before": 1.8, "after": 5.8, "alpha": 4.1}, "IL": {"before": 1.8, "after": 5.9, "alpha": 4.0}, "IN": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "IA": {"before": 2.0, "after": 6.0, "alpha": 4.0}, "KY": {"before": 2.0, "after": 6.0, "alpha": 4.0}, "MA": {"before": 0.6, "after": 5.3, "alpha": 4.8}, "MI": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "MS": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "NC": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "PA": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "UT": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "AL": {"before": 1.8, "after": 5.9, "alpha": 4.1}, "AR": {"before": 2.0, "after": 6.0, "alpha": 4.0}, "CA": {"before": 0.4, "after": 5.1, "alpha": 4.7}, "CT": {"before": 1.5, "after": 5.7, "alpha": 4.2}, "DE": {"before": 1.5, "after": 5.7, "alpha": 4.2}, "DC": {"before": 0.8, "after": 5.4, "alpha": 4.5}, "HI": {"before": 0.8, "after": 5.5, "alpha": 4.7}, "KS": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "LA": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "ME": {"before": 1.5, "after": 5.7, "alpha": 4.2}, "MD": {"before": 1.5, "after": 5.7, "alpha": 4.1}, "MN": {"before": 0.8, "after": 5.3, "alpha": 4.5}, "MO": {"before": 2.7, "after": 6.3, "alpha": 3.7}, "MT": {"before": 1.7, "after": 5.9, "alpha": 4.2}, "NE": {"before": 1.8, "after": 5.8, "alpha": 4.1}, "NJ": {"before": 0.8, "after": 5.4, "alpha": 4.5}, "NM": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "NY": {"before": 0.8, "after": 5.3, "alpha": 4.5}, "ND": {"before": 2.2, "after": 6.1, "alpha": 3.9}, "NYC": {"before": 0.2, "after": 5.0, "alpha": 4.8}, "OH": {"before": 2.1, "after": 6.0, "alpha": 3.9}, "OK": {"before": 1.9, "after": 5.9, "alpha": 4.0}, "OR": {"before": 1.0, "after": 5.4, "alpha": 4.4}, "RI": {"before": 1.6, "after": 5.8, "alpha": 4.1}, "SC": {"before": 1.7, "after": 5.9, "alpha": 4.2}, "VT": {"before": 1.2, "after": 5.5, "alpha": 4.4}, "VA": {"before": 1.7, "after": 5.8, "alpha": 4.1}, "WV": {"before": 1.8, "after": 5.9, "alpha": 4.0}, "WI": {"before": 1.4, "after": 5.7, "alpha": 4.3}}, "state_names": {"\u2014": "a no-income-tax state", "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California", "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "DC": "Washington DC", "FL": "Florida", "GA": "Georgia", "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa", "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland", "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri", "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey", "NM": "New Mexico", "NY": "New York", "NYC": "New York City", "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio", "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina", "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont", "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"}};
 (function(){
   var svg = document.getElementById("exchart"); if(!svg) return;
   var paths = svg.querySelectorAll("path"); if(paths.length < 2) return;
@@ -314,7 +337,9 @@ window.__STATE__ = {"header": {"generated": "2026-07-20 17:40:18 UTC", "horizon_
       cta.setAttribute("data-base", base);
       var fwd = new URLSearchParams();
       ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(function(k){ var v=qp.get(k); if(v) fwd.set(k,v); });
-      if(code) fwd.set("utm_content", (qp.get("utm_content")? qp.get("utm_content")+"|" : "") + "state-"+code);
+      if(code){ fwd.set("state", code); fwd.set("utm_content", (qp.get("utm_content")? qp.get("utm_content")+"|" : "") + "state-"+code); }
+      if(port>0) fwd.set("portfolio", String(Math.round(port)));               // pre-call intelligence
+      if(row && port>0) fwd.set("est_leakage_usd", String(Math.round(port*row.alpha/100)));
       cta.href = base + (fwd.toString()? "?"+fwd.toString() : "");
       if(!cta._tracked){ cta._tracked = true; cta.addEventListener("click", function(){ if(window.plausible) plausible("taxlab_to_book",{props:{state:code||"—"}}); }); }
     }

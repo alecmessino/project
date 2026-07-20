@@ -247,6 +247,7 @@ NAV = (
     '    <div class="dwnav-drop dwnav-drop--current">\n'
     '      <button class="dwnav-trigger" type="button">Tools &amp; Research<span class="caret" aria-hidden="true"></span></button>\n'
     '      <div class="dwnav-panel">\n'
+    '        <a href="score.html">Coordination&nbsp;Assessment</a>\n'
     '        <a href="leakage.html">Tax&nbsp;Diagnostic</a>\n'
     '        <a href="taxlab.html">After-Tax&nbsp;Review</a>\n'
     '        <a href="statemap.html" aria-current="page">State&nbsp;Tax&nbsp;Atlas</a>\n'
@@ -879,7 +880,7 @@ def export_state_pages(out_dir: str | Path = "docs", edition: str = CURRENT_EDIT
 
 # Core (non-state) pages that also belong in the sitemap, with priorities.
 _CORE_SITEMAP = [
-    ("index.html", "1.0", "weekly"), ("insights.html", "0.9", "weekly"),
+    ("index.html", "1.0", "weekly"), ("research.html", "0.9", "weekly"), ("insights.html", "0.9", "weekly"),
     ("every-portfolio-has-two-returns.html", "0.8", "monthly"),
     ("principles.html", "0.9", "monthly"),
     ("about.html", "0.9", "monthly"),

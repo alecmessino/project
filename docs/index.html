@@ -200,7 +200,7 @@
   .diag-insight{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.5;color:var(--dim);
     margin:0 0 14px;max-width:56ch;padding-left:16px;border-left:2px solid var(--accent-strike)}
   @media(max-width:700px){.diag{grid-template-columns:1fr;max-width:60ch}}
-  /* the plate's product line, a quiet serif framing above the five-systems headline */
+  /* the plate's product line, a quiet serif framing above the seven-systems headline */
   .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw + 15px,19px);line-height:1.5;color:var(--dim);
     margin:0 auto 20px;max-width:36ch}
 
@@ -231,7 +231,7 @@
   .doc a:hover .doc-go{color:#1e4666;text-decoration:underline;text-underline-offset:2px}
   @media(max-width:700px){.docs-list{grid-template-columns:1fr;gap:0}}
 
-  /* THE THESIS, a museum exhibit. Five systems in a faint web; hovering one illuminates what it
+  /* THE THESIS, a museum exhibit. Seven systems in a faint web; hovering one illuminates what it
      moves, the centre names the coordination, the flow carries down to the outcome, and a causal
      micro-story with one proof appears beneath. Paper under glass: ~300ms opacity + hairline
      transitions only, no motion, no scale, no spring. Teach through interaction, not paragraphs. */
@@ -241,13 +241,13 @@
   .sysstage{margin:16px auto 0;max-width:590px;opacity:1}
   .sysstage svg{width:100%;height:auto;display:block;overflow:visible}
   .sysstage text{font-family:var(--sans)}
-  /* the web, ten hairlines among five systems, near-silent at rest: the density IS the argument.
+  /* the web, 21 hairlines among seven systems, near-silent at rest: the density IS the argument.
      A hovered system lifts only its own links; a traced decision lifts the chords among its set. */
   .net{stroke:var(--ghost-line);stroke-width:.6;opacity:.15;transition:opacity .34s ease,stroke .34s ease}
   .net.lit{stroke:var(--accent-strike);stroke-width:1;opacity:.72}
   /* a decision's web is read as a hierarchy, not a mesh: the chords leaving the originating system are the
      primary star (full strength); the cross-links among the downstream systems are a quieter secondary
-     matrix, present, so the true depth still shows, but toned down so a five-system web reads structured
+     matrix, present, so the true depth still shows, but toned down so a seven-system web reads structured
      rather than busy. Applied to every scenario, so the 3-system webs gain the same restraint. */
   .net.lit.sec{stroke-width:.7;opacity:.3}
   .net.dim{opacity:.05}
@@ -268,8 +268,8 @@
   .node.lit .lbl{fill:var(--body)}
   .node.active .dot{fill:var(--ink)}
   .node.active .lbl{fill:var(--ink);font-weight:700}
-  /* Static fallback: with JS off or motion reduced, seed the full five-system lattice lit
-     (Investments, Taxes, Liquidity, Professionals, Estate) so the plate makes its point with no animation.
+  /* Static fallback: with JS off or motion reduced, seed the full seven-system lattice lit
+     (Investments, Taxes, Liquidity, Estate, Protection, Ownership, Purpose) so the plate makes its point with no animation.
      JS clears .seeded before it takes over, so full interactivity is unaffected for everyone else. */
   .sysstage.seeded .net{stroke:var(--accent-strike);stroke-width:1;opacity:.72}
   .sysstage.seeded .node .dot{fill:var(--ink)}
@@ -446,53 +446,72 @@
       </div>
     </header>
 
-    <!-- ── GALLERY II · THE SYSTEM (Plate I), the machine first: five systems in one lattice;
+    <!-- ── GALLERY II · THE SYSTEM (Plate I), the machine first: seven systems in one lattice;
          hovering a system teaches what it moves, and tracing a common decision lights everything it
          touches. The whole argument is visible before a single paragraph. ── -->
     <div class="sysband" id="thesystem">
       <div class="sysband-in">
         <p class="sb-lead">Driftwood coordinates your financial life as one system.</p>
-        <h2 class="sb-h">Five systems. No decision touches just one.</h2>
+        <h2 class="sb-h">Seven systems. No decision touches just one.</h2>
         <div class="sysstage seeded" id="sysDiagram">
-          <svg viewBox="0 0 640 546" role="group" aria-label="Five financial systems, Investments, Taxes, Liquidity, Professionals, and Estate, in one coordinated network. Tap a system to see what it moves; what you keep is the result.">
+          <svg viewBox="0 0 640 546" role="group" aria-label="Seven financial systems, Investments, Taxes, Liquidity and cash flow, Estate and legacy, Risk and protection, Ownership and account structure, and Purpose and family, in one coordinated network. Tap a system to see what it moves; what you keep is the result.">
             <!-- the lattice: every system connected to every other (near-silent at rest) -->
-            <line class="net" data-a="0" data-b="1" x1="320" y1="58" x2="510" y2="196"/>
-            <line class="net" data-a="0" data-b="2" x1="320" y1="58" x2="438" y2="420"/>
-            <line class="net" data-a="0" data-b="3" x1="320" y1="58" x2="202" y2="420"/>
-            <line class="net" data-a="0" data-b="4" x1="320" y1="58" x2="130" y2="196"/>
-            <line class="net" data-a="1" data-b="2" x1="510" y1="196" x2="438" y2="420"/>
-            <line class="net" data-a="1" data-b="3" x1="510" y1="196" x2="202" y2="420"/>
-            <line class="net" data-a="1" data-b="4" x1="510" y1="196" x2="130" y2="196"/>
-            <line class="net" data-a="2" data-b="3" x1="438" y1="420" x2="202" y2="420"/>
-            <line class="net" data-a="2" data-b="4" x1="438" y1="420" x2="130" y2="196"/>
-            <line class="net" data-a="3" data-b="4" x1="202" y1="420" x2="130" y2="196"/>
+            <line class="net" data-a="0" data-b="1" x1="320" y1="65" x2="457" y2="131"/>
+            <line class="net" data-a="0" data-b="2" x1="320" y1="65" x2="491" y2="279"/>
+            <line class="net" data-a="0" data-b="3" x1="320" y1="65" x2="244" y2="398"/>
+            <line class="net" data-a="0" data-b="4" x1="320" y1="65" x2="149" y2="279"/>
+            <line class="net" data-a="0" data-b="5" x1="320" y1="65" x2="183" y2="131"/>
+            <line class="net" data-a="0" data-b="6" x1="320" y1="65" x2="396" y2="398"/>
+            <line class="net" data-a="1" data-b="2" x1="457" y1="131" x2="491" y2="279"/>
+            <line class="net" data-a="1" data-b="3" x1="457" y1="131" x2="244" y2="398"/>
+            <line class="net" data-a="1" data-b="4" x1="457" y1="131" x2="149" y2="279"/>
+            <line class="net" data-a="1" data-b="5" x1="457" y1="131" x2="183" y2="131"/>
+            <line class="net" data-a="1" data-b="6" x1="457" y1="131" x2="396" y2="398"/>
+            <line class="net" data-a="2" data-b="3" x1="491" y1="279" x2="244" y2="398"/>
+            <line class="net" data-a="2" data-b="4" x1="491" y1="279" x2="149" y2="279"/>
+            <line class="net" data-a="2" data-b="5" x1="491" y1="279" x2="183" y2="131"/>
+            <line class="net" data-a="2" data-b="6" x1="491" y1="279" x2="396" y2="398"/>
+            <line class="net" data-a="3" data-b="4" x1="244" y1="398" x2="149" y2="279"/>
+            <line class="net" data-a="3" data-b="5" x1="244" y1="398" x2="183" y2="131"/>
+            <line class="net" data-a="3" data-b="6" x1="244" y1="398" x2="396" y2="398"/>
+            <line class="net" data-a="4" data-b="5" x1="149" y1="279" x2="183" y2="131"/>
+            <line class="net" data-a="4" data-b="6" x1="149" y1="279" x2="396" y2="398"/>
+            <line class="net" data-a="5" data-b="6" x1="183" y1="131" x2="396" y2="398"/>
             <!-- the flow: coordination carries down to the outcome -->
-            <line class="flow" x1="320" y1="288" x2="320" y2="496"/>
+            <line class="flow" x1="320" y1="272" x2="320" y2="492"/>
             <!-- the centre: coordination (an invisible paper mask keeps it legible over the lattice) -->
-            <rect class="hub-bg" x="266" y="244" width="108" height="24" fill="var(--bg)"/>
-            <text class="hub" x="320" y="260" text-anchor="middle">Coordination</text>
+            <rect class="hub-bg" x="266" y="230" width="108" height="24" fill="var(--bg)"/>
+            <text class="hub" x="320" y="246" text-anchor="middle">Coordination</text>
             <!-- the outcome, free, below the network; never boxed -->
             <text class="keep" x="320" y="518" text-anchor="middle">What you keep.</text>
-            <!-- the five systems (DOM order = SYS index) -->
+            <!-- the seven systems (DOM order = SYS index); short labels, full names live in SYS + aria -->
             <g class="node" data-i="0" tabindex="0" role="button" aria-label="Investments, see what it moves">
-              <circle class="hit" cx="320" cy="58" r="30"/><circle class="dot" cx="320" cy="58" r="5"/>
-              <text class="lbl" x="320" y="34" text-anchor="middle">Investments</text>
+              <circle class="hit" cx="320" cy="65" r="30"/><circle class="dot" cx="320" cy="65" r="5"/>
+              <text class="lbl" x="320" y="41" text-anchor="middle">Investments</text>
             </g>
             <g class="node" data-i="1" tabindex="0" role="button" aria-label="Taxes, see what it moves">
-              <circle class="hit" cx="510" cy="196" r="30"/><circle class="dot" cx="510" cy="196" r="5"/>
-              <text class="lbl" x="528" y="191" text-anchor="start">Taxes</text>
+              <circle class="hit" cx="457" cy="131" r="30"/><circle class="dot" cx="457" cy="131" r="5"/>
+              <text class="lbl" x="475" y="122" text-anchor="start">Taxes</text>
             </g>
-            <g class="node" data-i="2" tabindex="0" role="button" aria-label="Liquidity, see what it moves">
-              <circle class="hit" cx="438" cy="420" r="30"/><circle class="dot" cx="438" cy="420" r="5"/>
-              <text class="lbl" x="438" y="456" text-anchor="middle">Liquidity</text>
+            <g class="node" data-i="2" tabindex="0" role="button" aria-label="Liquidity and cash flow, see what it moves">
+              <circle class="hit" cx="491" cy="279" r="30"/><circle class="dot" cx="491" cy="279" r="5"/>
+              <text class="lbl" x="511" y="284" text-anchor="start">Liquidity</text>
             </g>
-            <g class="node" data-i="3" tabindex="0" role="button" aria-label="Professionals, see what they move">
-              <circle class="hit" cx="202" cy="420" r="30"/><circle class="dot" cx="202" cy="420" r="5"/>
-              <text class="lbl" x="202" y="456" text-anchor="middle">Professionals</text>
+            <g class="node" data-i="3" tabindex="0" role="button" aria-label="Purpose and family, see what it moves">
+              <circle class="hit" cx="244" cy="398" r="30"/><circle class="dot" cx="244" cy="398" r="5"/>
+              <text class="lbl" x="238" y="430" text-anchor="middle">Purpose</text>
             </g>
-            <g class="node" data-i="4" tabindex="0" role="button" aria-label="Estate, see what it moves">
-              <circle class="hit" cx="130" cy="196" r="30"/><circle class="dot" cx="130" cy="196" r="5"/>
-              <text class="lbl" x="112" y="191" text-anchor="end">Estate</text>
+            <g class="node" data-i="4" tabindex="0" role="button" aria-label="Estate and legacy, see what it moves">
+              <circle class="hit" cx="149" cy="279" r="30"/><circle class="dot" cx="149" cy="279" r="5"/>
+              <text class="lbl" x="129" y="284" text-anchor="end">Estate</text>
+            </g>
+            <g class="node" data-i="5" tabindex="0" role="button" aria-label="Risk and protection, see what it moves">
+              <circle class="hit" cx="183" cy="131" r="30"/><circle class="dot" cx="183" cy="131" r="5"/>
+              <text class="lbl" x="165" y="122" text-anchor="end">Protection</text>
+            </g>
+            <g class="node" data-i="6" tabindex="0" role="button" aria-label="Ownership and account structure, see what it moves">
+              <circle class="hit" cx="396" cy="398" r="30"/><circle class="dot" cx="396" cy="398" r="5"/>
+              <text class="lbl" x="402" y="430" text-anchor="middle">Ownership</text>
             </g>
           </svg>
         </div>
@@ -503,10 +522,10 @@
           <a class="mproof" id="mproof" href="#"></a>
         </div>
         <div class="trig" id="trig" role="group" aria-label="Trace a common decision, press one to see the systems it moves">
-          <button class="trig-btn" data-t="0" aria-pressed="false">Move to cash &amp; T-bills</button>
-          <button class="trig-btn" data-t="1" aria-pressed="false">Buy an out-of-state property</button>
-          <button class="trig-btn" data-t="2" aria-pressed="false">Gift $50,000 to an adult child</button>
-          <button class="trig-btn" data-t="3" aria-pressed="false">Exercise stock options</button>
+          <button class="trig-btn" data-t="0" aria-pressed="false">Buy a home</button>
+          <button class="trig-btn" data-t="1" aria-pressed="false">Sell a business</button>
+          <button class="trig-btn" data-t="2" aria-pressed="false">Exercise stock options</button>
+          <button class="trig-btn" data-t="3" aria-pressed="false">Receive an inheritance</button>
         </div>
       </div>
     </div>
@@ -666,37 +685,44 @@ window.__STATE__ = {"header": {"generated": "2026-07-19 23:15:22 UTC"}, "hero": 
   var HUB0 = "Coordination";
   // Each system: a concise centre label, a memorable lead, one consequence, and the one proof.
   var SYS = [
-    { center:"Investment coordination", lead:"Investments determine taxes.",
-      body:"What you own also sets asset location, the estate basis, and what’s available to spend.",
+    { center:"Investment coordination", lead:"Investments set everything downstream.",
+      body:"What you own also sets your tax exposure, the estate basis, and what’s available to spend.",
       href:"thesis.html", proof:"See how we invest" },
     { center:"Tax coordination", lead:"Taxes never change alone.",
-      body:"Changing tax strategy also moves withdrawals, portfolio construction, estate outcomes, and how advisors coordinate.",
+      body:"A tax move also shifts withdrawals, portfolio construction, entity choices, and what the estate keeps.",
       href:"taxlab.html", proof:"See the After-Tax Review" },
-    { center:"Liquidity coordination", lead:"Liquidity changes every other decision.",
-      body:"A cash need moves which lots are sold, the bracket you land in, and the portfolio’s balance.",
+    { center:"Liquidity coordination", lead:"Cash flow decides what’s possible.",
+      body:"What’s liquid, and what comes in each month, sets which lots are sold, the bracket you land in, and the plans you can actually fund.",
       href:"opportunity-register.html", proof:"See the Opportunity Register" },
-    { center:"Advisor coordination", lead:"Specialists optimize the parts.",
-      body:"Coordination aligns the whole, one plan across the CPA, the attorney, and the advisor.",
-      href:"decision-register.html", proof:"See the Decision Register" },
+    { center:"Purpose coordination", lead:"Goals point the whole plan.",
+      body:"What the wealth is for, independence, family, giving, sets the target every other system is solving toward.",
+      href:"principles.html", proof:"See the philosophy" },
     { center:"Estate coordination", lead:"Estate planning reshapes the portfolio.",
-      body:"Beneficiaries, titling, entity structure, liability, and taxes all change together, and every one of them touches the portfolio.",
-      href:"manual.html", proof:"See the Operating Manual" }
+      body:"Beneficiaries, legacy goals, and titling change how the portfolio is built and what it ultimately keeps.",
+      href:"manual.html", proof:"See the Operating Manual" },
+    { center:"Protection coordination", lead:"Protection sets the floor.",
+      body:"Insurance, liability limits, and how concentrated the wealth is decide how much any strategy can safely carry.",
+      href:"howitworks.html", proof:"See how it’s coordinated" },
+    { center:"Ownership coordination", lead:"Titling decides what’s possible.",
+      body:"Which entity or account holds an asset drives its taxes, its protection, and what the estate plan can even reach.",
+      href:"atlas/2026/household/", proof:"See a Household Record" }
   ];
-  // Common decisions, traced: each lights the set of systems it moves at once. Facts, hedged,
-  // never invented statistics; the disclosure block below the page governs all of it.
+  // Common decisions people think are isolated, traced: each lights the systems it moves at once. Buying a
+  // home is the recurring motif, the everyday decision that quietly touches all seven. Facts, hedged, never
+  // invented statistics; the disclosure block below the page governs all of it.
   var TRIG = [
-    { set:[0,1,2,4], lead:"One allocation. Four systems.",
-      body:"Moving to cash is never just a safe haven. The decision ripples through your portfolio’s growth engine, ordinary-income tax exposure, liquid reserves, and the estate basis your heirs inherit.",
-      href:"taxlab.html", proof:"See the After-Tax Review" },
-    { set:[0,1,2,3,4], lead:"One purchase. Five systems.",
-      body:"Buying across state lines is never just a boundary change. It ripples through your portfolio balance, multi-state tax exposure, near-term liquidity, estate titling, and the professionals who keep them aligned.",
-      href:"atlas/2026/crossing/", proof:"Map the Property Acquisition" },
-    { set:[4,1,0,3], lead:"One gift. Four systems.",
-      body:"Gifting wealth is never just a generous gesture. It ripples through your lifetime estate exemption, annual tax reporting, the assets you liquidate to fund it, and the advisors coordinating the transfer.",
-      href:"decision-register.html", proof:"Model the Gifting Impact" },
-    { set:[0,1,2,3], lead:"One exercise. Four systems.",
-      body:"An exercise is never just a transaction. It ripples through your concentration risk, tax brackets, the cash you raise to cover them, and the professionals timing it all.",
-      href:"case-stock-options.html", proof:"Model the Exercise Strategy" }
+    { set:[0,1,2,6,5,4,3], lead:"One purchase. Seven systems.",
+      body:"Buying a home feels like a single decision. It moves the investments you sell for the down payment, your tax picture, monthly cash flow, how the property is titled, the protection you carry, the estate it becomes part of, and the life the purchase is really for.",
+      href:"atlas/2026/household/", proof:"See a Household Record" },
+    { set:[0,1,2,6,5,4,3], lead:"One sale. Seven systems.",
+      body:"A business sale is the clearest case. The proceeds become an investment problem, a tax event, a liquidity windfall, an entity-structure cleanup, a new protection profile, an estate and legacy question, and a fresh conversation about what the money is now for.",
+      href:"case-business-sale.html", proof:"See the Business-Sale case" },
+    { set:[0,1,2,5,6,3], lead:"One exercise. Six systems.",
+      body:"Vesting equity is never just hold-or-sell. It moves your concentration risk, your tax brackets, the cash you raise to cover them, the protection a single-company position needs, how the shares are held, and the goals the proceeds are meant to serve.",
+      href:"case-stock-options.html", proof:"Model the Exercise Strategy" },
+    { set:[4,0,1,2,6,3], lead:"One inheritance. Six systems.",
+      body:"An inheritance arrives as an estate event, then becomes an investment decision, a step-up and tax question, a liquidity change, a titling and account cleanup, and a prompt to revisit what the family’s wealth is for.",
+      href:"case-inheritance.html", proof:"See the Inheritance case" }
   ];
   function fitHub(){
     if(!hubBg || !hub.getBBox) return;
@@ -747,7 +773,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-19 23:15:22 UTC"}, "hero": 
   // alongside the line draw-in (so the central node + labels ease in too). JS + motion-OK only,
   // no-JS and reduced-motion keep it visible from the start (CSS default opacity:1).
   // Non-reduced-motion + JS: hand the plate to the interactive/rotation layer, so drop the static seed
-  // (the five-system fallback). No-JS and reduced-motion keep .seeded, i.e. the meaningful static default.
+  // (the seven-system fallback). No-JS and reduced-motion keep .seeded, i.e. the meaningful static default.
   if(!REDUCE){ stage.classList.remove("seeded"); stage.style.opacity = "0"; }
   var timers = [];
   function later(fn, ms){ timers.push(setTimeout(fn, ms)); }

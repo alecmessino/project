@@ -645,3 +645,19 @@ review + Design Council):
   small-size cut (4.6/7.0 at 22px), documented in `brand.html` + `IDENTITY_ROLLOUT.md` alongside the favicon
   cut. Hero runway trimmed (the serif lede that restated the headline cut ~40%), so the interactive plate
   arrives a screen sooner on mobile.
+
+**Round 13 — the seven-system model (better seven), mark decoupled** (user-directed):
+- **Reversed Round 12's five, adopted a stronger seven.** The five-node reduction fixed the logo mismatch but
+  carried a category error: "Professionals" (CPA / attorney / advisor) sat in the lattice as a *system* when
+  they are *participants*. The new model is seven true systems: **Investments · Taxes · Liquidity & cash flow
+  · Estate & legacy · Risk & protection · Ownership & account structure · Purpose & family** ("governance"
+  renamed to "purpose" so it reads intuitively, not institutionally). No professions as nodes. Plate rebuilt
+  to the seven-node lattice; `inside.html` legend back to seven (new Purpose compass glyph); the "seven
+  systems" copy restored across the essays, the Letter, and the Household page.
+- **Ripple motif.** Scenarios now trace common decisions people think are isolated: **Buy a home** (the
+  flagship, touches all seven), Sell a business (all seven), Exercise stock options (six), Receive an
+  inheritance (six). "No decision touches just one," shown, not asserted.
+- **Mark decoupled from the model.** The five-stream mark stays frozen but is now documented as an *emblem of
+  confluence*, not an inventory of the systems (`brand.html` + `IDENTITY_ROLLOUT.md`). The mark keeps five
+  streams at every size; the model has seven systems; no copy equates the two, so the numbers no longer read
+  as a contradiction.

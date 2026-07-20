@@ -93,6 +93,20 @@
   .pband{margin:14px 40px 0;padding:2px 0 2px 16px;border-left:1px solid var(--line);
     font-size:13px;color:var(--teal)}
   .pband b{color:var(--teal)}
+  /* Advisory guardrail: a thin, honest Level-1 (statute) vs Level-2 (model) qualifier. */
+  .guardrail{margin:12px 40px 0;font-size:12px;line-height:1.5;color:var(--muted);
+    display:flex;gap:10px;align-items:baseline;max-width:80ch}
+  .guardrail .gk{flex:none;font-family:var(--sans);font-weight:700;font-size:9.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--dim)}
+  .guardrail b{color:var(--dim);font-weight:600}
+  /* A first-person note from the principal — human context right before the ask. */
+  .pnote{margin:24px 40px 0;padding:18px 20px;background:var(--soft);border:1px solid var(--line);
+    border-radius:var(--surface-radius);max-width:72ch}
+  .pnote .pn-k{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--accent-strike);margin-bottom:8px}
+  .pnote p{font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--ink);margin:0 0 10px}
+  .pnote .pn-sig{font-family:var(--sans);font-size:12.5px;color:var(--dim)}
+  .pnote .pn-sig b{color:var(--ink);font-weight:600}
   .cta{margin:20px 40px 4px;padding:16px 0 0;border-top:1px solid var(--line);
     display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .cta .ctxt{flex:1;min-width:240px}
@@ -179,6 +193,8 @@
 
     <div class="pband" id="pband" style="display:none"></div>
 
+    <p class="guardrail"><span class="gk">How to read this</span><span>The state &amp; federal <b>rates</b> come from current tax code; the <b>coordination figure</b> is an illustrative model of what disciplined tax management has recovered over time — a diagnostic, not a forecast, and not a robo-advisor's black box.</span></p>
+
     <div class="cols">
       <div class="card before" id="c-before"></div>
       <div class="card after" id="c-after"></div>
@@ -246,6 +262,12 @@
     </table>
     </div>
 
+    <div class="pnote" id="pnote">
+      <div class="pn-k">A note from the founder</div>
+      <p>This diagnostic is deliberately conservative — it counts only what disciplined portfolio tax management recovers, and stops there. In a short call I'd walk your actual holdings, <span id="pn-state">your state</span>'s specific rules, and the estate, gifting, and residency coordination this figure leaves at zero — where the larger opportunities usually sit.</p>
+      <div class="pn-sig">— <b>Alec Messino</b>, Founder · Driftwood Wealth</div>
+    </div>
+
     <div class="cta" id="cta">
       <div class="ctxt">
         <div class="ch">See it on your own portfolio.</div>
@@ -253,7 +275,7 @@
       </div>
       <div class="btns">
         <a class="primary" id="cta-analysis" href="taxlab.html?view=review">Request a Private After-Tax Review →</a>
-        <a class="ghost" href="https://calendly.com/alec-messino/15-minute-introductory-meeting" target="_blank" rel="noopener">or book a 15-minute introductory call →</a>
+        <a class="ghost" id="cta-book-cal" href="https://calendly.com/alec-messino/15-minute-introductory-meeting" target="_blank" rel="noopener">or book a 15-minute introductory call →</a>
       </div>
     </div>
 
@@ -331,6 +353,22 @@ function render(s){
   const tl = "taxlab.html?view=review" + (fwd.toString()?("&"+fwd.toString()):"");
   const ca = document.getElementById("cta-analysis"); if(ca) ca.href = tl;
   const cb = document.getElementById("cta-book"); if(cb) cb.href = tl;
+  // Pre-call intelligence (compliant): forward state + portfolio + the visitor's OWN leakage estimate onto
+  // the Calendly link. Calendly captures unknown query keys in the invitee payload — no on-site form, no PII.
+  const calBtn = document.getElementById("cta-book-cal");
+  if(calBtn){
+    const calBase = calBtn.getAttribute("data-base") || calBtn.href.split("?")[0];
+    calBtn.setAttribute("data-base", calBase);
+    const cp = new URLSearchParams();
+    if(qState) cp.set("state", qState);
+    if(qPort>0) cp.set("portfolio", String(Math.round(qPort)));
+    if(row && qPort>0) cp.set("est_leakage_usd", String(Math.round(annual)));
+    ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(k=>{ const v=qp.get(k); if(v) cp.set(k,v); });
+    calBtn.href = calBase + (cp.toString()? "?"+cp.toString() : "");
+  }
+  // The founder's note names the visitor's state when we know it.
+  const pnState = document.getElementById("pn-state");
+  if(pnState && row) pnState.textContent = (names[qState]||qState);
   // Funnel continuity: count click-throughs from the diagnostic into the After-Tax Review prospect flow.
   const st0 = qp.get("state") || "—";
   if(ca) ca.addEventListener("click", ()=>{ if(window.plausible) plausible("diagnostic_to_taxlab",{props:{state:st0,target:"analysis"}}); });

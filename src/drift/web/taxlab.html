@@ -61,6 +61,20 @@
     padding:12px 16px;background:var(--soft);border-left:2px solid var(--accent-strike-soft);border-radius:6px}
   .pband[hidden]{display:none}
   .pband b{color:var(--ink);font-weight:600}
+  /* Advisory guardrail: a thin, honest Level-1 (statute) vs Level-2 (model) qualifier. */
+  .guardrail{margin:12px 44px 0;font-size:12px;line-height:1.5;color:var(--muted);
+    display:flex;gap:10px;align-items:baseline;max-width:80ch}
+  .guardrail .gk{flex:none;font-family:var(--sans);font-weight:700;font-size:9.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--dim)}
+  .guardrail b{color:var(--dim);font-weight:600}
+  /* A first-person note from the principal — human context near the ask. */
+  .pnote{margin:8px 44px 0;padding:18px 20px;background:var(--soft);border:1px solid var(--line);
+    border-radius:var(--surface-radius);max-width:72ch}
+  .pnote .pn-k{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--accent-strike);margin-bottom:8px}
+  .pnote p{font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--ink);margin:0 0 10px}
+  .pnote .pn-sig{font-family:var(--sans);font-size:12.5px;color:var(--dim)}
+  .pnote .pn-sig b{color:var(--ink);font-weight:600}
 
   .sec{padding:18px 44px 8px;max-width:900px}
   .sec .h{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:14px}
@@ -126,6 +140,7 @@
       <a class="dwnav-access" aria-label="Client Access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="index.html#conversation">Request Review</a>
     </nav>
+    <div id="dw-household" data-page="taxlab"></div>
 
     <!-- ── The one idea ── -->
     <div class="doc">
@@ -138,6 +153,8 @@
     </div>
 
     <p class="pband" id="tl-pband" hidden></p>
+
+    <p class="guardrail"><span class="gk">How to read this</span><span>The state &amp; federal <b>rates</b> come from current tax code; the <b>coordination figure</b> is an illustrative model of what disciplined tax management has recovered over time — a diagnostic, not a forecast, and not a robo-advisor's black box.</span></p>
 
     <!-- ── The single exhibit, coordinated vs isolated, isolated from market return ── -->
     <div class="sec">
@@ -210,6 +227,12 @@
       <b>Evidence-based</b><span class="dot">·</span>
       <b>Coordinates with your CPA &amp; attorney</b><span class="dot">·</span>
       <b>No commissions</b>
+    </div>
+
+    <div class="pnote" id="tl-pnote">
+      <div class="pn-k">A note from the founder</div>
+      <p>The figure above is illustrative and deliberately conservative — it counts only the portfolio layer of coordination. The private After-Tax Review computes it on your actual holdings, and a short call is where we'd look at the estate, gifting, and residency coordination this exhibit leaves at zero.</p>
+      <div class="pn-sig">— <b>Alec Messino</b>, Founder · Driftwood Wealth</div>
     </div>
 
     <!-- ── One CTA ── -->
@@ -314,7 +337,9 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
       cta.setAttribute("data-base", base);
       var fwd = new URLSearchParams();
       ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(function(k){ var v=qp.get(k); if(v) fwd.set(k,v); });
-      if(code) fwd.set("utm_content", (qp.get("utm_content")? qp.get("utm_content")+"|" : "") + "state-"+code);
+      if(code){ fwd.set("state", code); fwd.set("utm_content", (qp.get("utm_content")? qp.get("utm_content")+"|" : "") + "state-"+code); }
+      if(port>0) fwd.set("portfolio", String(Math.round(port)));               // pre-call intelligence
+      if(row && port>0) fwd.set("est_leakage_usd", String(Math.round(port*row.alpha/100)));
       cta.href = base + (fwd.toString()? "?"+fwd.toString() : "");
       if(!cta._tracked){ cta._tracked = true; cta.addEventListener("click", function(){ if(window.plausible) plausible("taxlab_to_book",{props:{state:code||"—"}}); }); }
     }

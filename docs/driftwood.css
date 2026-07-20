@@ -580,6 +580,19 @@ table.exhibit-table{ width:100%; border-collapse:collapse; font-family:var(--san
   letter-spacing:.14em; text-transform:uppercase; color:var(--dim); font-variant-numeric:tabular-nums; }
 @media(max-width:620px){ .firm-anchor{ font-size:9px; letter-spacing:.1em; padding:10px 14px; gap:4px 16px; } }
 
+/* ── Onward strip — one shared "return to the diagnostic" component ────────────────────────────
+   Content hubs (research · insights · library) and any editorial page can drop <div class="onward">
+   before their <div class="foot"> to guarantee a ≤2-click path back to the money-path. Fallback
+   colours keep it correct on pages whose :root omits a token. */
+.onward{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px 24px;
+  margin:44px 44px 0; padding:20px 24px; background:var(--soft,#f7f5f0); border:1px solid var(--line,#d8d3c6);
+  border-radius:var(--surface-radius,8px); }
+.onward .ow-t{ font-family:var(--serif); font-size:16px; color:var(--ink,#1e2833); }
+.onward .ow-cta{ font-family:var(--sans); font-weight:600; font-size:14px; color:var(--accent-strike,#2c5878);
+  text-decoration:none; border-bottom:1px solid var(--accent-strike-soft,#a9c2d6); white-space:nowrap; }
+.onward .ow-cta:hover{ border-bottom-color:var(--accent-strike,#2c5878); }
+@media(max-width:520px){ .onward{ margin-left:22px; margin-right:22px; } }
+
 /* ── Footer disclosure line — one canonical treatment ─────────────────────────────────────────
    Every page's quiet <div class="foot"> disclosure used to carry its own inline .foot{} — 24
    variants that had drifted apart in top spacing, colour, size, and line-height. This single rule

@@ -148,6 +148,7 @@
         <div class="dwnav-drop dwnav-drop--current">
           <button class="dwnav-trigger" type="button">Tools &amp; Research<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
+            <a href="score.html">Coordination&nbsp;Assessment</a>
             <a href="leakage.html" aria-current="page">Tax&nbsp;Diagnostic</a>
             <a href="taxlab.html">After-Tax&nbsp;Review</a>
             <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
@@ -248,11 +249,11 @@
     <div class="cta" id="cta">
       <div class="ctxt">
         <div class="ch">See it on your own portfolio.</div>
-        <div class="cd">The full After-Tax&nbsp;Review turns this into your numbers, what coordination keeps, by bracket, state, and holdings.</div>
+        <div class="cd">The full After-Tax&nbsp;Review localizes this to your state and bracket, then, privately, computes what coordination keeps on your actual holdings.</div>
       </div>
       <div class="btns">
         <a class="primary" id="cta-analysis" href="taxlab.html?view=review">Request a Private After-Tax Review →</a>
-        <a class="ghost" href="https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting" target="_blank" rel="noopener">or book a 15-minute introductory call →</a>
+        <a class="ghost" href="https://calendly.com/alec-messino/15-minute-introductory-meeting" target="_blank" rel="noopener">or book a 15-minute introductory call →</a>
       </div>
     </div>
 
@@ -300,7 +301,7 @@ function render(s){
       `modeling, a concentrated, high-turnover book in ${nm} keeps ~<b>${row.before.toFixed(1)}%/yr</b> after tax `+
       `versus ~<b>${row.after.toFixed(1)}%/yr</b> coordinated, a modeled <b>~+${row.alpha.toFixed(1)}%/yr</b>`+
       `${qPort>0?` (≈ <b>${fmt$(annual)}/yr</b> on this portfolio)`:''}. Your actual figure depends on your `+
-      `holdings; the full After-Tax Review computes it.`;
+      `holdings; the full After-Tax Review computes it privately.`;
   } else { pband.style.display = "none"; }
 
   // When personalized, the cards show this state's single before/after CAGR (not the cross-state range).

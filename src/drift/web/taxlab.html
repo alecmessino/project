@@ -56,6 +56,11 @@
     letter-spacing:-.022em;color:var(--ink);margin:0 0 22px;max-width:20ch}
   .lede{font-family:var(--serif);font-size:18.5px;line-height:1.58;color:var(--dim);margin:0 0 6px;max-width:58ch}
   .lede b{color:var(--ink);font-weight:500}
+  /* Personalized banner — shown only when a state/portfolio arrives (URL or saved household). */
+  .pband{margin:6px 44px 0;max-width:66ch;font-family:var(--sans);font-size:13.5px;line-height:1.55;color:var(--dim);
+    padding:12px 16px;background:var(--soft);border-left:2px solid var(--accent-strike-soft);border-radius:6px}
+  .pband[hidden]{display:none}
+  .pband b{color:var(--ink);font-weight:600}
 
   .sec{padding:18px 44px 8px;max-width:900px}
   .sec .h{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:14px}
@@ -110,6 +115,7 @@
         <div class="dwnav-drop dwnav-drop--current">
           <button class="dwnav-trigger" type="button">Tools &amp; Research<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
+            <a href="score.html">Coordination&nbsp;Assessment</a>
             <a href="leakage.html">Tax&nbsp;Diagnostic</a>
             <a href="taxlab.html" aria-current="page">After-Tax&nbsp;Review</a>
             <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
@@ -123,13 +129,15 @@
 
     <!-- ── The one idea ── -->
     <div class="doc">
-      <div class="eyebrow">The After-Tax Review</div>
+      <div class="eyebrow" id="tl-eyebrow">The After-Tax Review</div>
       <h1>The return you keep is not the return you earn.</h1>
       <p class="lede">If you hold embedded gains spread across taxable, tax-deferred, and Roth accounts, this gap
         is yours. Two identical portfolios. Same markets, same pre-tax return. The only difference is
         how the tax is managed, where each holding sits, how losses are used, how gains and withdrawals are
         timed. Over a lifetime, <b>that difference compounds into what a household actually keeps.</b></p>
     </div>
+
+    <p class="pband" id="tl-pband" hidden></p>
 
     <!-- ── The single exhibit, coordinated vs isolated, isolated from market return ── -->
     <div class="sec">
@@ -162,8 +170,8 @@
           <line class="crosshair" id="excross" x1="626" x2="626" y1="24" y2="240" stroke="#b8b2a4" stroke-width="1"/>
           <rect class="marker" id="exmco" x="622.5" y="88.9" width="7" height="7" fill="#15806a"/>
           <rect class="marker" id="exmis" x="622.5" y="204.1" width="7" height="7" fill="#6b6e6a"/>
-          <text x="636" y="95.4" font-size="15" font-weight="700" fill="#15463a">$410k</text>
-          <text x="636" y="110.4" font-size="10" fill="#5c6470">coordinated</text>
+          <text id="tl-colbl" x="636" y="95.4" font-size="15" font-weight="700" fill="#15463a">$410k</text>
+          <text id="tl-cosub" x="636" y="110.4" font-size="10" fill="#5c6470">coordinated</text>
           <text x="636" y="210.6" font-size="12" font-weight="700" fill="#6b6e6a">$90k</text>
           <text x="636" y="224.6" font-size="10" fill="#6b6e6a">isolated</text>
           <text x="58" y="259" font-size="10.5" fill="#6b6e6a" text-anchor="start">today</text>
@@ -209,7 +217,7 @@
       <p class="conv">The difference between the two lines is not a market call. It is a set of decisions made
         deliberately, held for decades. <b>See it on your own numbers.</b></p>
       <div class="ctas">
-        <a class="primary" href="https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting" target="_blank" rel="noopener">Request a Private After-Tax Review →</a>
+        <a class="primary" id="tl-cta" href="https://calendly.com/alec-messino/15-minute-introductory-meeting" target="_blank" rel="noopener">Request a Private After-Tax Review →</a>
         <a class="ghost" href="coordination.html">or see a worked example</a>
       </div>
     </div>
@@ -225,35 +233,102 @@
 </div>
 
 <script>
-// The public exhibit is static and self-contained: it shows the firm's illustrative thesis, not a
-// per-portfolio computation. The operational tooling that computes this for a specific balance sheet
-// lives in the (internal) Advisor Workspace, which consumes the shared build_taxlab() engine.
-
-// Restrained inspection, a hairline crosshair reads exact values along the two paths (no animation).
+// The public exhibit stays static and illustrative — the argument, not a per-portfolio calculator. But when a
+// visitor arrives with a state / portfolio (forwarded from the Tax Diagnostic or Atlas, or a saved household),
+// we localize the SAME illustrative thesis to their state: the kept-gap scales with that state's coordination
+// alpha and the portfolio translates to an annual figure in the caption. The full, computed review stays
+// private (the internal Advisor Workspace consumes the shared build_taxlab() engine for a specific balance
+// sheet). Personalizing an illustration is not a per-holdings computation, and every disclosure is preserved.
+window.__STATE__ = /*__STATE__*/null/*__END__*/;
 (function(){
   var svg = document.getElementById("exchart"); if(!svg) return;
   var paths = svg.querySelectorAll("path"); if(paths.length < 2) return;
   function pts(p){ return p.getAttribute("d").replace("M","").trim().split("L").map(function(s){
     var a = s.trim().split(/\s+/); return { x:parseFloat(a[0]), y:parseFloat(a[1]) }; }); }
-  var iso = pts(paths[0]), co = pts(paths[1]);   // document order: isolated, then coordinated
+  var baseIso = pts(paths[0]), baseCo = pts(paths[1]);   // document order: isolated, then coordinated
+  var coPath = paths[1];
   var cross=document.getElementById("excross"), mco=document.getElementById("exmco"), mis=document.getElementById("exmis"),
-      yr=document.getElementById("exyr"), eco=document.getElementById("exco"), eis=document.getElementById("exis"), ek=document.getElementById("exkept");
-  function val(y){ return Math.round((240 - y) / 72 * 200000 / 1000) * 1000; }
+      yr=document.getElementById("exyr"), eco=document.getElementById("exco"), eis=document.getElementById("exis"), ek=document.getElementById("exkept"),
+      colbl=document.getElementById("tl-colbl"), cosub=document.getElementById("tl-cosub");
+  var Y0=240, PX200K=72;                                   // fixed axis: y=240 -> $0, 72px -> $200k
+  function val(y){ return Math.round((Y0 - y) / PX200K * 200000 / 1000) * 1000; }
+  function yOf(v){ return Y0 - v / 200000 * PX200K; }
   function fmt(v){ return "$" + v.toLocaleString("en-US"); }
+  function fmtK(v){ return "$" + Math.round(v/1000) + "k"; }
+  function fmtBig(v){ return v>=1e6 ? "$"+(v/1e6).toFixed(v>=1e7?0:1)+"M" : "$"+Math.round(v/1e3)+"k"; }
+
+  var REF_ALPHA = 4.0;               // the generic exhibit's reference (~a representative mid state, $320k kept on $1M)
+  var co = baseCo.slice();           // the currently-displayed coordinated path (personalized in place)
+
+  function rescale(factor){
+    // Scale ONLY the coordinated line's gap over the (unchanged) isolated baseline; the isolated line and the
+    // $0–$600k axis stay put, so state alpha (3.3–4.8) keeps the top line inside the plot. factor = alpha/REF.
+    co = baseCo.map(function(c, i){
+      var v = val(baseIso[i].y) + (val(c.y) - val(baseIso[i].y)) * factor;
+      return { x: c.x, y: yOf(v) };
+    });
+    coPath.setAttribute("d", "M" + co.map(function(p){ return p.x.toFixed(1)+" "+p.y.toFixed(1); }).join(" L"));
+    var end = co[co.length-1];       // year-30 label + marker follow the personalized line
+    if(colbl){ colbl.textContent = fmtK(val(end.y)); colbl.setAttribute("y", (end.y+3).toFixed(1)); }
+    if(cosub){ cosub.setAttribute("y", (end.y+18).toFixed(1)); }
+  }
   function set(i){
-    var c = co[i], n = iso[i];
+    var c = co[i], n = baseIso[i];
     cross.setAttribute("x1", c.x); cross.setAttribute("x2", c.x);
     mco.setAttribute("x", c.x - 3.5); mco.setAttribute("y", c.y - 3.5);
     mis.setAttribute("x", n.x - 3.5); mis.setAttribute("y", n.y - 3.5);
     var vc = val(c.y), vn = val(n.y);
     yr.textContent = i; eco.textContent = fmt(vc); eis.textContent = fmt(vn); ek.textContent = fmt(vc - vn);
   }
+
+  var S = window.__STATE__ || {};
+  function personalize(){
+    var qp = new URLSearchParams(location.search);
+    var dwc = (window.dwTaxContext && dwTaxContext.get()) || {};
+    var code = qp.get("state") || dwc.state || null;               // URL wins, else the saved household
+    var row = (code && S.state_alpha && S.state_alpha[code]) ? S.state_alpha[code] : null;
+    var port = parseFloat(qp.get("portfolio")||qp.get("port")||(dwc.portfolio>0?dwc.portfolio:"")) || 0;
+    var nm = (row && S.state_names && S.state_names[code]) ? S.state_names[code] : code;
+
+    rescale(row ? row.alpha / REF_ALPHA : 1);                       // no state -> factor 1 -> identical generic
+    set(30);
+
+    var eb = document.getElementById("tl-eyebrow");
+    if(eb) eb.textContent = row ? ("The After-Tax Review · " + nm) : "The After-Tax Review";
+    var pb = document.getElementById("tl-pband");
+    if(pb){
+      if(row){
+        var annual = port>0 ? port * row.alpha/100 : 0;
+        pb.hidden = false;
+        pb.innerHTML = "Localized to <b>"+nm+"</b>"+(port>0?" · <b>"+fmtBig(port)+"</b> portfolio":"")+
+          ": in our illustrative modeling, coordination in "+nm+" keeps about <b>~+"+row.alpha.toFixed(1)+
+          "%/yr</b> after tax"+(port>0?" (≈ <b>"+fmt(Math.round(annual))+"/yr</b> on this portfolio)":"")+
+          ". Your actual figure depends on your holdings; the After-Tax Review computes it privately.";
+      } else { pb.hidden = true; }
+    }
+
+    // Forward the incoming UTM attribution + state onto the private-review CTA (Calendly ignores unknown keys).
+    var cta = document.getElementById("tl-cta");
+    if(cta){
+      var base = cta.getAttribute("data-base") || cta.href.split("?")[0];
+      cta.setAttribute("data-base", base);
+      var fwd = new URLSearchParams();
+      ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(function(k){ var v=qp.get(k); if(v) fwd.set(k,v); });
+      if(code) fwd.set("utm_content", (qp.get("utm_content")? qp.get("utm_content")+"|" : "") + "state-"+code);
+      cta.href = base + (fwd.toString()? "?"+fwd.toString() : "");
+      if(!cta._tracked){ cta._tracked = true; cta.addEventListener("click", function(){ if(window.plausible) plausible("taxlab_to_book",{props:{state:code||"—"}}); }); }
+    }
+  }
+
+  personalize();
+  // Restrained inspection, a hairline crosshair reads exact values along the two paths (no animation).
   svg.addEventListener("mousemove", function(e){
     var r = svg.getBoundingClientRect(); var x = (e.clientX - r.left) / r.width * 760;
     set(Math.max(0, Math.min(30, Math.round((x - 58) / 18.9333))));
   });
   svg.addEventListener("mouseleave", function(){ set(30); });
-  set(30);
+  // Re-localize live if the shared household bar changes state/portfolio.
+  if(window.dwTaxContext) dwTaxContext.subscribe(personalize);
 })();
 </script>
 </body>

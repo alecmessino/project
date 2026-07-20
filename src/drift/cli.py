@@ -261,11 +261,17 @@ def taxlab(
     """Build the interactive After-Tax Review (after-tax / TLH / asset location) from the ledger."""
     from pathlib import Path
     from .taxlab import build_taxlab
+    from .leakage import build_leakage
     from .exhibit import export_taxlab, export_workspace
     state = build_taxlab(docs)
-    path = export_taxlab(state, out)
-    # The Advisor Workspace is a separate page over the same engine/state (internal, noindex).
+    # The Advisor Workspace is a separate page over the same (heavy, ledger-driven) engine/state (internal, noindex).
     export_workspace(state, Path(docs) / "workspace.html")
+    # The public After-Tax Review is an illustrative exhibit: it needs only the per-state coordination-alpha
+    # table (+ names) to localize to a visitor's state — the heavy workspace assumptions stay off the public page.
+    leak = build_leakage()
+    public = {"header": {"generated": state["header"]["generated"], "horizon_years": 30},
+              "state_alpha": leak["state_alpha"], "state_names": leak["state_names"]}
+    path = export_taxlab(public, out)
     p = state.get("profile")
     if p:
         console.print(f"taxlab: pretax {p['pretax_return']*100:+.1f}%  "

@@ -53,6 +53,9 @@
   .tabs button:hover{background:var(--soft)}
   .tabs button[aria-selected="true"]{background:var(--ink);color:#f1ede3;border-color:var(--ink)}
   .split{display:grid;grid-template-columns:1.35fr .85fr;gap:20px;padding:10px 40px 8px;align-items:start}
+  /* the author `display:grid` above beats the UA `[hidden]{display:none}`, so hiding the split on the
+     Coordination tab needs this explicit guard (the ranked-free "your state" panel takes its place). */
+  .split[hidden]{display:none}
   /* Grid items default to min-width:auto (min-content), which lets the cartogram's floor width
      force the whole column, and the detail card, wider than the frame, clipping their right
      edge. min-width:0 lets the tracks shrink to the frame so the map scrolls inside .tscroll. */
@@ -93,6 +96,49 @@
     font-weight:500;font-size:12.5px;color:var(--accent-strike);text-decoration:none;
     border-bottom:1px solid var(--accent-strike-soft);transition:border-color .12s,color .12s}
   .detail a.atlas-link:hover{border-bottom-color:var(--accent-strike);color:var(--ink)}
+  /* ── "Lean your state" coordination view (replaces the map on the alpha dimension). Leads with the
+     visitor's own state — its figure + how its rules tax them — then an every-state list anchored to a
+     true $0 so the story is "the opportunity is large everywhere," a high floor, not a ranking. Bars are
+     baked in at build, so nothing animates under reduced motion. ── */
+  #coord{padding:6px 40px 8px}
+  .your-hd{border-top:2px solid var(--ink);padding-top:18px}
+  .your-hd .yh-state{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:6px}
+  .your-hd .yh-fig{font-family:var(--sans);font-weight:700;font-size:clamp(22px,1.6vw + 15px,30px);letter-spacing:-.02em;color:var(--ink);line-height:1.12}
+  .your-hd .yh-note{font-family:var(--serif);font-size:14px;line-height:1.6;color:var(--dim);margin:12px 0 0;max-width:78ch}
+  .your-hd .yh-univ{font-family:var(--serif);font-size:14px;line-height:1.6;color:var(--dim);margin:10px 0 0;max-width:78ch;padding-left:16px;border-left:2px solid var(--accent-strike-soft)}
+  .your-hd .yh-univ b{font-family:var(--sans);font-weight:600;color:var(--ink)}
+  .lev-h{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:28px 0 12px}
+  .levers{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:760px){.levers{grid-template-columns:1fr}}
+  .lev{border:1px solid var(--line);border-left:3px solid var(--accent-strike);background:#fff;padding:12px 15px}
+  .lev-k{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .lev-v{font-family:var(--sans);font-weight:600;font-size:14.5px;color:var(--ink);margin:3px 0 5px}
+  .lev-n{font-size:12px;line-height:1.5;color:var(--dim)}
+  .coord-cta{margin-top:22px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}
+  .coord-cta a.cta{display:inline-block;background:var(--accent-strike);color:#f1ede3;text-decoration:none;font-weight:500;font-size:13px;padding:10px 16px;border-radius:var(--surface-radius)}
+  .coord-cta a.atlas-link{font-family:var(--sans);font-weight:500;font-size:12.5px;color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
+  .coord-cta a.atlas-link:hover{border-bottom-color:var(--accent-strike);color:var(--ink)}
+  #coord .src{font-size:10.5px;color:var(--muted);margin-top:14px;border-top:1px solid var(--line2);padding-top:10px;line-height:1.45;max-width:82ch}
+  .every{margin-top:34px;border-top:2px solid var(--ink);padding-top:18px}
+  .every-h{font-family:var(--sans);font-weight:700;font-size:clamp(18px,1vw + 13px,22px);letter-spacing:-.012em;color:var(--ink);margin:0 0 4px}
+  .every-sub{font-family:var(--serif);font-size:13.5px;line-height:1.55;color:var(--dim);margin:0 0 14px;max-width:78ch}
+  .ecols{display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+  @media(max-width:760px){.ecols{grid-template-columns:1fr}}
+  .brow{display:grid;grid-template-columns:1fr 5.4em;align-items:center;gap:10px;width:100%;text-align:left;
+    background:none;border:0;border-bottom:1px solid var(--line2);padding:7px 0;cursor:pointer;font:inherit;color:var(--body);transition:background .12s}
+  .brow:hover{background:var(--soft)}
+  .brow:focus-visible{outline:2px solid var(--accent-strike);outline-offset:-2px}
+  .brow .track{position:relative;height:22px;display:flex;align-items:center;background:linear-gradient(var(--line2),var(--line2)) left/100% 1px no-repeat}
+  .brow .bar{position:absolute;left:0;top:3px;bottom:3px;background:var(--accent-strike);opacity:.14;border-radius:1px;pointer-events:none}
+  .brow .bnm{position:relative;z-index:1;padding-left:8px;font-size:13px;color:var(--ink)}
+  .brow .bamt{justify-self:end;font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;color:var(--ink)}
+  .brow.you,.brow.you:hover{box-shadow:inset 3px 0 0 var(--accent-strike);background:var(--soft)}
+  .brow.you .bar{opacity:.3}
+  .brow .btag{margin-left:8px;font-family:var(--sans);font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike)}
+  .floor{font-family:var(--serif);font-size:14px;line-height:1.55;color:var(--dim);margin:16px 0 0;padding-left:16px;border-left:2px solid var(--accent-strike-soft);max-width:76ch}
+  .floor b{font-family:var(--sans);font-weight:600;color:var(--ink)}
+  @media(prefers-reduced-motion:reduce){.brow{transition:none}}
+  @media(max-width:620px){#coord{padding-left:18px;padding-right:18px}}
   .foot{margin:14px 40px 30px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:11px;line-height:1.55}
   .foot b{color:#5a5a62}
   .asof{font-size:11px;color:var(--muted);padding:0 40px;margin:2px 0 0}
@@ -164,6 +210,9 @@
       </div>
       <div class="detail" id="detail"></div>
     </div>
+    <!-- Coordination Opportunity is a magnitude, not a regime: on that dimension the map gives way to a
+         full-width "your state" panel (your figure + how your state taxes you + an every-state floor). -->
+    <div id="coord" hidden></div>
     <p class="asof" id="asof"></p>
     <!--FIRM_ANCHOR-->
     <div class="foot" id="foot"></div>
@@ -212,11 +261,23 @@ function render(s){
     e.preventDefault(); t.forEach(x=>x.tabIndex=-1); t[j].tabIndex=0; t[j].focus(); t[j].click();
   });
 
+  // One selection path shared by a cartogram tile and an every-state row: move the selection, persist it
+  // to the shared "Your household" context, and log which surface drove it.
+  function pick(code, via){ sel = code; paint();
+    if(window.dwTaxContext) dwTaxContext.save({state:sel});
+    if(window.plausible) plausible("map_state_clicked",{props:{state:code, via:via||"map"}}); }
+
   function paint(){
     const d = dims[active];
     document.getElementById("frame").className = "frame";
     tabs.querySelectorAll("button").forEach((b,i)=>b.setAttribute("aria-selected", i===active));
     document.getElementById("maptitle").innerHTML = d.title;
+    // Coordination Opportunity is a magnitude, not a regime: swap the whole map/detail split for the
+    // full-width "your state" panel. The other 7 dimensions keep the cartogram.
+    const isCoord = d.key === "alpha";
+    document.querySelector(".split").hidden = isCoord;
+    document.getElementById("coord").hidden = !isCoord;
+    if(isCoord){ paintCoord(d); return; }
     const cmap = colorMap(d);
     // cartogram
     let maxc=0,maxr=0; for(const k in tiles){ maxc=Math.max(maxc,tiles[k][0]); maxr=Math.max(maxr,tiles[k][1]); }
@@ -242,14 +303,88 @@ function render(s){
     svg.setAttribute("viewBox", `-2 -2 ${(maxc+1)*CELL+2} ${(maxr+1)*CELL}`);
     svg.innerHTML = parts;
     svg.querySelectorAll("g.tile").forEach(g=>{
-      const pick=()=>{ sel=g.dataset.code; paint(); if(window.dwTaxContext) dwTaxContext.save({state:sel}); if(window.plausible) plausible("map_state_clicked",{props:{state:sel}}); };
-      g.addEventListener("click",pick);
-      g.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });
+      g.addEventListener("click",()=>pick(g.dataset.code));
+      g.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(g.dataset.code); } });
     });
     // legend
     document.getElementById("legend").innerHTML = d.legend.filter(([,,l])=>l!=="").map(([r,c,l])=>
       `<span><i style="background:${c}"></i>${l}</span>`).join("");
     renderDetail(d);
+  }
+
+  // The full-width "your state" coordination panel (replaces the map on the alpha dimension): the
+  // visitor's figure, how their state's rules tax them (7 levers, all present for the 50 states + DC),
+  // the conversion doors, then an every-state list anchored to a true $0 — the opportunity is large
+  // everywhere, a high floor, not a ranking. All from existing __STATE__ data. Territories carry no
+  // .alpha and fall back to a "pick a state" prompt.
+  function paintCoord(d){
+    const nm = names[sel]||sel;
+    const a = (states[sel]||{}).alpha;
+    const slug = String(nm).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    const codes = Object.keys(states).filter(c => states[c].alpha && (c in tiles));
+    const vals = codes.map(c => states[c].alpha.usd_per_m);
+    const loV = Math.min.apply(null, vals), hiV = Math.max.apply(null, vals);
+    const kk = v => Math.round(v/1000);
+    let html = "";
+
+    if(a){
+      html += `<div class="your-hd"><div class="yh-state">Your household · ${nm}</div>`+
+        `<div class="yh-fig">an illustrative <b>~${a.tag}</b> a year at stake</div>`+
+        `<p class="yh-note">${a.note}</p>`+
+        `<p class="yh-univ">Typical of every state — in this modeling, coordination is worth roughly `+
+          `<b>$${kk(loV)}k–$${kk(hiV)}k per $1M</b> wherever you live. What your state changes is which `+
+          `levers do the most work, not whether it's worth doing.</p></div>`;
+      const LEVERS = ["cg","marriage","estate","muni","qsbs","loss","stepup"];
+      const dimBy = {}; dims.forEach(dd => dimBy[dd.key] = dd);
+      html += `<div class="lev-h">How ${nm} taxes you, lever by lever</div><div class="levers">`;
+      LEVERS.forEach(k => {
+        const dd = dimBy[k], rec = (states[sel]||{})[k];
+        if(!dd || !rec) return;
+        const regimeLabel = (dd.legend.find(([r]) => r===rec.regime)||[])[2] || "";
+        const tag = rec.tag || "";
+        const rate = (/%/.test(tag) || /^\$?\d/.test(tag)) && tag!==regimeLabel ? " · "+tag : "";
+        html += `<div class="lev"><div class="lev-k">${dd.label}</div>`+
+          `<div class="lev-v">${(regimeLabel||tag||"—")}${rate}</div>`+
+          `<div class="lev-n">${rec.note||""}</div></div>`;
+      });
+      html += `</div><div class="coord-cta">`+
+        `<a class="cta" href="${a.deeplink||("leakage.html?state="+sel)}">See the personalized diagnostic for ${nm} →</a>`+
+        `<a class="atlas-link" href="atlas/2026/${slug}/">Open the full ${nm} profile in the Atlas →</a></div>`+
+        `<div class="src"><b>How this is modeled:</b> a single 30-year proxy-spliced path (1996–2026), `+
+          `comparing a concentrated, high-turnover book with a tax-managed one, illustrative and coarse; `+
+          `treat the figure as directional, not a precise ranking. ${a.source||""}</div>`;
+    } else {
+      html += `<div class="your-hd"><div class="yh-state">${nm}</div>`+
+        `<p class="yh-note">${nm} isn't modeled for coordination opportunity. Pick a state below to see `+
+          `how its rules shape the after-tax picture.</p></div>`;
+    }
+
+    // every-state list, anchored to a true $0 (alphabetical). Your household is the fixed "You" anchor;
+    // the state you're currently viewing is marked quietly if it isn't your own.
+    const rows = codes.map(c => ({code:c, name:names[c]||c, v:states[c].alpha.usd_per_m}))
+      .sort((x,y) => x.name.localeCompare(y.name));
+    const loRow = rows.reduce((m,r) => r.v < m.v ? r : m, rows[0]);
+    const MAXAX = 50000, half = Math.ceil(rows.length/2);
+    const rowHtml = r => {
+      const w = Math.min(100, r.v/MAXAX*100).toFixed(1);
+      const you = r.code===sel;
+      const a11y = `${r.name}, $${kk(r.v)}k per $1M` + (you ? ", your household" : "");
+      return `<button class="brow${you?" you":""}" type="button" data-code="${r.code}"${you?' aria-current="true"':""} aria-label="${a11y}">`+
+        `<span class="track"><span class="bar" style="width:${w}%"></span>`+
+        `<span class="bnm">${r.name}${you?'<span class="btag">You</span>':""}</span></span>`+
+        `<span class="bamt">$${kk(r.v)}k/$1M</span></button>`;
+    };
+    html += `<div class="every"><div class="every-h">The opportunity is large — in every state.</div>`+
+      `<p class="every-sub">Anchored to a true $0, every state is a long bar. Pick any state to see how its rules shape the picture.</p>`+
+      `<div class="ecols"><div>${rows.slice(0,half).map(rowHtml).join("")}</div>`+
+      `<div>${rows.slice(half).map(rowHtml).join("")}</div></div>`+
+      `<p class="floor">Even the lowest-modeled state, <b>${loRow.name}</b>, is about `+
+        `<b>$${kk(loRow.v)}k a year</b> per $1M. The point isn't which state ranks highest — it's that the `+
+        `floor is high everywhere.</p></div>`;
+
+    document.getElementById("coord").innerHTML = html;
+    document.querySelectorAll("#coord .brow").forEach(b =>
+      b.addEventListener("click", () => pick(b.dataset.code, "coord")));
   }
 
   function renderDetail(d){

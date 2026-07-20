@@ -3,169 +3,20 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<!-- Privacy-first analytics (Plausible) -->
-<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
-<script>
-  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
-  plausible.init()
-</script>
-<link rel="stylesheet" href="driftwood.css">
-<script src="dw-context.js"></script>
-<title>Insights, Driftwood Wealth</title>
-<meta name="description" content="Ideas about running a financial life as one system, and what you keep when you do. Writing from Driftwood." />
-<link rel="canonical" href="https://driftwoodwealth.com/insights.html" />
+<!-- Insights folded into the single Research hub (2026). Canonical + refresh consolidate the equity. -->
+<meta http-equiv="refresh" content="0; url=research.html" />
+<link rel="canonical" href="https://driftwoodwealth.com/research.html" />
+<meta name="robots" content="noindex, follow" />
+<title>Research, Driftwood Wealth</title>
 <link rel="icon" href="favicon.svg" />
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
-<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
-<meta property="og:type" content="website" />
-<meta property="og:site_name" content="Driftwood Wealth" />
-<meta property="og:title" content="Insights, Driftwood" />
-<meta property="og:description" content="Ideas about running a financial life as one system, and what you keep when you do." />
-<meta property="og:url" content="https://driftwoodwealth.com/insights.html" />
-<meta property="og:image" content="https://driftwoodwealth.com/og/index.png" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Insights, Driftwood" />
-<meta name="twitter:description" content="Ideas about running a financial life as one system, and what you keep when you do." />
-<meta name="twitter:image" content="https://driftwoodwealth.com/og/index.png" />
 <style>
-  :root{
-    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6;
-    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
-    --brass:#2c5878; --gold:#a9c2d6; --teal:#15463a; --teal2:#15806a; --navy:#1a2330;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--body);font:18px/1.75 var(--sans);
-    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  .wrap{max-width:1080px;margin:40px auto;padding:0 20px 60px}
-  .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
-
-  /* Restraint is the design. A dek, then dated titles, nothing else. */
-  .doc{max-width:640px;padding:0 44px;margin:0 auto}
-  .eyebrow{font-family:var(--sans);font-weight:500;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--brass);margin:56px 0 14px}
-  h1{font-family:var(--sans);font-weight:700;font-size:clamp(32px,3vw+16px,42px);line-height:1.06;
-    letter-spacing:-.02em;color:var(--ink);margin:0 0 12px}
-  .dek{font-family:var(--serif);font-size:18px;line-height:1.55;color:var(--muted);margin:0 0 8px;max-width:52ch}
-
-  .list{margin:40px 0 8px;border-top:1px solid var(--line)}
-  .item{display:block;text-decoration:none;color:inherit;padding:22px 0;border-bottom:1px solid var(--line)}
-  .item .meta{font-family:var(--sans);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:7px;font-variant-numeric:tabular-nums}
-  .item .meta .rt{color:var(--dim)}
-  .item .t{font-family:var(--sans);font-weight:500;font-size:24px;line-height:1.2;letter-spacing:-.015em;
-    color:var(--ink);transition:color .12s ease}
-  .item .t .arw{color:var(--accent-strike);font-weight:400;opacity:0;transition:opacity .12s ease}
-  .item:hover .t{color:var(--teal2)}
-  .item:hover .t .arw{opacity:1}
-  .item .dek{font-family:var(--serif);font-size:15.5px;line-height:1.55;color:var(--body);margin:6px 0 0;max-width:60ch}
-  @media(max-width:620px){ .item .t{font-size:21px} }
-
-  .after{margin:30px 0 0;font-size:14.5px;line-height:1.6;color:var(--muted)}
-  .after a{color:var(--teal2)}
-
-  .foot{margin-top:52px;padding:20px 44px 40px;border-top:1px solid var(--line);
-    color:var(--muted);font-size:12.5px;line-height:1.65}
-  .foot .note{color:#5a5a62;font-weight:500}
-  @media(max-width:620px){ .doc{padding:0 22px} .foot{padding-left:22px;padding-right:22px} .item .t{font-size:21px} }
+  body{margin:0;background:#f1efe9;color:#3d4650;
+    font:16px/1.6 var(--sans, system-ui,-apple-system,"Segoe UI",sans-serif);
+    display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center;padding:24px}
+  a{color:#2c5878}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="frame">
-    <nav class="dwnav" aria-label="Driftwood Wealth">
-      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"/><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"/><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"/><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"/><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links">
-        <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Firm<span class="caret" aria-hidden="true"></span></button>
-          <div class="dwnav-panel">
-            <a href="about.html">Our Story</a>
-            <a href="principles.html">Philosophy</a>
-            <a href="fees.html">Fees</a>
-          </div>
-        </div>
-        <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Approach<span class="caret" aria-hidden="true"></span></button>
-          <div class="dwnav-panel">
-            <a href="inside.html">Operating&nbsp;System</a>
-            <a href="howitworks.html">How It Works</a>
-            <a href="thesis.html">How We Invest</a>
-          </div>
-        </div>
-        <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Tools &amp; Research<span class="caret" aria-hidden="true"></span></button>
-          <div class="dwnav-panel">
-            <a href="score.html">Coordination&nbsp;Assessment</a>
-            <a href="leakage.html">Tax&nbsp;Diagnostic</a>
-            <a href="taxlab.html">After-Tax&nbsp;Review</a>
-            <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
-            <a href="research.html">Research&nbsp;Hub</a>
-          </div>
-        </div>
-      </div>
-      <a class="dwnav-access" aria-label="Client Access" href="private.html">Client Access</a>
-      <a class="dwnav-cta" href="index.html#conversation">Request Review</a>
-    </nav>
-
-    <div class="doc">
-      <div class="eyebrow">Insights</div>
-      <h1>How a financial life fits together.</h1>
-      <p class="dek">Ideas, guides, and worked examples on treating money, taxes, and time as a single system, and what you keep when you do.</p>
-
-      <div class="list">
-        <a class="item" href="coordination.html">
-          <div class="meta">Worked example · <span class="rt">6 min read</span></div>
-          <div class="t">What Coordination Is Worth <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">One household, two state lines. The Illinois estate-tax trap, the Texas income-tax opening, and an interactive map of the ripple every financial move sets off. The clearest case for why coordination, not any single decision, is the product.</p>
-        </a>
-        <a class="item" href="library.html">
-          <div class="meta">Reference · <span class="rt">browse</span></div>
-          <div class="t">The Coordination Library <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">One decision, many consequences, a browsable library of the ripples a single financial move sets off across taxes, estate, liquidity, and the professionals who advise on them.</p>
-        </a>
-        <a class="item" href="every-portfolio-has-two-returns.html">
-          <div class="meta">July 2026 · <span class="rt">4 min read</span></div>
-          <div class="t">Every Portfolio Has Two Returns <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">The one it earns, and the one you keep. The gap between them is the most expensive line on no statement.</p>
-        </a>
-        <a class="item" href="the-worlds-largest-investors.html">
-          <div class="meta">July 2026 · <span class="rt">3 min read</span></div>
-          <div class="t">The World's Largest Investors Pay Attention Differently <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">They don't have access to different markets, they pay attention to different things. What an endowment actually discusses, and why it compounds.</p>
-        </a>
-        <a class="item" href="enough-is-a-number.html">
-          <div class="meta">July 2026 · <span class="rt">2 min read</span></div>
-          <div class="t">Enough Is a Number <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">A portfolio exists to fund a life, so enough can be calculated. Once it can, winning every year stops being the point.</p>
-        </a>
-        <a class="item" href="concentration.html">
-          <div class="meta">Guide · <span class="rt">5 min read</span></div>
-          <div class="t">How to De-risk a Concentrated Stock Position <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">Every way to unwind a concentrated, low-basis position, selling, harvesting, hedging, deferring, and giving, scored across liquidity, speed, and tax.</p>
-        </a>
-        <a class="item" href="principles.html">
-          <div class="meta">Reference · <span class="rt">2 min read</span></div>
-          <div class="t">The Driftwood Principles <span class="arw" aria-hidden="true">→</span></div>
-          <p class="dek">Five beliefs about money, markets, and time. Return is not wealth. Compounding hates interruptions. Behavior is the multiplier.</p>
-        </a>
-      </div>
-
-      <p class="after">The evidence behind the ideas lives in the
-        <a href="ledger.html">research ledger</a> and the <a href="tearsheet.html">tearsheet</a>.</p>
-    </div>
-
-    <div class="onward">
-      <span class="ow-t">See how this reads on your own numbers.</span>
-      <a class="ow-cta" href="leakage.html">Run the Tax Diagnostic →</a>
-    </div>
-
-    <div class="foot">
-      <span class="note">Educational, not investment, tax, or legal advice.</span>
-      Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS and a Financial Representative of The Guardian Life Insurance Company of America® (Guardian), New York, NY. PAS is a wholly owned subsidiary of Guardian. Capitol Wealth Strategies, LLC is not an affiliate or subsidiary of PAS or Guardian. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
-    </div>
-  </div>
-</div>
+  <p>Driftwood's essays now live in the <a href="research.html">Research hub</a>. Redirecting you there…</p>
 </body>
 </html>

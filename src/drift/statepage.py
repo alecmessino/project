@@ -880,7 +880,7 @@ def export_state_pages(out_dir: str | Path = "docs", edition: str = CURRENT_EDIT
 
 # Core (non-state) pages that also belong in the sitemap, with priorities.
 _CORE_SITEMAP = [
-    ("index.html", "1.0", "weekly"), ("research.html", "0.9", "weekly"), ("insights.html", "0.9", "weekly"),
+    ("index.html", "1.0", "weekly"), ("research.html", "0.9", "weekly"),
     ("every-portfolio-has-two-returns.html", "0.8", "monthly"),
     ("principles.html", "0.9", "monthly"),
     ("about.html", "0.9", "monthly"),

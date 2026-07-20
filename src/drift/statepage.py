@@ -798,11 +798,14 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
     {NAV_ABS}
     {_process_bar("environment", edition)}
     <div class="hd">
-      <div class="eyebrow">The State Atlas · state tax reference</div>
+      <div class="eyebrow">The State Atlas · all 50 states + DC, alphabetical reference</div>
       <h1>How every state taxes investors.</h1>
       <p class="lede">Whether you're weighing a move, holding a concentrated position, or settling an estate, your
         state sets the terms. Pick yours for its capital-gains, estate, marriage, and basis-step-up profile,
         and an illustrative estimate of the after-tax coordination opportunity its rules create.</p>
+      <p class="lede" style="margin-top:8px">This is the alphabetical reference. To rank states by the
+        coordination opportunity and explore them on the map, see the
+        <a href="{_ABS}statemap.html" style="color:var(--accent-strike);font-weight:500">interactive State Tax Atlas &rarr;</a>.</p>
     </div>
     <table class="st">
       <thead><tr><th scope="col">State</th><th scope="col">Top LT rate</th><th scope="col">Coordination Opportunity</th></tr></thead>

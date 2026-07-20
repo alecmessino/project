@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-20T22:58:46+00:00",
+  "generated": "2026-07-20T23:14:07+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 229430,
+    "rows": 230335,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 67027,
-      "live_total": 23531,
-      "live_today": 57,
-      "last_row_age_min": 0.3
+      "rows_total": 67508,
+      "live_total": 23568,
+      "live_today": 94,
+      "last_row_age_min": 0.5
     },
     "fanduel": {
-      "rows_total": 162397,
-      "live_total": 28072,
-      "live_today": 58,
-      "last_row_age_min": 0.3
+      "rows_total": 162821,
+      "live_total": 28118,
+      "live_today": 104,
+      "last_row_age_min": 0.5
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 21153.8
+      "last_row_age_min": 21169.1
     }
   },
   "books_reporting_live": [
@@ -37,19 +37,20 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 23531,
-    "OPEN": 25620,
-    "SUSPENDED": 2346,
+    "unset": 23568,
+    "OPEN": 25664,
+    "SUSPENDED": 2348,
     "REMOVED": 106
   },
   "overlap": {
-    "simultaneous_pairs_total": 28714,
-    "simultaneous_pairs_today": 63,
-    "overlap_games": 61,
+    "simultaneous_pairs_total": 28747,
+    "simultaneous_pairs_today": 96,
+    "overlap_games": 62,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
-      "0_books": 20,
-      "2_books": 61
+      "0_books": 16,
+      "1_books": 3,
+      "2_books": 62
     }
   },
   "fix_verification": {
@@ -66,7 +67,7 @@
   "coverage": {
     "live_games_seen": 67,
     "book_panel_games": 81,
-    "team_total_rows": 12274,
+    "team_total_rows": 12276,
     "innings_seen": [
       1,
       2,
@@ -85,17 +86,17 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 28714,
+        "current": 28747,
         "target": 2000,
         "pass": true,
         "progress": 1.0
       },
       {
         "criterion": "games with live overlap",
-        "current": 61,
+        "current": 62,
         "target": 100,
         "pass": false,
-        "progress": 0.61
+        "progress": 0.62
       },
       {
         "criterion": "median sync lag < 15s",
@@ -113,6 +114,6 @@
       }
     ],
     "cleared": false,
-    "overall_progress": 0.819
+    "overall_progress": 0.822
   }
 }

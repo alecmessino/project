@@ -86,6 +86,13 @@
   .detail .src{font-size:10.5px;color:var(--muted);margin-top:14px;border-top:1px solid var(--line2);padding-top:10px;line-height:1.45}
   .detail a.cta{display:inline-block;margin-top:14px;background:var(--accent-strike);color:#f1ede3;text-decoration:none;
     font-weight:500;font-size:13px;padding:10px 16px;border-radius:var(--surface-radius)}
+  /* the quiet door to a state's full Atlas card (the deep per-state reference); a text link, not a second
+     button, so the solid diagnostic CTA stays the one confident action on the panel. Shown on every
+     dimension, so a selected state is never a dead end. */
+  .detail a.atlas-link{display:block;width:max-content;max-width:100%;margin-top:14px;font-family:var(--sans);
+    font-weight:500;font-size:12.5px;color:var(--accent-strike);text-decoration:none;
+    border-bottom:1px solid var(--accent-strike-soft);transition:border-color .12s,color .12s}
+  .detail a.atlas-link:hover{border-bottom-color:var(--accent-strike);color:var(--ink)}
   .foot{margin:14px 40px 30px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:11px;line-height:1.55}
   .foot b{color:#5a5a62}
   .asof{font-size:11px;color:var(--muted);padding:0 40px;margin:2px 0 0}
@@ -180,7 +187,16 @@ function render(s){
   let sel = (qp.get("state")||"").toUpperCase();
   if(!(sel in tiles)){ var _dw=(window.dwTaxContext&&dwTaxContext.get())||{}; if(_dw.state && (_dw.state in tiles)) sel=_dw.state; }  // fall back to the saved household state
   if(!(sel in tiles)) sel = "IL" in tiles ? "IL" : Object.keys(tiles)[0];
-  const qdim = qp.get("dim"); const di = dims.findIndex(d=>d.key===qdim); if(di>=0) active = di;
+  // active-dimension deep link: ?dim=<key> (exact key), or ?tab= / ?view= matched against a dimension
+  // key or label (so ?tab=coordination lands on "Coordination Opportunity"). With no param, direct
+  // navigation keeps the canonical first tab (Income & gains).
+  const qdim = qp.get("dim");
+  let di = dims.findIndex(d=>d.key===qdim);
+  if(di<0){
+    const qtab = (qp.get("tab")||qp.get("view")||"").trim().toLowerCase();
+    if(qtab) di = dims.findIndex(d=> d.key.toLowerCase()===qtab || (d.label||"").toLowerCase().includes(qtab));
+  }
+  if(di>=0) active = di;
 
   const colorMap = d => Object.fromEntries(d.legend.map(([r,c])=>[r,c]));
   const DARK = new Set(["#5b6b74","#9b4439","#15806a","#2f8467","#15604a","#15463a"]);
@@ -245,10 +261,17 @@ function render(s){
     const rec = (states[sel]||{})[d.key];
     const nm = names[sel]||sel;
     const cmap = colorMap(d);
+    // A selected state is the Environment; offer the door to its full Atlas card (the deep per-state
+    // reference at /atlas/2026/<state>/). Shown for the 50 states + DC — the codes that carry a ranked
+    // coordination figure and an Atlas page; territories (no alpha, no card) get none. The slug mirrors
+    // statepage.state_slug (both derive from the same STATE_NAMES, so the link cannot drift).
+    const atlasLink = (states[sel]||{}).alpha
+      ? `<a class="atlas-link" href="atlas/2026/${String(nm).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}/">Open the full ${nm} profile in the Atlas →</a>`
+      : "";
     if(!rec){
       document.getElementById("detail").innerHTML =
         `<div class="dn">${nm} <span class="code">(${sel})</span></div>`+
-        `<p class="dnote">Not modeled for this dimension.</p>`;
+        `<p class="dnote">Not modeled for this dimension.</p>`+ atlasLink;
       return;
     }
     const lab = (d.legend.find(([r])=>r===rec.regime)||[])[2] || "";
@@ -256,6 +279,7 @@ function render(s){
     let html = `<div class="dn">${nm} <span class="code">(${sel})</span>`+
       (lab?`<span class="pill" style="background:${col};color:${["#5b6b74","#9b4439","#15806a","#2f8467","#15604a"].includes(col)?'#f4f1e8':'#16130f'}">${lab}</span>`:"")+
       `</div><p class="dnote">${rec.note}</p>`;
+    html += atlasLink;   // deep-dive into this state's full Atlas card, on every dimension
     if(d.key==="alpha" && rec.deeplink){
       html += `<a class="cta" href="${rec.deeplink}">See the personalized diagnostic for ${nm} →</a>`;
     }

@@ -142,15 +142,9 @@
   .ctas .quiet{color:var(--ink);padding:14px 25px;border:1.5px solid var(--ink);border-radius:var(--surface-radius);
     transition:background var(--t-fast),color var(--t-fast)}
   .ctas .quiet:hover{background:var(--ink);color:var(--bg)}
-  /* Secondary, a demoted text link; a resting hairline underline gives it link affordance so it reads as
-     an action (not faint body copy), and it warms to editorial blue on hover. */
-  .ctas .ghost{color:var(--ink);padding:15px 10px;font-weight:500;border-bottom:2px solid var(--ghost-line);
-    transition:border-color var(--t-fast),color var(--t-fast)}
-  .ctas .ghost:hover{border-bottom-color:var(--accent-strike)}
-  /* Mobile restraint: the first fold shows one pristine action. The secondary text link stacks into
-     visual chatter on a phone, so it is suppressed under 768px (the section it points to is still one
-     scroll away). */
-  @media(max-width:767px){.hero .ctas .ghost{display:none}}
+  /* The hero holds ONE confident action (the solid primary → the review). No secondary "escape hatch"
+     link sits beside the highest-intent ask; the path onward to the State Atlas is carried by the bridge
+     line in the Annual Review section below, so the first fold stays a single, pristine action. */
 
   /* ── Section scaffold, tiny label, medium statement, generous air. Galleries vary their own
      vertical rhythm deliberately: dense ledger, vast plate, quiet archive, never one template. ── */
@@ -199,6 +193,13 @@
     letter-spacing:.01em;color:var(--dim);font-weight:400}
   .diag-insight{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.5;color:var(--dim);
     margin:0 0 14px;max-width:56ch;padding-left:16px;border-left:2px solid var(--accent-strike)}
+  /* the bridge from the six conditions to the State Atlas: quiet serif connective tissue naming the
+     state as the environment those conditions play out in. Its trailing link carries the promise, so the
+     path onward (removed from the hero) lives here, where it is actually earned. */
+  .diag-bridge{font-family:var(--serif);font-size:15.5px;line-height:1.6;color:var(--dim);margin:0 0 20px;max-width:58ch}
+  .diag-bridge a{color:var(--accent-strike);font-weight:500;text-decoration:none;
+    border-bottom:1px solid var(--accent-strike-soft);transition:border-color var(--t-fast),color var(--t-fast)}
+  .diag-bridge a:hover{border-bottom-color:var(--accent-strike);color:var(--ink)}
   @media(max-width:700px){.diag{grid-template-columns:1fr;max-width:60ch}}
   /* the plate's product line, a quiet serif framing above the seven-systems headline */
   .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw + 15px,19px);line-height:1.5;color:var(--dim);
@@ -268,22 +269,18 @@
   .node.lit .lbl{fill:var(--body)}
   .node.active .dot{fill:var(--ink)}
   .node.active .lbl{fill:var(--ink);font-weight:700}
-  /* Static fallback: with JS off or motion reduced, seed the full seven-system lattice lit
-     (Investments, Taxes, Liquidity, Estate, Protection, Ownership, Purpose) so the plate makes its point with no animation.
-     JS clears .seeded before it takes over, so full interactivity is unaffected for everyone else. */
+  /* The resting composition: the full seven-system lattice, lit (Investments, Taxes, Liquidity, Estate,
+     Protection, Ownership, Purpose). This static, fully lit state is the DEFAULT for everyone — no-JS,
+     reduced-motion, and the interactive default alike — so the plate makes its point at rest, with no
+     animation. Hovering / focusing / tracing clears .seeded to light one specific scenario. */
   .sysstage.seeded .net{stroke:var(--accent-strike);stroke-width:1;opacity:.72}
   .sysstage.seeded .node .dot{fill:var(--ink)}
   .sysstage.seeded .node .lbl{fill:var(--ink);font-weight:700}
   .node:focus{outline:none}
   .node:focus-visible .hit{stroke:var(--accent-strike);stroke-width:2}
-  /* Idle life is now the rotation itself: while the plate auto-rotates through the decisions, the active
-     systems and their lit chords breathe gently, enough to read as alive, never enough to fatigue.
-     Suppressed the moment a visitor takes control (the .rotating class is removed) and under reduced-motion. */
-  @keyframes nodePulse{0%,100%{opacity:1}50%{opacity:.66}}
-  @keyframes edgePulse{0%,100%{opacity:.72}50%{opacity:.42}}
-  .sysstage.rotating .node.active .dot{animation:nodePulse 2.8s ease-in-out infinite}
-  .sysstage.rotating .net.lit:not(.sec){animation:edgePulse 2.8s ease-in-out infinite}
-  @media(prefers-reduced-motion:reduce){.sysstage.rotating .node.active .dot,.sysstage.rotating .net.lit{animation:none}}
+  /* (The plate rests static and fully lit. There is no auto-rotation, so no breathing pulse and no
+     .rotating state — the resting composition is the .seeded lattice above; all motion is interaction-
+     driven and lives in the trace/story layers in script.) */
   /* the micro-story, a memorable line, one consequence, and a footnote-quiet proof */
   .mstory{position:relative;max-width:60ch;margin:24px auto 0;min-height:166px;padding-top:20px;border-top:1px solid var(--line2)}
   .mrest{position:absolute;top:24px;left:0;right:0;font-family:var(--sans);font-size:12px;color:var(--muted);letter-spacing:.03em;margin:0;transition:opacity .34s ease}
@@ -293,8 +290,8 @@
   .mproof:hover{text-decoration:underline}
   .mstory.show .mrest{opacity:0}
   .mstory.show .mlead,.mstory.show .mchain,.mstory.show .mproof{opacity:1}
-  /* between auto-rotated scenarios the panel dips out quickly, swaps text, then eases back in, a
-     composed crossfade rather than a hard flash every five seconds. */
+  /* moving between scenarios (hovering one system, then another) the panel dips out quickly, swaps text,
+     then eases back in — a composed crossfade rather than a hard flash. */
   .mstory.swapping .mlead,.mstory.swapping .mchain,.mstory.swapping .mproof{opacity:0;transition:opacity .18s ease}
   /* the trigger rail, trace a common decision; specimen labels, not software buttons. Sits directly
      under the reading panel (no rule) so the two read as one exhibit block, not two boxed zones. */
@@ -305,15 +302,7 @@
     transition:border-color .2s ease,color .2s ease}
   .trig-btn:hover{border-color:var(--ghost-line);color:var(--ink)}
   .trig-btn.showing{border-color:var(--accent-strike);color:var(--ink)}
-  /* the pause control, a quiet, keyboard-operable pause/resume for the auto-rotation (WCAG 2.2.2 · Pause,
-     Stop, Hide). Injected by script only when the motion actually runs; centred under the scenario rail.
-     A plain text control (no media-player glyph); its accessible name flips Pause/Resume, no aria-pressed. */
-  .rot-toggle{display:inline-block;margin:12px 0 0;background:none;border:0;cursor:pointer;
-    font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-    color:var(--muted);padding:5px 4px;transition:color .2s ease}
-  .rot-toggle:hover{color:var(--ink)}
-  .rot-toggle:focus-visible{outline:2px solid var(--accent-strike);outline-offset:3px;border-radius:var(--surface-radius)}
-  @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.rot-toggle,.diag-item,.review-cta .rc-main::after{transition:none}}
+  @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.diag-item,.review-cta .rc-main::after{transition:none}}
   @media(prefers-reduced-motion:reduce){.mstory.swapping .mlead,.mstory.swapping .mchain,.mstory.swapping .mproof{transition:none;opacity:1}}
   @media(max-width:620px){.sysband{padding:32px 22px 40px}.sysstage{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}}
   /* the reading panel wraps taller as the column narrows; reserve the tallest scenario at each phone tier so
@@ -442,7 +431,6 @@
       </div>
       <div class="ctas">
         <a class="primary" href="#conversation">Request a Coordination Review →</a>
-        <a class="ghost" href="#diagnostic">or see where coordination breaks down</a>
       </div>
     </header>
 
@@ -546,8 +534,11 @@
         <label class="diag-item"><input class="vh" type="checkbox"><span>No one person is responsible for how it all fits together.<span class="diag-why">Coordination becomes no one's job, until it's expensive.</span></span></label>
       </div>
       <p class="diag-insight">Institutions review all six every year. Most households discover one or two only after they've become expensive.</p>
+      <p class="diag-bridge">These six are where coordination breaks down. Your state's rules are the
+        environment they play out in — <a href="statemap.html?tab=coordination">see how yours shapes them,
+        ranked by the after-tax opportunity →</a></p>
       <div class="ctas">
-        <a class="quiet" href="atlas/2026/">Identify your highest-value coordination opportunities →</a>
+        <a class="quiet" href="statemap.html?tab=coordination">Identify your highest-value coordination opportunities →</a>
       </div>
     </div>
 
@@ -766,15 +757,9 @@ window.__STATE__ = {"header": {"generated": "2026-07-19 23:15:22 UTC"}, "hero": 
   //    carries the motion so the resting web never flickers. ──────────────────────────────────────
   var REDUCE = false;
   try{ REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
-  // The plate is a self-running exhibit on every viewport, phones included: a static lattice beside an
-  // empty explanation panel reads as dead, so mobile gets the same draw-in, rotation, and pause control
-  // as the desktop (touch pauses it exactly as hover does; the WCAG pause button governs the motion).
-  // Progressive-enhancement reveal: hold the plate hidden until it scrolls into view, then fade it in
-  // alongside the line draw-in (so the central node + labels ease in too). JS + motion-OK only,
-  // no-JS and reduced-motion keep it visible from the start (CSS default opacity:1).
-  // Non-reduced-motion + JS: hand the plate to the interactive/rotation layer, so drop the static seed
-  // (the seven-system fallback). No-JS and reduced-motion keep .seeded, i.e. the meaningful static default.
-  if(!REDUCE){ stage.classList.remove("seeded"); stage.style.opacity = "0"; }
+  // The plate rests as the static, fully lit .seeded lattice for everyone — no-JS, reduced-motion, and
+  // the interactive default alike. It is never hidden and never draws itself in or rotates; the .seeded
+  // class stays until an interaction (hover / focus / trace) clears it to light one specific scenario.
   var timers = [];
   function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
   // Cancels the trace/story stagger AND any pending crossfade, so an interaction never lets a stale
@@ -868,7 +853,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-19 23:15:22 UTC"}, "hero": 
     // Draw every chord among the set as a staggered signal; as each lands, that chord lights (.net.lit)
     // and both systems activate. Scales to any set, a triangle for three, a dense sub-web for five, so
     // the plate shows the true depth of the decision, then the travelling signal retires and the lit web
-    // remains (and, while auto-rotating, breathes).
+    // remains at rest until the next interaction.
     nodes[set[0]].classList.add("active");
     var edges = [];
     for(var i=0;i<set.length;i++){ for(var j=i+1;j<set.length;j++){
@@ -918,87 +903,13 @@ window.__STATE__ = {"header": {"generated": "2026-07-19 23:15:22 UTC"}, "hero": 
   svg.addEventListener("mouseleave", function(){ clear(false); });
   stage.addEventListener("focusout", function(e){ if(!stage.contains(e.relatedTarget)) clear(false); });
 
-  // Motion identity: the plate sketches itself in once, then becomes a slow, self-running exhibit, it
-  // rotates through the common decisions on a 5s cadence, breathing gently on the active systems. Any
-  // interaction (hover / focus / trace) hands full control to the visitor and pauses the loop; after 30s
-  // of stillness it resumes. Reduced-motion shows a static web, no draw-in, no rotation, no pulse.
-  var ROT_ORDER = [0,1,2,3];
-  var introDone = false, rotIdx = 0, rotTimer = 0, resumeTimer = 0, userHeld = false, inView = false, stopped = false;
-  function rotStep(){
-    rotTimer = 0;
-    if(!inView || userHeld || stopped || REDUCE){ stage.classList.remove("rotating"); return; }
-    showSet(ROT_ORDER[rotIdx]);
-    rotIdx = (rotIdx + 1) % ROT_ORDER.length;
-    rotTimer = setTimeout(rotStep, 5000);
-  }
-  function startRotation(){
-    if(REDUCE || userHeld || stopped || !inView || rotTimer) return;
-    stage.classList.add("rotating");
-    rotStep();
-  }
-  function stopRotation(){
-    if(rotTimer){ clearTimeout(rotTimer); rotTimer = 0; }
-    stage.classList.remove("rotating");
-  }
-  function scheduleResume(){
-    if(stopped) return;                                    // an explicit pause is honoured indefinitely
-    if(resumeTimer) clearTimeout(resumeTimer);
-    resumeTimer = setTimeout(function(){
-      resumeTimer = 0; userHeld = false; clear(true); rotIdx = 0; startRotation();
-    }, 30000);
-  }
-  // Every user touch pauses the loop and re-arms the 30s idle timer, so any activity keeps control.
-  function holdForUser(){ userHeld = true; stopRotation(); scheduleResume(); }
-  // WCAG 2.2.2, the auto-motion lasts more than five seconds, so offer a real, discoverable, keyboard-
-  // operable control to stop it for good (a hover-pause isn't discoverable and doesn't persist). Injected
-  // only when the motion actually runs (never under reduced-motion / no-JS), a quiet text pause/resume.
-  var rotToggle = null;
-  function paintToggle(){
-    if(!rotToggle) return;
-    // Play/pause pattern: the accessible NAME flips, no aria-pressed, which would both contradict the
-    // label ("Resume" while announcing "pressed") and over-specify a two-state control. The visible word is
-    // contained in the aria-label, so voice control's "click Pause"/"click Resume" resolves (WCAG 2.5.3).
-    rotToggle.textContent = stopped ? "Resume" : "Pause";
-    rotToggle.setAttribute("aria-label", (stopped ? "Resume" : "Pause") + " the moving diagram");
-  }
-  function toggleStopped(){
-    stopped = !stopped;
-    if(stopped){ if(resumeTimer){ clearTimeout(resumeTimer); resumeTimer = 0; } userHeld = false; stopRotation(); }
-    else { userHeld = false; clear(true); rotIdx = 0; startRotation(); }   // resume from a clean state, exactly like the idle-resume path
-    paintToggle();
-  }
-  if(!REDUCE){
-    rotToggle = document.createElement("button");
-    rotToggle.className = "rot-toggle"; rotToggle.type = "button";
-    var trigWrap = document.getElementById("trig");
-    if(trigWrap && trigWrap.parentNode) trigWrap.parentNode.insertBefore(rotToggle, trigWrap.nextSibling);
-    rotToggle.addEventListener("click", toggleStopped);
-    paintToggle();
-  }
-  function intro(){
-    if(introDone || REDUCE) return; introDone = true;
-    stage.style.transition = "opacity .7s ease"; stage.style.opacity = "1";   // whole plate eases in with the draw
-    nets.forEach(function(ln){ var len = ln.getTotalLength();
-      ln.style.transition = "none"; ln.style.strokeDasharray = len; ln.style.strokeDashoffset = len; });
-    void svg.getBoundingClientRect();
-    nets.forEach(function(ln, k){ var delay = 120 + k*44;
-      ln.style.transition = "stroke-dashoffset 640ms cubic-bezier(.4,0,.2,1) "+delay+"ms, opacity .34s ease";
-      ln.style.strokeDashoffset = "0"; });
-    // the sketch draws in, then the exhibit begins promptly, the first decision traces in while the
-    // web is still settling (showSet's snapNets completes it), so the plate feels live soon after it opens
-    rotTimer = setTimeout(function(){ rotTimer = 0; startRotation(); }, 950);
-  }
-  if(!REDUCE && "IntersectionObserver" in window){
-    var io = new IntersectionObserver(function(es){ es.forEach(function(en){
-      inView = en.isIntersecting;
-      if(inView){ if(!introDone) intro(); else if(!userHeld) startRotation(); }
-      else stopRotation();
-    }); }, {threshold:.25});
-    io.observe(stage);
-    // keyboard safety: focusing a node before the plate crosses the .25 threshold would leave the focus
-    // ring on the opacity:0 stage, reveal on first focus so the ring is always visible.
-    stage.addEventListener("focusin", function(){ if(!introDone) intro(); });
-  } else { inView = true; intro(); }   // no IntersectionObserver: run the exhibit outright so the pause control governs real motion
+  // Static exhibit, no perpetual motion. The plate rests as the fully lit .seeded lattice and never
+  // auto-rotates, breathes, or draws itself in; every reveal is interaction-driven (show / showSet), and
+  // the travelling-signal motion runs only on that interaction (and is skipped under reduced-motion).
+  // Because nothing moves for longer than an interaction, WCAG 2.2.2 needs no pause control, so none is
+  // injected. holdForUser is kept as a no-op: the node/trigger handlers still call it, but with no loop
+  // to pause there is nothing to do.
+  function holdForUser(){}
   fitHub();
 })();
 

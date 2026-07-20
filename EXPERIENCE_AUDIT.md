@@ -238,7 +238,7 @@ Opening pad → one 44px value (container-padding pass), per measured deviation:
 | 106 | footer generated-stamp presence (index only) | either every data page or none | S |
 | 107 | favicon/mask on sample pages | verify all carry full icon set | S |
 | 108 | print stylesheet for archive/samples ("print and bind" bar) | add @media print pass post-freeze | L |
-| 109 | brand.html/mark-sandbox noindex + exclusion from any index | verify | S |
+| 109 | brand.html noindex + exclusion from any index | verify | S |
 | 110 | workspace.html linked from public? | boundary check — evidence vs operation | S |
 
 *(Items 13–47 expand to one row per page in practice; counted individually the backlog is

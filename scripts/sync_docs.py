@@ -38,6 +38,7 @@ PAIRS = {
     "tearsheet.html": "tearsheet.html",
     "workspace.html": "workspace.html",
     "thesis.html": "thesis.html",
+    "taxlab.html": "taxlab.html",
 }
 STATE_RE = re.compile(r"window\.__STATE__ = (.*?);\s*\n")
 
@@ -64,7 +65,7 @@ def main() -> int:
     # Plain static assets (not templated) — copy them through. CNAME is the GitHub Pages custom-domain
     # file: managed here (source of truth in src/) and shipped in every docs/ deploy so automated
     # publishes never drop the domain.
-    for asset in ("CNAME", "driftwood.css", "dw-context.js", "favicon.svg", "mask-icon.svg", "privacy.html", "terms.html", "taxlab.html", "about.html", "principles.html", "philosophy.html",
+    for asset in ("CNAME", "driftwood.css", "dw-context.js", "favicon.svg", "mask-icon.svg", "privacy.html", "terms.html", "about.html", "principles.html", "philosophy.html",
                   "insights.html", "research.html", "every-portfolio-has-two-returns.html",
                   "the-worlds-largest-investors.html", "enough-is-a-number.html", "howitworks.html",
                   "coordination.html", "library.html", "case-business-sale.html",

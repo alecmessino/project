@@ -214,6 +214,13 @@
   .m-verb{font-family:var(--sans);font-weight:700;font-size:clamp(25px,1.6vw + 14px,34px);letter-spacing:-.022em;color:var(--ink);margin:0}
   .m-q{font-family:var(--serif);font-size:19px;line-height:1.4;color:var(--ink);margin:0 0 10px;max-width:34ch}
   .m-d{font-family:var(--sans);font-size:14px;line-height:1.58;color:var(--dim);margin:0 0 16px;max-width:48ch}
+  /* One quiet on-ramp per diagnostic step (Diagnose→leakage, Measure→taxlab) — an index entry, not a button. */
+  .m-go{display:inline-block;margin:0;font-family:var(--sans);font-weight:600;font-size:13px;letter-spacing:.01em;
+    color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft);transition:border-color .2s ease}
+  .m-go:hover{border-bottom-color:var(--accent-strike)}
+  .lede2-note{font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--dim);margin:-6px 0 22px;max-width:58ch}
+  .lede2-note a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
+  .lede2-note a:hover{border-bottom-color:var(--accent-strike)}
   @media(max-width:700px){.m-row{grid-template-columns:1fr;gap:6px 0}.m-body{margin-top:4px}}
   /* the centerpiece, the four proprietary standing records the method produces, given real weight:
      the firm's infrastructure is the differentiator, not the process. A 2×2 vitrine of named artifacts. */
@@ -399,6 +406,7 @@
         <div class="dwnav-drop">
           <button class="dwnav-trigger" type="button">Tools &amp; Research<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
+            <a href="score.html">Coordination&nbsp;Assessment</a>
             <a href="leakage.html">Tax&nbsp;Diagnostic</a>
             <a href="taxlab.html">After-Tax&nbsp;Review</a>
             <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
@@ -541,12 +549,14 @@
     <!-- ── GALLERY IV · THE METHOD (#capabilities), an architect's index, not a feature grid ── -->
     <div class="sec gal" id="capabilities">
       <p class="lede2">Every client relationship follows the same sequence.</p>
+      <p class="lede2-note">Not sure where coordination is helping or costing you? The <a href="score.html">Coordination&nbsp;Assessment</a> is a brief, neutral place to begin.</p>
       <ol class="method">
         <li class="m-row">
           <div class="m-head"><span class="m-step">01</span><div class="m-verb">Diagnose</div></div>
           <div class="m-body">
             <p class="m-q">Where does your return go to tax?</p>
             <p class="m-d">See what taxes quietly take from the same holdings, by your state and bracket.</p>
+            <a class="m-go" href="leakage.html">Open the Tax Diagnostic →</a>
           </div>
         </li>
         <li class="m-row">
@@ -554,6 +564,7 @@
           <div class="m-body">
             <p class="m-q">What is coordination worth?</p>
             <p class="m-d">Put a dollar figure on it, for your bracket, state, and portfolio. In one 30-year illustration, that gap was $320,000.</p>
+            <a class="m-go" href="taxlab.html">See the After-Tax Review →</a>
           </div>
         </li>
         <li class="m-row">
@@ -604,7 +615,7 @@
         <b>coordination decisions.</b> When every part of your financial life works together, you keep more
         of what you've built.</p>
       <div class="review">
-        <a class="review-cta" href="https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting" target="_blank" rel="noopener">
+        <a class="review-cta" href="https://calendly.com/alec-messino/15-minute-introductory-meeting" target="_blank" rel="noopener">
           <span class="rc-main">Request a Coordination Review</span>
           <span class="rc-sub">A 15-minute introductory conversation about your financial architecture.</span>
         </a>

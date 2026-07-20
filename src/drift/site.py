@@ -29,7 +29,7 @@ BASE_URL = "https://driftwoodwealth.com"
 
 # Currently live, operational, safe to flip via scripts/set_contact.py:
 CONTACT_EMAIL = "hello@driftwoodplanning.com"
-BOOKING_URL = "https://calendly.com/alec-messino-cwsplanning/15-minute-introductory-meeting"
+BOOKING_URL = "https://calendly.com/alec-messino/15-minute-introductory-meeting"
 
 # Confirmed firm facts (principal-directed, July 2026):
 FIRM_LEGAL_NAME = "Driftwood Wealth"

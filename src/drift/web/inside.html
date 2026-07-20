@@ -83,9 +83,9 @@
   .art .ad{font-size:13px;line-height:1.5;color:var(--dim);margin:0}
   .art .ag{margin-top:10px;font-family:var(--sans);font-weight:700;font-size:12px;color:var(--teal2)}
 
-  /* The seven systems, a quiet legend of what coordination holds together; the glyphs are the
+  /* The five systems, a quiet legend of what coordination holds together; the glyphs are the
      home-page lattice nodes, redrawn as flat hairline line-art (one accent stroke, no fill). */
-  .systems{display:grid;grid-template-columns:repeat(4,1fr);gap:0 30px;margin:22px 0 6px}
+  .systems{display:grid;grid-template-columns:repeat(5,1fr);gap:0 26px;margin:22px 0 6px}
   .sysitem{padding:18px 2px 16px;border-top:1px solid var(--line)}
   .sysitem .gi{display:block;height:30px;margin-bottom:13px;color:var(--brass)}
   .sysitem .gi svg{width:30px;height:30px;display:block}
@@ -123,7 +123,7 @@
   <div class="frame">
     <div class="inner">
     <nav class="dwnav" aria-label="Driftwood Wealth">
-      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="3.2"/><polyline points="10,34 43.18,34 62,50" stroke-width="3.2"/><line x1="10" y1="50" x2="62" y2="50" stroke-width="3.2"/><polyline points="10,66 43.18,66 62,50" stroke-width="3.2"/><polyline points="10,82 24.35,82 62,50" stroke-width="3.2"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="5.2"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"/><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"/><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"/><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"/><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-links">
         <div class="dwnav-drop">
           <button class="dwnav-trigger" type="button">Firm<span class="caret" aria-hidden="true"></span></button>
@@ -134,7 +134,7 @@
           </div>
         </div>
         <div class="dwnav-drop dwnav-drop--current">
-          <button class="dwnav-trigger" type="button">System<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">Approach<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
             <a href="inside.html" aria-current="page">Operating&nbsp;System</a>
             <a href="howitworks.html">How It Works</a>
@@ -142,24 +142,16 @@
           </div>
         </div>
         <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Tools<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">Tools &amp; Research<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
             <a href="leakage.html">Tax&nbsp;Diagnostic</a>
             <a href="taxlab.html">After-Tax&nbsp;Review</a>
             <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
-          </div>
-        </div>
-        <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Research<span class="caret" aria-hidden="true"></span></button>
-          <div class="dwnav-panel">
             <a href="research.html">Research&nbsp;Hub</a>
-            <a href="letter.html">The&nbsp;Letter</a>
-            <a href="ledger.html">Model&nbsp;Ledger</a>
-            <a href="tearsheet.html">Tearsheet</a>
           </div>
         </div>
       </div>
-      <a class="dwnav-access" aria-label="Client Access" href="private.html">Access</a>
+      <a class="dwnav-access" aria-label="Client Access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="index.html#conversation">Request Review</a>
     </nav>
 
@@ -176,8 +168,8 @@
     <div class="rule" style="margin-top:34px"></div>
 
     <div class="sec">
-      <div class="sh">The seven systems</div>
-      <p class="intro">A financial life isn't one decision, it's seven systems that constantly move each other.
+      <div class="sh">The five systems</div>
+      <p class="intro">A financial life isn't one decision, it's five systems that constantly move each other.
         These are the parts Driftwood keeps in view at once, the same map that holds together on the home page, so
         no decision is made in isolation.</p>
       <div class="systems">
@@ -204,17 +196,7 @@
         <div class="sysitem">
           <span class="gi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M9 18 L24 9 L39 18"/><path d="M13 18 V34 M20 18 V34 M28 18 V34 M35 18 V34"/><path d="M8 38 H40 M11 34 H37"/></svg></span>
           <p class="sn">Estate</p>
-          <p class="sd">What continues, and to whom.</p>
-        </div>
-        <div class="sysitem">
-          <span class="gi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M24 7 L38 12 V23 C38 31 32 37 24 41 C16 37 10 31 10 23 V12 Z"/><circle cx="24" cy="21" r="3"/><path d="M24 24 V30"/></svg></span>
-          <p class="sn">Risk &amp; Liability</p>
-          <p class="sd">The floor under the whole plan.</p>
-        </div>
-        <div class="sysitem">
-          <span class="gi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="18" y="9" width="12" height="8"/><path d="M24 17 V21 M13 21 H35 M13 21 V27 M35 21 V27"/><rect x="8" y="27" width="10" height="8"/><rect x="30" y="27" width="10" height="8"/></svg></span>
-          <p class="sn">Entity Structure</p>
-          <p class="sd">Where the wealth actually lives.</p>
+          <p class="sd">Titling, protection, and what continues.</p>
         </div>
       </div>
     </div>

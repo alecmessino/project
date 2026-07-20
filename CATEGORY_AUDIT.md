@@ -624,3 +624,24 @@ Verified: 507 tests, 38/38 harness, css byte-mirror, zero overflow at 1440/1280/
 - **Nav alignment fixed.** Mobile: the nameplate + MENU wrapped to two rows at 375–393px; pinned them to one
   centred line (`.dwnav--menu:not(.dwnav--open){flex-wrap:nowrap}` + a snugger mobile wordmark) — verified
   single-row with no overflow at 320/360/375/393/430. Desktop nav (two-row grid) unchanged and neat.
+
+**Round 12 — five-vs-seven reconciliation, nav collapse, mobile lattice, mark weight** (user-directed, mobile
+review + Design Council):
+- **Five systems, everywhere.** The brand rule is "five streams, always," so the homepage centrepiece and the
+  site copy now match the mark. The plate is a clean five-node pentagon (Investments, Taxes, Liquidity,
+  Professionals, Estate); "Seven systems" → "Five systems. No decision touches just one."; the two folded
+  systems (Risk & Liability, Entity Structure) now live inside Estate and Taxes. `inside.html`'s glyph legend
+  dropped 7 → 5 (single row), and every "seven systems" line across the essays, the Letter, and the Household
+  page became "five." No number now disagrees with the logo.
+- **Nav collapsed 4 → 3 groups.** The Firm / The Approach / Tools & Research (was Firm/System/Tools/Research).
+  Killed the Research umbrella-plus-contents redundancy: Research Hub is one door; The Letter, Model Ledger,
+  and Tearsheet live inside it, not in the menu. "System" → "Approach" (stopped colliding with "Operating
+  System"). "Access" → "Client Access." Applied across 48 templates + `statepage.py` (99 atlas pages).
+- **Mobile lattice restored to life.** Auto-rotation was disabled on phones, leaving a frozen plate, a "hover"
+  legend you cannot obey, and an empty reserved panel. Re-enabled rotation on every viewport (touch pauses it
+  like hover; the WCAG pause control now ships on mobile too), device-neutral legend copy, and the rotation
+  fills the panel so the gap is gone.
+- **Nav mark strengthened.** The thin nameplate stroke (3.2/5.2) went pale at 20px; the nav now uses a heavier
+  small-size cut (4.6/7.0 at 22px), documented in `brand.html` + `IDENTITY_ROLLOUT.md` alongside the favicon
+  cut. Hero runway trimmed (the serif lede that restated the headline cut ~40%), so the interactive plate
+  arrives a screen sooner on mobile.

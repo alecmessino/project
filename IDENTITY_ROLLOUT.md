@@ -35,6 +35,8 @@ line     62,50        90,50       trunk / river — one step heavier, 5.2
 ```
 
 - **Weights:** stream `3.2` / trunk `5.2` (trunk-units) — stream : void ≈ 1 : 1.
+- **Nav cut:** `4.6 / 7.0` at ~22px — the small-size optical weight the site nav uses so the
+  mark holds its own beside the wordmark (thin strokes go pale at nav scale).
 - **Favicon cut:** heavier `~5.5 / 9`, white on tile, for legibility at ≤ 32px.
 - **Convergence:** all five land on `(62,50)`; the trunk runs `(62,50) → (90,50)`.
 

@@ -1,11 +1,19 @@
 # Identity System v1 — KIT 02 (frozen)
 
 The Driftwood Wealth visual identity, frozen July 2026. The mark is the **Streams
-confluence** — five tributaries (Investments · Taxes · Estate · Liquidity ·
-Relationships) entering from one shared origin and stepping through a true **45°
-convergence** into a single, heavier trunk: *what you keep*. The trunk is held at
-length and cut square, so the mark reads as **coordination and structure**, not
-direction or speed.
+confluence** — five tributaries entering from one shared origin and stepping through
+a true **45° convergence** into a single, heavier trunk: *what you keep*. The trunk
+is held at length and cut square, so the mark reads as **coordination and structure**,
+not direction or speed.
+
+**The five streams are an emblem, not an inventory.** They stand for confluence
+itself, many currents becoming one coordinated whole, and are deliberately *not* a
+count of the systems Driftwood coordinates. The working model of what we coordinate
+is the **seven-system lattice** on the home page (Investments · Taxes · Liquidity &
+cash flow · Estate & legacy · Risk & protection · Ownership & account structure ·
+Purpose & family). Never equate the two: the mark keeps five streams at every size,
+the model has seven systems, and no site copy should tie the stream count to the
+system count.
 
 Full standard: **[`src/drift/web/brand.html`](src/drift/web/brand.html)** (open with `driftwood.css` alongside).
 

@@ -28,8 +28,8 @@ const CARDS = {
 // The confluence mark — the same nameplate lockup the site nav uses, so the share card is unmistakably
 // the brand rather than a text slab. Editorial-blue on warm paper, tracked-caps wordmark, one hairline
 // accent, a serif headline, and a quiet compliance colophon.
-const MARK = `<svg class="mark" viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt" aria-hidden="true">
-    <path d="M1.5 1 H4.5 L27 15" stroke-width="2.4"/><path d="M1.5 8 H8 L27 15" stroke-width="2.4"/><path d="M1.5 15 H27" stroke-width="2.4"/><path d="M1.5 22 H8 L27 15" stroke-width="2.4"/><path d="M1.5 29 H4.5 L27 15" stroke-width="2.4"/><path d="M27 15 H44.5" stroke-width="3.4"/></svg>`;
+const MARK = `<svg class="mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
+    <polyline points="10,18 24.35,18 62,50" stroke-width="3.2"/><polyline points="10,34 43.18,34 62,50" stroke-width="3.2"/><line x1="10" y1="50" x2="62" y2="50" stroke-width="3.2"/><polyline points="10,66 43.18,66 62,50" stroke-width="3.2"/><polyline points="10,82 24.35,82 62,50" stroke-width="3.2"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="5.2"/></svg>`;
 const card = (title, sub) => `<!doctype html><html><head><meta charset="utf-8"><style>
   @font-face{font-family:'Erode';font-weight:400;src:url("${FONTS}/erode-400.woff2") format("woff2")}
   @font-face{font-family:'Erode';font-weight:600;src:url("${FONTS}/erode-600.woff2") format("woff2")}

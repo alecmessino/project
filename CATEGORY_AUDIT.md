@@ -536,7 +536,7 @@ pre-launch compliance/social checklist. Not a design round — a launch-readines
   tracked source (`src/`, `scripts/`, `tests/`, root docs): the JSON-LD legal schema (`name`, `legalName`,
   `disambiguatingDescription`), meta/OG/Twitter titles + descriptions, the nav brand mark and `aria-label`s,
   footer disclosures, the `firm_anchor` band (`FIRM_LEGAL_NAME` in `site.py`), the brand SVGs' `aria-label`,
-  and the brand-exploration pages (`brand.html`, `mark-sandbox.html`). `package.json` carries no firm name,
+  and the brand-exploration page (`brand.html`). `package.json` carries no firm name,
   so nothing to change there. Zero stray old-name instances remain in the tracked repo (any case). The
   correspondence test pin moved `DRIFTWOOD CAPITAL` → `DRIFTWOOD WEALTH`.
 - **Domain cutover to `driftwoodwealth.com`.** `scripts/set_domain.py` rewrote every canonical / `og:url` /

@@ -20,11 +20,12 @@
   .sh h2{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin:0}
   .sh .sub{margin-left:auto;font-size:12px;color:var(--muted)}
   p.note{font-size:13.5px;line-height:1.6;color:var(--dim);max-width:70ch;margin:0 0 22px}
+  p.note b{color:var(--ink)}
+  .rule-line{font-size:12.5px;line-height:1.6;color:var(--accent-strike);font-weight:700;letter-spacing:.02em;margin:0 0 22px}
   .stage{border:1px solid var(--line);border-radius:5px;padding:52px 48px;display:flex;align-items:center;justify-content:center;gap:56px;flex-wrap:wrap}
   .stage.navy{background:var(--navy);border-color:#2b3746}
   .stage + .stage{margin-top:12px}
-  /* lockup engine (mirrors the frozen tokens) */
-  .lk{display:inline-flex;align-items:center;gap:32px;--cut:var(--bg)}
+  .lk{display:inline-flex;align-items:center;gap:32px}
   .lk .mk{color:var(--accent-strike);display:flex}.lk .mk svg{display:block;height:48px;width:auto;overflow:visible}
   .lk .rl{width:1px;height:58px;background:var(--line)}
   .lk .tx{display:flex;flex-direction:column;gap:14px}
@@ -33,24 +34,22 @@
   .lk.sec .mk svg,.lk.mic .mk svg{height:26px}.lk.sec .rl{height:30px}
   .lk.sec .nm,.lk.mic .nm{font-size:17px;letter-spacing:.16em}
   .lk.mic{gap:13px}.lk.mic .mk svg{height:19px}.lk.mic .nm{font-size:14px;letter-spacing:.14em}
-  .lk.on-navy .mk{color:#a9c2d6}.lk.on-navy .nm{color:#f1ede3}.lk.on-navy .ds{color:#a9c2d6}.lk.on-navy .rl{background:rgba(233,229,219,.20)}
-  .stage .mk,.stage .mk-rev{display:flex;align-items:center;justify-content:center}
   .stage .mk.big{color:var(--accent-strike)}
-  .stage .mk-rev.big{color:#a9c2d6}
+  .stage .mk-rev.big{color:#f1efe9}
   .stage .mk.big svg,.stage .mk-rev.big svg{height:96px;width:auto;display:block;overflow:visible}
   .sig{text-align:center}
   .sig .snm{font-weight:500;font-size:17px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink);margin-bottom:20px}
   .sig .sds{font-family:var(--serif);font-size:15px;color:var(--dim);margin-bottom:22px}
   .sig .smt{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);line-height:1.85}
-  .grid{display:grid;grid-template-columns:150px 1fr;gap:0 0;border:1px solid var(--line);border-radius:5px;overflow:hidden}
-  .grid .rl{display:grid;grid-template-columns:150px 1fr}
-  .lkrow{display:grid;grid-template-columns:1fr;border-top:1px solid var(--line)}
-  .use{display:grid;grid-template-columns:130px 1fr;border-top:1px solid var(--line)}
+  .use{display:grid;grid-template-columns:150px 1fr;border-top:1px solid var(--line)}
   .use:first-child{border-top:none}
   .use .u1{padding:16px;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-strike);background:var(--soft)}
   .use .u2{padding:16px 18px;border-left:1px solid var(--line);display:flex;align-items:center}
-  .disc{background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#a9c2d6}
-  .disc svg{height:34%;width:auto;overflow:visible}
+  /* favicon = editorial-blue tile (zero radius); avatar = editorial-blue disc (the one exception) */
+  .tile,.disc{background:var(--accent-strike);display:flex;align-items:center;justify-content:center;color:#fff}
+  .disc{border-radius:50%}
+  .tile svg,.disc svg{height:60%;width:auto;overflow:visible}
+  .disc svg{height:52%}
   .row{display:flex;gap:30px;align-items:flex-end;flex-wrap:wrap}
   .sw{display:flex;flex-direction:column;gap:8px}
   .sw .chip{width:120px;height:64px;border-radius:4px;border:1px solid rgba(0,0,0,.06)}
@@ -60,7 +59,7 @@
   @media(max-width:680px){.col2{grid-template-columns:1fr}.stage{padding:36px 24px;gap:32px}}
   .do{border:1px solid var(--line);border-radius:5px;padding:20px 22px}
   .do .h{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
-  .do.ok .h{color:var(--teal2)}.do.no .h{color:var(--neg)}
+  .do.ok .h{color:var(--teal2)}.do.no .h{color:var(--neg,#9a3b3b)}
   .do ul{margin:0;padding-left:18px}.do li{font-size:13px;line-height:1.7;color:var(--body)}
   pre{font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.5;color:var(--body);background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:12px 14px;overflow-x:auto}
 </style>
@@ -68,22 +67,23 @@
 <body>
 <div class="page">
   <div class="mast">
-    <div><div class="k">Driftwood Wealth · Identity System v1</div><h1>Brand Constitution</h1></div>
+    <div><div class="k">Driftwood Wealth · Identity System v1 · KIT 02</div><h1>Brand Constitution</h1></div>
     <div class="lk sec"><span class="mk" data-mark></span><span class="rl"></span><span class="tx"><span class="nm">Driftwood&nbsp;Wealth</span></span></div>
   </div>
 
   <section>
-    <div class="sh"><span class="n">01</span><h2>The mark</h2><span class="sub">Streams confluence · frozen</span></div>
-    <p class="note">Five tributaries, Investments, Taxes, Estate, Liquidity, and the Relationships that coordinate them, gather gradually into one coordinated river: <em>what you keep</em>. The outflow is one step heavier, so the mark reads as <em>coordination</em>, not direction. Straight geometry, single ink, no curves.</p>
+    <div class="sh"><span class="n">01</span><h2>The mark</h2><span class="sub">Aligned confluence · frozen</span></div>
+    <p class="note">Five tributaries, Investments, Taxes, Estate, Liquidity, and the Relationships that coordinate them, enter from one shared origin and step through a true 45&deg; convergence into a single, heavier trunk: <em>what you keep</em>. The outflow is held at length and cut square, so the mark reads as <b>coordination and structure</b>, not direction or speed. Straight geometry, square caps, no curves.</p>
+    <p class="rule-line">Five streams, always. The mark holds all five at every size. It is never redrawn with fewer lines and never swapped for a simpler glyph, down to 16px. One silhouette earns recognition; two would spend it.</p>
     <div class="stage"><span class="mk big" data-mark></span></div>
     <div class="stage navy"><span class="mk-rev big" data-mark></span></div>
     <div class="col2" style="margin-top:12px">
-      <div><p class="cap" style="text-align:left">Geometry, viewBox 0 0 46 30</p><pre id="src"></pre></div>
+      <div><p class="cap" style="text-align:left">Geometry, viewBox 6 13 90 74 (100-unit grid)</p><pre id="src"></pre></div>
       <div>
-        <p class="cap" style="text-align:left">Weights</p>
-        <div class="use"><div class="u1">Fine</div><div class="u2">1.4 / 2.2, lockups ≥ 48px</div></div>
-        <div class="use"><div class="u1">Nav</div><div class="u2">2.4 / 3.4, chrome ~ 17–24px</div></div>
-        <div class="use"><div class="u1">Favicon cut</div><div class="u2">2.4 / 3.2, avatar ≤ 32px</div></div>
+        <p class="cap" style="text-align:left">Weights · stream / trunk (trunk-units)</p>
+        <div class="use"><div class="u1">Mark</div><div class="u2">3.2 / 5.2 &middot; stream : void = 1 : 1</div></div>
+        <div class="use"><div class="u1">Angle</div><div class="u2">45&deg; constant &middot; squared 90&deg; terminal</div></div>
+        <div class="use"><div class="u1">Favicon cut</div><div class="u2">heavier (~5.5 / 9), white on tile, &le; 32px</div></div>
       </div>
     </div>
   </section>
@@ -96,22 +96,25 @@
       <div class="lk mic"><span class="mk" data-mark></span><span class="tx"><span class="nm">Driftwood&nbsp;Wealth</span></span></div></div>
     <p class="cap" style="text-align:left">Secondary (with divider), navigation · headers · email &nbsp;·&nbsp; Micro (no divider), chrome · dashboard · mobile · footers</p>
     <div class="stage">
-      <div style="text-align:center"><div class="disc" style="width:56px;height:56px" data-fav></div><div class="cap">Avatar 56</div></div>
-      <div style="text-align:center"><div class="disc" style="width:32px;height:32px" data-fav></div><div class="cap">Favicon 32</div></div>
-      <div style="text-align:center"><div class="disc" style="width:16px;height:16px" data-fav></div><div class="cap">16</div></div>
+      <div style="text-align:center"><div class="tile" style="width:56px;height:56px" data-fav></div><div class="cap">Favicon tile 56</div></div>
+      <div style="text-align:center"><div class="tile" style="width:32px;height:32px" data-fav></div><div class="cap">32</div></div>
+      <div style="text-align:center"><div class="tile" style="width:16px;height:16px" data-fav></div><div class="cap">16</div></div>
+      <div style="text-align:center"><div class="disc" style="width:56px;height:56px" data-fav></div><div class="cap">Avatar disc 56</div></div>
       <div class="sig"><div class="snm">Driftwood&nbsp;Wealth</div><div class="sds">Private Wealth Advisory</div><div class="smt">Austin, Texas</div></div>
     </div>
-    <p class="cap" style="text-align:left">Avatar, favicon · social · workspace &nbsp;·&nbsp; Signature, document colophon (proposals · letters · AWOR · Manual)</p>
+    <p class="cap" style="text-align:left">Favicon, editorial-blue tile (zero radius) &nbsp;·&nbsp; Avatar, editorial-blue disc, mark at 52% for a circular crop &nbsp;·&nbsp; Signature, document colophon</p>
   </section>
 
   <section>
-    <div class="sh"><span class="n">03</span><h2>Colour</h2></div>
+    <div class="sh"><span class="n">03</span><h2>Colour</h2><span class="sub">blue names the brand · teal is data</span></div>
+    <p class="note"><b>Editorial blue #2C5878 is the mark's only identity colour</b>, and carries wayfinding: the mark, section eyebrows, the running-head marker, active nav. <b>Bright teal #15806A is reserved for data</b> only, positive values, links, the recompute pulse. Teal never touches the mark and never carries identity.</p>
     <div class="row">
+      <div class="sw"><div class="chip" style="background:#2c5878"></div><div class="lab">Editorial blue</div><div class="hex">#2C5878 · the mark, only</div></div>
       <div class="sw"><div class="chip" style="background:#1e2833"></div><div class="lab">Slate-navy ink</div><div class="hex">#1E2833 · wordmark</div></div>
-      <div class="sw"><div class="chip" style="background:#2c5878"></div><div class="lab">Editorial blue</div><div class="hex">#2C5878 · mark · descriptor</div></div>
-      <div class="sw"><div class="chip" style="background:#1a2330"></div><div class="lab">Navy field</div><div class="hex">#1A2330 · avatar ground</div></div>
-      <div class="sw"><div class="chip" style="background:#d8d3c6"></div><div class="lab">Hairline</div><div class="hex">#D8D3C6 · divider</div></div>
       <div class="sw"><div class="chip" style="background:#f1efe9"></div><div class="lab">Limestone</div><div class="hex">#F1EFE9 · paper</div></div>
+      <div class="sw"><div class="chip" style="background:#1a2330"></div><div class="lab">Navy field</div><div class="hex">#1A2330 · reversed ground</div></div>
+      <div class="sw"><div class="chip" style="background:#a9c2d6"></div><div class="lab">Soft blue</div><div class="hex">#A9C2D6 · tint</div></div>
+      <div class="sw"><div class="chip" style="background:#15806a"></div><div class="lab">Bright teal</div><div class="hex">#15806A · data only</div></div>
     </div>
   </section>
 
@@ -124,30 +127,30 @@
     <div class="sh"><span class="n">05</span><h2>Usage</h2></div>
     <div class="col2">
       <div class="do ok"><div class="h">Do</div><ul>
+        <li>Keep all five streams at every size, down to 16px.</li>
         <li>Keep the mark's height of clear-space on every side.</li>
-        <li>Fall back to the Avatar below the minimum lockup width.</li>
-        <li>Recolour by ground: editorial blue on limestone, light on navy.</li>
-        <li>Use the favicon cut (heavier) at ≤ 32px.</li>
+        <li>Editorial blue on limestone; white or limestone on navy.</li>
+        <li>Favicon, editorial-blue tile; avatar, editorial-blue disc.</li>
+        <li>Use the heavier favicon cut at ≤ 32px.</li>
       </ul></div>
       <div class="do no"><div class="h">Don't</div><ul>
+        <li>Reduce the stream count, no three-stream or simplified cut.</li>
+        <li>Colour the mark anything but editorial blue; never use teal for identity.</li>
         <li>Two-tone the wordmark, or set it anything but tracked caps.</li>
-        <li>Curve the tributaries or lighten the outflow.</li>
-        <li>Put the descriptor in the navigation.</li>
-        <li>Add a box, shadow, or rounded corner to the mark.</li>
+        <li>Curve the streams, shorten the trunk, or round the terminal.</li>
+        <li>Add a box, shadow, gradient, or rounded corner to the mark.</li>
       </ul></div>
     </div>
   </section>
 </div>
 
 <script>
-const MARK = `<svg viewBox="0 0 46 30" fill="none" stroke="currentColor" stroke-linecap="butt">
-  <path d="M1.5 15 H44.5" stroke-width="2.2"/><path d="M1.5 1 H4.5 L27 15" stroke-width="1.3"/><path d="M1.5 8 H8 L27 15" stroke-width="1.3"/><path d="M1.5 22 H8 L27 15" stroke-width="1.3"/><path d="M1.5 29 H4.5 L27 15" stroke-width="1.3"/>
-</svg>`;
-const FAV = `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="butt">
-  <path d="M4 4 L21 16" stroke-width="2.4"/><path d="M4 10 L21 16" stroke-width="2.4"/>
-  <path d="M4 16 H21" stroke-width="2.4"/><path d="M4 22 L21 16" stroke-width="2.4"/>
-  <path d="M4 28 L21 16" stroke-width="2.4"/><path d="M21 16 H29" stroke-width="3.2"/>
-</svg>`;
+// KIT 02, aligned confluence, frozen. Five streams from a shared origin (x=10), a true 45deg
+// step to the convergence (62,50), one heavier trunk held to 90. Square caps, miter joins.
+const STREAMS = `<polyline points="10,18 24.35,18 62,50" stroke-width="3.2"/><polyline points="10,34 43.18,34 62,50" stroke-width="3.2"/><line x1="10" y1="50" x2="62" y2="50" stroke-width="3.2"/><polyline points="10,66 43.18,66 62,50" stroke-width="3.2"/><polyline points="10,82 24.35,82 62,50" stroke-width="3.2"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="5.2"/>`;
+const HEAVY   = `<polyline points="10,18 24.35,18 62,50" stroke-width="5.5"/><polyline points="10,34 43.18,34 62,50" stroke-width="5.5"/><line x1="10" y1="50" x2="62" y2="50" stroke-width="5.5"/><polyline points="10,66 43.18,66 62,50" stroke-width="5.5"/><polyline points="10,82 24.35,82 62,50" stroke-width="5.5"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="9"/>`;
+const MARK = `<svg viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter">${STREAMS}</svg>`;
+const FAV  = `<svg viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter">${HEAVY}</svg>`;
 document.querySelectorAll("[data-mark]").forEach(el => el.innerHTML = MARK);
 document.querySelectorAll("[data-fav]").forEach(el => el.innerHTML = FAV);
 document.getElementById("src").textContent = MARK;

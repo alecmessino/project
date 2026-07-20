@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-20T23:29:28+00:00",
+  "generated": "2026-07-20T23:44:49+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 231373,
+    "rows": 232342,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 67998,
-      "live_total": 23658,
-      "live_today": 184,
+      "rows_total": 68477,
+      "live_total": 23754,
+      "live_today": 280,
       "last_row_age_min": 0.1
     },
     "fanduel": {
-      "rows_total": 163369,
-      "live_total": 28239,
-      "live_today": 225,
+      "rows_total": 163859,
+      "live_total": 28379,
+      "live_today": 365,
       "last_row_age_min": 0.1
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 21184.5
+      "last_row_age_min": 21199.8
     }
   },
   "books_reporting_live": [
@@ -37,20 +37,19 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 23658,
-    "OPEN": 25777,
-    "SUSPENDED": 2356,
+    "unset": 23754,
+    "OPEN": 25906,
+    "SUSPENDED": 2367,
     "REMOVED": 106
   },
   "overlap": {
-    "simultaneous_pairs_total": 28835,
-    "simultaneous_pairs_today": 184,
-    "overlap_games": 64,
+    "simultaneous_pairs_total": 28958,
+    "simultaneous_pairs_today": 307,
+    "overlap_games": 68,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
-      "0_books": 15,
-      "1_books": 2,
-      "2_books": 64
+      "0_books": 13,
+      "2_books": 68
     }
   },
   "fix_verification": {
@@ -65,9 +64,9 @@
     "verified": true
   },
   "coverage": {
-    "live_games_seen": 69,
+    "live_games_seen": 71,
     "book_panel_games": 81,
-    "team_total_rows": 12328,
+    "team_total_rows": 12412,
     "innings_seen": [
       1,
       2,
@@ -86,17 +85,17 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 28835,
+        "current": 28958,
         "target": 2000,
         "pass": true,
         "progress": 1.0
       },
       {
         "criterion": "games with live overlap",
-        "current": 64,
+        "current": 68,
         "target": 100,
         "pass": false,
-        "progress": 0.64
+        "progress": 0.68
       },
       {
         "criterion": "median sync lag < 15s",
@@ -114,6 +113,6 @@
       }
     ],
     "cleared": false,
-    "overall_progress": 0.827
+    "overall_progress": 0.837
   }
 }

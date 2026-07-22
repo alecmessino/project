@@ -2,8 +2,9 @@
 
 The firm's contact endpoint and coordinates live in ONE place (drift.site) and propagate to every page;
 these tests fail loudly if a personal Gmail ever returns, if the contact address stops being the firm
-domain, or if the confirmed coordinates (Austin, Texas / Founded 2024) stop rendering — while an unset
-fact (CRD, custodian) must still render nothing rather than a placeholder.
+domain, or if the firm anchor stops rendering the firm name + principal line — while an unset fact
+(CRD, custodian) must still render nothing rather than a placeholder. The anchor is intentionally
+de-localized: it must NOT stamp a city/state (Driftwood reads as institutional, not regional).
 """
 
 from pathlib import Path
@@ -31,12 +32,20 @@ def test_contact_endpoint_is_the_firm_domain_and_single_sourced():
     assert "gmail" not in hub
 
 
-def test_firm_anchor_renders_the_confirmed_coordinates():
+def test_firm_anchor_renders_the_firm_name_and_principal():
     a = site.firm_anchor_html()
     assert "DRIFTWOOD WEALTH" in a
-    assert "AUSTIN, TEXAS" in a and "A PRACTICE OF ALEC MESSINO" in a
+    assert "A PRACTICE OF ALEC MESSINO" in a
     assert "FOUNDED 2024" not in a
     assert "ADVISERINFO.SEC.GOV" not in a and "MODEL DATA AS OF JULY 2026" in a
+
+
+def test_firm_anchor_is_de_localized_no_city_or_state():
+    # Driftwood reads as institutional, not regional: the anchor must not stamp a city/state.
+    facts = site.firm_facts()
+    assert "location" not in facts
+    a = site.firm_anchor_html()
+    assert "AUSTIN" not in a.upper() and "TEXAS" not in a.upper()
 
 
 def test_firm_anchor_omits_unset_facts_never_a_placeholder():
@@ -52,4 +61,5 @@ def test_firm_anchor_band_reaches_pages_via_the_build_token():
     # The homepage carries the rendered band (token injected at build), not the raw token.
     idx = (ROOT / "docs" / "index.html").read_text()
     assert "FIRM_ANCHOR" not in idx, "the <!--FIRM_ANCHOR--> token was not injected at build"
-    assert "firm-anchor" in idx and "AUSTIN, TEXAS" in idx
+    assert "firm-anchor" in idx and "A PRACTICE OF ALEC MESSINO" in idx
+    assert "AUSTIN, TEXAS" not in idx.upper(), "de-localized: no city/state stamp in the firm anchor"

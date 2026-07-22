@@ -119,8 +119,11 @@
   .cta .ct{flex:1;min-width:260px}
   .cta .ch{font-family:var(--sans);font-weight:700;font-size:22px;color:#f1ede3;margin-bottom:6px;letter-spacing:-.02em}
   .cta .cs{font-family:var(--sans);font-size:13.5px;color:var(--accent-strike-soft);line-height:1.55;max-width:46ch}
+  .cta .cbtns{display:flex;flex-direction:column;align-items:flex-end;gap:9px}
   .cta a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:700;white-space:nowrap;padding:15px 26px;border-radius:var(--surface-radius);background:var(--accent-strike);color:#f1ede3}
   .cta a:hover{filter:brightness(1.08)}
+  .cta a.cta-alt{background:none;padding:0;font-weight:600;font-size:12.5px;color:var(--accent-strike-soft);border-bottom:1px solid transparent}
+  .cta a.cta-alt:hover{filter:none;color:#f1ede3;border-bottom-color:var(--accent-strike-soft)}
   @media(max-width:620px){.doc{padding-left:22px;padding-right:22px}.cta{margin-left:22px;margin-right:22px}}
 
   .foot{margin-top:8px;padding:18px 44px 34px;border-top:1px solid var(--line);color:#9a978f;font-size:11px;line-height:1.6}
@@ -152,6 +155,75 @@
   .sysitem .sd{font-size:12px;line-height:1.5;color:var(--dim);margin:0;max-width:22ch}
   @media(max-width:720px){.systems{grid-template-columns:repeat(3,1fr);gap:0 24px}}
   @media(max-width:480px){.systems{grid-template-columns:repeat(2,1fr);gap:0 20px}}
+  /* The Driftwood operating system. The SYSTEM is the coordination between four seats (the horizontal
+     table band); a decision moves left to right through them and returns to the client, decided. The
+     records are the EVIDENCE that coordination leaves: the .stemma grammar (ink spine, square nodes,
+     tabular marks) bent into a cycle, descending I to IV, the blue return-lane carrying it back each
+     year. Seats = the system; ink ledger = the evidence; blue = the loop. */
+  .hiw-os{padding:16px 44px 10px}
+  .os-k{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin:26px 0 10px}
+  .os-h{font-family:var(--sans);font-weight:700;font-size:22px;line-height:1.2;letter-spacing:-.015em;color:var(--ink);margin:0 0 8px}
+  .os-lead{font-family:var(--serif);font-style:italic;font-size:15px;line-height:1.5;color:var(--dim);margin:0 0 22px;max-width:60ch}
+  /* the system: the four seats, a decision moving through them */
+  .os-seats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--ink);max-width:720px;margin:0 0 26px}
+  .seat{position:relative;padding:15px 16px 15px 18px;border-right:1px solid var(--ink)}
+  .seat:last-child{border-right:none}
+  .seat-n{display:block;font-family:var(--sans);font-weight:700;font-size:12.5px;letter-spacing:-.005em;color:var(--ink)}
+  .seat-r{display:block;font-family:var(--sans);font-size:11px;line-height:1.42;color:var(--body);margin-top:4px}
+  .seat + .seat::before{content:"";position:absolute;left:-5px;top:50%;width:9px;height:9px;transform:translateY(-50%) rotate(45deg);border-top:1px solid var(--ink);border-right:1px solid var(--ink);background:var(--bg)}
+  .seat-end{background:var(--soft)}
+  .seat-end .seat-n{color:var(--accent-strike)}
+  .os-evk{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .os-diagram{display:grid;grid-template-columns:46px 1fr;align-items:stretch;max-width:720px}
+  .os-return{position:relative;border:1px solid var(--accent-strike);border-right:none}
+  .os-return .lbl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(180deg);
+    writing-mode:vertical-rl;white-space:nowrap;font-family:var(--sans);font-weight:700;font-size:9px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent-strike)}
+  .os-return .os-arrow{position:absolute;top:-2px;right:-6px;width:12px;height:12px;color:var(--accent-strike)}
+  .os-return .os-arrow *{vector-effect:non-scaling-stroke}
+  .os-ledger{border-left:1px solid var(--ink)}
+  .os-tier{position:relative;display:block;padding:16px 18px 16px 22px;border-top:1px solid var(--line2);text-decoration:none;color:inherit}
+  .os-tier:first-child{border-top:none}
+  .os-tier:hover{background:var(--soft)}
+  .os-tier::before{content:"";position:absolute;left:-4px;top:22px;width:7px;height:7px;background:var(--ink)}
+  .os-body{display:grid;grid-template-columns:1fr auto;column-gap:16px}
+  .os-tier:nth-child(2) .os-body{padding-left:12px}
+  .os-tier:nth-child(3) .os-body{padding-left:24px}
+  .os-tier:nth-child(4) .os-body{padding-left:36px}
+  .os-lbl{grid-column:1;grid-row:1;font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-strike)}
+  .os-n{margin-right:9px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .os-tag{grid-column:2;grid-row:1;justify-self:end;font-family:var(--sans);font-weight:700;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .os-role{grid-column:1/-1;grid-row:2;font-family:var(--sans);font-size:14px;line-height:1.55;color:var(--body);margin:6px 0 0;max-width:56ch}
+  .os-cap{font-family:var(--sans);font-size:12.5px;line-height:1.6;color:var(--muted);margin:16px 0 0;max-width:60ch}
+  .os-cap b{color:var(--dim);font-weight:600}
+  @media(max-width:620px){
+    .hiw-os{padding-left:22px;padding-right:22px}
+    .os-seats{grid-template-columns:1fr 1fr}
+    .seat:nth-child(2){border-right:none}
+    .seat:nth-child(-n+2){border-bottom:1px solid var(--ink)}
+    .seat + .seat::before{display:none}
+    .os-diagram{grid-template-columns:38px 1fr}
+    .os-tier:nth-child(2) .os-body{padding-left:8px}
+    .os-tier:nth-child(3) .os-body{padding-left:16px}
+    .os-tier:nth-child(4) .os-body{padding-left:24px}
+  }
+  @media(max-width:480px){
+    .os-seats{grid-template-columns:1fr}
+    .seat{border-right:none;border-bottom:1px solid var(--line2)}
+    .seat:last-child{border-bottom:none}
+    .os-diagram{grid-template-columns:34px 1fr}
+    .os-return .lbl{display:none}
+    .os-body{grid-template-columns:1fr}
+    .os-tag{grid-column:1;grid-row:2;justify-self:start;margin-top:4px}
+    .os-role{grid-row:3}
+  }
+  @media print{
+    .hiw-os{break-inside:avoid}
+    .os-seats{border-color:var(--ink)}
+    .os-tier:hover{background:none}
+    .os-return{border-color:var(--ink)}
+    .os-return .lbl,.os-return .os-arrow{color:var(--ink)}
+  }
 </style>
 </head>
 <body>
@@ -260,6 +332,32 @@
       </div>
     </div>
 
+    <div class="hiw-os">
+      <div class="os-k">The operating system</div>
+      <div class="os-h">How a decision moves through the household.</div>
+      <p class="os-lead">The operating system isn't the paperwork. It's the standing coordination between four seats, and how one decision moves through all of them before it is made. What gets written down after is the evidence it happened, kept so the next decision starts where the last one ended.</p>
+      <div class="os-seats" role="img" aria-label="A decision moves through four seats: you raise the intention, Driftwood models it and coordinates the seats, your CPA and attorney weigh the tax and the documents, and it returns to you to decide.">
+        <div class="seat"><span class="seat-n">You</span><span class="seat-r">raise the intention</span></div>
+        <div class="seat"><span class="seat-n">Driftwood</span><span class="seat-r">models it, coordinates the seats</span></div>
+        <div class="seat"><span class="seat-n">CPA &amp; attorney</span><span class="seat-r">weigh the tax and the documents</span></div>
+        <div class="seat seat-end"><span class="seat-n">Back to you</span><span class="seat-r">decided, the consequence in view</span></div>
+      </div>
+      <p class="os-evk">The evidence it leaves, kept and reopened each year</p>
+      <div class="os-diagram">
+        <div class="os-return" aria-hidden="true">
+          <span class="lbl">Each year · the Operating Session</span>
+          <svg class="os-arrow" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M2 2 L8 6 L2 10"/></svg>
+        </div>
+        <div class="os-ledger">
+          <a class="os-tier" href="index.html#conversation"><div class="os-body"><div class="os-lbl"><span class="os-n">I</span>Coordination Review</div><div class="os-tag">Entry · the first read</div><p class="os-role">What the first coordinated read leaves behind: your household seen as one system, where it leaks, and the seams where decisions aren't talking.</p></div></a>
+          <a class="os-tier" href="manual.html"><div class="os-body"><div class="os-lbl"><span class="os-n">II</span>Wealth Operating Manual</div><div class="os-tag">Setup · append-only</div><p class="os-role">Where a decision, once every seat has weighed in, is written down with its reason and what would reopen it, so the judgment holds.</p></div></a>
+          <a class="os-tier" href="score.html"><div class="os-body"><div class="os-lbl"><span class="os-n">III</span>Coordination Index</div><div class="os-tag">Standing · measured</div><p class="os-role">The standing read on whether the seats are actually moving together: what's in view, what isn't, and what would move it.</p></div></a>
+          <a class="os-tier" href="awor.html"><div class="os-body"><div class="os-lbl"><span class="os-n">IV</span>Annual Wealth Operating Review</div><div class="os-tag">Governance · annual</div><p class="os-role">The year the four seats sit down together: the record judged, intent re-examined, and every open decision reopened.</p></div></a>
+        </div>
+      </div>
+      <p class="os-cap">The coordination is the system. The records are its evidence, and every year the Operating Session brings the seats back to the table and reopens them. <b>Coordination compounds.</b></p>
+    </div>
+
     <div class="meetings">
       <div class="mh">The first ninety days, in three conversations.</div>
       <p class="msub">Most of the work is judgment, not paperwork, so most of it happens across three working meetings. Here is what each one is, and what it asks of you.</p>
@@ -348,10 +446,11 @@
 
     <div class="cta">
       <div class="ct">
-        <div class="ch">It starts before you begin.</div>
-        <div class="cs">See what a coordinated approach could be worth on your own numbers, by your state and bracket, in about two minutes.</div>
+        <div class="ch">The next step is a conversation.</div>
+        <div class="cs">If the sequence above fits what your household needs, a Coordination Review is where it begins: your numbers, your state, read as one system, with no obligation.</div>
       </div>
-      <div><a href="leakage.html">Run the Tax Diagnostic →</a></div>
+      <div class="cbtns"><a href="index.html#conversation">Request a Coordination Review →</a>
+        <a class="cta-alt" href="leakage.html">or start on your own with the Tax Diagnostic</a></div>
     </div>
 
     <div class="hiw-systems">

@@ -58,7 +58,7 @@ const card = (title, sub) => `<!doctype html><html><head><meta charset="utf-8"><
   <div class="accent"></div>
   <div class="lockup">${MARK}<span class="rule"></span><span class="wm">Driftwood&nbsp;Wealth</span></div>
   <div class="body">
-    <div class="kicker">Private Wealth Architecture</div>
+    <div class="kicker">A Private Wealth Operating System</div>
     <h1>${title}</h1>
     <div class="sub">${sub}</div>
   </div>

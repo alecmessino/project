@@ -56,7 +56,7 @@
     letter-spacing:-.022em;color:var(--ink);margin:0 0 22px;max-width:20ch}
   .lede{font-family:var(--serif);font-size:18.5px;line-height:1.58;color:var(--dim);margin:0 0 6px;max-width:58ch}
   .lede b{color:var(--ink);font-weight:500}
-  /* Personalized banner — shown only when a state/portfolio arrives (URL or saved household). */
+  /* Personalized banner, shown only when a state/portfolio arrives (URL or saved household). */
   .pband{margin:6px 44px 0;max-width:66ch;font-family:var(--sans);font-size:13.5px;line-height:1.55;color:var(--dim);
     padding:12px 16px;background:var(--soft);border-left:2px solid var(--accent-strike-soft);border-radius:6px}
   .pband[hidden]{display:none}
@@ -67,7 +67,7 @@
   .guardrail .gk{flex:none;font-family:var(--sans);font-weight:700;font-size:9.5px;letter-spacing:.12em;
     text-transform:uppercase;color:var(--dim)}
   .guardrail b{color:var(--dim);font-weight:600}
-  /* A first-person note from the principal — human context near the ask. */
+  /* A first-person note from the principal, human context near the ask. */
   .pnote{margin:8px 44px 0;padding:18px 20px;background:var(--soft);border:1px solid var(--line);
     border-radius:var(--surface-radius);max-width:72ch}
   .pnote .pn-k{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
@@ -111,33 +111,31 @@
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"/><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"/><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"/><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"/><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-links">
         <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Firm<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">The Firm<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
-            <a href="about.html">Our Story</a>
-            <a href="principles.html">Philosophy</a>
+            <a href="principles.html">Our Story &amp; Principles</a>
             <a href="fees.html">Fees</a>
           </div>
         </div>
         <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Approach<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">The Method<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
-            <a href="inside.html">Operating&nbsp;System</a>
             <a href="howitworks.html">How It Works</a>
             <a href="thesis.html">How We Invest</a>
           </div>
         </div>
         <div class="dwnav-drop dwnav-drop--current">
-          <button class="dwnav-trigger" type="button">Tools &amp; Research<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">Research<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
-            <a href="score.html">Coordination&nbsp;Assessment</a>
+            <a href="research.html">Research &amp; Atlas</a>
+            <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
             <a href="leakage.html">Tax&nbsp;Diagnostic</a>
             <a href="taxlab.html" aria-current="page">After-Tax&nbsp;Review</a>
-            <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
-            <a href="research.html">Research&nbsp;Hub</a>
+            <a href="score.html">Coordination&nbsp;Assessment</a>
           </div>
         </div>
+        <a class="dwnav-access" href="partners.html">For CPAs &amp; Attorneys</a>
       </div>
-      <a class="dwnav-access" aria-label="Client Access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="index.html#conversation">Request Review</a>
     </nav>
     <div id="dw-household" data-page="taxlab"></div>
@@ -154,7 +152,7 @@
 
     <p class="pband" id="tl-pband" hidden></p>
 
-    <p class="guardrail"><span class="gk">How to read this</span><span>The state &amp; federal <b>rates</b> come from current tax code; the <b>coordination figure</b> is an illustrative model of what disciplined tax management has recovered over time — a diagnostic, not a forecast, and not a robo-advisor's black box.</span></p>
+    <p class="guardrail"><span class="gk">How to read this</span><span>The state &amp; federal <b>rates</b> come from current tax code; the <b>coordination figure</b> is an illustrative model of what disciplined tax management has recovered over time, a diagnostic, not a forecast, and not a robo-advisor's black box.</span></p>
 
     <!-- ── The single exhibit, coordinated vs isolated, isolated from market return ── -->
     <div class="sec">
@@ -225,14 +223,13 @@
 
     <div class="cred">
       <b>Evidence-based</b><span class="dot">·</span>
-      <b>Coordinates with your CPA &amp; attorney</b><span class="dot">·</span>
-      <b>No commissions</b>
+      <b>Coordinates with your CPA &amp; attorney</b>
     </div>
 
     <div class="pnote" id="tl-pnote">
       <div class="pn-k">A note from the founder</div>
-      <p>The figure above is illustrative and deliberately conservative — it counts only the portfolio layer of coordination. The private After-Tax Review computes it on your actual holdings, and a short call is where we'd look at the estate, gifting, and residency coordination this exhibit leaves at zero.</p>
-      <div class="pn-sig">— <b>Alec Messino</b>, Founder · Driftwood Wealth</div>
+      <p>The figure above is illustrative and deliberately conservative, it counts only the portfolio layer of coordination. The private After-Tax Review computes it on your actual holdings, and a short call is where we'd look at the estate, gifting, and residency coordination this exhibit leaves at zero.</p>
+      <div class="pn-sig"><b>Alec Messino</b>, Founder · Driftwood Wealth</div>
     </div>
 
     <!-- ── One CTA ── -->

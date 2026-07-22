@@ -107,6 +107,24 @@
   .foot .note{color:var(--dim);font-weight:500}
   .foot b{color:var(--dim)}
   @media(max-width:620px){ .doc{padding:0 22px} .foot{padding-left:22px;padding-right:22px} }
+  /* Folded from the former Our Story page: the founder as a trust artifact for UHNW + CPA partners. */
+  .firm-who{padding:2px 44px 12px}
+  .firm-who .rule{height:1px;background:var(--line,#d8d3c6);margin:22px 0 30px}
+  .firm-who .sh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike,#2c5878);margin:0 0 18px}
+  .founder{display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:start;margin:6px 0 0}
+  @media(max-width:680px){.founder{grid-template-columns:1fr;gap:26px}}
+  .founder-photo{margin:0}
+  .founder-photo img{width:100%;max-width:300px;height:auto;aspect-ratio:1/1;object-fit:cover;object-position:center 30%;border:1px solid var(--frame-line,#c3bcab);display:block}
+  @media(max-width:680px){.founder-photo img{max-width:264px}}
+  .founder-name{font-family:var(--sans);font-weight:700;font-size:24px;letter-spacing:-.02em;color:var(--ink);margin:0}
+  .founder-role{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass,#2c5878);margin:5px 0 18px}
+  .founder-bio p{font-size:16px;line-height:1.72;color:var(--body);margin:0 0 14px}
+  .founder-bio p:last-of-type{margin-bottom:0}
+  .founder-credo{font-family:var(--serif);font-size:16.5px;line-height:1.5;color:var(--ink);font-style:italic;margin:16px 0 0;padding-left:16px;border-left:2px solid var(--frame-line,#c3bcab)}
+  .founder-sign{margin:20px 0 0;padding-left:16px}
+  .founder-sign .sig{display:block;font-family:var(--serif);font-style:italic;font-weight:500;font-size:30px;line-height:1;letter-spacing:.01em;color:var(--ink)}
+  .founder-sign .sigline{display:block;margin-top:9px;font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .trust-strip{grid-column:1/-1;margin-top:30px;padding-top:15px;border-top:1px solid var(--line,#d8d3c6);font-family:var(--sans);font-size:12.5px;line-height:1.9;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -117,33 +135,31 @@
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"/><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"/><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"/><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"/><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-links">
         <div class="dwnav-drop dwnav-drop--current">
-          <button class="dwnav-trigger" type="button">Firm<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">The Firm<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
-            <a href="about.html">Our Story</a>
-            <a href="principles.html" aria-current="page">Philosophy</a>
+            <a href="principles.html" aria-current="page">Our Story &amp; Principles</a>
             <a href="fees.html">Fees</a>
           </div>
         </div>
         <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Approach<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">The Method<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
-            <a href="inside.html">Operating&nbsp;System</a>
             <a href="howitworks.html">How It Works</a>
             <a href="thesis.html">How We Invest</a>
           </div>
         </div>
         <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Tools &amp; Research<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">Research<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
-            <a href="score.html">Coordination&nbsp;Assessment</a>
+            <a href="research.html">Research &amp; Atlas</a>
+            <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
             <a href="leakage.html">Tax&nbsp;Diagnostic</a>
             <a href="taxlab.html">After-Tax&nbsp;Review</a>
-            <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
-            <a href="research.html">Research&nbsp;Hub</a>
+            <a href="score.html">Coordination&nbsp;Assessment</a>
           </div>
         </div>
+        <a class="dwnav-access" href="partners.html">For CPAs &amp; Attorneys</a>
       </div>
-      <a class="dwnav-access" aria-label="Client Access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="index.html#conversation">Request Review</a>
     </nav>
 
@@ -226,6 +242,30 @@
       <p class="slogan">Investments compound. Coordination determines what remains.<span class="s">Coordination compounds, and it compounds first.</span></p>
 
       <div class="onward" style="margin-top:26px">See the thinking in practice: <a href="coordination.html">a worked example →</a></div>
+    </div>
+
+    <div class="firm-who">
+      <div class="rule"></div>
+      <div class="sh">Who's behind the firm</div>
+      <div class="founder">
+        <figure class="founder-photo">
+          <img src="Headshot.jpg" width="300" height="300" alt="Alec Messino, Founder of Driftwood" onerror="this.closest('.founder-photo').style.display='none'">
+        </figure>
+        <div class="founder-bio">
+          <p class="founder-name">Alec Messino</p>
+          <p class="founder-role">Founder</p>
+          <p>Alec founded Driftwood after working across both institutional investment management and private wealth advisory. He saw wealth from two very different vantage points. First, helping many of the country's leading advisory firms build evidence-based investment programs. Then, working directly with families navigating the practical realities of investing, taxes, estate planning, and long-term decisions.</p>
+          <p>The same conclusion kept emerging. Financial decisions rarely break down because individual professionals lack expertise. They break down because important decisions aren't connected. Driftwood was built to solve that problem.</p>
+          <p class="founder-credo">"I didn't want to be one more specialist at the table. I wanted to be the one accountable for how the whole table fits together."</p>
+          <div class="founder-sign" aria-label="Signed, Alec Messino, Founder of Driftwood">
+            <span class="sig">Alec Messino</span>
+            <span class="sigline">Founder · Driftwood</span>
+          </div>
+        </div>
+        <div class="trust-strip">
+          <span class="c">B.S.&nbsp;Finance &amp; Economic Consulting, with Distinction, Indiana University&nbsp;Kelley</span>
+        </div>
+      </div>
     </div>
 
     <div class="foot">

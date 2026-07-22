@@ -876,15 +876,31 @@ def export_state_pages(out_dir: str | Path = "docs", edition: str = CURRENT_EDIT
     return written
 
 
-# Core (non-state) pages that also belong in the sitemap, with priorities.
+# Core (non-state) pages that also belong in the sitemap, with priorities. Every indexable public
+# page is listed; deliberately absent are the Core Alpha research series, workspace.html, and
+# waitlist.html (non-marketing / compliance-sensitive surfaces) and the noindex/redirect stubs.
 _CORE_SITEMAP = [
     ("index.html", "1.0", "weekly"), ("research.html", "0.9", "weekly"),
     ("every-portfolio-has-two-returns.html", "0.8", "monthly"),
     ("principles.html", "0.9", "monthly"),
+    ("howitworks.html", "0.9", "monthly"), ("fees.html", "0.9", "monthly"),
     ("taxlab.html", "0.9", "weekly"),
     ("leakage.html", "0.9", "monthly"), ("statemap.html", "0.8", "monthly"),
     ("concentration.html", "0.8", "monthly"),
     ("states.html", "0.8", "monthly"), ("thesis.html", "0.7", "monthly"),
+    ("score.html", "0.8", "monthly"), ("coordination.html", "0.8", "monthly"),
+    ("library.html", "0.8", "monthly"), ("familyoffice.html", "0.8", "monthly"),
+    ("review.html", "0.8", "monthly"), ("record.html", "0.7", "monthly"),
+    ("manual.html", "0.7", "monthly"), ("awor.html", "0.7", "monthly"),
+    ("decision-register.html", "0.7", "monthly"), ("opportunity-register.html", "0.7", "monthly"),
+    ("constitution.html", "0.7", "monthly"), ("capital-allocation.html", "0.7", "monthly"),
+    ("ic-memo.html", "0.7", "monthly"), ("transition-plan.html", "0.7", "monthly"),
+    ("enough-is-a-number.html", "0.7", "monthly"),
+    ("the-worlds-largest-investors.html", "0.7", "monthly"),
+    ("case-business-sale.html", "0.6", "monthly"), ("case-charitable-giving.html", "0.6", "monthly"),
+    ("case-inheritance.html", "0.6", "monthly"), ("case-moving-states.html", "0.6", "monthly"),
+    ("case-rmds.html", "0.6", "monthly"), ("case-stock-options.html", "0.6", "monthly"),
+    ("case-vacation-home.html", "0.6", "monthly"), ("case-widowed.html", "0.6", "monthly"),
 ]
 
 

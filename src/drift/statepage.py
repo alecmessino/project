@@ -229,33 +229,31 @@ NAV = (
     '<span class="brand-word">Driftwood Wealth</span></a>\n'
     '  <div class="dwnav-links">\n'
     '    <div class="dwnav-drop">\n'
-    '      <button class="dwnav-trigger" type="button">Firm<span class="caret" aria-hidden="true"></span></button>\n'
+    '      <button class="dwnav-trigger" type="button">The Firm<span class="caret" aria-hidden="true"></span></button>\n'
     '      <div class="dwnav-panel">\n'
-    '        <a href="about.html">Our Story</a>\n'
-    '        <a href="principles.html">Philosophy</a>\n'
+    '        <a href="principles.html">Our Story &amp; Principles</a>\n'
     '        <a href="fees.html">Fees</a>\n'
     '      </div>\n'
     '    </div>\n'
     '    <div class="dwnav-drop">\n'
-    '      <button class="dwnav-trigger" type="button">Approach<span class="caret" aria-hidden="true"></span></button>\n'
+    '      <button class="dwnav-trigger" type="button">The Method<span class="caret" aria-hidden="true"></span></button>\n'
     '      <div class="dwnav-panel">\n'
-    '        <a href="inside.html">Operating&nbsp;System</a>\n'
     '        <a href="howitworks.html">How It Works</a>\n'
     '        <a href="thesis.html">How We Invest</a>\n'
     '      </div>\n'
     '    </div>\n'
     '    <div class="dwnav-drop dwnav-drop--current">\n'
-    '      <button class="dwnav-trigger" type="button">Tools &amp; Research<span class="caret" aria-hidden="true"></span></button>\n'
+    '      <button class="dwnav-trigger" type="button">Research<span class="caret" aria-hidden="true"></span></button>\n'
     '      <div class="dwnav-panel">\n'
-    '        <a href="score.html">Coordination&nbsp;Assessment</a>\n'
+    '        <a href="research.html">Research&nbsp;&amp;&nbsp;Atlas</a>\n'
+    '        <a href="statemap.html" aria-current="page">State&nbsp;Tax&nbsp;Atlas</a>\n'
     '        <a href="leakage.html">Tax&nbsp;Diagnostic</a>\n'
     '        <a href="taxlab.html">After-Tax&nbsp;Review</a>\n'
-    '        <a href="statemap.html" aria-current="page">State&nbsp;Tax&nbsp;Atlas</a>\n'
-    '        <a href="research.html">Research&nbsp;Hub</a>\n'
+    '        <a href="score.html">Coordination&nbsp;Assessment</a>\n'
     '      </div>\n'
     '    </div>\n'
+    '    <a class="dwnav-access" href="partners.html">For CPAs &amp; Attorneys</a>\n'
     '  </div>\n'
-    '  <a class="dwnav-access" aria-label="Client Access" href="private.html">Client Access</a>\n'
     '  <a class="dwnav-cta" href="index.html#conversation">Request Review</a>\n'
     '</nav>'
 )
@@ -883,13 +881,10 @@ _CORE_SITEMAP = [
     ("index.html", "1.0", "weekly"), ("research.html", "0.9", "weekly"),
     ("every-portfolio-has-two-returns.html", "0.8", "monthly"),
     ("principles.html", "0.9", "monthly"),
-    ("about.html", "0.9", "monthly"),
     ("taxlab.html", "0.9", "weekly"),
     ("leakage.html", "0.9", "monthly"), ("statemap.html", "0.8", "monthly"),
     ("concentration.html", "0.8", "monthly"),
     ("states.html", "0.8", "monthly"), ("thesis.html", "0.7", "monthly"),
-    ("ledger.html", "0.5", "weekly"), ("tearsheet.html", "0.5", "weekly"),
-    ("equities.html", "0.4", "weekly"), ("equities_case_studies.html", "0.4", "weekly"),
 ]
 
 

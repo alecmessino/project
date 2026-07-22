@@ -75,7 +75,7 @@
   .cadence .cd{font-size:13.5px;color:var(--body);line-height:1.5}
 
   /* Who does what, the hand-offs, plainly. */
-  /* The three conversations — the human first 90 days, in the client's seat */
+  /* The three conversations, the human first 90 days, in the client's seat */
   .meetings{padding:14px 44px 8px}
   .meetings .mh{font-family:var(--sans);font-weight:700;font-size:22px;line-height:1.2;letter-spacing:-.015em;color:var(--ink);margin:22px 0 10px}
   .meetings .msub{font-size:15.5px;line-height:1.6;color:var(--body);margin:0 0 22px;max-width:64ch}
@@ -87,7 +87,7 @@
   .mcard p{font-size:14px;line-height:1.6;color:var(--body);margin:0 0 12px}
   .mcard p b{color:var(--ink);font-weight:600}
   .mcard .mq{font-family:var(--serif);font-size:13.5px;line-height:1.55;color:var(--dim);border-left:2px solid var(--accent-strike-soft);padding-left:12px}
-  /* Principal note — the human anchor on the engagement page */
+  /* Principal note, the human anchor on the engagement page */
   .hiw-pnote{margin:26px 44px 6px;padding:22px 24px;background:var(--soft);border:1px solid var(--line);border-radius:var(--surface-radius);max-width:74ch}
   .hiw-pnote .pn-k{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:9px}
   .hiw-pnote p{font-family:var(--serif);font-size:15.5px;line-height:1.62;color:var(--ink);margin:0 0 11px}
@@ -138,6 +138,20 @@
   .ripplesec .rsn{font-size:12.5px;line-height:1.6;color:var(--muted);margin:16px auto 0;max-width:560px;text-align:center}
   .ripplesec .rsn a{color:var(--teal2)}
   @media(max-width:620px){.ripplesec{padding-left:22px;padding-right:22px}}
+  /* Folded from the former Operating System page: the seven-systems framework, core differentiator. */
+  .hiw-systems{padding:16px 44px 22px}
+  .hiw-systems .sh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike,#2c5878);margin:26px 0 10px}
+  .hiw-systems .intro{font-size:15.5px;line-height:1.6;color:var(--body);margin:0 0 18px;max-width:64ch}
+  .hiw-systems .intro b{color:var(--ink);font-weight:500}
+  .systems{display:grid;grid-template-columns:repeat(4,1fr);gap:0 30px;margin:8px 0 6px}
+  .sysitem{padding:18px 2px 16px;border-top:1px solid var(--line)}
+  .sysitem .gi{display:block;height:30px;margin-bottom:13px;color:var(--brass,#2c5878)}
+  .sysitem .gi svg{width:30px;height:30px;display:block}
+  .sysitem .gi svg *{vector-effect:non-scaling-stroke}
+  .sysitem .sn{font-family:var(--sans);font-weight:700;font-size:12.5px;letter-spacing:.02em;color:var(--ink);margin:0 0 5px}
+  .sysitem .sd{font-size:12px;line-height:1.5;color:var(--dim);margin:0;max-width:22ch}
+  @media(max-width:720px){.systems{grid-template-columns:repeat(3,1fr);gap:0 24px}}
+  @media(max-width:480px){.systems{grid-template-columns:repeat(2,1fr);gap:0 20px}}
 </style>
 </head>
 <body>
@@ -148,33 +162,31 @@
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"/><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"/><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"/><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"/><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-links">
         <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Firm<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">The Firm<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
-            <a href="about.html">Our Story</a>
-            <a href="principles.html">Philosophy</a>
+            <a href="principles.html">Our Story &amp; Principles</a>
             <a href="fees.html">Fees</a>
           </div>
         </div>
         <div class="dwnav-drop dwnav-drop--current">
-          <button class="dwnav-trigger" type="button">Approach<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">The Method<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
-            <a href="inside.html">Operating&nbsp;System</a>
             <a href="howitworks.html" aria-current="page">How It Works</a>
             <a href="thesis.html">How We Invest</a>
           </div>
         </div>
         <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Tools &amp; Research<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">Research<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
-            <a href="score.html">Coordination&nbsp;Assessment</a>
+            <a href="research.html">Research &amp; Atlas</a>
+            <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
             <a href="leakage.html">Tax&nbsp;Diagnostic</a>
             <a href="taxlab.html">After-Tax&nbsp;Review</a>
-            <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
-            <a href="research.html">Research&nbsp;Hub</a>
+            <a href="score.html">Coordination&nbsp;Assessment</a>
           </div>
         </div>
+        <a class="dwnav-access" href="partners.html">For CPAs &amp; Attorneys</a>
       </div>
-      <a class="dwnav-access" aria-label="Client Access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="index.html#conversation">Request Review</a>
     </nav>
 
@@ -250,24 +262,24 @@
 
     <div class="meetings">
       <div class="mh">The first ninety days, in three conversations.</div>
-      <p class="msub">Most of the work is judgment, not paperwork — so most of it happens across three working meetings. Here is what each one is, and what it asks of you.</p>
+      <p class="msub">Most of the work is judgment, not paperwork, so most of it happens across three working meetings. Here is what each one is, and what it asks of you.</p>
       <div class="mgrid">
         <div class="mcard">
           <div class="mk">Meeting one · ~90 minutes</div>
           <h3>The Intent Conversation</h3>
-          <p>Not data collection — the documents already hold the facts. This captures the thing paperwork never does: what your family is trying to accomplish, what must never happen, and the language you use for your own life. It becomes the yardstick every later decision is measured against.</p>
-          <div class="mq">You'll be asked: "When you picture this having gone right in twenty years, what's true?" — and "What must never happen?"</div>
+          <p>Not data collection, the documents already hold the facts. This captures the thing paperwork never does: what your family is trying to accomplish, what must never happen, and the language you use for your own life. It becomes the yardstick every later decision is measured against.</p>
+          <div class="mq">You'll be asked: "When you picture this having gone right in twenty years, what's true?", and "What must never happen?"</div>
         </div>
         <div class="mcard">
           <div class="mk">Meeting two · ~90 minutes</div>
           <h3>The Provenance Session</h3>
-          <p>We go structure by structure — each trust, entity, account title, and policy — and recover the <b>why</b>: what it was meant to do, what it assumed, and what would make you reconsider it. Where the reasoning was lost with a prior advisor, we reconstruct it and mark it to confirm. This is where "we have documents" becomes "we have judgment preserved."</p>
-          <div class="mq">The by-product: wherever an old rationale no longer holds under today's facts, that is a finding — and it becomes a coordination opportunity.</div>
+          <p>We go structure by structure, each trust, entity, account title, and policy, and recover the <b>why</b>: what it was meant to do, what it assumed, and what would make you reconsider it. Where the reasoning was lost with a prior advisor, we reconstruct it and mark it to confirm. This is where "we have documents" becomes "we have judgment preserved."</p>
+          <div class="mq">The by-product: wherever an old rationale no longer holds under today's facts, that is a finding, and it becomes a coordination opportunity.</div>
         </div>
         <div class="mcard">
           <div class="mk">Meeting three · ~2 hours</div>
           <h3>The Charter Session</h3>
-          <p>We walk your Wealth Operating Manual end to end: confirm the decisions that still hold, retire the ones that don't, open the decisions ahead — a sale, a move, a conversion ladder — and set the exact conditions that would reopen each. This <b>is</b> your first Operating Session; every year after runs the same way.</p>
+          <p>We walk your Wealth Operating Manual end to end: confirm the decisions that still hold, retire the ones that don't, open the decisions ahead, a sale, a move, a conversion ladder, and set the exact conditions that would reopen each. This <b>is</b> your first Operating Session; every year after runs the same way.</p>
           <div class="mq">You leave with a published Manual v1 and a calendar of what gets watched, by whom, and when.</div>
         </div>
       </div>
@@ -275,8 +287,8 @@
 
     <div class="hiw-pnote">
       <div class="pn-k">A note from the founder</div>
-      <p>Most firms sell you a portfolio and call it a plan. What we build is a standing record of your family's judgment — why each decision was made, and what would change it — so that ten years from now it still makes sense, even to a different advisor. That is the work these three conversations begin, and the reason the relationship is a cadence, not a transaction.</p>
-      <div class="pn-sig">— <b>Alec Messino</b>, Founder · Driftwood Wealth</div>
+      <p>Most firms sell you a portfolio and call it a plan. What we build is a standing record of your family's judgment, why each decision was made, and what would change it, so that ten years from now it still makes sense, even to a different advisor. That is the work these three conversations begin, and the reason the relationship is a cadence, not a transaction.</p>
+      <div class="pn-sig"><b>Alec Messino</b>, Founder · Driftwood Wealth</div>
     </div>
 
     <div class="roles">
@@ -340,6 +352,47 @@
         <div class="cs">See what a coordinated approach could be worth on your own numbers, by your state and bracket, in about two minutes.</div>
       </div>
       <div><a href="leakage.html">Run the Tax Diagnostic →</a></div>
+    </div>
+
+    <div class="hiw-systems">
+      <div class="sh">The seven systems</div>
+      <p class="intro">A financial life isn't one decision, it's seven systems that constantly move each other. These are the parts Driftwood keeps in view at once, the same map that holds together on the home page, so no decision is made in isolation.</p>
+      <div class="systems">
+        <div class="sysitem">
+          <span class="gi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M9 9 V39 H39"/><path d="M13 33 L21 25 L27 29 L37 15"/><path d="M32 15 H37 V20"/></svg></span>
+          <p class="sn">Investments</p>
+          <p class="sd">What you own sets everything downstream.</p>
+        </div>
+        <div class="sysitem">
+          <span class="gi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M14 8 H34 V40 L30 37 L26 40 L22 37 L18 40 L14 37 Z"/><path d="M18 15 H30 M18 21 H30 M18 27 H26"/></svg></span>
+          <p class="sn">Taxes</p>
+          <p class="sd">What you keep, after every decision.</p>
+        </div>
+        <div class="sysitem">
+          <span class="gi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><ellipse cx="24" cy="15" rx="11" ry="4"/><path d="M13 15 V25 C13 27.2 17.9 29 24 29 C30.1 29 35 27.2 35 25 V15"/><path d="M13 20 C13 22.2 17.9 24 24 24 C30.1 24 35 22.2 35 20"/></svg></span>
+          <p class="sn">Liquidity &amp; Cash Flow</p>
+          <p class="sd">What's available, and what comes in.</p>
+        </div>
+        <div class="sysitem">
+          <span class="gi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M9 18 L24 9 L39 18"/><path d="M13 18 V34 M20 18 V34 M28 18 V34 M35 18 V34"/><path d="M8 38 H40 M11 34 H37"/></svg></span>
+          <p class="sn">Estate &amp; Legacy</p>
+          <p class="sd">What continues, and to whom.</p>
+        </div>
+        <div class="sysitem">
+          <span class="gi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M24 7 L38 12 V23 C38 31 32 37 24 41 C16 37 10 31 10 23 V12 Z"/><circle cx="24" cy="21" r="3"/><path d="M24 24 V30"/></svg></span>
+          <p class="sn">Risk &amp; Protection</p>
+          <p class="sd">The floor under the whole plan.</p>
+        </div>
+        <div class="sysitem">
+          <span class="gi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="18" y="9" width="12" height="8"/><path d="M24 17 V21 M13 21 H35 M13 21 V27 M35 21 V27"/><rect x="8" y="27" width="10" height="8"/><rect x="30" y="27" width="10" height="8"/></svg></span>
+          <p class="sn">Ownership &amp; Structure</p>
+          <p class="sd">Where the wealth actually lives.</p>
+        </div>
+        <div class="sysitem">
+          <span class="gi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><circle cx="24" cy="24" r="15"/><path d="M24 13 L28.5 24 L24 35 L19.5 24 Z"/></svg></span>
+          <p class="sn">Purpose &amp; Family</p>
+          <p class="sd">What all of it is actually for.</p>
+        </div>
     </div>
 
     <div class="foot">

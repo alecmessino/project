@@ -194,7 +194,7 @@
   .diag-insight{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.5;color:var(--dim);
     margin:0 0 14px;max-width:56ch;padding-left:16px;border-left:2px solid var(--accent-strike)}
   /* the bridge from the six conditions to the State Atlas: quiet serif connective tissue naming the
-     state as the environment those conditions play out in. Prose only — it frames the single action
+     state as the environment those conditions play out in. Prose only, it frames the single action
      (the .quiet CTA directly below), so no second link competes with it. */
   .diag-bridge{font-family:var(--serif);font-size:15.5px;line-height:1.6;color:var(--dim);margin:0 0 20px;max-width:58ch}
   @media(max-width:700px){.diag{grid-template-columns:1fr;max-width:60ch}}
@@ -214,7 +214,7 @@
   .m-verb{font-family:var(--sans);font-weight:700;font-size:clamp(25px,1.6vw + 14px,34px);letter-spacing:-.022em;color:var(--ink);margin:0}
   .m-q{font-family:var(--serif);font-size:19px;line-height:1.4;color:var(--ink);margin:0 0 10px;max-width:34ch}
   .m-d{font-family:var(--sans);font-size:14px;line-height:1.58;color:var(--dim);margin:0 0 16px;max-width:48ch}
-  /* One quiet on-ramp per diagnostic step (Diagnose→leakage, Measure→taxlab) — an index entry, not a button. */
+  /* One quiet on-ramp per diagnostic step (Diagnose→leakage, Measure→taxlab), an index entry, not a button. */
   .m-go{display:inline-block;margin:0;font-family:var(--sans);font-weight:600;font-size:13px;letter-spacing:.01em;
     color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft);transition:border-color .2s ease}
   .m-go:hover{border-bottom-color:var(--accent-strike)}
@@ -274,8 +274,8 @@
   .node.active .dot{fill:var(--ink)}
   .node.active .lbl{fill:var(--ink);font-weight:700}
   /* The resting composition: the full seven-system lattice, lit (Investments, Taxes, Liquidity, Estate,
-     Protection, Ownership, Purpose). This static, fully lit state is the DEFAULT for everyone — no-JS,
-     reduced-motion, and the interactive default alike — so the plate makes its point at rest, with no
+     Protection, Ownership, Purpose). This static, fully lit state is the DEFAULT for everyone, no-JS,
+     reduced-motion, and the interactive default alike, so the plate makes its point at rest, with no
      animation. Hovering / focusing / tracing clears .seeded to light one specific scenario. */
   .sysstage.seeded .net{stroke:var(--accent-strike);stroke-width:1;opacity:.72}
   .sysstage.seeded .node .dot{fill:var(--ink)}
@@ -283,7 +283,7 @@
   .node:focus{outline:none}
   .node:focus-visible .hit{stroke:var(--accent-strike);stroke-width:2}
   /* (The plate rests static and fully lit. There is no auto-rotation, so no breathing pulse and no
-     .rotating state — the resting composition is the .seeded lattice above; all motion is interaction-
+     .rotating state, the resting composition is the .seeded lattice above; all motion is interaction-
      driven and lives in the trace/story layers in script.) */
   /* the micro-story, a memorable line, one consequence, and a footnote-quiet proof */
   .mstory{position:relative;max-width:60ch;margin:24px auto 0;min-height:166px;padding-top:20px;border-top:1px solid var(--line2)}
@@ -295,7 +295,7 @@
   .mstory.show .mrest{opacity:0}
   .mstory.show .mlead,.mstory.show .mchain,.mstory.show .mproof{opacity:1}
   /* moving between scenarios (hovering one system, then another) the panel dips out quickly, swaps text,
-     then eases back in — a composed crossfade rather than a hard flash. */
+     then eases back in, a composed crossfade rather than a hard flash. */
   .mstory.swapping .mlead,.mstory.swapping .mchain,.mstory.swapping .mproof{opacity:0;transition:opacity .18s ease}
   /* the trigger rail, trace a common decision; specimen labels, not software buttons. Sits directly
      under the reading panel (no rule) so the two read as one exhibit block, not two boxed zones. */
@@ -388,33 +388,31 @@
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"/><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"/><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"/><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"/><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-links">
         <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Firm<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">The Firm<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
-            <a href="about.html">Our Story</a>
-            <a href="principles.html">Philosophy</a>
+            <a href="principles.html">Our Story &amp; Principles</a>
             <a href="fees.html">Fees</a>
           </div>
         </div>
         <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Approach<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">The Method<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
-            <a href="inside.html">Operating&nbsp;System</a>
             <a href="howitworks.html">How It Works</a>
             <a href="thesis.html">How We Invest</a>
           </div>
         </div>
         <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">Tools &amp; Research<span class="caret" aria-hidden="true"></span></button>
+          <button class="dwnav-trigger" type="button">Research<span class="caret" aria-hidden="true"></span></button>
           <div class="dwnav-panel">
-            <a href="score.html">Coordination&nbsp;Assessment</a>
+            <a href="research.html">Research &amp; Atlas</a>
+            <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
             <a href="leakage.html">Tax&nbsp;Diagnostic</a>
             <a href="taxlab.html">After-Tax&nbsp;Review</a>
-            <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
-            <a href="research.html">Research&nbsp;Hub</a>
+            <a href="score.html">Coordination&nbsp;Assessment</a>
           </div>
         </div>
+        <a class="dwnav-access" href="partners.html">For CPAs &amp; Attorneys</a>
       </div>
-      <a class="dwnav-access" aria-label="Client Access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="index.html#conversation">Request Review</a>
     </nav>
 
@@ -540,7 +538,7 @@
       </div>
       <p class="diag-insight">Institutions review all six every year. Most households discover one or two only after they've become expensive.</p>
       <p class="diag-bridge">These six are where coordination breaks down. Your state's rules are the
-        environment they play out in — see how much is at stake, and how your state's rules shape it.</p>
+        environment they play out in, see how much is at stake, and how your state's rules shape it.</p>
       <div class="ctas">
         <a class="quiet" href="statemap.html?tab=coordination">See what's at stake in your state →</a>
       </div>

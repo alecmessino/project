@@ -63,7 +63,7 @@ const card = (title, sub) => `<!doctype html><html><head><meta charset="utf-8"><
     <div class="sub">${sub}</div>
   </div>
   <div class="foot"><span class="pill">Illustrative modeling</span>
-    <span>Registered Investment Adviser&nbsp;&nbsp;·&nbsp;&nbsp;Austin, Texas</span></div>
+    <span>Registered Investment Adviser</span></div>
 </body></html>`;
 
 const b = await chromium.launch({ executablePath: EXE });

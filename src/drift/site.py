@@ -33,7 +33,8 @@ BOOKING_URL = "https://calendly.com/alec-messino/15-minute-introductory-meeting"
 
 # Confirmed firm facts (principal-directed, July 2026):
 FIRM_LEGAL_NAME = "Driftwood Wealth"
-FIRM_LOCATION = "Austin, Texas"  # the firm's city/state, an intentional part of the presentation
+FIRM_LOCATION = ""  # de-localized: Driftwood reads as institutional, not regional, so no city/state is
+                    # stamped in marketing/branding. Location belongs only in legal/ADV disclosures.
 FIRM_SINCE = "2024"              # founding year, for the "Founded" line
 
 # Deferred, consumed by the firm-anchor band once confirmed; empty means "render nothing":

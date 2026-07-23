@@ -75,6 +75,7 @@ def main() -> int:
                   "score.html", "review.html", "awor.html", "inside.html", "decision-register.html",
                   "constitution.html", "capital-allocation.html", "opportunity-register.html",
                   "record.html", "ic-memo.html", "transition-plan.html", "waitlist.html", "partners.html",
+                  "coordination-review.html",
                   "letter.html", "private.html"):
         (DOCS / asset).write_text(_inject_tokens((WEB / asset).read_text()))
         print(f"   {asset:15} -> docs/{asset} (copied)")

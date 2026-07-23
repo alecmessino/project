@@ -254,7 +254,7 @@ NAV = (
     '    </div>\n'
     '    <a class="dwnav-access" href="partners.html">For CPAs &amp; Attorneys</a>\n'
     '  </div>\n'
-    '  <a class="dwnav-cta" href="index.html#conversation">Request Review</a>\n'
+    '  <a class="dwnav-cta" href="coordination-review.html">Request Review</a>\n'
     '</nav>'
 )
 
@@ -881,6 +881,7 @@ def export_state_pages(out_dir: str | Path = "docs", edition: str = CURRENT_EDIT
 # waitlist.html (non-marketing / compliance-sensitive surfaces) and the noindex/redirect stubs.
 _CORE_SITEMAP = [
     ("index.html", "1.0", "weekly"), ("research.html", "0.9", "weekly"),
+    ("coordination-review.html", "0.95", "monthly"),
     ("every-portfolio-has-two-returns.html", "0.8", "monthly"),
     ("principles.html", "0.9", "monthly"),
     ("howitworks.html", "0.9", "monthly"), ("fees.html", "0.9", "monthly"),

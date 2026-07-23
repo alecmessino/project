@@ -228,17 +228,56 @@
   @media(max-width:700px){.m-row{grid-template-columns:1fr;gap:6px 0}.m-body{margin-top:4px}}
   /* the centerpiece, the four proprietary standing records the method produces, given real weight:
      the firm's infrastructure is the differentiator, not the process. A 2×2 vitrine of named artifacts. */
-  .docs{margin-top:20px;padding-top:24px;border-top:2px solid var(--ink)}
-  .docs-cap{font-family:var(--serif);font-size:clamp(18px,.6vw + 15px,21px);line-height:1.5;color:var(--ink);margin:0 0 22px;max-width:52ch}
-  .docs-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 54px}
-  .doc{border-top:1px solid var(--line2)}
-  .doc a{display:block;padding:20px 0 22px;text-decoration:none;color:inherit}
-  .doc-t{display:block;font-family:var(--sans);font-weight:700;font-size:19px;letter-spacing:-.012em;color:var(--ink);margin-bottom:8px;transition:color .2s ease}
-  .doc-d{display:block;font-family:var(--serif);font-size:15px;line-height:1.45;color:var(--dim);margin-bottom:12px;max-width:36ch}
-  .doc-go{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--accent-strike);transition:color .2s ease}
-  .doc a:hover .doc-t{color:var(--accent-strike)}
-  .doc a:hover .doc-go{color:#1e4666;text-decoration:underline;text-underline-offset:2px}
-  @media(max-width:700px){.docs-list{grid-template-columns:1fr;gap:0}}
+  /* THE OPPORTUNITY REGISTER, the signature artifact: a ruled record made to read as standing, not
+     printed. Text statuses (no gauges, no progress bars), owners and dependencies as facts. It feels
+     alive through restraint: rows settle in once on first scroll, and the time-sensitive row keeps a
+     slow live pulse, both cancelled under prefers-reduced-motion. Resolved rows are dimmed by colour,
+     not opacity, so the reveal animation can drive opacity cleanly. */
+  .reg{margin-top:20px;padding-top:26px;border-top:2px solid var(--ink)}
+  .reg-head{max-width:660px;margin-bottom:22px}
+  .reg-lead{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 10px}
+  .reg-h{font-family:var(--sans);font-weight:700;font-size:clamp(24px,1.6vw + 16px,32px);line-height:1.14;letter-spacing:-.02em;color:var(--ink);margin:0 0 12px;max-width:22ch}
+  .reg-sub{font-family:var(--serif);font-size:16px;line-height:1.5;color:var(--dim);margin:0;max-width:60ch}
+  .reg-table{border-top:1px solid var(--ink);font-family:var(--sans)}
+  .reg-r{display:grid;grid-template-columns:1.6fr 1.05fr .95fr 1.15fr .75fr;gap:16px;padding:14px 4px;border-bottom:1px solid var(--line2);align-items:baseline}
+  .reg-th{border-bottom:1px solid var(--ink);padding:0 4px 8px}
+  .reg-th span{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .reg-m{font-weight:700;font-size:14.5px;letter-spacing:-.005em;color:var(--ink)}
+  .reg-sys{font-size:12.5px;color:var(--dim)}
+  .reg-o{font-size:12.5px;color:var(--body)}
+  .reg-num,.reg-th .reg-num{font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums;text-align:right}
+  .reg-num .pu{color:var(--muted);font-size:11px;margin-left:4px}
+  .st{font-size:11px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+  .st-open{color:var(--accent-strike)} .st-ready{color:var(--teal2)} .st-mon{color:var(--muted)}
+  .st-wait{color:var(--dim)} .st-fut{color:var(--dim)} .st-res{color:var(--muted)}
+  .st-time{color:var(--neg)}
+  .st-time::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--neg);
+    margin-right:6px;vertical-align:middle;animation:regpulse 1.9s ease-in-out infinite}
+  @keyframes regpulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .reg-done .reg-m{color:var(--muted);font-weight:600} .reg-done .reg-sys,.reg-done .reg-o{color:var(--ghost-line)}
+  .reg-done .reg-num{color:var(--muted)}
+  .reg.seeded .reg-r{opacity:0;transform:translateY(7px)}
+  .reg.seeded.in .reg-r{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease;transition-delay:calc(var(--i) * 65ms)}
+  .reg-foot{display:flex;justify-content:space-between;align-items:baseline;gap:16px 26px;flex-wrap:wrap;margin-top:16px}
+  .reg-note{font-family:var(--sans);font-size:11.5px;line-height:1.55;color:var(--muted);margin:0;max-width:62ch}
+  .reg-go{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--accent-strike);text-decoration:none;white-space:nowrap}
+  .reg-go:hover{text-decoration:underline;text-underline-offset:2px}
+  .reg-records{font-family:var(--sans);font-size:13px;line-height:1.6;color:var(--muted);margin:20px 0 0;padding-top:16px;border-top:1px solid var(--line2)}
+  .reg-records a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
+  .reg-records a:hover{border-bottom-color:var(--accent-strike)}
+  @media(max-width:760px){
+    .reg-th{display:none}
+    .reg-r{grid-template-columns:1fr auto;column-gap:14px;row-gap:3px;padding:15px 2px}
+    .reg-m{grid-column:1;grid-row:1}
+    .reg-r>span[role=cell]:nth-child(3){grid-column:2;grid-row:1;justify-self:end}
+    .reg-sys{grid-column:1;grid-row:2}
+    .reg-num{grid-column:2;grid-row:2;justify-self:end}
+    .reg-o{grid-column:1;grid-row:3}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .reg.seeded .reg-r{opacity:1;transform:none}
+    .st-time::before{animation:none}
+  }
 
   /* THE THESIS, a museum exhibit. Seven systems in a faint web; hovering one illuminates what it
      moves, the centre names the coordination, the flow carries down to the outcome, and a causal
@@ -417,7 +456,7 @@
         </div>
         <a class="dwnav-access" href="partners.html">For CPAs &amp; Attorneys</a>
       </div>
-      <a class="dwnav-cta" href="index.html#conversation">Request Review</a>
+      <a class="dwnav-cta" href="coordination-review.html">Request Review</a>
     </nav>
 
     <main id="main" tabindex="-1">
@@ -437,7 +476,7 @@
         </div>
       </div>
       <div class="ctas">
-        <a class="primary" href="#conversation">Request a Coordination Review →</a>
+        <a class="primary" href="coordination-review.html">Request a Coordination Review →</a>
       </div>
     </header>
 
@@ -585,31 +624,42 @@
         </li>
       </ol>
       <p class="method-onward">This is the shape of it. To see exactly what happens once you're a client, month by month and every year after, walk the full sequence on <a href="howitworks.html">The Method</a>.</p>
-      <!-- the centerpiece: the standing records the method produces, the firm's actual infrastructure,
-           not another set of tool links. Every coordinated household ends up running on these four. -->
-      <div class="docs">
-        <p class="docs-cap">Every coordinated household eventually keeps the same standing record.
-          The Wealth Operating Manual holds it, the registers keep its decisions and open matters, and the
-          Annual Wealth Operating Review reopens it each year. Not advice, infrastructure. Illustrative
-          samples, for a fictional family:</p>
-        <ul class="docs-list">
-          <li class="doc"><a href="manual.html">
-            <span class="doc-t">Wealth Operating Manual</span>
-            <span class="doc-d">The living record, every decision, its reason, and what it touched.</span>
-            <span class="doc-go">See a sample →</span></a></li>
-          <li class="doc"><a href="decision-register.html">
-            <span class="doc-t">Decision Register</span>
-            <span class="doc-d">Every structural decision, its assumptions, and what would reopen it.</span>
-            <span class="doc-go">See a sample →</span></a></li>
-          <li class="doc"><a href="opportunity-register.html">
-            <span class="doc-t">Opportunity Register</span>
-            <span class="doc-d">The standing, prioritized coordination opportunities, owner, dependencies, status.</span>
-            <span class="doc-go">See a sample →</span></a></li>
-          <li class="doc"><a href="awor.html">
-            <span class="doc-t">Annual Wealth Operating Review</span>
-            <span class="doc-d">The board-style yearly review of the whole household.</span>
-            <span class="doc-go">See a sample →</span></a></li>
-        </ul>
+      <!-- The signature artifact. The six conditions above are the recognition; the Register is the
+           resolution: coordination made standing, not annual. A ruled record, not a dashboard, with
+           two resolved rows to prove it moves. Rows and the live status arrive on scroll (reduced-motion
+           shows the end-state at once). Illustrative sample for a fictional household. -->
+      <div class="reg" id="register">
+        <div class="reg-head">
+          <p class="reg-lead">This is what standing attention looks like.</p>
+          <h2 class="reg-h">Coordination, kept in one register.</h2>
+          <p class="reg-sub">Every client household runs on a standing Opportunity Register: each open matter
+            carried with a status, an owner, and its dependency, reviewed until it is resolved and dated. Not
+            tasks. Not reminders. The wealth opportunities themselves, held open until they close.</p>
+        </div>
+        <div class="reg-table" role="table" aria-label="A sample Opportunity Register: six open matters and two resolved.">
+          <div class="reg-r reg-th" role="row">
+            <span role="columnheader">Matter</span><span role="columnheader">Systems</span>
+            <span role="columnheader">Status</span><span role="columnheader">Owner</span>
+            <span role="columnheader" class="reg-num">Potential</span>
+          </div>
+          <div class="reg-r" role="row" style="--i:0"><span class="reg-m" role="cell">Asset location</span><span class="reg-sys" role="cell">Investments · Taxes</span><span role="cell"><span class="st st-open">Open</span></span><span class="reg-o" role="cell">Driftwood</span><span class="reg-num" role="cell">≈ $14,800<span class="pu">/yr</span></span></div>
+          <div class="reg-r" role="row" style="--i:1"><span class="reg-m" role="cell">Trust funding &amp; titling</span><span class="reg-sys" role="cell">Ownership</span><span role="cell"><span class="st st-wait">Waiting</span></span><span class="reg-o" role="cell">Estate attorney</span><span class="reg-num" role="cell">structural</span></div>
+          <div class="reg-r" role="row" style="--i:2"><span class="reg-m" role="cell">Roth conversion window</span><span class="reg-sys" role="cell">Taxes</span><span role="cell"><span class="st st-mon">Monitoring</span></span><span class="reg-o" role="cell">Driftwood + CPA</span><span class="reg-num" role="cell">≈ $4,100<span class="pu">/yr</span></span></div>
+          <div class="reg-r" role="row" style="--i:3"><span class="reg-m" role="cell">QSBS eligibility</span><span class="reg-sys" role="cell">Taxes · Estate</span><span role="cell"><span class="st st-time">Time-sensitive</span></span><span class="reg-o" role="cell">Assigned at review</span><span class="reg-num" role="cell">at exit</span></div>
+          <div class="reg-r" role="row" style="--i:4"><span class="reg-m" role="cell">Charitable gifting sequence</span><span class="reg-sys" role="cell">Purpose · Taxes</span><span role="cell"><span class="st st-ready">Ready</span></span><span class="reg-o" role="cell">Driftwood + CPA</span><span class="reg-num" role="cell">≈ $6,200<span class="pu">this yr</span></span></div>
+          <div class="reg-r" role="row" style="--i:5"><span class="reg-m" role="cell">Business liquidity</span><span class="reg-sys" role="cell">Liquidity · Risk</span><span role="cell"><span class="st st-fut">Future event</span></span><span class="reg-o" role="cell">Driftwood</span><span class="reg-num" role="cell">at event</span></div>
+          <div class="reg-r reg-done" role="row" style="--i:6"><span class="reg-m" role="cell">Loss carryforward deployment</span><span class="reg-sys" role="cell">Taxes</span><span role="cell"><span class="st st-res">Resolved ✓</span></span><span class="reg-o" role="cell">Driftwood · Mar 2026</span><span class="reg-num" role="cell">$11,300 kept</span></div>
+          <div class="reg-r reg-done" role="row" style="--i:7"><span class="reg-m" role="cell">Reserve target</span><span class="reg-sys" role="cell">Liquidity</span><span role="cell"><span class="st st-res">Resolved ✓</span></span><span class="reg-o" role="cell">Driftwood · May 2026</span><span class="reg-num" role="cell">≈ $5,200<span class="pu">/yr</span></span></div>
+        </div>
+        <div class="reg-foot">
+          <p class="reg-note">Illustrative sample, a fictional household. Potentials are modeled on the household's
+            own figures; resolved rows record what was actually captured. The Annual Review's opportunity table
+            and the Manual's open matters are scoped views of this one record.</p>
+          <a class="reg-go" href="opportunity-register.html">See the full Opportunity Register &rarr;</a>
+        </div>
+        <p class="reg-records">The register feeds the record it is kept in: the
+          <a href="manual.html">Wealth Operating Manual</a>, the <a href="decision-register.html">Decision
+          Register</a>, and the <a href="awor.html">Annual Wealth Operating Review</a>.</p>
       </div>
     </div>
 
@@ -620,12 +670,11 @@
         <b>coordination decisions.</b> When every part of your financial life works together, you keep more
         of what you've built.</p>
       <div class="review">
-        <a class="review-cta" href="https://calendly.com/alec-messino/15-minute-introductory-meeting" target="_blank" rel="noopener">
+        <a class="review-cta" href="coordination-review.html">
           <span class="rc-main">Request a Coordination Review</span>
-          <span class="rc-sub">A 15-minute introductory conversation about your financial architecture.</span>
+          <span class="rc-sub">Every system read together, the findings written down, and an owner against every gap, yours to keep.</span>
         </a>
-        <p class="review-scope">We'll review structure, taxes, estate, advisor coordination, and account
-          architecture, and identify where coordination is likely creating or destroying value.</p>
+        <p class="review-scope">See exactly what the review examines, the report and register you receive, and how it begins.</p>
       </div>
       <figure class="founder-tag" aria-label="Alec Messino, founder of Driftwood Wealth">
         <img class="ft-photo" src="Headshot.jpg" width="120" height="120" loading="lazy"
@@ -969,6 +1018,23 @@ window.__STATE__ = {"header": {"generated": "2026-07-22 23:19:24 UTC"}, "hero": 
   // keyboard safety: if a Tab lands on a still-hidden row (its scroll-into-view may not cross the .18
   // threshold at narrow widths), reveal immediately so the focus ring is never on an opacity:0 element.
   grid.addEventListener("focusin", reveal);
+})();
+
+// The Register, made to read as standing rather than printed: its rows settle in once on first scroll
+// (staggered via --i), and the time-sensitive row keeps a slow live pulse (both in CSS). With JS off the
+// rows are simply visible; under prefers-reduced-motion the whole record shows at once.
+(function(){
+  var reg = document.getElementById("register");
+  if(!reg) return;
+  reg.classList.add("seeded");
+  var reduce = false;
+  try{ reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+  if(reduce || !("IntersectionObserver" in window)){ reg.classList.add("in"); return; }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting){ reg.classList.add("in"); io.disconnect(); } });
+  }, {threshold: .12});
+  io.observe(reg);
+  reg.addEventListener("focusin", function(){ reg.classList.add("in"); });   // keyboard safety
 })();
 </script>
 </body>

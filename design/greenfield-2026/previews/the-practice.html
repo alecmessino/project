@@ -51,17 +51,17 @@ h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
 @media(max-width:860px){.nav-links,.nav-util{display:none}}
 
 /* ── header plate + hero ── */
-.plate-top{position:relative;height:clamp(280px,46vh,500px);overflow:hidden;background:var(--paper2)}
+.plate-top{position:relative;height:clamp(190px,30vh,330px);overflow:hidden;background:var(--paper2)}
 .plate-top img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 46%}
 .plate-top .fade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(241,239,233,.28) 0%,rgba(241,239,233,0) 30%,rgba(241,239,233,0) 62%,var(--paper) 100%)}
-.hero{padding:clamp(30px,5vh,52px) 0 clamp(46px,7vh,74px)}
+.hero{padding:clamp(24px,3.5vh,40px) 0 clamp(36px,5vh,58px)}
 .eyebrow{font-weight:700;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
 .hero h1{font-weight:700;font-size:clamp(30px,4.4vw,50px);line-height:1.04;max-width:20ch}
 .hero .lede{font-family:var(--serif);font-size:clamp(17px,1.5vw,20.5px);line-height:1.52;color:var(--dim);max-width:60ch;margin:22px 0 0}
 .hero .lede b{color:var(--ink);font-weight:500}
 
 /* ── section rhythm ── */
-section{padding-block:clamp(56px,9vh,104px)}
+section{padding-block:clamp(44px,6.5vh,80px)}
 .sn{font-weight:700;font-size:12.5px;letter-spacing:.03em;color:var(--blue);font-variant-numeric:tabular-nums;margin-bottom:6px}
 .h2{font-size:clamp(24px,3.1vw,37px);line-height:1.1;max-width:24ch}
 .lead-serif{font-family:var(--serif);font-size:clamp(18px,1.7vw,22px);line-height:1.45;color:var(--ink);max-width:40ch;margin:0}
@@ -70,18 +70,18 @@ section{padding-block:clamp(56px,9vh,104px)}
 
 /* ── navy stance band ── */
 .stance{background:var(--navy);color:var(--on-dark)}
-.stance .wrap{padding-block:clamp(52px,8vh,92px)}
+.stance .wrap{padding-block:clamp(42px,6vh,74px)}
 .stance p{font-family:var(--serif);font-size:clamp(22px,3vw,36px);line-height:1.24;color:#f1ede3;margin:0;max-width:22ch;letter-spacing:-.01em}
 .stance .sub{font-family:var(--sans);font-size:15px;line-height:1.6;color:var(--blue-soft);max-width:56ch;margin:20px 0 0;letter-spacing:0}
 
 /* ── analog strip (medicine/aviation/wealth) ── */
-.analogs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:32px 0}
+.analogs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:26px 0}
 @media(max-width:720px){.analogs{grid-template-columns:1fr}}
 .analog{background:var(--card);padding:22px 22px 24px;border-top:2px solid var(--blue)}
 .analog .a-k{font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
 .analog .a-t{font-family:var(--serif);font-size:16.5px;line-height:1.4;color:var(--ink)}
 .analog.on-wealth{border-top-color:var(--teal)}
-.pull{font-family:var(--serif);font-size:clamp(20px,2.4vw,27px);line-height:1.32;color:var(--ink);border-left:3px solid var(--blue);padding:6px 0 6px 22px;margin:30px 0 0;max-width:34ch}
+.pull{font-family:var(--serif);font-size:clamp(20px,2.4vw,27px);line-height:1.32;color:var(--ink);border-left:3px solid var(--blue);padding:6px 0 6px 22px;margin:26px 0 0;max-width:34ch}
 .pull b{color:var(--blue-d);font-weight:500}
 
 /* ── proof: two-state compare ── */
@@ -109,7 +109,7 @@ section{padding-block:clamp(56px,9vh,104px)}
 .src{font-size:12px;color:var(--muted);line-height:1.5;margin:20px 0 0;max-width:62ch}
 
 /* ── first-year meetings ── */
-.meetings{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:30px}
+.meetings{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:26px}
 @media(max-width:860px){.meetings{grid-template-columns:1fr}}
 .mtg{background:var(--soft);padding:24px 22px 26px;display:flex;flex-direction:column}
 .mtg .m-n{font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:9px}
@@ -164,7 +164,7 @@ section{padding-block:clamp(56px,9vh,104px)}
 
 /* ── invitation ── */
 .invite{background:var(--navy);color:var(--on-dark)}
-.invite .wrap{padding-block:clamp(64px,10vh,116px)}
+.invite .wrap{padding-block:clamp(52px,7.5vh,92px)}
 .invite .conv{font-weight:700;font-size:clamp(25px,3.4vw,42px);line-height:1.1;color:#f1ede3;max-width:20ch;letter-spacing:-.02em;margin:0}
 .invite .sub{font-family:var(--sans);font-size:15.5px;line-height:1.6;color:var(--blue-soft);max-width:56ch;margin:20px 0 0}
 .invite .btn{display:inline-block;text-decoration:none;background:var(--blue-soft);color:var(--navy);font-weight:700;font-size:15px;padding:15px 28px;margin-top:30px;transition:background .18s,transform .18s}

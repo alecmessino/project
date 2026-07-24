@@ -50,17 +50,21 @@ h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
 @media(max-width:900px){.nav-links,.nav-util{display:none}}
 
 /* masthead */
-.plate-strip{position:relative;height:clamp(120px,17vh,180px);overflow:hidden;background:var(--paper2)}
+.plate-strip{position:relative;height:clamp(64px,9vh,96px);overflow:hidden;background:var(--paper2)}
 .plate-strip img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 50%}
 .plate-strip .fade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(241,239,233,.2),rgba(241,239,233,0) 40%,var(--paper))}
-.masthead{padding:clamp(24px,4vh,40px) 0 0}
+.masthead{padding:clamp(18px,2.5vh,28px) 0 0}
+.mast-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:26px 40px;align-items:end}
+@media(max-width:940px){.mast-row{grid-template-columns:1fr;align-items:start}}
+.mast-controls{display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+@media(max-width:940px){.mast-controls{align-items:flex-start}}
 .eyebrow{font-weight:700;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--blue)}
-.mast-h{font-family:var(--serif);font-weight:500;font-size:clamp(28px,4.2vw,48px);line-height:1.06;margin:14px 0 0;max-width:18ch}
-.mast-lede{font-size:clamp(15.5px,1.4vw,18px);line-height:1.55;color:var(--dim);max-width:58ch;margin:16px 0 0}
+.mast-h{font-family:var(--serif);font-weight:500;font-size:clamp(27px,3.8vw,43px);line-height:1.06;margin:12px 0 0;max-width:18ch}
+.mast-lede{font-size:clamp(15px,1.3vw,17px);line-height:1.5;color:var(--dim);max-width:54ch;margin:12px 0 0}
 .mast-lede b{color:var(--ink);font-weight:500}
 
 /* instrument */
-.instrument{padding-block:clamp(28px,4vh,44px) clamp(30px,5vh,48px)}
+.instrument{padding-block:clamp(14px,2vh,20px) clamp(18px,2.5vh,26px)}
 .inst-bar{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between;margin-bottom:18px}
 .toggle{display:inline-flex;background:var(--soft);border:1px solid var(--line);padding:3px;gap:3px;flex-wrap:wrap}
 .toggle button{font:600 12.5px var(--sans);color:var(--dim);background:none;border:none;padding:9px 15px;cursor:pointer;transition:background .15s,color .15s;white-space:nowrap}
@@ -69,34 +73,55 @@ h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
 .yourstate{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .yourstate b{color:var(--ink)}
 .yourstate .chg{color:var(--blue);cursor:pointer;border-bottom:1px solid var(--blue-soft);font-weight:600}
-.prompt{font-family:var(--serif);font-size:16px;color:var(--blue-d);margin:0 0 14px}
+.prompt{font-family:var(--serif);font-size:clamp(15px,1.5vw,18px);color:var(--blue-d);margin:0}
 
 /* cartogram */
 .cartowrap{overflow-x:auto;margin-inline:calc(var(--pad) * -0.5);padding-inline:calc(var(--pad) * 0.5)}
-.carto{display:grid;grid-template-columns:repeat(11,1fr);gap:4px;min-width:600px;width:100%}
+.carto{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:4px;min-width:640px;width:100%;max-width:920px}
 .tile{position:relative;aspect-ratio:1;border:1px solid rgba(30,40,51,.14);background:var(--card);cursor:pointer;
   display:flex;align-items:center;justify-content:center;transition:transform .12s,box-shadow .12s;outline:0}
 .tile:hover{transform:translateY(-2px);z-index:3;box-shadow:0 5px 14px rgba(30,40,51,.2)}
 .tile:focus-visible{box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--ink);z-index:4}
 /* selected: an ink frame that reads at a glance without changing the tile's value colour */
 .tile.sel{z-index:2;box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--ink)}
-.tile .ab{font:700 13px var(--sans);letter-spacing:-.01em;pointer-events:none;font-variant-numeric:tabular-nums}
+.tile .ab{font:700 13.5px var(--sans);letter-spacing:-.01em;pointer-events:none;font-variant-numeric:tabular-nums}
 /* a haven is an ABSENCE, so it is marked by a rule, never by a competing colour */
 .tile.haven{border-color:var(--teal)}
 .tile.haven::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--teal)}
 .tip{position:fixed;z-index:40;background:var(--navy);color:#f1ede3;font-size:12px;line-height:1.4;padding:9px 12px;max-width:230px;pointer-events:none;opacity:0;transition:opacity .12s;border-radius:2px}
 .tip b{color:#fff;display:block;margin-bottom:3px;font-size:12.5px}
 .tip .tp{color:var(--blue-soft)}
-.legend{display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center;margin-top:22px;font-size:12px;color:var(--dim)}
+/* the tile grid leaves an empty upper quadrant between Alaska and Maine; the map's own caption
+   occupies it, so the void reads as composition rather than as a gap */
+.carto-cap{grid-row:1 / span 2;grid-column:2 / span 7;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:0 10px}
+@media(max-width:700px){.carto-cap{grid-column:2 / span 6}}
+.legend{display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center;font-size:12px;color:var(--dim)}
 .ramp-wrap{display:inline-flex;align-items:center;gap:10px}
 .ramp{width:190px;height:11px;border:1px solid rgba(30,40,51,.18);flex:none}
 .ramp-lo,.ramp-hi{font-size:11.5px;color:var(--muted);white-space:nowrap}
 .legend .haven-key{display:inline-flex;align-items:center;gap:8px}
 .legend .haven-rule{width:16px;height:3px;background:var(--teal);flex:none}
 .savednote{font-size:11.5px;color:var(--muted);margin-top:16px}
+@media(max-width:640px){
+  .cartowrap{overflow-x:visible;margin-inline:0;padding-inline:0}
+  .carto{min-width:0;gap:2px}
+  .tile .ab{font-size:9.5px}
+  .carto-cap{grid-row:1 / span 2;grid-column:2 / span 7;gap:8px;padding:0 4px}
+  .carto-cap .prompt{font-size:12.5px}
+  .legend{gap:5px 12px;font-size:10.5px}
+  .ramp{width:96px;height:9px}
+  .ramp-lo,.ramp-hi{font-size:10px}
+}
+
+/* the diagnostic answers three questions in order, so each block is labelled as one */
+.q{font-family:var(--serif);font-size:clamp(17px,1.7vw,21px);color:var(--ink);margin:0 0 14px;letter-spacing:-.01em}
+.q span{color:var(--blue-d)}
+.diagnostic .q{margin-top:30px}
+.diagnostic .diag-head + .q{margin-top:22px}
 
 /* diagnostic */
 .diagnostic{background:var(--soft);border-block:1px solid var(--line)}
+.diagnostic{padding-block:clamp(30px,4.5vh,48px)}
 .diag-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:14px}
 .diag-state{font-family:var(--serif);font-size:clamp(26px,3.4vw,40px);color:var(--ink);letter-spacing:-.02em}
 .diag-tag{font-size:13px;color:var(--muted)}
@@ -189,21 +214,28 @@ h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
 </figure>
 
 <header class="masthead"><div class="wrap">
-  <div class="eyebrow">Tax Atlas</div>
-  <h1 class="mast-h">Fifty states, fifty tax personalities.</h1>
-  <p class="mast-lede">Where you live changes what you keep. Tap your state, and the picture below is already yours: income, estate, and inheritance, read together. <b>Nothing is saved but your state, and only in this browser.</b></p>
+  <div class="mast-row">
+    <div>
+      <div class="eyebrow">Tax Atlas</div>
+      <h1 class="mast-h">Fifty states, fifty tax personalities.</h1>
+      <p class="mast-lede">Where you live changes what you keep. Tap your state, and the picture below is already yours.</p>
+    </div>
+    <div class="mast-controls">
+      <div class="toggle" id="dimbar" role="tablist" aria-label="Choose a tax dimension"></div>
+      <div class="yourstate" id="yourstate"></div>
+    </div>
+  </div>
 </div></header>
 
 <section class="instrument"><div class="wrap">
-  <div class="inst-bar">
-    <div class="toggle" id="dimbar" role="tablist" aria-label="Choose a tax dimension"></div>
-    <div class="yourstate" id="yourstate"></div>
-  </div>
-  <p class="prompt" id="prompt">Tap your state to begin.</p>
   <div class="cartowrap">
-    <div class="carto" id="carto" role="group" aria-label="Tile map of US states and DC; select a state"></div>
+    <div class="carto" id="carto" role="group" aria-label="Tile map of US states and DC; select a state">
+      <div class="carto-cap">
+        <p class="prompt" id="prompt">Tap your state to begin.</p>
+        <div class="legend" id="legend"></div>
+      </div>
+    </div>
   </div>
-  <div class="legend" id="legend"></div>
   <p class="savednote">The map is a schematic tile grid, not to geographic scale. Your selection is stored only on this device and is never transmitted.</p>
 </div></section>
 
@@ -213,6 +245,7 @@ h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
     <div class="diag-tag" id="diag-tag"></div>
   </div>
 
+  <p class="q" id="q1">What makes <span id="q1s">Illinois</span> different</p>
   <div class="factrow">
     <div class="fact"><div class="fl">Top income rate</div><div class="fv" id="f-inc">4.95%</div><div class="fn" id="f-inc-n">Flat.</div></div>
     <div class="fact"><div class="fl" id="f-est-l">Estate tax starts at</div><div class="fv" id="f-est">$4,000,000</div><div class="fn" id="f-est-n">The federal shield waits until $15,000,000.</div></div>
@@ -221,6 +254,7 @@ h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
 
   <div class="profile" id="profile" aria-label="The rest of the picture for this state"></div>
 
+  <p class="q" id="q2">What it means for you</p>
   <div class="exhibit">
     <div class="ex-k">Illustrative · the income drag on $1,000,000 <span class="tag tag-i">Illustrative</span></div>
     <p class="ex-lead" id="ex-lead">What your state quietly takes from the same holdings, compared with a no-income-tax state.</p>
@@ -232,6 +266,7 @@ h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
 </div></section>
 
 <section class="bridge"><div class="wrap">
+  <p class="q" style="margin-bottom:14px">What to do about it</p>
   <p class="blead">The Atlas shows where the money leaks. A Coordination Review is where it gets kept.</p>
   <p class="bsub">The map answers "is there anything here for a family like mine." The Review answers "who stays accountable for all of it, year over year." Your state travels with you into that conversation.</p>
   <div class="brow">
@@ -288,7 +323,7 @@ var LAYOUT = {
   HI:[7,0], TX:[7,3], FL:[7,8]
 };
 
-var dim = "income";
+var dim = "burden";
 var FED_ESTATE = 15000000;
 
 // ── One visual language: a single ink ramp. Darker always means more tax, in every dimension.
@@ -301,31 +336,25 @@ function ink(d){ d=Math.max(0,Math.min(1,d)); return rgb(lerp(PAPER, INK, Math.p
 
 // Six dimensions, one visual rule. Each returns 0..1 density, a tooltip line, and whether the
 // state is "clear" on that dimension (marked by a teal rule, never a colour).
+function deathExposure(s){ return (s.estate&&s.inher)?1:s.estate?0.8:s.inher?0.5:0; }
+// The overall read is the default, because the first question is never "what is the capital gains
+// rate", it is "how expensive is my state". Income and estate are the two ways to interrogate it.
+// The remaining detail (gains, retirement, trust situs, QSBS) lives in the diagnostic below, where
+// a reader has already asked a second question.
 var DIMS = [
-  { id:"income", label:"Income",       lo:"None",           hi:"13.3%",
+  { id:"burden", label:"Overall burden", lo:"Lightest", hi:"Heaviest", none:"No income, estate, or inheritance tax",
+    d:function(s){ return 0.45*(s.noinc?0:Math.min(s.inc/13.3,1)) + 0.20*Math.min((s.cgv||0)/13.3,1) + 0.35*deathExposure(s); },
+    clear:function(s){ return s.noinc && !s.estate && !s.inher; },
+    line:function(s){ return (s.noinc && !s.estate && !s.inher) ? "No income, estate, or inheritance tax"
+      : (s.noinc?"No income tax":"Income to "+trim(s.inc)+"%") + (s.estate?", estate tax":s.inher?", inheritance tax":", no death tax"); } },
+  { id:"income", label:"Income", lo:"None", hi:"13.3%", none:"No state income tax",
     d:function(s){ return s.noinc?0:Math.min(s.inc/13.3,1); },
     clear:function(s){ return s.noinc; },
     line:function(s){ return s.noinc?"No state income tax":"Top income rate "+trim(s.inc)+"%"; } },
-  { id:"gains",  label:"Capital gains", lo:"None",          hi:"13.3%",
-    d:function(s){ return Math.min((s.cgv||0)/13.3,1); },
-    clear:function(s){ return (s.cgv||0)===0; },
-    line:function(s){ return s.cgl || "Taxed as ordinary income"; } },
-  { id:"death",  label:"Estate & inheritance", lo:"No death tax", hi:"Estate + inheritance",
-    d:function(s){ return (s.estate&&s.inher)?1:s.estate?0.78:s.inher?0.5:0; },
+  { id:"death", label:"Estate", lo:"No death tax", hi:"Estate + inheritance", none:"No state estate or inheritance tax",
+    d:deathExposure,
     clear:function(s){ return !s.estate && !s.inher; },
-    line:function(s){ return s.estate?("Estate tax, "+s.estate_exempt+" shield"):s.inher?"Inheritance tax":"No state death tax"; } },
-  { id:"retire", label:"Retirement income", lo:"Untaxed",   hi:"Fully taxed",
-    d:function(s){ return (s.rtv||0)/2; },
-    clear:function(s){ return (s.rtv||0)===0; },
-    line:function(s){ return s.rtl || ""; } },
-  { id:"trust",  label:"Trust situs",  lo:"No trust tax",   hi:"13.3%",
-    d:function(s){ return Math.min((s.trv||0)/13.3,1); },
-    clear:function(s){ return (s.trv||0)===0; },
-    line:function(s){ return (s.trv||0)===0?"No tax on accumulated trust income":"Trust income taxed to "+trim(s.trv)+"%"; } },
-  { id:"qsbs",   label:"QSBS conformity", lo:"Conforms",    hi:"Does not conform",
-    d:function(s){ return (s.qsv||0)/2; },
-    clear:function(s){ return (s.qsv||0)===0; },
-    line:function(s){ return s.qsl || ""; } }
+    line:function(s){ return s.estate?("Estate tax, "+s.estate_exempt+" shield"):s.inher?"Inheritance tax":"No state death tax"; } }
 ];
 function trim(n){ return (n==null?0:n).toFixed(2).replace(/\.?0+$/,""); }
 function D(){ for(var i=0;i<DIMS.length;i++){ if(DIMS[i].id===dim) return DIMS[i]; } return DIMS[0]; }
@@ -336,7 +365,8 @@ function textColor(s){ return density(s) > 0.52 ? "#f4f1ea" : "#1e2833"; }
 
 var carto = document.getElementById("carto");
 function buildTiles(){
-  carto.innerHTML = "";
+  // clear only the tiles; the caption block lives inside the grid and must survive a redraw
+  [].slice.call(carto.querySelectorAll(".tile")).forEach(function(t){ t.remove(); });
   Object.keys(LAYOUT).forEach(function(ab){
     var s = BY[ab]; if(!s) return;
     var pos = LAYOUT[ab];
@@ -372,7 +402,7 @@ function buildLegend(){
     '<span class="ramp-wrap"><span class="ramp-lo">'+d.lo+'</span>'+
       '<span class="ramp" style="background:linear-gradient(90deg,'+ink(0)+','+ink(.35)+','+ink(.7)+','+ink(1)+')"></span>'+
       '<span class="ramp-hi">'+d.hi+'</span></span>'+
-    '<span class="haven-key"><span class="haven-rule"></span>'+d.lo+'</span>';
+    '<span class="haven-key"><span class="haven-rule"></span>'+(d.none||d.lo)+'</span>';
 }
 
 // selection + diagnostic
@@ -398,6 +428,7 @@ function select(ab, scroll){
 var FV_ANNUITY_30_6 = ( (Math.pow(1.06,30)-1)/0.06 ); // ~79.06
 function renderDiagnostic(s){
   document.getElementById("diag-state").textContent = s.name;
+  var q1s=document.getElementById("q1s"); if(q1s) q1s.textContent = s.name;
   document.getElementById("diag-tag").textContent = s.tag || "";
 
   // Facts. Colour is semantic and strict: teal = nothing owed, red = where a cost begins,

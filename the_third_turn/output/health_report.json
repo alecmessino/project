@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-24T22:19:06+00:00",
+  "generated": "2026-07-24T22:34:33+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 313163,
+    "rows": 314472,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 102602,
-      "live_total": 33001,
-      "live_today": 174,
-      "last_row_age_min": 0.4
+      "rows_total": 103284,
+      "live_total": 33013,
+      "live_today": 186,
+      "last_row_age_min": 0.1
     },
     "fanduel": {
-      "rows_total": 210555,
-      "live_total": 37419,
-      "live_today": 325,
-      "last_row_age_min": 0.4
+      "rows_total": 211182,
+      "live_total": 37423,
+      "live_today": 329,
+      "last_row_age_min": 0.1
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 26874.1
+      "last_row_age_min": 26889.6
     }
   },
   "books_reporting_live": [
@@ -37,14 +37,14 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 33001,
-    "OPEN": 34147,
+    "unset": 33013,
+    "OPEN": 34151,
     "SUSPENDED": 3113,
     "REMOVED": 159
   },
   "overlap": {
-    "simultaneous_pairs_total": 38663,
-    "simultaneous_pairs_today": 321,
+    "simultaneous_pairs_total": 38667,
+    "simultaneous_pairs_today": 325,
     "overlap_games": 78,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
@@ -64,9 +64,9 @@
     "verified": true
   },
   "coverage": {
-    "live_games_seen": 80,
+    "live_games_seen": 82,
     "book_panel_games": 97,
-    "team_total_rows": 17702,
+    "team_total_rows": 18127,
     "innings_seen": [
       1,
       2,
@@ -86,7 +86,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 38663,
+        "current": 38667,
         "target": 2000,
         "pass": true,
         "progress": 1.0

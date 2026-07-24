@@ -60,34 +60,40 @@ h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
 .mast-lede b{color:var(--ink);font-weight:500}
 
 /* instrument */
-.instrument{padding-block:clamp(30px,5vh,52px)}
-.inst-bar{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;justify-content:space-between;margin-bottom:22px}
-.toggle{display:inline-flex;background:var(--soft);border:1px solid var(--line);padding:3px;gap:3px}
-.toggle button{font:600 13px var(--sans);color:var(--dim);background:none;border:none;padding:9px 16px;cursor:pointer;transition:background .15s,color .15s}
+.instrument{padding-block:clamp(28px,4vh,44px) clamp(30px,5vh,48px)}
+.inst-bar{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between;margin-bottom:18px}
+.toggle{display:inline-flex;background:var(--soft);border:1px solid var(--line);padding:3px;gap:3px;flex-wrap:wrap}
+.toggle button{font:600 12.5px var(--sans);color:var(--dim);background:none;border:none;padding:9px 15px;cursor:pointer;transition:background .15s,color .15s;white-space:nowrap}
 .toggle button.on{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.toggle button:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
 .yourstate{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .yourstate b{color:var(--ink)}
 .yourstate .chg{color:var(--blue);cursor:pointer;border-bottom:1px solid var(--blue-soft);font-weight:600}
 .prompt{font-family:var(--serif);font-size:16px;color:var(--blue-d);margin:0 0 14px}
 
 /* cartogram */
-.cartowrap{overflow-x:auto}
-.carto{display:grid;grid-template-columns:repeat(11,1fr);gap:5px;min-width:520px;max-width:760px}
-.tile{position:relative;aspect-ratio:1;border:1px solid var(--line);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .12s,box-shadow .12s,outline .12s;outline:2px solid transparent;outline-offset:-2px}
-.tile:hover{transform:translateY(-2px);z-index:3;box-shadow:0 4px 12px rgba(30,40,51,.16)}
-.tile:focus-visible{outline-color:var(--ink)}
-.tile.sel{outline-color:var(--ink);z-index:2}
-.tile .ab{font:700 12px var(--sans);letter-spacing:-.01em;pointer-events:none}
-.tile.haven::after{content:"";position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--teal)}
+.cartowrap{overflow-x:auto;margin-inline:calc(var(--pad) * -0.5);padding-inline:calc(var(--pad) * 0.5)}
+.carto{display:grid;grid-template-columns:repeat(11,1fr);gap:4px;min-width:600px;width:100%}
+.tile{position:relative;aspect-ratio:1;border:1px solid rgba(30,40,51,.14);background:var(--card);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:transform .12s,box-shadow .12s;outline:0}
+.tile:hover{transform:translateY(-2px);z-index:3;box-shadow:0 5px 14px rgba(30,40,51,.2)}
+.tile:focus-visible{box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--ink);z-index:4}
+/* selected: an ink frame that reads at a glance without changing the tile's value colour */
+.tile.sel{z-index:2;box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--ink)}
+.tile .ab{font:700 13px var(--sans);letter-spacing:-.01em;pointer-events:none;font-variant-numeric:tabular-nums}
+/* a haven is an ABSENCE, so it is marked by a rule, never by a competing colour */
+.tile.haven{border-color:var(--teal)}
+.tile.haven::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--teal)}
 .tip{position:fixed;z-index:40;background:var(--navy);color:#f1ede3;font-size:12px;line-height:1.4;padding:9px 12px;max-width:230px;pointer-events:none;opacity:0;transition:opacity .12s;border-radius:2px}
 .tip b{color:#fff;display:block;margin-bottom:3px;font-size:12.5px}
 .tip .tp{color:var(--blue-soft)}
-.legend{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:20px;font-size:12px;color:var(--dim)}
-.legend .sw{display:inline-flex;align-items:center;gap:7px}
-.legend .box{width:15px;height:15px;border:1px solid var(--line);flex:none}
-.legend .haven-key{display:inline-flex;align-items:center;gap:7px}
-.legend .haven-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);flex:none}
-.savednote{font-size:11.5px;color:var(--muted);margin-top:14px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center;margin-top:22px;font-size:12px;color:var(--dim)}
+.ramp-wrap{display:inline-flex;align-items:center;gap:10px}
+.ramp{width:190px;height:11px;border:1px solid rgba(30,40,51,.18);flex:none}
+.ramp-lo,.ramp-hi{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.legend .haven-key{display:inline-flex;align-items:center;gap:8px}
+.legend .haven-rule{width:16px;height:3px;background:var(--teal);flex:none}
+.savednote{font-size:11.5px;color:var(--muted);margin-top:16px}
 
 /* diagnostic */
 .diagnostic{background:var(--soft);border-block:1px solid var(--line)}
@@ -103,6 +109,16 @@ h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
 .fact .fv.warn{color:var(--neg)}
 .fact .fn{font-size:12px;color:var(--dim);line-height:1.45;margin-top:8px}
 
+/* the rest of the picture: three dimensions most sites never show */
+.profile{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-top:none;margin-top:0}
+@media(max-width:720px){.profile{grid-template-columns:1fr}}
+.pf{background:var(--soft);padding:18px 22px 20px}
+.pf .pl{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;display:flex;align-items:center;gap:8px}
+.pf .pl .dot{width:7px;height:7px;flex:none;border-radius:50%}
+.pf .pv{font-weight:700;font-size:16.5px;color:var(--ink);margin-top:9px;line-height:1.25}
+.pf .pv.good{color:var(--teal)}
+.pf .pv.warn{color:var(--neg)}
+.pf .pn{font-size:12px;line-height:1.5;color:var(--dim);margin-top:7px}
 .exhibit{margin-top:26px;background:var(--card);border:1px solid var(--ink);padding:clamp(24px,3.5vw,34px)}
 .exhibit .ex-k{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .exhibit .ex-lead{font-family:var(--serif);font-size:clamp(18px,2vw,23px);line-height:1.4;color:var(--ink);margin:0;max-width:44ch}
@@ -180,10 +196,7 @@ h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
 
 <section class="instrument"><div class="wrap">
   <div class="inst-bar">
-    <div class="toggle" role="tablist" aria-label="Choose a tax dimension">
-      <button id="dim-income" class="on" role="tab" aria-selected="true">Income tax</button>
-      <button id="dim-death" role="tab" aria-selected="false">Estate &amp; inheritance</button>
-    </div>
+    <div class="toggle" id="dimbar" role="tablist" aria-label="Choose a tax dimension"></div>
     <div class="yourstate" id="yourstate"></div>
   </div>
   <p class="prompt" id="prompt">Tap your state to begin.</p>
@@ -202,9 +215,11 @@ h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
 
   <div class="factrow">
     <div class="fact"><div class="fl">Top income rate</div><div class="fv" id="f-inc">4.95%</div><div class="fn" id="f-inc-n">Flat.</div></div>
-    <div class="fact"><div class="fl">State estate shield</div><div class="fv" id="f-est">$4.0M</div><div class="fn" id="f-est-n">Federal shield is $15M.</div></div>
+    <div class="fact"><div class="fl" id="f-est-l">Estate tax starts at</div><div class="fv" id="f-est">$4,000,000</div><div class="fn" id="f-est-n">The federal shield waits until $15,000,000.</div></div>
     <div class="fact"><div class="fl">Inheritance tax</div><div class="fv" id="f-inh">None</div><div class="fn" id="f-inh-n">Paid by heirs, not the estate.</div></div>
   </div>
+
+  <div class="profile" id="profile" aria-label="The rest of the picture for this state"></div>
 
   <div class="exhibit">
     <div class="ex-k">Illustrative · the income drag on $1,000,000 <span class="tag tag-i">Illustrative</span></div>
@@ -276,28 +291,48 @@ var LAYOUT = {
 var dim = "income";
 var FED_ESTATE = 15000000;
 
-// colour by dimension
+// ── One visual language: a single ink ramp. Darker always means more tax, in every dimension.
+//    No second hue competes with it; teal marks an ABSENCE (a haven) as a rule, never a fill.
 function lerp(a,b,t){ return a.map(function(v,i){ return Math.round(v+(b[i]-v)*t); }); }
 function rgb(c){ return "rgb("+c[0]+","+c[1]+","+c[2]+")"; }
-var LIME=[236,233,224], BLUE=[44,88,120], DEEP=[34,72,95], TEAL=[21,128,106], MIDB=[122,160,191], PALE=[231,227,216];
-function tileColor(s){
-  if(dim==="income"){
-    if(s.noinc) return rgb(TEAL);
-    var t = Math.min(s.inc/13.3, 1);            // 0..13.3% -> lime..deep blue
-    return rgb(lerp(lerp(LIME,BLUE,Math.min(t*1.4,1)), DEEP, Math.max(0,(t-0.6)/0.4)));
-  } else {
-    if(s.estate && s.inher) return rgb(DEEP);
-    if(s.estate) return rgb(BLUE);
-    if(s.inher) return rgb(MIDB);
-    return rgb(PALE);
-  }
-}
-function isHaven(s){ return s.noinc && !s.estate && !s.inher; }
-function textColor(s){
-  // dark tiles get light text
-  if(dim==="income"){ return (s.noinc || s.inc>=6) ? "#f1ede3" : "var(--ink)"; }
-  return (s.estate) ? "#f1ede3" : (s.inher ? "#f1ede3" : "var(--ink)");
-}
+var PAPER=[252,250,245], INK=[26,35,48];
+// density 0..1 -> limestone paper to slate ink, eased so the middle stays readable
+function ink(d){ d=Math.max(0,Math.min(1,d)); return rgb(lerp(PAPER, INK, Math.pow(d,0.88))); }
+
+// Six dimensions, one visual rule. Each returns 0..1 density, a tooltip line, and whether the
+// state is "clear" on that dimension (marked by a teal rule, never a colour).
+var DIMS = [
+  { id:"income", label:"Income",       lo:"None",           hi:"13.3%",
+    d:function(s){ return s.noinc?0:Math.min(s.inc/13.3,1); },
+    clear:function(s){ return s.noinc; },
+    line:function(s){ return s.noinc?"No state income tax":"Top income rate "+trim(s.inc)+"%"; } },
+  { id:"gains",  label:"Capital gains", lo:"None",          hi:"13.3%",
+    d:function(s){ return Math.min((s.cgv||0)/13.3,1); },
+    clear:function(s){ return (s.cgv||0)===0; },
+    line:function(s){ return s.cgl || "Taxed as ordinary income"; } },
+  { id:"death",  label:"Estate & inheritance", lo:"No death tax", hi:"Estate + inheritance",
+    d:function(s){ return (s.estate&&s.inher)?1:s.estate?0.78:s.inher?0.5:0; },
+    clear:function(s){ return !s.estate && !s.inher; },
+    line:function(s){ return s.estate?("Estate tax, "+s.estate_exempt+" shield"):s.inher?"Inheritance tax":"No state death tax"; } },
+  { id:"retire", label:"Retirement income", lo:"Untaxed",   hi:"Fully taxed",
+    d:function(s){ return (s.rtv||0)/2; },
+    clear:function(s){ return (s.rtv||0)===0; },
+    line:function(s){ return s.rtl || ""; } },
+  { id:"trust",  label:"Trust situs",  lo:"No trust tax",   hi:"13.3%",
+    d:function(s){ return Math.min((s.trv||0)/13.3,1); },
+    clear:function(s){ return (s.trv||0)===0; },
+    line:function(s){ return (s.trv||0)===0?"No tax on accumulated trust income":"Trust income taxed to "+trim(s.trv)+"%"; } },
+  { id:"qsbs",   label:"QSBS conformity", lo:"Conforms",    hi:"Does not conform",
+    d:function(s){ return (s.qsv||0)/2; },
+    clear:function(s){ return (s.qsv||0)===0; },
+    line:function(s){ return s.qsl || ""; } }
+];
+function trim(n){ return (n==null?0:n).toFixed(2).replace(/\.?0+$/,""); }
+function D(){ for(var i=0;i<DIMS.length;i++){ if(DIMS[i].id===dim) return DIMS[i]; } return DIMS[0]; }
+function density(s){ return Math.max(0, Math.min(1, D().d(s))); }
+function tileColor(s){ return ink(density(s)); }
+function isHaven(s){ return D().clear(s); }
+function textColor(s){ return density(s) > 0.52 ? "#f4f1ea" : "#1e2833"; }
 
 var carto = document.getElementById("carto");
 function buildTiles(){
@@ -324,33 +359,21 @@ function buildTiles(){
 // tooltip
 var tip = document.createElement("div"); tip.className="tip"; document.body.appendChild(tip);
 function showTip(e,s){
-  var line = dim==="income"
-    ? (s.noinc? "No state income tax" : "Top income rate "+s.inc.toFixed(2).replace(/\.?0+$/,"")+"%")
-    : (s.estate? ("Estate tax, "+s.estate_exempt+" shield") : s.inher? "Inheritance tax" : "No state death tax");
-  tip.innerHTML = "<b>"+s.name+"</b><span class='tp'>"+line+"</span>";
+  tip.innerHTML = "<b>"+s.name+"</b><span class='tp'>"+(D().line(s)||"")+"</span>";
   tip.style.opacity="1"; moveTip(e);
 }
 function moveTip(e){ tip.style.left=(e.clientX+14)+"px"; tip.style.top=(e.clientY+14)+"px"; }
 function hideTip(){ tip.style.opacity="0"; }
 
-// legend
+// legend: one continuous ramp, so the reader learns a single rule (darker is more)
 function buildLegend(){
-  var L = document.getElementById("legend"); var h="";
-  if(dim==="income"){
-    h += swatch(rgb(TEAL),"No income tax");
-    h += swatch(rgb(lerp(LIME,BLUE,0.5)),"Lower");
-    h += swatch(rgb(BLUE),"Higher");
-    h += swatch(rgb(DEEP),"Highest (to 13.3%)");
-  } else {
-    h += swatch(rgb(PALE),"No death tax");
-    h += swatch(rgb(MIDB),"Inheritance tax");
-    h += swatch(rgb(BLUE),"Estate tax");
-    h += swatch(rgb(DEEP),"Both");
-  }
-  h += '<span class="haven-key"><span class="haven-dot"></span>No income, estate, or inheritance tax</span>';
-  L.innerHTML = h;
+  var d = D();
+  document.getElementById("legend").innerHTML =
+    '<span class="ramp-wrap"><span class="ramp-lo">'+d.lo+'</span>'+
+      '<span class="ramp" style="background:linear-gradient(90deg,'+ink(0)+','+ink(.35)+','+ink(.7)+','+ink(1)+')"></span>'+
+      '<span class="ramp-hi">'+d.hi+'</span></span>'+
+    '<span class="haven-key"><span class="haven-rule"></span>'+d.lo+'</span>';
 }
-function swatch(c,label){ return '<span class="sw"><span class="box" style="background:'+c+'"></span>'+label+'</span>'; }
 
 // selection + diagnostic
 var selAb = null;
@@ -377,20 +400,50 @@ function renderDiagnostic(s){
   document.getElementById("diag-state").textContent = s.name;
   document.getElementById("diag-tag").textContent = s.tag || "";
 
-  // facts
-  document.getElementById("f-inc").textContent = s.noinc ? "None" : (s.inc.toFixed(2).replace(/\.?0+$/,"")+"%");
-  document.getElementById("f-inc").className = "fv" + (s.noinc?" good":"");
-  document.getElementById("f-inc-n").textContent = s.inc_note || (s.noinc?"No tax on wage income.":"");
-  var est = document.getElementById("f-est");
-  if(s.estate){ est.textContent = s.estate_exempt; est.className="fv warn";
-    document.getElementById("f-est-n").textContent = "Federal shield is $15M. This is far lower.";
-  } else { est.textContent = "$15M"; est.className="fv good";
-    document.getElementById("f-est-n").textContent = "No separate state estate tax; only the federal shield.";
+  // Facts. Colour is semantic and strict: teal = nothing owed, red = where a cost begins,
+  // ink = a neutral fact. A shield is never red.
+  var inc = document.getElementById("f-inc");
+  inc.textContent = s.noinc ? "None" : (s.inc.toFixed(2).replace(/\.?0+$/,"")+"%");
+  inc.className = "fv" + (s.noinc?" good":"");
+  document.getElementById("f-inc-n").textContent = s.noinc
+    ? "No state tax on wage or investment income."
+    : "Applies to income and, in most states, to capital gains.";
+
+  var est = document.getElementById("f-est"), estL = document.getElementById("f-est-l");
+  if(s.estate){
+    estL.textContent = "Estate tax starts at";
+    est.textContent = s.estate_exempt; est.className = "fv warn";
+    var m = parseFloat((s.estate_exempt||"").replace(/[^0-9.]/g,""));
+    var gap = m ? Math.round(15 - (m > 1000 ? m/1e6 : m)) : null;
+    document.getElementById("f-est-n").innerHTML = gap && gap > 0
+      ? ("The federal shield waits until $15,000,000. "+s.name+" begins <b>$"+gap+" million earlier</b>.")
+      : "Applies before the federal shield is reached.";
+  } else {
+    estL.textContent = "State estate tax";
+    est.textContent = "None"; est.className = "fv good";
+    document.getElementById("f-est-n").textContent = "Only the federal $15,000,000 shield applies.";
   }
+
   var inh = document.getElementById("f-inh");
   inh.textContent = s.inher ? "Yes" : "None";
-  inh.className = "fv" + (s.inher?" warn":"");
-  document.getElementById("f-inh-n").textContent = s.inher ? "Heirs may owe, depending on relationship." : "Heirs owe no state inheritance tax.";
+  inh.className = "fv" + (s.inher?" warn":" good");
+  document.getElementById("f-inh-n").textContent = s.inher
+    ? "Heirs can owe directly, by relationship."
+    : "Heirs owe no state inheritance tax.";
+
+  // The rest of the picture: capital gains, retirement income, trust situs, QSBS. These are the
+  // dimensions a business owner or a pre-retiree actually decides on, and almost no public map shows them.
+  var cgGood = (s.cgv||0)===0, rtGood = (s.rtv||0)===0, qsBad = (s.qsv||0)===2;
+  document.getElementById("profile").innerHTML = [
+    ["Capital gains", s.cgl || "Taxed as ordinary income", s.cgn || "", cgGood?"good":"", cgGood?"var(--teal)":ink(Math.min((s.cgv||0)/13.3,1))],
+    ["Retirement income", s.rtl || "", s.rtn || "", rtGood?"good":"", rtGood?"var(--teal)":ink((s.rtv||0)/2)],
+    [(s.qsv!=null?"QSBS on a business sale":"Trust situs"),
+      (s.qsv!=null ? (s.qsl||"") : (s.trv?("Trust income taxed to "+trim(s.trv)+"%"):"No tax on accumulated trust income")),
+      (s.qsv!=null ? (s.qsn||"") : (s.trn||"")), qsBad?"warn":((s.qsv||0)===0?"good":""), qsBad?"var(--neg)":ink((s.qsv||0)/2)]
+  ].map(function(r){
+    return '<div class="pf"><div class="pl"><span class="dot" style="background:'+r[4]+'"></span>'+r[0]+'</div>'+
+           '<div class="pv '+r[3]+'">'+r[1]+'</div><div class="pn">'+r[2]+'</div></div>';
+  }).join("");
 
   // income-drag exhibit
   var y, annual = 20000 * (s.inc/100);         // 2% taxable yield on $1M, taxed at state top rate
@@ -405,7 +458,7 @@ function renderDiagnostic(s){
   var pct = Math.max(2, Math.min(100, (y/maxY)*100));
   document.getElementById("bar2").innerHTML =
     '<div class="barline"><span class="bl">'+s.name+'</span><span class="bartrack"><span class="barfill hero" style="width:'+(s.noinc?0:pct)+'%"></span></span><span class="bv">'+(s.noinc?"$0":fmt(y))+'</span></div>'+
-    '<div class="barline"><span class="bl">A no-tax state</span><span class="bartrack"><span class="barfill calm" style="width:2%"></span></span><span class="bv">$0</span></div>';
+    '<div class="barline"><span class="bl">A no-tax state</span><span class="bartrack"></span><span class="bv" style="color:var(--teal)">$0</span></div>';
   document.getElementById("assump").textContent =
     "Assumes a $1,000,000 taxable account yielding 2% in annually taxed income ($20,000), taxed at "+s.name+"'s top marginal rate of "+(s.noinc?"0%":s.inc+"%")+", with the tax instead kept and compounded at 6% for 30 years. A mechanics illustration on stated assumptions, not a forecast; actual rates are graduated and situation-specific.";
 
@@ -428,17 +481,27 @@ function updateYourState(){
   else { el.textContent = ""; }
 }
 
-// dimension toggle
-function setDim(d){
-  dim = d;
-  document.getElementById("dim-income").classList.toggle("on", d==="income");
-  document.getElementById("dim-income").setAttribute("aria-selected", d==="income");
-  document.getElementById("dim-death").classList.toggle("on", d==="death");
-  document.getElementById("dim-death").setAttribute("aria-selected", d==="death");
+// dimension toggle, built from DIMS so the bar and the map can never disagree
+(function(){
+  var bar = document.getElementById("dimbar");
+  DIMS.forEach(function(d){
+    var b = document.createElement("button");
+    b.type="button"; b.setAttribute("role","tab"); b.textContent = d.label;
+    b.className = d.id===dim ? "on" : "";
+    b.setAttribute("aria-selected", String(d.id===dim));
+    b.addEventListener("click", function(){ setDim(d.id); });
+    bar.appendChild(b);
+  });
+})();
+function setDim(id){
+  dim = id;
+  [].forEach.call(document.querySelectorAll("#dimbar button"), function(b,i){
+    var on = DIMS[i].id===id;
+    b.classList.toggle("on", on); b.setAttribute("aria-selected", String(on));
+  });
   buildTiles(); buildLegend();
+  if(selAb) renderDiagnostic(BY[selAb]);
 }
-document.getElementById("dim-income").addEventListener("click", function(){ setDim("income"); });
-document.getElementById("dim-death").addEventListener("click", function(){ setDim("death"); });
 document.addEventListener("click", function(e){ if(e.target && e.target.id==="clearstate"){ dw.set("state",""); location.reload(); } });
 
 // init: build, then silently personalize from the saved profile (the "aha")

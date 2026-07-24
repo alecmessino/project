@@ -25,7 +25,6 @@ LEDGER_TEMPLATE = Path(__file__).with_name("web") / "ledger.html"
 HUB_TEMPLATE = Path(__file__).with_name("web") / "hub.html"
 THESIS_TEMPLATE = Path(__file__).with_name("web") / "thesis.html"
 TAXLAB_TEMPLATE = Path(__file__).with_name("web") / "taxlab.html"
-WORKSPACE_TEMPLATE = Path(__file__).with_name("web") / "workspace.html"
 LEAKAGE_TEMPLATE = Path(__file__).with_name("web") / "leakage.html"
 STATEMAP_TEMPLATE = Path(__file__).with_name("web") / "statemap.html"
 CONCENTRATION_TEMPLATE = Path(__file__).with_name("web") / "concentration.html"
@@ -244,20 +243,6 @@ def export_taxlab(state: dict, out: str | Path) -> Path:
     out.write_text(render_taxlab(state))
     return out
 
-
-def render_workspace(state: dict) -> str:
-    """The Advisor Workspace, the full after-tax toolset (estate, Roth, asset-location, proposal and
-    CPA-brief generation), fed by the same build_taxlab() engine as the public exhibit. Internal,
-    noindex; kept a separate template so it can graduate into its own application without a rewrite."""
-    template = WORKSPACE_TEMPLATE.read_text()
-    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
-
-
-def export_workspace(state: dict, out: str | Path) -> Path:
-    out = Path(out)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(render_workspace(state))
-    return out
 
 
 def render_leakage(state: dict) -> str:

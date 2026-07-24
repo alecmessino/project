@@ -36,7 +36,6 @@ PAIRS = {
     "concentration.html": "concentration.html",
     "ledger.html": "ledger.html",
     "tearsheet.html": "tearsheet.html",
-    "workspace.html": "workspace.html",
     "thesis.html": "thesis.html",
     "taxlab.html": "taxlab.html",
 }
@@ -68,13 +67,13 @@ def main() -> int:
     for asset in ("CNAME", "driftwood.css", "dw-context.js", "favicon.svg", "mask-icon.svg", "privacy.html", "terms.html", "about.html", "principles.html", "philosophy.html",
                   "insights.html", "research.html", "every-portfolio-has-two-returns.html",
                   "the-worlds-largest-investors.html", "enough-is-a-number.html", "howitworks.html",
-                  "coordination.html", "library.html", "case-business-sale.html",
-                  "case-vacation-home.html", "case-inheritance.html", "familyoffice.html",
+                  "coordination.html", "case-business-sale.html",
+                  "case-vacation-home.html", "case-inheritance.html",
                   "case-moving-states.html", "case-stock-options.html", "case-rmds.html",
                   "case-widowed.html", "case-charitable-giving.html", "fees.html", "manual.html",
                   "score.html", "review.html", "awor.html", "inside.html", "decision-register.html",
                   "constitution.html", "capital-allocation.html", "opportunity-register.html",
-                  "record.html", "ic-memo.html", "transition-plan.html", "waitlist.html", "partners.html",
+                  "record.html", "ic-memo.html", "transition-plan.html", "partners.html",
                   "coordination-review.html",
                   "letter.html", "private.html"):
         (DOCS / asset).write_text(_inject_tokens((WEB / asset).read_text()))

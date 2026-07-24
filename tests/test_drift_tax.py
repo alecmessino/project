@@ -473,25 +473,6 @@ def test_build_taxlab_degraded_without_ledger(tmp_path):
     json.dumps(st3)
 
 
-def test_taxlab_il_estate_curve_is_injected_not_hand_mirrored():
-    """The IL estate curve is canonical (drift.state_facts.IL_AG_CURVE): the Python calculator and the
-    workspace JS both render it from one source, so they cannot drift. Guard that the JS no longer
-    carries a hand-typed IL_AG literal and instead reads the injected curve, and that build_taxlab
-    injects it verbatim."""
-    import re
-    from pathlib import Path
-    import drift.taxlab as T
-    from drift.state_facts import IL_AG_CURVE
-    html = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
-    assert "const IL_AG=" not in html, "workspace.html still hand-mirrors the IL curve"
-    assert "S.assumptions.estate.il_ag_curve" in html, "workspace.html must read the injected curve"
-    # The Python calculator uses the canonical curve...
-    assert T._IL_AG_CURVE is IL_AG_CURVE
-    # ...and it is injected for the browser, verbatim (as JSON-serializable lists).
-    injected = T.ASSUMPTIONS["estate"]["il_ag_curve"]
-    assert injected == [list(r) for r in IL_AG_CURVE]
-
-
 def test_pure_tax_fns_handle_edge_inputs():
     """Slider extremes / misconfigured assumptions must not yield NaN/Inf or negative dollars."""
     from drift.taxlab import roth_conversion, location_alpha3, compounded_fee_drag, after_fee
@@ -553,61 +534,6 @@ def test_methodology_dual_engine_and_honest():
     assert "illustrative" in led.lower() and "scripts/slow_sweep.py" in led
 
 
-def test_mobile_state_picker_is_a_severity_chip_grid_not_a_bare_select():
-    # F1: the mobile lead picker must be the tappable severity chip grid (same heat-map language as
-    # the desktop map), not a bare native <select>, and must route through the shared selectState
-    # handler with no separate sync path that can desync.
-    from pathlib import Path
-    import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
-    assert '<select id="leadstate"' not in tx                 # the bare dropdown is gone
-    assert 'id="leadstate"' in tx and "buildLeadStates(" in tx
-    assert "paintLeadSel(" in tx                              # selection mirrored, no desync
-    assert "$(\"leadstate\").value=" not in tx                # the old select-value sync is gone
-
-
-def test_lead_funnel_is_competence_framed_with_instant_recap():
-    # C1/C2/C3: the funnel leads with the analysis (not a fear-framed "recovery plan" grab),
-    # delivers the prospect's own computed figures instantly, and brands the booking step.
-    from pathlib import Path
-    import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
-    assert "Send Me My Custom Tax Recovery Plan" not in tx     # the direct-response grab is gone (C1)
-    assert "See my personalized analysis" in tx               # competence-led CTA (C1)
-    assert "lead-recap" in tx                                  # instant figures delivered on submit (C2)
-    assert "intro call covers" in tx                          # branded pre-call context (C3)
-
-
-def test_estate_view_includes_illiquid_true_net_worth_inputs():
-    # F1: real estate, business equity, and life insurance (with the §2042 ownership toggle) must
-    # feed the Gross Estate — illiquid assets are what trigger the cliff for HNW clients.
-    from pathlib import Path
-    import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
-    for el in ('id="estre"', 'id="estbiz"', 'id="estli"', 'id="estliown"'):
-        assert el in tx, f"estate input missing: {el}"
-    assert "liInEstate" in tx and "§2042" in tx          # life insurance counted only when owned
-    assert "ind+joint+trust+re+biz+liCount" in tx        # all summed into the gross estate
-    assert T.ASSUMPTIONS["estate"]["default_real_estate"] >= 0
-    assert "default_life_insurance" in T.ASSUMPTIONS["estate"]
-
-
-def test_personalized_outreach_url_params_supported():
-    # F3: cold-outreach links pre-load bracket / portfolio / home / li / biz and the prospect view.
-    from pathlib import Path
-    import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
-    assert 'qp.get("portfolio")' in tx and 'qp.get("home")' in tx
-    assert 'qp.get("li")' in tx and 'qp.get("biz")' in tx
-    assert 'qp.get("bracket")' in tx
-    assert 'v==="prospect"' in tx                          # ?view=prospect → lead view
-    # Campaign attribution: utm_* are parsed off the querystring into LEAD_UTM and ride along on the
-    # lead email + conversion event (so geo/segment campaigns are measurable).
-    for utm in ("utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"):
-        assert utm in tx, f"taxlab missing UTM capture: {utm}"
-    assert "LEAD_UTM" in tx and "Object.assign(payload, LEAD_UTM)" in tx
-
-
 def test_firm_models_are_well_formed_and_distinct_from_engine():
     # F4: the 3 IPS models must be internally consistent and keep the Driftwood sleeve as a small
     # satellite — never presented as the whole book or conflated with the backtest.
@@ -631,45 +557,6 @@ def test_build_taxlab_embeds_firm_models(tmp_path):
     assert st["models"] and len(st["models"]) == 3
 
 
-def test_transition_ui_labels_structural_alpha_and_keeps_models_distinct():
-    from pathlib import Path
-    import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
-    assert 'id="transition"' in tx and "renderTransition(" in tx
-    assert "Estimated Structural Alpha (Tax + Fee Optimization)" in tx
-    assert "not a forecast that these funds out-perform" in tx     # honest savings framing
-    assert "distinct from</b> the hypothetical Driftwood" in tx    # institutional model kept separate
-
-
-def test_decision_tree_visualizes_placement_and_gates_trust_on_estate():
-    # F2: the capital-flow map visualizes the placement and surfaces CST/SLAT only as education
-    # gated on the gross estate — never an auto-recommendation (UPL guardrail).
-    from pathlib import Path
-    import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
-    assert 'id="decisiontree"' in tx and "renderDecisionTree(" in tx and "grossEstate(" in tx
-    assert "Credit Shelter" in tx and "SLAT" in tx
-    assert "your attorney determines suitability" in tx   # education, not advice
-    assert "§1014 step-up" in tx
-
-
-def test_pdf_proposal_print_template_and_disclosures():
-    # F5: the print template lives in the shared stylesheet, and every generated proposal (an
-    # advertisement) carries the formal disclosures + a running firm footer.
-    from pathlib import Path
-    import drift.taxlab as T
-    web = Path(T.__file__).with_name("web")
-    css = (web / "driftwood.css").read_text()
-    tx = (web / "workspace.html").read_text()
-    assert "@media print" in css and "@page" in css
-    assert "#printfoot" in css and "position:fixed" in css     # running footer on every page
-    assert 'id="printdisc"' in tx and 'id="printproposal"' in tx
-    assert "Park Avenue Securities" in tx and "adviserinfo.sec.gov" not in tx
-    assert "not a performance forecast" in tx
-    assert "does not guarantee future\n      results" in tx or "does not guarantee future results" in tx
-    assert "Recommended structure" in tx
-
-
 def test_location_alpha3_range_brackets_the_base():
     # M3: the sensitivity range must straddle the point estimate and be a genuine interval.
     from drift.taxlab import location_alpha3, location_alpha3_range
@@ -681,17 +568,6 @@ def test_location_alpha3_range_brackets_the_base():
     # degenerate: no advantaged accounts -> no overlap -> zero saving, zero-width range
     z = location_alpha3_range(1_000_000, 0, 0, 0.02, 0.003, 0.07, 30)
     assert z["annual_low"] == 0.0 and z["annual_high"] == 0.0
-
-
-def test_structural_alpha_shows_a_sensitivity_range_with_tooltip():
-    # M3: the headline carries a defensible visible range AND a hover tooltip naming the drivers.
-    from pathlib import Path
-    import drift.taxlab as T
-    tx = (Path(T.__file__).with_name("web") / "workspace.html").read_text()
-    assert "Sensitivity range" in tx and "DRAG_BAND" in tx
-    assert "saLo" in tx and "saHi" in tx
-    assert "effective tax rate, turnover, and market return" in tx      # the band's drivers, in the tip
-    assert 'class="term"' in tx                                          # rendered via the tooltip component
 
 
 def test_shipped_configs_ship_neutral_tilt():

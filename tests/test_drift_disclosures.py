@@ -13,7 +13,6 @@ from drift.exhibit import (
     HUB_TEMPLATE,
     THESIS_TEMPLATE,
     TAXLAB_TEMPLATE,
-    WORKSPACE_TEMPLATE,  # the Advisor Workspace — the lead funnel + advisor tooling moved here
     LEAKAGE_TEMPLATE,
     TEMPLATE,  # index.html / dashboard
 )
@@ -110,17 +109,6 @@ def test_hypothetical_exhibits_carry_an_audience_statement():
         t = _read(tmpl)
         assert "Intended for sophisticated investors" in t, f"{tmpl.name}: no audience statement"
         assert "may not be relevant to your situation" in t
-
-
-def test_funnel_does_not_over_promise_an_automated_report():
-    # P0-5: the success state must not claim a report "is on its way" when the backend only
-    # notifies the firm of a lead — that was a misleading representation to a prospect. The lead
-    # funnel now lives in the (internal) Advisor Workspace; the public exhibit has a single
-    # "Request a Private After-Tax Review" invitation and no funnel.
-    t = _read(WORKSPACE_TEMPLATE)
-    assert "report is on its way" not in t
-    assert "custom tax-recovery plan" not in t          # implied instant deliverable
-    assert "follow up by email" in t                    # honest manual-follow-up framing
 
 
 def test_ledger_attribution_states_alpha_significance_and_out_of_sample():

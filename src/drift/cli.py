@@ -262,10 +262,9 @@ def taxlab(
     from pathlib import Path
     from .taxlab import build_taxlab
     from .leakage import build_leakage
-    from .exhibit import export_taxlab, export_workspace
+    from .exhibit import export_taxlab
     state = build_taxlab(docs)
     # The Advisor Workspace is a separate page over the same (heavy, ledger-driven) engine/state (internal, noindex).
-    export_workspace(state, Path(docs) / "workspace.html")
     # The public After-Tax Review is an illustrative exhibit: it needs only the per-state coordination-alpha
     # table (+ names) to localize to a visitor's state — the heavy workspace assumptions stay off the public page.
     leak = build_leakage()

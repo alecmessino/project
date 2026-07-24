@@ -1,0 +1,450 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tax Atlas — Driftwood Wealth (concept)</title>
+<style>
+@font-face{font-family:'Satoshi';font-weight:400;font-style:normal;font-display:swap;src:url(__SAT400__) format('woff2')}
+@font-face{font-family:'Satoshi';font-weight:500;font-style:normal;font-display:swap;src:url(__SAT500__) format('woff2')}
+@font-face{font-family:'Satoshi';font-weight:700;font-style:normal;font-display:swap;src:url(__SAT700__) format('woff2')}
+@font-face{font-family:'Erode';font-weight:400;font-style:normal;font-display:swap;src:url(__ERO400__) format('woff2')}
+@font-face{font-family:'Erode';font-weight:500;font-style:normal;font-display:swap;src:url(__ERO500__) format('woff2')}
+@font-face{font-family:'Erode';font-weight:600;font-style:normal;font-display:swap;src:url(__ERO600__) format('woff2')}
+:root{
+  color-scheme:light;
+  --paper:#f1efe9;--paper2:#ece9e0;--soft:#f7f5f0;--card:#fffdf8;--line:#d8d3c6;--line2:#e5e0d5;--rule:#c3bcab;
+  --ink:#1e2833;--body:#3d4650;--dim:#5c6470;--muted:#797d78;
+  --blue:#2c5878;--blue-d:#22485f;--blue-soft:#a9c2d6;--teal:#15806a;--amber:#9a6b12;--neg:#9b4439;
+  --navy:#1a2330;--on-dark:#e7ecf2;
+  --sans:'Satoshi','Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  --serif:'Erode','Georgia','Times New Roman',serif;
+  --col:1080px;--pad:clamp(22px,5vw,64px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--body);font:400 16.5px/1.62 var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:var(--col);margin:0 auto;padding-inline:var(--pad)}
+h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
+.tnum{font-variant-numeric:tabular-nums}
+.tag{font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:2px}
+.tag::before{content:"";width:6px;height:6px;border-radius:50%;flex:none}
+.tag-i{color:var(--amber);background:#f4ead0;border:1px solid #d5b874}
+.tag-i::before{background:none;border:1.5px solid currentColor}
+.tag-c{color:var(--blue);background:#e2edf4;border:1px solid #86aac6}
+.tag-c::before{background:currentColor}
+
+/* ribbon + nav */
+.ribbon{position:fixed;top:0;left:0;right:0;z-index:60;background:var(--navy);color:var(--blue-soft);font-size:11.5px;letter-spacing:.06em;text-align:center;padding:6px 12px;font-weight:500}
+.ribbon b{color:#f1ede3;font-weight:700}
+.nav{position:sticky;top:0;z-index:50;background:rgba(241,239,233,.9);backdrop-filter:blur(9px);border-bottom:1px solid var(--line);margin-top:29px}
+.nav-in{max-width:var(--col);margin:0 auto;padding:14px var(--pad);display:flex;align-items:center;gap:26px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto}
+.brand svg{width:30px;height:26px;color:var(--ink)}
+.brand-w{font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink)}
+.nav-links{display:flex;gap:22px}
+.nav-links a{text-decoration:none;color:var(--body);font-size:13.5px;font-weight:500;padding:4px 0;border-bottom:1.5px solid transparent;transition:border-color .18s,color .18s}
+.nav-links a:hover,.nav-links a.on{color:var(--ink);border-bottom-color:var(--blue-soft)}
+.nav-util{text-decoration:none;color:var(--dim);font-size:12px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:6px;padding:4px 0}
+.nav-util::before{content:"";width:6px;height:6px;border:1.5px solid var(--muted);border-radius:50%;flex:none}
+.nav-cta{text-decoration:none;background:var(--blue);color:#f4f1ea;font-size:13px;font-weight:700;padding:9px 17px;white-space:nowrap}
+@media(max-width:900px){.nav-links,.nav-util{display:none}}
+
+/* masthead */
+.plate-strip{position:relative;height:clamp(120px,17vh,180px);overflow:hidden;background:var(--paper2)}
+.plate-strip img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 50%}
+.plate-strip .fade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(241,239,233,.2),rgba(241,239,233,0) 40%,var(--paper))}
+.masthead{padding:clamp(24px,4vh,40px) 0 0}
+.eyebrow{font-weight:700;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--blue)}
+.mast-h{font-family:var(--serif);font-weight:500;font-size:clamp(28px,4.2vw,48px);line-height:1.06;margin:14px 0 0;max-width:18ch}
+.mast-lede{font-size:clamp(15.5px,1.4vw,18px);line-height:1.55;color:var(--dim);max-width:58ch;margin:16px 0 0}
+.mast-lede b{color:var(--ink);font-weight:500}
+
+/* instrument */
+.instrument{padding-block:clamp(30px,5vh,52px)}
+.inst-bar{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;justify-content:space-between;margin-bottom:22px}
+.toggle{display:inline-flex;background:var(--soft);border:1px solid var(--line);padding:3px;gap:3px}
+.toggle button{font:600 13px var(--sans);color:var(--dim);background:none;border:none;padding:9px 16px;cursor:pointer;transition:background .15s,color .15s}
+.toggle button.on{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.yourstate{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.yourstate b{color:var(--ink)}
+.yourstate .chg{color:var(--blue);cursor:pointer;border-bottom:1px solid var(--blue-soft);font-weight:600}
+.prompt{font-family:var(--serif);font-size:16px;color:var(--blue-d);margin:0 0 14px}
+
+/* cartogram */
+.cartowrap{overflow-x:auto}
+.carto{display:grid;grid-template-columns:repeat(11,1fr);gap:5px;min-width:520px;max-width:760px}
+.tile{position:relative;aspect-ratio:1;border:1px solid var(--line);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .12s,box-shadow .12s,outline .12s;outline:2px solid transparent;outline-offset:-2px}
+.tile:hover{transform:translateY(-2px);z-index:3;box-shadow:0 4px 12px rgba(30,40,51,.16)}
+.tile:focus-visible{outline-color:var(--ink)}
+.tile.sel{outline-color:var(--ink);z-index:2}
+.tile .ab{font:700 12px var(--sans);letter-spacing:-.01em;pointer-events:none}
+.tile.haven::after{content:"";position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--teal)}
+.tip{position:fixed;z-index:40;background:var(--navy);color:#f1ede3;font-size:12px;line-height:1.4;padding:9px 12px;max-width:230px;pointer-events:none;opacity:0;transition:opacity .12s;border-radius:2px}
+.tip b{color:#fff;display:block;margin-bottom:3px;font-size:12.5px}
+.tip .tp{color:var(--blue-soft)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:20px;font-size:12px;color:var(--dim)}
+.legend .sw{display:inline-flex;align-items:center;gap:7px}
+.legend .box{width:15px;height:15px;border:1px solid var(--line);flex:none}
+.legend .haven-key{display:inline-flex;align-items:center;gap:7px}
+.legend .haven-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);flex:none}
+.savednote{font-size:11.5px;color:var(--muted);margin-top:14px}
+
+/* diagnostic */
+.diagnostic{background:var(--soft);border-block:1px solid var(--line)}
+.diag-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:14px}
+.diag-state{font-family:var(--serif);font-size:clamp(26px,3.4vw,40px);color:var(--ink);letter-spacing:-.02em}
+.diag-tag{font-size:13px;color:var(--muted)}
+.factrow{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:24px}
+@media(max-width:720px){.factrow{grid-template-columns:1fr}}
+.fact{background:var(--card);padding:20px 22px}
+.fact .fl{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.fact .fv{font-weight:700;font-size:clamp(22px,2.5vw,28px);letter-spacing:-.02em;color:var(--ink);margin-top:8px;line-height:1.05}
+.fact .fv.good{color:var(--teal)}
+.fact .fv.warn{color:var(--neg)}
+.fact .fn{font-size:12px;color:var(--dim);line-height:1.45;margin-top:8px}
+
+.exhibit{margin-top:26px;background:var(--card);border:1px solid var(--ink);padding:clamp(24px,3.5vw,34px)}
+.exhibit .ex-k{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.exhibit .ex-lead{font-family:var(--serif);font-size:clamp(18px,2vw,23px);line-height:1.4;color:var(--ink);margin:0;max-width:44ch}
+.exhibit .ex-big{font-weight:700;font-size:clamp(38px,6vw,60px);letter-spacing:-.03em;color:var(--ink);line-height:1;margin:18px 0 6px}
+.exhibit .ex-big .vs{color:var(--muted);font-weight:500;font-size:.5em}
+.bar2{display:grid;grid-template-columns:1fr;gap:10px;margin:22px 0 0;max-width:560px}
+.barline{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:center;font-size:13px}
+.barline .bl{color:var(--body)}
+.bartrack{height:14px;background:var(--paper2);position:relative;overflow:hidden}
+.barfill{position:absolute;inset:0 auto 0 0;height:100%;transition:width .5s ease}
+.barfill.hero{background:var(--neg)}
+.barfill.calm{background:var(--teal)}
+.barline .bv{font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
+.assump{font-size:11.5px;color:var(--muted);line-height:1.5;margin:20px 0 0;max-width:64ch}
+.estate-note{margin-top:20px;padding-top:18px;border-top:1px solid var(--line2);font-size:14.5px;line-height:1.55;color:var(--body);max-width:60ch}
+.estate-note b{color:var(--ink);font-weight:600}
+
+/* bridge / door */
+.bridge{padding-block:clamp(56px,9vh,100px)}
+.bridge .blead{font-family:var(--serif);font-size:clamp(20px,2.5vw,30px);line-height:1.34;color:var(--ink);max-width:34ch;margin:0}
+.bridge .bsub{font-size:15px;line-height:1.6;color:var(--body);max-width:56ch;margin:16px 0 0}
+.bridge .brow{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;margin-top:28px}
+.btn{display:inline-block;text-decoration:none;background:var(--blue);color:#f4f1ea;font-weight:700;font-size:15px;padding:15px 28px;transition:filter .18s,transform .18s}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-quiet{text-decoration:none;color:var(--blue);font-weight:600;font-size:14px;border-bottom:1.5px solid var(--blue-soft);padding-bottom:2px}
+
+/* footer */
+.foot{background:var(--paper2);border-top:1px solid var(--line)}
+.foot-in{max-width:var(--col);margin:0 auto;padding:clamp(36px,6vh,60px) var(--pad)}
+.foot-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:26px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.foot-contact div{font-size:14px;line-height:1.7;color:var(--body)}
+.foot-contact .nm{font-weight:700;color:var(--ink)}
+.foot-contact a{color:var(--blue);text-decoration:none}
+.foot-nav{display:flex;gap:34px;flex-wrap:wrap}
+.foot-col h4{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 11px;font-weight:700}
+.foot-col a{display:block;font-size:13.5px;color:var(--body);text-decoration:none;padding:3px 0}
+.disc{font-size:11.5px;line-height:1.6;color:var(--muted);margin-top:22px}
+.disc .note{color:var(--dim);font-weight:600}
+</style>
+
+<div class="ribbon">Concept preview · Driftwood — <b>Tax Atlas</b>. Illustrative reference on 2025 law; verify current thresholds. Figures model the mechanics, not a client result.</div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="brand" href="__HOMEURL__">
+      <svg viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="4.6" aria-hidden="true">
+        <polyline points="10,18 24.35,18 62,50"/><polyline points="10,34 43.18,34 62,50"/>
+        <line x1="10" y1="50" x2="62" y2="50"/><polyline points="10,66 43.18,66 62,50"/>
+        <polyline points="10,82 24.35,82 62,50"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"/></svg>
+      <span class="brand-w">Driftwood Wealth</span>
+    </a>
+    <div class="nav-links">
+      <a href="__HOMEURL__">The Firm</a>
+      <a href="__PRACTICEURL__">The Practice</a>
+      <a href="__RECORDURL__">The Record</a>
+      <a href="__HOMEURL__">The Library</a>
+      <a href="#" class="on">Tax Atlas</a>
+      <a href="__HOMEURL__">For CPAs &amp; Attorneys</a>
+    </div>
+    <a class="nav-util" href="#" title="Secure access for current clients">Client Access</a>
+    <a class="nav-cta" href="#door">Request a Review</a>
+  </div>
+</nav>
+
+<figure class="plate-strip" style="margin:0">
+  <img src="__SHORE__" alt="Calm engraved strata, a schematic of contour and place.">
+  <div class="fade"></div>
+</figure>
+
+<header class="masthead"><div class="wrap">
+  <div class="eyebrow">Tax Atlas</div>
+  <h1 class="mast-h">Fifty states, fifty tax personalities.</h1>
+  <p class="mast-lede">Where you live changes what you keep. Tap your state, and the picture below is already yours: income, estate, and inheritance, read together. <b>Nothing is saved but your state, and only in this browser.</b></p>
+</div></header>
+
+<section class="instrument"><div class="wrap">
+  <div class="inst-bar">
+    <div class="toggle" role="tablist" aria-label="Choose a tax dimension">
+      <button id="dim-income" class="on" role="tab" aria-selected="true">Income tax</button>
+      <button id="dim-death" role="tab" aria-selected="false">Estate &amp; inheritance</button>
+    </div>
+    <div class="yourstate" id="yourstate"></div>
+  </div>
+  <p class="prompt" id="prompt">Tap your state to begin.</p>
+  <div class="cartowrap">
+    <div class="carto" id="carto" role="group" aria-label="Tile map of US states and DC; select a state"></div>
+  </div>
+  <div class="legend" id="legend"></div>
+  <p class="savednote">The map is a schematic tile grid, not to geographic scale. Your selection is stored only on this device and is never transmitted.</p>
+</div></section>
+
+<section class="diagnostic" id="diagnostic" hidden><div class="wrap">
+  <div class="diag-head">
+    <div class="diag-state" id="diag-state">Illinois</div>
+    <div class="diag-tag" id="diag-tag"></div>
+  </div>
+
+  <div class="factrow">
+    <div class="fact"><div class="fl">Top income rate</div><div class="fv" id="f-inc">4.95%</div><div class="fn" id="f-inc-n">Flat.</div></div>
+    <div class="fact"><div class="fl">State estate shield</div><div class="fv" id="f-est">$4.0M</div><div class="fn" id="f-est-n">Federal shield is $15M.</div></div>
+    <div class="fact"><div class="fl">Inheritance tax</div><div class="fv" id="f-inh">None</div><div class="fn" id="f-inh-n">Paid by heirs, not the estate.</div></div>
+  </div>
+
+  <div class="exhibit">
+    <div class="ex-k">Illustrative · the income drag on $1,000,000 <span class="tag tag-i">Illustrative</span></div>
+    <p class="ex-lead" id="ex-lead">What your state quietly takes from the same holdings, compared with a no-income-tax state.</p>
+    <div class="ex-big" id="ex-big">$78,000<span class="vs"> over 30 years</span></div>
+    <div class="bar2" id="bar2"></div>
+    <p class="assump" id="assump"></p>
+    <div class="estate-note" id="estate-note"></div>
+  </div>
+</div></section>
+
+<section class="bridge"><div class="wrap">
+  <p class="blead">The Atlas shows where the money leaks. A Coordination Review is where it gets kept.</p>
+  <p class="bsub">The map answers "is there anything here for a family like mine." The Review answers "who stays accountable for all of it, year over year." Your state travels with you into that conversation.</p>
+  <div class="brow">
+    <a class="btn" href="#" id="door">Request a Coordination Review →</a>
+    <a class="btn-quiet" href="__RECORDURL__">See it kept in a household's Record</a>
+  </div>
+</div></section>
+
+<footer class="foot"><div class="foot-in">
+  <div class="foot-top">
+    <div class="foot-contact">
+      <div class="nm">Driftwood Wealth</div>
+      <div><a href="mailto:alec@driftwoodwealth.com">alec@driftwoodwealth.com</a></div>
+      <div>(708) 548-7600</div>
+      <div><a href="#" style="color:var(--dim);font-weight:600">Client Access →</a></div>
+    </div>
+    <div class="foot-nav">
+      <div class="foot-col"><h4>The Firm</h4><a href="__HOMEURL__">Story &amp; Principles</a><a href="__HOMEURL__">Fees</a></div>
+      <div class="foot-col"><h4>The Practice</h4><a href="__PRACTICEURL__">The Engagement</a><a href="#door">The Coordination Review</a></div>
+      <div class="foot-col"><h4>The Record</h4><a href="__RECORDURL__">Opportunity Register</a></div>
+      <div class="foot-col"><h4>Tax Atlas</h4><a href="#">Your state</a><a href="#diagnostic">The diagnostic</a></div>
+    </div>
+  </div>
+  <p class="disc"><span class="note">Illustrative reference on current law, not investment, tax, or legal advice.</span> State rates and exemptions are for 2025 and change frequently; confirm current statute for your situation. Illustrative figures model tax mechanics on stated assumptions and are not a forecast or a client result. Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS and a Financial Representative of The Guardian Life Insurance Company of America® (Guardian), New York, NY. PAS is a wholly owned subsidiary of Guardian. Capitol Wealth Strategies, LLC is not an affiliate or subsidiary of PAS or Guardian.</p>
+</div></footer>
+
+<script>
+// ── dw-context: the shared, browser-only household profile every tool reads and writes ──
+window.dw = (function(){
+  var KEY = "dw.profile";
+  function load(){ try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ return {}; } }
+  var p = load();
+  return {
+    get: function(k){ return p[k]; },
+    set: function(k,v){ p[k]=v; try{ localStorage.setItem(KEY, JSON.stringify(p)); }catch(e){}
+      document.dispatchEvent(new CustomEvent("dw:change",{detail:{key:k,value:v,profile:p}})); },
+    all: function(){ return p; }
+  };
+})();
+
+// ── the verified dataset is injected here ──
+var STATES = __STATEDATA__;
+var BY = {}; STATES.forEach(function(s){ BY[s.ab]=s; });
+
+// ── tile-grid layout (schematic; [row,col], 8 rows x 11 cols) ──
+var LAYOUT = {
+  AK:[0,0], ME:[0,10],
+  VT:[1,9], NH:[1,10],
+  WA:[2,0], ID:[2,1], MT:[2,2], ND:[2,3], MN:[2,4], IL:[2,5], WI:[2,6], MI:[2,8], NY:[2,9], MA:[2,10],
+  OR:[3,0], NV:[3,1], WY:[3,2], SD:[3,3], IA:[3,4], IN:[3,5], OH:[3,6], PA:[3,7], NJ:[3,8], CT:[3,9], RI:[3,10],
+  CA:[4,0], UT:[4,1], CO:[4,2], NE:[4,3], MO:[4,4], KY:[4,5], WV:[4,6], VA:[4,7], MD:[4,8], DE:[4,9],
+  AZ:[5,1], NM:[5,2], KS:[5,3], AR:[5,4], TN:[5,5], NC:[5,6], SC:[5,7], DC:[5,8],
+  OK:[6,3], LA:[6,4], MS:[6,5], AL:[6,6], GA:[6,7],
+  HI:[7,0], TX:[7,3], FL:[7,8]
+};
+
+var dim = "income";
+var FED_ESTATE = 15000000;
+
+// colour by dimension
+function lerp(a,b,t){ return a.map(function(v,i){ return Math.round(v+(b[i]-v)*t); }); }
+function rgb(c){ return "rgb("+c[0]+","+c[1]+","+c[2]+")"; }
+var LIME=[236,233,224], BLUE=[44,88,120], DEEP=[34,72,95], TEAL=[21,128,106], MIDB=[122,160,191], PALE=[231,227,216];
+function tileColor(s){
+  if(dim==="income"){
+    if(s.noinc) return rgb(TEAL);
+    var t = Math.min(s.inc/13.3, 1);            // 0..13.3% -> lime..deep blue
+    return rgb(lerp(lerp(LIME,BLUE,Math.min(t*1.4,1)), DEEP, Math.max(0,(t-0.6)/0.4)));
+  } else {
+    if(s.estate && s.inher) return rgb(DEEP);
+    if(s.estate) return rgb(BLUE);
+    if(s.inher) return rgb(MIDB);
+    return rgb(PALE);
+  }
+}
+function isHaven(s){ return s.noinc && !s.estate && !s.inher; }
+function textColor(s){
+  // dark tiles get light text
+  if(dim==="income"){ return (s.noinc || s.inc>=6) ? "#f1ede3" : "var(--ink)"; }
+  return (s.estate) ? "#f1ede3" : (s.inher ? "#f1ede3" : "var(--ink)");
+}
+
+var carto = document.getElementById("carto");
+function buildTiles(){
+  carto.innerHTML = "";
+  Object.keys(LAYOUT).forEach(function(ab){
+    var s = BY[ab]; if(!s) return;
+    var pos = LAYOUT[ab];
+    var b = document.createElement("button");
+    b.className = "tile" + (isHaven(s)?" haven":"");
+    b.style.gridRow = (pos[0]+1); b.style.gridColumn = (pos[1]+1);
+    b.style.background = tileColor(s);
+    b.setAttribute("data-ab", ab);
+    b.setAttribute("aria-label", s.name);
+    b.innerHTML = '<span class="ab" style="color:'+textColor(s)+'">'+ab+'</span>';
+    b.addEventListener("click", function(){ select(ab, true); });
+    b.addEventListener("mouseenter", function(e){ showTip(e, s); });
+    b.addEventListener("mousemove", moveTip);
+    b.addEventListener("mouseleave", hideTip);
+    carto.appendChild(b);
+  });
+  markSelected();
+}
+
+// tooltip
+var tip = document.createElement("div"); tip.className="tip"; document.body.appendChild(tip);
+function showTip(e,s){
+  var line = dim==="income"
+    ? (s.noinc? "No state income tax" : "Top income rate "+s.inc.toFixed(2).replace(/\.?0+$/,"")+"%")
+    : (s.estate? ("Estate tax, "+s.estate_exempt+" shield") : s.inher? "Inheritance tax" : "No state death tax");
+  tip.innerHTML = "<b>"+s.name+"</b><span class='tp'>"+line+"</span>";
+  tip.style.opacity="1"; moveTip(e);
+}
+function moveTip(e){ tip.style.left=(e.clientX+14)+"px"; tip.style.top=(e.clientY+14)+"px"; }
+function hideTip(){ tip.style.opacity="0"; }
+
+// legend
+function buildLegend(){
+  var L = document.getElementById("legend"); var h="";
+  if(dim==="income"){
+    h += swatch(rgb(TEAL),"No income tax");
+    h += swatch(rgb(lerp(LIME,BLUE,0.5)),"Lower");
+    h += swatch(rgb(BLUE),"Higher");
+    h += swatch(rgb(DEEP),"Highest (to 13.3%)");
+  } else {
+    h += swatch(rgb(PALE),"No death tax");
+    h += swatch(rgb(MIDB),"Inheritance tax");
+    h += swatch(rgb(BLUE),"Estate tax");
+    h += swatch(rgb(DEEP),"Both");
+  }
+  h += '<span class="haven-key"><span class="haven-dot"></span>No income, estate, or inheritance tax</span>';
+  L.innerHTML = h;
+}
+function swatch(c,label){ return '<span class="sw"><span class="box" style="background:'+c+'"></span>'+label+'</span>'; }
+
+// selection + diagnostic
+var selAb = null;
+function markSelected(){
+  [].forEach.call(carto.querySelectorAll(".tile"), function(t){
+    t.classList.toggle("sel", t.getAttribute("data-ab")===selAb);
+  });
+}
+function fmt(n){ return "$"+Math.round(n).toLocaleString("en-US"); }
+function fmtK(n){ n=Math.round(n); if(n>=1000) return "$"+Math.round(n/1000)+"k"; return "$"+n; }
+
+function select(ab, scroll){
+  selAb = ab; markSelected();
+  dw.set("state", ab);                       // silent handoff: the profile every tool reads
+  renderDiagnostic(BY[ab]);
+  document.getElementById("prompt").textContent = "Showing "+BY[ab].name+". Tap another state to compare.";
+  updateYourState();
+  var d = document.getElementById("diagnostic"); d.hidden = false;
+  if(scroll){ d.scrollIntoView({behavior:"smooth", block:"start"}); }
+}
+
+var FV_ANNUITY_30_6 = ( (Math.pow(1.06,30)-1)/0.06 ); // ~79.06
+function renderDiagnostic(s){
+  document.getElementById("diag-state").textContent = s.name;
+  document.getElementById("diag-tag").textContent = s.tag || "";
+
+  // facts
+  document.getElementById("f-inc").textContent = s.noinc ? "None" : (s.inc.toFixed(2).replace(/\.?0+$/,"")+"%");
+  document.getElementById("f-inc").className = "fv" + (s.noinc?" good":"");
+  document.getElementById("f-inc-n").textContent = s.inc_note || (s.noinc?"No tax on wage income.":"");
+  var est = document.getElementById("f-est");
+  if(s.estate){ est.textContent = s.estate_exempt; est.className="fv warn";
+    document.getElementById("f-est-n").textContent = "Federal shield is $15M. This is far lower.";
+  } else { est.textContent = "$15M"; est.className="fv good";
+    document.getElementById("f-est-n").textContent = "No separate state estate tax; only the federal shield.";
+  }
+  var inh = document.getElementById("f-inh");
+  inh.textContent = s.inher ? "Yes" : "None";
+  inh.className = "fv" + (s.inher?" warn":"");
+  document.getElementById("f-inh-n").textContent = s.inher ? "Heirs may owe, depending on relationship." : "Heirs owe no state inheritance tax.";
+
+  // income-drag exhibit
+  var y, annual = 20000 * (s.inc/100);         // 2% taxable yield on $1M, taxed at state top rate
+  y = annual * FV_ANNUITY_30_6;
+  document.getElementById("ex-big").innerHTML = (s.noinc? "$0" : fmt(y)) + "<span class='vs'> over 30 years</span>";
+  document.getElementById("ex-lead").textContent = s.noinc
+    ? (s.name+" takes nothing in state income tax on the same holdings. The whole return stays at work.")
+    : ("What "+s.name+" quietly takes from the same holdings in state income tax, kept and compounded instead.");
+
+  // comparison bars vs a no-tax state (max scale = California-ish)
+  var maxY = 20000*(13.3/100)*FV_ANNUITY_30_6;
+  var pct = Math.max(2, Math.min(100, (y/maxY)*100));
+  document.getElementById("bar2").innerHTML =
+    '<div class="barline"><span class="bl">'+s.name+'</span><span class="bartrack"><span class="barfill hero" style="width:'+(s.noinc?0:pct)+'%"></span></span><span class="bv">'+(s.noinc?"$0":fmt(y))+'</span></div>'+
+    '<div class="barline"><span class="bl">A no-tax state</span><span class="bartrack"><span class="barfill calm" style="width:2%"></span></span><span class="bv">$0</span></div>';
+  document.getElementById("assump").textContent =
+    "Assumes a $1,000,000 taxable account yielding 2% in annually taxed income ($20,000), taxed at "+s.name+"'s top marginal rate of "+(s.noinc?"0%":s.inc+"%")+", with the tax instead kept and compounded at 6% for 30 years. A mechanics illustration on stated assumptions, not a forecast; actual rates are graduated and situation-specific.";
+
+  // estate note
+  var en = document.getElementById("estate-note");
+  if(s.estate){
+    var exemptNum = parseFloat((s.estate_exempt||"").replace(/[^0-9.]/g,"")) * 1e6;
+    en.innerHTML = "<b>Estate:</b> "+s.name+" begins taxing an estate above "+s.estate_exempt+", while the federal shield is $15,000,000. A $6,000,000 estate that owes nothing federally can still owe "+s.name+" estate tax, which the identical estate in a no-tax state like Texas would never owe."+(s.death_note?(" "+s.death_note):"");
+  } else if(s.inher){
+    en.innerHTML = "<b>Estate:</b> "+s.name+" has no estate tax, but levies an inheritance tax that heirs may owe depending on their relationship to the deceased. Coordination decides who inherits which asset, and in what form.";
+  } else {
+    en.innerHTML = "<b>Estate:</b> "+s.name+" levies no state estate or inheritance tax. Only the federal $15,000,000 shield applies, so the estate question here is a federal and titling question, not a state one.";
+  }
+}
+
+function updateYourState(){
+  var el = document.getElementById("yourstate");
+  var st = dw.get("state");
+  if(st && BY[st]){ el.innerHTML = "Your state: <b>"+BY[st].name+"</b> <span class='chg' id='clearstate'>change</span>"; }
+  else { el.textContent = ""; }
+}
+
+// dimension toggle
+function setDim(d){
+  dim = d;
+  document.getElementById("dim-income").classList.toggle("on", d==="income");
+  document.getElementById("dim-income").setAttribute("aria-selected", d==="income");
+  document.getElementById("dim-death").classList.toggle("on", d==="death");
+  document.getElementById("dim-death").setAttribute("aria-selected", d==="death");
+  buildTiles(); buildLegend();
+}
+document.getElementById("dim-income").addEventListener("click", function(){ setDim("income"); });
+document.getElementById("dim-death").addEventListener("click", function(){ setDim("death"); });
+document.addEventListener("click", function(e){ if(e.target && e.target.id==="clearstate"){ dw.set("state",""); location.reload(); } });
+
+// init: build, then silently personalize from the saved profile (the "aha")
+buildTiles(); buildLegend(); updateYourState();
+(function(){
+  var saved = dw.get("state");
+  if(saved && BY[saved]){ select(saved, false); }
+})();
+</script>

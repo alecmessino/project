@@ -1,0 +1,523 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Record — Driftwood Wealth (concept)</title>
+<style>
+@font-face{font-family:'Satoshi';font-weight:400;font-style:normal;font-display:swap;src:url(__SAT400__) format('woff2')}
+@font-face{font-family:'Satoshi';font-weight:500;font-style:normal;font-display:swap;src:url(__SAT500__) format('woff2')}
+@font-face{font-family:'Satoshi';font-weight:700;font-style:normal;font-display:swap;src:url(__SAT700__) format('woff2')}
+@font-face{font-family:'Erode';font-weight:400;font-style:normal;font-display:swap;src:url(__ERO400__) format('woff2')}
+@font-face{font-family:'Erode';font-weight:500;font-style:normal;font-display:swap;src:url(__ERO500__) format('woff2')}
+@font-face{font-family:'Erode';font-weight:600;font-style:normal;font-display:swap;src:url(__ERO600__) format('woff2')}
+:root{
+  color-scheme:light;
+  --paper:#f1efe9;--paper2:#ece9e0;--soft:#f7f5f0;--card:#fffdf8;--line:#d8d3c6;--line2:#e5e0d5;--rule:#c3bcab;
+  --ink:#1e2833;--body:#3d4650;--dim:#5c6470;--muted:#797d78;
+  --blue:#2c5878;--blue-d:#22485f;--blue-soft:#a9c2d6;--teal:#15806a;--amber:#9a6b12;--neg:#9b4439;
+  --navy:#1a2330;--on-dark:#e7ecf2;
+  --sans:'Satoshi','Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  --serif:'Erode','Georgia','Times New Roman',serif;
+  --col:1080px;--pad:clamp(22px,5vw,64px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--body);font:400 16.5px/1.62 var(--sans);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:var(--col);margin:0 auto;padding-inline:var(--pad)}
+h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* evidence tags */
+.tag{font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:2px;white-space:nowrap}
+.tag::before{content:"";width:6px;height:6px;border-radius:50%;flex:none}
+.tag-c{color:var(--blue);background:#e2edf4;border:1px solid #86aac6}
+.tag-c::before{background:currentColor}
+.tag-i{color:var(--amber);background:#f4ead0;border:1px solid #d5b874}
+.tag-i::before{background:none;border:1.5px solid currentColor}
+
+/* ── ribbon + nav ── */
+.ribbon{position:fixed;top:0;left:0;right:0;z-index:60;background:var(--navy);color:var(--blue-soft);font-size:11.5px;letter-spacing:.06em;text-align:center;padding:6px 12px;font-weight:500}
+.ribbon b{color:#f1ede3;font-weight:700}
+.nav{position:sticky;top:0;z-index:50;background:rgba(241,239,233,.86);backdrop-filter:blur(9px);border-bottom:1px solid var(--line);margin-top:29px}
+.nav-in{max-width:var(--col);margin:0 auto;padding:14px var(--pad);display:flex;align-items:center;gap:26px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto}
+.brand svg{width:30px;height:26px;color:var(--ink)}
+.brand-w{font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink)}
+.nav-links{display:flex;gap:22px}
+.nav-links a{text-decoration:none;color:var(--body);font-size:13.5px;font-weight:500;padding:4px 0;border-bottom:1.5px solid transparent;transition:border-color .18s,color .18s}
+.nav-links a:hover,.nav-links a.on{color:var(--ink);border-bottom-color:var(--blue-soft)}
+.nav-util{text-decoration:none;color:var(--dim);font-size:12px;font-weight:600;letter-spacing:.02em;white-space:nowrap;display:flex;align-items:center;gap:6px;padding:4px 0}
+.nav-util::before{content:"";width:6px;height:6px;border:1.5px solid var(--muted);border-radius:50%;flex:none}
+.nav-cta{text-decoration:none;background:var(--blue);color:#f4f1ea;font-size:13px;font-weight:700;padding:9px 17px;white-space:nowrap}
+@media(max-width:900px){.nav-links,.nav-util{display:none}}
+
+/* ── masthead ── */
+.plate-top{position:relative;height:clamp(230px,38vh,380px);overflow:hidden;background:var(--paper2)}
+.plate-top img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.plate-top .fade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(241,239,233,.15) 0%,rgba(241,239,233,0) 42%,var(--paper) 100%)}
+.masthead{padding:clamp(26px,4vh,44px) 0 0}
+.eyebrow{font-weight:700;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--blue)}
+.mast-h{font-family:var(--serif);font-weight:500;font-size:clamp(29px,4.4vw,50px);line-height:1.06;margin:14px 0 0;max-width:20ch}
+.mast-stand{font-family:var(--serif);font-size:clamp(16px,1.4vw,19px);line-height:1.55;color:var(--dim);max-width:60ch;margin:18px 0 0}
+.mast-stand b{color:var(--ink);font-weight:500}
+
+/* hero stat band */
+.statband{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:34px}
+@media(max-width:760px){.statband{grid-template-columns:1fr}}
+.stat{background:var(--card);padding:22px 22px 24px;display:flex;flex-direction:column;gap:9px}
+.stat .n{font-weight:700;font-size:clamp(25px,2.9vw,34px);letter-spacing:-.02em;color:var(--ink);line-height:1}
+.stat .n .arrow{color:var(--teal)}
+.stat .n .sm{font-size:.6em;color:var(--dim);font-weight:600}
+.stat .lb{font-size:13px;line-height:1.45;color:var(--body);max-width:34ch}
+.stat .meta{margin-top:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.stat .src{font-size:10.5px;color:var(--muted);line-height:1.4}
+
+/* evidence key */
+.evkey{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;margin-top:18px;padding:14px 18px;background:var(--soft);border:1px solid var(--line2);font-size:12.5px;color:var(--dim)}
+.evkey .k-t{font-weight:700;color:var(--ink);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.evkey .k-i{display:flex;align-items:center;gap:7px}
+
+/* ── section rhythm ── */
+section{padding-block:clamp(52px,8vh,92px)}
+.k{font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
+.sec-h{font-size:clamp(22px,2.9vw,34px);line-height:1.1;max-width:24ch}
+.sec-lead{font-family:var(--serif);font-size:clamp(17px,1.5vw,20px);line-height:1.45;color:var(--ink);max-width:44ch;margin:0}
+.p{font-size:15.5px;line-height:1.62;color:var(--body);max-width:62ch}
+.p b{color:var(--ink);font-weight:600}
+.alt{background:var(--soft);border-block:1px solid var(--line)}
+
+/* ── dossier ── */
+.dossier{display:grid;grid-template-columns:132px 1fr;gap:0;border:1px solid var(--ink);background:var(--card);margin-top:8px}
+@media(max-width:640px){.dossier{grid-template-columns:1fr}}
+.doss-mono{background:var(--navy);color:#f1ede3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:26px 14px}
+.doss-mono .mg{font-family:var(--serif);font-size:52px;line-height:1;color:#f1ede3}
+.doss-mono .cs{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-soft)}
+.doss-body{padding:26px 28px 28px}
+.doss-body .prof{font-family:var(--serif);font-size:18px;line-height:1.5;color:var(--ink);margin:0 0 20px;max-width:60ch}
+.attrs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2)}
+@media(max-width:620px){.attrs{grid-template-columns:1fr 1fr}}
+.attr{background:var(--card);padding:12px 14px}
+.attr .al{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.attr .av{font-size:14px;color:var(--ink);font-weight:500;margin-top:4px}
+.attr .av .t{color:var(--teal)}
+.doss-note{font-size:12px;color:var(--muted);font-style:italic;margin:16px 0 0}
+
+/* ── contents spine ── */
+.contents{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,5vw,56px)}
+@media(max-width:760px){.contents{grid-template-columns:1fr}}
+.idx{border-top:1px solid var(--ink)}
+.idx a{display:flex;gap:14px;align-items:baseline;padding:13px 2px;border-bottom:1px solid var(--line2);text-decoration:none;color:var(--ink);transition:background .15s,padding .15s}
+.idx a:hover{background:var(--soft);padding-left:8px}
+.idx .fn{font-family:ui-monospace,monospace;font-size:11.5px;font-weight:700;color:var(--blue);letter-spacing:.02em;flex:none;width:22px}
+.idx .nm{font-weight:600;font-size:15px}
+.idx .gl{font-size:12.5px;color:var(--muted);margin-left:auto;text-align:right;max-width:20ch}
+.openfull{background:var(--card);border:1px solid var(--rule);padding:20px 22px;align-self:start}
+.openfull .of-k{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:12px}
+.openfull a{display:flex;justify-content:space-between;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:600;font-size:14px;padding:11px 0;border-top:1px solid var(--line2)}
+.openfull a:first-of-type{border-top:none}
+.openfull a .go{color:var(--blue)}
+
+/* ── register: finding cards ── */
+.finds{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
+@media(max-width:720px){.finds{grid-template-columns:1fr}}
+.find{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--blue);padding:20px 22px 18px;display:flex;flex-direction:column;gap:11px}
+.find.illus{border-left-color:var(--amber)}
+.find-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.find-sys{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.find-num{font-weight:700;font-size:clamp(23px,2.4vw,29px);letter-spacing:-.02em;color:var(--ink);line-height:1.02}
+.find-num .u{font-size:.5em;color:var(--dim);font-weight:600;letter-spacing:0}
+.find-num .arrow{color:var(--muted);font-weight:500}
+.find-mech{font-size:13.5px;line-height:1.5;color:var(--body);margin:0}
+.find-foot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:auto;padding-top:12px;border-top:1px solid var(--line2)}
+.find-status{font-size:10.5px;font-weight:700;letter-spacing:.03em;color:var(--blue-d)}
+.find-src{font-size:10.5px;color:var(--muted);line-height:1.4;text-align:right;max-width:26ch}
+.reg-intro{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+
+/* ── cost band (failures) ── */
+.cost .k{color:var(--neg)}
+.costgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:24px}
+@media(max-width:820px){.costgrid{grid-template-columns:1fr}}
+.cost-c{background:var(--card);padding:22px 22px 24px;border-top:2px solid var(--neg)}
+.cost-c .cc-n{font-weight:700;font-size:clamp(21px,2.3vw,27px);letter-spacing:-.02em;color:var(--ink);line-height:1.05}
+.cost-c .cc-b{font-size:13.5px;line-height:1.52;color:var(--body);margin:10px 0 0}
+.cost-c .cc-s{font-size:10.5px;color:var(--muted);margin:12px 0 0;line-height:1.4}
+
+/* ── standing views ── */
+.charter{background:var(--navy);color:#f1ede3;padding:clamp(28px,4vw,44px);border:1px solid var(--navy)}
+.charter .ch-k{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue-soft);font-weight:700;margin-bottom:16px}
+.charter .art{font-family:var(--serif);font-size:clamp(21px,2.5vw,30px);line-height:1.28;color:#f5f1e8;margin:0;max-width:24ch}
+.charter .art .no{color:var(--blue-soft);display:block;font-size:.55em;letter-spacing:.06em;margin-bottom:8px}
+.charter .prevents{font-size:13.5px;line-height:1.55;color:var(--blue-soft);margin:20px 0 0;max-width:46ch;padding-top:18px;border-top:1px solid rgba(169,194,214,.26)}
+.charter .prevents b{color:#f1ede3;font-weight:600}
+.tl-k{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:34px 0 4px}
+.timeline{margin-top:16px;border-left:2px solid var(--rule);padding-left:0}
+.tl{position:relative;padding:0 0 22px 26px}
+.tl::before{content:"";position:absolute;left:-7px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--card);border:2px solid var(--blue)}
+.tl.done::before{background:var(--blue)}
+.tl:last-child{padding-bottom:0}
+.tl .d{font-family:ui-monospace,monospace;font-size:11.5px;color:var(--blue);font-weight:600;letter-spacing:.01em}
+.tl .dec{font-weight:600;font-size:15px;color:var(--ink);margin:3px 0 4px}
+.tl .rat{font-size:13px;line-height:1.5;color:var(--body);max-width:56ch}
+.tl .rev{font-size:11.5px;color:var(--muted);margin-top:5px}
+.tl .rev b{color:var(--dim);font-weight:600}
+
+/* ── AWOR diptych ── */
+.diptych{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--ink);margin-top:28px}
+@media(max-width:680px){.diptych{grid-template-columns:1fr}}
+.dp{padding:30px 28px 28px;position:relative}
+.dp.il{background:var(--card);border-right:1px solid var(--ink)}
+.dp.tx{background:var(--soft)}
+@media(max-width:680px){.dp.il{border-right:none;border-bottom:1px solid var(--ink)}}
+.dp .dp-st{font-weight:700;font-size:17px;color:var(--ink);letter-spacing:-.01em}
+.dp .dp-tag{font-size:12px;color:var(--muted);margin:4px 0 20px}
+.dp .dp-num{font-weight:700;font-size:clamp(40px,6.5vw,68px);letter-spacing:-.03em;line-height:.95}
+.dp.il .dp-num{color:var(--neg)}
+.dp.tx .dp-num{color:var(--teal)}
+.dp .dp-sub{font-size:13.5px;line-height:1.5;color:var(--body);margin:14px 0 0;max-width:30ch}
+.calc{margin-top:22px;background:var(--card);border:1px solid var(--rule);padding:18px 20px}
+.calc .cl-k{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:12px}
+.calc-row{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-top:1px solid var(--line2);font-size:13.5px}
+.calc-row:first-of-type{border-top:none}
+.calc-row .cl{color:var(--body)}
+.calc-row .cv{font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.awor-find{font-family:var(--serif);font-size:clamp(17px,1.8vw,21px);line-height:1.45;color:var(--ink);max-width:52ch;margin:26px 0 0}
+.awor-atlas{font-size:13.5px;color:var(--muted);margin:14px 0 0}
+.awor-atlas a{color:var(--blue);text-decoration:none;border-bottom:1px solid var(--blue-soft)}
+
+/* ── provenance + colophon ── */
+.prov-band{background:var(--navy);color:var(--on-dark)}
+.prov-band .wrap{padding-block:clamp(56px,9vh,100px)}
+.prov-lead{font-family:var(--serif);font-size:clamp(21px,2.6vw,31px);line-height:1.32;color:#f1ede3;max-width:30ch;margin:0}
+.prov-lead b{color:#fff;font-weight:500}
+.prov-btn{display:inline-block;text-decoration:none;background:var(--blue-soft);color:var(--navy);font-weight:700;font-size:15px;padding:15px 28px;margin-top:28px;transition:background .18s,transform .18s}
+.prov-btn:hover{background:#c0d4e4;transform:translateY(-1px)}
+.colophon{margin-top:40px;padding-top:26px;border-top:1px solid rgba(169,194,214,.24);display:grid;grid-template-columns:1fr 1fr;gap:26px}
+@media(max-width:680px){.colophon{grid-template-columns:1fr}}
+.colophon h4{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-soft);margin:0 0 12px;font-weight:700}
+.colophon .cl-list{font-size:11.5px;line-height:1.7;color:rgba(231,236,242,.72)}
+.colophon .cl-list b{color:var(--on-dark);font-weight:600}
+
+/* ── footer ── */
+.foot{background:var(--paper2);border-top:1px solid var(--line)}
+.foot-in{max-width:var(--col);margin:0 auto;padding:clamp(36px,6vh,60px) var(--pad)}
+.foot-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:26px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.foot-contact div{font-size:14px;line-height:1.7;color:var(--body)}
+.foot-contact .nm{font-weight:700;color:var(--ink)}
+.foot-contact a{color:var(--blue);text-decoration:none}
+.foot-nav{display:flex;gap:34px;flex-wrap:wrap}
+.foot-col h4{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 11px;font-weight:700}
+.foot-col a{display:block;font-size:13.5px;color:var(--body);text-decoration:none;padding:3px 0}
+.disc{font-size:11.5px;line-height:1.6;color:var(--muted);margin-top:22px}
+.disc .note{color:var(--dim);font-weight:600}
+</style>
+
+<div class="ribbon">Concept preview · Driftwood — <b>The Record</b>. Cited figures are current law or named studies; illustrative figures are modeled for a composite household, not client results.</div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="brand" href="__HOMEURL__">
+      <svg viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="4.6" aria-hidden="true">
+        <polyline points="10,18 24.35,18 62,50"/><polyline points="10,34 43.18,34 62,50"/>
+        <line x1="10" y1="50" x2="62" y2="50"/><polyline points="10,66 43.18,66 62,50"/>
+        <polyline points="10,82 24.35,82 62,50"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"/></svg>
+      <span class="brand-w">Driftwood Wealth</span>
+    </a>
+    <div class="nav-links">
+      <a href="__HOMEURL__">The Firm</a>
+      <a href="__PRACTICEURL__">The Practice</a>
+      <a href="#" class="on">The Record</a>
+      <a href="__HOMEURL__">The Library</a>
+      <a href="#">Tax Atlas</a>
+      <a href="__HOMEURL__">For CPAs &amp; Attorneys</a>
+    </div>
+    <a class="nav-util" href="#" title="Secure access for current clients">Client Access</a>
+    <a class="nav-cta" href="#door">Request a Review</a>
+  </div>
+</nav>
+
+<!-- ── masthead ── -->
+<figure class="plate-top" style="margin:0">
+  <img src="__REACH__" alt="Fine engraved lines receding to a single distant point, an archive converging over years.">
+  <div class="fade"></div>
+</figure>
+<header class="masthead"><div class="wrap reveal">
+  <div class="eyebrow">The Record</div>
+  <h1 class="mast-h">The paper a coordinated household actually runs on.</h1>
+  <p class="mast-stand">Coordination is not a posture. It leaves documents: dated, reasoned, connected to each other. What follows is one household's operating record, reproduced as its own pages produce it. <b>A composite household; the figures illustrative, the mechanics real and current.</b></p>
+
+  <div class="statband">
+    <div class="stat">
+      <div class="n">~3%<span class="sm"> / ~$30k a yr</span></div>
+      <div class="lb">What disciplined, coordinated advice can add on a $1,000,000 portfolio.</div>
+      <div class="meta"><span class="tag tag-c">Cited</span><span class="src">Vanguard Advisor's Alpha, 2025. The 3% is the study; the dollars are illustrative.</span></div>
+    </div>
+    <div class="stat">
+      <div class="n">$15M<span class="sm"> / $30M</span></div>
+      <div class="lb">Shielded per person, and per couple, from federal estate tax in 2026. Now permanent.</div>
+      <div class="meta"><span class="tag tag-c">Cited</span><span class="src">OBBBA (P.L. 119-21); IRS 2026 adjustments.</span></div>
+    </div>
+    <div class="stat">
+      <div class="n">$395k<span class="arrow"> → </span>$0</div>
+      <div class="lb">Illinois state estate tax the identical Texas family would never owe.</div>
+      <div class="meta"><span class="tag tag-i">Illustrative</span><span class="src">Modeled on a ~$5.5M estate. A domicile outcome, not performance.</span></div>
+    </div>
+  </div>
+
+  <div class="evkey">
+    <span class="k-t">How to read the numbers</span>
+    <span class="k-i"><span class="tag tag-c">Cited</span> a law, an IRS or SSA threshold, or a named third-party study, with its source.</span>
+    <span class="k-i"><span class="tag tag-i">Illustrative</span> a modeled figure for this composite household, not an actual client result.</span>
+  </div>
+</div></header>
+
+<!-- ── 2 · Harris dossier ── -->
+<section><div class="wrap reveal">
+  <div class="k">Case 001</div>
+  <div class="dossier">
+    <div class="doss-mono">
+      <div class="mg">H</div>
+      <div class="cs">Case 001</div>
+    </div>
+    <div class="doss-body">
+      <p class="prof">The Harris household. Two principals in their late fifties, one operating company they still run, roughly <b style="color:var(--teal)">$8 million</b> in investable assets, residency and revenue split across Illinois and Texas, three adult children, and a charitable intention they have talked about for a decade but never structured.</p>
+      <div class="attrs">
+        <div class="attr"><div class="al">Composition</div><div class="av">Two principals, 3 heirs</div></div>
+        <div class="attr"><div class="al">Business</div><div class="av">One operating company</div></div>
+        <div class="attr"><div class="al">Investable</div><div class="av"><span class="t">≈ $8,000,000</span></div></div>
+        <div class="attr"><div class="al">Residency</div><div class="av">Illinois / Texas</div></div>
+        <div class="attr"><div class="al">Next generation</div><div class="av">Three adult children</div></div>
+        <div class="attr"><div class="al">Open questions</div><div class="av">Sale, move, legacy</div></div>
+      </div>
+      <p class="doss-note">A composite. No such family exists. The tensions are real because they recur. Every page that follows says "the Harrises" and assumes you have met them here.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ── 3 · Contents ── -->
+<section class="alt"><div class="wrap reveal">
+  <div class="k">Contents of the Record</div>
+  <p class="sec-lead" style="margin-bottom:30px">There is one living list. The Constitution, the allocation policy, the memos, the transition plan, the decision log are not separate documents so much as dated views onto it.</p>
+  <div class="contents">
+    <div class="idx">
+      <a href="#register"><span class="fn">01</span><span class="nm">Opportunity Register</span><span class="gl">the spine, the living list</span></a>
+      <a href="#views"><span class="fn">02</span><span class="nm">Constitution</span><span class="gl">rules set once</span></a>
+      <a href="#register"><span class="fn">03</span><span class="nm">Capital Allocation Policy</span><span class="gl">how the money is placed</span></a>
+      <a href="#register"><span class="fn">04</span><span class="nm">Investment Committee Memo</span><span class="gl">the reasoning, dated</span></a>
+      <a href="#register"><span class="fn">05</span><span class="nm">Transition Plan</span><span class="gl">the sale, sequenced</span></a>
+      <a href="#register"><span class="fn">06</span><span class="nm">Operating Manual</span><span class="gl">how it all runs</span></a>
+      <a href="#views"><span class="fn">07</span><span class="nm">Decision Register</span><span class="gl">decisions logged over time</span></a>
+    </div>
+    <div class="openfull">
+      <div class="of-k">Open in full</div>
+      <a href="#">The Opportunity Register <span class="go">→</span></a>
+      <a href="#">The Annual Wealth Operating Review <span class="go">→</span></a>
+    </div>
+  </div>
+</div></section>
+
+<!-- ── 4 · Opportunity Register (finding cards) ── -->
+<section id="register"><div class="wrap reveal">
+  <div class="reg-intro">
+    <div>
+      <div class="k">01 · The Opportunity Register</div>
+      <h2 class="sec-h">One living list. Everything else is a view of it.</h2>
+    </div>
+  </div>
+  <p class="p" style="margin-top:16px">Each entry is an open matter, carried with a status, an owner, and its dependency, until it resolves and is dated. This is the list a coordinated household actually works. Dollar figures are the household's own, modeled; the mechanics beneath them are current law and cited research.</p>
+  <div class="finds">
+    <article class="find illus">
+      <div class="find-top"><span class="find-sys">Ownership · Estate · Taxes</span><span class="tag tag-i">Illustrative</span></div>
+      <div class="find-num">$395,000</div>
+      <p class="find-mech">Residency and domicile. Illinois taxes the estate above $4M with no portable spousal exemption; a Texas domicile owes $0.</p>
+      <div class="find-foot"><span class="find-status">Structural</span><span class="find-src">Modeled, ~$5.5M estate · IL 35 ILCS 405 vs TX Const. Art. 8</span></div>
+    </article>
+    <article class="find illus">
+      <div class="find-top"><span class="find-sys">Investments · Taxes</span><span class="tag tag-i">Illustrative</span></div>
+      <div class="find-num">≈ $24,000<span class="u"> /yr</span></div>
+      <p class="find-mech">Hidden fund tax drag. Non-tax-managed funds surrender ~1.90% a year to taxes vs ~0.70% for ETFs, on a $2M taxable sleeve.</p>
+      <div class="find-foot"><span class="find-status">Open</span><span class="find-src">Ratios: Morningstar tax-cost, 2025 · dollars modeled</span></div>
+    </article>
+    <article class="find illus">
+      <div class="find-top"><span class="find-sys">Purpose · Taxes · Estate</span><span class="tag tag-i">Illustrative</span></div>
+      <div class="find-num">$220,000</div>
+      <p class="find-mech">A charitable remainder structure for the concentrated position, sequenced with the business sale rather than after it.</p>
+      <div class="find-foot"><span class="find-status">Modeling</span><span class="find-src">Alec + estate counsel · household figures</span></div>
+    </article>
+    <article class="find">
+      <div class="find-top"><span class="find-sys">Taxes</span><span class="tag tag-c">Cited</span></div>
+      <div class="find-num">up to $96,700<span class="u"> at 0%</span></div>
+      <p class="find-mech">Long-term gains harvested at a 0% federal rate in the low-income years before Social Security, resetting basis for free.</p>
+      <div class="find-foot"><span class="find-status">Ready</span><span class="find-src">2025 MFJ 0% LTCG ceiling · IRS Rev. Proc. 2024-40</span></div>
+    </article>
+    <article class="find">
+      <div class="find-top"><span class="find-sys">Taxes · Estate</span><span class="tag tag-c">Cited</span></div>
+      <div class="find-num">$38,000<span class="u"> /recipient/yr</span></div>
+      <p class="find-mech">Coordinated annual gifting moves wealth out of the estate tax-free, with no cap on recipients, for a gift-splitting couple.</p>
+      <div class="find-foot"><span class="find-status">Recurring</span><span class="find-src">2025-26 annual exclusion, $19k each · IRS</span></div>
+    </article>
+    <article class="find">
+      <div class="find-top"><span class="find-sys">Taxes · Liquidity</span><span class="tag tag-c">Cited</span></div>
+      <div class="find-num">$2,105<span class="u"> /yr avoided</span></div>
+      <p class="find-mech">Sequencing the Roth conversion under the IRMAA line. One dollar over $212,000 of joint income bumps a full Medicare tier.</p>
+      <div class="find-foot"><span class="find-status">Monitoring</span><span class="find-src">2025 CMS IRMAA schedule · Driftwood + CPA</span></div>
+    </article>
+  </div>
+</div></section>
+
+<!-- ── 5 · What uncoordinated wealth costs ── -->
+<section class="cost alt"><div class="wrap reveal">
+  <div class="k">The other side of the ledger</div>
+  <h2 class="sec-h">What goes uncollected when no one keeps the list.</h2>
+  <p class="p" style="margin-top:14px">Every figure above has a shadow: the same mechanic, left unattended. These are not opinions. They are thresholds already written into law and studies already published.</p>
+  <div class="costgrid">
+    <div class="cost-c">
+      <div class="cc-n">$212,000 → $2,105</div>
+      <p class="cc-b">One dollar over the joint-income line bumps a Medicare couple a full IRMAA tier, triggered by a return they filed two years earlier.</p>
+      <p class="cc-s"><span class="tag tag-c">Cited</span> &nbsp;2025 CMS Part B &amp; D schedule.</p>
+    </div>
+    <div class="cost-c">
+      <div class="cc-n">1.2 pts a year</div>
+      <p class="cc-b">Left to their own timing, investors earned 7.0% while their own funds returned 8.2%, giving up about 15% of everything the funds earned.</p>
+      <p class="cc-s"><span class="tag tag-c">Cited</span> &nbsp;Morningstar, Mind the Gap 2025.</p>
+    </div>
+    <div class="cost-c">
+      <div class="cc-n">80% vs 5%</div>
+      <p class="cc-b">In 2024 more than 80% of US stock mutual funds handed shareholders a taxable gain they never asked for, against about 5% of equity ETFs.</p>
+      <p class="cc-s"><span class="tag tag-c">Cited</span> &nbsp;Morningstar distribution data, 2024.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ── 6 · Standing views ── -->
+<section id="views"><div class="wrap reveal">
+  <div class="k">02 &amp; 07 · The Standing Views</div>
+  <h2 class="sec-h">The rules, set once. The decisions, logged over time.</h2>
+  <p class="p" style="margin:14px 0 30px">Two archetypes stand in for the binder. The Constitution is what the household decided once and holds to. The Decision Register is what it decides as life moves, each entry dated, reasoned, and marked for whether it can still be undone.</p>
+  <div class="charter">
+    <div class="ch-k">From the Constitution</div>
+    <p class="art"><span class="no">Article VII</span>Tax is a coordination problem before it is an investment problem.</p>
+    <p class="prevents"><b>What the article prevents:</b> a tax move made in one seat that quietly reshapes the estate in another. No decision is scored on its own return; it is scored on what the whole household keeps.</p>
+  </div>
+
+  <div class="tl-k">From the Decision Register</div>
+  <div class="timeline">
+    <div class="tl done">
+      <div class="d">2025 · 01 · 20</div>
+      <div class="dec">Filed Form 706 electing portability at the first death, though no tax was due.</div>
+      <div class="rat">Preserves up to $30,000,000 of combined 2026 exemption for the survivor. Portability is never automatic; it is lost if the return is not filed.</div>
+      <div class="rev"><b>Reversible?</b> No. Deadline-bound.</div>
+    </div>
+    <div class="tl done">
+      <div class="d">2025 · 03 · 14</div>
+      <div class="dec">Deferred the Roth conversion to Q4.</div>
+      <div class="rat">State residency for the year was still unsettled; converting early risked the full Illinois rate, and risked crossing the IRMAA line two years out.</div>
+      <div class="rev"><b>Reversible?</b> Yes, until Dec 31.</div>
+    </div>
+    <div class="tl done">
+      <div class="d">2025 · 06 · 02</div>
+      <div class="dec">Harvested $96,700 of long-term gains at the 0% federal rate.</div>
+      <div class="rat">A low-income gap year before Social Security. Basis was reset at no federal tax, ahead of the concentrated position's eventual sale.</div>
+      <div class="rev"><b>Reversible?</b> No. Basis reset.</div>
+    </div>
+    <div class="tl">
+      <div class="d">2025 · 09 · 11</div>
+      <div class="dec">Held the low-basis lot for the step-up rather than gifting it.</div>
+      <div class="rat">Gifting carries the basis; holding to death resets it under IRC 1014. The heirs' after-tax result was the deciding variable, not the donor's.</div>
+      <div class="rev"><b>Reversible?</b> Yes. Under annual review.</div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ── 7 · AWOR diptych ── -->
+<section class="alt"><div class="wrap reveal">
+  <div class="k">The Annual Wealth Operating Review</div>
+  <h2 class="sec-h">Once a year, the whole record is worked end to end.</h2>
+  <p class="p" style="margin:14px 0 0">The Review does not chase a return. It re-reads every open matter, re-tests the plan against current law, and documents the one or two decisions that move the most. This year, for the Harrises, one variable moved more than the portfolio did: which state they call home.</p>
+  <div class="diptych">
+    <div class="dp il">
+      <div class="dp-st">Illinois</div>
+      <div class="dp-tag">Domiciled here at death</div>
+      <div class="dp-num">$395k</div>
+      <div class="dp-sub">State estate tax on a roughly $5.5M estate, due nine months after death, with no buyer yet for the illiquid pieces.</div>
+    </div>
+    <div class="dp tx">
+      <div class="dp-st">Texas</div>
+      <div class="dp-tag">The identical family, domiciled here</div>
+      <div class="dp-num">$0</div>
+      <div class="dp-sub">No state income tax, no state estate tax, made permanent by 2025 Proposition 8. The value moves to a lifetime of Roth conversions at a 0% state rate.</div>
+    </div>
+  </div>
+  <div class="calc">
+    <div class="cl-k">How the Illinois figure is built</div>
+    <div class="calc-row"><span class="cl">Taxable estate (modeled)</span><span class="cv">≈ $5,500,000</span></div>
+    <div class="calc-row"><span class="cl">Illinois exclusion (unchanged since 2012, not portable)</span><span class="cv">$4,000,000</span></div>
+    <div class="calc-row"><span class="cl">Effective rate on the first dollars above</span><span class="cv">≈ 29%</span></div>
+    <div class="calc-row"><span class="cl">Texas, for the identical estate</span><span class="cv" style="color:var(--teal)">$0</span></div>
+  </div>
+  <p class="awor-find">The Review does not assert an answer. It documents the defensible split, the days-count evidence, and the second-order effects on the charitable timing, so the decision is made on the record, not in the moment.</p>
+  <p class="awor-atlas">The same $395,000 can be explored, state by state, in the <a href="https://claude.ai/code/artifact/fd1339c3-c5f1-445e-b5bd-eda534c77931">Tax Atlas →</a></p>
+</div></section>
+
+<!-- ── 8 · Provenance + door + colophon ── -->
+<section class="prov-band" id="door"><div class="wrap reveal">
+  <p class="prov-lead">None of these pages was written for a website. Each is an output of the same process, kept between reviews and re-worked once a year. <b>This is what a Coordination Review produces.</b></p>
+  <a class="prov-btn" href="#">Request a Coordination Review →</a>
+
+  <div class="colophon">
+    <div>
+      <h4>Cited, current law and named studies</h4>
+      <p class="cl-list">
+        <b>Federal estate &amp; gift exemption</b> $15M / $30M, 2026, OBBBA P.L. 119-21, IRS. ·
+        <b>Annual gift exclusion</b> $19k / $38k, 2025-26, IRS. ·
+        <b>Illinois estate tax</b> $4M non-portable, ~29% first-dollar, 35 ILCS 405. ·
+        <b>Texas</b> $0 income &amp; estate; 2025 Proposition 8. ·
+        <b>IRMAA</b> 2025 CMS Part B &amp; D schedule. ·
+        <b>0% LTCG ceiling</b> $96,700 MFJ, 2025, IRS. ·
+        <b>Portability / step-up</b> IRC 2010(c), 1014. ·
+        <b>Advisor value</b> Vanguard Advisor's Alpha 2025; Morningstar Mind the Gap 2025 &amp; tax-cost data.
+      </p>
+    </div>
+    <div>
+      <h4>Illustrative, modeled for this composite household</h4>
+      <p class="cl-list">
+        <b>$395,000 vs $0</b> Illinois-vs-Texas estate result on a modeled ~$5.5M estate. ·
+        <b>≈ $24,000/yr</b> fund tax drag applied to a $2M taxable sleeve. ·
+        <b>$220,000</b> charitable-structure opportunity. ·
+        <b>~$30,000/yr</b> the 3% translated onto $1M. ·
+        Every Harris register row. Hypothetical, for illustration; not an actual client result, and not a promise of future outcomes. Figures reflect current law, which is subject to change, and suitability that is specific to each household.
+      </p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ── footer ── -->
+<footer class="foot"><div class="foot-in">
+  <div class="foot-top">
+    <div class="foot-contact">
+      <div class="nm">Driftwood Wealth</div>
+      <div><a href="mailto:alec@driftwoodwealth.com">alec@driftwoodwealth.com</a></div>
+      <div>(708) 548-7600</div>
+      <div><a href="#" style="color:var(--dim);font-weight:600">Client Access →</a></div>
+    </div>
+    <div class="foot-nav">
+      <div class="foot-col"><h4>The Firm</h4><a href="__HOMEURL__">Story &amp; Principles</a><a href="__HOMEURL__">Fees</a><a href="__HOMEURL__">For CPAs &amp; Attorneys</a></div>
+      <div class="foot-col"><h4>The Practice</h4><a href="__PRACTICEURL__">Coordination</a><a href="__PRACTICEURL__">The Engagement</a><a href="#door">The Coordination Review</a></div>
+      <div class="foot-col"><h4>The Record</h4><a href="#register">Opportunity Register</a><a href="#views">Standing Views</a></div>
+      <div class="foot-col"><h4>Tax Atlas</h4><a href="https://claude.ai/code/artifact/fd1339c3-c5f1-445e-b5bd-eda534c77931">Your state &amp; bracket</a><a href="https://claude.ai/code/artifact/fd1339c3-c5f1-445e-b5bd-eda534c77931">The after-tax figure</a></div>
+    </div>
+  </div>
+  <p class="disc"><span class="note">Research &amp; illustrative modeling, not investment, tax, or legal advice.</span> Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS and a Financial Representative of The Guardian Life Insurance Company of America® (Guardian), New York, NY. PAS is a wholly owned subsidiary of Guardian. Capitol Wealth Strategies, LLC is not an affiliate or subsidiary of PAS or Guardian. All figures are illustrative models for educational purposes, not a recommendation.</p>
+</div></footer>
+
+<script>
+(function(){
+  var rm=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var els=[].slice.call(document.querySelectorAll(".reveal"));
+  if(rm||!("IntersectionObserver"in window)){els.forEach(function(e){e.classList.add("in");});return;}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:.1});
+  els.forEach(function(e){io.observe(e);});
+})();
+</script>

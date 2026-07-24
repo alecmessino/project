@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-24T22:50:01+00:00",
+  "generated": "2026-07-24T23:05:29+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 315869,
+    "rows": 317366,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 103988,
-      "live_total": 33109,
-      "live_today": 282,
-      "last_row_age_min": 0.3
+      "rows_total": 104790,
+      "live_total": 33270,
+      "live_today": 443,
+      "last_row_age_min": 0.1
     },
     "fanduel": {
-      "rows_total": 211875,
-      "live_total": 37500,
-      "live_today": 406,
-      "last_row_age_min": 0.3
+      "rows_total": 212570,
+      "live_total": 37630,
+      "live_today": 536,
+      "last_row_age_min": 0.1
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 26905.0
+      "last_row_age_min": 26920.5
     }
   },
   "books_reporting_live": [
@@ -37,20 +37,20 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 33109,
-    "OPEN": 34227,
-    "SUSPENDED": 3114,
-    "REMOVED": 159
+    "unset": 33270,
+    "OPEN": 34348,
+    "SUSPENDED": 3122,
+    "REMOVED": 160
   },
   "overlap": {
-    "simultaneous_pairs_total": 38727,
-    "simultaneous_pairs_today": 385,
-    "overlap_games": 80,
+    "simultaneous_pairs_total": 38857,
+    "simultaneous_pairs_today": 515,
+    "overlap_games": 81,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
-      "0_books": 16,
-      "1_books": 1,
-      "2_books": 80
+      "0_books": 12,
+      "1_books": 4,
+      "2_books": 81
     }
   },
   "fix_verification": {
@@ -65,9 +65,9 @@
     "verified": true
   },
   "coverage": {
-    "live_games_seen": 85,
+    "live_games_seen": 87,
     "book_panel_games": 97,
-    "team_total_rows": 18536,
+    "team_total_rows": 18854,
     "innings_seen": [
       1,
       2,
@@ -87,17 +87,17 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 38727,
+        "current": 38857,
         "target": 2000,
         "pass": true,
         "progress": 1.0
       },
       {
         "criterion": "games with live overlap",
-        "current": 80,
+        "current": 81,
         "target": 100,
         "pass": false,
-        "progress": 0.8
+        "progress": 0.81
       },
       {
         "criterion": "median sync lag < 15s",
@@ -115,6 +115,6 @@
       }
     ],
     "cleared": false,
-    "overall_progress": 0.867
+    "overall_progress": 0.869
   }
 }

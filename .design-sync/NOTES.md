@@ -11,6 +11,26 @@
 - Do **not** overwrite `tokens/`, `components/`, `guidelines/`, `templates/`, `ui_kits/` — curated DS artifacts, authored outside this repo, already current.
 - `reference/report.html` exists in the project but has no `docs/` source anymore — leave it.
 
+## Pending delta for the next reference refresh (recorded 2026-07-24)
+A `/design-sync` run on 2026-07-24 could not reach the project: DesignSync returned
+"needs design-system authorization, but /design-login requires an interactive terminal and is not
+available in this environment." Nothing was read or written. To unblock, run design-sync from an
+interactive terminal (`/design-login`), or use Claude Design's **Send to Claude Code Web** to seed
+the project into the workspace.
+
+When it next runs, `reference/*` is stale in two ways:
+- **Four source pages were deleted from `docs/`** in commit `3caa0d6` (familyoffice, library,
+  workspace, waitlist). If `reference/` carries copies, they are now orphans with no `docs/` source,
+  the same condition as the pre-existing `reference/report.html`. Deleting those four is the one
+  safe deletion; confirm each has no `docs/` source before removing.
+- **Changed since the last refresh:** `docs/driftwood.css` (commits `2c27881`, `6bba8c4`), plus most
+  page copies and the whole `atlas/2026/**` tree. A refresh should re-copy `driftwood.css`,
+  `dw-context.js`, and the page mirrors.
+
+Also new in this repo but deliberately NOT part of a reference refresh: `design/greenfield-2026/`
+(redesign prototypes, engravings, collateral). Those are concept artifacts pending compliance
+sign-off, not shipped site output. Do not mirror them into the project.
+
 ## Re-sync risks
 - If a future run "creates a new project," it will collide on the name and duplicate a superior existing system — always re-adopt `230c9097` and refresh `reference/` only.
 - The project was authored WITHOUT the design-sync converter (no `_ds_sync.json` anchor; component cards use a `<group>.card.html` convention, not per-component `@dsCard`). Do not write `_ds_needs_recompile`/`_ds_sync.json` for a reference-only refresh — it could disturb the curated `_ds_manifest.json`.

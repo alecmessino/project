@@ -199,7 +199,7 @@
       <div class="card index" id="c-index"></div>
       <div class="card after" id="c-after"></div>
     </div>
-    <p class="guardrail"><span class="gk">Read it honestly</span><span>The <b>+3.7–4.7%/yr</b> is what disciplined, tax-managed coordination recovers versus a <b>concentrated, tax-naive</b> book (left). Measured against an ordinary broadly-diversified index (center), the defensible edge of coordination is smaller — on the order of <b>~0.6–1.5%/yr</b>, consistent with published tax-alpha research. We show all three so the number is never taken out of context.</span></p>
+    <p class="guardrail"><span class="gk">Read it honestly</span><span>The <b>+3.7–4.7%/yr</b> shown above for the four representative jurisdictions (Federal, Illinois, New York, California) is what disciplined, tax-managed coordination recovers versus a <b>concentrated, tax-naive</b> book (left); the full range across every jurisdiction we model runs <b>+3.3–4.8%/yr</b>, and your own figure appears above once you've told us your state. Measured against an ordinary broadly-diversified index (center), the defensible edge of coordination is smaller — on the order of <b>~0.6–1.5%/yr</b>, consistent with published tax-alpha research. We show all three so the number is never taken out of context.</span></p>
 
     <div class="sec">
       <div class="h">How coordination changes the outcome</div>
@@ -283,7 +283,7 @@
       </div>
     </div>
 
-    <div class="firm-anchor" role="contentinfo"><span>DRIFTWOOD WEALTH&nbsp;&nbsp;·&nbsp;&nbsp;A PRACTICE OF ALEC MESSINO</span><span>MODEL DATA AS OF JULY 2026</span></div>
+    <div class="firm-anchor" role="contentinfo"><span><span class="firm-anchor-brand">Driftwood Wealth</span>&nbsp;&nbsp;·&nbsp;&nbsp;A PRACTICE OF ALEC MESSINO</span><span>MODEL DATA AS OF JULY 2026</span></div>
     <div class="foot" id="foot"></div>
   </div>
 </div>
@@ -294,40 +294,67 @@ window.__STATE__ = {"header": {"generated": "2026-07-26 21:09:36 UTC", "source":
 const fmt$ = v => "$"+Math.round(v).toLocaleString();
 const fmt$big = v => v>=1e6 ? "$"+(v/1e6).toFixed(v>=1e7?0:1)+"M" : "$"+Math.round(v/1e3)+"k";
 
+// Normalizes a portfolio value to raw dollars. Cold-outreach links are hand-typed (?port=2000000,
+// per the doc line below) but "2M"/"2.5m"/"500k" are natural shorthand for a human to type — an
+// explicit suffix scales the number; anything else (including a plain small number) passes through
+// unscaled, so a legitimate raw-dollar value is never silently reinterpreted as millions.
+function parsePortfolio(raw){
+  if(raw == null) return NaN;
+  const m = String(raw).trim().match(/^(-?[\d.]+)\s*([km])?$/i);
+  if(!m) return NaN;
+  const n = parseFloat(m[1]);
+  if(!isFinite(n)) return NaN;
+  const suf = (m[2]||"").toLowerCase();
+  return suf === "m" ? n*1e6 : suf === "k" ? n*1e3 : n;
+}
+
 function render(s){
   const hd = s.headline||{}, b = s.before||{}, a = s.after||{};
-  // --- Personalization: a cold-outreach link (?state=IL&port=2000000) localizes the diagnostic to the
-  // prospect's own state + portfolio, off the per-state STATE_ALPHA table. Defaults to the illustrative
-  // figures when absent. Forwards state/port/utm into the After-Tax Review funnel for continuity + attribution.
+  // --- Personalization: a cold-outreach link (?state=IL&port=2000000, or the shorthand ?port=2M)
+  // localizes the diagnostic to the prospect's own state + portfolio, off the per-state STATE_ALPHA
+  // table. Defaults to the illustrative figures when absent. Forwards state/port/utm into the
+  // After-Tax Review funnel for continuity + attribution.
   const qp = new URLSearchParams(location.search);
   const sa = s.state_alpha||{}, names = s.state_names||{};
   // Personalize from the URL, else from the saved household (dw-context.js), URL always wins.
   const dwc = (window.dwTaxContext&&dwTaxContext.get())||{};
   const qState = qp.get("state") || dwc.state || null;
   const row = (qState && sa[qState]) ? sa[qState] : null;
-  const qPort = parseFloat(qp.get("portfolio")||qp.get("port")|| (dwc.portfolio>0?dwc.portfolio:""));
+  const qPort = parsePortfolio(qp.get("portfolio")||qp.get("port")) || (dwc.portfolio>0?dwc.portfolio:0);
   const annual = (row && qPort>0) ? qPort * row.alpha/100 : 0;
 
+  // Personalized (?state= set): lead with the prospect's OWN pain — the uncoordinated book's after-tax
+  // yield — as the hero headline; the alpha (what coordination recovers) comes second, in the note,
+  // dollarized whenever the portfolio size is also known. Un-personalized visitors keep the original
+  // alpha-first hero (there's no "their number" yet to lead with).
+  const hCap = document.getElementById("h-cap");
   if(row){
-    document.getElementById("h-alpha").textContent = `+${row.alpha.toFixed(1)}%`;
+    const nm = names[qState] || qState;
+    document.getElementById("h-alpha").textContent = `${row.before.toFixed(1)}%`;
+    if(hCap) hCap.textContent = `after-tax yield today · uncoordinated, ${nm}`;
+    document.getElementById("h-note").innerHTML =
+      `An uncoordinated, tax-naive book in <b>${nm}</b> compounds at ~${row.before.toFixed(1)}%/yr after tax `+
+      `&mdash; full equity risk, a cash-like return. Coordinated, tax-managed: <b>+${row.alpha.toFixed(1)}%/yr</b> recovered`+
+      `${qPort>0?` (&asymp; <b>${fmt$(annual)}/yr</b> on this portfolio)`:''}.`;
   } else {
     document.getElementById("h-alpha").textContent = `+${hd.alpha_low}% to +${hd.alpha_high}%`;
+    if(hCap) hCap.textContent = "modeled after-tax improvement / year";
+    document.getElementById("h-note").textContent =
+      `Pre-tax: ${hd.pretax_before}%/yr (before) vs ${hd.pretax_after}%/yr (after), the coordinated book is `+
+      `NOT claimed to out-earn pre-tax. Illustrative, after-tax, over ~${(s.header||{}).horizon_years||30} years.`;
   }
-  document.getElementById("h-note").textContent =
-    `Pre-tax: ${hd.pretax_before}%/yr (before) vs ${hd.pretax_after}%/yr (after), the coordinated book is `+
-    `NOT claimed to out-earn pre-tax. Illustrative, after-tax, over ~${(s.header||{}).horizon_years||30} years.`;
 
-  // Personalized banner (compliant reframe: "up to ~X%/yr in our illustrative modeling").
+  // Personalized banner: the "after" (coordinated) side, not yet shown above, plus the household badge
+  // and the standing disclaimer. The before/alpha/dollar story now leads in h-note (above); this stays
+  // focused on what's unique here rather than repeating it.
   const pband = document.getElementById("pband");
   if(row){
     const nm = names[qState] || qState;
     pband.style.display = "";
     pband.innerHTML =
-      `Personalized for <b>${nm}</b>${qPort>0?` · <b>${fmt$big(qPort)}</b> portfolio`:''}: in our illustrative `+
-      `modeling, a concentrated, high-turnover book in ${nm} keeps ~<b>${row.before.toFixed(1)}%/yr</b> after tax `+
-      `versus ~<b>${row.after.toFixed(1)}%/yr</b> coordinated, a modeled <b>~+${row.alpha.toFixed(1)}%/yr</b>`+
-      `${qPort>0?` (≈ <b>${fmt$(annual)}/yr</b> on this portfolio)`:''}. Your actual figure depends on your `+
-      `holdings; the full After-Tax Review computes it privately.`;
+      `<b>${nm}</b>${qPort>0?` &middot; <b>${fmt$big(qPort)}</b> portfolio`:''} &mdash; in our illustrative modeling, coordinated, tax-managed: `+
+      `~<b>${row.after.toFixed(1)}%/yr</b> after tax. Your actual figure depends on your holdings; the full `+
+      `After-Tax Review computes it privately.`;
   } else { pband.style.display = "none"; }
 
   // When personalized, the cards show this state's single before/after CAGR (not the cross-state range).

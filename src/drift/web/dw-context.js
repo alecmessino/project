@@ -37,6 +37,19 @@
   function write(ctx) { try { localStorage.setItem(KEY, JSON.stringify(ctx)); } catch (e) {} }
   function notify(c) { subs.forEach(function (fn) { try { fn(c); } catch (e) {} }); }
 
+  // Accepts a raw dollar number (the household dropdown's own values, e.g. "2000000") or a hand-typed
+  // cold-outreach shorthand ("2M", "500k") — an explicit suffix scales the number; anything else,
+  // including a plain small number, passes through unscaled so a real raw-dollar value is never
+  // silently reinterpreted as millions. Mirrors leakage.html's parsePortfolio for the same convention
+  // everywhere a portfolio value can enter the site.
+  function parsePortfolioLike(raw) {
+    var m = String(raw).trim().match(/^(-?[\d.]+)\s*([km])?$/i);
+    if (!m) return NaN;
+    var n = parseFloat(m[1]); if (!isFinite(n)) return NaN;
+    var suf = (m[2] || "").toLowerCase();
+    return suf === "m" ? n * 1e6 : suf === "k" ? n * 1e3 : n;
+  }
+
   function clean(patch, c) {
     if (patch && patch.state != null) {
       var s = String(patch.state).toUpperCase();
@@ -46,7 +59,7 @@
       var b = parseInt(patch.bracket, 10); if (b >= 10 && b <= 60) c.bracket = b;
     }
     if (patch && patch.portfolio != null && patch.portfolio !== "") {
-      var p = Math.round(Number(patch.portfolio)); if (isFinite(p) && p >= 0 && p <= 1e11) c.portfolio = p;
+      var p = Math.round(parsePortfolioLike(patch.portfolio)); if (isFinite(p) && p >= 0 && p <= 1e11) c.portfolio = p;
     }
     return c;
   }
@@ -66,8 +79,9 @@
     { prefix: "taxlab.html", params: ["state", "bracket", "port"] },
     { prefix: "leakage.html", params: ["state", "port"] },
     { prefix: "statemap.html", params: ["state"] },
-    // The four production pages read the same household, so a link from any of them carries it.
-    { prefix: "tax-atlas.html", params: ["state", "bracket", "port"] },
+    // The production pages read the same household, so a link from any of them carries it.
+    // (tax-atlas.html retired 2026-07 — consolidated into statemap.html; no entry needed, same as
+    // the other redirect stubs.)
     { prefix: "the-record.html", params: ["state", "bracket", "port"] },
     { prefix: "the-practice.html", params: ["state", "bracket", "port"] },
     { prefix: "coordination-review.html", params: ["state", "bracket", "port"] }
@@ -129,10 +143,11 @@
     taxlab: [{ href: "leakage.html", label: "Tax Diagnostic →" }, { href: "statemap.html", label: "State Atlas →" }],
     statemap: [{ href: "leakage.html", label: "Tax Diagnostic →" }, { href: "taxlab.html", label: "After-Tax Review →" }],
     leakage: [{ href: "taxlab.html", label: "After-Tax Review →" }, { href: "statemap.html", label: "State Atlas →" }],
-    atlas: [{ href: "the-record.html", label: "The Record →" }, { href: "the-practice.html", label: "The Practice →" }],
-    record: [{ href: "tax-atlas.html", label: "Tax Atlas →" }, { href: "the-practice.html", label: "The Practice →" }],
-    practice: [{ href: "tax-atlas.html", label: "Tax Atlas →" }, { href: "the-record.html", label: "The Record →" }],
-    home: [{ href: "tax-atlas.html", label: "Tax Atlas →" }, { href: "the-record.html", label: "The Record →" }]
+    // (the standalone "atlas" key retired 2026-07 with tax-atlas.html — consolidated into statemap.html,
+    // which keeps its own siblings entry above)
+    record: [{ href: "statemap.html", label: "Tax Atlas →" }, { href: "the-practice.html", label: "The Practice →" }],
+    practice: [{ href: "statemap.html", label: "Tax Atlas →" }, { href: "the-record.html", label: "The Record →" }],
+    home: [{ href: "statemap.html", label: "Tax Atlas →" }, { href: "the-record.html", label: "The Record →" }]
   };
   function renderBars() {
     var hosts = document.querySelectorAll("#dw-household");

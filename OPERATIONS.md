@@ -99,29 +99,51 @@ canonicals before DNS is live:**
 
 ## 2026 redesign — decisions & Phase 2 backlog
 
-**Statemap vs. Tax Atlas (decided 2026-07-26, launch of the redesign branch).** The 2026 redesign
-introduced `tax-atlas.html`, a single-ink-ramp, 3-toggle state comparison map built on the new
-`driftwood.css` design system and wired into `dw-context.js`'s household-profile state. It ships
-**alongside**, not in place of, `statemap.html` — do not stub or delete `statemap.html`. Reasoning:
+**Statemap vs. Tax Atlas — consolidated (decided 2026-07-26, executed same day).** The 2026 redesign
+briefly introduced `tax-atlas.html`, a single-ink-ramp, 3-toggle state comparison map on the new
+`driftwood.css` design system. It shipped alongside `statemap.html` for one day; the two-Atlas state
+was never meant to be permanent (see the original entry this replaces, in git history). Consolidated
+same-day: `statemap.html` is the one canonical Atlas — `tax-atlas.html` is now a redirect stub
+(`meta refresh` + `canonical`, same pattern as `howitworks.html`/`record.html`). Reasoning unchanged:
 `statemap.html` is the live, Python-computed engine (`drift statemap`, `src/drift/statemap.py`),
-carries 6 dedicated tests (`tests/test_drift_statemap.py`, including citation and
-no-fabricated-alpha guards), and is load-bearing in the funnel — inbound links from `leakage.html`,
-`taxlab.html`, `score.html`, `docs/sitemap.xml`, and all 51 `atlas/2026/<state>/index.html` SEO
-pages. `tax-atlas.html` currently has no independent data engine of its own.
-- **Phase 2 item:** port the redesign shell/visual language of `tax-atlas.html` onto `statemap.html`'s
-  live computed data, then consolidate to one canonical state-comparison page. Until that lands,
-  treat `tax-atlas.html` as the exploratory front door and `statemap.html` as the source of truth.
+carries 6 dedicated tests (`tests/test_drift_statemap.py`, including citation and no-fabricated-alpha
+guards), and is load-bearing in the funnel. `tax-atlas.html` had no independent data engine of its
+own and its simpler 3-toggle/income-drag view had no equivalent on `statemap.html` — that view is
+retired, not preserved, an accepted cost of one comprehensive Atlas over two partial ones.
+- Wordmark unified site-wide first (see the mandate below), so `statemap.html`'s nav/footer already
+  read on-brand before the redirect landed — no separate "shell" reskin of its dense 8-tab/cartogram
+  layout was needed beyond that. All inbound links (`hub.html`, `taxlab.html`, `the-practice.html`,
+  `the-record.html`, `dw-context.js` SIBLINGS/CONSUMERS) repointed to `statemap.html` directly, not
+  left to redirect through the stub.
 
 **Figure provenance (standing mandate, 2026-07-26).** Every public dollar/percent figure on the site
 must have a row in `FIGURE_PROVENANCE.md` (repo root) classifying it DERIVED / ASSUMED / UNSOURCED.
 No new public figure ships without an entry. See that file for the current audit and open
 UNSOURCED items.
 
-**Stale sitemap entries (found during 2026-07-26 launch verification, not yet fixed).**
-`docs/sitemap.xml` still lists `library.html` and `familyoffice.html`, both 404 on the live site —
-they were deleted in `3caa0d6c` ("Strip the site to its purest form: kill four pages") but the
-sitemap was never updated. Predates the 2026 redesign; unrelated to it. **Phase 2 item:** drop
-both entries from `sitemap.xml` (or regenerate it) and resubmit in Google Search Console.
+**Resolved-row ratio on the homepage sample register (standing design rule, 2026-07-26).** The
+"Coordination, kept in one register" table (`hub.html`) mixes open/monitoring/time-sensitive matters
+with resolved-and-dated ones ("Resolved ✓ · Driftwood · Mar 2026"). A resolved, dated row is the most
+trust-building row type on the page — it proves the register produces outcomes, not just promises —
+so **keep resolved-and-dated rows at ≥25% of the sample register.** As of this writing the table is
+5 rows / 1 resolved (20%), just under the floor. Not corrected here: bringing it to 25%+ means either
+adding a second resolved row or converting an existing one, and either requires a properly-derived
+illustrative figure with its own `FIGURE_PROVENANCE.md` row (see the Phase 2 item there for the
+canonical-household work already queued for these rows) — not a number invented under this pass.
+**Phase 2 item:** bring the register to ≥25% resolved as part of that same canonical-household pass.
+
+**Stale sitemap entries (`src/drift/statepage.py::_CORE_SITEMAP`, found 2026-07-26, not yet fixed).**
+Four problems, same root cause (the list wasn't updated as pages were added/retired):
+- `library.html`, `familyoffice.html` — 404 on the live site (deleted in `3caa0d6c`, predates the
+  2026 redesign).
+- `howitworks.html`, `record.html` — now `noindex, follow` redirect stubs (2026-07 blocker-2 fix);
+  should be dropped from the sitemap, not just left to redirect out.
+- `tax-atlas.html` — never added (was never in the sitemap to begin with; now moot, it's also a
+  redirect stub as of the statemap consolidation below).
+- `the-practice.html`, `the-record.html` — real, canonical, live pages, missing from the sitemap
+  entirely.
+**Phase 2 item:** rewrite `_CORE_SITEMAP` (remove the four stale/stub entries, add the two missing
+live ones), regenerate `docs/sitemap.xml` via `drift states`, resubmit in Google Search Console.
 
 ## Disaster recovery
 - **Lost/corrupt `tests/data/matrix_history.json`** → `TILT_SWEEP_REFRESH=1 python scripts/tilt_sweep.py`

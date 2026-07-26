@@ -110,21 +110,22 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
   flex-wrap:wrap; padding:14px 24px; border-bottom:1px solid var(--line,#e3dccd);
   background:var(--soft,#fbf9f4); font-family:var(--sans); }
 /* The Nameplate (Secondary lockup): the Streams confluence mark, an architectural hairline, and
-   DRIFTWOOD WEALTH in tracked caps — single-ink, never two-tone. Colour belongs to the page, so
-   the wordmark reads identically everywhere. Metrics come from the --logo-* tokens. */
+   Driftwood Wealth, title-case, single-ink, never two-tone. Colour belongs to the page, so
+   the wordmark reads identically everywhere. Metrics come from the --logo-* tokens.
+   2026 wordmark unification: title-case, untracked — matches the redesign nav's .brand-w exactly
+   (was tracked uppercase caps; "one logo, one case, one type, everywhere"). */
 .dwnav .brand{ display:inline-flex; align-items:center; gap:var(--logo-gap,14px);
   text-decoration:none; white-space:nowrap; }
 .dwnav .brand-mark{ height:var(--logo-mark,17px); width:auto; flex:none;
   color:var(--accent-strike,#2c5878); overflow:visible; }
 .dwnav .brand-rule{ width:1px; height:var(--logo-rule,20px); flex:none;
   background:var(--logo-rule-color,#d8d3c6); }
-.dwnav .brand-word{ font-size:var(--logo-word,14px); font-weight:500; color:var(--ink,#1d242d);
-  letter-spacing:var(--logo-word-spacing,.15em); text-transform:uppercase; }
+.dwnav .brand-word{ font-size:var(--logo-word,14px); font-weight:700; color:var(--ink,#1d242d);
+  letter-spacing:-.01em; }
 .dwnav .brand:hover .brand-word{ color:var(--accent-strike,#2c5878); }
-/* Mobile: drop the divider, tighten to the Micro lockup. Snug the wordmark's tracking so the whole
-   nameplate + the MENU control fit on one centred line on a phone (they wrapped at ~375–393px before). */
+/* Mobile: drop the divider, tighten to the Micro lockup. */
 @media (max-width:1199px){ .dwnav{ align-items:center; } .dwnav .brand{ gap:9px; }
-  .dwnav .brand-rule{ display:none; } .dwnav .brand-word{ font-size:14.5px; letter-spacing:.08em; }
+  .dwnav .brand-rule{ display:none; } .dwnav .brand-word{ font-size:14.5px; }
   /* collapsed: pin the nameplate + MENU to one centred line (they can never wrap to a second row);
      the menu opens with flex-wrap restored so the family columns stack below. */
   .dwnav--menu:not(.dwnav--open){ flex-wrap:nowrap; } }
@@ -581,6 +582,9 @@ table.exhibit-table{ width:100%; border-collapse:collapse; font-family:var(--san
   margin:0 0 16px; padding:11px 18px; background:var(--soft); border:1px solid var(--line);
   border-radius:var(--surface-radius); font-family:var(--sans); font-weight:600; font-size:10px;
   letter-spacing:.14em; text-transform:uppercase; color:var(--dim); font-variant-numeric:tabular-nums; }
+/* The firm NAME is the wordmark — title-case everywhere else on the site — so it overrides the meta
+   strip's tracked caps here too. 2026 wordmark unification: one logo, one case, one type. */
+.firm-anchor-brand{ text-transform:none; letter-spacing:-.01em; font-weight:700; color:var(--ink,#1d242d); }
 @media(max-width:620px){ .firm-anchor{ font-size:9px; letter-spacing:.1em; padding:10px 14px; gap:4px 16px; } }
 
 /* ── Onward strip — one shared "return to the diagnostic" component ────────────────────────────

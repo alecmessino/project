@@ -97,6 +97,32 @@ canonicals before DNS is live:**
 5. `pytest -q tests/test_site_domain.py` must pass (asserts no stale-host references), then commit+push.
 6. Re-submit `sitemap.xml` in Google Search Console under the new property.
 
+## 2026 redesign — decisions & Phase 2 backlog
+
+**Statemap vs. Tax Atlas (decided 2026-07-26, launch of the redesign branch).** The 2026 redesign
+introduced `tax-atlas.html`, a single-ink-ramp, 3-toggle state comparison map built on the new
+`driftwood.css` design system and wired into `dw-context.js`'s household-profile state. It ships
+**alongside**, not in place of, `statemap.html` — do not stub or delete `statemap.html`. Reasoning:
+`statemap.html` is the live, Python-computed engine (`drift statemap`, `src/drift/statemap.py`),
+carries 6 dedicated tests (`tests/test_drift_statemap.py`, including citation and
+no-fabricated-alpha guards), and is load-bearing in the funnel — inbound links from `leakage.html`,
+`taxlab.html`, `score.html`, `docs/sitemap.xml`, and all 51 `atlas/2026/<state>/index.html` SEO
+pages. `tax-atlas.html` currently has no independent data engine of its own.
+- **Phase 2 item:** port the redesign shell/visual language of `tax-atlas.html` onto `statemap.html`'s
+  live computed data, then consolidate to one canonical state-comparison page. Until that lands,
+  treat `tax-atlas.html` as the exploratory front door and `statemap.html` as the source of truth.
+
+**Figure provenance (standing mandate, 2026-07-26).** Every public dollar/percent figure on the site
+must have a row in `FIGURE_PROVENANCE.md` (repo root) classifying it DERIVED / ASSUMED / UNSOURCED.
+No new public figure ships without an entry. See that file for the current audit and open
+UNSOURCED items.
+
+**Stale sitemap entries (found during 2026-07-26 launch verification, not yet fixed).**
+`docs/sitemap.xml` still lists `library.html` and `familyoffice.html`, both 404 on the live site —
+they were deleted in `3caa0d6c` ("Strip the site to its purest form: kill four pages") but the
+sitemap was never updated. Predates the 2026 redesign; unrelated to it. **Phase 2 item:** drop
+both entries from `sitemap.xml` (or regenerate it) and resubmit in Google Search Console.
+
 ## Disaster recovery
 - **Lost/corrupt `tests/data/matrix_history.json`** → `TILT_SWEEP_REFRESH=1 python scripts/tilt_sweep.py`
   re-pulls and rewrites the cache (needs `TIINGO_API_KEY`); then regenerate STATE_ALPHA (above).

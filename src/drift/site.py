@@ -65,11 +65,17 @@ _ANCHOR_SEP = "&nbsp;&nbsp;·&nbsp;&nbsp;"
 
 def firm_anchor_html() -> str:
     """The coordinates band (Launch Standard, item D): a restrained institution + provenance strip for
-    page footers, 'DRIFTWOOD WEALTH · AUSTIN, TEXAS · FOUNDED 2024' left, provenance right. Renders
+    page footers, 'Driftwood Wealth · A PRACTICE OF ALEC MESSINO' left, provenance right. Renders
     only confirmed facts, so an unset fact (CRD, custodian) simply does not appear, never a placeholder.
-    One source; change a fact in site.py and every footer follows on the next build."""
+    One source; change a fact in site.py and every footer follows on the next build.
+
+    The band is styled as a small tracked-caps meta strip (.firm-anchor, driftwood.css) — but the firm
+    NAME is the wordmark, and the wordmark is title-case everywhere else on the site (nav brand lockup,
+    hub.html hero). .firm-anchor-brand overrides the parent's text-transform so the name renders in its
+    one true case here too, while the surrounding descriptor/provenance text keeps the meta-strip
+    treatment. 'One logo, one case, one type, everywhere' (2026 wordmark unification)."""
     f = firm_facts()
-    left = [FIRM_LEGAL_NAME.upper()]
+    left = [f'<span class="firm-anchor-brand">{FIRM_LEGAL_NAME}</span>']
     if f.get("location"):
         left.append(f["location"].upper())
     # Not registered: the practice is named for its principal, not a "Founded" year.

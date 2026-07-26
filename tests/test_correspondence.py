@@ -34,7 +34,10 @@ def test_contact_endpoint_is_the_firm_domain_and_single_sourced():
 
 def test_firm_anchor_renders_the_firm_name_and_principal():
     a = site.firm_anchor_html()
-    assert "DRIFTWOOD WEALTH" in a
+    # 2026 wordmark unification: the firm name is title-case (matches the nav wordmark everywhere
+    # else), not the meta strip's tracked uppercase caps — "DRIFTWOOD WEALTH" must NOT appear.
+    assert "Driftwood Wealth" in a
+    assert "DRIFTWOOD WEALTH" not in a
     assert "A PRACTICE OF ALEC MESSINO" in a
     assert "FOUNDED 2024" not in a
     assert "ADVISERINFO.SEC.GOV" not in a and "MODEL DATA AS OF JULY 2026" in a

@@ -37,6 +37,19 @@
   function write(ctx) { try { localStorage.setItem(KEY, JSON.stringify(ctx)); } catch (e) {} }
   function notify(c) { subs.forEach(function (fn) { try { fn(c); } catch (e) {} }); }
 
+  // Accepts a raw dollar number (the household dropdown's own values, e.g. "2000000") or a hand-typed
+  // cold-outreach shorthand ("2M", "500k") — an explicit suffix scales the number; anything else,
+  // including a plain small number, passes through unscaled so a real raw-dollar value is never
+  // silently reinterpreted as millions. Mirrors leakage.html's parsePortfolio for the same convention
+  // everywhere a portfolio value can enter the site.
+  function parsePortfolioLike(raw) {
+    var m = String(raw).trim().match(/^(-?[\d.]+)\s*([km])?$/i);
+    if (!m) return NaN;
+    var n = parseFloat(m[1]); if (!isFinite(n)) return NaN;
+    var suf = (m[2] || "").toLowerCase();
+    return suf === "m" ? n * 1e6 : suf === "k" ? n * 1e3 : n;
+  }
+
   function clean(patch, c) {
     if (patch && patch.state != null) {
       var s = String(patch.state).toUpperCase();
@@ -46,7 +59,7 @@
       var b = parseInt(patch.bracket, 10); if (b >= 10 && b <= 60) c.bracket = b;
     }
     if (patch && patch.portfolio != null && patch.portfolio !== "") {
-      var p = Math.round(Number(patch.portfolio)); if (isFinite(p) && p >= 0 && p <= 1e11) c.portfolio = p;
+      var p = Math.round(parsePortfolioLike(patch.portfolio)); if (isFinite(p) && p >= 0 && p <= 1e11) c.portfolio = p;
     }
     return c;
   }

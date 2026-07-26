@@ -294,18 +294,33 @@ window.__STATE__ = {"header": {"generated": "2026-07-26 21:09:36 UTC", "source":
 const fmt$ = v => "$"+Math.round(v).toLocaleString();
 const fmt$big = v => v>=1e6 ? "$"+(v/1e6).toFixed(v>=1e7?0:1)+"M" : "$"+Math.round(v/1e3)+"k";
 
+// Normalizes a portfolio value to raw dollars. Cold-outreach links are hand-typed (?port=2000000,
+// per the doc line below) but "2M"/"2.5m"/"500k" are natural shorthand for a human to type — an
+// explicit suffix scales the number; anything else (including a plain small number) passes through
+// unscaled, so a legitimate raw-dollar value is never silently reinterpreted as millions.
+function parsePortfolio(raw){
+  if(raw == null) return NaN;
+  const m = String(raw).trim().match(/^(-?[\d.]+)\s*([km])?$/i);
+  if(!m) return NaN;
+  const n = parseFloat(m[1]);
+  if(!isFinite(n)) return NaN;
+  const suf = (m[2]||"").toLowerCase();
+  return suf === "m" ? n*1e6 : suf === "k" ? n*1e3 : n;
+}
+
 function render(s){
   const hd = s.headline||{}, b = s.before||{}, a = s.after||{};
-  // --- Personalization: a cold-outreach link (?state=IL&port=2000000) localizes the diagnostic to the
-  // prospect's own state + portfolio, off the per-state STATE_ALPHA table. Defaults to the illustrative
-  // figures when absent. Forwards state/port/utm into the After-Tax Review funnel for continuity + attribution.
+  // --- Personalization: a cold-outreach link (?state=IL&port=2000000, or the shorthand ?port=2M)
+  // localizes the diagnostic to the prospect's own state + portfolio, off the per-state STATE_ALPHA
+  // table. Defaults to the illustrative figures when absent. Forwards state/port/utm into the
+  // After-Tax Review funnel for continuity + attribution.
   const qp = new URLSearchParams(location.search);
   const sa = s.state_alpha||{}, names = s.state_names||{};
   // Personalize from the URL, else from the saved household (dw-context.js), URL always wins.
   const dwc = (window.dwTaxContext&&dwTaxContext.get())||{};
   const qState = qp.get("state") || dwc.state || null;
   const row = (qState && sa[qState]) ? sa[qState] : null;
-  const qPort = parseFloat(qp.get("portfolio")||qp.get("port")|| (dwc.portfolio>0?dwc.portfolio:""));
+  const qPort = parsePortfolio(qp.get("portfolio")||qp.get("port")) || (dwc.portfolio>0?dwc.portfolio:0);
   const annual = (row && qPort>0) ? qPort * row.alpha/100 : 0;
 
   // Personalized (?state= set): lead with the prospect's OWN pain — the uncoordinated book's after-tax

@@ -25,6 +25,26 @@ from drift import leakage as L
 
 TOL = 0.2  # %/yr — wider than seed jitter (~0.1), tighter than any material mis-statement (>= 0.3)
 
+WEB_LEAKAGE = Path(__file__).resolve().parents[1] / "src" / "drift" / "web" / "leakage.html"
+
+
+def test_read_it_honestly_guardrail_cites_the_true_full_range():
+    """The headline band (+3.7-4.7%/yr) is scoped to the four representative jurisdictions shown in
+    the cards (see test_headline_band_is_the_representative_states_range) — a WA or MA/NYC visitor's
+    own state falls outside that band (the full table runs 3.3-4.8). The static 'Read it honestly'
+    guardrail paragraph exists precisely to guard against that reading looking like an overstatement/
+    understatement, so it must cite the true full-table min/max. If STATE_ALPHA drifts, this fails
+    until the copy is updated to match."""
+    text = WEB_LEAKAGE.read_text(encoding="utf-8")
+    alphas = [v["alpha"] for v in L.STATE_ALPHA.values()]
+    lo, hi = min(alphas), max(alphas)
+    needle = f"+{lo:.1f}–{hi:.1f}%/yr"
+    assert needle in text, (
+        f"leakage.html's 'Read it honestly' guardrail doesn't cite the true full-table range {needle} — "
+        "a state outside the four representative jurisdictions could read a static number that "
+        "contradicts their own figure. Update the guardrail paragraph to match."
+    )
+
 
 def test_headline_band_is_the_representative_states_range():
     """The published headline band (alpha_low/alpha_high) is the range across the four DISPLAYED

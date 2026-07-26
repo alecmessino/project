@@ -54,6 +54,17 @@ signals. Driftwood mirrors this for prices (`feed/base.py`, `signal.py`, `sizing
   `feed/base.py`); add new sources there, don't special-case them in the engine.
 - Keep the three projects **decoupled** — no cross-imports between `drift`, `mrbet`, and
   `the_third_turn`.
+- **Personalized Driftwood pages must be tested via URL params, not just UI interaction.** Pages
+  that read `?state`/`?port`/`?portfolio` (e.g. `leakage.html`) personalize from the URL and from
+  the saved household bar (`dw-context.js`) — two independent code paths for the same value that
+  can silently diverge. A 2026-07-26 incident: `leakage.html`'s URL-path parser accepted a
+  hand-typed cold-outreach shorthand (`?port=2M`) as the literal number `2`, rendering "$0/yr"
+  recovered, while the household dropdown always passed pre-scaled raw dollars and worked fine — a
+  test exercised only through the UI wouldn't have caught it. Both paths now share one parser
+  (raw dollars, or an explicit `M`/`K` suffix — `parsePortfolio()` in `leakage.html`,
+  `parsePortfolioLike()` in `dw-context.js`), so this specific case is fixed, but the general rule
+  stands: when a page accepts the same field from both a URL param and a UI-driven value, write a
+  test against the URL-param path explicitly — don't assume it behaves like the UI path.
 
 ## Gotchas
 

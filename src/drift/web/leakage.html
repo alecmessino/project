@@ -53,11 +53,12 @@
   .hero .big{font-variant-numeric:tabular-nums;font-size:40px;font-weight:700;color:#f1ede3;letter-spacing:-.02em;line-height:1}
   .hero .cap{font-size:12.5px;color:var(--gold);font-weight:500}
   .hero .note{font-size:11.5px;color:#9aa3ae;margin-left:auto;max-width:34ch;line-height:1.45}
-  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:20px 40px 6px}
+  .cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;padding:20px 40px 6px}
+  @media(max-width:900px){.cols{grid-template-columns:1fr 1fr}}
   @media(max-width:760px){.cols{grid-template-columns:1fr}}
   .card{padding:16px 0 6px;border-top:1px solid var(--line)}
   .card .tag{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:4px}
-  .before .tag{color:var(--neg)} .after .tag{color:var(--teal2)}
+  .before .tag{color:var(--neg)} .after .tag{color:var(--teal2)} .index .tag{color:var(--brass)}
   .card h3{font-family:var(--sans);font-weight:500;font-size:19px;color:var(--ink);margin:0 0 4px}
   .card .csub{font-size:12px;color:var(--dim);margin-bottom:14px;min-height:32px}
   .leak{margin:8px 0 6px}
@@ -195,8 +196,10 @@
 
     <div class="cols">
       <div class="card before" id="c-before"></div>
+      <div class="card index" id="c-index"></div>
       <div class="card after" id="c-after"></div>
     </div>
+    <p class="guardrail"><span class="gk">Read it honestly</span><span>The <b>+3.7–4.7%/yr</b> is what disciplined, tax-managed coordination recovers versus a <b>concentrated, tax-naive</b> book (left). Measured against an ordinary broadly-diversified index (center), the defensible edge of coordination is smaller — on the order of <b>~0.6–1.5%/yr</b>, consistent with published tax-alpha research. We show all three so the number is never taken out of context.</span></p>
 
     <div class="sec">
       <div class="h">How coordination changes the outcome</div>
@@ -255,10 +258,11 @@
     </div>
     <div class="tscroll">
     <table class="states">
-      <thead><tr><th>Tax environment</th><th>Uncoordinated</th><th>Coordinated</th><th>After-tax recovered</th></tr></thead>
+      <thead><tr><th>Tax environment</th><th>Uncoordinated*</th><th>Coordinated</th><th>Recovered vs naive</th></tr></thead>
       <tbody id="states"></tbody>
     </table>
     </div>
+    <p class="guardrail" style="margin-top:10px"><span class="gk">Footnote</span><span><b>*Uncoordinated</b> = a concentrated, tax-naive book (the uncoordinated extreme). A broadly-diversified index sits between these two columns; the defensible coordination edge versus that index is ~0.6–1.5%/yr (see the cards above). State rows show after-tax CAGR %/yr.</span></p>
 
     <div class="pnote" id="pnote">
       <div class="pn-k">A note from the founder</div>
@@ -327,22 +331,32 @@ function render(s){
   // When personalized, the cards show this state's single before/after CAGR (not the cross-state range).
   const bd = row ? Object.assign({}, b, {atc_low:row.before, atc_high:row.before}) : b;
   const ad = row ? Object.assign({}, a, {atc_low:row.after,  atc_high:row.after})  : a;
+  const idx = s.index || {};
   const span = d => d.atc_low===d.atc_high ? `${d.atc_low}%` : `${d.atc_low}–${d.atc_high}%`;
-  const sideHTML = (d, before) =>
-    `<div class="tag">${before?'Uncoordinated':'Coordinated'}</div>`+
-    `<h3>${d.label}</h3><div class="csub">${d.sub}</div>`+
-    `<div class="leak"><div class="bar">`+
+  // Three-way card: naive / index / coordinated. Index is the honest benchmark; +alpha is measured
+  // versus the naive book, never versus the index (the page states this explicitly).
+  const sideHTML = (d, kind) => {
+    const isIndex = kind==='index';
+    const tag = kind==='before' ? 'Uncoordinated' : kind==='index' ? 'Benchmark' : 'Coordinated';
+    const leakRow = isIndex ? '' :
+      `<div class="leak"><div class="bar">`+
       `<div class="kept" style="width:${d.keep_pct}%"></div>`+
       `<div class="lost" style="width:${100-d.keep_pct}%"></div></div>`+
       `<div class="lbl"><span><b>${d.keep_pct}%</b> kept after tax</span>`+
-      `<span><b>${100-d.keep_pct}%</b> leaked to tax</span></div></div>`+
-    `<div class="metrics">`+
-      `<div class="m"><div class="v">${span(d)}</div><div class="l">after-tax CAGR /yr</div></div>`+
+      `<span><b>${100-d.keep_pct}%</b> left on the table</span></div></div>`;
+    const metrics = isIndex ?
+      `<div class="metrics"><div class="m"><div class="v">${span(d)}</div><div class="l">after-tax CAGR /yr</div></div>`+
+      `<div class="m"><div class="v">diversified</div><div class="l">broadly held</div></div></div>` :
+      `<div class="metrics"><div class="m"><div class="v">${span(d)}</div><div class="l">after-tax CAGR /yr</div></div>`+
       `<div class="m"><div class="v">${d.st_share}%</div><div class="l">short-term gains</div></div>`+
-      `<div class="m"><div class="v">${d.turnover}%</div><div class="l">annual turnover</div></div>`+
-    `</div>`;
-  document.getElementById("c-before").innerHTML = sideHTML(bd, true);
-  document.getElementById("c-after").innerHTML = sideHTML(ad, false);
+      `<div class="m"><div class="v">${d.turnover}%</div><div class="l">annual turnover</div></div></div>`;
+    return `<div class="tag tag-${kind}">${tag}</div>`+
+      `<h3>${d.label}</h3><div class="csub">${d.sub}</div>`+
+      leakRow + metrics;
+  };
+  document.getElementById("c-before").innerHTML = sideHTML(bd, 'before');
+  document.getElementById("c-index").innerHTML  = sideHTML(idx, 'index');
+  document.getElementById("c-after").innerHTML  = sideHTML(ad, 'after');
 
   // CTA: forward state/port/utm into the After-Tax Review prospect funnel (continuity + campaign attribution).
   const fwd = new URLSearchParams();

@@ -116,22 +116,47 @@ _LEVERS = [
 
 def build_leakage() -> dict:
     """Assemble the Tax-Leakage Diagnostic state (fixed illustrative figures + the per-state table for
-    the personalized variant). `leakage.html` reads `?state`/`?port` to localize off `state_alpha`."""
+    the personalized variant). `leakage.html` reads `?state`/`?port` to localize off `state_alpha`.
+
+    Number-integrity note: the `+3.7–4.7%/yr` Structural Alpha figure is the modeled recovery of a
+    coordinated, tax-managed book versus a *concentrated, tax-naive* book (the `before` case below) —
+    NOT versus a plain buy-and-hold index. The honest third anchor (a broadly-diversified, buy-and-hold
+    taxable index) is included so the page never implies the coordination edge is measured against an
+    ordinary portfolio. A plain index sits between the naive and coordinated books; the defensible
+    published total tax-alpha of disciplined management over a simple index is on the order of
+    ~0.5–1.5%/yr, which the page states plainly rather than over-claiming.
+    """
     return {
         "header": {
             "generated": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
-            "source": "Driftwood After-Tax model · 30y proxy-spliced cache, 1996–2026 (tests/data/matrix_history.json)",
+            # Source string is deliberately free of any internal file path (no tests/data/* reference)
+            # so the public disclosure never leaks build internals.
+            "source": "Driftwood After-Tax model · 30y proxy-spliced cache, 1996–2026",
             "horizon_years": 30,
         },
-        # The headline recovery range across states (the Structural Alpha (tax) number).
+        # The headline recovery range across states (the Structural Alpha (tax) number), measured
+        # versus the concentrated, tax-naive book — explicitly, not versus a plain index.
         "headline": {"alpha_low": 3.7, "alpha_high": 4.7,
-                     "pretax_before": 9.4, "pretax_after": 9.1},
+                     "pretax_before": 9.4, "pretax_after": 9.1,
+                     "vs_index_low": 0.6, "vs_index_high": 1.5},
         "before": {
-            "label": "Concentrated · high-turnover",
-            "sub": "A concentrated, high-turnover book in a taxable account, taxed naively.",
+            "label": "Concentrated · tax-naive",
+            "sub": "A concentrated, high-turnover book in a taxable account, taxed with no lot, "
+                   "harvesting, or location discipline — the uncoordinated extreme, not a typical portfolio.",
             "st_share": 96, "turnover": 371,
             "atc_low": 0.4, "atc_high": 2.7,         # after-tax CAGR, CA → federal-only
             "keep_pct": 9,                            # keeps 9% of the 30y pre-tax gain after tax
+            "note": "The uncoordinated extreme — a strawman for what disciplined management avoids, "
+                    "not what a diversified index portfolio does.",
+        },
+        # Honest third anchor: a broadly-diversified, buy-and-hold taxable index (8% gross, qualified
+        # dividends, top bracket, realized at horizon). Computed, not modeled — see exhibit_footnote.
+        "index": {
+            "label": "Buy-and-hold index",
+            "sub": "A broadly-diversified taxable index, held and liquidated at the horizon — the "
+                   "ordinary benchmark a coordinated book is actually measured against.",
+            "atc_low": 6.18, "atc_high": 6.89,      # after-tax CAGR, CA → federal-only (liquidated)
+            "keep_pct": 0,                            # not a "leak" framing; index is the reference
         },
         "after": {
             "label": "Coordinated · tax-managed",

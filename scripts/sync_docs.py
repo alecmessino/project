@@ -75,6 +75,8 @@ def main() -> int:
                   "constitution.html", "capital-allocation.html", "opportunity-register.html",
                   "record.html", "ic-memo.html", "transition-plan.html", "partners.html",
                   "coordination-review.html",
+                  # the four production pages of the 2026 redesign
+                  "the-practice.html", "the-record.html", "tax-atlas.html",
                   "letter.html", "private.html"):
         (DOCS / asset).write_text(_inject_tokens((WEB / asset).read_text()))
         print(f"   {asset:15} -> docs/{asset} (copied)")
@@ -85,6 +87,14 @@ def main() -> int:
         if src.exists():
             (DOCS / asset).write_bytes(src.read_bytes())
             print(f"   {asset:15} -> docs/{asset} (copied, binary)")
+    # Engraving plates (the page headers). Committed static art, copied through on every build so a
+    # docs/ deploy is always self-contained.
+    img_src = WEB / "img"
+    if img_src.is_dir():
+        (DOCS / "img").mkdir(exist_ok=True)
+        for f in sorted(img_src.glob("*.jpg")):
+            (DOCS / "img" / f.name).write_bytes(f.read_bytes())
+            print(f"   img/{f.name:22} -> docs/img/{f.name} (copied, binary)")
     if bad:
         print(f"FAILED: {bad} file(s) had problems")
         return 1

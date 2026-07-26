@@ -65,7 +65,12 @@
   var CONSUMERS = [
     { prefix: "taxlab.html", params: ["state", "bracket", "port"] },
     { prefix: "leakage.html", params: ["state", "port"] },
-    { prefix: "statemap.html", params: ["state"] }
+    { prefix: "statemap.html", params: ["state"] },
+    // The four production pages read the same household, so a link from any of them carries it.
+    { prefix: "tax-atlas.html", params: ["state", "bracket", "port"] },
+    { prefix: "the-record.html", params: ["state", "bracket", "port"] },
+    { prefix: "the-practice.html", params: ["state", "bracket", "port"] },
+    { prefix: "coordination-review.html", params: ["state", "bracket", "port"] }
   ];
   function paramVal(k, c) { return k === "port" ? c.portfolio : c[k]; }
   function withContext(href, keys, c) {
@@ -123,7 +128,11 @@
   var SIBLINGS = {
     taxlab: [{ href: "leakage.html", label: "Tax Diagnostic →" }, { href: "statemap.html", label: "State Atlas →" }],
     statemap: [{ href: "leakage.html", label: "Tax Diagnostic →" }, { href: "taxlab.html", label: "After-Tax Review →" }],
-    leakage: [{ href: "taxlab.html", label: "After-Tax Review →" }, { href: "statemap.html", label: "State Atlas →" }]
+    leakage: [{ href: "taxlab.html", label: "After-Tax Review →" }, { href: "statemap.html", label: "State Atlas →" }],
+    atlas: [{ href: "the-record.html", label: "The Record →" }, { href: "the-practice.html", label: "The Practice →" }],
+    record: [{ href: "tax-atlas.html", label: "Tax Atlas →" }, { href: "the-practice.html", label: "The Practice →" }],
+    practice: [{ href: "tax-atlas.html", label: "Tax Atlas →" }, { href: "the-record.html", label: "The Record →" }],
+    home: [{ href: "tax-atlas.html", label: "Tax Atlas →" }, { href: "the-record.html", label: "The Record →" }]
   };
   function renderBars() {
     var hosts = document.querySelectorAll("#dw-household");
@@ -155,13 +164,30 @@
     });
   }
 
-  // 4 · Public API.
+  // 4 · Public API. The four production pages consume this rather than re-deriving the household,
+  //     so a state name, a dollar format, and an as-of stamp read identically everywhere.
+  var NAME_BY_CODE = {};
+  STATES.forEach(function (s) { if (s[0] && s[0] !== "—") NAME_BY_CODE[s[0]] = s[1]; });
+
   var api = window.dwTaxContext = {
     get: read,
     save: function (patch) { var c = clean(patch, read()); write(c); decorate(); renderBars(); notify(c); },
     reset: function () { try { localStorage.removeItem(KEY); } catch (e) {} decorate(); renderBars(); notify({}); },
     subscribe: function (fn) { if (typeof fn === "function") subs.push(fn); },
-    decorate: decorate, mountBar: renderBars
+    decorate: decorate, mountBar: renderBars,
+    states: STATES,
+    stateName: function (code) { return NAME_BY_CODE[String(code || "").toUpperCase()] || ""; },
+    // Dollars, never percentages, on family-facing pages; tabular numerals are applied in CSS.
+    usd: function (n) {
+      if (n == null || !isFinite(n)) return "–";
+      return "$" + Math.round(n).toLocaleString("en-US");
+    },
+    // Every computed figure carries where it came from and when. Showing the work is the point.
+    asOf: function (c) {
+      c = c || read();
+      var where = c.state && c.state !== "—" ? api.stateName(c.state) : "Federal only";
+      return where + " · 2025 law · computed in this browser, never transmitted";
+    }
   };
 
   // Cross-tab sync.

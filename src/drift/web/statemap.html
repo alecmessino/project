@@ -10,7 +10,7 @@
   plausible.init()
 </script>
 <title>Driftwood Wealth, State Tax Atlas</title>
-<meta name="description" content="Fifty states, eight tax dimensions, capital gains, marriage, estate, munis, QSBS, losses, basis step-up, and how much each state's rules move a tax-managed portfolio. An interactive reference. Illustrative modeling, not advice." />
+<meta name="description" content="Every state creates a different coordination problem. The State Tax Atlas shows where a state's tax rules differ and where coordinated planning creates the greatest impact — not which state is 'best' to live in. Illustrative modeling, not advice." />
 <link rel="canonical" href="https://driftwoodwealth.com/statemap.html" />
 <link rel="icon" href="favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
@@ -112,7 +112,7 @@
   .detail a.atlas-link:hover{border-bottom-color:var(--accent-strike);color:var(--ink)}
   /* ── "Lean your state" coordination view (replaces the map on the alpha dimension). Leads with the
      visitor's own state, its figure + how its rules tax them, then an every-state list anchored to a
-     true $0 so the story is "the opportunity is large everywhere," a high floor, not a ranking. Bars are
+     true $0 so the story is "coordination impact is large everywhere," a high floor, not a ranking. Bars are
      baked in at build, so nothing animates under reduced motion. ── */
   #coord{padding:6px 40px 8px}
   .your-hd{border-top:2px solid var(--ink);padding-top:18px}
@@ -203,11 +203,12 @@
 
     <div class="hd">
       <div class="eyebrow">State Tax Atlas</div>
-      <h1>The State Tax Atlas.</h1>
-      <p class="lede">Fifty states. Fifty tax personalities. How each one treats investment income, filing
-        status, and estates, rates on gains, the marriage penalty, death taxes, municipal-bond interest,
-        the §1202 QSBS exclusion, and what happens to a harvested loss. A final dimension shows how
-        much a state's rules move a tax-managed portfolio.</p>
+      <h1>The question isn't where you live. It's how your state's rules change the decisions you should make.</h1>
+      <p class="lede">Every state creates a different <b>coordination problem.</b> State tax law affects far more
+        than your income tax bill: it changes how investment income is taxed, when capital gains should be
+        realized, how estates transfer, whether municipal bonds make sense, how losses are used, and dozens
+        of other planning decisions. The State Tax Atlas shows where those rules differ — and where coordinated
+        planning creates the greatest opportunity. Where you live is fixed; the strategy it demands is not.</p>
     </div>
     <div class="atlas-body">
     <aside class="atlas-index">
@@ -224,7 +225,7 @@
       </div>
       <div class="detail" id="detail"></div>
     </div>
-    <!-- Coordination Opportunity is a magnitude, not a regime: on that dimension the map gives way to a
+    <!-- Coordination Impact is a magnitude, not a regime: on that dimension the map gives way to a
          full-width "your state" panel (your figure + how your state taxes you + an every-state floor). -->
     <div id="coord" hidden></div>
     </div>
@@ -248,7 +249,7 @@ function render(s){
   if(!(sel in tiles)){ var _dw=(window.dwTaxContext&&dwTaxContext.get())||{}; if(_dw.state && (_dw.state in tiles)) sel=_dw.state; }  // fall back to the saved household state
   if(!(sel in tiles)) sel = "IL" in tiles ? "IL" : Object.keys(tiles)[0];
   // active-dimension deep link: ?dim=<key> (exact key), or ?tab= / ?view= matched against a dimension
-  // key or label (so ?tab=coordination lands on "Coordination Opportunity"). With no param, direct
+  // key or label (so ?tab=coordination lands on "Coordination Impact"). With no param, direct
   // navigation keeps the canonical first tab (Income & gains).
   const qdim = qp.get("dim");
   let di = dims.findIndex(d=>d.key===qdim);
@@ -288,7 +289,7 @@ function render(s){
     document.getElementById("frame").className = "frame";
     tabs.querySelectorAll("button").forEach((b,i)=>b.setAttribute("aria-selected", i===active));
     document.getElementById("maptitle").innerHTML = d.title;
-    // Coordination Opportunity is a magnitude, not a regime: swap the whole map/detail split for the
+    // Coordination Impact is a magnitude, not a regime: swap the whole map/detail split for the
     // full-width "your state" panel. The other 7 dimensions keep the cartogram.
     const isCoord = d.key === "alpha";
     document.querySelector(".split").hidden = isCoord;
@@ -330,7 +331,7 @@ function render(s){
 
   // The full-width "your state" coordination panel (replaces the map on the alpha dimension): the
   // visitor's figure, how their state's rules tax them (7 levers, all present for the 50 states + DC),
-  // the conversion doors, then an every-state list anchored to a true $0 — the opportunity is large
+  // the conversion doors, then an every-state list anchored to a true $0 — coordination impact is large
   // everywhere, a high floor, not a ranking. All from existing __STATE__ data. Territories carry no
   // .alpha and fall back to a "pick a state" prompt.
   function paintCoord(d){
@@ -390,8 +391,8 @@ function render(s){
         `<span class="bnm">${r.name}${you?'<span class="btag">You</span>':""}</span></span>`+
         `<span class="bamt">$${kk(r.v)}k/$1M</span></button>`;
     };
-    html += `<div class="every"><div class="every-h">The opportunity is large — in every state.</div>`+
-      `<p class="every-sub">Anchored to a true $0, every state is a long bar. Pick any state to see how its rules shape the picture.</p>`+
+    html += `<div class="every"><div class="every-h">Every state rewards different decisions.</div>`+
+      `<p class="every-sub">The Atlas isn't about finding the "best" state. It's about understanding which planning levers matter most where you already live. Anchored to a true $0, every state is a long bar — pick any to see how its rules shape the after-tax picture.</p>`+
       `<div class="ecols"><div>${rows.slice(0,half).map(rowHtml).join("")}</div>`+
       `<div>${rows.slice(half).map(rowHtml).join("")}</div></div>`+
       `<p class="floor">Even the lowest-modeled state, <b>${loRow.name}</b>, is about `+

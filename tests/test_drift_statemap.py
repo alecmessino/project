@@ -74,10 +74,16 @@ def test_prove_it_citations_only_where_verified():
 
 def test_template_is_original_and_carries_compliance_framing():
     t = STATEMAP_TEMPLATE.read_text()
-    # Firm-approved editorial copy: the page is the "State Tax Atlas" (a permanent reference),
-    # with "Fifty states. Fifty tax personalities." as its subhead and "State Tax Atlas" as the eyebrow.
+    # Firm-approved editorial copy: the page is the "State Tax Atlas" (a permanent
+    # reference), reframed as a COORDINATION tool — not a relocation tool. The H1 leads with
+    # "It's how your state's rules change the decisions you should make" and the dimension is
+    # "Coordination Impact" (no star). Guards against any drift back to "Fifty tax personalities"
+    # or "The opportunity is large" move-framing.
     assert "State Tax Atlas" in t
-    assert "Fifty states. Fifty tax personalities." in t
+    assert "how your state's rules change the decisions you should make" in t
+    assert "Coordination Impact" in t
+    assert "opportunity is large" not in t.lower()  # dropped: it implied a ranking / relocation read
+    assert "Fifty states. Fifty tax personalities." not in t  # replaced by the coordination-problem H1
     assert "The Fifty States" not in t  # renamed in the Waterline port; eyebrow is now "State Tax Atlas"
     assert "America turns 250" not in t
     # ORIGINALITY: we still never reuse the third party's brand name or assets.

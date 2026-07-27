@@ -101,6 +101,10 @@
     text-transform:uppercase;color:var(--dim)}
   .guardrail b{color:var(--dim);font-weight:600}
   /* A first-person note from the principal, human context right before the ask. */
+  .recog{margin:16px 40px 0;padding:16px 18px;background:var(--soft);border-left:2px solid var(--accent-strike);border-radius:0;max-width:78ch}
+  .recog .recog-k{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:7px}
+  .recog p{font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--ink);margin:0}
+  .recog b{color:var(--accent-strike);font-weight:600}
   .pnote{margin:24px 40px 0;padding:18px 20px;background:var(--soft);border:1px solid var(--line);
     border-radius:var(--surface-radius);max-width:72ch}
   .pnote .pn-k{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
@@ -152,6 +156,22 @@
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review</a>
     </nav>
     <div id="dw-household" data-page="leakage"></div>
+    <div class="journey-rail" aria-label="Your path through the engagement">
+      <div class="jr-in">
+        <span class="jr-k">Your path</span>
+        <ol>
+          <li><span class="num">1</span><a href="leakage.html">Tax Diagnostic</a></li>
+          <li class="sep" aria-hidden="true">→</li>
+          <li><span class="num">2</span><a href="statemap.html">State Tax Atlas</a></li>
+          <li class="sep" aria-hidden="true">→</li>
+          <li><span class="num">3</span><a href="taxlab.html">After-Tax Review</a></li>
+          <li class="sep" aria-hidden="true">→</li>
+          <li aria-current="step"><span class="num">4</span><a href="coordination-review.html">Coordination Review</a></li>
+        </ol>
+        <a class="jr-cta" href="coordination-review.html">The product →</a>
+      </div>
+    </div>
+
 
     <div class="hd">
       <div class="eyebrow">Tax Diagnostic</div>
@@ -172,6 +192,14 @@
     <div class="pband" id="pband" style="display:none"></div>
 
     <p class="guardrail"><span class="gk">How to read this</span><span>The state &amp; federal <b>rates</b> come from current tax code; the <b>coordination figure</b> is an illustrative model of what disciplined tax management has recovered over time, a diagnostic, not a forecast, and not a robo-advisor's black box.</span></p>
+
+    <div class="recog" role="note">
+      <div class="recog-k">Before the numbers</div>
+      <p>This isn't a test of what you know. It's a read on where a financial life has quietly
+        <b>stopped talking to itself</b> — the gaps most households only notice after they've become
+        expensive. Set your state and portfolio above; the figure that appears is the coordination you
+        may already be leaving on the table, named before any recommendation.</p>
+    </div>
 
     <div class="cols">
       <div class="card before" id="c-before"></div>

@@ -33,7 +33,7 @@
     --bg:#f1efe9; --soft:#f7f5f0; --card:#fff; --line:#d8d3c6; --line2:#e9e5db;
     --frame-line:#c3bcab; --ghost-line:#b8b2a4;
     --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
-    --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6; --accent-strike-deep:#1f425c;
+    --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6;
     --teal:#15463a; --teal2:#15806a; --accent:#15806a; --neg:#9b4439; --navy:#1a2330;
     --brass:#2c5878; --gold:#a9c2d6;
     --on-dark:#e7ecf2; --on-dark-strong:#f1ede3; --on-dark-dim:#9aa3ae;
@@ -56,10 +56,6 @@
      cross (the T-intersection). No cards, no boxes: alignment is the only ornament, the grid the
      language. Museum labels, tiny, tracked, tabular, name the room and cite its provenance. ── */
   .gal{position:relative;border-top:1px solid var(--line);border-left:1px solid var(--frame-line)}
-  /* Section rule: a 12px slice of the merged channel (Plate II's blue dotted band) carrying the
-     motif down the page instead of a plain hairline. Editorial Blue only — the colour of coordination. */
-  .sec-rule{height:12px;margin:0;border:0;background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='14'%20height='3'%3E%3Ccircle%20cx='1.5'%20cy='1.5'%20r='1.5'%20fill='%232c5878'/%3E%3C/svg%3E");
-    background-repeat:repeat-x;background-position:center;background-size:auto 3px}
   .gal::before,.sysband::before{content:"";position:absolute;left:0;top:0;width:11px;height:11px;
     pointer-events:none;transform:translate(-50%,-50%);opacity:.9;
     background:linear-gradient(var(--accent-strike),var(--accent-strike)) center/1px 11px no-repeat,
@@ -90,24 +86,6 @@
   .lede{font-family:var(--serif);font-size:16.5px;line-height:1.68;color:var(--dim);margin:0}
   .lede b{color:var(--ink);font-weight:500}
   .hero .ctas{margin-top:38px;padding-top:26px;border-top:1px solid var(--line)}
-  /* Plate II · Confluence. A quiet band behind the hero; the two streams merge under the headline
-     and a single blue channel continues right. pointer-events off so it never steals a click. */
-  .confluence{position:absolute;left:0;right:0;top:0;height:300px;pointer-events:none;overflow:hidden;
-    opacity:.9;z-index:0}
-  .hero-grid,.hero .ctas{position:relative;z-index:1}
-  .confluence svg{position:absolute;inset:0;width:100%;height:100%}
-  .cf{fill:none;stroke-width:2.6;stroke-linecap:round;stroke-dasharray:0.5 8}
-  .cf-ink{stroke:var(--ink)}
-  .cf-blue{stroke:var(--accent-strike)}
-  .cf-lab{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.16em;
-    fill:var(--muted);text-transform:uppercase}
-  /* one-time left-to-right reveal on load: a mask wipes the dotted bands in once, under two seconds,
-     then rests. The bands stay halftone dots throughout; only their visibility is revealed. */
-  .cf-reveal{transform:scaleX(0);transform-origin:0 0;animation:cfReveal 1.6s cubic-bezier(.4,0,.2,1) forwards}
-  @keyframes cfReveal{to{transform:scaleX(1)}}
-  @media (prefers-reduced-motion:reduce){
-    .cf-reveal{transform:scaleX(1);animation:none}
-  }
   @media(max-width:900px){
     .hero{padding-top:40px}
     .hero-grid{display:block}
@@ -126,8 +104,8 @@
   .ctas{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
   .ctas a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:500;white-space:nowrap;
     transition:filter var(--t-fast),transform var(--t-fast),background var(--t-fast),border-color var(--t-fast)}
-  .ctas .primary{background:var(--accent-strike);color:#fff;padding:15px 26px;border-radius:var(--surface-radius);font-weight:600;border:0;text-decoration:none;transition:background .3s ease,box-shadow .3s ease}
-  .ctas .primary:hover{background:var(--accent-strike-deep);box-shadow:0 6px 18px rgba(44,88,120,.28)}
+  .ctas .primary{background:var(--accent-strike);color:#fff;padding:15px 26px;border-radius:var(--surface-radius);font-weight:600}
+  .ctas .primary:hover{filter:brightness(1.08)}
   /* Quiet, the outlined-ink guided-path step, used for the mid-page Atlas link. The SOLID
      editorial-blue primary now anchors both the hero (entry) and the close (exit), the two conversion
      moments, while mid-page links stay quiet, so the eye still lands on one confident action top and bottom. */
@@ -140,8 +118,8 @@
 
   /* ── Section scaffold, tiny label, medium statement, generous air. Galleries vary their own
      vertical rhythm deliberately: dense ledger, vast plate, quiet archive, never one template. ── */
-  .sec{padding:80px 52px 100px}
-  .sec.gal{padding:88px 52px 96px}
+  .sec{padding:20px 52px 40px}
+  .sec.gal{padding:52px 52px 52px}
   #diagnostic.gal{padding:26px 52px 44px}
   #capabilities.gal{padding:26px 52px 32px}
   .lede2{font-family:var(--serif);font-size:clamp(19px,1vw + 15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
@@ -173,7 +151,7 @@
     .diag-item:hover::after{opacity:1}
   }
   .diag-item:focus-within::after{opacity:1}
-  .diag-item input:focus-visible ~ span{outline:none;background:rgba(44,88,120,.10);box-shadow:inset 0 -2px 0 var(--accent-strike);border-radius:2px;transition:background .22s ease,box-shadow .22s ease}
+  .diag-item input:focus-visible ~ span{outline:2px solid var(--accent);outline-offset:3px}
   .diag-item input:checked ~ span{color:var(--ink);font-weight:500}
   /* selection is checked off in a fixed right-hand column, an item cleared on the ledger */
   .diag-item input:checked ~ span::after{content:"✓";position:absolute;right:2px;top:50%;
@@ -189,7 +167,7 @@
      state as the environment those conditions play out in. Prose only, it frames the single action
      (the .quiet CTA directly below), so no second link competes with it. */
   .diag-bridge{font-family:var(--serif);font-size:15.5px;line-height:1.6;color:var(--dim);margin:0 0 20px;max-width:58ch}
-  @media(max-width:700px){.diag{grid-template-columns:1fr;max-width:60ch}.diag-item{width:100%;padding-right:12px}}
+  @media(max-width:700px){.diag{grid-template-columns:1fr;max-width:60ch}}
   /* the plate's product line, a quiet serif framing above the seven-systems headline */
   .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw + 15px,19px);line-height:1.5;color:var(--dim);
     margin:0 auto 20px;max-width:36ch}
@@ -235,7 +213,7 @@
   .reg-th span{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
   .reg-m{font-weight:700;font-size:14.5px;letter-spacing:-.005em;color:var(--ink)}
   .reg-sys{font-size:12.5px;color:var(--dim)}
-  .reg-o{font-size:12.5px;color:var(--body);font-variant-numeric:tabular-nums}
+  .reg-o{font-size:12.5px;color:var(--body)}
   .reg-num,.reg-th .reg-num{font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums;text-align:right}
   .reg-num .pu{color:var(--muted);font-size:11px;margin-left:4px}
   .st{font-size:11px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
@@ -243,8 +221,8 @@
   .st-wait{color:var(--dim)} .st-fut{color:var(--dim)} .st-res{color:var(--muted)}
   .st-time{color:var(--neg)}
   .st-time::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--neg);
-    margin-right:6px;vertical-align:middle;animation:regpulse 3.5s ease-in-out infinite}
-  @keyframes regpulse{0%,100%{opacity:1}50%{opacity:.6}}
+    margin-right:6px;vertical-align:middle;animation:regpulse 1.9s ease-in-out infinite}
+  @keyframes regpulse{0%,100%{opacity:1}50%{opacity:.35}}
   .reg-done .reg-m{color:var(--muted);font-weight:600} .reg-done .reg-sys,.reg-done .reg-o{color:var(--ghost-line)}
   .reg-done .reg-num{color:var(--muted)}
   .reg.seeded .reg-r{opacity:0;transform:translateY(7px)}
@@ -262,7 +240,7 @@
     .reg-m{grid-column:1;grid-row:1}
     .reg-r>span[role=cell]:nth-child(3){grid-column:2;grid-row:1;justify-self:end}
     .reg-sys{grid-column:1;grid-row:2}
-    .reg-num{grid-column:2;grid-row:2;justify-self:end;text-align:right}
+    .reg-num{grid-column:2;grid-row:2;justify-self:end}
     .reg-o{grid-column:1;grid-row:3}
   }
   @media(prefers-reduced-motion:reduce){
@@ -342,7 +320,7 @@
   .trig-btn.showing{border-color:var(--accent-strike);color:var(--ink)}
   @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.diag-item,.review-cta .rc-main::after{transition:none}}
   @media(prefers-reduced-motion:reduce){.mstory.swapping .mlead,.mstory.swapping .mchain,.mstory.swapping .mproof{transition:none;opacity:1}}
-  @media(max-width:620px){.sysband{padding:32px 22px 40px}.sysstage{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}.net{stroke-width:1.1}.net.lit{stroke-width:1.5}.net.lit.sec{stroke-width:1.2}.trace{stroke-width:2}}
+  @media(max-width:620px){.sysband{padding:32px 22px 40px}.sysstage{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}}
   /* the reading panel wraps taller as the column narrows; reserve the tallest scenario at each phone tier so
      the scenario buttons never shift while the plate auto-rotates (the 166px desktop reservation holds >=560px). */
   @media(max-width:555px){.mstory{min-height:186px}}
@@ -388,7 +366,7 @@
   .foot b{color:var(--dim)}
   @media(max-width:620px){
     .hero{padding:28px 22px 40px}
-    .sec,.sec.gal,#diagnostic.gal,#capabilities.gal{padding-left:22px;padding-right:22px;padding-top:60px;padding-bottom:60px}
+    .sec,.sec.gal,#diagnostic.gal,#capabilities.gal{padding-left:22px;padding-right:22px;padding-top:28px;padding-bottom:32px}
     .foot{padding-left:22px;padding-right:22px}
     .diag-item::after{left:-10px}
     .hero .ctas,.sec .ctas{margin-top:36px}
@@ -434,29 +412,6 @@
     <!-- ── GALLERY I · THE CONSTRAINT, an asymmetric broadsheet: the triad carved large, the
          supporting argument set as a margin deck, one footnote for the deep reader ── -->
     <header class="hero">
-      <!-- Plate II · Confluence — two labeled streams enter, bend, and merge beneath the headline;
-           a single blue channel carries on to the right edge. Ink for the bands, Editorial Blue
-           reserved for the merged channel only. One-time left-to-right draw on load; reduced-motion
-           shows the end-state at once. -->
-      <div class="confluence" aria-hidden="true">
-        <svg viewBox="0 0 1200 260" preserveAspectRatio="xMidYMid meet" role="presentation">
-          <defs>
-            <mask id="cfMask">
-              <rect class="cf-reveal" x="0" y="0" width="1200" height="260" fill="#fff"></rect>
-            </mask>
-          </defs>
-          <g mask="url(#cfMask)">
-            <!-- upper stream: TAX AND ESTATE -->
-            <path class="cf cf-ink" pathLength="1" d="M -10 64 C 360 64, 470 150, 600 150"></path>
-            <!-- lower stream: PORTFOLIO AND LIQUIDITY -->
-            <path class="cf cf-ink" pathLength="1" d="M -10 210 C 360 210, 470 150, 600 150"></path>
-            <!-- merged channel: blue, exits right to the viewport edge -->
-            <path class="cf cf-blue" pathLength="1" d="M 600 150 L 1210 150"></path>
-          </g>
-          <text class="cf-lab" x="14" y="50">TAX AND ESTATE</text>
-          <text class="cf-lab" x="14" y="232">PORTFOLIO AND LIQUIDITY</text>
-        </svg>
-      </div>
       <div class="hero-grid">
         <h1><span>Wealth compounds.</span> <span>Complexity compounds with it.</span> <span>Eventually, coordination becomes the constraint.</span></h1>
         <div class="hero-aside">
@@ -476,8 +431,6 @@
 
     <!-- ── RECOGNITION · "he's describing my life" — the moment a visitor sees their own situation ── -->
     <div class="sec gal" id="recognition">
-  <div class="sec-rule" aria-hidden="true"></div>
-
       <p class="lede2">Most households we meet aren't missing an investment. They're missing the person coordinating the ones they have.</p>
       <p class="lede2-note">The portfolio is fine. The CPA is fine. The estate attorney is fine. But no one is holding the three of them to the same decision — and that gap is exactly where the return goes. If you've ever thought <em>"someone should be watching how all of this fits together,"</em> you've already found the problem Driftwood exists to solve.</p>
     </div>
@@ -569,8 +522,6 @@
     <!-- ── GALLERY III · THE ANNUAL REVIEW, the standing checklist a family office runs each year;
          now that the machine is on the wall, the visitor measures their own life against the standard ── -->
     <div class="sec gal" id="diagnostic">
-  <div class="sec-rule" aria-hidden="true"></div>
-
       <p class="lede2">Every year, institutional families review the connections between these systems
         before making major financial decisions. The following conditions often reveal where coordination
         has begun to break down.</p>
@@ -593,24 +544,18 @@
 
     <!-- ── HOUSEHOLD EXAMPLE · a concrete household, so the abstract becomes specific ── -->
     <div class="sec gal" id="household-example">
-  <div class="sec-rule" aria-hidden="true"></div>
-
       <p class="lede2">A worked household.</p>
       <p class="lede2-note">A couple in their 50s: $4M taxable, a concentrated equity position from a sale, two trusts that were never funded, and a Roth they'd forgotten they had. Nothing was "broken." Coordinated, the same holdings keep an estimated <b>~$40k/yr more after tax</b> — and three decisions that had sat open for years finally closed. <a href="https://driftwoodwealth.com/household-example.html">See the full household walk-through →</a></p>
     </div>
 
     <!-- ── EVIDENCE · the dollar proof, isolated from market return ── -->
     <div class="sec gal" id="evidence">
-  <div class="sec-rule" aria-hidden="true"></div>
-
       <p class="lede2">The evidence is a number, not a promise.</p>
       <p class="lede2-note">In one 30-year illustration, coordinated versus isolated kept <b>$320,000 more</b> per $1M of realized gains. The investments didn't change. Only the coordination did. <a href="https://driftwoodwealth.com/taxlab.html?state=IL&amp;bracket=37&amp;port=250000">See the After-Tax Review →</a></p>
     </div>
 
     <!-- ── GALLERY IV · THE METHOD (#capabilities), an architect's index, not a feature grid ── -->
     <div class="sec gal" id="capabilities">
-  <div class="sec-rule" aria-hidden="true"></div>
-
       <p class="lede2">Every client relationship follows the same sequence.</p>
       <p class="lede2-note">Not sure where coordination is helping or costing you? The <a href="https://driftwoodwealth.com/score.html">Coordination&nbsp;Assessment</a> is a brief, neutral place to begin.</p>
       <ol class="method">

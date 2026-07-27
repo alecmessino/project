@@ -1,0 +1,88 @@
+# Configuration for the Launch Skew Monitor.
+# All thresholds/params live here — the engine and dashboard read from this file.
+# Mirrors the config-as-pydantic + thresholds-in-yaml convention from the sibling
+# projects (mrbet/settings.yaml, config/drift.yaml).
+
+# ── Universe & sources ──────────────────────────────────────────────
+universe:
+  # Min/max market cap band for tracked launches (USD).
+  min_market_cap: 1_000_000       # $1M
+  max_market_cap: 50_000_000      # $50M
+  # Min 24h liquidity relative to mkt cap.
+  min_liquidity_ratio: 0.10       # liq > 10% of mkt cap
+  # Demo seeds are injected tokens (not real API data) so the dashboard
+  # is always populated for development. Turn off when live feeds are ready.
+  include_demo_seeds: true
+
+sources:
+  # Dune Analytics query endpoints. Each expects a JSON result set.
+  # Set to empty string to disable a source.
+  dune:
+    query_url: ""                 # e.g. https://api.dune.com/api/queries/12345/execute
+    api_key: ""                   # or set DUNE_API_KEY env var
+  # Messari asset profiles (MVRV, dilution, supply schedules).
+  messari:
+    base_url: "https://data.messari.io/api/v1"
+    api_key: ""
+  # CoinGecko for price/volume/market cap (no key needed; rate-limited).
+  coingecko:
+    base_url: "https://api.coingecko.com/api/v3"
+
+# ── Module A: Day-1 Liquidity Filter ────────────────────────────────
+module_a:
+  # Turnover = 24h volume / initial circulating supply.
+  # Sweet spot is 30-60%; below 30% = illiquid, above 100% = wash/weak hands.
+  turnover_sweet_min: 0.30        # 30%
+  turnover_sweet_max: 0.60        # 60%
+  turnover_wash_threshold: 1.00    # >100% → flag as potential wash trading
+  min_dev_active_days: 3          # ≥ N active dev days in 7d before TGE
+  # Holder concentration: top-10 wallets owning >X% of supply = distribution trap
+  holder_concentration_warn_pct: 70.0
+  # Min protocol revenue (24h fees) to qualify as "real yield" (not inflation)
+  min_protocol_revenue_24h: 10000  # $10K/day
+
+# ── Module B: Vesting Wall ──────────────────────────────────────────
+module_b:
+  # Inflation Pressure = (next 30d unlocks) / (daily average volume).
+  # >2x daily volume → sell-side pressure (avoid).
+  pressure_threshold: 2.0
+  # Flag tokens with a major cliff unlock within this many days.
+  cliff_warning_days: 12
+  # Max acceptable dilution rate (FDV - MC) / MC before flag.
+  dilution_warn_pct: 0.20         # 20%
+  # Emission-to-Revenue ratio: unlocks_usd / daily_protocol_revenue
+  # >50x = unlocks dwarf real yield → dangerous
+  emission_to_revenue_warn: 50.0
+
+# ── Module C: Adoption Curve (Power Law) ──────────────────────────
+module_c:
+  # Fit log(Active Addresses) vs log(Price) over a trailing window.
+  # Tokens trading below their fitted trendline → undervalued relative to adoption.
+  fit_window_days: 30
+  # Residual threshold (std devs) to flag as undervalued/overvalued.
+  residual_threshold: 1.0
+  # Min active addresses to include (avoid noise on tiny tokens).
+  min_active_addresses: 100
+
+# ── Conjunctive signal gate ─────────────────────────────────────────
+# A token is flagged only when ALL three modules clear their respective gates.
+# This mirrors the conjunctive trigger gate used by mrbet and drift.
+signal_gate:
+  require_module_a_pass: true     # must be in sweet-spot turnover band
+  require_module_b_pass: true     # no major vesting pressure
+  require_module_c_pass: true     # adoption-fair relative to price
+  # A token that passes all three but with strong metrics in every module
+  # is tagged 🔥 STRONG.
+  strong_threshold:
+    turnover_in_sweet: true
+    pressure_below: 1.0           # <1x daily volume in unlocks
+    adoption_below_trendline: true
+
+server:
+  host: "127.0.0.1"
+  port: 8765
+  refresh_seconds: 3              # dashboard poll interval (live mode)
+  # When true, the server serves a static bundle of demo seeds so the
+  # dashboard is fully populated without API keys.
+  demo_mode: true
+  demo_refresh_seconds: 15        # how often to reshuffle demo data

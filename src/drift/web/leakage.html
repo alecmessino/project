@@ -56,7 +56,7 @@
   .hero .h-quick{display:none;width:100%;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);
     align-items:baseline;gap:14px;flex-wrap:wrap}
   .hero .h-quick[hidden]{display:none}
-  .hero .h-quick.show{display:flex}
+  .hero .h-quick:not([hidden]){display:flex}
   .hero .h-quick .t{font-size:13px;color:#cdd4dc;line-height:1.5;margin:0;flex:1 1 240px}
   .hero .h-quick .t b{color:#f1ede3;font-weight:600}
   .hero .h-quick .btn{font-family:var(--sans);font-weight:600;font-size:13px;color:#0e1620;background:var(--gold);
@@ -380,12 +380,10 @@ function render(s){
 
   // Low-friction quick-start: when the household is incomplete, surface a one-tap affordance that
   // focuses the State field so the visitor gets a personalized figure in a single action. Hidden
-  // once a state is known (the hero then leads with their own number).
+  // once a state is known (the hero then leads with their own number). Visibility is driven by the
+  // `hidden` attribute only (works in the CI DOM-shim as well as browsers).
   const quick = document.getElementById("h-quick");
-  if (quick) {
-    if (row) { quick.hidden = true; quick.classList.remove("show"); }
-    else { quick.hidden = false; quick.classList.add("show"); }
-  }
+  if (quick) quick.hidden = !!row;
   const qb = document.getElementById("h-quick-btn");
   if (qb) qb.onclick = function () {
     const sel = document.querySelector('.dw-household select[data-k="state"]');

@@ -807,7 +807,7 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
         <a href="{_ABS}statemap.html" style="color:var(--accent-strike);font-weight:500">interactive State Tax Atlas &rarr;</a>.</p>
     </div>
     <table class="st">
-      <thead><tr><th scope="col">State</th><th scope="col">Top LT rate</th><th scope="col">Coordination Opportunity</th></tr></thead>
+      <thead><tr><th scope="col">State</th><th scope="col">Top LT rate</th><th scope="col">Coordination Impact</th></tr></thead>
       <tbody>{body}</tbody>
     </table>
     <div class="cta">

@@ -835,28 +835,20 @@ details.exhibit-method{ margin-top:14px; border-top:1px solid var(--line2); padd
 .lat-cta{ display:flex; flex-wrap:wrap; align-items:center; gap:16px 24px; margin-top:26px; }
 
 .lat-viz{ position:relative; }
-.lat-graph{ width:100%; height:auto; display:block; overflow:visible; }
+.lat-lattice{ display:block; }
+.lat-svg{ width:100%; height:auto; display:block; overflow:visible; }
 .lat-fallback-note{ margin:18px 0 0; font-family:var(--serif); font-size:14.5px; line-height:1.5;
   color:var(--muted); max-width:46ch; }
 
-/* Node + edge styling (applied by the draw script, but declared here so the static shape
-   is styled even before JS runs). */
-.lat-graph .node{ cursor:pointer; }
-.lat-graph .node circle{ fill:var(--bg); stroke:var(--ink); stroke-width:1.4; transition:fill .18s ease, stroke .18s ease; }
-.lat-graph .node.core circle{ fill:var(--ink); stroke:var(--ink); }
-.lat-graph .node text{ font-family:var(--sans); font-size:13px; font-weight:600; fill:var(--ink);
-  text-anchor:middle; pointer-events:none; }
-.lat-graph .node.core text{ fill:var(--bg); }
-.lat-graph .edge{ transition:stroke .18s ease, stroke-width .18s ease, opacity .18s ease; }
-.lat-graph.dim .node:not(.active){ opacity:.4; }
-.lat-graph.dim .edge:not(.active){ opacity:.18; }
-.lat-graph .node.active circle{ fill:var(--accent-strike); stroke:var(--accent-strike); }
-.lat-graph .node.active text{ fill:#fff; }
-.lat-graph .edge.active{ stroke:var(--accent-strike); stroke-width:2.2; opacity:1; }
+/* Hero coordination graph — engraved heptagon (faithful to the original). Nodes + edges drawn
+   by the inline script; the weighted spine, Coordination label and "What you keep" are static. */
+.node-lbl{ font:500 12.5px var(--sans); fill:var(--ink); }
+.hub-lbl{ font:700 15px var(--sans); fill:var(--accent-strike); letter-spacing:-.01em; }
+.keep-lbl{ font:italic 500 16px var(--serif); fill:var(--teal); }
 
 /* Phone / small tablet: stack, drop the diagram, keep the fallback note. */
 @media (max-width:899px){
   .lat-grid{ grid-template-columns:1fr; gap:28px; }
   .lat-viz{ order:2; }
-  .lat-graph{ max-width:420px; margin:0 auto; }
+  .lat-svg{ max-width:420px; margin:0 auto; }
 }

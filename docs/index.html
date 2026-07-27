@@ -271,10 +271,17 @@ section{padding-block:clamp(60px,10vh,116px)}
         </div>
       </div>
       <div class="lat-viz">
-        <svg class="lat-graph" viewBox="0 0 600 520" role="img" aria-label="Seven financial concerns arranged around a central Coordination node. Each concern connects to the others it touches: taxes, cash flow, business ownership, estate, investments, protection, family and purpose.">
-          <g id="lat-edges" stroke="var(--frame-line)" stroke-width="1.4" fill="none"></g>
-          <g id="lat-nodes"></g>
-        </svg>
+        <div class="lat-lattice">
+          <svg class="lat-svg" viewBox="0 0 520 460" role="img" aria-label="Seven financial concerns — Taxes, Cash Flow, Business Ownership, Estate, Investments, Protection, and Family / Purpose — connected around a central node, Coordination, resolving downward into the outcome: what you keep.">
+            <g stroke="#b7b0a0" stroke-width="1.35" opacity=".9" id="lat-edges"></g>
+            <line x1="260" y1="216" x2="260" y2="388" stroke="#22485f" stroke-width="4.25" stroke-linecap="round"/>
+            <path d="M253 380 L260 391 L267 380" fill="none" stroke="#22485f" stroke-width="4.25" stroke-linecap="round" stroke-linejoin="round"/>
+            <g id="lat-nodes"></g>
+            <rect x="203" y="197" width="114" height="27" fill="#f1efe9"/>
+            <text class="hub-lbl" x="260" y="215" text-anchor="middle">Coordination</text>
+            <text class="keep-lbl" x="260" y="424" text-anchor="middle">What you keep.</text>
+          </svg>
+        </div>
         <p class="lat-fallback-note">A tax move shifts what you withdraw, how the portfolio is built, which entity holds what, and what your family keeps. Each line is a dependency, not a menu item.</p>
       </div>
     </div>
@@ -418,63 +425,29 @@ window.__STATE__ = {"header": {"generated": "2026-07-26 23:14:46 UTC"}, "hero": 
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:.14});
   els.forEach(function(e){io.observe(e);});
 })();
-// Hero coordination graph: central Coordination node + seven concern nodes in a ring, all-pairs
-// edges. Hover/focus a node -> its connected edges + nodes light; the rest recede. No edges or
-// nodes are created by anything but this; if JS is off the hero copy + fallback note still read.
+// Hero coordination graph: engraved heptagon of seven concerns around a central Coordination
+// node, resolving down a weighted spine into "What you keep." Drawn once; the static SVG (spine,
+// Coordination label, "What you keep") is present even before JS, so the hero is never blank.
 (function(){
-  var svg=document.querySelector(".lat-graph");
-  if(!svg) return;
-  var NS="http://www.w3.org/2000/svg";
-  var W=600,H=520,cx=300,cy=260,R=176;
-  var nodes=[
-    {id:"taxes",  label:"Taxes"},
-    {id:"cash",   label:"Cash Flow"},
-    {id:"biz",    label:"Business Ownership"},
-    {id:"estate", label:"Estate"},
-    {id:"invest", label:"Investments"},
-    {id:"protect",label:"Protection"},
-    {id:"family", label:"Family / Purpose"}
-  ];
-  // place the seven on a ring (start at top, clockwise)
-  nodes.forEach(function(n,i){ var a=-Math.PI/2 + i*2*Math.PI/7;
-    n.x=cx+R*Math.cos(a); n.y=cy+R*Math.sin(a); });
-  var edgesG=svg.querySelector("#lat-edges");
-  var nodesG=svg.querySelector("#lat-nodes");
-  // all-pairs edges
-  for(var i=0;i<nodes.length;i++) for(var j=i+1;j<nodes.length;j++){
-    var e=document.createElementNS(NS,"line");
-    e.setAttribute("x1",nodes[i].x.toFixed(1)); e.setAttribute("y1",nodes[i].y.toFixed(1));
-    e.setAttribute("x2",nodes[j].x.toFixed(1)); e.setAttribute("y2",nodes[j].y.toFixed(1));
-    e.setAttribute("class","edge e-"+nodes[i].id+" e-"+nodes[j].id);
-    edgesG.appendChild(e);
+  var NS="http://www.w3.org/2000/svg", cx=260, cy=118, R=104;
+  var names=["Investments","Taxes","Cash Flow","Business Ownership","Estate","Protection","Family / Purpose"];
+  var pts=names.map(function(n,i){var a=-Math.PI/2+i*2*Math.PI/7;return{x:cx+R*Math.cos(a),y:cy+R*Math.sin(a),n:n,a:a};});
+  var edges=document.getElementById("lat-edges"),nodes=document.getElementById("lat-nodes");
+  for(var i=0;i<pts.length;i++)for(var j=i+1;j<pts.length;j++){
+    var l=document.createElementNS(NS,"line");
+    l.setAttribute("x1",pts[i].x.toFixed(1));l.setAttribute("y1",pts[i].y.toFixed(1));
+    l.setAttribute("x2",pts[j].x.toFixed(1));l.setAttribute("y2",pts[j].y.toFixed(1));
+    edges.appendChild(l);
   }
-  function node(c,cls,label,r){
-    var g=document.createElementNS(NS,"g"); g.setAttribute("class",cls);
-    var cEl=document.createElementNS(NS,"circle");
-    cEl.setAttribute("cx",c.x.toFixed(1)); cEl.setAttribute("cy",c.y.toFixed(1)); cEl.setAttribute("r",r);
+  pts.forEach(function(p){
+    var c=document.createElementNS(NS,"circle");
+    c.setAttribute("cx",p.x.toFixed(1));c.setAttribute("cy",p.y.toFixed(1));c.setAttribute("r","5.5");
+    c.setAttribute("fill","#22485f");c.setAttribute("stroke","#f1efe9");c.setAttribute("stroke-width","2");nodes.appendChild(c);
     var t=document.createElementNS(NS,"text");
-    t.setAttribute("x",c.x.toFixed(1));
-    t.setAttribute("y",(c.y + (cls.indexOf("core")>-1?4:4)).toFixed(1));
-    t.textContent=label;
-    g.appendChild(cEl); g.appendChild(t);
-    return g;
-  }
-  // core
-  nodesG.appendChild(node({x:cx,y:cy},"node core","Coordination",30));
-  // ring nodes
-  nodes.forEach(function(n){
-    var g=node(n,"node n-"+n.id,n.label,40);
-    g.setAttribute("tabindex","0");
-    g.setAttribute("role","button");
-    g.setAttribute("aria-label",n.label+", part of your financial life");
-    function on(){ svg.classList.add("dim");
-      svg.querySelectorAll(".e-"+n.id).forEach(function(x){x.classList.add("active");});
-      svg.querySelectorAll(".n-"+n.id).forEach(function(x){x.classList.add("active");}); }
-    function off(){ svg.classList.remove("dim");
-      svg.querySelectorAll(".edge.active,.node.active").forEach(function(x){x.classList.remove("active");}); }
-    g.addEventListener("mouseenter",on); g.addEventListener("mouseleave",off);
-    g.addEventListener("focus",on); g.addEventListener("blur",off);
-    nodesG.appendChild(g);
+    var out=Math.cos(p.a), outy=Math.sin(p.a);
+    t.setAttribute("x",(p.x+out*13).toFixed(1));t.setAttribute("y",(p.y+outy*13+4).toFixed(1));
+    t.setAttribute("text-anchor",Math.abs(out)<0.3?"middle":(out>0?"start":"end"));
+    t.setAttribute("class","node-lbl");t.textContent=p.n;nodes.appendChild(t);
   });
 })();
 </script>

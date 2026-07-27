@@ -16,16 +16,23 @@ OUT = ROOT / "artifacts" / "shots"
 
 # (label, file, query) — the After-Tax Review is captured at its working-paper sections with populated state.
 PAGES = [
+    ("home", "index.html", ""),
     ("taxlab-portfolio", "taxlab.html", "?view=portfolio&state=IL"),
     ("taxlab-recs", "taxlab.html", "?view=recs&state=IL"),
     ("taxlab-state", "taxlab.html", "?view=state&state=IL"),
     ("taxlab-review", "taxlab.html", "?view=review&state=IL&port=2000000"),
-    ("leakage", "leakage.html", ""),
+    ("leakage", "leakage.html", "?state=NY&port=2000000"),
+    ("leakage-empty", "leakage.html", ""),
+    ("statemap", "statemap.html", "?state=CA"),
+    ("coordination-review", "coordination-review.html", ""),
+    ("household-example", "household-example.html", ""),
+    ("our-story", "our-story.html", ""),
+    ("coordination-framework", "coordination-framework.html", ""),
+    ("articles", "articles.html", ""),
+    ("cpa-collab", "cpa-collab.html", ""),
     ("ledger", "ledger.html", ""),
     ("thesis", "thesis.html", ""),
-    ("index", "index.html", ""),
     ("tearsheet", "tearsheet.html", ""),
-    ("equities", "equities.html", ""),
 ]
 VIEWPORTS = [("desktop", 1280, 900), ("mobile", 390, 844)]
 

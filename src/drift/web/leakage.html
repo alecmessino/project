@@ -53,6 +53,16 @@
   .hero .big{font-variant-numeric:tabular-nums;font-size:40px;font-weight:700;color:#f1ede3;letter-spacing:-.02em;line-height:1}
   .hero .cap{font-size:12.5px;color:var(--gold);font-weight:500}
   .hero .note{font-size:11.5px;color:#9aa3ae;margin-left:auto;max-width:34ch;line-height:1.45}
+  .hero .h-quick{display:none;width:100%;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);
+    align-items:baseline;gap:14px;flex-wrap:wrap}
+  .hero .h-quick[hidden]{display:none}
+  .hero .h-quick:not([hidden]){display:flex}
+  .hero .h-quick .t{font-size:13px;color:#cdd4dc;line-height:1.5;margin:0;flex:1 1 240px}
+  .hero .h-quick .t b{color:#f1ede3;font-weight:600}
+  .hero .h-quick .btn{font-family:var(--sans);font-weight:600;font-size:13px;color:#0e1620;background:var(--gold);
+    border:0;border-radius:0;padding:9px 16px;cursor:pointer;white-space:nowrap}
+  .hero .h-quick .btn:hover{background:#c4d8e8}
+  @media(max-width:760px){.hero .h-quick .t{flex-basis:100%}}
   .cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;padding:20px 40px 6px}
   @media(max-width:900px){.cols{grid-template-columns:1fr 1fr}}
   @media(max-width:760px){.cols{grid-template-columns:1fr}}
@@ -187,7 +197,11 @@
       <div class="big" id="h-alpha" aria-live="polite">…</div>
       <div class="cap" id="h-cap">modeled after-tax improvement / year</div>
       <div class="note" id="h-note"></div>
-    </div>
+      <div class="h-quick" id="h-quick" hidden>
+        <p class="t">Most of what a portfolio loses to tax, it loses <b>before you ever see it</b>. Set your state and portfolio above and the figure appears instantly — personalized to where you live.</p>
+        <button type="button" class="btn" id="h-quick-btn">Show my number →</button>
+      </div>
+      </div>
 
     <div class="pband" id="pband" style="display:none"></div>
 
@@ -363,6 +377,18 @@ function render(s){
       `~<b>${row.after.toFixed(1)}%/yr</b> after tax. Your actual figure depends on your holdings; the full `+
       `After-Tax Review computes it privately.`;
   } else { pband.style.display = "none"; }
+
+  // Low-friction quick-start: when the household is incomplete, surface a one-tap affordance that
+  // focuses the State field so the visitor gets a personalized figure in a single action. Hidden
+  // once a state is known (the hero then leads with their own number). Visibility is driven by the
+  // `hidden` attribute only (works in the CI DOM-shim as well as browsers).
+  const quick = document.getElementById("h-quick");
+  if (quick) quick.hidden = !!row;
+  const qb = document.getElementById("h-quick-btn");
+  if (qb) qb.onclick = function () {
+    const sel = document.querySelector('.dw-household select[data-k="state"]');
+    if (sel) { sel.focus(); try { sel.scrollIntoView({ block: "center", behavior: "smooth" }); } catch (e) {} }
+  };
 
   // When personalized, the cards show this state's single before/after CAGR (not the cross-state range).
   const bd = row ? Object.assign({}, b, {atc_low:row.before, atc_high:row.before}) : b;

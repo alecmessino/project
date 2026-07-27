@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-27T23:05:03+00:00",
+  "generated": "2026-07-27T23:20:33+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 373485,
+    "rows": 374287,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 122922,
-      "live_total": 39268,
-      "live_today": 250,
-      "last_row_age_min": 0.3
+      "rows_total": 123364,
+      "live_total": 39423,
+      "live_today": 405,
+      "last_row_age_min": 0.1
     },
     "fanduel": {
-      "rows_total": 250557,
-      "live_total": 46949,
-      "live_today": 224,
-      "last_row_age_min": 0.3
+      "rows_total": 250917,
+      "live_total": 47087,
+      "live_today": 362,
+      "last_row_age_min": 0.1
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 31240.1
+      "last_row_age_min": 31255.6
     }
   },
   "books_reporting_live": [
@@ -37,20 +37,19 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 39268,
-    "OPEN": 43102,
-    "SUSPENDED": 3642,
+    "unset": 39423,
+    "OPEN": 43233,
+    "SUSPENDED": 3649,
     "REMOVED": 205
   },
   "overlap": {
-    "simultaneous_pairs_total": 48297,
-    "simultaneous_pairs_today": 263,
-    "overlap_games": 95,
+    "simultaneous_pairs_total": 48441,
+    "simultaneous_pairs_today": 407,
+    "overlap_games": 96,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
       "0_books": 14,
-      "1_books": 1,
-      "2_books": 95
+      "2_books": 96
     }
   },
   "fix_verification": {
@@ -67,7 +66,7 @@
   "coverage": {
     "live_games_seen": 98,
     "book_panel_games": 110,
-    "team_total_rows": 22223,
+    "team_total_rows": 22322,
     "innings_seen": [
       1,
       2,
@@ -87,17 +86,17 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 48297,
+        "current": 48441,
         "target": 2000,
         "pass": true,
         "progress": 1.0
       },
       {
         "criterion": "games with live overlap",
-        "current": 95,
+        "current": 96,
         "target": 100,
         "pass": false,
-        "progress": 0.95
+        "progress": 0.96
       },
       {
         "criterion": "median sync lag < 15s",
@@ -115,6 +114,6 @@
       }
     ],
     "cleared": false,
-    "overall_progress": 0.904
+    "overall_progress": 0.907
   }
 }

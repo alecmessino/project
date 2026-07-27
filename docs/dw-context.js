@@ -179,6 +179,42 @@
     });
   }
 
+  // 3b · Journey progress rail. Each tool page carries a .journey-rail (4 steps: Diagnose →
+  //      Atlas → After-Tax Review → Coordination Review). Mark steps prior to the current one
+  //      (and any previously visited step, persisted in the shared context) as done, and show a
+  //      household-readiness pip so the visitor sees how far their setup has progressed. Pure
+  //      enhancement: with the script absent the static rail still reads correctly.
+  function markVisited(step) {
+    var c = read(), v = Array.isArray(c.visited) ? c.visited.slice() : [];
+    if (v.indexOf(step) === -1) { v.push(step); c.visited = v; write(c); }
+  }
+  function renderJourney() {
+    var rail = document.querySelector(".journey-rail");
+    if (!rail) return;
+    var step = parseInt(rail.getAttribute("data-step"), 10);
+    if (!step) { var cur = rail.querySelector('li[aria-current="step"]'); step = cur ? parseInt(cur.querySelector(".num").textContent, 10) : 0; }
+    if (!step) return;
+    markVisited(step);
+    var c = read(), visited = Array.isArray(c.visited) ? c.visited : [];
+    var items = rail.querySelectorAll("ol > li:not(.sep)");
+    for (var i = 0; i < items.length; i++) {
+      var n = parseInt(items[i].querySelector(".num").textContent, 10);
+      if (n < step || visited.indexOf(n) !== -1) items[i].classList.add("done");
+      else items[i].classList.remove("done");
+    }
+    // Household-readiness pip: all three facts set = ready.
+    var ready = c.state != null && c.state !== "" && c.bracket != null && c.portfolio != null;
+    var pip = rail.querySelector(".jr-house");
+    if (!pip) {
+      pip = document.createElement("span");
+      pip.className = "jr-house";
+      var cta = rail.querySelector(".jr-cta");
+      (cta ? rail.querySelector(".jr-in") : rail).insertBefore(pip, cta || null);
+    }
+    pip.textContent = ready ? "Household set" : "Set your household →";
+    pip.className = "jr-house" + (ready ? " set" : "");
+  }
+
   // 4 · Public API. The four production pages consume this rather than re-deriving the household,
   //     so a state name, a dollar format, and an as-of stamp read identically everywhere.
   var NAME_BY_CODE = {};
@@ -186,8 +222,8 @@
 
   var api = window.dwTaxContext = {
     get: read,
-    save: function (patch) { var c = clean(patch, read()); write(c); decorate(); renderBars(); notify(c); },
-    reset: function () { try { localStorage.removeItem(KEY); } catch (e) {} decorate(); renderBars(); notify({}); },
+    save: function (patch) { var c = clean(patch, read()); write(c); decorate(); renderBars(); renderJourney(); notify(c); },
+    reset: function () { try { localStorage.removeItem(KEY); } catch (e) {} decorate(); renderBars(); renderJourney(); notify({}); },
     subscribe: function (fn) { if (typeof fn === "function") subs.push(fn); },
     decorate: decorate, mountBar: renderBars,
     states: STATES,
@@ -206,9 +242,9 @@
   };
 
   // Cross-tab sync.
-  try { window.addEventListener("storage", function (e) { if (e.key === KEY) { decorate(); renderBars(); notify(read()); } }); } catch (e) {}
+  try { window.addEventListener("storage", function (e) { if (e.key === KEY) { decorate(); renderBars(); renderJourney(); notify(read()); } }); } catch (e) {}
 
-  function ready() { decorate(); renderBars(); }
+  function ready() { decorate(); renderBars(); renderJourney(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ready); else ready();
 })();
 

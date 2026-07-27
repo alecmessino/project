@@ -96,11 +96,10 @@
     opacity:.9;z-index:0}
   .hero-grid,.hero .ctas{position:relative;z-index:1}
   .confluence svg{position:absolute;inset:0;width:100%;height:100%}
-  .cf{fill:none;stroke-linecap:round}
-  .cf-ink{stroke:var(--ink);stroke-width:2.4;stroke-dasharray:0.6 7}
-  .cf-fork{stroke-width:2;stroke-dasharray:0.5 9}
-  .cf-blue{stroke:var(--accent-strike);stroke-width:3.2;stroke-dasharray:0.9 6}
-  .cf-lab{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.18em;
+  .cf{fill:none;stroke-width:2.6;stroke-linecap:round;stroke-dasharray:0.5 8}
+  .cf-ink{stroke:var(--ink)}
+  .cf-blue{stroke:var(--accent-strike)}
+  .cf-lab{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.16em;
     fill:var(--muted);text-transform:uppercase}
   /* one-time left-to-right reveal on load: a mask wipes the dotted bands in once, under two seconds,
      then rests. The bands stay halftone dots throughout; only their visibility is revealed. */
@@ -435,34 +434,27 @@
     <!-- ── GALLERY I · THE CONSTRAINT, an asymmetric broadsheet: the triad carved large, the
          supporting argument set as a margin deck, one footnote for the deep reader ── -->
     <header class="hero">
-      <!-- Plate II · Confluence — three independent tributaries descend from the right, weaving and
-           branching, then merge into one high-capacity channel that carries across the foreground.
-           Ink for the tributaries, Editorial Blue reserved for the single merged river. Pure dots
-           (stippled), density rising toward the confluence. One-time left-to-right reveal on load;
-           reduced-motion shows the end-state at once. -->
+      <!-- Plate II · Confluence — two labeled streams enter, bend, and merge beneath the headline;
+           a single blue channel carries on to the right edge. Ink for the bands, Editorial Blue
+           reserved for the merged channel only. One-time left-to-right draw on load; reduced-motion
+           shows the end-state at once. -->
       <div class="confluence" aria-hidden="true">
-        <svg viewBox="0 0 1200 320" preserveAspectRatio="xMidYMid slice" role="presentation">
+        <svg viewBox="0 0 1200 260" preserveAspectRatio="xMidYMid meet" role="presentation">
           <defs>
             <mask id="cfMask">
-              <rect class="cf-reveal" x="0" y="0" width="1200" height="320" fill="#fff"></rect>
+              <rect class="cf-reveal" x="0" y="0" width="1200" height="260" fill="#fff"></rect>
             </mask>
           </defs>
           <g mask="url(#cfMask)">
-            <!-- Tributary A (upper): a main stem with two forks -->
-            <path class="cf cf-ink" pathLength="1" d="M 1250 40 C 980 40, 760 120, 600 170"></path>
-            <path class="cf cf-ink cf-fork" pathLength="1" d="M 1010 86 C 900 110, 800 140, 700 162"></path>
-            <path class="cf cf-ink cf-fork" pathLength="1" d="M 880 50 C 820 80, 760 120, 690 158"></path>
-            <!-- Tributary B (middle): winding, one fork -->
-            <path class="cf cf-ink" pathLength="1" d="M 1250 150 C 1000 150, 820 150, 600 170"></path>
-            <path class="cf cf-ink cf-fork" pathLength="1" d="M 1060 150 C 960 150, 880 158, 760 166"></path>
-            <!-- Tributary C (lower): rises from the valley, branches up -->
-            <path class="cf cf-ink" pathLength="1" d="M 1250 280 C 1010 280, 800 240, 600 170"></path>
-            <path class="cf cf-ink cf-fork" pathLength="1" d="M 1080 250 C 980 240, 880 210, 740 180"></path>
-            <!-- The merged main channel: single, blue, high density, across the foreground -->
-            <path class="cf cf-blue cf-main" pathLength="1" d="M 600 170 C 720 176, 980 176, 1240 176"></path>
+            <!-- upper stream: TAX AND ESTATE -->
+            <path class="cf cf-ink" pathLength="1" d="M -10 64 C 360 64, 470 150, 600 150"></path>
+            <!-- lower stream: PORTFOLIO AND LIQUIDITY -->
+            <path class="cf cf-ink" pathLength="1" d="M -10 210 C 360 210, 470 150, 600 150"></path>
+            <!-- merged channel: blue, exits right to the viewport edge -->
+            <path class="cf cf-blue" pathLength="1" d="M 600 150 L 1210 150"></path>
           </g>
-          <text class="cf-lab" x="14" y="30">SOURCES</text>
-          <text class="cf-lab" x="14" y="306">ONE COORDINATED SYSTEM</text>
+          <text class="cf-lab" x="14" y="50">TAX AND ESTATE</text>
+          <text class="cf-lab" x="14" y="232">PORTFOLIO AND LIQUIDITY</text>
         </svg>
       </div>
       <div class="hero-grid">

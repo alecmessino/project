@@ -226,6 +226,9 @@
     for (var i = 0; i < navs.length; i++) {
       (function (nav, idx) {
         if (nav.querySelector(".dwnav-toggle")) return;              // already wired
+        // The Waterline masthead carries its five Primary words at every width (they wrap to two
+        // lines of tracked caps under 860px), so it must never grow a hamburger. 2026 header port.
+        if (nav.classList.contains("dwnav--waterline")) return;
         var links = nav.querySelector(".dwnav-links");
         if (!links) return;
         if (!links.id) links.id = "dwnav-links-" + (idx + 1);

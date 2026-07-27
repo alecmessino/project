@@ -770,3 +770,43 @@ details.exhibit-method{ margin-top:14px; border-top:1px solid var(--line2); padd
 .om-sections a:hover{ color:var(--ink); }
 .om-sections a[aria-current="page"]{ color:var(--ink); }
 .om-sections .d{ color:var(--ghost-line); margin:0 8px; }
+
+
+/* ── Waterline masthead (2026) ───────────────────────────────────────────────────────────────────
+   One flat header for every page, replacing the .dwnav-drop hover panels entirely. A page's granular
+   links belong to that page's in-page index (see .atlas-index on statemap.html), never to the global
+   header. Primary is five words with For Professionals last; Client Access is a ghost outline;
+   Request a Review is the one solid CTA. Mobile carries the same five words wrapped to two lines of
+   tracked caps — no hamburger, no drawer, no JS (see the dwnav--waterline guard in dw-context.js). */
+.dwnav--waterline{ display:flex; align-items:center; gap:clamp(16px,2vw,26px); flex-wrap:wrap;
+  padding:0 clamp(18px,4vw,40px); border-bottom:1px solid var(--ink); }
+.dwnav--waterline .brand{ margin-right:auto; height:60px; }
+.dwnav--waterline .dwnav-links{ display:flex; gap:clamp(16px,2vw,23px); align-items:center; flex-wrap:nowrap; }
+.dwnav--waterline .dwnav-links a{ text-decoration:none; color:var(--body); font-size:13.5px; font-weight:500;
+  padding:3px 0; border-bottom:1.5px solid transparent; white-space:nowrap;
+  transition:color .18s, border-color .18s; }
+.dwnav--waterline .dwnav-links a:hover{ color:var(--ink); border-bottom-color:var(--accent-strike-soft); }
+.dwnav--waterline .dwnav-links a[aria-current="page"]{ color:var(--ink); border-bottom-color:var(--accent-strike); }
+.dwnav--waterline .dwnav-sep{ width:1px; height:22px; background:var(--line); flex:none; }
+.dwnav--waterline .dwnav-access{ text-decoration:none; color:var(--body); font-size:12px; font-weight:600;
+  letter-spacing:.02em; white-space:nowrap; padding:7px 13px; border:1px solid var(--frame-line); border-radius:0;
+  transition:color .18s, border-color .18s; }
+.dwnav--waterline .dwnav-access:hover{ color:var(--ink); border-color:var(--ink); }
+.dwnav--waterline .dwnav-access::before{ content:none; }
+.dwnav--waterline .dwnav-cta{ text-decoration:none; background:var(--accent-strike); color:#f4f1ea; font-size:13px;
+  font-weight:700; padding:10px 18px; border-radius:0; white-space:nowrap; transition:filter .18s; }
+.dwnav--waterline .dwnav-cta:hover{ filter:brightness(1.08); }
+
+@media (max-width:860px){
+  .dwnav--waterline{ padding:0 18px; }
+  .dwnav--waterline .brand{ height:54px; }
+  .dwnav--waterline .dwnav-links{ order:3; width:100%; flex-wrap:wrap; gap:4px 18px; padding:0 0 10px; }
+  .dwnav--waterline .dwnav-links a{ font-size:11px; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
+    min-height:34px; display:inline-flex; align-items:center; }
+  .dwnav--waterline .dwnav-sep{ display:none; }
+  .dwnav--waterline .dwnav-access{ order:2; border:0; padding:0; font-size:10px; font-weight:700;
+    letter-spacing:.13em; text-transform:uppercase; color:var(--dim); height:54px; display:inline-flex; align-items:center; }
+  .dwnav--waterline .dwnav-cta{ position:fixed; left:0; right:0; bottom:0; z-index:60; text-align:center;
+    padding:15px 0; font-size:13.5px; }
+  body:has(.dwnav--waterline){ padding-bottom:52px; }
+}

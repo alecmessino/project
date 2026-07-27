@@ -77,7 +77,10 @@ def main() -> int:
                   "coordination-review.html",
                   # the four production pages of the 2026 redesign
                   "the-practice.html", "the-record.html", "tax-atlas.html",
-                  "letter.html", "private.html"):
+                  "letter.html", "private.html",
+                  # Phase 2 dropdown-nav sub-pages (plain editorial stubs)
+                  "household-example.html", "our-story.html",
+                  "coordination-framework.html", "articles.html", "cpa-collab.html"):
         (DOCS / asset).write_text(_inject_tokens((WEB / asset).read_text()))
         print(f"   {asset:15} -> docs/{asset} (copied)")
     # Binary assets (e.g. the founder headshot) — copy through only if present, so the About page's

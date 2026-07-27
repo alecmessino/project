@@ -259,71 +259,23 @@ section{padding-block:clamp(60px,10vh,116px)}
      browser without :has() simply shows the finished artwork, which is the correct default. -->
 <header class="hero-lat">
   <div class="lat-wrap">
-    <div class="lat">
-      <svg class="lat-lines" viewBox="0 0 1080 470" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-        <line class="l-taxes l-estate" x1="498" y1="66" x2="734" y2="66" vector-effect="non-scaling-stroke"/>
-        <line class="l-taxes l-invest" x1="498" y1="66" x2="972" y2="66" vector-effect="non-scaling-stroke"/>
-        <line class="l-taxes l-cash" x1="498" y1="66" x2="498" y2="228" vector-effect="non-scaling-stroke"/>
-        <line class="l-taxes l-insure" x1="498" y1="66" x2="734" y2="228" vector-effect="non-scaling-stroke"/>
-        <line class="l-taxes l-business" x1="498" y1="66" x2="972" y2="228" vector-effect="non-scaling-stroke"/>
-        <line class="l-taxes l-give" x1="498" y1="66" x2="498" y2="390" vector-effect="non-scaling-stroke"/>
-        <line class="l-estate l-insure" x1="734" y1="66" x2="734" y2="228" vector-effect="non-scaling-stroke"/>
-        <line class="l-estate l-give" x1="734" y1="66" x2="498" y2="390" vector-effect="non-scaling-stroke"/>
-        <line class="l-estate l-business" x1="734" y1="66" x2="972" y2="228" vector-effect="non-scaling-stroke"/>
-        <line class="l-invest l-cash" x1="972" y1="66" x2="498" y2="228" vector-effect="non-scaling-stroke"/>
-        <line class="l-invest l-business" x1="972" y1="66" x2="972" y2="228" vector-effect="non-scaling-stroke"/>
-        <line class="l-invest l-give" x1="972" y1="66" x2="498" y2="390" vector-effect="non-scaling-stroke"/>
-        <line class="l-cash l-insure" x1="498" y1="228" x2="734" y2="228" vector-effect="non-scaling-stroke"/>
-        <line class="l-cash l-business" x1="498" y1="228" x2="972" y2="228" vector-effect="non-scaling-stroke"/>
-        <line class="l-insure l-business" x1="734" y1="228" x2="972" y2="228" vector-effect="non-scaling-stroke"/>
-      </svg>
+    <div class="lat-grid">
       <div class="lat-head">
         <p class="lat-eyebrow">What your financial life already is</p>
         <h1>Everything here affects everything else&nbsp;here.</h1>
-        <p class="lat-lede">Seven concerns, fifteen dependencies. Your CPA sees one. Your attorney sees another. Nobody is assigned to the lines between them.</p>
-        <p class="lat-hint">Hover a concern to see what it moves.</p>
-      </div>
-      <div class="lc" id="lc-taxes" tabindex="0">
-        <span class="lc-k">Taxes</span>
-        <p class="lc-t">You realize gains in a state that taxes them as ordinary income.</p>
-        <p class="lc-x">Touches estate &middot; investments &middot; cash flow &middot; insurance &middot; business interest &middot; charitable</p>
-      </div>
-      <div class="lc" id="lc-estate" tabindex="0">
-        <span class="lc-k">Estate</span>
-        <p class="lc-t">Your documents were drafted before the exemption doubled.</p>
-        <p class="lc-x">Touches taxes &middot; insurance &middot; charitable &middot; business interest</p>
-      </div>
-      <div class="lc" id="lc-invest" tabindex="0">
-        <span class="lc-k">Investments</span>
-        <p class="lc-t">Your taxable account and your IRA hold the same funds.</p>
-        <p class="lc-x">Touches taxes &middot; cash flow &middot; business interest &middot; charitable</p>
-      </div>
-      <div class="lc" id="lc-cash" tabindex="0">
-        <span class="lc-k">Cash flow</span>
-        <p class="lc-t">The distribution you take this year sets next year&rsquo;s bracket.</p>
-        <p class="lc-x">Touches taxes &middot; investments &middot; insurance &middot; business interest</p>
-      </div>
-      <div class="lc" id="lc-insure" tabindex="0">
-        <span class="lc-k">Insurance</span>
-        <p class="lc-t">A policy bought for one reason is now funding another.</p>
-        <p class="lc-x">Touches taxes &middot; estate &middot; cash flow &middot; business interest</p>
-      </div>
-      <div class="lc" id="lc-business" tabindex="0">
-        <span class="lc-k">Business interest</span>
-        <p class="lc-t">You&rsquo;re holding company stock you can&rsquo;t sell cheaply.</p>
-        <p class="lc-x">Touches taxes &middot; estate &middot; investments &middot; cash flow &middot; insurance</p>
-      </div>
-      <div class="lc" id="lc-give" tabindex="0">
-        <span class="lc-k">Charitable</span>
-        <p class="lc-t">You give cash every year and hold appreciated stock you never sell.</p>
-        <p class="lc-x">Touches taxes &middot; estate &middot; investments</p>
-      </div>
-      <div class="lat-close">
-        <p class="lat-q">Each line is a dependency, not a menu item. Coordination is the assignment nobody has.</p>
+        <p class="lat-lede">Seven concerns, one coordination problem. Your CPA sees one. Your attorney sees another. Nobody is assigned to the lines between them &mdash; so the decisions quietly work against each other.</p>
+        <p class="lat-hint">Hover or tap a concern to see what it moves.</p>
         <div class="lat-cta">
           <a class="btn" href="#invite">Request a Coordination Review &rarr;</a>
           <a class="btn-quiet" href="#capabilities">See what coordination is</a>
         </div>
+      </div>
+      <div class="lat-viz">
+        <svg class="lat-graph" viewBox="0 0 600 520" role="img" aria-label="Seven financial concerns arranged around a central Coordination node. Each concern connects to the others it touches: taxes, cash flow, business ownership, estate, investments, protection, family and purpose.">
+          <g id="lat-edges" stroke="var(--frame-line)" stroke-width="1.4" fill="none"></g>
+          <g id="lat-nodes"></g>
+        </svg>
+        <p class="lat-fallback-note">A tax move shifts what you withdraw, how the portfolio is built, which entity holds what, and what your family keeps. Each line is a dependency, not a menu item.</p>
       </div>
     </div>
   </div>
@@ -465,6 +417,65 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
   if(rm||!("IntersectionObserver"in window)){els.forEach(function(e){e.classList.add("in");});return;}
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:.14});
   els.forEach(function(e){io.observe(e);});
+})();
+// Hero coordination graph: central Coordination node + seven concern nodes in a ring, all-pairs
+// edges. Hover/focus a node -> its connected edges + nodes light; the rest recede. No edges or
+// nodes are created by anything but this; if JS is off the hero copy + fallback note still read.
+(function(){
+  var svg=document.querySelector(".lat-graph");
+  if(!svg) return;
+  var NS="http://www.w3.org/2000/svg";
+  var W=600,H=520,cx=300,cy=260,R=176;
+  var nodes=[
+    {id:"taxes",  label:"Taxes"},
+    {id:"cash",   label:"Cash Flow"},
+    {id:"biz",    label:"Business Ownership"},
+    {id:"estate", label:"Estate"},
+    {id:"invest", label:"Investments"},
+    {id:"protect",label:"Protection"},
+    {id:"family", label:"Family / Purpose"}
+  ];
+  // place the seven on a ring (start at top, clockwise)
+  nodes.forEach(function(n,i){ var a=-Math.PI/2 + i*2*Math.PI/7;
+    n.x=cx+R*Math.cos(a); n.y=cy+R*Math.sin(a); });
+  var edgesG=svg.querySelector("#lat-edges");
+  var nodesG=svg.querySelector("#lat-nodes");
+  // all-pairs edges
+  for(var i=0;i<nodes.length;i++) for(var j=i+1;j<nodes.length;j++){
+    var e=document.createElementNS(NS,"line");
+    e.setAttribute("x1",nodes[i].x.toFixed(1)); e.setAttribute("y1",nodes[i].y.toFixed(1));
+    e.setAttribute("x2",nodes[j].x.toFixed(1)); e.setAttribute("y2",nodes[j].y.toFixed(1));
+    e.setAttribute("class","edge e-"+nodes[i].id+" e-"+nodes[j].id);
+    edgesG.appendChild(e);
+  }
+  function node(c,cls,label,r){
+    var g=document.createElementNS(NS,"g"); g.setAttribute("class",cls);
+    var cEl=document.createElementNS(NS,"circle");
+    cEl.setAttribute("cx",c.x.toFixed(1)); cEl.setAttribute("cy",c.y.toFixed(1)); cEl.setAttribute("r",r);
+    var t=document.createElementNS(NS,"text");
+    t.setAttribute("x",c.x.toFixed(1));
+    t.setAttribute("y",(c.y + (cls.indexOf("core")>-1?4:4)).toFixed(1));
+    t.textContent=label;
+    g.appendChild(cEl); g.appendChild(t);
+    return g;
+  }
+  // core
+  nodesG.appendChild(node({x:cx,y:cy},"node core","Coordination",30));
+  // ring nodes
+  nodes.forEach(function(n){
+    var g=node(n,"node n-"+n.id,n.label,40);
+    g.setAttribute("tabindex","0");
+    g.setAttribute("role","button");
+    g.setAttribute("aria-label",n.label+", part of your financial life");
+    function on(){ svg.classList.add("dim");
+      svg.querySelectorAll(".e-"+n.id).forEach(function(x){x.classList.add("active");});
+      svg.querySelectorAll(".n-"+n.id).forEach(function(x){x.classList.add("active");}); }
+    function off(){ svg.classList.remove("dim");
+      svg.querySelectorAll(".edge.active,.node.active").forEach(function(x){x.classList.remove("active");}); }
+    g.addEventListener("mouseenter",on); g.addEventListener("mouseleave",off);
+    g.addEventListener("focus",on); g.addEventListener("blur",off);
+    nodesG.appendChild(g);
+  });
 })();
 </script>
 </body>

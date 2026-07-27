@@ -810,3 +810,112 @@ details.exhibit-method{ margin-top:14px; border-top:1px solid var(--line2); padd
     padding:15px 0; font-size:13.5px; }
   body:has(.dwnav--waterline){ padding-bottom:52px; }
 }
+
+
+/* ── Hero lattice (2026) ─────────────────────────────────────────────────────────────────────────
+   Replaces the homepage's JS-drawn heptagon. Every cell and every hairline is in the markup; the
+   only behaviour is the :has() block below, which drops UNCONNECTED cells to 55% on hover/focus.
+   Nothing is ever drawn, faded in, or revealed, so a static render, a print, a JS-off visit and a
+   browser without :has() all show the same finished lattice. Below 900px the diagram is dropped
+   entirely and the same seven cells stack as ruled rows, each carrying its dependencies in text. */
+.hero-lat{ background:var(--bg); border-bottom:1px solid var(--line); }
+.lat-wrap{ max-width:var(--col,1080px); margin:0 auto; padding:clamp(34px,6vh,72px) clamp(18px,4vw,40px) clamp(40px,7vh,80px); }
+.lat{ position:relative; }
+.lat-lines{ display:none; }
+
+.lat-head h1{ margin:0; color:var(--ink); font-family:var(--sans); font-weight:700;
+  font-size:clamp(31px,3.4vw,43px); line-height:1.03; letter-spacing:-.025em; text-wrap:balance; }
+.lat-eyebrow{ margin:0 0 14px; font-family:var(--sans); font-size:11px; font-weight:700;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
+.lat-lede{ margin:18px 0 0; font-family:var(--serif); font-size:clamp(16px,1.5vw,19px); line-height:1.48;
+  color:var(--body); max-width:40ch; }
+.lat-hint{ margin:20px 0 0; font-size:12px; line-height:1.6; color:var(--muted); display:none; }
+
+.lc{ border:1px solid var(--frame-line); background:var(--bg); padding:14px 16px;
+  transition:opacity .18s ease; }
+.lc:focus-visible{ outline:2px solid var(--accent-strike); outline-offset:2px; }
+.lc-k{ display:block; font-weight:700; font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--accent-strike); margin-bottom:8px; }
+.lc-t{ margin:0; font-size:clamp(12.5px,1.25vw,14px); line-height:1.45; color:var(--ink); }
+.lc-x{ margin:8px 0 0; padding-left:13px; border-left:1px solid var(--frame-line);
+  font-size:11.5px; line-height:1.55; color:var(--muted); }
+
+.lat-q{ margin:0; font-family:var(--serif); font-size:clamp(19px,2.2vw,26px); line-height:1.28;
+  color:var(--ink); letter-spacing:-.01em; text-wrap:pretty; }
+.lat-cta{ display:flex; flex-wrap:wrap; align-items:center; gap:16px 24px; margin-top:24px; }
+
+/* Phone and small tablet: no diagram. Seven ruled rows, dependencies written out. */
+@media (max-width:899px){
+  .lat-head{ margin-bottom:30px; }
+  .lc{ border:0; border-top:1px solid var(--line2); padding:15px 0; }
+  #lc-taxes{ border-top:1px solid var(--ink); }
+  .lat-close{ margin-top:30px; padding-top:22px; border-top:1px solid var(--ink); }
+}
+
+/* Desktop: the lattice proper. Cells sit on a 12-column asymmetric grid; the hairlines run behind
+   them on a stretched 1080x470 coordinate space (non-scaling strokes keep them at 1px). */
+@media (min-width:900px){
+  .lat{ aspect-ratio:1080 / 470; }
+  .lat-lines{ display:block; position:absolute; inset:0; width:100%; height:100%;
+    stroke:var(--frame-line); stroke-width:1; }
+  .lat-hint{ display:block; }
+  .lat-head, .lc, .lat-close{ position:absolute; }
+  .lat-head{ left:0; top:0; width:31.85%; }
+  .lc{ width:19.63%; height:28.085%; overflow:visible; }
+  #lc-invest, #lc-business{ width:20%; }
+  #lc-taxes{ left:36.296%; top:0; }
+  #lc-estate{ left:58.148%; top:0; }
+  #lc-invest{ left:80%; top:0; }
+  #lc-cash{ left:36.296%; top:34.468%; }
+  #lc-insure{ left:58.148%; top:34.468%; }
+  #lc-business{ left:80%; top:34.468%; }
+  #lc-give{ left:36.296%; top:68.936%; }
+  .lc-x{ display:none; }
+  .lat-close{ left:58.148%; top:68.936%; width:41.85%; }
+
+  .lat:has(.lc:hover) .lc, .lat:has(.lc:focus-within) .lc{ opacity:.55; }
+  .lat:has(#lc-taxes:hover) #lc-taxes, .lat:has(#lc-taxes:focus-within) #lc-taxes,
+  .lat:has(#lc-taxes:hover) #lc-estate, .lat:has(#lc-taxes:focus-within) #lc-estate,
+  .lat:has(#lc-taxes:hover) #lc-invest, .lat:has(#lc-taxes:focus-within) #lc-invest,
+  .lat:has(#lc-taxes:hover) #lc-cash, .lat:has(#lc-taxes:focus-within) #lc-cash,
+  .lat:has(#lc-taxes:hover) #lc-insure, .lat:has(#lc-taxes:focus-within) #lc-insure,
+  .lat:has(#lc-taxes:hover) #lc-business, .lat:has(#lc-taxes:focus-within) #lc-business,
+  .lat:has(#lc-taxes:hover) #lc-give, .lat:has(#lc-taxes:focus-within) #lc-give{ opacity:1; }
+  .lat:has(#lc-taxes:hover) .l-taxes, .lat:has(#lc-taxes:focus-within) .l-taxes{ stroke:var(--accent-strike); stroke-width:1.7; }
+  .lat:has(#lc-estate:hover) #lc-estate, .lat:has(#lc-estate:focus-within) #lc-estate,
+  .lat:has(#lc-estate:hover) #lc-taxes, .lat:has(#lc-estate:focus-within) #lc-taxes,
+  .lat:has(#lc-estate:hover) #lc-insure, .lat:has(#lc-estate:focus-within) #lc-insure,
+  .lat:has(#lc-estate:hover) #lc-give, .lat:has(#lc-estate:focus-within) #lc-give,
+  .lat:has(#lc-estate:hover) #lc-business, .lat:has(#lc-estate:focus-within) #lc-business{ opacity:1; }
+  .lat:has(#lc-estate:hover) .l-estate, .lat:has(#lc-estate:focus-within) .l-estate{ stroke:var(--accent-strike); stroke-width:1.7; }
+  .lat:has(#lc-invest:hover) #lc-invest, .lat:has(#lc-invest:focus-within) #lc-invest,
+  .lat:has(#lc-invest:hover) #lc-taxes, .lat:has(#lc-invest:focus-within) #lc-taxes,
+  .lat:has(#lc-invest:hover) #lc-cash, .lat:has(#lc-invest:focus-within) #lc-cash,
+  .lat:has(#lc-invest:hover) #lc-business, .lat:has(#lc-invest:focus-within) #lc-business,
+  .lat:has(#lc-invest:hover) #lc-give, .lat:has(#lc-invest:focus-within) #lc-give{ opacity:1; }
+  .lat:has(#lc-invest:hover) .l-invest, .lat:has(#lc-invest:focus-within) .l-invest{ stroke:var(--accent-strike); stroke-width:1.7; }
+  .lat:has(#lc-cash:hover) #lc-cash, .lat:has(#lc-cash:focus-within) #lc-cash,
+  .lat:has(#lc-cash:hover) #lc-taxes, .lat:has(#lc-cash:focus-within) #lc-taxes,
+  .lat:has(#lc-cash:hover) #lc-invest, .lat:has(#lc-cash:focus-within) #lc-invest,
+  .lat:has(#lc-cash:hover) #lc-insure, .lat:has(#lc-cash:focus-within) #lc-insure,
+  .lat:has(#lc-cash:hover) #lc-business, .lat:has(#lc-cash:focus-within) #lc-business{ opacity:1; }
+  .lat:has(#lc-cash:hover) .l-cash, .lat:has(#lc-cash:focus-within) .l-cash{ stroke:var(--accent-strike); stroke-width:1.7; }
+  .lat:has(#lc-insure:hover) #lc-insure, .lat:has(#lc-insure:focus-within) #lc-insure,
+  .lat:has(#lc-insure:hover) #lc-taxes, .lat:has(#lc-insure:focus-within) #lc-taxes,
+  .lat:has(#lc-insure:hover) #lc-estate, .lat:has(#lc-insure:focus-within) #lc-estate,
+  .lat:has(#lc-insure:hover) #lc-cash, .lat:has(#lc-insure:focus-within) #lc-cash,
+  .lat:has(#lc-insure:hover) #lc-business, .lat:has(#lc-insure:focus-within) #lc-business{ opacity:1; }
+  .lat:has(#lc-insure:hover) .l-insure, .lat:has(#lc-insure:focus-within) .l-insure{ stroke:var(--accent-strike); stroke-width:1.7; }
+  .lat:has(#lc-business:hover) #lc-business, .lat:has(#lc-business:focus-within) #lc-business,
+  .lat:has(#lc-business:hover) #lc-taxes, .lat:has(#lc-business:focus-within) #lc-taxes,
+  .lat:has(#lc-business:hover) #lc-estate, .lat:has(#lc-business:focus-within) #lc-estate,
+  .lat:has(#lc-business:hover) #lc-invest, .lat:has(#lc-business:focus-within) #lc-invest,
+  .lat:has(#lc-business:hover) #lc-cash, .lat:has(#lc-business:focus-within) #lc-cash,
+  .lat:has(#lc-business:hover) #lc-insure, .lat:has(#lc-business:focus-within) #lc-insure{ opacity:1; }
+  .lat:has(#lc-business:hover) .l-business, .lat:has(#lc-business:focus-within) .l-business{ stroke:var(--accent-strike); stroke-width:1.7; }
+  .lat:has(#lc-give:hover) #lc-give, .lat:has(#lc-give:focus-within) #lc-give,
+  .lat:has(#lc-give:hover) #lc-taxes, .lat:has(#lc-give:focus-within) #lc-taxes,
+  .lat:has(#lc-give:hover) #lc-estate, .lat:has(#lc-give:focus-within) #lc-estate,
+  .lat:has(#lc-give:hover) #lc-invest, .lat:has(#lc-give:focus-within) #lc-invest{ opacity:1; }
+  .lat:has(#lc-give:hover) .l-give, .lat:has(#lc-give:focus-within) .l-give{ stroke:var(--accent-strike); stroke-width:1.7; }
+}

@@ -240,12 +240,11 @@ section{padding-block:clamp(60px,10vh,116px)}
       <span class="brand-w">Driftwood Wealth</span>
     </a>
     <div class="nav-links">
-      <a href="principles.html">The Firm</a>
-      <a href="the-practice.html">The Practice</a>
-      <a href="the-record.html">The Record</a>
-      <a href="#think">The Library</a>
-      <a href="statemap.html">Tax Atlas</a>
-      <a href="partners.html">For CPAs &amp; Attorneys</a>
+      <a href="principles.html">Our Approach</a>
+      <a href="the-record.html">Track Record</a>
+      <a href="#think">Insights</a>
+      <a href="principles.html">About</a>
+      <a href="partners.html">For Professionals</a>
     </div>
     <a class="nav-util" href="private.html" title="Secure access for current clients">Client Access</a>
     <a class="nav-cta" href="coordination-review.html">Request a Review</a>
@@ -253,16 +252,79 @@ section{padding-block:clamp(60px,10vh,116px)}
 </nav>
 <div id="dw-household" data-page="home"></div>
 
-<!-- ── HERO ─────────────────────────────────────────────────────────── -->
-<header class="hero">
-  <img class="hero-img" src="img/eng-hero.jpg" alt="A still expanse of water beneath a swirling engraved sky, rendered in fine editorial-blue linework.">
-  <div class="hero-scrim"></div>
-  <div class="hero-in">
-    <h1><span class="t1">Wealth compounds.</span><span class="t2">Complexity compounds with it.</span><span class="t3">Eventually, coordination becomes the constraint.</span></h1>
-    <p class="hero-lede">It arrives one account, one entity, one state at a time, until every important decision depends on <b>three others</b>.</p>
-    <div class="cta-row">
-      <a class="btn" href="#invite">Request a Coordination Review →</a>
-      <a class="btn-quiet" href="#thesystem">See what coordination is</a>
+<!-- ── HERO: the lattice ────────────────────────────────────────────
+     Seven concerns, fifteen dependencies, authored in full in the markup below. No script draws
+     any part of it: the complete lattice is legible at load, in print, and with JS disabled. The
+     only behaviour is a CSS :has() rule that RECEDES the unconnected cells on hover/focus — a
+     browser without :has() simply shows the finished artwork, which is the correct default. -->
+<header class="hero-lat">
+  <div class="lat-wrap">
+    <div class="lat">
+      <svg class="lat-lines" viewBox="0 0 1080 470" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <line class="l-taxes l-estate" x1="498" y1="66" x2="734" y2="66" vector-effect="non-scaling-stroke"/>
+        <line class="l-taxes l-invest" x1="498" y1="66" x2="972" y2="66" vector-effect="non-scaling-stroke"/>
+        <line class="l-taxes l-cash" x1="498" y1="66" x2="498" y2="228" vector-effect="non-scaling-stroke"/>
+        <line class="l-taxes l-insure" x1="498" y1="66" x2="734" y2="228" vector-effect="non-scaling-stroke"/>
+        <line class="l-taxes l-business" x1="498" y1="66" x2="972" y2="228" vector-effect="non-scaling-stroke"/>
+        <line class="l-taxes l-give" x1="498" y1="66" x2="498" y2="390" vector-effect="non-scaling-stroke"/>
+        <line class="l-estate l-insure" x1="734" y1="66" x2="734" y2="228" vector-effect="non-scaling-stroke"/>
+        <line class="l-estate l-give" x1="734" y1="66" x2="498" y2="390" vector-effect="non-scaling-stroke"/>
+        <line class="l-estate l-business" x1="734" y1="66" x2="972" y2="228" vector-effect="non-scaling-stroke"/>
+        <line class="l-invest l-cash" x1="972" y1="66" x2="498" y2="228" vector-effect="non-scaling-stroke"/>
+        <line class="l-invest l-business" x1="972" y1="66" x2="972" y2="228" vector-effect="non-scaling-stroke"/>
+        <line class="l-invest l-give" x1="972" y1="66" x2="498" y2="390" vector-effect="non-scaling-stroke"/>
+        <line class="l-cash l-insure" x1="498" y1="228" x2="734" y2="228" vector-effect="non-scaling-stroke"/>
+        <line class="l-cash l-business" x1="498" y1="228" x2="972" y2="228" vector-effect="non-scaling-stroke"/>
+        <line class="l-insure l-business" x1="734" y1="228" x2="972" y2="228" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="lat-head">
+        <p class="lat-eyebrow">What your financial life already is</p>
+        <h1>Everything here affects everything else&nbsp;here.</h1>
+        <p class="lat-lede">Seven concerns, fifteen dependencies. Your CPA sees one. Your attorney sees another. Nobody is assigned to the lines between them.</p>
+        <p class="lat-hint">Hover a concern to see what it moves.</p>
+      </div>
+      <div class="lc" id="lc-taxes" tabindex="0">
+        <span class="lc-k">Taxes</span>
+        <p class="lc-t">You realize gains in a state that taxes them as ordinary income.</p>
+        <p class="lc-x">Touches estate &middot; investments &middot; cash flow &middot; insurance &middot; business interest &middot; charitable</p>
+      </div>
+      <div class="lc" id="lc-estate" tabindex="0">
+        <span class="lc-k">Estate</span>
+        <p class="lc-t">Your documents were drafted before the exemption doubled.</p>
+        <p class="lc-x">Touches taxes &middot; insurance &middot; charitable &middot; business interest</p>
+      </div>
+      <div class="lc" id="lc-invest" tabindex="0">
+        <span class="lc-k">Investments</span>
+        <p class="lc-t">Your taxable account and your IRA hold the same funds.</p>
+        <p class="lc-x">Touches taxes &middot; cash flow &middot; business interest &middot; charitable</p>
+      </div>
+      <div class="lc" id="lc-cash" tabindex="0">
+        <span class="lc-k">Cash flow</span>
+        <p class="lc-t">The distribution you take this year sets next year&rsquo;s bracket.</p>
+        <p class="lc-x">Touches taxes &middot; investments &middot; insurance &middot; business interest</p>
+      </div>
+      <div class="lc" id="lc-insure" tabindex="0">
+        <span class="lc-k">Insurance</span>
+        <p class="lc-t">A policy bought for one reason is now funding another.</p>
+        <p class="lc-x">Touches taxes &middot; estate &middot; cash flow &middot; business interest</p>
+      </div>
+      <div class="lc" id="lc-business" tabindex="0">
+        <span class="lc-k">Business interest</span>
+        <p class="lc-t">You&rsquo;re holding company stock you can&rsquo;t sell cheaply.</p>
+        <p class="lc-x">Touches taxes &middot; estate &middot; investments &middot; cash flow &middot; insurance</p>
+      </div>
+      <div class="lc" id="lc-give" tabindex="0">
+        <span class="lc-k">Charitable</span>
+        <p class="lc-t">You give cash every year and hold appreciated stock you never sell.</p>
+        <p class="lc-x">Touches taxes &middot; estate &middot; investments</p>
+      </div>
+      <div class="lat-close">
+        <p class="lat-q">Each line is a dependency, not a menu item. Coordination is the assignment nobody has.</p>
+        <div class="lat-cta">
+          <a class="btn" href="#invite">Request a Coordination Review &rarr;</a>
+          <a class="btn-quiet" href="#capabilities">See what coordination is</a>
+        </div>
+      </div>
     </div>
   </div>
 </header>
@@ -272,33 +334,6 @@ section{padding-block:clamp(60px,10vh,116px)}
   <div class="wrap reveal">
     <p>Most firms charge to manage investments. We charge to coordinate decisions.</p>
     <p class="sub">Investment management is the commodity. The product is the coordination between your investments, taxes, estate, liquidity, and the professionals who advise you, held as one after-tax system. Fee-based, and an optional line item at that.</p>
-  </div>
-</section>
-
-<!-- ── THE SYSTEM ───────────────────────────────────────────────────── -->
-<section class="sys" id="thesystem">
-  <div class="wrap reveal">
-    <div class="sys-head">
-      <p class="sys-lead">Driftwood coordinates your financial life as one system.</p>
-      <h2>Seven systems. No decision touches just one.</h2>
-    </div>
-    <div class="lattice">
-      <svg viewBox="0 0 520 460" role="img" aria-label="Seven financial systems — Investments, Taxes, Liquidity, Ownership, Estate, Protection, and Purpose — connected around a central node, Coordination, resolving downward into the outcome: what you keep.">
-        <g stroke="#b7b0a0" stroke-width="1.35" opacity=".9" id="edges"></g>
-        <!-- the anchor spine: coordination resolves downward into the outcome, deliberately the heaviest line -->
-        <line x1="260" y1="216" x2="260" y2="388" stroke="#22485f" stroke-width="4.25" stroke-linecap="round"/>
-        <path d="M253 380 L260 391 L267 380" fill="none" stroke="#22485f" stroke-width="4.25" stroke-linecap="round" stroke-linejoin="round"/>
-        <g id="nodes"></g>
-        <rect x="203" y="197" width="114" height="27" fill="#f1efe9"/>
-        <text class="hub-lbl" x="260" y="215" text-anchor="middle">Coordination</text>
-        <text class="keep-lbl" x="260" y="424" text-anchor="middle">What you keep.</text>
-      </svg>
-      <div class="sys-note">
-        <p class="named">A tax move is never only a tax move.</p>
-        <p>It shifts what you withdraw, how the portfolio is built, which entity holds what, and what your family finally keeps. Each line above is a dependency, not a menu item.</p>
-        <p><b>The institutions already work this way.</b> A single household rarely does, because no one is assigned to the connections. That assignment is the engagement.</p>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -423,29 +458,6 @@ section{padding-block:clamp(60px,10vh,116px)}
 <script>
 // Build-injected by scripts/sync_docs.py; carries the exhibit as-of date.
 window.__STATE__ = {"header": {"generated": "2026-07-26 23:14:46 UTC"}, "hero": {"keep_before": 9, "keep_after": 41, "alpha_low": 3.7, "alpha_high": 4.7, "horizon": 30, "pretax_before": 9.4, "pretax_after": 9.1}, "headline": [], "value_adds": [{"tag": "Keep more", "title": "A portfolio built to be held, and taxed lightly.", "stat": "$90,000 \u2192 $410,000", "stat_label": "kept from $1 million of realized gains over 30 years, after tax, an illustrative +3.7\u20134.7%/yr (modeled; federal to a high-tax state)", "note": "A diversified, low-turnover portfolio, with harvesting, lot selection, and account placement handing less of it to taxes. Driftwood calls the cumulative benefit of those implementation decisions Structural Alpha. Illustrative; your figure depends on your bracket and holdings."}, {"tag": "Build better", "title": "One portfolio, built as a system.", "stat": "", "stat_label": "", "note": "A diversified, low-turnover core, placed by account and coordinated across taxable, Traditional, and Roth, so allocation, location, harvesting, and withdrawals work together, not apart. Implementation, not prediction."}, {"tag": "Stay invested", "title": "The best portfolio is one you're glad to own in twenty years.", "stat": "", "stat_label": "", "note": "Most of the damage in investing is done by leaving at the wrong time. A portfolio built to be held, diversified, low-cost, and understood, is one you can stay with long enough for compounding to do its work."}], "exhibits": [{"title": "How we invest", "href": "thesis.html", "desc": "How Driftwood invests: evidence over prediction, taxes treated as part of investing, and a diversified core placed alongside a focused complement, one portfolio, measured after tax.", "present": true, "appendix": false}, {"title": "After-Tax Review", "href": "taxlab.html", "desc": "See your after-tax return, and where each holding belongs, taxable, Traditional, or Roth, with estate step-up and tax-loss harvesting, by your bracket and state.", "present": true, "appendix": false}, {"title": "The Tax Diagnostic", "href": "leakage.html", "desc": "The one-page before/after: where a concentrated, high-turnover account loses return to tax, and how much careful placement puts back on an identical exposure.", "present": true, "appendix": false}, {"title": "State Tax Atlas", "href": "statemap.html", "desc": "Fifty states across eight dimensions, capital gains, marriage, estate, munis, QSBS, losses, and basis step-up, plus what careful tax management can change in each.", "present": true, "appendix": false}, {"title": "State tax guides (50 states + DC)", "href": "states.html", "desc": "A capital-gains, estate, marriage, and basis-step-up profile for every state, each with what careful tax management can recover there, and a one-click personalized diagnostic.", "present": true, "appendix": false}, {"title": "Single asset risk", "href": "concentration.html", "desc": "How to de-risk a concentrated stock position: 22 strategies across selling, harvesting, hedging, deferring, and giving, scored on liquidity, speed, fees, tax cost, customization, and simplicity.", "present": true, "appendix": false}, {"title": "Current model portfolio", "href": "equities.html", "desc": "What the hypothetical model portfolio holds now, its sleeves, the last rebalance in and out, and the dated track. A research model, not a client account.", "present": true, "appendix": true}, {"title": "Model portfolio ledger", "href": "ledger.html", "desc": "The append-only historical record: every change, every mark, with attribution. A hypothetical backtest, not actual trading or any client account.", "present": true, "appendix": true}, {"title": "Model portfolio \u00b7 long history", "href": "tearsheet.html", "desc": "The model across decades of daily history: strategy vs buy-and-hold, fit in-sample and reported out-of-sample. Hypothetical.", "present": true, "appendix": true}, {"title": "Research studies", "href": "equities_case_studies.html", "desc": "Educational backtests on why the approach behaves as it does: time-series, cross-sectional, lookback & cost sensitivity, and a no-trend control.", "present": true, "appendix": true}]};
-// Seven-system lattice: heptagon nodes + faint all-pairs edges, drawn once.
-(function(){
-  var NS="http://www.w3.org/2000/svg", cx=260, cy=118, R=104;
-  var names=["Investments","Taxes","Liquidity","Ownership","Estate","Protection","Purpose"];
-  var pts=names.map(function(n,i){var a=-Math.PI/2+i*2*Math.PI/7;return{x:cx+R*Math.cos(a),y:cy+R*Math.sin(a),n:n,a:a};});
-  var edges=document.getElementById("edges"),nodes=document.getElementById("nodes");
-  for(var i=0;i<pts.length;i++)for(var j=i+1;j<pts.length;j++){
-    var l=document.createElementNS(NS,"line");
-    l.setAttribute("x1",pts[i].x.toFixed(1));l.setAttribute("y1",pts[i].y.toFixed(1));
-    l.setAttribute("x2",pts[j].x.toFixed(1));l.setAttribute("y2",pts[j].y.toFixed(1));
-    edges.appendChild(l);
-  }
-  pts.forEach(function(p){
-    var c=document.createElementNS(NS,"circle");
-    c.setAttribute("cx",p.x.toFixed(1));c.setAttribute("cy",p.y.toFixed(1));c.setAttribute("r","5.5");
-    c.setAttribute("fill","#22485f");c.setAttribute("stroke","#f1efe9");c.setAttribute("stroke-width","2");nodes.appendChild(c);
-    var t=document.createElementNS(NS,"text");
-    var out=Math.cos(p.a), outy=Math.sin(p.a);
-    t.setAttribute("x",(p.x+out*13).toFixed(1));t.setAttribute("y",(p.y+outy*13+4).toFixed(1));
-    t.setAttribute("text-anchor",Math.abs(out)<0.3?"middle":(out>0?"start":"end"));
-    t.setAttribute("class","node-lbl");t.textContent=p.n;nodes.appendChild(t);
-  });
-})();
 // Scroll reveal (respects reduced motion)
 (function(){
   var rm=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;

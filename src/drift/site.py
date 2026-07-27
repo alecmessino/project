@@ -39,7 +39,7 @@ FIRM_SINCE = "2024"              # founding year, for the "Founded" line
 
 # Deferred, consumed by the firm-anchor band once confirmed; empty means "render nothing":
 FIRM_CRD = ""        # SEC/IARD CRD number
-FIRM_CUSTODIAN = ""  # independent third-party custodian (e.g. Schwab / Fidelity / Pershing)
+FIRM_CUSTODIAN = "Park Avenue Securities LLC (PAS), member FINRA/SIPC"  # custody/clearing
 
 # The month/year the model data is current to, one place; bump at each data refresh.
 MODEL_ASOF = "July 2026"
@@ -82,6 +82,8 @@ def firm_anchor_html() -> str:
     left.append("A PRACTICE OF ALEC MESSINO")
     if f.get("crd"):
         left.append(f"CRD {f['crd']}")
+    if f.get("custodian"):
+        left.append(f"custody {f['custodian']}")
     right = [f"MODEL DATA AS OF {MODEL_ASOF.upper()}"]
     return ('<div class="firm-anchor" role="contentinfo">'
             f'<span>{_ANCHOR_SEP.join(left)}</span>'

@@ -770,3 +770,161 @@ details.exhibit-method{ margin-top:14px; border-top:1px solid var(--line2); padd
 .om-sections a:hover{ color:var(--ink); }
 .om-sections a[aria-current="page"]{ color:var(--ink); }
 .om-sections .d{ color:var(--ghost-line); margin:0 8px; }
+
+
+/* ── Waterline masthead (2026) ───────────────────────────────────────────────────────────────────
+   One flat header for every page, replacing the .dwnav-drop hover panels entirely. A page's granular
+   links belong to that page's in-page index (see .atlas-index on statemap.html), never to the global
+   header. Primary is five words with For Professionals last; Client Access is a ghost outline;
+   Request a Review is the one solid CTA. Mobile carries the same five words wrapped to two lines of
+   tracked caps — no hamburger, no drawer, no JS (see the dwnav--waterline guard in dw-context.js). */
+.dwnav--waterline{ display:flex; align-items:center; gap:clamp(16px,2vw,26px); flex-wrap:wrap;
+  padding:0 clamp(18px,4vw,40px); border-bottom:1px solid var(--ink); }
+.dwnav--waterline .brand{ margin-right:auto; height:60px; }
+.dwnav--waterline .dwnav-links{ display:flex; gap:clamp(16px,2vw,23px); align-items:center; flex-wrap:nowrap; }
+.dwnav--waterline .dwnav-links a{ text-decoration:none; color:var(--body); font-size:13.5px; font-weight:500;
+  padding:3px 0; border-bottom:1.5px solid transparent; white-space:nowrap;
+  transition:color .18s, border-color .18s; }
+.dwnav--waterline .dwnav-links a:hover{ color:var(--ink); border-bottom-color:var(--accent-strike-soft); }
+.dwnav--waterline .dwnav-links a[aria-current="page"]{ color:var(--ink); border-bottom-color:var(--accent-strike); }
+.dwnav--waterline .dwnav-sep{ width:1px; height:22px; background:var(--line); flex:none; }
+.dwnav--waterline .dwnav-access{ text-decoration:none; color:var(--body); font-size:12px; font-weight:600;
+  letter-spacing:.02em; white-space:nowrap; padding:7px 13px; border:1px solid var(--frame-line); border-radius:0;
+  transition:color .18s, border-color .18s; }
+.dwnav--waterline .dwnav-access:hover{ color:var(--ink); border-color:var(--ink); }
+.dwnav--waterline .dwnav-access::before{ content:none; }
+.dwnav--waterline .dwnav-cta{ text-decoration:none; background:var(--accent-strike); color:#f4f1ea; font-size:13px;
+  font-weight:700; padding:10px 18px; border-radius:0; white-space:nowrap; transition:filter .18s; }
+.dwnav--waterline .dwnav-cta:hover{ filter:brightness(1.08); }
+
+@media (max-width:860px){
+  .dwnav--waterline{ padding:0 18px; }
+  .dwnav--waterline .brand{ height:54px; }
+  .dwnav--waterline .dwnav-links{ order:3; width:100%; flex-wrap:wrap; gap:4px 18px; padding:0 0 10px; }
+  .dwnav--waterline .dwnav-links a{ font-size:11px; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
+    min-height:34px; display:inline-flex; align-items:center; }
+  .dwnav--waterline .dwnav-sep{ display:none; }
+  .dwnav--waterline .dwnav-access{ order:2; border:0; padding:0; font-size:10px; font-weight:700;
+    letter-spacing:.13em; text-transform:uppercase; color:var(--dim); height:54px; display:inline-flex; align-items:center; }
+  .dwnav--waterline .dwnav-cta{ position:fixed; left:0; right:0; bottom:0; z-index:60; text-align:center;
+    padding:15px 0; font-size:13.5px; }
+  body:has(.dwnav--waterline){ padding-bottom:52px; }
+}
+
+/* ── Phase 2 dropdown masthead ──────────────────────────────────────────────────────────────
+   The persuasion redesign organizes the site into four labelled families (Our Firm, Coordination,
+   Insights & Research, Professionals), each a hover/focus/click dropdown reusing the proven
+   .dwnav-drop panel machinery; Client Access is a ghost outline; Request a Coordination Review is the
+   one solid CTA. The Coordination family carries the guided journey (Six Systems → Your First 90 Days →
+   Household Example → the three tools → the flagship Review). Mobile collapses behind the shared
+   hamburger (dropdowns degrade to stacked links, like the legacy menu). */
+.dwnav--phase2{ display:flex; align-items:center; gap:clamp(14px,1.8vw,24px); flex-wrap:wrap;
+  padding:0 clamp(18px,4vw,40px); border-bottom:1px solid var(--ink); }
+.dwnav--phase2 .brand{ height:60px; flex:none; }
+.dwnav--phase2 .dwnav-links{ display:flex; gap:clamp(10px,1.4vw,22px); align-items:center; flex-wrap:nowrap; }
+.dwnav--phase2 .dwnav-trigger{ font-family:var(--sans); font-size:13px; font-weight:700;
+  letter-spacing:.02em; text-transform:none; color:var(--body); background:none; border:0; cursor:pointer;
+  padding:8px 2px; display:inline-flex; align-items:center; gap:7px; white-space:nowrap;
+  border-bottom:2px solid transparent; transition:color .15s, border-color .15s; }
+.dwnav--phase2 .dwnav-trigger .caret{ width:5px; height:5px; border-right:1.5px solid currentColor;
+  border-bottom:1.5px solid currentColor; transform:rotate(45deg) translateY(-1px); opacity:.55;
+  transition:transform .15s; }
+.dwnav--phase2 .dwnav-drop--open > .dwnav-trigger{ color:var(--ink); }
+.dwnav--phase2 .dwnav-drop--open > .dwnav-trigger .caret{ transform:rotate(225deg) translateY(1px); }
+.dwnav--phase2 .dwnav-drop--current > .dwnav-trigger{ color:var(--ink); border-bottom-color:var(--accent-strike); }
+.dwnav--phase2 .dwnav-panel{ display:none; }
+.dwnav--phase2 .dwnav-panel a{ font-family:var(--sans); font-size:13px; font-weight:500; text-transform:none;
+  letter-spacing:0; color:var(--body); text-decoration:none; padding:8px 0; display:block;
+  border-bottom:1px solid var(--line2); transition:color .15s; }
+.dwnav--phase2 .dwnav-panel a:last-child{ border-bottom:0; }
+.dwnav--phase2 .dwnav-panel a:hover{ color:var(--ink); }
+.dwnav--phase2 .dwnav-panel a[aria-current="page"]{ color:var(--accent-strike); }
+.dwnav--phase2 .dwnav-sep{ width:1px; height:22px; background:var(--line); flex:none; }
+.dwnav--phase2 .dwnav-access{ text-decoration:none; color:var(--body); font-size:12.5px; font-weight:600;
+  letter-spacing:.02em; white-space:nowrap; padding:7px 13px; border:1px solid var(--frame-line);
+  transition:color .18s, border-color .18s; }
+.dwnav--phase2 .dwnav-access:hover{ color:var(--ink); border-color:var(--ink); }
+.dwnav--phase2 .dwnav-cta{ text-decoration:none; background:var(--accent-strike); color:#f4f1ea; font-size:13px;
+  font-weight:700; padding:10px 18px; white-space:nowrap; transition:filter .18s; }
+.dwnav--phase2 .dwnav-cta:hover{ filter:brightness(1.08); }
+/* Desktop: brand left, four families, then Client Access + CTA anchored right. */
+@media (min-width:1200px){
+  .dwnav--phase2{ align-items:center; padding:14px 30px; }
+  .dwnav--phase2 .brand{ margin-right:clamp(16px,2vw,28px); }
+  .dwnav--phase2 .dwnav-links{ gap:0 clamp(14px,1.6vw,26px); }
+  .dwnav--phase2 .dwnav-access{ margin-left:auto; }
+  .dwnav--phase2 .dwnav-panel{ position:absolute; top:100%; left:-14px; margin-top:9px; min-width:236px;
+    flex-direction:column; background:var(--soft); border:1px solid var(--frame-line); padding:10px 16px;
+    z-index:60; opacity:0; visibility:hidden; transform:translateY(-4px); display:flex;
+    transition:opacity .15s, transform .15s, visibility .15s; }
+  .dwnav--phase2 .dwnav-drop--open > .dwnav-panel{ opacity:1; visibility:visible; transform:translateY(0); }
+}
+@media (max-width:1199px){
+  .dwnav--phase2{ flex-wrap:wrap; padding:12px 16px; gap:10px 10px; }
+}
+
+/* ── Operational artifacts: the guided-journey progress rail ──────────────────────────────────
+   A thin, hairline "where you are in the engagement" rail shown on the tool pages and the Review.
+   Pure presentational markup; the active step is marked with [aria-current="step"]. Designed to read
+   like the ledger of a wealth operating system, not a marketing progress bar. */
+.journey-rail{ font-family:var(--sans); border-top:1px solid var(--ink); border-bottom:1px solid var(--line);
+  background:var(--soft); padding:14px clamp(18px,4vw,40px); }
+.journey-rail .jr-in{ max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:8px 14px;
+  flex-wrap:wrap; }
+.journey-rail .jr-k{ font-size:10px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;
+  color:var(--accent-strike); margin-right:4px; }
+.journey-rail ol{ display:flex; align-items:center; gap:0; margin:0; padding:0; list-style:none; flex-wrap:wrap; }
+.journey-rail li{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--muted); }
+.journey-rail li .num{ display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px;
+  border:1px solid var(--frame-line); color:var(--dim); font-size:10.5px; font-weight:700; font-variant-numeric:tabular-nums; }
+.journey-rail li a{ color:var(--body); text-decoration:none; border-bottom:1px solid transparent; }
+.journey-rail li a:hover{ color:var(--ink); border-bottom-color:var(--accent-strike-soft); }
+.journey-rail li[aria-current="step"]{ color:var(--ink); font-weight:600; }
+.journey-rail li[aria-current="step"] .num{ background:var(--accent-strike); color:#f4f1ea; border-color:var(--accent-strike); }
+.journey-rail li[aria-current="step"] a{ color:var(--ink); }
+.journey-rail li .sep{ color:var(--ghost-line); margin:0 6px; }
+.journey-rail .jr-cta{ margin-left:auto; font-size:12px; font-weight:700; color:var(--accent-strike);
+  text-decoration:none; border-bottom:1px solid var(--accent-strike-soft); }
+.journey-rail .jr-cta:hover{ border-bottom-color:var(--accent-strike); }
+@media (max-width:680px){ .journey-rail .jr-cta{ margin-left:0; width:100%; } }
+
+/* ── Hero lattice (2026) ─────────────────────────────────────────────────────────────────────────
+   Replaces the homepage's JS-drawn heptagon. Every cell and every hairline is in the markup; the
+   only behaviour is the :has() block below, which drops UNCONNECTED cells to 55% on hover/focus.
+   Nothing is ever drawn, faded in, or revealed, so a static render, a print, a JS-off visit and a
+   browser without :has() all show the same finished lattice. Below 900px the diagram is dropped
+   entirely and the same seven cells stack as ruled rows, each carrying its dependencies in text. */
+.hero-lat{ background:var(--bg); border-bottom:1px solid var(--line); }
+.lat-wrap{ max-width:var(--col,1080px); margin:0 auto; padding:clamp(34px,6vh,72px) clamp(18px,4vw,40px) clamp(40px,7vh,80px); }
+
+/* Hero lattice: headline left, interactive node-graph right. The graph is drawn by a small
+   script (edges + nodes + hover emphasis). Without JS, the SVG is empty but the surrounding
+   copy + the fallback note still carry the meaning, so the hero is never blank. */
+.lat-grid{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px,5vw,64px); align-items:center; }
+.lat-head h1{ margin:0; color:var(--ink); font-family:var(--sans); font-weight:700;
+  font-size:clamp(31px,3.4vw,43px); line-height:1.03; letter-spacing:-.025em; text-wrap:balance; }
+.lat-eyebrow{ margin:0 0 14px; font-family:var(--sans); font-size:11px; font-weight:700;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
+.lat-lede{ margin:18px 0 0; font-family:var(--serif); font-size:clamp(16px,1.5vw,19px); line-height:1.48;
+  color:var(--body); max-width:42ch; }
+.lat-hint{ margin:18px 0 0; font-size:12px; line-height:1.6; color:var(--muted); }
+.lat-cta{ display:flex; flex-wrap:wrap; align-items:center; gap:16px 24px; margin-top:26px; }
+
+.lat-viz{ position:relative; }
+.lat-lattice{ display:block; }
+.lat-svg{ width:100%; height:auto; display:block; overflow:visible; }
+.lat-fallback-note{ margin:18px 0 0; font-family:var(--serif); font-size:14.5px; line-height:1.5;
+  color:var(--muted); max-width:46ch; }
+
+/* Hero coordination graph — engraved heptagon (faithful to the original). Nodes + edges drawn
+   by the inline script; the weighted spine, Coordination label and "What you keep" are static. */
+.node-lbl{ font:500 12.5px var(--sans); fill:var(--ink); }
+.hub-lbl{ font:700 15px var(--sans); fill:var(--accent-strike); letter-spacing:-.01em; }
+.keep-lbl{ font:italic 500 16px var(--serif); fill:var(--teal); }
+
+/* Phone / small tablet: stack, drop the diagram, keep the fallback note. */
+@media (max-width:899px){
+  .lat-grid{ grid-template-columns:1fr; gap:28px; }
+  .lat-viz{ order:2; }
+  .lat-svg{ max-width:420px; margin:0 auto; }
+}

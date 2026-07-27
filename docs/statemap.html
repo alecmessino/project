@@ -47,11 +47,25 @@
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px, 2.4vw + 19px, 36px);line-height:1.05;
     letter-spacing:-.02em;color:var(--ink);margin:0 0 10px}
   .lede{font-family:var(--serif);font-size:14.5px;color:#5c6470;margin:0;max-width:76ch}
-  .tabs{display:flex;flex-wrap:wrap;gap:8px;padding:14px 40px 4px}
-  .tabs button{font:inherit;font-size:13px;font-weight:500;color:var(--dim);background:#fff;border:1px solid var(--line);
-    border-radius:var(--surface-radius);padding:8px 14px;cursor:pointer;transition:all .12s}
-  .tabs button:hover{background:var(--soft)}
-  .tabs button[aria-selected="true"]{background:var(--ink);color:#f1ede3;border-color:var(--ink)}
+  /* In-page index (Waterline spec): the dimension tablist is this page's own sub-nav, so it lives
+     beside the content, never in the global header. Vertical, ruled, sticky. */
+  .atlas-body{display:grid;grid-template-columns:236px 1fr;align-items:start}
+  .atlas-index{border-right:1px solid var(--line);padding:22px 22px 26px;position:sticky;top:24px;align-self:start}
+  .atlas-index h2{font-weight:700;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .tabs{display:flex;flex-direction:column;gap:0}
+  .tabs button{font:inherit;font-size:13px;font-weight:500;color:var(--body);background:none;border:0;border-radius:0;
+    text-align:left;padding:8px 0 8px 11px;margin-left:-13px;border-left:2px solid transparent;cursor:pointer;
+    min-height:34px;transition:color .12s,border-color .12s}
+  .tabs button:hover{color:var(--ink)}
+  .tabs button[aria-selected="true"]{color:var(--ink);font-weight:600;border-left-color:var(--accent-strike)}
+  .atlas-note{margin-top:20px;padding-top:14px;border-top:1px solid var(--line2);font-size:11.5px;line-height:1.6;color:var(--muted)}
+  @media(max-width:860px){
+    .atlas-body{grid-template-columns:1fr}
+    .atlas-index{position:static;border-right:0;border-bottom:1px solid var(--line);padding:14px 18px 12px}
+    .tabs{flex-direction:row;flex-wrap:wrap;gap:2px 18px}
+    .tabs button{padding:6px 0;margin-left:0;border-left:0;border-bottom:2px solid transparent}
+    .tabs button[aria-selected="true"]{border-bottom-color:var(--accent-strike)}
+  }
   .split{display:grid;grid-template-columns:1.35fr .85fr;gap:20px;padding:10px 40px 8px;align-items:start}
   /* the author `display:grid` above beats the UA `[hidden]{display:none}`, so hiding the split on the
      Coordination tab needs this explicit guard (the ranked-free "your state" panel takes its place). */
@@ -67,7 +81,7 @@
      the wrapper scroll horizontally so tiles stay grabbable. */
   @media(max-width:620px){
     svg.cart{min-width:470px}
-    .hd,.tabs,.split,.asof,.foot{padding-left:18px;padding-right:18px}
+    .hd,.split,.asof,.foot{padding-left:18px;padding-right:18px}
     .detail{padding:16px}
   }
   .tile rect{cursor:pointer;transition:filter .12s,stroke .12s}
@@ -160,47 +174,48 @@
 <body>
 <div class="sheet">
   <div class="frame" id="frame">
-    <nav class="dwnav" aria-label="Driftwood Wealth">
-      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"/><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"/><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"/><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"/><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links">
-        <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">The Firm<span class="caret" aria-hidden="true"></span></button>
-          <div class="dwnav-panel">
-            <a href="principles.html">Our Story &amp; Principles</a>
-            <a href="fees.html">Fees</a>
-          </div>
-        </div>
-        <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">The Method<span class="caret" aria-hidden="true"></span></button>
-          <div class="dwnav-panel">
-            <a href="howitworks.html">How It Works</a>
-            <a href="thesis.html">How We Invest</a>
-          </div>
-        </div>
-        <div class="dwnav-drop dwnav-drop--current">
-          <button class="dwnav-trigger" type="button">Research<span class="caret" aria-hidden="true"></span></button>
-          <div class="dwnav-panel">
-            <a href="research.html">Research &amp; Atlas</a>
-            <a href="statemap.html" aria-current="page">State&nbsp;Tax&nbsp;Atlas</a>
-            <a href="leakage.html">Tax&nbsp;Diagnostic</a>
-            <a href="taxlab.html">After-Tax&nbsp;Review</a>
-            <a href="score.html">Coordination&nbsp;Assessment</a>
-          </div>
-        </div>
-        <a class="dwnav-access" href="partners.html">For CPAs &amp; Attorneys</a>
-      </div>
-      <a class="dwnav-cta" href="coordination-review.html">Request Review</a>
+    <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fiduciary.html">Fiduciary Standard</a></div></div>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="six-systems.html">Six Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="the-practice.html">Household Example</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Review</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
+      <div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights & Research<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="statemap.html" aria-current="page">State Tax Atlas</a><a href="research.html">Research</a><a href="insights.html">Articles</a><a href="commentary.html">Commentary</a></div></div>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">CPA Collaboration</a><a href="estate-attorneys.html">Estate Attorneys</a><a href="referral.html">Referral Process</a></div></div>
+      <span class="dwnav-sep" aria-hidden="true"></span>
+      <a class="dwnav-access" href="private.html">Client Access</a>
+      <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review</a>
     </nav>
     <div id="dw-household" data-page="statemap"></div>
+    <div class="journey-rail" aria-label="Your path through the engagement">
+      <div class="jr-in">
+        <span class="jr-k">Your path</span>
+        <ol>
+          <li><span class="num">1</span><a href="leakage.html">Tax Diagnostic</a></li>
+          <li class="sep" aria-hidden="true">→</li>
+          <li><span class="num">2</span><a href="statemap.html">State Tax Atlas</a></li>
+          <li class="sep" aria-hidden="true">→</li>
+          <li><span class="num">3</span><a href="taxlab.html">After-Tax Review</a></li>
+          <li class="sep" aria-hidden="true">→</li>
+          <li aria-current="step"><span class="num">4</span><a href="coordination-review.html">Coordination Review</a></li>
+        </ol>
+        <a class="jr-cta" href="coordination-review.html">The product →</a>
+      </div>
+    </div>
+
     <div class="hd">
-      <div class="eyebrow">The Fifty States</div>
+      <div class="eyebrow">State Tax Atlas</div>
       <h1>The State Tax Atlas.</h1>
       <p class="lede">Fifty states. Fifty tax personalities. How each one treats investment income, filing
         status, and estates, rates on gains, the marriage penalty, death taxes, municipal-bond interest,
         the §1202 QSBS exclusion, and what happens to a harvested loss. A final dimension shows how
         much a state's rules move a tax-managed portfolio.</p>
     </div>
-    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="atlas-body">
+    <aside class="atlas-index">
+      <h2>On this page</h2>
+      <div class="tabs" id="tabs" role="tablist"></div>
+      <p class="atlas-note">Granular Atlas links live here, on the page they belong to, never in the global header.</p>
+    </aside>
+    <div>
     <div class="split">
       <div>
         <div class="maptitle" id="maptitle"></div>
@@ -212,8 +227,10 @@
     <!-- Coordination Opportunity is a magnitude, not a regime: on that dimension the map gives way to a
          full-width "your state" panel (your figure + how your state taxes you + an every-state floor). -->
     <div id="coord" hidden></div>
+    </div>
+    </div>
     <p class="asof" id="asof"></p>
-    <div class="firm-anchor" role="contentinfo"><span><span class="firm-anchor-brand">Driftwood Wealth</span>&nbsp;&nbsp;·&nbsp;&nbsp;A PRACTICE OF ALEC MESSINO</span><span>MODEL DATA AS OF JULY 2026</span></div>
+    <div class="firm-anchor" role="contentinfo"><span><span class="firm-anchor-brand">Driftwood Wealth</span>&nbsp;&nbsp;·&nbsp;&nbsp;A PRACTICE OF ALEC MESSINO&nbsp;&nbsp;·&nbsp;&nbsp;custody Park Avenue Securities LLC (PAS), member FINRA/SIPC</span><span>MODEL DATA AS OF JULY 2026</span></div>
     <div class="foot" id="foot"></div>
   </div>
 </div>

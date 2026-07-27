@@ -3,10 +3,27 @@
 Every figure appearing on the four redesigned pages, sorted by what it needs from you.
 Nothing here ships until **Column A is signed and Column B is source-confirmed**.
 
-Rule applied throughout: under SEC Marketing Rule 206(4)-1 a fee-only RIA may cite third-party
-research and may quantify tax, gift, estate, and IRMAA mechanics as labeled illustrations. It may
-not claim investment outperformance, imply a guaranteed result, present a hypothetical as an actual
-client outcome, or restate a third party's study figure as its own result.
+Rule applied throughout: Driftwood is a **fee-based** practice and Alec Messino is a registered
+representative of **Park Avenue Securities LLC (PAS), member FINRA/SIPC**, so these materials sit
+under **two** regimes at once — **SEC Marketing Rule 206(4)-1** and **FINRA Rule 2210**
+(communications with the public). Under both, the practice may cite third-party research and may
+quantify tax, gift, estate, and IRMAA mechanics as labeled illustrations. It may not claim
+investment outperformance, imply a guaranteed result, present a hypothetical as an actual client
+outcome, or restate a third party's study figure as its own result.
+
+**2210 is the binding constraint, not 206(4)-1.** FINRA Rule 2210(d)(1)(F) prohibits projections of
+performance for a communication with the public, with narrow carve-outs; the "fair and balanced"
+standard of 2210(d)(1) applies to every figure below regardless of how it is labeled. Two entries
+need a re-run against 2210 before they ship, over and above their 206(4)-1 sign-off:
+
+- **A5 (~$30,000/yr, Vanguard's 3% translated onto $1,000,000).** A dollar translation of a
+  third-party value-add estimate reads as a projection of a result to the reader. The recommendation
+  in section C — cite the 3%, drop the dollar figure — becomes the safe course under 2210.
+- **A12 (state income drag, 6% compounding over 30 years).** A forward compounding assumption
+  applied across 51 states is the clearest projection on the site. Re-run under 2210, or reframe as
+  a backward-looking arithmetic of tax paid rather than wealth foregone.
+
+Neither re-run blocks the build; both block publication of those two figures.
 
 ---
 

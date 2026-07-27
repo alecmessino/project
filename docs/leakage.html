@@ -101,6 +101,10 @@
     text-transform:uppercase;color:var(--dim)}
   .guardrail b{color:var(--dim);font-weight:600}
   /* A first-person note from the principal, human context right before the ask. */
+  .recog{margin:16px 40px 0;padding:16px 18px;background:var(--soft);border-left:2px solid var(--accent-strike);border-radius:0;max-width:78ch}
+  .recog .recog-k{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:7px}
+  .recog p{font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--ink);margin:0}
+  .recog b{color:var(--accent-strike);font-weight:600}
   .pnote{margin:24px 40px 0;padding:18px 20px;background:var(--soft);border:1px solid var(--line);
     border-radius:var(--surface-radius);max-width:72ch}
   .pnote .pn-k{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
@@ -141,41 +145,36 @@
 <body>
 <div class="sheet">
   <div class="frame">
-    <nav class="dwnav" aria-label="Driftwood Wealth">
-      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"/><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"/><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"/><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"/><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links">
-        <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">The Firm<span class="caret" aria-hidden="true"></span></button>
-          <div class="dwnav-panel">
-            <a href="principles.html">Our Story &amp; Principles</a>
-            <a href="fees.html">Fees</a>
-          </div>
-        </div>
-        <div class="dwnav-drop">
-          <button class="dwnav-trigger" type="button">The Method<span class="caret" aria-hidden="true"></span></button>
-          <div class="dwnav-panel">
-            <a href="howitworks.html">How It Works</a>
-            <a href="thesis.html">How We Invest</a>
-          </div>
-        </div>
-        <div class="dwnav-drop dwnav-drop--current">
-          <button class="dwnav-trigger" type="button">Research<span class="caret" aria-hidden="true"></span></button>
-          <div class="dwnav-panel">
-            <a href="research.html">Research &amp; Atlas</a>
-            <a href="statemap.html">State&nbsp;Tax&nbsp;Atlas</a>
-            <a href="leakage.html" aria-current="page">Tax&nbsp;Diagnostic</a>
-            <a href="taxlab.html">After-Tax&nbsp;Review</a>
-            <a href="score.html">Coordination&nbsp;Assessment</a>
-          </div>
-        </div>
-        <a class="dwnav-access" href="partners.html">For CPAs &amp; Attorneys</a>
-      </div>
-      <a class="dwnav-cta" href="coordination-review.html">Request Review</a>
+    <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fiduciary.html">Fiduciary Standard</a></div></div>
+      <div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="six-systems.html">Six Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="the-practice.html">Household Example</a><a href="leakage.html" aria-current="page">Tax Diagnostic</a><a href="taxlab.html">After-Tax Review</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights & Research<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="statemap.html">State Tax Atlas</a><a href="research.html">Research</a><a href="insights.html">Articles</a><a href="commentary.html">Commentary</a></div></div>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">CPA Collaboration</a><a href="estate-attorneys.html">Estate Attorneys</a><a href="referral.html">Referral Process</a></div></div>
+      <span class="dwnav-sep" aria-hidden="true"></span>
+      <a class="dwnav-access" href="private.html">Client Access</a>
+      <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review</a>
     </nav>
     <div id="dw-household" data-page="leakage"></div>
+    <div class="journey-rail" aria-label="Your path through the engagement">
+      <div class="jr-in">
+        <span class="jr-k">Your path</span>
+        <ol>
+          <li><span class="num">1</span><a href="leakage.html">Tax Diagnostic</a></li>
+          <li class="sep" aria-hidden="true">→</li>
+          <li><span class="num">2</span><a href="statemap.html">State Tax Atlas</a></li>
+          <li class="sep" aria-hidden="true">→</li>
+          <li><span class="num">3</span><a href="taxlab.html">After-Tax Review</a></li>
+          <li class="sep" aria-hidden="true">→</li>
+          <li aria-current="step"><span class="num">4</span><a href="coordination-review.html">Coordination Review</a></li>
+        </ol>
+        <a class="jr-cta" href="coordination-review.html">The product →</a>
+      </div>
+    </div>
+
 
     <div class="hd">
-      <div class="eyebrow">The Tax Diagnostic</div>
+      <div class="eyebrow">Tax Diagnostic</div>
       <h1>One place coordination becomes measurable.</h1>
       <p class="lede">Taxes are the most measurable expression of coordination, the same discipline behind
         your estate planning, withdrawal strategy, liquidity, and how your advisors work together. Here it
@@ -193,6 +192,14 @@
     <div class="pband" id="pband" style="display:none"></div>
 
     <p class="guardrail"><span class="gk">How to read this</span><span>The state &amp; federal <b>rates</b> come from current tax code; the <b>coordination figure</b> is an illustrative model of what disciplined tax management has recovered over time, a diagnostic, not a forecast, and not a robo-advisor's black box.</span></p>
+
+    <div class="recog" role="note">
+      <div class="recog-k">Before the numbers</div>
+      <p>This isn't a test of what you know. It's a read on where a financial life has quietly
+        <b>stopped talking to itself</b> — the gaps most households only notice after they've become
+        expensive. Set your state and portfolio above; the figure that appears is the coordination you
+        may already be leaving on the table, named before any recommendation.</p>
+    </div>
 
     <div class="cols">
       <div class="card before" id="c-before"></div>
@@ -283,7 +290,7 @@
       </div>
     </div>
 
-    <div class="firm-anchor" role="contentinfo"><span><span class="firm-anchor-brand">Driftwood Wealth</span>&nbsp;&nbsp;·&nbsp;&nbsp;A PRACTICE OF ALEC MESSINO</span><span>MODEL DATA AS OF JULY 2026</span></div>
+    <div class="firm-anchor" role="contentinfo"><span><span class="firm-anchor-brand">Driftwood Wealth</span>&nbsp;&nbsp;·&nbsp;&nbsp;A PRACTICE OF ALEC MESSINO&nbsp;&nbsp;·&nbsp;&nbsp;custody Park Avenue Securities LLC (PAS), member FINRA/SIPC</span><span>MODEL DATA AS OF JULY 2026</span></div>
     <div class="foot" id="foot"></div>
   </div>
 </div>

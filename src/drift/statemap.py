@@ -14,16 +14,16 @@ tax-managed portfolio:
   6. Losses         , capital-loss carryforward: federal §1212 / expires / none / no-tax / n/a.
   7. Basis step-up  , marital-property regime (community / opt-in trust / common law + UDCPRDA /
                        common law) governing the IRC 1014 step-up.
-  8. Coordination opportunity, a descriptive estimate (from `leakage.STATE_ALPHA`) of the after-tax
-                       coordination opportunity a state's rules create, expressed as dollars per year
-                       per $1M of taxable assets. Illustrative, diagnostic-gated; a reference dimension,
+  8. Coordination impact, a descriptive estimate (from `leakage.STATE_ALPHA`) of the after-tax
+                      coordination impact a state's rules create, expressed as dollars per year
+                      per $1M of taxable assets. Illustrative, diagnostic-gated; a reference dimension,
                        not a product claim.
 
 Per-state classifications, effective rates, and exemptions are settled public-domain tax facts
 (tax year 2025); they are stated here in our own words. A per-dimension "Prove it" statutory citation
 is attached ONLY where the exact code section has been independently verified (Illinois today); every
 other state carries a generic source line until its statute is checked, we do not fabricate cites.
-The Coordination Opportunity values trace to our own `STATE_ALPHA`; that dimension is illustrative/hypothetical.
+The Coordination Impact values trace to our own `STATE_ALPHA`; that dimension is illustrative/hypothetical.
 """
 
 from __future__ import annotations
@@ -340,7 +340,7 @@ def _attach_citations(code, rec):
     return rec
 
 
-# ── 8 · Coordination Opportunity (descriptive reference dimension) ─────────────────────────────────
+# ── 8 · Coordination Impact (descriptive reference dimension) ─────────────────────────────────
 _ALPHA_BUCKETS = [(3.8, "a"), (4.0, "b"), (4.3, "c"), (4.5, "d"), (99, "e")]
 
 
@@ -376,8 +376,8 @@ DIMENSIONS = [
     {"key": "stepup", "label": "Basis step-up", "title": "Marital property & the basis step-up",
      "legend": [("common", "#d8cfbc", "Common law"), ("udcprda", "#7faa97", "Common law + UDCPRDA"),
                 ("optin", "#c1a35b", "Opt-in community trust"), ("community", "#15806a", "Community property")]},
-    {"key": "alpha", "label": "Coordination Opportunity",
-     "title": "Illustrative after-tax coordination opportunity, dollars per year for every $1M of taxable assets",
+    {"key": "alpha", "label": "Coordination Impact",
+     "title": "Illustrative after-tax coordination impact, dollars per year for every $1M of taxable assets",
      "legend": [("a", "#cfe0d6", "smaller"), ("b", "#9ec9b6", ""), ("c", "#5ea98c", ""),
                 ("d", "#2f8467", ""), ("e", "#15604a", "larger opportunity")]},
 ]

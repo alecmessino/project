@@ -84,7 +84,7 @@ All three are **portfolio** levers on a **taxable brokerage** book.
 **OUT (shown on the Atlas as factual regime dimensions, but $0 in the dollar figure):**
 estate / death tax · gifting & freeze techniques (SLAT / GRAT / FLP discounts / ILIT) · residency & relocation · QSBS §1202 · municipal-bond preference · basis step-up §1014 · marriage / filing status.
 
-The Atlas is explicit that the "Coordination Opportunity" dimension is *"a descriptive estimate … a reference dimension, not a product claim,"* while the other seven are *"factual regime dimensions"* with no dollar attached.
+The Atlas is explicit that the "Coordination Impact" dimension is *"a descriptive estimate … a reference dimension, not a product claim,"* while the other seven are *"factual regime dimensions"* with no dollar attached.
 
 ---
 

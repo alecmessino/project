@@ -77,7 +77,14 @@
   .pnote .pn-sig b{color:var(--ink);font-weight:600}
 
   .sec{padding:18px 44px 8px;max-width:900px}
-  .sec .h{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:14px}
+  .sec .h{font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  /* Report-style three-part scaffold: 01 Findings → 02 Recommendations → 03 Illustrative Outcomes.
+     Two-column hairline grids, same language as the Coordination Review deliverables. */
+  .findings,.recs{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--line2)}
+  @media(max-width:760px){.findings,.recs{grid-template-columns:1fr}}
+  .fn-item,.rc{padding:16px 18px;border-bottom:1px solid var(--line2);border-right:1px solid var(--line2)}
+  .fn-n,.rc-n{font-family:var(--sans);font-weight:700;font-size:13.5px;letter-spacing:-.005em;color:var(--ink);margin-bottom:5px}
+  .fn-d,.rc-d{font-family:var(--serif);font-size:14.5px;line-height:1.5;color:var(--body)}
   .sysbody{font-family:var(--sans);font-size:15.5px;line-height:1.65;color:var(--body);margin:0 0 22px;max-width:60ch}
   .sysbody b{color:var(--ink);font-weight:500}
 
@@ -149,9 +156,34 @@
 
     <p class="guardrail"><span class="gk">How to read this</span><span>The state &amp; federal <b>rates</b> come from current tax code; the <b>coordination figure</b> is an illustrative model of what disciplined tax management has recovered over time, a diagnostic, not a forecast, and not a robo-advisor's black box.</span></p>
 
+    <!-- ── Report-style: 01 Findings ── -->
+    <div class="sec">
+      <div class="h">01 · Findings</div>
+      <p class="sysbody">The After-Tax Review reads a balance sheet the way a coordinator does — looking for the
+        gaps a market return never shows. The ones it surfaces most often:</p>
+      <div class="findings">
+        <div class="fn-item"><div class="fn-n">Location</div><div class="fn-d">Embedded gains concentrated in taxable accounts, or equity awards left in the wrong bucket, are the most common leak.</div></div>
+        <div class="fn-item"><div class="fn-n">Lot selection</div><div class="fn-d">The broker's default (FIFO, or average cost) often realizes the worst lot. The review specifies the lot, not the default.</div></div>
+        <div class="fn-item"><div class="fn-n">Harvesting</div><div class="fn-d">Losses sit unused with no cadence. A disciplined schedule turns a dormant carryforward into tax paid every year.</div></div>
+        <div class="fn-item"><div class="fn-n">Withdrawal order</div><div class="fn-d">Drawing accounts in the wrong sequence changes the after-tax path materially across a retirement.</div></div>
+      </div>
+    </div>
+
+    <!-- ── 02 Recommendations ── -->
+    <div class="sec">
+      <div class="h">02 · Recommendations</div>
+      <p class="sysbody">Each finding becomes a specific, owned action — written down, not advised in passing. The review produces:</p>
+      <div class="recs">
+        <div class="rc"><div class="rc-n">An asset-location map</div><div class="rc-d">which holding belongs in which account, and the reason — so the portfolio stops paying tax it doesn't have to.</div></div>
+        <div class="rc"><div class="rc-n">A harvesting schedule</div><div class="rc-d">tied to your realized-gain budget, not the market's mood.</div></div>
+        <div class="rc"><div class="rc-n">A drawdown order</div><div class="rc-d">for withdrawals, sequenced against your bracket and required minimum distributions.</div></div>
+        <div class="rc"><div class="rc-n">Gain-timing guidance</div><div class="rc-d">for concentrated positions — including whether gifting or a charitable vehicle changes the math.</div></div>
+      </div>
+    </div>
+
     <!-- ── The single exhibit, coordinated vs isolated, isolated from market return ── -->
     <div class="sec">
-      <div class="h">The evidence</div>
+      <div class="h">03 · Illustrative Outcomes</div>
       <p class="sysbody">Nothing about the investments changed. Only the coordination did.</p>
       <div class="exhibit-plate">
         <div class="exhibit-cap">

@@ -887,6 +887,14 @@ details.exhibit-method{ margin-top:14px; border-top:1px solid var(--line2); padd
   text-decoration:none; border-bottom:1px solid var(--accent-strike-soft); }
 .journey-rail .jr-cta:hover{ border-bottom-color:var(--accent-strike); }
 @media (max-width:680px){ .journey-rail .jr-cta{ margin-left:0; width:100%; } }
+.journey-rail li.done{ color:var(--ink); }
+.journey-rail li.done .num{ background:var(--teal2); color:#f4f1ea; border-color:var(--teal2); }
+.journey-rail li.done a{ color:var(--ink); border-bottom-color:var(--accent-strike-soft); }
+.journey-rail .jr-house{ margin-left:14px; font-size:11px; font-weight:600; color:var(--muted);
+  border:1px solid var(--line); border-radius:999px; padding:3px 11px; white-space:nowrap; }
+.journey-rail .jr-house.set{ color:var(--teal2); border-color:var(--teal2);
+  background:rgba(21,128,106,.08); }
+@media (max-width:680px){ .journey-rail .jr-house{ margin-left:0; } }
 
 /* ── Hero lattice (2026) ─────────────────────────────────────────────────────────────────────────
    Replaces the homepage's JS-drawn heptagon. Every cell and every hairline is in the markup; the

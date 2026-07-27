@@ -52,11 +52,14 @@ def test_firm_anchor_is_de_localized_no_city_or_state():
 
 
 def test_firm_anchor_omits_unset_facts_never_a_placeholder():
-    # CRD and custodian are not yet confirmed — they must produce no output (the honesty rule),
-    # not a blank or placeholder line.
+    # Honesty rule: a fact produces output only when it has a real value — never a blank or
+    # placeholder line. Custodian is now set to the verified PAS value; CRD stays empty
+    # (publish-gated) and must still produce no output.
     facts = site.firm_facts()
-    assert "crd" not in facts and "custodian" not in facts
+    assert "custodian" in facts and facts["custodian"] == "Park Avenue Securities LLC (PAS), member FINRA/SIPC"
+    assert "crd" not in facts  # CRD is publish-gated; empty must render nothing, never a placeholder
     a = site.firm_anchor_html()
+    assert "PARK AVENUE SECURITIES" in a.upper()
     assert "CRD" not in a and "CUSTODIAN" not in a and "None" not in a
 
 

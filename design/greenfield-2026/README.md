@@ -74,7 +74,9 @@ IRS/CMS/SSA schedules, OBBBA P.L. 119-21, named studies). Two corrections captur
 
 ## Compliance gates (do NOT skip before any production use)
 
-This is marketing material for a fee-only RIA under **SEC Marketing Rule 206(4)-1**. Before any of
+This is marketing material for a **fee-based advisory practice**; Driftwood operates as a registered
+representative of **Park Avenue Securities LLC (PAS), member FINRA/SIPC**, so it sits under **both**
+**SEC Marketing Rule 206(4)-1** and **FINRA Rule 2210**. Before any of
 this ships to `driftwoodwealth.com`:
 
 1. Every figure tagged **Illustrative** (the $395k, the ~$24k fund drag, the $220k charitable

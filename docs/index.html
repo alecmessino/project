@@ -68,7 +68,23 @@ h1,h2,h3{color:var(--ink);letter-spacing:-.02em;text-wrap:balance;margin:0}
 .nav-cta{text-decoration:none;background:var(--blue);color:#f4f1ea;font-size:13px;font-weight:700;
   padding:9px 17px;white-space:nowrap;transition:filter .18s}
 .nav-cta:hover{filter:brightness(1.08)}
-@media(max-width:860px){.nav-links{display:none}.nav-util{display:none}}
+/* Mobile (<=860px): the Waterline wrap. No hamburger, no drawer, no JS — the five Primary
+   words wrap to two lines of tracked caps inside the masthead itself, Client Access stays a quiet
+   caps link, and the CTA is pinned to the bottom edge. Replaces the 2026-07 rule that hid
+   .nav-links and .nav-util with nothing in their place (live mobile-nav defect). */
+@media(max-width:860px){
+  .nav-in{flex-wrap:wrap;gap:0 14px;padding:0 var(--pad)}
+  .brand{height:54px;margin-right:auto}
+  .brand svg{width:26px;height:23px}
+  .brand-w{font-size:15px}
+  .nav-links{order:3;width:100%;flex-wrap:wrap;gap:4px 18px;padding:0 0 10px}
+  .nav-links a{font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
+    min-height:34px;display:inline-flex;align-items:center}
+  .nav-util{order:2;height:54px;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
+  .nav-util::before{display:none}
+  .nav-cta{position:fixed;left:0;right:0;bottom:0;z-index:60;text-align:center;padding:15px 0;font-size:13.5px}
+  body{padding-bottom:52px}
+}
 
 /* ── Hero ──────────────────────────────────────────────────────────── */
 .hero{position:relative;overflow:hidden;background:var(--paper)}
@@ -255,7 +271,7 @@ section{padding-block:clamp(60px,10vh,116px)}
 <section class="stance">
   <div class="wrap reveal">
     <p>Most firms charge to manage investments. We charge to coordinate decisions.</p>
-    <p class="sub">Investment management is the commodity. The product is the coordination between your investments, taxes, estate, liquidity, and the professionals who advise you, held as one after-tax system. Fee-only, and an optional line item at that.</p>
+    <p class="sub">Investment management is the commodity. The product is the coordination between your investments, taxes, estate, liquidity, and the professionals who advise you, held as one after-tax system. Fee-based, and an optional line item at that.</p>
   </div>
 </section>
 
@@ -399,7 +415,7 @@ section{padding-block:clamp(60px,10vh,116px)}
         <div class="foot-col"><h4>The Library</h4><a href="#think">Essays</a><a href="#think">Case studies</a><a href="#think">The Driftwood Letter</a></div>
       </div>
     </div>
-    <div class="firm-anchor" role="contentinfo"><span><span class="firm-anchor-brand">Driftwood Wealth</span>&nbsp;&nbsp;·&nbsp;&nbsp;A PRACTICE OF ALEC MESSINO</span><span>MODEL DATA AS OF JULY 2026</span></div>
+    <div class="firm-anchor" role="contentinfo"><span><span class="firm-anchor-brand">Driftwood Wealth</span>&nbsp;&nbsp;·&nbsp;&nbsp;A PRACTICE OF ALEC MESSINO&nbsp;&nbsp;·&nbsp;&nbsp;custody Park Avenue Securities LLC (PAS), member FINRA/SIPC</span><span>MODEL DATA AS OF JULY 2026</span></div>
   <p class="disc"><span class="note">Research and illustrative modeling, not investment, tax, or legal advice.</span> Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS and a Financial Representative of The Guardian Life Insurance Company of America® (Guardian), New York, NY. PAS is a wholly owned subsidiary of Guardian. Capitol Wealth Strategies, LLC is not an affiliate or subsidiary of PAS or Guardian. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation. Driftwood coordinates with your CPA and attorney; it does not provide tax or legal advice. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.</p>
   </div>
 </footer>

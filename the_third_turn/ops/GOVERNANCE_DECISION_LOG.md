@@ -107,5 +107,21 @@ invalidate inference) · **Confidence Register** (what the evidence justifies be
 
 ---
 
+### GD-13 · 2026-07-28 · **PROPOSED (not decided)** · Formal change proposal: supersede GD-7's Paper 2 scope
+- **Status:** **PROPOSAL AWAITING OWNER APPROVAL.** Nothing is superseded until the owner rules. Logged because the drift below happened *implicitly* and must not stand unrecorded.
+- **The problem — implicit scope drift, admitted.** Two incompatible Paper 2 scopes are on the record:
+  - **GD-7 (2026-07-14, approved):** Paper 2 = **Avenue 2, within-book vig/inventory dynamics vs. game leverage.** GD-7 *explicitly rejected* Avenue 1 (cross-book leader-laggard) as blocked on ED-1/RD-1.
+  - **ROADMAP (2026-07-19, edited by me, endorsed in conversation, never logged):** Paper 2 = **"When can information leadership be identified from live betting markets?"** — which is Avenue 1 territory, the thing GD-7 rejected.
+  The roadmap edit changed the approved scope without a decision-log entry superseding GD-7. That is the drift the owner flagged. It is mine, and this entry exists to make it explicit rather than let it harden by default.
+- **Consequence of the drift:** the 07-28 "defer Paper 2" recommendation was reasoned against the *identification* scope while GD-7's *vig* scope was still nominally in force, and it further mistook the identification framing for a novel proposal when it was already the (informally) approved objective. Both errors trace to the unlogged change.
+- **The proposal:** make **Paper 2 = the identification paper** (roadmap scope) and **re-home GD-7's vig/inventory study as a separate later paper**, not as Paper 2.
+  - *Why identification:* it inherits Paper 1's character (method + honest limits over positive findings); its raw material (E-016 frequency confound, E-017 extraction sensitivity, E-018 latency-vs-information) is **already generated and recorded**; and the blockers to a *leadership magnitude* are the paper's **subject matter**, not obstacles to it.
+  - *Why not vig-as-Paper-2:* it is genuinely *less blocked* (within-book, no third book needed), which is the strongest argument against this proposal and is stated here rather than buried. But it is a conventional microstructure study whose contribution does not compound with Paper 1, and RD-3 still bites it (whose line's vig?).
+- **Alternatives the owner may pick instead:** (a) keep GD-7 as written, vig = Paper 2, identification = Paper 3; (b) merge both into one microstructure paper; (c) this proposal.
+- **What does NOT change under any option:** GD-12 stands. No empirical Paper 2 result is produced until measurement is de-risked. Approving this proposal authorizes **drafting of non-result sections only** (see the drafting/blocked split delivered 2026-07-28).
+- **If approved:** GD-7's Paper 2 designation is superseded (its Paper 1 appendix decisions stand untouched); ROADMAP §3 is corrected to name the vig study explicitly as a separate output.
+
+---
+
 *Append new decisions below this line. Never edit a past entry; correct with a new dated entry that
 supersedes it.*

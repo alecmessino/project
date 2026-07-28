@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-28T17:47:16+00:00",
+  "generated": "2026-07-28T17:51:11+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 387889,
+    "rows": 387915,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 131006,
-      "live_total": 42465,
-      "live_today": 2634,
-      "last_row_age_min": 131.6
+      "rows_total": 131016,
+      "live_total": 42470,
+      "live_today": 2639,
+      "last_row_age_min": 0.3
     },
     "fanduel": {
-      "rows_total": 256877,
-      "live_total": 49750,
-      "live_today": 2284,
-      "last_row_age_min": 0.5
+      "rows_total": 256893,
+      "live_total": 49758,
+      "live_today": 2292,
+      "last_row_age_min": 0.3
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 32362.3
+      "last_row_age_min": 32366.2
     }
   },
   "books_reporting_live": [
@@ -37,20 +37,19 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 42465,
-    "OPEN": 45602,
-    "SUSPENDED": 3929,
+    "unset": 42470,
+    "OPEN": 45608,
+    "SUSPENDED": 3931,
     "REMOVED": 219
   },
   "overlap": {
-    "simultaneous_pairs_total": 51139,
-    "simultaneous_pairs_today": 2319,
-    "overlap_games": 101,
+    "simultaneous_pairs_total": 51146,
+    "simultaneous_pairs_today": 2326,
+    "overlap_games": 102,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
       "0_books": 10,
-      "1_books": 1,
-      "2_books": 101
+      "2_books": 102
     }
   },
   "fix_verification": {
@@ -87,14 +86,14 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 51139,
+        "current": 51146,
         "target": 2000,
         "pass": true,
         "progress": 1.0
       },
       {
         "criterion": "games with live overlap",
-        "current": 101,
+        "current": 102,
         "target": 100,
         "pass": true,
         "progress": 1.0

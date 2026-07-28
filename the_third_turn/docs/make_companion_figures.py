@@ -6,7 +6,7 @@
     supp_weather_diamond.png — the run-environment: how weather and park move fly-ball carry,
                               the physics the market already prices (and, in our data, over-adjusts)
 
-    python the_third_turn/paper/make_supplement_figures.py
+    python the_third_turn/docs/make_companion_figures.py
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch, Polygon, Wedge, Circle, FancyBboxPatch
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent / "paper"))
 import figstyle as fs  # noqa: E402
 
 OUT = HERE.parent / "output"

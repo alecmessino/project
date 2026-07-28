@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-07-28T01:31:23+00:00
+ THE THIRD TURN — collection health   2026-07-28T01:46:57+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,32 +12,32 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ███████████████···  live=40889 (today 1058)  last 0.3m ago
-  fanduel   ██████████████████  live=48477 (today 1011)  last 0.3m ago
-  pinnacle  ··················  live=    0 (today    0)  last 31386.4m ago ⚠STALE
+  bovada    ███████████████···  live=41133 (today 1302)  last 0.1m ago
+  fanduel   ██████████████████  live=48625 (today 1159)  last 0.1m ago
+  pinnacle  ··················  live=    0 (today    0)  last 31402.0m ago ⚠STALE
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
-  simultaneous live pairs :  49831  (today 1011)
-  overlap games           : 97
+  simultaneous live pairs :  49995  (today 1175)
+  overlap games           : 100
   median sync lag         : 0.0 s
-  games by #books live     : {'0_books': 12, '1_books': 2, '2_books': 97}
+  games by #books live     : {'0_books': 11, '1_books': 1, '2_books': 100}
 
 QUOTE LIFECYCLE (live rows)
-  market status: {'unset': 40889, 'OPEN': 44496, 'SUSPENDED': 3776, 'REMOVED': 205}
+  market status: {'unset': 41133, 'OPEN': 44599, 'SUSPENDED': 3815, 'REMOVED': 211}
 
 COVERAGE
-  live games seen: 102   book-panel games: 111   team-total rows: 23340
+  live games seen: 102   book-panel games: 112   team-total rows: 23451
   innings seen: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 INTEGRITY
-  rows=381870  malformed=0  missing-fields=0  duplicates=0  future-ts=0
+  rows=382784  malformed=0  missing-fields=0  duplicates=0  future-ts=0
   status: ✅ clean
 
 SR-1 GATE (leadership analysis — blocked until all pass)
-  ✅ ██████████████████ simultaneous live quote pairs    49831 / 2000
-     █████████████████· games with live overlap          97 / 100
+  ✅ ██████████████████ simultaneous live quote pairs    49995 / 2000
+  ✅ ██████████████████ games with live overlap          100 / 100
   ✅ ██████████████████ median sync lag < 15s            0.0 / 15
      ████████████······ books quoting live               2 / 3
-  overall: 90%  →  BLOCKED — keep collecting
+  overall: 91%  →  BLOCKED — keep collecting
 ══════════════════════════════════════════════════════════════════

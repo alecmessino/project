@@ -578,9 +578,10 @@ field accumulate falsifications rather than scattered one-off backtests.
 
 We state the conditions under which the conclusion holds, without editorializing. **Scope.** The
 study covers 163 games in a single month (June 2026) of one sport. The boundary is characterized
-precisely, but only under those conditions, and we claim no seasonal or cross-sport generality. A
-second month of live data is being collected and will be added before journal submission to test
-temporal stability. **Odds source.** Line trajectories come from a single Pinnacle-grade feed
+precisely, but only under those conditions, and we claim no seasonal or cross-sport generality.
+This sample is deliberately frozen: independent live collection is ongoing, and a temporal
+replication on a later, non-overlapping month is reported separately rather than pooled into these
+estimates, so that the replication is a genuine out-of-sample test of the present result. **Odds source.** Line trajectories come from a single Pinnacle-grade feed
 sampled at roughly one-minute intervals, so we cannot separate genuine price-formation latency
 from feed cadence, and the uniform sub-one response ratio in the transfer function is consistent
 with either. **Single-book benchmark.** All encompassing tests run against one sharp book; we

@@ -4,7 +4,9 @@ Everything needed to disseminate Paper 1, in the order it gets used. Ready-to-pa
 `SUBMISSION_KIT.md` (referenced by ID below, e.g. **D1**); this file is the operational checklist.
 
 **Artifact under dissemination:** `paper/paper1.pdf` (1,312 KB, 11 figures, rebuilt 2026-07-28).
-**Status:** frozen. The only permitted edit is the data-availability substitution in §4 below.
+**Status:** scientific content **frozen**. Permitted changes are limited to, and only to:
+data-availability substitution · repository URL · DOI · reproducibility language · copyediting.
+No empirical claim, number, figure, or result may change (owner ruling, 2026-07-28).
 
 ---
 
@@ -69,8 +71,25 @@ add remote → push → tag `v1.0` → create a GitHub Release from the tag (Zen
    > Benchmark Dataset (v1) at `<repo URL>`, archived at `<DOI>`; reference implementations
    > reproduce every number reported here from the committed inputs.
 
-5. Rebuild: `python3 paper/build_pdf.py` → re-upload the revised PDF to SSRN (SSRN supports
+5. **Also apply the reproducibility strengthening** (§4b below) in the same edit pass.
+6. Rebuild: `python3 paper/build_pdf.py` → re-upload the revised PDF to SSRN (SSRN supports
    revisions) and arXiv (**v2**). Add the DOI to `CITATION.cff`.
+
+## 4b. Reproducibility strengthening (§3.5) — pre-drafted, applies with the DOI
+
+Permitted under the freeze: it adds infrastructure detail and changes **no empirical claim**. Append
+to the end of §3.5 once the repo and DOI exist, substituting the two bracketed values:
+
+> The full pipeline, including the collector, is released at `<repo URL>` and archived at `<DOI>`,
+> with citation metadata in `CITATION.cff`. Release `v1.0` corresponds to the results reported here.
+> The environment is Python 3.11 with dependencies pinned in `requirements.txt`; the analysis is
+> versioned on three independent axes, Protocol 1.0, Collector 1.1, and Benchmark Dataset 2026.06,
+> because method, engineering, and data evolve separately. From a clean checkout of the release tag,
+> `pip install -r requirements.txt` followed by `python3 paper/make_figures.py` and
+> `python3 paper/build_pdf.py` regenerates every figure and the manuscript from the committed inputs.
+
+**Verify before publishing:** run that exact command sequence in a clean clone of the release bundle
+and confirm it reproduces. Do not ship a reproduction command that has not been executed as written.
 
 ## 5. Conference submission checklist
 

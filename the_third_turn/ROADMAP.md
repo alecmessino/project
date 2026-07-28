@@ -124,6 +124,10 @@ single most persuasive exhibit that the protocol earns its keep; put it early in
 ## 3. Forthcoming papers and program strategy
 
 ### Paper 2 — *When can information leadership be identified from live betting markets?*
+> **Scope locked by GD-13 (approved 2026-07-28).** Paper 2 answers **one** research question:
+> identification. The former GD-7 concept (within-book vig/inventory dynamics vs. game leverage) is a
+> **separate future paper**, deliberately **not merged** here. Governing specification:
+> `paper/PAPER2_DESIGN_BRIEF.md`. Drafting is authorized for non-result sections only (GD-12).
 The question has sharpened from "measure information leadership" to **"under what conditions is
 cross-book information leadership even identifiable, and when is an apparent leader an artifact of
 update frequency or feed latency?"** Half the paper may be about **identification**, not results —
@@ -143,6 +147,11 @@ totals)? Every one is a live-data question, unanswerable from one-minute single-
 a target count of simultaneous cross-book live quotes across a target number of games), not on a
 calendar. This is the natural place for any real edge to appear, because Paper 1 has ruled out the
 first-moment, single-book one.
+
+### Future paper — Within-book vig / inventory dynamics vs. game leverage *(unscheduled)*
+The original GD-7 concept, re-homed by GD-13 as its own output rather than a second question inside
+Paper 2. Attractive because it is *less blocked* than identification: within-book, needs no third
+book. Still exposed to RD-3 (whose line's vig?). No start date; revisit after Paper 2 drafting.
 
 ### Paper 3 — The Third Turn Protocol as a standalone method / benchmark *(optional, reception-gated)*
 The reviewer's read is that the durable value is the protocol plus the survivorship-bias

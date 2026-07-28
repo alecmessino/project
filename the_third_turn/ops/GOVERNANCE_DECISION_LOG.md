@@ -107,8 +107,9 @@ invalidate inference) · **Confidence Register** (what the evidence justifies be
 
 ---
 
-### GD-13 · 2026-07-28 · **PROPOSED (not decided)** · Formal change proposal: supersede GD-7's Paper 2 scope
-- **Status:** **PROPOSAL AWAITING OWNER APPROVAL.** Nothing is superseded until the owner rules. Logged because the drift below happened *implicitly* and must not stand unrecorded.
+### GD-13 · 2026-07-28 · **APPROVED 2026-07-28** · Supersede GD-7's Paper 2 scope
+- **Status:** **APPROVED BY OWNER**, with one clarification: the GD-7 vig/inventory concept becomes a **separate future paper**, explicitly **not merged** into Paper 2. *"I do not want Paper 2 trying to answer two research questions."* Alternatives (a) and (b) below are therefore rejected; option (c) is adopted.
+- **Ruling in force:** **Paper 2 = the identification paper** (single research question). GD-7's Paper 2 designation is superseded; GD-7's Paper 1 appendix decisions stand untouched. The vig/inventory study is re-homed as a separate future output with no scheduled start. Drafting is authorized for **non-result sections only**; GD-12 stands unchanged.
 - **The problem — implicit scope drift, admitted.** Two incompatible Paper 2 scopes are on the record:
   - **GD-7 (2026-07-14, approved):** Paper 2 = **Avenue 2, within-book vig/inventory dynamics vs. game leverage.** GD-7 *explicitly rejected* Avenue 1 (cross-book leader-laggard) as blocked on ED-1/RD-1.
   - **ROADMAP (2026-07-19, edited by me, endorsed in conversation, never logged):** Paper 2 = **"When can information leadership be identified from live betting markets?"** — which is Avenue 1 territory, the thing GD-7 rejected.

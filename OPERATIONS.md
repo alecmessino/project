@@ -15,7 +15,7 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 # Offline-safe (use the committed cache): ledger/tearsheet/equities need market data; the rest do not.
 drift ledger   --config config/drift.yaml          # docs/ledger.* (needs data; falls back gracefully)
-drift export   --source yahoo --config config/drift.yaml --out docs/equities.html
+drift export   --config config/drift.yaml --out docs/equities.html   # projects the ledger; run AFTER drift ledger
 drift tearsheet --config config/drift.yaml --out docs/tearsheet.html
 drift taxlab   --docs docs --out docs/taxlab.html
 drift thesis   --docs docs --out docs/thesis.html
@@ -99,6 +99,32 @@ canonicals before DNS is live:**
 
 ## 2026 redesign — decisions & Phase 2 backlog
 
+**The four-plate homepage (decided and executed 2026-07-29).** `hub.html` is now a folio of four
+plates: **I The Constraint** ("Uncoordinated decisions leak what you keep") → **II The Coordination
+Engine** (the seven-node lattice, carried over unchanged) → **III Governance Register** → **IV The
+Ask**, reversed to ink. Three sections were removed because each answered a question another plate
+already answered, not because the page was long: a six-condition self-audit (duplicated the hero's
+recognition beat), a standalone dollar band, and the four-step capability sheet. Page height fell from
+~6,160px to ~4,000px as a byproduct.
+- **The capability path moved, it was not deleted.** Diagnose → Measure → Coordinate → Manage now
+  lives on `the-practice.html` as section III, where "how the work runs" is the page's actual subject.
+  `tests/test_drift_hub.py::test_capability_sequence_lives_on_the_practice_not_the_homepage` was
+  **retargeted, not relaxed**: it still pins all four verbs, their order, and `id="capabilities"`, and
+  it additionally bars the homepage from growing a second copy.
+- **The register's dollar column is gone.** "Potential" (≈$14,800/yr and siblings) became "Next
+  review" (a date). Those figures were the top UNSOURCED rows in `FIGURE_PROVENANCE.md`; a review date
+  proves the matter is *carried*, which is the actual claim, and needs no model behind it.
+- The resolved-row floor (≥25%, below) is met: two of eight rows are resolved-and-dated.
+
+**Six Systems vs. Seven Systems — resolved (2026-07-29).** The nav taught "Six Systems" while the
+homepage lattice, `coordination-framework.html`, and the Coordination Engine all teach **seven**
+(Investments, Taxes, Cash Flow, Estate, Protection, Business Ownership, Family / Purpose).
+`six-systems.html` was a content-free stub whose own meta description enumerated six, omitting
+Business Ownership. **Seven is canonical.** The nav entry is now "The Seven Systems" pointing at
+`coordination-framework.html` (which actually enumerates them, and was orphaned until this change);
+`six-systems.html` is a redirect stub. The label lives in `scripts/phase2_nav.py::FAMILIES`, which was
+fixed too, so re-running the generator cannot reintroduce it.
+
 **Statemap vs. Tax Atlas — consolidated (decided 2026-07-26, executed same day).** The 2026 redesign
 briefly introduced `tax-atlas.html`, a single-ink-ramp, 3-toggle state comparison map on the new
 `driftwood.css` design system. It shipped alongside `statemap.html` for one day; the two-Atlas state
@@ -125,12 +151,11 @@ UNSOURCED items.
 "Coordination, kept in one register" table (`hub.html`) mixes open/monitoring/time-sensitive matters
 with resolved-and-dated ones ("Resolved ✓ · Driftwood · Mar 2026"). A resolved, dated row is the most
 trust-building row type on the page — it proves the register produces outcomes, not just promises —
-so **keep resolved-and-dated rows at ≥25% of the sample register.** As of this writing the table is
-5 rows / 1 resolved (20%), just under the floor. Not corrected here: bringing it to 25%+ means either
-adding a second resolved row or converting an existing one, and either requires a properly-derived
-illustrative figure with its own `FIGURE_PROVENANCE.md` row (see the Phase 2 item there for the
-canonical-household work already queued for these rows) — not a number invented under this pass.
-**Phase 2 item:** bring the register to ≥25% resolved as part of that same canonical-household pass.
+so **keep resolved-and-dated rows at ≥25% of the sample register.** **Met as of 2026-07-29:** the
+Plate III register is 8 rows / 2 resolved-and-dated (25%). The earlier concern (that raising the ratio
+would require inventing a dollar figure) dissolved when the dollar column was replaced by "Next
+review" — a resolved row now carries a close date rather than a captured amount, so the floor can be
+held without any un-derived number.
 
 **Stale sitemap entries (`src/drift/statepage.py::_CORE_SITEMAP`, found 2026-07-26, not yet fixed).**
 Four problems, same root cause (the list wasn't updated as pages were added/retired):

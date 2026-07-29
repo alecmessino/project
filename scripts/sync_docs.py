@@ -80,7 +80,12 @@ def main() -> int:
                   "letter.html", "private.html",
                   # Phase 2 dropdown-nav sub-pages (plain editorial stubs)
                   "household-example.html", "our-story.html",
-                  "coordination-framework.html", "articles.html", "cpa-collab.html"):
+                  "coordination-framework.html", "articles.html", "cpa-collab.html",
+                  # Phase 2 nav destinations that existed in src/ but were never registered here, so
+                  # every one 404'd in production while the shared nav linked them from ~43 pages.
+                  # If a page is in the nav it must be in this tuple; see the nav-integrity test.
+                  "leadership.html", "fiduciary.html", "six-systems.html", "first-90-days.html",
+                  "commentary.html", "estate-attorneys.html", "referral.html"):
         (DOCS / asset).write_text(_inject_tokens((WEB / asset).read_text()))
         print(f"   {asset:15} -> docs/{asset} (copied)")
     # Binary assets (e.g. the founder headshot) — copy through only if present, so the About page's

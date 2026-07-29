@@ -1,7 +1,10 @@
 import json
+from pathlib import Path
 
 from drift.hub import build_hub
 from drift.exhibit import render_hub
+
+WEB = Path(__file__).resolve().parents[1] / "src" / "drift" / "web"
 
 
 def test_build_hub_empty_docs_lists_all_exhibits_absent(tmp_path):
@@ -123,28 +126,47 @@ def test_hero_leads_with_the_structural_alpha_before_after(tmp_path):
 
 def test_hub_leads_with_coordination_not_taxes():
     # Coordination-first hero: the front door's one sentence is that Driftwood manages the whole
-    # after-tax SYSTEM (taxes are just the proof), and the spine of the page is the four-capability
-    # path — Diagnose -> Measure -> Coordinate -> Manage — in that deliberate order.
+    # after-tax SYSTEM, taxes are just the proof.
     from drift.exhibit import HUB_TEMPLATE
     t = HUB_TEMPLATE.read_text()
     assert "after-tax system" in t                           # sells coordination of the whole system, not a bare tax pitch
     assert "coordinate" in t.lower()
     assert "The architecture" not in t                       # no machinery-led header
-    for cap in ("Diagnose", "Measure", "Coordinate", "Manage"):
-        assert cap in t, f"the {cap} capability should anchor the guided path"
+
+
+def test_capability_sequence_lives_on_the_practice_not_the_homepage():
+    """The four-capability path (Diagnose -> Measure -> Coordinate -> Manage) must exist, in order,
+    and be reachable, but it answers "how do you work" — a post-interest question. It moved to
+    the-practice.html with the 2026 four-plate homepage (the homepage now runs Constraint -> Engine ->
+    Register -> Ask, and Plate IV states the method in one sentence instead).
+
+    This guard was previously pointed at hub.html. It is retargeted, NOT relaxed: the sequence and its
+    deliberate order are still pinned, and the homepage is still barred from re-growing a second copy,
+    so neither the path nor the reason it was moved can be lost silently."""
+    from drift.exhibit import HUB_TEMPLATE
+    practice = (WEB / "the-practice.html").read_text()
+    caps = ("Diagnose", "Measure", "Coordinate", "Manage")
+    for cap in caps:
+        assert cap in practice, f"the {cap} capability should anchor the guided path on The Practice"
+    # the order is the argument, not an accident
+    positions = [practice.index(c) for c in caps]
+    assert positions == sorted(positions), f"capability order drifted: {list(zip(caps, positions))}"
+    assert 'id="capabilities"' in practice
+    # and the homepage must not carry a duplicate of the sequence it delegated away
+    hub = HUB_TEMPLATE.read_text()
+    assert 'id="capabilities"' not in hub, "the capability sequence should live on The Practice only"
 
 
 def test_hub_demotes_research_below_the_primary_path():
     from drift.exhibit import HUB_TEMPLATE
     t = HUB_TEMPLATE.read_text()
-    # the primary path is the capability sequence; the homepage ends on a single conviction
-    # statement + one invitation (NOT a sitemap/resources directory), placed BELOW the capability
-    # path — no internal product names, no perf figure on the homepage.
-    assert 'id="capabilities"' in t
-    assert 'class="sec close-conv"' in t                     # a conviction close, not a card wall / link list
+    # The homepage ends on a single conviction statement + one invitation (NOT a sitemap/resources
+    # directory) — no internal product names, no perf figure on the homepage.
+    assert 'class="sec close-conv' in t                      # a conviction close, not a card wall / link list
     assert 'class="res"' not in t                            # the old resources directory is gone
-    assert t.index('id="capabilities"') < t.index('class="sec close-conv"')  # the close sits below the primary path
     assert "coordination decisions" in t                     # ends on the thesis, in words
     assert "Core Alpha Research" not in t
     assert 'class="rstat"' not in t                          # no performance figure line on the homepage
     assert "View the track record" not in t
+    # the close is the last plate: nothing structural may follow it inside <main>
+    assert t.index('class="sec close-conv') > t.index('id="governance"'), "the ask must follow the register"

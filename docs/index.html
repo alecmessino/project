@@ -77,15 +77,20 @@
   .tnum{font-variant-numeric:tabular-nums}
 
   /* ── Gallery I · The Constraint, an asymmetric broadsheet, not a centered column. ──────────── */
-  .hero{display:block;padding:26px 52px 44px}
+  .hero{display:block;padding:26px 52px 38px}
   .hero-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:0 34px;align-items:start}
   .hero h1{grid-column:1/8;font-family:var(--sans);font-weight:700;
-    font-size:clamp(36px,4vw,50px);line-height:1.1;letter-spacing:-.024em;color:var(--ink);margin:0}
+    font-size:clamp(38px,5.1vw,68px);line-height:1.02;letter-spacing:-.026em;color:var(--ink);margin:0;max-width:22ch}
   .hero h1 span{display:block}
-  .hero-aside{grid-column:9/-1;margin-top:76px;padding-left:24px;border-left:1px solid var(--line)}
-  .lede{font-family:var(--serif);font-size:16.5px;line-height:1.68;color:var(--dim);margin:0}
+  /* the aside is the margin argument: it sits at the headline's baseline, not floated below it, so the
+     plate reads as one spread rather than two stacked blocks. */
+  .hero-aside{grid-column:9/-1;margin-top:10px;padding-left:24px;border-left:1px solid var(--line)}
+  .lede{font-family:var(--serif);font-size:16.5px;line-height:1.62;color:var(--dim);margin:0}
   .lede b{color:var(--ink);font-weight:500}
-  .hero .ctas{margin-top:38px;padding-top:26px;border-top:1px solid var(--line)}
+  /* second beat of the margin argument: separated by air and a change of face, so the two paragraphs
+     read as claim then answer rather than one run-on column. */
+  .hero-aside .lede2-note{margin:16px 0 0}
+  .hero .ctas{margin-top:26px;padding-top:24px;border-top:1px solid var(--line)}
   @media(max-width:900px){
     .hero{padding-top:40px}
     .hero-grid{display:block}
@@ -101,7 +106,10 @@
   .fn-note{margin-top:20px;background:var(--navy);color:var(--on-dark);font-family:var(--sans);
     font-size:12.5px;line-height:1.62;padding:15px 17px;max-width:46ch}
   .fn-note b{color:var(--on-dark-strong);font-weight:700}
-  .ctas{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .ctas{display:flex;gap:12px 20px;flex-wrap:wrap;align-items:center}
+  /* the qualifier does more trust work than a third paragraph would: it removes the reader's main
+     objection to booking (being sold to) in six words, so it sits with the action, not in the prose. */
+  .hero-qual{font-family:var(--sans);font-size:12.5px;letter-spacing:.01em;color:var(--muted)}
   .ctas a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:500;white-space:nowrap;
     transition:filter var(--t-fast),transform var(--t-fast),background var(--t-fast),border-color var(--t-fast)}
   .ctas .primary{background:var(--accent-strike);color:#fff;padding:15px 26px;border-radius:var(--surface-radius);font-weight:600}
@@ -120,81 +128,28 @@
      vertical rhythm deliberately: dense ledger, vast plate, quiet archive, never one template. ── */
   .sec{padding:20px 52px 40px}
   .sec.gal{padding:52px 52px 52px}
-  #diagnostic.gal{padding:26px 52px 44px}
-  #capabilities.gal{padding:26px 52px 32px}
   .lede2{font-family:var(--serif);font-size:clamp(19px,1vw + 15px,23px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:56ch;letter-spacing:-.01em}
   .lede2 b{color:var(--ink);font-weight:500}
-  /* ── Gallery III · The Annual Review, the standing checklist a family office runs, not a lead form.
-     Native inputs stay (visually hidden) so keyboard behaviour is unchanged; there is no score or
-     verdict, hovering a statement focuses it like a lens, and a recognized one carries a drawn check
-     as a private, unhurried self-audit. ── */
-  .diag-cue{font-family:var(--sans);font-size:12.5px;font-weight:500;letter-spacing:.01em;color:var(--muted);margin:0 0 4px}
-  /* the standing review a family office runs each year, laid out as a 2×3 matrix (a board's register,
-     not a to-do list), so it doesn't echo the Method's numbered rows just below. Items stretch to their
-     row's height so the hairline rules align across both columns; collapses to one column on mobile. */
-  .diag{counter-reset:dg;display:grid;grid-template-columns:1fr 1fr;column-gap:46px;align-items:stretch;
-    margin:16px 0 30px;max-width:none;border-top:2px solid var(--ink)}
-  .diag-item{display:grid;grid-template-columns:30px 1fr;gap:0 12px;align-items:baseline;align-content:start;position:relative;
-    padding:14px 28px 15px 8px;border-bottom:1px solid var(--line2);cursor:pointer;
-    font-family:var(--serif);font-size:14.5px;line-height:1.5;color:var(--body);
-    transition:opacity .2s ease,color .2s ease,background .2s ease,transform .2s ease}
-  .diag-item::before{counter-increment:dg;content:counter(dg,decimal-leading-zero);
-    font-family:var(--sans);font-variant-numeric:tabular-nums;font-size:11px;font-weight:700;
-    letter-spacing:.14em;color:var(--ghost-line);transform:translateY(-2px);transition:color .22s ease}
-  .diag-item::after{content:"";position:absolute;left:-20px;top:15px;bottom:15px;width:2px;
-    background:var(--accent-strike);opacity:0;transition:opacity .22s ease}
-  @media(hover:hover){
-    .diag:hover .diag-item:not(:hover):not(:focus-within){opacity:.32}
-    /* the hovered condition lifts off the ledger, a touch of warmer cream + a 1px raise, so it reads
-       as a tactile, selectable row (the left accent bar joins it). */
-    .diag-item:hover{background:#ece8df;transform:translateY(-1px)}
-    .diag-item:hover::after{opacity:1}
-  }
-  .diag-item:focus-within::after{opacity:1}
-  .diag-item input:focus-visible ~ span{outline:2px solid var(--accent);outline-offset:3px}
-  .diag-item input:checked ~ span{color:var(--ink);font-weight:500}
-  /* selection is checked off in a fixed right-hand column, an item cleared on the ledger */
-  .diag-item input:checked ~ span::after{content:"✓";position:absolute;right:2px;top:50%;
-    transform:translateY(-50%);font-family:var(--sans);font-size:13px;font-weight:700;color:var(--accent-strike)}
-  .diag-item:has(input:checked)::before{color:var(--accent-strike)}
-  /* each condition names its own coordination consequence, a quiet, matter-of-fact sub-line (not a
-     second column), and it stays muted even when the statement above it is checked. */
-  .diag-why{display:block;margin-top:5px;font-family:var(--sans);font-size:12.5px;line-height:1.45;
-    letter-spacing:.01em;color:var(--dim);font-weight:400}
-  .diag-insight{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.5;color:var(--dim);
-    margin:0 0 14px;max-width:56ch;padding-left:16px;border-left:2px solid var(--accent-strike)}
-  /* the bridge from the six conditions to the State Atlas: quiet serif connective tissue naming the
-     state as the environment those conditions play out in. Prose only, it frames the single action
-     (the .quiet CTA directly below), so no second link competes with it. */
-  .diag-bridge{font-family:var(--serif);font-size:15.5px;line-height:1.6;color:var(--dim);margin:0 0 20px;max-width:58ch}
-  @media(max-width:700px){.diag{grid-template-columns:1fr;max-width:60ch}}
+
+  /* ── Plate labels (2026 four-plate homepage). The page is an engraved folio: each plate announces
+     itself in the margin the way an exhibition label does, "Plate II · The Coordination Engine".
+     Mirrors the "Exhibit I" convention already used on leakage.html, so the two pages read as one
+     publication. Numerals are Roman by intent: they date the argument, not the visit. ── */
+  .plate{display:flex;align-items:center;gap:12px;margin:0 0 26px}
+  /* the engine plate is centred copy, but its label belongs on the page's left margin like the others */
+  .sysband-in .plate{justify-content:flex-start;text-align:left}
+  .plate .pl-n,.plate .pl-t{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  .plate .pl-r{width:28px;height:1px;background:var(--ghost-line);flex:none}
+  .plate .pl-t{color:var(--accent-strike)}
+  @media(max-width:620px){ .plate{gap:9px;margin-bottom:20px} .plate .pl-n,.plate .pl-t{font-size:9.5px;letter-spacing:.16em} }
   /* the plate's product line, a quiet serif framing above the seven-systems headline */
   .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw + 15px,19px);line-height:1.5;color:var(--dim);
     margin:0 auto 20px;max-width:36ch}
 
-  /* ── Gallery IV · The Method, a specification sheet, deliberately the opposite of the Diagnosis
-     ledger: where that is dense and forensic, this is open and procedural. Each step is a numbered
-     sheet, the label + verb anchor a wide left column, the question and route fill the right, and
-     generous air between steps reads as a drawing set, not a checklist. ── */
-  .method{list-style:none;margin:30px 0 0;padding:0}
-  .m-row{display:grid;grid-template-columns:minmax(168px,.8fr) 1.7fr;gap:0 58px;align-items:start;
-    padding:32px 0 28px;border-top:1px solid var(--line)}
-  .m-step{display:block;font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.24em;
-    text-transform:uppercase;color:var(--accent-strike);font-variant-numeric:tabular-nums;margin:0 0 16px}
-  .m-verb{font-family:var(--sans);font-weight:700;font-size:clamp(25px,1.6vw + 14px,34px);letter-spacing:-.022em;color:var(--ink);margin:0}
-  .m-q{font-family:var(--serif);font-size:19px;line-height:1.4;color:var(--ink);margin:0 0 10px;max-width:34ch}
-  .m-d{font-family:var(--sans);font-size:14px;line-height:1.58;color:var(--dim);margin:0 0 16px;max-width:48ch}
-  /* One quiet on-ramp per diagnostic step (Diagnose→leakage, Measure→taxlab), an index entry, not a button. */
-  .m-go{display:inline-block;margin:0;font-family:var(--sans);font-weight:600;font-size:13px;letter-spacing:.01em;
-    color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft);transition:border-color .2s ease}
-  .m-go:hover{border-bottom-color:var(--accent-strike)}
   .lede2-note{font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--dim);margin:-6px 0 22px;max-width:58ch}
   .lede2-note a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
   .lede2-note a:hover{border-bottom-color:var(--accent-strike)}
-  .method-onward{font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--dim);margin:20px 0 30px;max-width:58ch}
-  .method-onward a{color:var(--accent-strike);text-decoration:none;font-weight:600;border-bottom:1px solid var(--accent-strike-soft)}
-  .method-onward a:hover{border-bottom-color:var(--accent-strike)}
-  @media(max-width:700px){.m-row{grid-template-columns:1fr;gap:6px 0}.m-body{margin-top:4px}}
   /* the centerpiece, the four proprietary standing records the method produces, given real weight:
      the firm's infrastructure is the differentiator, not the process. A 2×2 vitrine of named artifacts. */
   /* THE OPPORTUNITY REGISTER, the signature artifact: a ruled record made to read as standing, not
@@ -208,14 +163,15 @@
   .reg-h{font-family:var(--sans);font-weight:700;font-size:clamp(24px,1.6vw + 16px,32px);line-height:1.14;letter-spacing:-.02em;color:var(--ink);margin:0 0 12px;max-width:22ch}
   .reg-sub{font-family:var(--serif);font-size:16px;line-height:1.5;color:var(--dim);margin:0;max-width:60ch}
   .reg-table{border-top:1px solid var(--ink);font-family:var(--sans)}
-  .reg-r{display:grid;grid-template-columns:1.6fr 1.05fr .95fr 1.15fr .75fr;gap:16px;padding:14px 4px;border-bottom:1px solid var(--line2);align-items:baseline}
+  .reg-r{display:grid;grid-template-columns:1.55fr 1.2fr 1.05fr .8fr .85fr;gap:16px;padding:14px 4px;border-bottom:1px solid var(--line2);align-items:baseline}
   .reg-th{border-bottom:1px solid var(--ink);padding:0 4px 8px}
   .reg-th span{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
   .reg-m{font-weight:700;font-size:14.5px;letter-spacing:-.005em;color:var(--ink)}
   .reg-sys{font-size:12.5px;color:var(--dim)}
   .reg-o{font-size:12.5px;color:var(--body)}
-  .reg-num,.reg-th .reg-num{font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums;text-align:right}
-  .reg-num .pu{color:var(--muted);font-size:11px;margin-left:4px}
+  /* the date a matter is next examined: tabular so the column scans as a schedule, which is the point */
+  .reg-when{font-size:12.5px;color:var(--body);font-variant-numeric:tabular-nums}
+  .reg-st,.reg-th .reg-st{text-align:right}
   .st{font-size:11px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
   .st-open{color:var(--accent-strike)} .st-ready{color:var(--teal2)} .st-mon{color:var(--muted)}
   .st-wait{color:var(--dim)} .st-fut{color:var(--dim)} .st-res{color:var(--muted)}
@@ -224,7 +180,7 @@
     margin-right:6px;vertical-align:middle;animation:regpulse 1.9s ease-in-out infinite}
   @keyframes regpulse{0%,100%{opacity:1}50%{opacity:.35}}
   .reg-done .reg-m{color:var(--muted);font-weight:600} .reg-done .reg-sys,.reg-done .reg-o{color:var(--ghost-line)}
-  .reg-done .reg-num{color:var(--muted)}
+  .reg-done .reg-when{color:var(--ghost-line)}
   .reg.seeded .reg-r{opacity:0;transform:translateY(7px)}
   .reg.seeded.in .reg-r{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease;transition-delay:calc(var(--i) * 65ms)}
   .reg-foot{display:flex;justify-content:space-between;align-items:baseline;gap:16px 26px;flex-wrap:wrap;margin-top:16px}
@@ -238,9 +194,9 @@
     .reg-th{display:none}
     .reg-r{grid-template-columns:1fr auto;column-gap:14px;row-gap:3px;padding:15px 2px}
     .reg-m{grid-column:1;grid-row:1}
-    .reg-r>span[role=cell]:nth-child(3){grid-column:2;grid-row:1;justify-self:end}
+    .reg-st{grid-column:2;grid-row:1;justify-self:end}
     .reg-sys{grid-column:1;grid-row:2}
-    .reg-num{grid-column:2;grid-row:2;justify-self:end}
+    .reg-when{grid-column:2;grid-row:3;justify-self:end}
     .reg-o{grid-column:1;grid-row:3}
   }
   @media(prefers-reduced-motion:reduce){
@@ -360,6 +316,34 @@
   @media(max-width:620px){.close-conv{padding:64px 22px 56px}.review-cta{display:flex}
     .founder-tag{gap:14px}.founder-tag .ft-photo{width:56px;height:56px}}
 
+  /* ── Plate IV, the ask, set on ink (2026 four-plate homepage). The three light plates argue; the
+     closing plate is where the reader is asked, and reversing to ink marks the change of register
+     without adding an element. Full-bleed inside the frame, so it reads as the page's last surface
+     rather than one more block on limestone. Local overrides only, the light rules above are the
+     single source for structure. ── */
+  .close-conv.on-ink{background:var(--navy);color:var(--on-dark);max-width:none;
+    border-top:none;padding:64px 52px 66px}
+  .close-conv.on-ink .plate .pl-n{color:var(--on-dark-dim)}
+  .close-conv.on-ink .plate .pl-t{color:var(--gold)}
+  .close-conv.on-ink .plate .pl-r{background:rgba(169,194,214,.34)}
+  .close-conv.on-ink .conv{color:var(--on-dark-strong);max-width:26ch}
+  .close-conv.on-ink .conv b{color:#fff}
+  .close-conv.on-ink .review-scope{color:var(--on-dark-dim)}
+  /* on ink the primary inverts to paper, the strongest contrast available without a new hue */
+  .close-conv.on-ink .review-cta{background:var(--on-dark-strong);color:var(--navy)}
+  .close-conv.on-ink .review-cta .rc-sub{color:#3d4650}
+  .close-conv.on-ink .founder-tag{border-top-color:rgba(169,194,214,.28)}
+  .close-conv.on-ink .ft-name{color:var(--on-dark-strong)}
+  .close-conv.on-ink .ft-cred{color:var(--gold)}
+  .close-conv.on-ink .ft-say{color:var(--on-dark-dim)}
+  .close-conv.on-ink .ft-photo{border-color:rgba(169,194,214,.3);filter:grayscale(1) contrast(1.04)}
+  /* the deliverable line: what the review physically hands over, held apart by a rule */
+  .close-conv.on-ink .deliver{margin:26px 0 0;max-width:58ch;padding-top:20px;
+    border-top:1px solid rgba(169,194,214,.22);font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--on-dark-dim)}
+  .close-conv.on-ink .deliver a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(169,194,214,.4)}
+  .close-conv.on-ink .deliver a:hover{border-bottom-color:var(--gold)}
+  @media(max-width:620px){.close-conv.on-ink{padding:52px 22px 54px}}
+
   .foot{margin-top:26px;padding:18px 52px 34px;border-top:1px solid var(--line);border-left:1px solid transparent;color:var(--dim);font-size:12px;line-height:1.62}
   .foot .note{color:var(--body);font-weight:500}
   .foot a{color:var(--dim);text-decoration:underline;text-underline-offset:2px}
@@ -393,14 +377,14 @@
 </style>
 </head>
 <body>
-<a class="skip-link" href="https://driftwoodwealth.com/#main">Skip to main content</a>
+<a class="skip-link" href="#main">Skip to main content</a>
 <div class="wrap">
   <div class="frame">
     <div class="inner">
     <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fiduciary.html">Fiduciary Standard</a></div></div>
-      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="six-systems.html">Six Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="the-practice.html">Household Example</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Review</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="coordination-framework.html">The Seven Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="household-example.html">Household Example</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Review</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights & Research<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="statemap.html">State Tax Atlas</a><a href="research.html">Research</a><a href="insights.html">Articles</a><a href="commentary.html">Commentary</a></div></div>
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">CPA Collaboration</a><a href="estate-attorneys.html">Estate Attorneys</a><a href="referral.html">Referral Process</a></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
@@ -409,37 +393,43 @@
     </nav>
 
     <main id="main" tabindex="-1">
-    <!-- ── GALLERY I · THE CONSTRAINT, an asymmetric broadsheet: the triad carved large, the
-         supporting argument set as a margin deck, one footnote for the deep reader ── -->
+    <!-- ══ PLATE I · THE CONSTRAINT ═══════════════════════════════════════════════════════════
+         The 2026 folio homepage: four plates, one argument. Problem (I) → mechanism (II) →
+         artifact (III) → ask (IV). The three sections this replaced (a six-condition self-audit, a
+         four-step method sheet, and a standalone dollar band) each answered a question another plate
+         already answered; the method sheet moved to the-practice.html, where "how the work runs" is
+         the page's actual subject. Length was never the problem; duplicate questions were. ── -->
     <header class="hero">
+      <div class="plate"><span class="pl-n">Plate I</span><span class="pl-r" aria-hidden="true"></span><span class="pl-t">The Constraint</span></div>
       <div class="hero-grid">
-        <h1><span>Wealth compounds.</span> <span>Complexity compounds with it.</span> <span>Eventually, coordination becomes the constraint.</span></h1>
+        <h1><span>Uncoordinated decisions</span> <span>leak what you keep.</span></h1>
         <div class="hero-aside">
-          <p class="lede">It arrives one account, one entity, one state at a time, until every important
-            decision depends on <b>three others</b>.<sup class="fn"><button class="fn-btn" id="fn1btn" aria-expanded="false" aria-controls="fn1">[1]</button></sup></p>
+          <p class="lede">Affluent households rarely lack investment options. They lack a single party
+            responsible for the seams: the tax consequence of a rebalance, the estate consequence of a
+            title, the entity consequence of a move across state
+            lines.<sup class="fn"><button class="fn-btn" id="fn1btn" aria-expanded="false" aria-controls="fn1">[1]</button></sup></p>
           <aside class="fn-note" id="fn1" hidden="">
             <b>[1]</b>&nbsp; One example from the Atlas: Illinois exempts an estate only to $4M, far below the
             federal ~$15M, so a single titling or residency decision can move income, estate, and filing
             outcomes at once. Illustrative, not advice.
           </aside>
+          <p class="lede2-note">Driftwood is that party. We do not replace your CPA or your counsel. We
+            convene them, hold the register of open decisions, and read the whole <b>after-tax system</b> as
+            one, so the second-order effects are chosen rather than inherited.</p>
         </div>
       </div>
       <div class="ctas">
-        <a class="primary" href="https://driftwoodwealth.com/coordination-review.html">Request a Coordination Review →</a>
+        <a class="primary" href="coordination-review.html">Request a Coordination Review &rarr;</a>
+        <span class="hero-qual">No products at the first meeting.</span>
       </div>
     </header>
-
-    <!-- ── RECOGNITION · "he's describing my life" — the moment a visitor sees their own situation ── -->
-    <div class="sec gal" id="recognition">
-      <p class="lede2">Most households we meet aren't missing an investment. They're missing the person coordinating the ones they have.</p>
-      <p class="lede2-note">The portfolio is fine. The CPA is fine. The estate attorney is fine. But no one is holding the three of them to the same decision — and that gap is exactly where the return goes. If you've ever thought <em>"someone should be watching how all of this fits together,"</em> you've already found the problem Driftwood exists to solve.</p>
-    </div>
 
     <!-- ── GALLERY II · THE SYSTEM (Plate I), the machine first: seven systems in one lattice;
          hovering a system teaches what it moves, and tracing a common decision lights everything it
          touches. The whole argument is visible before a single paragraph. ── -->
     <div class="sysband" id="thesystem">
       <div class="sysband-in">
+        <div class="plate"><span class="pl-n">Plate II</span><span class="pl-r" aria-hidden="true"></span><span class="pl-t">The Coordination Engine</span></div>
         <p class="sb-lead">Driftwood coordinates your financial life as one system.</p>
         <h2 class="sb-h">Seven systems. No decision touches just one.</h2>
         <div class="sysstage seeded" id="sysDiagram">
@@ -508,7 +498,7 @@
           <p class="mrest" id="mrest">Each line is a dependency. Trace a decision below, or explore a system.</p>
           <p class="mlead" id="mlead"></p>
           <p class="mchain" id="mchain"></p>
-          <a class="mproof" id="mproof" href="https://driftwoodwealth.com/#"></a>
+          <a class="mproof" id="mproof" href="#"></a>
         </div>
         <div class="trig" id="trig" role="group" aria-label="Trace a common decision, press one to see the systems it moves">
           <button class="trig-btn" data-t="0" aria-pressed="false">Buy a home</button>
@@ -519,146 +509,86 @@
       </div>
     </div>
 
-    <!-- ── GALLERY III · THE ANNUAL REVIEW, the standing checklist a family office runs each year;
-         now that the machine is on the wall, the visitor measures their own life against the standard ── -->
-    <div class="sec gal" id="diagnostic">
-      <p class="lede2">Every year, institutional families review the connections between these systems
-        before making major financial decisions. The following conditions often reveal where coordination
-        has begun to break down.</p>
-      <p class="diag-cue">Mark the ones you recognize.</p>
-      <div class="diag" id="diag">
-        <label class="diag-item" style="transition: none; opacity: 0;"><input class="vh" type="checkbox"><span>My CPA and advisor rarely talk to each other.<span class="diag-why">Tax and investment decisions drift apart.</span></span></label>
-        <label class="diag-item" style="transition: none; opacity: 0;"><input class="vh" type="checkbox"><span>I have multiple custodians or account structures.<span class="diag-why">Account structure begins driving decisions instead of strategy.</span></span></label>
-        <label class="diag-item" style="transition: none; opacity: 0;"><input class="vh" type="checkbox"><span>My estate plan hasn't been reviewed alongside my investments.<span class="diag-why">Estate and portfolio decisions gradually diverge.</span></span></label>
-        <label class="diag-item" style="transition: none; opacity: 0;"><input class="vh" type="checkbox"><span>I'm considering relocating, or I keep more than one residence.<span class="diag-why">A move can reopen income, estate, and residency questions at once.</span></span></label>
-        <label class="diag-item" style="transition: none; opacity: 0;"><input class="vh" type="checkbox"><span>A business, equity compensation, or trusts have added moving parts.<span class="diag-why">Each new structure multiplies the connections to keep aligned.</span></span></label>
-        <label class="diag-item" style="transition: none; opacity: 0;"><input class="vh" type="checkbox"><span>No one person is responsible for how it all fits together.<span class="diag-why">Coordination becomes no one's job, until it's expensive.</span></span></label>
-      </div>
-      <p class="diag-insight">Institutions review all six every year. Most households discover one or two only after they've become expensive.</p>
-      <p class="diag-bridge">These six are where coordination breaks down. Your state's rules are the
-        environment they play out in, see how much is at stake, and how your state's rules shape it.</p>
-      <div class="ctas">
-        <a class="quiet" href="https://driftwoodwealth.com/statemap.html?tab=coordination&amp;state=IL">See what's at stake in your state →</a>
-      </div>
-    </div>
-
-    <!-- ── HOUSEHOLD EXAMPLE · a concrete household, so the abstract becomes specific ── -->
-    <div class="sec gal" id="household-example">
-      <p class="lede2">A worked household.</p>
-      <p class="lede2-note">A couple in their 50s: $4M taxable, a concentrated equity position from a sale, two trusts that were never funded, and a Roth they'd forgotten they had. Nothing was "broken." Coordinated, the same holdings keep an estimated <b>~$40k/yr more after tax</b> — and three decisions that had sat open for years finally closed. <a href="https://driftwoodwealth.com/household-example.html">See the full household walk-through →</a></p>
-    </div>
-
-    <!-- ── EVIDENCE · the dollar proof, isolated from market return ── -->
-    <div class="sec gal" id="evidence">
-      <p class="lede2">The evidence is a number, not a promise.</p>
-      <p class="lede2-note">In one 30-year illustration, coordinated versus isolated kept <b>$320,000 more</b> per $1M of realized gains. The investments didn't change. Only the coordination did. <a href="https://driftwoodwealth.com/taxlab.html?state=IL&amp;bracket=37&amp;port=250000">See the After-Tax Review →</a></p>
-    </div>
-
-    <!-- ── GALLERY IV · THE METHOD (#capabilities), an architect's index, not a feature grid ── -->
-    <div class="sec gal" id="capabilities">
-      <p class="lede2">Every client relationship follows the same sequence.</p>
-      <p class="lede2-note">Not sure where coordination is helping or costing you? The <a href="https://driftwoodwealth.com/score.html">Coordination&nbsp;Assessment</a> is a brief, neutral place to begin.</p>
-      <ol class="method">
-        <li class="m-row">
-          <div class="m-head"><span class="m-step">01</span><div class="m-verb">Diagnose</div></div>
-          <div class="m-body">
-            <p class="m-q">Where does your return go to tax?</p>
-            <p class="m-d">See what taxes quietly take from the same holdings, by your state and bracket.</p>
-            <a class="m-go" href="https://driftwoodwealth.com/leakage.html?state=IL&amp;port=250000">Open the Tax Diagnostic →</a>
-          </div>
-        </li>
-        <li class="m-row">
-          <div class="m-head"><span class="m-step">02</span><div class="m-verb">Measure</div></div>
-          <div class="m-body">
-            <p class="m-q">What is coordination worth?</p>
-            <p class="m-d">Put a dollar figure on it, for your bracket, state, and portfolio. In one 30-year illustration, that gap was $320,000.</p>
-            <a class="m-go" href="https://driftwoodwealth.com/taxlab.html?state=IL&amp;bracket=37&amp;port=250000">See the After-Tax Review →</a>
-          </div>
-        </li>
-        <li class="m-row">
-          <div class="m-head"><span class="m-step">03</span><div class="m-verb">Coordinate</div></div>
-          <div class="m-body">
-            <p class="m-q">How do the pieces work as one plan?</p>
-            <p class="m-d">Taxes, accounts, and estate kept consistent, the way institutions coordinate decisions.</p>
-          </div>
-        </li>
-        <li class="m-row">
-          <div class="m-head"><span class="m-step">04</span><div class="m-verb">Manage</div></div>
-          <div class="m-body">
-            <p class="m-q">How is the portfolio built and held?</p>
-            <p class="m-d">A low-turnover core, placed by tax and held with discipline, reviewed as one system, not one account at a time.</p>
-          </div>
-        </li>
-      </ol>
-      <p class="method-onward">This is the shape of it. To see exactly what happens once you're a client, month by month and every year after, walk the full sequence on <a href="https://driftwoodwealth.com/howitworks.html">The Method</a>.</p>
-      <!-- The signature artifact. The six conditions above are the recognition; the Register is the
-           resolution: coordination made standing, not annual. A ruled record, not a dashboard, with
-           two resolved rows to prove it moves. Rows and the live status arrive on scroll (reduced-motion
-           shows the end-state at once). Illustrative sample for a fictional household. -->
+    <!-- ══ PLATE III · GOVERNANCE REGISTER ════════════════════════════════════════════════════
+         The signature artifact, and the page's climax: coordination made standing, not annual. The
+         "Potential" dollar column was retired in 2026-07 — those figures (~$14,800/yr and siblings)
+         were illustrative estimates with no derivation in this repo, the top UNSOURCED entries in
+         FIGURE_PROVENANCE.md. A "Next review" date is the more honest and more institutional column:
+         it proves the matter is *carried*, which is the actual claim, and it needs no model to stand
+         behind it. Two of eight rows are resolved-and-dated (25%), the floor set in OPERATIONS.md. ── -->
+    <div class="sec gal" id="governance">
+      <div class="plate"><span class="pl-n">Plate III</span><span class="pl-r" aria-hidden="true"></span><span class="pl-t">Governance Register</span></div>
       <div class="reg seeded" id="register">
         <div class="reg-head">
           <p class="reg-lead">This is what standing attention looks like.</p>
-          <h2 class="reg-h">Coordination, kept in one register.</h2>
-          <p class="reg-sub">Every client household runs on a standing Opportunity Register: each open matter
-            carried with a status, an owner, and its dependency, reviewed until it is resolved and dated. Not
-            tasks. Not reminders. The wealth opportunities themselves, held open until they close.</p>
+          <h2 class="reg-h">Everything we find is written down and owned.</h2>
+          <p class="reg-sub">Every client household runs on a standing Opportunity Register: each open
+            matter carried with the systems it touches, a named owner, and the date it is next examined,
+            held until it is resolved and dated. Not tasks. Not reminders. The wealth opportunities
+            themselves, held open until they close.</p>
         </div>
         <div class="reg-table" role="table" aria-label="A sample Opportunity Register: six open matters and two resolved.">
           <div class="reg-r reg-th" role="row">
-            <span role="columnheader">Matter</span><span role="columnheader">Systems</span>
-            <span role="columnheader">Status</span><span role="columnheader">Owner</span>
-            <span role="columnheader" class="reg-num">Potential</span>
+            <span role="columnheader">Item</span><span role="columnheader">Systems touched</span>
+            <span role="columnheader">Owner</span><span role="columnheader">Next review</span>
+            <span role="columnheader" class="reg-st">Status</span>
           </div>
-          <div class="reg-r" role="row" style="--i:0"><span class="reg-m" role="cell">Asset location</span><span class="reg-sys" role="cell">Investments · Taxes</span><span role="cell"><span class="st st-open">Open</span></span><span class="reg-o" role="cell">Driftwood</span><span class="reg-num" role="cell">≈ $14,800<span class="pu">/yr</span></span></div>
-          <div class="reg-r" role="row" style="--i:1"><span class="reg-m" role="cell">Trust funding &amp; titling</span><span class="reg-sys" role="cell">Business Ownership</span><span role="cell"><span class="st st-wait">Waiting</span></span><span class="reg-o" role="cell">Estate attorney</span><span class="reg-num" role="cell">structural</span></div>
-          <div class="reg-r" role="row" style="--i:2"><span class="reg-m" role="cell">Roth conversion window</span><span class="reg-sys" role="cell">Taxes</span><span role="cell"><span class="st st-mon">Monitoring</span></span><span class="reg-o" role="cell">Driftwood + CPA</span><span class="reg-num" role="cell">≈ $4,100<span class="pu">/yr</span></span></div>
-          <div class="reg-r" role="row" style="--i:3"><span class="reg-m" role="cell">QSBS eligibility</span><span class="reg-sys" role="cell">Taxes · Estate</span><span role="cell"><span class="st st-time">Time-sensitive</span></span><span class="reg-o" role="cell">Assigned at review</span><span class="reg-num" role="cell">at exit</span></div>
-          <div class="reg-r" role="row" style="--i:4"><span class="reg-m" role="cell">Charitable gifting sequence</span><span class="reg-sys" role="cell">Family / Purpose · Taxes</span><span role="cell"><span class="st st-ready">Ready</span></span><span class="reg-o" role="cell">Driftwood + CPA</span><span class="reg-num" role="cell">≈ $6,200<span class="pu">this yr</span></span></div>
-          <div class="reg-r" role="row" style="--i:5"><span class="reg-m" role="cell">Business liquidity</span><span class="reg-sys" role="cell">Cash Flow · Risk</span><span role="cell"><span class="st st-fut">Future event</span></span><span class="reg-o" role="cell">Driftwood</span><span class="reg-num" role="cell">at event</span></div>
-          <div class="reg-r reg-done" role="row" style="--i:6"><span class="reg-m" role="cell">Loss carryforward deployment</span><span class="reg-sys" role="cell">Taxes</span><span role="cell"><span class="st st-res">Resolved ✓</span></span><span class="reg-o" role="cell">Driftwood · Mar 2026</span><span class="reg-num" role="cell">$11,300 kept</span></div>
-          <div class="reg-r reg-done" role="row" style="--i:7"><span class="reg-m" role="cell">Reserve target</span><span class="reg-sys" role="cell">Cash Flow</span><span role="cell"><span class="st st-res">Resolved ✓</span></span><span class="reg-o" role="cell">Driftwood · May 2026</span><span class="reg-num" role="cell">≈ $5,200<span class="pu">/yr</span></span></div>
+          <div class="reg-r" role="row" style="--i:0"><span class="reg-m" role="cell">Asset location</span><span class="reg-sys" role="cell">Investments &middot; Taxes</span><span class="reg-o" role="cell">Driftwood</span><span class="reg-when" role="cell">Sep 2026</span><span class="reg-st" role="cell"><span class="st st-open">Open</span></span></div>
+          <div class="reg-r" role="row" style="--i:1"><span class="reg-m" role="cell">Trust funding &amp; titling</span><span class="reg-sys" role="cell">Estate &middot; Business Ownership</span><span class="reg-o" role="cell">Estate attorney</span><span class="reg-when" role="cell">Aug 2026</span><span class="reg-st" role="cell"><span class="st st-wait">Waiting</span></span></div>
+          <div class="reg-r" role="row" style="--i:2"><span class="reg-m" role="cell">Roth conversion window</span><span class="reg-sys" role="cell">Taxes</span><span class="reg-o" role="cell">Driftwood + CPA</span><span class="reg-when" role="cell">Nov 2026</span><span class="reg-st" role="cell"><span class="st st-mon">Monitoring</span></span></div>
+          <div class="reg-r" role="row" style="--i:3"><span class="reg-m" role="cell">QSBS eligibility</span><span class="reg-sys" role="cell">Taxes &middot; Estate</span><span class="reg-o" role="cell">Assigned at review</span><span class="reg-when" role="cell">At exit</span><span class="reg-st" role="cell"><span class="st st-time">Time-sensitive</span></span></div>
+          <div class="reg-r" role="row" style="--i:4"><span class="reg-m" role="cell">Charitable gifting sequence</span><span class="reg-sys" role="cell">Family / Purpose &middot; Taxes</span><span class="reg-o" role="cell">Driftwood + CPA</span><span class="reg-when" role="cell">Dec 2026</span><span class="reg-st" role="cell"><span class="st st-ready">Ready</span></span></div>
+          <div class="reg-r" role="row" style="--i:5"><span class="reg-m" role="cell">Business liquidity</span><span class="reg-sys" role="cell">Cash Flow &middot; Risk</span><span class="reg-o" role="cell">Driftwood</span><span class="reg-when" role="cell">At event</span><span class="reg-st" role="cell"><span class="st st-fut">Future event</span></span></div>
+          <div class="reg-r reg-done" role="row" style="--i:6"><span class="reg-m" role="cell">Loss carryforward deployment</span><span class="reg-sys" role="cell">Taxes</span><span class="reg-o" role="cell">Driftwood</span><span class="reg-when" role="cell">Closed Mar 2026</span><span class="reg-st" role="cell"><span class="st st-res">Resolved &#10003;</span></span></div>
+          <div class="reg-r reg-done" role="row" style="--i:7"><span class="reg-m" role="cell">Reserve target</span><span class="reg-sys" role="cell">Cash Flow</span><span class="reg-o" role="cell">Driftwood</span><span class="reg-when" role="cell">Closed May 2026</span><span class="reg-st" role="cell"><span class="st st-res">Resolved &#10003;</span></span></div>
         </div>
         <div class="reg-foot">
-          <p class="reg-note">Illustrative sample, a fictional household. Potentials are modeled on the household's
-            own figures; resolved rows record what was actually captured. The Annual Review's opportunity table
-            and the Manual's open matters are scoped views of this one record.</p>
-          <a class="reg-go" href="https://driftwoodwealth.com/opportunity-register.html">See the full Opportunity Register →</a>
+          <p class="reg-note">Illustrative sample entries, a fictional household, not client data. A live
+            register typically runs longer. The Annual Review's opportunity table and the Manual's open
+            matters are scoped views of this one record.</p>
+          <a class="reg-go" href="opportunity-register.html">See the full Opportunity Register &rarr;</a>
         </div>
-        <p class="reg-records">The register feeds the record it is kept in: the
-          <a href="https://driftwoodwealth.com/manual.html">Wealth Operating Manual</a>, the <a href="https://driftwoodwealth.com/decision-register.html">Decision
-          Register</a>, and the <a href="https://driftwoodwealth.com/awor.html">Annual Wealth Operating Review</a>.</p>
+        <p class="reg-records">One household, carried end to end: <a href="household-example.html">a worked
+          example</a>. The register feeds the record it is kept in: the
+          <a href="manual.html">Wealth Operating Manual</a>, the <a href="decision-register.html">Decision
+          Register</a>, and the <a href="awor.html">Annual Wealth Operating Review</a>.</p>
       </div>
     </div>
 
-    <!-- ── GALLERY V · THE INVITATION, the exit wall: one conviction, one high-intent action, and a
-         single quiet line naming the scope. An engagement, not a booking form. ── -->
-    <div class="sec close-conv" id="conversation">
-      <p class="conv">The best financial decisions are rarely investment decisions alone. They are
-        <b>coordination decisions.</b> When every part of your financial life works together, you keep more
-        of what you've built.</p>
+    <!-- ══ PLATE IV · THE ASK ═════════════════════════════════════════════════════════════════
+         Reversed to ink: the three plates above argue, this one asks, and the change of surface marks
+         the change of register without adding an element. The thesis line ("coordination decisions")
+         now sits in the founder's voice rather than as free-floating copy — attributed conviction
+         reads as a person taking a position, which is what the sentence is actually doing. ── -->
+    <div class="sec close-conv on-ink" id="conversation">
+      <div class="plate"><span class="pl-n">Plate IV</span><span class="pl-r" aria-hidden="true"></span><span class="pl-t">The Ask</span></div>
+      <p class="conv">Begin with a review, not a proposal.</p>
+      <p class="review-scope">We inventory what exists, name what is uncoordinated, and hand you the
+        register. If there is nothing worth coordinating, we will tell you that.</p>
       <div class="review">
-        <a class="review-cta" href="https://driftwoodwealth.com/coordination-review.html">
+        <a class="review-cta" href="coordination-review.html">
           <span class="rc-main">Request a Coordination Review</span>
           <span class="rc-sub">Every system read together, the findings written down, and an owner against every gap, yours to keep.</span>
         </a>
-        <p class="review-scope">See exactly what the review examines, the report and register you receive, and how it begins.</p>
       </div>
+      <p class="deliver">The review produces your <a href="manual.html">Wealth Operating Manual</a>: the
+        register, the owners, the dependencies, and the review dates, held in one document.</p>
       <figure class="founder-tag" aria-label="Alec Messino, founder of Driftwood Wealth">
-        <img class="ft-photo" src="./Driftwood Wealth - July 23, 2026_files/Headshot.jpg" width="120" height="120" loading="lazy" alt="Alec Messino, founder of Driftwood Wealth" onerror="this.closest(&#39;.founder-tag&#39;).classList.add(&#39;no-photo&#39;)">
+        <img class="ft-photo" src="Headshot.jpg" width="120" height="120" loading="lazy" alt="Alec Messino, founder of Driftwood Wealth" onerror="this.closest(&#39;.founder-tag&#39;).classList.add(&#39;no-photo&#39;)">
         <figcaption class="ft-cap">
           <span class="ft-name">Alec Messino</span>
           <span class="ft-cred">Founder</span>
-          <span class="ft-say">The work is the coordination between decisions, not any single decision itself.</span>
+          <span class="ft-say">The best financial decisions are rarely investment decisions alone. They are coordination decisions.</span>
         </figcaption>
       </figure>
     </div>
     </main>
 
-    <div class="firm-anchor" role="contentinfo"><span>DRIFTWOOD WEALTH&nbsp;&nbsp;·&nbsp;&nbsp;A PRACTICE OF ALEC MESSINO</span><span>MODEL DATA AS OF JULY 2026</span></div>
+    <div class="firm-anchor" role="contentinfo"><span><span class="firm-anchor-brand">Driftwood Wealth</span>&nbsp;&nbsp;·&nbsp;&nbsp;A PRACTICE OF ALEC MESSINO&nbsp;&nbsp;·&nbsp;&nbsp;custody Park Avenue Securities LLC (PAS), member FINRA/SIPC</span><span>MODEL DATA AS OF JULY 2026</span></div>
     <div class="foot" id="disclosures">
       <span class="note">Research &amp; illustrative modeling, not investment, tax, or legal advice.</span>
       The Model Portfolio referenced across this site is a hypothetical, append-only backtest, not actual trading or
-      any client account. Past performance, hypothetical or actual, does not guarantee future results. Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS and a Financial Representative of The Guardian Life Insurance Company of America® (Guardian), New York, NY. PAS is a wholly owned subsidiary of Guardian. Capitol Wealth Strategies, LLC is not an affiliate or subsidiary of PAS or Guardian. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation. <a href="https://driftwoodwealth.com/privacy.html">Privacy Policy</a> · <a href="https://driftwoodwealth.com/terms.html">Terms of Use</a>.
+      any client account. Past performance, hypothetical or actual, does not guarantee future results. Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS and a Financial Representative of The Guardian Life Insurance Company of America® (Guardian), New York, NY. PAS is a wholly owned subsidiary of Guardian. Capitol Wealth Strategies, LLC is not an affiliate or subsidiary of PAS or Guardian. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
       <div id="gen" style="margin-top:6px">Model data as of July 2026.</div>
     </div>
     </div>

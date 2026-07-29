@@ -201,13 +201,30 @@ section{padding-block:clamp(44px,6.5vh,80px)}
 .foot-col a:hover{color:var(--ink)}
 .disc{font-size:11.5px;line-height:1.6;color:var(--muted);margin-top:24px}
 .disc .note{color:var(--dim);font-weight:600}
+
+/* ── The capability sequence (relocated from the homepage, 2026-07). It answers "how do you work",
+   a post-interest question, so it belongs on the page whose subject is exactly that. A specification
+   sheet, not a feature grid: the label and verb anchor a wide left column, the question and route
+   fill the right. ── */
+.caps{list-style:none;margin:30px 0 0;padding:0}
+.cap-row{display:grid;grid-template-columns:minmax(160px,.75fr) 1.8fr;gap:0 52px;align-items:start;
+  padding:30px 0 26px;border-top:1px solid var(--line)}
+.cap-step{display:block;font-weight:700;font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--blue);font-variant-numeric:tabular-nums;margin:0 0 14px}
+.cap-verb{font-weight:700;font-size:clamp(24px,1.6vw + 13px,32px);letter-spacing:-.022em;color:var(--ink);margin:0}
+.cap-q{font-family:var(--serif);font-size:18.5px;line-height:1.4;color:var(--ink);margin:0 0 10px;max-width:34ch}
+.cap-d{font-size:14px;line-height:1.58;color:var(--dim);margin:0 0 14px;max-width:50ch}
+.cap-go{display:inline-block;font-weight:600;font-size:13px;color:var(--blue);text-decoration:none;
+  border-bottom:1px solid var(--blue-soft);transition:border-color .2s ease}
+.cap-go:hover{border-bottom-color:var(--blue)}
+@media(max-width:700px){.cap-row{grid-template-columns:1fr;gap:6px 0}}
 </style>
 </head>
 <body>
 <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fiduciary.html">Fiduciary Standard</a></div></div>
-      <div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="six-systems.html">Six Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="the-practice.html" aria-current="page">Household Example</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Review</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
+      <div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="coordination-framework.html">The Seven Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="household-example.html" aria-current="page">Household Example</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Review</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights & Research<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="statemap.html">State Tax Atlas</a><a href="research.html">Research</a><a href="insights.html">Articles</a><a href="commentary.html">Commentary</a></div></div>
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">CPA Collaboration</a><a href="estate-attorneys.html">Estate Attorneys</a><a href="referral.html">Referral Process</a></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
@@ -285,8 +302,52 @@ section{padding-block:clamp(44px,6.5vh,80px)}
 </div></div></section>
 
 <!-- ── III. first year ── -->
-<section><div class="wrap reveal">
+<!-- ── III. the capability sequence (relocated from the homepage, 2026-07) ── -->
+<section id="capabilities"><div class="wrap reveal">
   <div class="sn">III</div>
+  <h2 class="h2">Every client relationship follows the same sequence.</h2>
+  <p class="p" style="margin-top:18px">Four capabilities, in this order. The first two are open to anyone
+    before there is a relationship; the second two are the engagement itself. Not sure where coordination
+    is helping or costing you? The <a href="score.html">Coordination Assessment</a> is a brief, neutral
+    place to begin.</p>
+  <ol class="caps">
+    <li class="cap-row">
+      <div><span class="cap-step">01</span><p class="cap-verb">Diagnose</p></div>
+      <div>
+        <p class="cap-q">Where does your return go to tax?</p>
+        <p class="cap-d">See what taxes quietly take from the same holdings, by your state and bracket.</p>
+        <a class="cap-go" href="leakage.html">Open the Tax Diagnostic &rarr;</a>
+      </div>
+    </li>
+    <li class="cap-row">
+      <div><span class="cap-step">02</span><p class="cap-verb">Measure</p></div>
+      <div>
+        <p class="cap-q">What is coordination worth?</p>
+        <p class="cap-d">Put a figure on it, for your bracket, state, and portfolio.</p>
+        <a class="cap-go" href="taxlab.html">See the After-Tax Review &rarr;</a>
+      </div>
+    </li>
+    <li class="cap-row">
+      <div><span class="cap-step">03</span><p class="cap-verb">Coordinate</p></div>
+      <div>
+        <p class="cap-q">How do the pieces work as one plan?</p>
+        <p class="cap-d">Taxes, accounts, and estate kept consistent, the way institutions coordinate
+          decisions, with every open matter carried in one register.</p>
+      </div>
+    </li>
+    <li class="cap-row">
+      <div><span class="cap-step">04</span><p class="cap-verb">Manage</p></div>
+      <div>
+        <p class="cap-q">How is the portfolio built and held?</p>
+        <p class="cap-d">A low-turnover core, placed by tax and held with discipline, reviewed as one
+          system, not one account at a time.</p>
+      </div>
+    </li>
+  </ol>
+</div></section>
+
+<section><div class="wrap reveal">
+  <div class="sn">IV</div>
   <h2 class="h2">How the first year runs, month zero through implementation.</h2>
   <p class="p" style="margin-top:18px">The first year is a defined sequence carried by three working sessions. Nothing is bought or sold until it has been modeled and you have approved it.</p>
   <div class="meetings">
@@ -316,7 +377,7 @@ section{padding-block:clamp(44px,6.5vh,80px)}
 
 <!-- ── IV. what recurs ── -->
 <section style="background:var(--soft);border-block:1px solid var(--line)"><div class="wrap reveal">
-  <div class="sn">IV</div>
+  <div class="sn">V</div>
   <h2 class="h2">What recurs, every year.</h2>
   <p class="p" style="margin-top:18px">Every institution runs on a cadence. Medicine has the annual physical. A company has its board meeting. A family office has its investment committee. Driftwood has the Annual Wealth Operating Review, and its job is not a performance update. It is to make sure every decision ahead is a better decision.</p>
   <div class="cadence">

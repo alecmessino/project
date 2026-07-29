@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-29T03:03:16+00:00",
+  "generated": "2026-07-29T03:18:49+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 405318,
+    "rows": 405955,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 139882,
-      "live_total": 45400,
-      "live_today": 2654,
-      "last_row_age_min": 0.4
+      "rows_total": 140192,
+      "live_total": 45524,
+      "live_today": 2778,
+      "last_row_age_min": 0.1
     },
     "fanduel": {
-      "rows_total": 265430,
-      "live_total": 52773,
-      "live_today": 2641,
-      "last_row_age_min": 0.4
+      "rows_total": 265757,
+      "live_total": 52906,
+      "live_today": 2774,
+      "last_row_age_min": 0.1
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 32918.3
+      "last_row_age_min": 32933.8
     }
   },
   "books_reporting_live": [
@@ -37,20 +37,19 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 45400,
-    "OPEN": 48434,
-    "SUSPENDED": 4107,
+    "unset": 45524,
+    "OPEN": 48560,
+    "SUSPENDED": 4114,
     "REMOVED": 232
   },
   "overlap": {
-    "simultaneous_pairs_total": 54126,
-    "simultaneous_pairs_today": 2654,
-    "overlap_games": 105,
+    "simultaneous_pairs_total": 54248,
+    "simultaneous_pairs_today": 2776,
+    "overlap_games": 106,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
       "0_books": 6,
-      "1_books": 1,
-      "2_books": 105
+      "2_books": 106
     }
   },
   "fix_verification": {
@@ -87,14 +86,14 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 54126,
+        "current": 54248,
         "target": 2000,
         "pass": true,
         "progress": 1.0
       },
       {
         "criterion": "games with live overlap",
-        "current": 105,
+        "current": 106,
         "target": 100,
         "pass": true,
         "progress": 1.0

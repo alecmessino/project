@@ -146,5 +146,21 @@ invalidate inference) · **Confidence Register** (what the evidence justifies be
 
 ---
 
+### GD-15 · 2026-07-29 · **APPROVED** · Freeze the July report as an instrument artifact; two-tier knowledge
+- **Decision:** (1) The July Instrument Report is **descriptive, not a findings paper**; language suggesting discovery is prohibited until confirmed elsewhere. (2) **Measurement facts** about the apparatus are promoted to **standing knowledge** (permanent documentation): ~31 s cadence · fanduel + bovada coverage · absence of Statcast/weather/sharp benchmark · live status fields · cross-book observability. (3) **Everything else stays provisional/exploratory** — vig widening, cross-book disagreement rate, run pass-through, lifecycle behaviour — until reproduced on independent data or another collection period. (4) The roadmap **follows the evidence**, not the reverse: the July observations are **not** presumed to belong to the vig paper merely because that paper exists. (5) The public repo proceeds independently of all July work.
+- **Evidence:** The July report produced several large, interpretable quantities (in-play vig +2.0 pp over pregame in both books; identical main line in only 48.9% of co-observed minutes; run pass-through ~0.6). Statistical size is not evidential status: all were generated from the same dataset under an un-preregistered analysis set, with game-clustered dependence.
+- **Alternatives rejected:** promote the vig widening to a finding because the effect is large and consistent (confuses magnitude with confirmation); pre-assign the July observations to the vig/inventory paper (roadmap driving evidence rather than the reverse).
+- **Reasoning:** The two-tier split is the operational form of the project's core discipline. A property of the *apparatus* is verifiable by inspection and cannot be a false discovery; a *relationship* found in the data can be, and must clear independent confirmation.
+- **Future implications:** Three independent programs now stand: Paper 1 (public-information efficiency, frozen) · Paper 2 (latency and price formation) · a later microstructure paper (vig, suspension, disagreement, inventory). Placement of any July observation is decided **after** confirmation, not before. No confidence level in any scientific claim moved.
+
+### GD-16 · 2026-07-29 · **APPROVED** · Paper 2 is a microstructure paper, not a sequel
+- **Decision:** Paper 2 asks **"How is information incorporated into live betting markets, and can differences in timing or market structure reveal information not observable from a single-book forecast?"** It is a **market-microstructure** paper, not another market-efficiency paper. Adopt the owner's six-part structure (Introduction · Conceptual framework · Identification · Data · Empirical analysis · Discussion), with **Identification as the heart**. Draft everything through Methods to submission quality **before** any Results sentence.
+- **Key refinement over the design brief:** the conceptual framework must explicitly decompose **three** latencies — **feed latency**, **bookmaker pricing latency**, and **observation latency** — and define the estimand before touching data. The design brief's A4 treated the first two as one; observation latency (our 30 s sampling) was implicit. This decomposition is now mandatory.
+- **Evidence:** Paper 1's null naturally raises the mechanism question; the July instrument exposes exactly the cross-book, higher-cadence observables a microstructure paper needs; a rigorously demonstrated null ("feed and pricing latency cannot be distinguished") is publishable.
+- **Alternatives rejected:** frame Paper 2 as "Paper 1 with more books" (wrong literature, wrong question); write Results first and structure the paper around what the data show (result-driven rather than hypothesis-driven).
+- **Future implications:** Drafting order is Introduction → Conceptual framework → Identification → Data → Methods, then stop. Results/Discussion remain gated by the four conditions in `PAPER2_DESIGN_BRIEF.md` §9. The design brief is amended by this entry on the three-latency decomposition.
+
+---
+
 *Append new decisions below this line. Never edit a past entry; correct with a new dated entry that
 supersedes it.*

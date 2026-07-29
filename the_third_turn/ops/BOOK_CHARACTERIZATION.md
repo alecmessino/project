@@ -108,3 +108,24 @@ event-alignment the sync-lag design review needs, so the two converge.
   for the fact that FanDuel and Bovada are different instruments.
 - **Does not change:** any scientific conclusion, Paper 1, or the collector. No efficiency claim is
   made or implied. This is instrument characterization that makes future analysis *harder to fool*.
+
+---
+
+## Standing knowledge: July instrument facts (GD-15, promoted 2026-07-29)
+
+These are **properties of the measurement apparatus**, verifiable by inspection of the panels. They
+are permanent documentation, not hypotheses, and are not subject to confirmation:
+
+- **Cadence:** ~31 s median live poll interval (p25 30 s, p75 31 s), both books.
+- **Coverage:** fanduel + bovada only. 112 games in panel, 106 with live quotes (Jul 3-29).
+- **Absent by construction:** no sharp benchmark book (pinnacle live quotes = 0), no Statcast
+  pitch-velocity features, no weather or park covariates.
+- **Live status fields:** present on ~89% of rows; **fanduel only** (OPEN / SUSPENDED / REMOVED).
+  bovada emits no status at any time (RD-4).
+- **Cross-book observability:** two books quote the same game simultaneously, which the June
+  instrument could not observe at all.
+- **Line semantics:** the posted live number is a **full-game total** (live median 8.5 = pregame
+  median 8.5; a remaining-runs line would decay toward zero).
+
+**Explicitly NOT promoted** (provisional/exploratory until independently reproduced, GD-15):
+in-play vig widening, cross-book disagreement rate, run pass-through magnitude, lifecycle behaviour.

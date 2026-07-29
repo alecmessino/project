@@ -1,6 +1,6 @@
 <div class="titleblock">
-<h1>The Plumbing and the Price: Identifying Information Transmission in Live Betting Markets</h1>
-<p class="epigraph">A market that has already priced everything public must have priced it somehow. This paper asks whether the mechanism is observable, and is honest about when it is not.</p>
+<h1>What Prices Cannot Tell You: An Identification Framework for Information Transmission in Live Markets</h1>
+<p class="epigraph">Markets reveal prices. They do not reveal how those prices came to be.</p>
 <p class="author">Alec Messino<br/><span class="affil">The Third Turn Research Initiative &middot; alec.messino@gmail.com</span></p>
 <p class="wp">Working Paper &middot; DRAFT, Sections 1-5 &middot; Results not yet written</p>
 </div>
@@ -45,11 +45,24 @@ established it, and showing where the assumption breaks is itself a contribution
 
 ## 1. Introduction
 
+Every pitch thrown in a Major League Baseball game can trigger dozens of price updates across
+sportsbooks before the next pitch is delivered. These are high-frequency markets in the ordinary
+sense of the term, and they have an unusual property that makes them a good laboratory for studying
+how prices form: unlike an equity, every contract settles within hours against an objective terminal
+payoff, so the thing being forecast is eventually revealed and the forecast can be graded.
+
 Market efficiency tests answer a question about outcomes. They ask whether some information, held by
 someone, would have improved on the price. When the answer is no, as it frequently is, the finding is
 usually reported and the matter closed. But a null of that kind is a statement about a mechanism
 whose operation has not been observed. Something incorporated the information. The efficiency test
 does not say what, or how quickly, or through which participant.
+
+![](figures/p2_boundary.png)
+
+**Figure 1.** *We never observe the pricing process itself.* Of the five stages between a game event
+and a row in our dataset, the two in the shaded band are exactly the two the question is about: when
+the bookmaker decided to move, and when its feed made that decision visible. Everything we record
+sits below the boundary.
 
 This paper begins where a companion study ended. That study treated a sharp live betting line as an
 incumbent forecast of the runs remaining in a baseball game and asked whether any of ten publicly
@@ -77,11 +90,23 @@ paper.
 
 ![](figures/p2_race.png)
 
-**Figure 1.** What a single observation actually summarizes. Between the run and our record of a new
+**Figure 2.** *Four internal events; two recorded numbers.* Between the run and our record of a new price sit each book's decision to re-price and each book's publication of that decision. We hold two timestamps. Between the run and our record of a new
 price sit four internal events, none of which we see: each book's decision to re-price, and each
 book's publication of that decision. We hold two timestamps. The difficulty of this paper is not
 measuring the interval; it is that the interval we can measure is a sum of intervals we cannot
 measure separately.
+
+<div class="protocol-box">
+<div class="pb-title">Box 1. A thought experiment</div>
+<p>Two sportsbooks are quoting the same game. A run scores. Book A updates its price 800
+milliseconds later; Book B updates 1.6 seconds later. You observe both prices once every 30 seconds.</p>
+<p>Can you conclude that Book A processes information faster?</p>
+<p><strong>No.</strong> You did not observe the pricing engines, the feed delays, or the moment the
+event actually occurred. You observed two timestamps, produced by a sampling process of your own
+construction, at a resolution nearly twenty times coarser than the difference you are trying to
+detect. Both books land in the same poll. The data are silent.</p>
+<p>This paper is about what it takes to make them speak, and about being candid when they cannot.</p>
+</div>
 
 Studying that interval requires more than one price. A single book's response time is not
 interpretable on its own: it confounds how fast the bookmaker thinks with how fast its infrastructure
@@ -89,10 +114,20 @@ publishes and how fast the analyst happens to be looking. Comparing two books ho
 possibility that the shared components cancel. Whether they actually do is an empirical and
 architectural question, and answering it honestly is the substance of what follows.
 
-We therefore frame this as a market microstructure paper rather than a second efficiency paper. The
-question is not whether the market can be beaten. It is how information moves through a market that
-apparently cannot be, and whether the movement is measurable with instruments of the kind available
-to an outside observer. Three things follow from taking that question seriously.
+The problem has a familiar shape. Astronomers infer the existence and mass of a planet they cannot
+see from the wobble of a star they can. The inference is only as good as the model of what lies
+between the observer and the object, and a great deal of the work is in characterizing the
+instrument rather than the sky. Our position is the same: we infer an invisible pricing process from
+the visible prices it produces, and the difficulty is not the arithmetic but the intervening
+machinery. **Markets reveal prices. They do not reveal how those prices came to be.**
+
+We therefore frame this as a paper about identification in high-frequency markets rather than a
+second efficiency paper, and rather than a paper about sportsbooks. Sports betting is the laboratory,
+chosen because its information arrivals are discrete and precisely dated and its contracts settle
+against ground truth; the identification problem it exposes is general. The question is not whether
+the market can be beaten. It is how information moves through a market that apparently cannot be, and
+whether the movement is measurable with instruments of the kind available to an outside observer.
+Three things follow from taking that question seriously.
 
 First, the estimand must be defined before the data are examined, because the intuitive estimators
 are wrong in a specific and instructive way. The obvious approach, timing one book's price change
@@ -132,7 +167,7 @@ distinct delays, produced by three distinct mechanisms.
 
 ![](figures/p2_why_paper1.png)
 
-**Figure 2.** Why the companion study never had to confront this. It compared two endpoints, a
+**Figure 3.** *Paper 1 never needed to identify internal latency.* It compared two endpoints with the market between them, and every node it required was observable. This paper's question is the machinery itself, and half its stages are hidden. It compared two endpoints, a
 public variable and a realized outcome, with the market price between them, and every node it needed
 was observable. This paper's question is the machinery itself, and two of its four stages are hidden
 from any outside observer.
@@ -173,7 +208,7 @@ it is an assumption, not a fact.
 
 ![](figures/p2_three_worlds.png)
 
-**Figure 3.** The paper's central problem, in one picture. In the first world a bookmaker genuinely
+**Figure 4.** *Identical observations can arise from different underlying markets.* In the first world a bookmaker genuinely
 prices faster and the publishing infrastructure is equal, so the observed lag means what it appears
 to mean. In the second, the two bookmakers price at identical speed and the entire observed lag is
 produced by one book's slower feed. In the third, both differ and partially offset. The observed
@@ -195,7 +230,7 @@ level and call the earlier one the leader. This is mechanically defective.
 
 ![](figures/p2_anchoring.png)
 
-**Figure 4.** Left: a book that re-prices frequently passes through any given price level before a
+**Figure 5.** *A denser book leads by construction, not by insight.* Left: a book that re-prices frequently passes through any given price level before a
 book that re-prices rarely, purely as a consequence of update density. A leadership statistic built
 on book-to-book arrival times reports this sampling artifact as information leadership. Right:
 anchoring each book's response to the exogenous game event measures each against a clock that neither
@@ -298,14 +333,14 @@ where identification breaks down tells a subsequent researcher what to build.
 
 ![](figures/p2_ladder.png)
 
-**Figure 5.** The requirements, as a ladder. Each rung depends on the one above it. We hold the top
+**Figure 6.** *Identification requires assumptions, not computation.* The requirements form a ladder, and each rung depends on the one above it. Each rung depends on the one above it. We hold the top
 two. The third is a methodological choice we can fix and test. The fourth, knowledge of feed latency,
 is not obtainable from public endpoints, and the fifth depends on it. The colour of the fourth rung
 is what determines whether this paper reports Outcome A, B, or C.
 
 ![](figures/p2_decision_tree.png)
 
-**Figure 6.** The same logic as a decision the reader can walk. The paper does not presuppose which
+**Figure 7.** *The paper does not presuppose which branch it takes.* The same logic, as a decision the reader can walk. The paper does not presuppose which
 branch it will take. All three terminal states are publishable, and the third is the one the
 literature most often skips.
 
@@ -315,7 +350,7 @@ An instrument cannot report structure below its sampling interval.
 
 ![](figures/p2_resolution.png)
 
-**Figure 7.** The instrument is coarser than the game. Pitches, balls, strikes, and the run itself
+**Figure 8.** *The instrument itself limits what can be learned.* The game is finer than the sampling window. Pitches, balls, strikes, and the run itself
 arrive on a scale of seconds; our sampling collapses everything inside a thirty-one-second window
 into a single observation. A book that re-priced two seconds after the run and one that re-priced
 twenty-five seconds after it are recorded identically. This bounds the paper's ambition: no claim
@@ -350,7 +385,7 @@ such.
 
 ![](figures/p2_windows.png)
 
-**Figure 8.** Two instruments, two different blind spots. The June apparatus saw a sharp benchmark
+**Figure 9.** *Different instruments reveal different phenomena.* The June apparatus saw a sharp benchmark
 book, pitch-level measurement, and weather; it could not see two books at once or a market's live
 status. The July apparatus sees the second book and the status stream but is blind to everything the
 first could measure. Neither is better. They are blind in different places, which is why a result
@@ -455,6 +490,23 @@ verified and recorded:
 Stating these in advance is the point. A paper that fixes its design before seeing its evidence
 cannot be reshaped by the evidence, and a null that arrives under those conditions carries the same
 weight as a finding.
+
+---
+
+## 5.7 Where this sits in the program
+
+![](figures/p2_bridge.png)
+
+**Figure 10.** *Paper 2 does not overturn Paper 1; it asks what Paper 1 leaves open.* The companion
+study traced public information through the market to an answer, and every node it needed was
+observable. This study starts from an event, passes through a process it cannot see, and arrives at a
+timestamp whose interpretation depends on assumptions rather than on computation. The first paper
+ends in a finding. The second ends, at best, in a set of conditions.
+
+That is not a weaker ambition. A literature that reports transmission estimates without establishing
+that transmission is identified accumulates numbers whose meaning depends on unexamined assumptions
+about publishing infrastructure. Stating the conditions is what makes the numbers interpretable when
+they eventually arrive.
 
 ---
 

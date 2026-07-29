@@ -31,6 +31,11 @@ SKY, PLUM = fs.PALETTE[4], fs.PALETTE[5]
 INK, MUTED, GRID = fs.INK, fs.MUTED, fs.GRID
 FOG = "#E8E8E8"
 
+# Shared colour vocabulary across the research program (Paper 1 and Paper 2):
+#   GREEN  = identified / observable          ORANGE = bounded only
+#   RED    = identification fails             FOG/MUTED = unknowable, outside the boundary
+IDENTIFIED, BOUNDED, FAILED, UNKNOWABLE = GREEN, ORANGE, RED, MUTED
+
 
 def box(ax, x, y, w, h, label, sub=None, fc="white", ec=INK, lw=1.4, tc=None, fsz=9.5, z=3):
     ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.010,rounding_size=0.018",
@@ -46,6 +51,108 @@ def arrow(ax, p, q, color=INK, lw=1.6, style="-|>", ls="-", z=4, rad=0.0, ms=13)
     ax.add_patch(FancyArrowPatch(p, q, arrowstyle=style, mutation_scale=ms, lw=lw,
                                  color=color, zorder=z, linestyle=ls,
                                  connectionstyle=f"arc3,rad={rad}"))
+
+
+
+# ----------------------------------------------------------------------------- FIG 0
+def fig_boundary():
+    """Negative space: the only two stages we cannot see are the two we need."""
+    fig, ax = plt.subplots(figsize=(9.6, 6.2))
+    ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
+
+    rows = [
+        ("Game event", 0.800, True, "from the state feed"),
+        ("Book pricing engine", 0.615, False, "when the book decided"),
+        ("Feed transport", 0.455, False, "when it was published"),
+        ("Collector sampling", 0.270, True, "our 31 s poll"),
+        ("Recorded timestamp", 0.110, True, "what lands in the panel"),
+    ]
+
+    # the fog covers ONLY the hidden stages
+    ax.add_patch(Rectangle((0.055, 0.425), 0.89, 0.283, fc=FOG, ec=MUTED, lw=1.3,
+                           ls=(0, (6, 4)), alpha=0.9, zorder=1))
+    ax.text(0.098, 0.566, "UNOBSERVED PROCESS", ha="center", va="center", fontsize=10.5,
+            color=MUTED, weight="bold", rotation=90, zorder=6)
+
+    for lab, yy, seen, sub in rows:
+        c = IDENTIFIED if seen else FAILED
+        ax.add_patch(FancyBboxPatch((0.215, yy), 0.475, 0.098,
+                                    boxstyle="round,pad=0.008,rounding_size=0.015",
+                                    fc="white", ec=INK if seen else MUTED,
+                                    lw=1.5 if seen else 1.0,
+                                    ls="-" if seen else (0, (4, 2)), zorder=4))
+        ax.text(0.4525, yy + 0.062, lab, ha="center", va="center", fontsize=10,
+                color=INK if seen else MUTED, weight="bold", zorder=6)
+        ax.text(0.4525, yy + 0.026, sub, ha="center", va="center", fontsize=7.8,
+                color=MUTED, zorder=6)
+        ax.text(0.735, yy + 0.049, "observed" if seen else "hidden", fontsize=9.2,
+                color=c, va="center", weight="bold", zorder=6)
+        ax.text(0.178, yy + 0.049, "\u2713" if seen else "\u2717", fontsize=14, color=c,
+                ha="center", va="center", weight="bold", zorder=6)
+
+    for y0, y1 in [(0.800, 0.717), (0.615, 0.557), (0.455, 0.372), (0.270, 0.212)]:
+        hidden_arrow = y0 in (0.615, 0.800)
+        arrow(ax, (0.4525, y0), (0.4525, y1), lw=1.5,
+              color=MUTED if y0 in (0.615, 0.455) else INK,
+              ls=(0, (3, 2)) if y0 in (0.615, 0.455) else "-")
+
+    ax.text(0.5, 0.045, "The only two stages we cannot see are the only two we need.",
+            ha="center", fontsize=11.4, color=INK, weight="bold")
+    ax.text(0.5, -0.012,
+            "Markets reveal prices. They do not reveal how those prices came to be.",
+            ha="center", fontsize=10.2, color=MUTED, style="italic")
+    ax.set_title("The boundary of observation", fontsize=13, color=INK, pad=12)
+    fig.savefig(FIG / "p2_boundary.png", dpi=200, bbox_inches="tight")
+    plt.close(fig)
+
+
+# ----------------------------------------------------------------------------- FIG 9
+def fig_bridge():
+    """The closing conceptual figure: how Paper 2 follows from Paper 1."""
+    fig, axes = plt.subplots(1, 2, figsize=(11.4, 5.0))
+    for ax in axes:
+        ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
+
+    ax = axes[0]
+    ax.text(0.5, 0.96, "PAPER 1", ha="center", fontsize=12.5, color=INK, weight="bold")
+    ax.text(0.5, 0.895, "does public information beat the price?",
+            ha="center", fontsize=8.8, color=MUTED)
+    for lab, yy, fc in [("Public information", 0.700, "white"),
+                        ("Market", 0.455, "white"),
+                        ("No increment", 0.210, "#E7F4EE")]:
+        box(ax, 0.22, yy, 0.56, 0.135, lab, fc=fc,
+            ec=IDENTIFIED if fc != "white" else INK,
+            tc=IDENTIFIED if fc != "white" else INK)
+    for y0, y1 in [(0.700, 0.605), (0.455, 0.360)]:
+        arrow(ax, (0.5, y0), (0.5, y1), lw=1.8)
+    ax.text(0.5, 0.115, "answered", ha="center", fontsize=10, color=IDENTIFIED, weight="bold")
+
+    ax = axes[1]
+    ax.text(0.5, 0.96, "PAPER 2", ha="center", fontsize=12.5, color=INK, weight="bold")
+    ax.text(0.5, 0.895, "how did the price come to be?",
+            ha="center", fontsize=8.8, color=MUTED)
+    for lab, yy, hidden in [("Game event", 0.735, False),
+                            ("Hidden market process", 0.545, True),
+                            ("Observed timestamp", 0.355, False),
+                            ("Identification depends\non assumptions", 0.145, None)]:
+        if hidden is None:
+            box(ax, 0.16, yy, 0.68, 0.155, lab.split("\n")[0], lab.split("\n")[1],
+                fc="#FBF1E6", ec=BOUNDED, tc=BOUNDED, lw=1.7)
+        else:
+            box(ax, 0.22, yy, 0.56, 0.115, lab, fc=FOG if hidden else "white",
+                ec=MUTED if hidden else INK, tc=MUTED if hidden else INK,
+                lw=1.0 if hidden else 1.4)
+    for y0, y1 in [(0.735, 0.665), (0.545, 0.475), (0.355, 0.305)]:
+        arrow(ax, (0.5, y0), (0.5, y1), lw=1.6, color=MUTED, ls=(0, (3, 2)))
+
+    fig.subplots_adjust(top=0.86)
+    fig.suptitle("From efficiency to identification", fontsize=13.5, color=INK, y=1.02)
+    fig.text(0.5, -0.045,
+             "Paper 2 does not overturn Paper 1. It asks the question Paper 1 leaves open, and finds\n"
+             "that answering it depends on assumptions rather than on computation.",
+             ha="center", fontsize=9.6, color=INK, linespacing=1.6)
+    fig.savefig(FIG / "p2_bridge.png", dpi=200, bbox_inches="tight")
+    plt.close(fig)
 
 
 # ----------------------------------------------------------------------------- FIG 1
@@ -103,7 +210,7 @@ def fig_information_race():
 # ----------------------------------------------------------------------------- FIG 2
 def fig_three_worlds():
     """THE figure: three different markets, one identical dataset."""
-    fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.9))
+    fig, axes = plt.subplots(1, 3, figsize=(15.4, 6.0))
     X0, HB, TOT = 0.11, 0.105, 0.72
     yA, yB = 0.60, 0.36
 
@@ -427,6 +534,7 @@ def fig_decision_tree():
 
 def main() -> int:
     fs.setup()
+    fig_boundary()
     fig_information_race()
     fig_three_worlds()
     fig_why_paper1_could_ignore()
@@ -435,8 +543,8 @@ def main() -> int:
     fig_resolution_ceiling()
     fig_instrument_windows()
     fig_decision_tree()
-    print("wrote 7: p2_race, p2_three_worlds, p2_why_paper1, p2_ladder, "
-          "p2_resolution, p2_windows, p2_decision_tree")
+    fig_bridge()
+    print("wrote 10 figures")
     return 0
 
 

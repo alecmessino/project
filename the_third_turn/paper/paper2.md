@@ -1,5 +1,5 @@
 <div class="titleblock">
-<h1>What Prices Cannot Tell You: An Identification Framework for Information Transmission in Live Markets</h1>
+<h1>What Prices Cannot Tell You: Identifying Information Transmission in Live Markets</h1>
 <p class="epigraph">Markets reveal prices. They do not reveal how those prices came to be.</p>
 <p class="author">Alec Messino<br/><span class="affil">The Third Turn Research Initiative &middot; alec.messino@gmail.com</span></p>
 <p class="wp">Working Paper &middot; DRAFT, Sections 1-5 &middot; Results not yet written</p>
@@ -16,9 +16,9 @@
 A companion study found that a live baseball wagering market encompasses every public-information
 candidate tested against it: no variable in a ten-hypothesis ladder improved on the market's own
 forecast of remaining runs. That null is a statement about outcomes, and it invites a question about
-mechanism. If the market has already incorporated public information, when did it do so, and is the
-apparent efficiency genuine or partly an artifact of observing the market only after the information
-has already propagated?
+mechanism. The companion study asked whether prices *contain* public information; this paper asks
+whether prices *reveal how that information entered the market*. Information in prices and formation
+of prices are distinct questions, and the second does not follow from the first by adding data.
 
 We take up the transmission question directly, and find that it is largely an identification problem.
 The delay between a game event and an observed price change decomposes into a bookmaker's pricing
@@ -38,8 +38,10 @@ analyst's choice of which posted line to treat as the main line, and we characte
 floor below which this class of instrument is silent. The design admits three outcomes, all of which
 we regard as publishable: identification of a pricing contrast, identification of bounds only, or a
 demonstration that the quantity is not identifiable without richer instrumentation. The third is not
-a failure of the study. Empirical work in this area has generally assumed identification rather than
-established it, and showing where the assumption breaks is itself a contribution.
+a failure of the study. Much of the microstructure literature studies environments in which richer
+event and timestamp information is available than sportsbook endpoints provide, so the decomposition
+we confront can often be assumed away there rather than established. Showing precisely where it
+cannot be assumed away is itself a contribution.
 
 ---
 
@@ -61,7 +63,13 @@ This paper begins where a companion study ended. That study treated a sharp live
 incumbent forecast of the runs remaining in a baseball game and asked whether any of ten publicly
 observable candidates, pitcher fatigue and velocity decay among them, carried incremental predictive
 content beyond it. None did, and the one candidate that appeared alive proved to be a post-treatment
-selection artifact. The transition between the two studies can be stated in a sentence. **The
+selection artifact.
+
+The two studies stand in a natural progression rather than a sequence of increments. **Paper 1 asked
+whether prices contain public information. This paper asks whether prices reveal how that
+information entered the market.** The first is a question about the content of a price; the second is
+a question about its formation, and the two are answered with different instruments and different
+assumptions. The transition can be stated more precisely still. **The
 companion study established that public baseball variables contain no incremental information beyond
 a sharp market observed at one-minute resolution; this paper asks whether that apparent efficiency is
 genuine, or whether it is partly an artifact of observing the market only after the information has
@@ -321,11 +329,14 @@ timestamp data from public sportsbook endpoints cannot separate market behaviour
 infrastructure, together with a specification of the additional instrumentation that would be
 required.
 
-We want to be explicit that Outcome C is a result and not a failure. Empirical work on information
-transmission has generally enjoyed exchange-timestamped data and has therefore been able to assume
-away the decomposition this paper confronts. Where that assumption is unavailable, the discipline is
-to demonstrate its unavailability rather than to proceed as though it held. A paper that establishes
-where identification breaks down tells a subsequent researcher what to build.
+We want to be explicit that Outcome C is a result and not a failure. Much of the market
+microstructure literature works in settings where researchers observe richer event and timestamp
+information than public sportsbook endpoints provide: exchange-side sequencing, order-level
+identifiers, and venue timestamps that pin the publication stage directly. Where that information is
+available, the decomposition this paper confronts can be handled by construction. Where it is not,
+the discipline is to demonstrate its unavailability rather than to proceed as though the richer
+setting obtained. A paper that establishes where identification breaks down tells a subsequent
+researcher what to build.
 
 ![](figures/p2_ladder.png)
 
@@ -336,9 +347,9 @@ is what determines whether this paper reports Outcome A, B, or C.
 
 ![](figures/p2_decision_tree.png)
 
-**Figure 7.** *The paper does not presuppose which branch it takes.* The same logic, as a decision the reader can walk. The paper does not presuppose which
-branch it will take. All three terminal states are publishable, and the third is the one the
-literature most often skips.
+**Figure 7.** *The paper does not presuppose which branch it takes.* The same logic, as a decision
+the reader can walk. All three terminal states are publishable, and the third is the one a study is
+least likely to report.
 
 ### 3.4 The resolution floor
 
@@ -531,9 +542,8 @@ lies not in stronger conclusions but in recognizing precisely where conclusions 
 
 ![](figures/p2_bridge.png)
 
-**Figure 10.** *Paper 2 does not overturn Paper 1; it asks what Paper 1 leaves open.* The companion
-study traced public information through the market to an answer, and every node it needed was
-observable. This study starts from an event, passes through a process it cannot see, and arrives at a
+**Figure 10.** *Information in prices; formation of prices.* Paper 1 asked whether prices contain
+public information and could answer it, because every node it needed was observable. This study starts from an event, passes through a process it cannot see, and arrives at a
 timestamp whose interpretation depends on assumptions rather than on computation. The first paper
 ends in a finding. The second ends, at best, in a set of conditions.
 

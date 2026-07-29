@@ -124,5 +124,27 @@ invalidate inference) · **Confidence Register** (what the evidence justifies be
 
 ---
 
+### GD-14 · 2026-07-28 · **APPROVED, with a mandatory scope correction** · Separate drafting from evidence
+- **Decision (owner):** Run two parallel tracks. **Track 1:** fully draft Paper 2 on the pre-registered estimand/hypotheses/methods, writing outcome-dependent sections to accommodate either result. **Track 2:** independently analyze the newly collected games as *evidence discovery*, not paper revision; follow the evidence wherever it leads. Paper 1 stays frozen (repo/DOI/reproducibility/copyedit only); new data is **not** retrofitted. Placement of any material finding is decided afterward.
+- **Track 1: accepted as written.** Drafting non-result sections raises no confidence in a conclusion, so GD-12 is not engaged. Outcome-agnostic drafting of gated sections is permitted *provided* no section asserts a direction.
+- **Track 2: accepted in purpose, but CANNOT be executed as "a replication of Paper 1." The instrument changed.** Verified 2026-07-28 against the raw files:
+
+  | | Paper 1 (Jun 1-23, 163 games) | New data (Jul 3-28, 103 live games) |
+  |---|---|---|
+  | Benchmark line | **Pinnacle** (sharp), via Odds Papi historical trajectories | **fanduel 256,893 / bovada 131,016 / pinnacle 6** (recreational; Pinnacle stillborn, ED-1) |
+  | Velocity feature `vdrop` | present (Statcast) | **absent** (Baseball Savant 403) |
+  | Weather `temp`/`wind` | present | **absent** from the live panels |
+  | Cadence | ~1 min | 30 s |
+
+  Running Paper 1's pipeline on the new month would therefore **confound time with instrument**: a different book class, a missing feature set (including `vdrop`, the survivorship-bias centerpiece), and a different sampling cadence. Any difference in result could not be attributed to the month. **This is a validity threat, not a logistics problem**, and it is not fixed by unblocking the feeds.
+- **Corrected Track 2, in two clearly separated arms:**
+  1. **Confirmatory (a true temporal replication).** Requires re-running the *same* instrument: Odds Papi historical **Pinnacle** for the new month **plus** Statcast features, on a host where both are reachable (both 403 here). Pre-specify the analysis **before** the data are examined; it is the frozen Paper 1 pipeline run unchanged. **Currently blocked on host access, not on method.**
+  2. **Exploratory (the two-book live dataset on its own terms).** Analyzable now, but it is *not* Paper 1's question and must never be reported as replicating or failing to replicate Paper 1. It is largely Paper 2's substrate and is governed by the Paper 2 design brief.
+- **Mandatory discipline on Track 2 (added, not optional):** "follow the evidence wherever it leads" across 100+ new games and dozens of candidate variables is the garden-of-forking-paths that Paper 1 exists to warn about. Therefore: **arm 1 is pre-registered before looking**; **arm 2's outputs are labelled `Exploratory` on the record and may not enter any paper without independent confirmation on data not used to generate them.** This preserves the owner's intent (genuine discovery, no confirmation bias) without reintroducing the failure mode the protocol was built to prevent.
+- **Alternatives rejected:** run Paper 1's pipeline on the new books and call it a replication (invalid, confounded); defer Track 2 entirely (loses real discovery value in arm 2); allow unlabelled exploratory findings into a paper (false-discovery risk).
+- **Future implications:** Paper 1.1 (temporal replication) remains **host-gated**, and is now also formally **instrument-gated**. No confidence level moved; no analysis run today.
+
+---
+
 *Append new decisions below this line. Never edit a past entry; correct with a new dated entry that
 supersedes it.*

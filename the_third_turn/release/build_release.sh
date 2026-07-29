@@ -20,6 +20,16 @@ git -C "$ROOT" archive "HEAD:the_third_turn" | tar -x -C "$OUT"
 # drop operational noise and the release-builder itself
 rm -rf "$OUT/release"
 find "$OUT" -type f -name '*.log' -delete
+
+# Raw live-collection panels are EXCLUDED by default (v1 release decision, 2026-07-28):
+# they are ~85 MB, are Paper 2's substrate rather than Paper 1's, and are still growing.
+# Paper 1 reproduces from output/*.json alone. Pass --with-panels to include them.
+if [ "${WITH_PANELS:-0}" = "1" ]; then
+  echo "==> including raw live panels (--with-panels)"
+else
+  rm -f "$OUT"/output/*_panel.jsonl
+  echo "==> excluded raw live panels (set WITH_PANELS=1 to include)"
+fi
 rm -f "$OUT/output/daemon.log" "$OUT/output/streamlit.log" 2>/dev/null || true
 find "$OUT" -type d -name '__pycache__' -prune -exec rm -rf {} + 2>/dev/null || true
 

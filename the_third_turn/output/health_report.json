@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-29T02:32:10+00:00",
+  "generated": "2026-07-29T02:47:43+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 403633,
+    "rows": 404617,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 139044,
-      "live_total": 45041,
-      "live_today": 2295,
-      "last_row_age_min": 0.3
+      "rows_total": 139524,
+      "live_total": 45251,
+      "live_today": 2505,
+      "last_row_age_min": 0.4
     },
     "fanduel": {
-      "rows_total": 264583,
-      "live_total": 52410,
-      "live_today": 2278,
-      "last_row_age_min": 0.3
+      "rows_total": 265087,
+      "live_total": 52632,
+      "live_today": 2500,
+      "last_row_age_min": 0.4
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 32887.2
+      "last_row_age_min": 32902.7
     }
   },
   "books_reporting_live": [
@@ -37,14 +37,14 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 45041,
-    "OPEN": 48090,
-    "SUSPENDED": 4093,
-    "REMOVED": 227
+    "unset": 45251,
+    "OPEN": 48299,
+    "SUSPENDED": 4102,
+    "REMOVED": 231
   },
   "overlap": {
-    "simultaneous_pairs_total": 53769,
-    "simultaneous_pairs_today": 2297,
+    "simultaneous_pairs_total": 53979,
+    "simultaneous_pairs_today": 2507,
     "overlap_games": 105,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
@@ -67,7 +67,7 @@
   "coverage": {
     "live_games_seen": 107,
     "book_panel_games": 112,
-    "team_total_rows": 25294,
+    "team_total_rows": 25296,
     "innings_seen": [
       1,
       2,
@@ -87,7 +87,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 53769,
+        "current": 53979,
         "target": 2000,
         "pass": true,
         "progress": 1.0

@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-07-29T19:56:20+00:00
+ THE THIRD TURN — collection health   2026-07-29T20:11:55+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,30 +12,30 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ████████████████··  live=46773 (today 4027)  last 0.2m ago
-  fanduel   ██████████████████  live=54054 (today 3922)  last 0.2m ago
-  pinnacle  ··················  live=    0 (today    0)  last 33931.3m ago ⚠STALE
+  bovada    ████████████████··  live=46775 (today 4029)  last 0.0m ago
+  fanduel   ██████████████████  live=54059 (today 3927)  last 0.0m ago
+  pinnacle  ··················  live=    0 (today    0)  last 33946.9m ago ⚠STALE
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
-  simultaneous live pairs :  55564  (today 4092)
+  simultaneous live pairs :  55571  (today 4099)
   overlap games           : 106
   median sync lag         : 0.0 s
   games by #books live     : {'0_books': 10, '2_books': 106}
 
 QUOTE LIFECYCLE (live rows)
-  market status: {'unset': 46773, 'OPEN': 49619, 'SUSPENDED': 4193, 'REMOVED': 242}
+  market status: {'unset': 46775, 'OPEN': 49623, 'SUSPENDED': 4194, 'REMOVED': 242}
 
 COVERAGE
-  live games seen: 107   book-panel games: 116   team-total rows: 26172
+  live games seen: 107   book-panel games: 116   team-total rows: 26177
   innings seen: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 INTEGRITY
-  rows=419279  malformed=0  missing-fields=0  duplicates=0  future-ts=0
+  rows=419782  malformed=0  missing-fields=0  duplicates=0  future-ts=0
   status: ✅ clean
 
 SR-1 GATE (leadership analysis — blocked until all pass)
-  ✅ ██████████████████ simultaneous live quote pairs    55564 / 2000
+  ✅ ██████████████████ simultaneous live quote pairs    55571 / 2000
   ✅ ██████████████████ games with live overlap          106 / 100
   ✅ ██████████████████ median sync lag < 15s            0.0 / 15
      ████████████······ books quoting live               2 / 3

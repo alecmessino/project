@@ -47,15 +47,32 @@ established it, and showing where the assumption breaks is itself a contribution
 
 Every pitch thrown in a Major League Baseball game can trigger dozens of price updates across
 sportsbooks before the next pitch is delivered. These are high-frequency markets in the ordinary
-sense of the term, and they have an unusual property that makes them a good laboratory for studying
-how prices form: unlike an equity, every contract settles within hours against an objective terminal
-payoff, so the thing being forecast is eventually revealed and the forecast can be graded.
+sense, with one property that makes them an unusually clean laboratory for studying price formation:
+every contract settles within hours against an objective terminal payoff, so the quantity being
+forecast is eventually revealed and the forecast can be graded. Equity prices offer no such closure.
 
 Market efficiency tests answer a question about outcomes. They ask whether some information, held by
 someone, would have improved on the price. When the answer is no, as it frequently is, the finding is
-usually reported and the matter closed. But a null of that kind is a statement about a mechanism
-whose operation has not been observed. Something incorporated the information. The efficiency test
-does not say what, or how quickly, or through which participant.
+reported and the matter closed. But a null of that kind is a statement about a mechanism whose
+operation was never observed. Something incorporated the information. The efficiency test does not
+say what, or how quickly, or through which participant.
+
+This paper begins where a companion study ended. That study treated a sharp live betting line as an
+incumbent forecast of the runs remaining in a baseball game and asked whether any of ten publicly
+observable candidates, pitcher fatigue and velocity decay among them, carried incremental predictive
+content beyond it. None did, and the one candidate that appeared alive proved to be a post-treatment
+selection artifact. The transition between the two studies can be stated in a sentence. **The
+companion study established that public baseball variables contain no incremental information beyond
+a sharp market observed at one-minute resolution; this paper asks whether that apparent efficiency is
+genuine, or whether it is partly an artifact of observing the market only after the information has
+already propagated through it.** The companion study's closing section anticipates the question,
+listing cross-book propagation, the information half-life of a shock, and the microstructure limits
+of one-minute single-book snapshots among the things its data could not settle.
+
+The obstacle is not statistical power. It is that the process of interest is unobserved. A baseball
+market is punctuated by discrete, publicly dated events, and each is followed, sooner or later, by a
+revised price; but between the event and the revision we record sit stages that no outside observer
+sees.
 
 ![](figures/p2_boundary.png)
 
@@ -64,37 +81,7 @@ and a row in our dataset, the two in the shaded band are exactly the two the que
 the bookmaker decided to move, and when its feed made that decision visible. Everything we record
 sits below the boundary.
 
-This paper begins where a companion study ended. That study treated a sharp live betting line as an
-incumbent forecast of the runs remaining in a baseball game and asked whether any of ten publicly
-observable candidates, pitcher fatigue and velocity decay among them, carried incremental predictive
-content beyond it. None did. The market's forecast error was unpredictable from every variable
-measured, and the one candidate that appeared alive was shown to be a post-treatment selection
-artifact rather than an effect. The conclusion was a boundary: the frontier of public information had
-already been reached by the price.
-
-The transition between the two studies can be stated in a sentence. **The companion study
-established that public baseball variables contain no incremental information beyond a sharp market
-observed at one-minute resolution; this paper asks whether that apparent efficiency is genuine, or
-whether it is partly an artifact of observing the market only after the information has already
-propagated through it.** The companion study's own closing section anticipates the question,
-listing cross-book propagation, the information half-life of a shock, and the microstructure limits
-of one-minute single-book snapshots as the things its data could not settle.
-
-The natural next question is not whether the boundary exists but how it is enforced. A live betting
-market is an unusually good laboratory for that question. Unlike an equity price, whose fundamental
-value is never realized and whose information arrivals are diffuse and hard to timestamp, a baseball
-market is punctuated by discrete, publicly observable, precisely dated events. A run scores. An out
-is recorded. A pitcher is removed. Each is an information arrival with a known clock time, and each
-is followed, sooner or later, by a revised price. The interval between the two is the object of this
-paper.
-
-![](figures/p2_race.png)
-
-**Figure 2.** *Four internal events; two recorded numbers.* Between the run and our record of a new price sit each book's decision to re-price and each book's publication of that decision. We hold two timestamps. Between the run and our record of a new
-price sit four internal events, none of which we see: each book's decision to re-price, and each
-book's publication of that decision. We hold two timestamps. The difficulty of this paper is not
-measuring the interval; it is that the interval we can measure is a sum of intervals we cannot
-measure separately.
+Box 1 makes the difficulty concrete before any notation is introduced.
 
 <div class="protocol-box">
 <div class="pb-title">Box 1. A thought experiment</div>
@@ -108,26 +95,24 @@ detect. Both books land in the same poll. The data are silent.</p>
 <p>This paper is about what it takes to make them speak, and about being candid when they cannot.</p>
 </div>
 
-Studying that interval requires more than one price. A single book's response time is not
-interpretable on its own: it confounds how fast the bookmaker thinks with how fast its infrastructure
-publishes and how fast the analyst happens to be looking. Comparing two books holds out the
-possibility that the shared components cancel. Whether they actually do is an empirical and
-architectural question, and answering it honestly is the substance of what follows.
+The problem has a familiar shape. Astronomers infer the mass of a planet they cannot see from the
+wobble of a star they can, and the inference is only as good as the model of what lies between the
+observer and the object; much of the work is characterizing the instrument rather than the sky. Our
+position is the same. **Markets reveal prices. They do not reveal how those prices came to be.**
 
-The problem has a familiar shape. Astronomers infer the existence and mass of a planet they cannot
-see from the wobble of a star they can. The inference is only as good as the model of what lies
-between the observer and the object, and a great deal of the work is in characterizing the
-instrument rather than the sky. Our position is the same: we infer an invisible pricing process from
-the visible prices it produces, and the difficulty is not the arithmetic but the intervening
-machinery. **Markets reveal prices. They do not reveal how those prices came to be.**
+Two prices are therefore the minimum. A single book's response time confounds how fast the bookmaker
+reprices with how fast its infrastructure publishes and how fast the analyst happens to be sampling.
+Comparing two books raises the possibility that the shared components difference out. Whether they
+actually do is an architectural question about publishing infrastructure, not a statistical one, and
+it is the question on which the paper's central estimand stands or falls. Section 3 shows that three
+materially different markets generate numerically identical timestamp data, so the possibility cannot
+be settled by any statistic computed from the timestamps themselves; that result, illustrated in
+Figure 4, is the paper's core.
 
-We therefore frame this as a paper about identification in high-frequency markets rather than a
-second efficiency paper, and rather than a paper about sportsbooks. Sports betting is the laboratory,
-chosen because its information arrivals are discrete and precisely dated and its contracts settle
-against ground truth; the identification problem it exposes is general. The question is not whether
-the market can be beaten. It is how information moves through a market that apparently cannot be, and
-whether the movement is measurable with instruments of the kind available to an outside observer.
-Three things follow from taking that question seriously.
+We frame this accordingly as a paper about identification in high-frequency markets, not as a second
+efficiency paper and not as a paper about sportsbooks. Sports betting is the laboratory, chosen
+because its information arrivals are discrete and precisely dated and its contracts settle against
+ground truth. The identification problem it exposes is general. Three consequences follow.
 
 First, the estimand must be defined before the data are examined, because the intuitive estimators
 are wrong in a specific and instructive way. The obvious approach, timing one book's price change
@@ -165,13 +150,6 @@ bookmaker offering a live total on that game will, at some point, revise its pos
 outside observer records the revision at some later time. Between the event and the record lie three
 distinct delays, produced by three distinct mechanisms.
 
-![](figures/p2_why_paper1.png)
-
-**Figure 3.** *Paper 1 never needed to identify internal latency.* It compared two endpoints with the market between them, and every node it required was observable. This paper's question is the machinery itself, and half its stages are hidden. It compared two endpoints, a
-public variable and a realized outcome, with the market price between them, and every node it needed
-was observable. This paper's question is the machinery itself, and two of its four stages are hidden
-from any outside observer.
-
 **Pricing latency**, which we write as the interval between the event and the bookmaker's internal
 decision to revise, is the economically meaningful quantity. It reflects how quickly the bookmaker
 detects the event, updates its model, and commits to a new number. Differences in pricing latency
@@ -185,6 +163,21 @@ infrastructure, caching, and content delivery, not of judgment about baseball.
 of our own collector. With a polling interval of roughly thirty-one seconds, a revision published
 immediately after a poll waits, on average, about fifteen seconds to be seen, and up to
 thirty-one seconds in the worst case.
+
+![](figures/p2_race.png)
+
+**Figure 2.** *Four internal events; two recorded numbers.* Each book decides to re-price and
+each book's feed publishes that decision. None of the four is visible. What we hold is one
+timestamp per book, and the interval we can measure is a sum of intervals we cannot measure
+separately.
+
+![](figures/p2_why_paper1.png)
+
+**Figure 3.** *Paper 1 never needed to identify internal latency.* It compared two endpoints, a
+public variable and a realized outcome, with the market price between them, and every node it
+required was observable. This paper's question is the machinery itself, and two of its four
+stages are hidden from any outside observer.
+
 
 The data contain only the sum. For book `b` and event `E`, the observable is
 
@@ -261,7 +254,8 @@ and describe what remains estimable when an assumption fails.
 
 ### 3.1 The estimand
 
-Let `E` index discrete game events with clock times `t_E`, and let `t_b(E)` denote the time of book
+As Figure 4 makes clear, the target of inference cannot be read off the data; it must be defined and
+then argued for. Let `E` index discrete game events with clock times `t_E`, and let `t_b(E)` denote the time of book
 `b`'s first main-line revision attributable to `E`. Define the event-anchored response latency
 
 > `λ_b = E[ t_b(E) - t_E ]`
@@ -288,7 +282,8 @@ observations, and downstream statistics move materially depending on the choice.
 requires a fixed, documented, and tested extraction rule, together with a demonstration that the
 conclusions do not depend on it.
 
-**A4. Separability of transport from pricing.** This is the binding assumption. `Δλ` identifies the
+**A4. Separability of transport from pricing.** This is the binding assumption, and Figure 4 is its
+statement in visual form. `Δλ` identifies the
 pricing contrast only if feed latency is common-mode across books, or if a book-specific transport
 component can be independently measured and removed. We do not assume A4 holds. Establishing whether
 it holds, or demonstrating rigorously that it cannot be established with instruments of this class,
@@ -320,7 +315,8 @@ lie, together with the assumption that produced it.
 
 **Outcome C. The quantity is not identifiable with this class of instrument.** No external
 measurement of feed latency is obtainable from public endpoints, and no argument establishes
-common-mode behaviour. The reportable result is then a demonstration, not a guess: a proof that
+common-mode behaviour. This is the case in which the three worlds of Figure 4 remain
+observationally equivalent no matter how much data accumulates. The reportable result is then a demonstration, not a guess: a proof that
 timestamp data from public sportsbook endpoints cannot separate market behaviour from publishing
 infrastructure, together with a specification of the additional instrumentation that would be
 required.
@@ -453,7 +449,8 @@ sampling unit, with intervals constructed accordingly.
 
 ### 5.5 Pre-registered analysis plan
 
-The following is fixed before any estimate is computed. Departures from it will be reported as
+Every item below exists to prevent one of the failure modes in Figure 4 from being mistaken for a
+finding. The following is fixed before any estimate is computed. Departures from it will be reported as
 departures.
 
 1. **Primary estimand.** The cross-book contrast in event-anchored response latency, `Δλ`.
@@ -493,7 +490,44 @@ weight as a finding.
 
 ---
 
-## 5.7 Where this sits in the program
+## 6. Scope of the contribution
+
+Here the paper stops being about sportsbooks.
+
+The identification problem set out above is not a peculiarity of betting markets. It arises whenever
+a researcher observes the output of a process rather than the process itself, and wishes to attribute
+a measured interval to one stage of that process rather than another. An econometrician timing how
+quickly an exchange incorporates a macroeconomic release faces the same decomposition: some of the
+measured delay belongs to the traders, some to the exchange's own dissemination, and some to the
+vendor feed the researcher happens to have purchased. A political scientist timing how quickly
+legislatures respond to public opinion confronts it. So does anyone measuring the speed of pass
+through from a policy rate to a posted lending rate. In each case the estimand is a property of an
+unobserved stage, and the data are the sum of that stage and the plumbing around it.
+
+What betting markets add is not a novel problem but an unusually clean setting in which to state it.
+The information arrivals are discrete, publicly visible, and precisely dated; the contracts settle
+against ground truth within hours; and two competing quotes on the identical contract can be observed
+simultaneously. Where a general treatment would be forced into abstraction, here the three stages can
+be named, the boundary of observation can be drawn, and the conditions for identification can be
+written down and checked. A setting in which the problem is tractable is worth more to the literature
+than a setting in which it is merely important.
+
+The methodological claim is correspondingly modest and, we think, general. Timestamps are
+observations; latency is an inference. Any transmission estimate is a joint statement about the
+market and about the apparatus that observed it, and the two cannot be separated by assertion. Where
+the separation can be defended, the estimate means what it appears to mean. Where it cannot, the
+honest report is a bound, or a demonstration that no bound is available, together with a
+specification of the instrument that would be required. Better measurement produces better
+identification; better argument does not.
+
+We would rather end on that discipline than on a result. When the mechanism is unobserved, rigour
+lies not in stronger conclusions but in recognizing precisely where conclusions end.
+
+**Observation survives. Identification does not.**
+
+---
+
+## Appendix. Where this sits in the research program
 
 ![](figures/p2_bridge.png)
 
@@ -502,11 +536,6 @@ study traced public information through the market to an answer, and every node 
 observable. This study starts from an event, passes through a process it cannot see, and arrives at a
 timestamp whose interpretation depends on assumptions rather than on computation. The first paper
 ends in a finding. The second ends, at best, in a set of conditions.
-
-That is not a weaker ambition. A literature that reports transmission estimates without establishing
-that transmission is identified accumulates numbers whose meaning depends on unexamined assumptions
-about publishing infrastructure. Stating the conditions is what makes the numbers interpretable when
-they eventually arrive.
 
 ---
 

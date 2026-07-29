@@ -1,6 +1,6 @@
 <div class="titleblock">
 <h1>What Prices Cannot Tell You: Identifying Information Transmission in Live Markets</h1>
-<p class="epigraph">Markets reveal prices. They do not reveal how those prices came to be.</p>
+<p class="epigraph">A companion study asked whether prices contain public information. This paper asks whether prices reveal how that information entered the market.</p>
 <p class="author">Alec Messino<br/><span class="affil">The Third Turn Research Initiative &middot; alec.messino@gmail.com</span></p>
 <p class="wp">Working Paper &middot; DRAFT, Sections 1-5 &middot; Results not yet written</p>
 </div>

@@ -16,6 +16,12 @@ Protocol) that shifts the burden of proof from predicting an outcome to improvin
 forecast; and an **infrastructure** one, a released benchmark dataset and the reference code that
 reproduces every number and figure in the paper.
 
+## The research program
+
+**Paper 1 asked whether prices contain public information. Paper 2 asks whether prices reveal how
+that information entered the market.** Information in prices; formation of prices. The two are
+distinct questions, answered with different instruments and different assumptions.
+
 ## What is here
 
 | Path | Contents |

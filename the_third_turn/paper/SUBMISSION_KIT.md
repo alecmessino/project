@@ -5,6 +5,21 @@ Companion to `../ROADMAP.md` (strategy). Everything below is copy you can paste 
 
 ---
 
+## 0. Program framing (use this language everywhere)
+
+One sentence positions both papers, and it should appear verbatim in talks, abstracts, SSRN and
+arXiv summaries, conference submissions, the repository README, and any web or research page:
+
+> **Paper 1 asked whether prices contain public information. Paper 2 asks whether prices reveal how
+> that information entered the market.**
+
+Compressed, for slides and headers: **information in prices** → **formation of prices**.
+
+Use "a companion study" rather than "Paper 1" in any standalone manuscript, where the reader may not
+have the other paper in hand.
+
+---
+
 ## A. Where to publish (preprint) — do tonight
 
 | Venue | Fit | Friction | Action |

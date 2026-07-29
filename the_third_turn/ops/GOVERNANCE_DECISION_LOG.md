@@ -160,6 +160,13 @@ invalidate inference) · **Confidence Register** (what the evidence justifies be
 - **Alternatives rejected:** frame Paper 2 as "Paper 1 with more books" (wrong literature, wrong question); write Results first and structure the paper around what the data show (result-driven rather than hypothesis-driven).
 - **Future implications:** Drafting order is Introduction → Conceptual framework → Identification → Data → Methods, then stop. Results/Discussion remain gated by the four conditions in `PAPER2_DESIGN_BRIEF.md` §9. The design brief is amended by this entry on the three-latency decomposition.
 
+### GD-17 · 2026-07-29 · **APPROVED** · Conceptual figures may not encode unestimated quantities
+- **Decision:** Standing rule for every paper in the program. **Conceptual figures may depict logical relationships, causal structures, or identification arguments. They may not encode numerical values, functional forms, or quantitative relationships that have not been estimated or theoretically derived within the paper.** A conceptual figure carrying a numeric axis, a fitted-looking curve, or a labelled magnitude is treated as a results figure and is subject to the same gating as any estimate.
+- **Evidence:** An external review proposed a "signal decay curve" for Paper 2 plotting incremental R² falling from **0.15** toward a "market efficient frontier" as latency rises. No such quantity has ever been estimated in this program (verified: no alpha-versus-latency analysis exists in the codebase), and the value is directionally opposed to Paper 1's measured incremental R² of **−0.037**. Labelling the figure "conceptual" would not have prevented readers from reading 0.15 as evidence.
+- **Alternatives rejected:** Publish it with a "conceptual, not to scale" caption (readers encode axis values as findings regardless of the caption, and the number contradicts our own null); publish a version with the axis unlabelled (still implies an estimated shape we have not derived).
+- **Reasoning:** The distinction is whether a figure asserts *structure* or asserts *magnitude*. Paper 2's "three worlds" figure passes: its bars are unitless and illustrate an equivalence argument. The decay curve fails: it puts an unestimated number on an axis. This is the visual analogue of the language discipline already in force (fact versus architectural hypothesis).
+- **Future implications:** Applies retroactively to all existing figures and to every future one, including talk slides and repository documentation. Any figure combining a numeric scale with an unestimated relationship requires either an estimate, a derivation, or removal. No confidence level moved.
+
 ---
 
 *Append new decisions below this line. Never edit a past entry; correct with a new dated entry that

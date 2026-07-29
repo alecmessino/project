@@ -15,19 +15,31 @@
 
 A companion study found that a live baseball wagering market encompasses every public-information
 candidate tested against it: no variable in a ten-hypothesis ladder improved on the market's own
-forecast of remaining runs. That null invites a mechanical question. If the market has already
-incorporated public information, how does it do so, and does the process leave an observable trace?
-We take up the transmission question directly. Using a two-book, thirty-one-second live quote panel
-matched to game-state events, we define an event-anchored response latency for each bookmaker and
-study the cross-book contrast. Our central contribution is not an estimate but an identification
-analysis. We decompose the delay between a game event and an observed price change into three
-components, only one of which is economic: bookmaker pricing latency, feed transport latency, and
-observation latency imposed by our own sampling. We state the conditions under which the cross-book
-contrast identifies the pricing component, show that several intuitive estimators of information
-leadership are mechanically confounded by update frequency and by the analyst's choice of which
-posted line to call the main line, and characterize the resolution floor below which this class of
-instrument can say nothing. The paper is designed so that a demonstrated inability to separate
-pricing from plumbing is a result rather than a failure.
+forecast of remaining runs. That null is a statement about outcomes, and it invites a question about
+mechanism. If the market has already incorporated public information, when did it do so, and is the
+apparent efficiency genuine or partly an artifact of observing the market only after the information
+has already propagated?
+
+We take up the transmission question directly, and find that it is largely an identification problem.
+The delay between a game event and an observed price change decomposes into a bookmaker's pricing
+latency, its feed's transport latency, and the observation latency imposed by our own sampling. That
+decomposition is arithmetic. The substantive difficulty is that only their sum is observed, and this
+paper is about what can and cannot be learned under that constraint. We show that three materially
+different markets, one in which a bookmaker genuinely prices faster, one in which pricing speeds are
+identical and only publishing infrastructure differs, and one in which both differ and partially
+offset, generate numerically identical timestamp data. No statistic computed from timestamps alone
+separates them.
+
+Working from a two-book, thirty-one-second live quote panel matched to game-state events, we define
+an event-anchored response latency and state precisely the conditions under which its cross-book
+contrast is a statement about pricing rather than about plumbing. We show that several intuitive
+estimators of information leadership are mechanically confounded by update frequency and by the
+analyst's choice of which posted line to treat as the main line, and we characterize the resolution
+floor below which this class of instrument is silent. The design admits three outcomes, all of which
+we regard as publishable: identification of a pricing contrast, identification of bounds only, or a
+demonstration that the quantity is not identifiable without richer instrumentation. The third is not
+a failure of the study. Empirical work in this area has generally assumed identification rather than
+established it, and showing where the assumption breaks is itself a contribution.
 
 ---
 
@@ -47,6 +59,14 @@ measured, and the one candidate that appeared alive was shown to be a post-treat
 artifact rather than an effect. The conclusion was a boundary: the frontier of public information had
 already been reached by the price.
 
+The transition between the two studies can be stated in a sentence. **The companion study
+established that public baseball variables contain no incremental information beyond a sharp market
+observed at one-minute resolution; this paper asks whether that apparent efficiency is genuine, or
+whether it is partly an artifact of observing the market only after the information has already
+propagated through it.** The companion study's own closing section anticipates the question,
+listing cross-book propagation, the information half-life of a shock, and the microstructure limits
+of one-minute single-book snapshots as the things its data could not settle.
+
 The natural next question is not whether the boundary exists but how it is enforced. A live betting
 market is an unusually good laboratory for that question. Unlike an equity price, whose fundamental
 value is never realized and whose information arrivals are diffuse and hard to timestamp, a baseball
@@ -54,6 +74,14 @@ market is punctuated by discrete, publicly observable, precisely dated events. A
 is recorded. A pitcher is removed. Each is an information arrival with a known clock time, and each
 is followed, sooner or later, by a revised price. The interval between the two is the object of this
 paper.
+
+![](figures/p2_race.png)
+
+**Figure 1.** What a single observation actually summarizes. Between the run and our record of a new
+price sit four internal events, none of which we see: each book's decision to re-price, and each
+book's publication of that decision. We hold two timestamps. The difficulty of this paper is not
+measuring the interval; it is that the interval we can measure is a sum of intervals we cannot
+measure separately.
 
 Studying that interval requires more than one price. A single book's response time is not
 interpretable on its own: it confounds how fast the bookmaker thinks with how fast its infrastructure
@@ -102,11 +130,12 @@ bookmaker offering a live total on that game will, at some point, revise its pos
 outside observer records the revision at some later time. Between the event and the record lie three
 distinct delays, produced by three distinct mechanisms.
 
-![](figures/p2_three_latencies.png)
+![](figures/p2_why_paper1.png)
 
-**Figure 1.** The chain from event to observation. A run scores; the bookmaker revises its price;
-the feed publishes the revision; our collector samples the feed. Each arrow carries its own delay,
-and the data contain only their sum. Only the first is a statement about the market.
+**Figure 2.** Why the companion study never had to confront this. It compared two endpoints, a
+public variable and a realized outcome, with the market price between them, and every node it needed
+was observable. This paper's question is the machinery itself, and two of its four stages are hidden
+from any outside observer.
 
 **Pricing latency**, which we write as the interval between the event and the bookmaker's internal
 decision to revise, is the economically meaningful quantity. It reflects how quickly the bookmaker
@@ -126,8 +155,11 @@ The data contain only the sum. For book `b` and event `E`, the observable is
 
 > `Δt_b(E) = λ_price_b(E) + λ_feed_b(E) + λ_obs_b(E)`
 
-and no manipulation of a single book's series decomposes it. This is the paper's governing
-difficulty, and it is why the identification section is longer than the estimation section.
+As an accounting identity this is unremarkable, and we do not present it as a contribution. Writing
+a delay as a sum of its parts is bookkeeping. What matters is the consequence: **no manipulation of a
+single book's series recovers the individual terms, because only the left-hand side is ever
+observed.** Everything difficult about this paper follows from that sentence, which is why the
+identification section is longer than the estimation section.
 
 ### 2.2 Why two books might help
 
@@ -139,13 +171,16 @@ them:
 and the contrast would isolate the economics. This is the hope that motivates a two-book design, and
 it is an assumption, not a fact.
 
-![](figures/p2_identification.png)
+![](figures/p2_three_worlds.png)
 
-**Figure 2.** The identification problem. On the left, the transport components are equal across
-books, so the observed difference in response time equals the true difference in pricing speed. On
-the right, the pricing speeds are identical and the entire observed difference is an artifact of
-unequal publishing infrastructure. Both panels are consistent with the same observed data. Telling
-them apart requires evidence external to the timing series itself.
+**Figure 3.** The paper's central problem, in one picture. In the first world a bookmaker genuinely
+prices faster and the publishing infrastructure is equal, so the observed lag means what it appears
+to mean. In the second, the two bookmakers price at identical speed and the entire observed lag is
+produced by one book's slower feed. In the third, both differ and partially offset. The observed
+timestamps, marked by the dashed guides, fall in exactly the same places in all three panels. The
+datasets are numerically identical; the markets are not. Any statistic computed from timestamps
+alone assigns the same value to all three, so distinguishing them requires evidence from outside the
+timing series.
 
 Observation latency is plausibly common-mode by construction: a single collector polls both books on
 the same schedule, so the sampling penalty is drawn from the same distribution for each. Feed latency
@@ -160,7 +195,7 @@ level and call the earlier one the leader. This is mechanically defective.
 
 ![](figures/p2_anchoring.png)
 
-**Figure 3.** Left: a book that re-prices frequently passes through any given price level before a
+**Figure 4.** Left: a book that re-prices frequently passes through any given price level before a
 book that re-prices rarely, purely as a consequence of update density. A leadership statistic built
 on book-to-book arrival times reports this sampling artifact as information leadership. Right:
 anchoring each book's response to the exogenous game event measures each against a clock that neither
@@ -235,24 +270,44 @@ an attribution window. A window chosen after inspecting the data is a researcher
 capable of manufacturing an effect. A6 is satisfied by pre-registration, which is why the window is
 fixed in Section 5.5 before any estimate is produced.
 
-### 3.3 What is identified under failure
+### 3.3 Three admissible outcomes
 
-The paper is designed so that assumption failures yield reportable results rather than a dead end.
+The design admits exactly three outcomes, and we commit in advance to reporting whichever obtains.
 
-If A4 fails and transport latency is book-specific and unmeasurable, `Δλ` is not a pricing quantity
-and no leadership claim is licensed. The reportable result is then a bound: a demonstration that a
-class of publicly available instruments, however carefully applied, cannot separate market behavior
-from publishing infrastructure, together with a specification of what additional measurement would be
-required. This is a genuine contribution to the microstructure literature, which has generally
-enjoyed exchange-timestamped data and has not had to confront this decomposition explicitly.
+**Outcome A. The pricing contrast is identified.** The clock audit passes, feed latency is shown to
+be common-mode or is independently measured, and the extraction rule is shown not to drive the
+result. The cross-book contrast is then a statement about how two bookmakers process information.
 
-If A3 fails and results depend on the extraction rule, the reportable result is a sensitivity
-analysis quantifying how much of an apparent leadership finding is attributable to an analyst's
-choice. Given that reasonable rules disagree on most observations, this quantity is of independent
-methodological interest.
+**Outcome B. Only bounds are identified.** Some assumption holds partially: transport latency is
+bounded but not known, or the result is directionally stable but magnitude-sensitive to the
+extraction rule. The reportable object is then an interval within which the pricing contrast must
+lie, together with the assumption that produced it.
 
-If A5 fails, point estimates survive but robustness claims weaken, and the paper reports the
-estimates with an explicit statement that single-book anomalies cannot be excluded.
+**Outcome C. The quantity is not identifiable with this class of instrument.** No external
+measurement of feed latency is obtainable from public endpoints, and no argument establishes
+common-mode behaviour. The reportable result is then a demonstration, not a guess: a proof that
+timestamp data from public sportsbook endpoints cannot separate market behaviour from publishing
+infrastructure, together with a specification of the additional instrumentation that would be
+required.
+
+We want to be explicit that Outcome C is a result and not a failure. Empirical work on information
+transmission has generally enjoyed exchange-timestamped data and has therefore been able to assume
+away the decomposition this paper confronts. Where that assumption is unavailable, the discipline is
+to demonstrate its unavailability rather than to proceed as though it held. A paper that establishes
+where identification breaks down tells a subsequent researcher what to build.
+
+![](figures/p2_ladder.png)
+
+**Figure 5.** The requirements, as a ladder. Each rung depends on the one above it. We hold the top
+two. The third is a methodological choice we can fix and test. The fourth, knowledge of feed latency,
+is not obtainable from public endpoints, and the fifth depends on it. The colour of the fourth rung
+is what determines whether this paper reports Outcome A, B, or C.
+
+![](figures/p2_decision_tree.png)
+
+**Figure 6.** The same logic as a decision the reader can walk. The paper does not presuppose which
+branch it will take. All three terminal states are publishable, and the third is the one the
+literature most often skips.
 
 ### 3.4 The resolution floor
 
@@ -260,10 +315,11 @@ An instrument cannot report structure below its sampling interval.
 
 ![](figures/p2_resolution.png)
 
-**Figure 4.** The instrument's resolution. With a thirty-one-second polling interval, latency
-differences below that scale are not recoverable, and this paper makes no claim about them. Delays at
-the scale of a bookmaker noticing a run and revising a number, plausibly seconds to minutes, sit
-above the floor and are within reach. The figure is a statement about the apparatus, not about the
+**Figure 7.** The instrument is coarser than the game. Pitches, balls, strikes, and the run itself
+arrive on a scale of seconds; our sampling collapses everything inside a thirty-one-second window
+into a single observation. A book that re-priced two seconds after the run and one that re-priced
+twenty-five seconds after it are recorded identically. This bounds the paper's ambition: no claim
+below the window is supportable, and we make none. The figure describes the apparatus, not the
 market.
 
 This limit is worth stating plainly because it bounds the paper's ambition. Financial microstructure
@@ -291,6 +347,14 @@ such.
 | Market status coverage | one book only |
 | Game state | inning, half, outs, base occupancy, score, pitch count, times through order |
 | Line semantics | full-game total, verified against pregame distribution |
+
+![](figures/p2_windows.png)
+
+**Figure 8.** Two instruments, two different blind spots. The June apparatus saw a sharp benchmark
+book, pitch-level measurement, and weather; it could not see two books at once or a market's live
+status. The July apparatus sees the second book and the status stream but is blind to everything the
+first could measure. Neither is better. They are blind in different places, which is why a result
+from one cannot confirm or contradict a result from the other.
 
 ### 4.2 What this instrument does not contain
 

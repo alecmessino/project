@@ -100,7 +100,7 @@ def main() -> int:
     img_src = WEB / "img"
     if img_src.is_dir():
         (DOCS / "img").mkdir(exist_ok=True)
-        for pat in ("*.jpg", "*.png"):
+        for pat in ("*.jpg", "*.png", "*.svg"):
             for f in sorted(img_src.glob(pat)):
                 (DOCS / "img" / f.name).write_bytes(f.read_bytes())
                 print(f"   img/{f.name:22} -> docs/img/{f.name} (copied, binary)")

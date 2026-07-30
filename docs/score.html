@@ -118,6 +118,30 @@
     .foot{padding-left:22px;padding-right:22px}
     .panel{position:static}
   }
+
+  /* ── The surface map (2026-07-29). The tally above is monotone: seven-of-ten looks identical
+     whether it is concentration + equity comp + multi-state or trusts + real estate + charity. But the
+     whole thesis is that the seams leak at the *weakest* system, and that asymmetry was invisible.
+     This lights the homepage's own seven-system lattice from the factors checked, so the reader sees
+     the SHAPE of their surface, not just its size. Deliberately not a radar/spider chart: nothing here
+     asks the reader to rate themselves 1-10, so no unsourced number is drawn with the authority of an
+     instrument, and nothing fills. A system is lit or it is not. ── */
+  .surface{margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+  .surface .sh{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  .surface .ssub{font-family:var(--serif);font-size:13.5px;line-height:1.55;color:var(--dim);margin:0 0 12px;max-width:54ch}
+  .surface svg{width:100%;height:auto;display:block;max-width:420px;margin:0 auto}
+  .surface .sn-net{stroke:var(--ghost-line);stroke-width:.6;opacity:.14;transition:opacity .3s ease,stroke .3s ease}
+  .surface .sn-net.on{stroke:var(--accent-strike);stroke-width:1.1;opacity:.5}
+  .surface .sn-dot{fill:var(--ghost-line);transition:fill .3s ease,r .3s ease}
+  .surface .sn-lbl{font-family:var(--sans);font-size:9.5px;font-weight:600;letter-spacing:.02em;
+    fill:var(--muted);transition:fill .3s ease}
+  .surface .sn.on .sn-dot{fill:var(--accent-strike)}
+  .surface .sn.on .sn-lbl{fill:var(--ink);font-weight:700}
+  .surface .scap{font-family:var(--sans);font-size:11.5px;line-height:1.5;color:var(--muted);
+    margin:10px 0 0;text-align:center}
+  .surface .scap b{color:var(--ink);font-weight:600}
+  @media(prefers-reduced-motion:reduce){.surface *{transition:none!important}}
 </style>
 </head>
 <body>
@@ -189,6 +213,45 @@
         </div>
         <p class="hint">This is an inventory, not a grade. It maps where the pieces of a financial life most need to
           be kept consistent with one another.</p>
+    <div class="surface">
+      <p class="sh">Your coordination surface</p>
+      <p class="ssub">Two households can check the same number of boxes and have completely different
+        surfaces. This is the shape of yours: the systems your answers actually move, and the seams
+        between them.</p>
+      <svg viewBox="0 0 640 452" role="img" id="surfaceMap"
+           aria-label="A seven-system map. The systems your checked factors move are highlighted.">
+                <line class="sn-net" data-a="0" data-b="1" x1="320" y1="65" x2="457" y2="131"></line>
+        <line class="sn-net" data-a="0" data-b="2" x1="320" y1="65" x2="491" y2="279"></line>
+        <line class="sn-net" data-a="0" data-b="3" x1="320" y1="65" x2="244" y2="398"></line>
+        <line class="sn-net" data-a="0" data-b="4" x1="320" y1="65" x2="149" y2="279"></line>
+        <line class="sn-net" data-a="0" data-b="5" x1="320" y1="65" x2="183" y2="131"></line>
+        <line class="sn-net" data-a="0" data-b="6" x1="320" y1="65" x2="396" y2="398"></line>
+        <line class="sn-net" data-a="1" data-b="2" x1="457" y1="131" x2="491" y2="279"></line>
+        <line class="sn-net" data-a="1" data-b="3" x1="457" y1="131" x2="244" y2="398"></line>
+        <line class="sn-net" data-a="1" data-b="4" x1="457" y1="131" x2="149" y2="279"></line>
+        <line class="sn-net" data-a="1" data-b="5" x1="457" y1="131" x2="183" y2="131"></line>
+        <line class="sn-net" data-a="1" data-b="6" x1="457" y1="131" x2="396" y2="398"></line>
+        <line class="sn-net" data-a="2" data-b="3" x1="491" y1="279" x2="244" y2="398"></line>
+        <line class="sn-net" data-a="2" data-b="4" x1="491" y1="279" x2="149" y2="279"></line>
+        <line class="sn-net" data-a="2" data-b="5" x1="491" y1="279" x2="183" y2="131"></line>
+        <line class="sn-net" data-a="2" data-b="6" x1="491" y1="279" x2="396" y2="398"></line>
+        <line class="sn-net" data-a="3" data-b="4" x1="244" y1="398" x2="149" y2="279"></line>
+        <line class="sn-net" data-a="3" data-b="5" x1="244" y1="398" x2="183" y2="131"></line>
+        <line class="sn-net" data-a="3" data-b="6" x1="244" y1="398" x2="396" y2="398"></line>
+        <line class="sn-net" data-a="4" data-b="5" x1="149" y1="279" x2="183" y2="131"></line>
+        <line class="sn-net" data-a="4" data-b="6" x1="149" y1="279" x2="396" y2="398"></line>
+        <line class="sn-net" data-a="5" data-b="6" x1="183" y1="131" x2="396" y2="398"></line>
+                <g class="sn" data-i="0"><circle class="sn-dot" cx="320" cy="65" r="4"></circle><text class="sn-lbl" x="320" y="41" text-anchor="middle">Investments</text></g>
+        <g class="sn" data-i="1"><circle class="sn-dot" cx="457" cy="131" r="4"></circle><text class="sn-lbl" x="473" y="126" text-anchor="start">Taxes</text></g>
+        <g class="sn" data-i="2"><circle class="sn-dot" cx="491" cy="279" r="4"></circle><text class="sn-lbl" x="507" y="284" text-anchor="start">Cash Flow</text></g>
+        <g class="sn" data-i="3"><circle class="sn-dot" cx="244" cy="398" r="4"></circle><text class="sn-lbl" x="238" y="428" text-anchor="middle">Family / Purpose</text></g>
+        <g class="sn" data-i="4"><circle class="sn-dot" cx="149" cy="279" r="4"></circle><text class="sn-lbl" x="133" y="284" text-anchor="end">Estate</text></g>
+        <g class="sn" data-i="5"><circle class="sn-dot" cx="183" cy="131" r="4"></circle><text class="sn-lbl" x="167" y="126" text-anchor="end">Protection</text></g>
+        <g class="sn" data-i="6"><circle class="sn-dot" cx="396" cy="398" r="4"></circle><text class="sn-lbl" x="400" y="428" text-anchor="middle">Business</text></g>
+      </svg>
+      <p class="scap" id="surfaceCap">Nothing checked yet. Your answers will light the systems they move.</p>
+    </div>
+
       </div>
     </div>
 
@@ -241,6 +304,48 @@
       return ['Many interacting parts','Many decisions that move each other, the interactions are where most of the value is kept or lost.'];
     }
 
+
+    // ── Surface map: light the systems the checked factors move. Order matches the checklist.
+    var FACTOR_SYS = [
+      [6,2,1,4,5],   // operating business
+      [6,1,4],       // multiple legal entities
+      [4,1,3],       // trusts
+      [0,1,2],       // equity comp / options
+      [0,5,1],       // concentrated position
+      [1,4],         // multi-state / cross-border
+      [0,2,1],       // private / alternatives (capital calls hit cash flow)
+      [0,2,1,5],     // investment real estate
+      [3,1,4],       // charitable giving
+      [4,1,3]        // estate over an exemption
+    ];
+    var SYS_NAMES = ['Investments','Taxes','Cash Flow','Family / Purpose','Estate','Protection','Business Ownership'];
+    var mapNodes = [].slice.call(document.querySelectorAll('#surfaceMap .sn'));
+    var mapNets  = [].slice.call(document.querySelectorAll('#surfaceMap .sn-net'));
+    var mapCap   = document.getElementById('surfaceCap');
+
+    function paintSurface(){
+      var live = {};
+      btns.forEach(function(b, i){
+        if(b.getAttribute('aria-pressed') === 'true'){
+          (FACTOR_SYS[i] || []).forEach(function(k){ live[k] = true; });
+        }
+      });
+      mapNodes.forEach(function(g, i){ g.classList.toggle('on', !!live[i]); });
+      mapNets.forEach(function(ln){
+        var a = +ln.getAttribute('data-a'), b = +ln.getAttribute('data-b');
+        ln.classList.toggle('on', !!live[a] && !!live[b]);
+      });
+      var on = Object.keys(live).length;
+      if(!on){
+        mapCap.innerHTML = 'Nothing checked yet. Your answers will light the systems they move.';
+      } else if(on === 7){
+        mapCap.innerHTML = 'Your answers move <b>all seven systems</b>. No decision here touches just one.';
+      } else {
+        var quiet = SYS_NAMES.filter(function(_, k){ return !live[k]; });
+        mapCap.innerHTML = 'Your answers move <b>' + on + ' of 7 systems</b>. Still quiet: ' + quiet.join(', ') + '.';
+      }
+    }
+
     function paint(){
       var n = 0, matters = [];
       btns.forEach(function(b){
@@ -253,6 +358,7 @@
       list.innerHTML = '';
       matters.forEach(function(m){ var li = document.createElement('li'); li.innerHTML = m; list.appendChild(li); });
       empty.style.display = matters.length ? 'none' : 'block';
+      paintSurface();
     }
 
     btns.forEach(function(b){

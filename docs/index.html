@@ -217,6 +217,12 @@
   /* the web, 21 hairlines among seven systems, near-silent at rest: the density IS the argument.
      A hovered system lifts only its own links; a traced decision lifts the chords among its set. */
   .net{stroke:var(--ghost-line);stroke-width:.6;opacity:.15;transition:opacity .34s ease,stroke .34s ease}
+  /* Two weights, and only two. A structural edge is one both of whose systems appear in EVERY decision
+     we publish a trace for; a situational edge depends on which decision it is. The set is derived from
+     the TRIG traces below, not asserted: see tests/test_hub_lattice_weights.py, which recomputes it and
+     fails if the traces change without the diagram following. Deliberately NOT a continuous
+     "correlation strength" ramp, which would be a quantitative claim with nothing behind it. */
+  .net--structural{stroke-width:1.1;opacity:.26}
   .net.lit{stroke:var(--accent-strike);stroke-width:1;opacity:.72}
   /* a decision's web is read as a hierarchy, not a mesh: the chords leaving the originating system are the
      primary star (full strength); the cross-links among the downstream systems are a quieter secondary
@@ -246,6 +252,7 @@
      reduced-motion, and the interactive default alike, so the plate makes its point at rest, with no
      animation. Hovering / focusing / tracing clears .seeded to light one specific scenario. */
   .sysstage.seeded .net{stroke:var(--accent-strike);stroke-width:1;opacity:.72}
+  .sysstage.seeded .net--structural{stroke-width:1.7;opacity:.9}
   .sysstage.seeded .node .dot{fill:var(--ink)}
   .sysstage.seeded .node .lbl{fill:var(--ink);font-weight:700}
   .node:focus{outline:none}
@@ -435,18 +442,18 @@
         <div class="sysstage seeded" id="sysDiagram">
           <svg viewBox="0 0 640 546" role="group" aria-label="Seven financial systems, Investments, Taxes, Cash Flow, Estate and legacy, Risk and protection, Business Ownership and account structure, and Family / Purpose, in one coordinated network. Tap a system to see what it moves; what you keep is the result.">
             <!-- the lattice: every system connected to every other (near-silent at rest) -->
-            <line class="net" data-a="0" data-b="1" x1="320" y1="65" x2="457" y2="131"></line>
-            <line class="net" data-a="0" data-b="2" x1="320" y1="65" x2="491" y2="279"></line>
-            <line class="net" data-a="0" data-b="3" x1="320" y1="65" x2="244" y2="398"></line>
+            <line class="net net--structural" data-a="0" data-b="1" x1="320" y1="65" x2="457" y2="131"></line>
+            <line class="net net--structural" data-a="0" data-b="2" x1="320" y1="65" x2="491" y2="279"></line>
+            <line class="net net--structural" data-a="0" data-b="3" x1="320" y1="65" x2="244" y2="398"></line>
             <line class="net" data-a="0" data-b="4" x1="320" y1="65" x2="149" y2="279"></line>
             <line class="net" data-a="0" data-b="5" x1="320" y1="65" x2="183" y2="131"></line>
             <line class="net" data-a="0" data-b="6" x1="320" y1="65" x2="396" y2="398"></line>
-            <line class="net" data-a="1" data-b="2" x1="457" y1="131" x2="491" y2="279"></line>
-            <line class="net" data-a="1" data-b="3" x1="457" y1="131" x2="244" y2="398"></line>
+            <line class="net net--structural" data-a="1" data-b="2" x1="457" y1="131" x2="491" y2="279"></line>
+            <line class="net net--structural" data-a="1" data-b="3" x1="457" y1="131" x2="244" y2="398"></line>
             <line class="net" data-a="1" data-b="4" x1="457" y1="131" x2="149" y2="279"></line>
             <line class="net" data-a="1" data-b="5" x1="457" y1="131" x2="183" y2="131"></line>
             <line class="net" data-a="1" data-b="6" x1="457" y1="131" x2="396" y2="398"></line>
-            <line class="net" data-a="2" data-b="3" x1="491" y1="279" x2="244" y2="398"></line>
+            <line class="net net--structural" data-a="2" data-b="3" x1="491" y1="279" x2="244" y2="398"></line>
             <line class="net" data-a="2" data-b="4" x1="491" y1="279" x2="149" y2="279"></line>
             <line class="net" data-a="2" data-b="5" x1="491" y1="279" x2="183" y2="131"></line>
             <line class="net" data-a="2" data-b="6" x1="491" y1="279" x2="396" y2="398"></line>
@@ -495,7 +502,7 @@
           </svg>
         </div>
         <div class="mstory" id="mstory">
-          <p class="mrest" id="mrest">Each line is a dependency. Trace a decision below, or explore a system.</p>
+          <p class="mrest" id="mrest">Each line is a dependency. The heavier lines are the four systems every decision below moves: what you own, what you owe, what you can spend, and what it is for. Trace a decision, or explore a system.</p>
           <p class="mlead" id="mlead"></p>
           <p class="mchain" id="mchain"></p>
           <a class="mproof" id="mproof" href="#"></a>
@@ -505,6 +512,7 @@
           <button class="trig-btn" data-t="1" aria-pressed="false">Sell a business</button>
           <button class="trig-btn" data-t="2" aria-pressed="false">Exercise stock options</button>
           <button class="trig-btn" data-t="3" aria-pressed="false">Receive an inheritance</button>
+          <button class="trig-btn" data-t="4" aria-pressed="false">Face a health event</button>
         </div>
       </div>
     </div>
@@ -669,7 +677,10 @@ window.__STATE__ = {"header": {"generated": "2026-07-29 23:16:55 UTC"}, "hero": 
       href:"case-stock-options.html", proof:"Model the Exercise Strategy" },
     { set:[4,0,1,2,6,3], lead:"One inheritance. Six systems.",
       body:"An inheritance arrives as an estate event, then becomes an investment decision, a step-up and tax question, a liquidity change, a titling and account cleanup, and a prompt to revisit what the family’s wealth is for.",
-      href:"case-inheritance.html", proof:"See the Inheritance case" }
+      href:"case-inheritance.html", proof:"See the Inheritance case" },
+    { set:[5,2,1,4,0,3], lead:"One diagnosis. Six systems.",
+      body:"Health doesn\u2019t sit alongside the money; it surrounds it. Protection is tested first, then the cash flow a long care period actually needs, the tax treatment of what gets sold to fund it, the estate documents and powers that have to be current, the portfolio\u2019s liquidity and horizon, and the conversation about what the family wants this money to do.",
+      href:"manual.html", proof:"See the Operating Manual" }
   ];
   function fitHub(){
     if(!hubBg || !hub.getBBox) return;

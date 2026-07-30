@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-30T19:10:38+00:00",
+  "generated": "2026-07-30T19:26:18+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 435851,
+    "rows": 436052,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 154949,
-      "live_total": 48941,
-      "live_today": 1873,
-      "last_row_age_min": 9.3
+      "rows_total": 154957,
+      "live_total": 48949,
+      "live_today": 1881,
+      "last_row_age_min": 0.6
     },
     "fanduel": {
-      "rows_total": 280896,
-      "live_total": 56208,
-      "live_today": 1834,
+      "rows_total": 281089,
+      "live_total": 56213,
+      "live_today": 1839,
       "last_row_age_min": 0.1
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 35325.6
+      "last_row_age_min": 35341.3
     }
   },
   "books_reporting_live": [
@@ -37,18 +37,18 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 48941,
-    "OPEN": 51585,
+    "unset": 48949,
+    "OPEN": 51590,
     "SUSPENDED": 4371,
     "REMOVED": 252
   },
   "overlap": {
-    "simultaneous_pairs_total": 57821,
-    "simultaneous_pairs_today": 1914,
+    "simultaneous_pairs_total": 57834,
+    "simultaneous_pairs_today": 1927,
     "overlap_games": 106,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
-      "0_books": 16,
+      "0_books": 18,
       "2_books": 106
     }
   },
@@ -65,7 +65,7 @@
   },
   "coverage": {
     "live_games_seen": 107,
-    "book_panel_games": 122,
+    "book_panel_games": 124,
     "team_total_rows": 27702,
     "innings_seen": [
       1,
@@ -86,7 +86,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 57821,
+        "current": 57834,
         "target": 2000,
         "pass": true,
         "progress": 1.0

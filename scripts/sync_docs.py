@@ -100,9 +100,10 @@ def main() -> int:
     img_src = WEB / "img"
     if img_src.is_dir():
         (DOCS / "img").mkdir(exist_ok=True)
-        for f in sorted(img_src.glob("*.jpg")):
-            (DOCS / "img" / f.name).write_bytes(f.read_bytes())
-            print(f"   img/{f.name:22} -> docs/img/{f.name} (copied, binary)")
+        for pat in ("*.jpg", "*.png"):
+            for f in sorted(img_src.glob(pat)):
+                (DOCS / "img" / f.name).write_bytes(f.read_bytes())
+                print(f"   img/{f.name:22} -> docs/img/{f.name} (copied, binary)")
     if bad:
         print(f"FAILED: {bad} file(s) had problems")
         return 1

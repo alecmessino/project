@@ -22,7 +22,8 @@ from pathlib import Path
 HUB = Path(__file__).resolve().parents[1] / "src" / "drift" / "web" / "hub.html"
 
 _TRIG_SET_RE = re.compile(r"set:\s*\[([\d,\s]+)\]")
-_EDGE_RE = re.compile(r'<line class="net(?P<mod> net--structural)?" data-a="(?P<a>\d)" data-b="(?P<b>\d)"')
+# Parse the whole class attribute: edges may carry net--structural, net--rim, or both, in any order.
+_EDGE_RE = re.compile(r'<line class="(?P<cls>[^"]*)" data-a="(?P<a>\d)" data-b="(?P<b>\d)"')
 
 
 def _parse():
@@ -31,24 +32,30 @@ def _parse():
         [int(n) for n in re.findall(r"\d+", body)]
         for body in _TRIG_SET_RE.findall(text)
     ]
-    edges = {
-        (min(int(m.group("a")), int(m.group("b"))), max(int(m.group("a")), int(m.group("b")))): bool(m.group("mod"))
-        for m in _EDGE_RE.finditer(text)
-    }
-    return text, traces, edges
+    edges, rim = {}, set()
+    for m in _EDGE_RE.finditer(text):
+        classes = m.group("cls").split()
+        if "net" not in classes:
+            continue
+        a, b = int(m.group("a")), int(m.group("b"))
+        pair = (min(a, b), max(a, b))
+        edges[pair] = "net--structural" in classes
+        if "net--rim" in classes:
+            rim.add(pair)
+    return text, traces, edges, rim
 
 
 def test_the_lattice_is_a_complete_graph_over_seven_systems():
     """Seven systems, every pair drawn: 7C2 = 21 edges. The 'no decision touches just one' claim
     depends on the graph actually being complete."""
-    _, _, edges = _parse()
+    _, _, edges, _ = _parse()
     assert len(edges) == 21, f"expected 21 edges over 7 systems, found {len(edges)}"
     assert set(edges) == set(combinations(range(7), 2))
 
 
 def test_structural_edges_are_exactly_those_in_every_published_trace():
     """The derivation. A structural edge's two systems must BOTH appear in every trace."""
-    _, traces, edges = _parse()
+    _, traces, edges, _ = _parse()
     assert len(traces) >= 4, f"expected the published decision traces, found {len(traces)}"
 
     core = set(range(7))
@@ -69,7 +76,7 @@ def test_structural_edges_are_exactly_those_in_every_published_trace():
 def test_both_weights_are_actually_used_and_there_are_only_two():
     """Two weights, not a gradient: exactly one extra class, and both tiers non-empty (a diagram
     where every edge is structural, or none is, encodes nothing)."""
-    text, _, edges = _parse()
+    text, _, edges, _ = _parse()
     structural = sum(1 for v in edges.values() if v)
     assert 0 < structural < len(edges), (
         f"{structural}/{len(edges)} edges structural — the distinction carries no information"
@@ -84,7 +91,7 @@ def test_both_weights_are_actually_used_and_there_are_only_two():
 def test_the_legend_explains_the_heavier_lines():
     """A visual encoding the reader cannot decode is decoration. The rest-state caption must say what
     the heavier lines mean."""
-    text, _, _ = _parse()
+    text, _, _, _ = _parse()
     caption = re.search(r'<p class="mrest"[^>]*>(.*?)</p>', text, re.S)
     assert caption, "the lattice's rest caption is missing"
     body = caption.group(1)

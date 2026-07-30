@@ -212,7 +212,19 @@
   .sysband-in{max-width:680px;margin:0 auto;text-align:center}
   .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.4vw + 15px,40px);line-height:1.12;letter-spacing:-.022em;color:var(--ink);margin:0 auto;max-width:20ch}
   .sysstage{margin:16px auto 0;max-width:590px;opacity:1}
-  .sysstage svg{width:100%;height:auto;display:block;overflow:visible}
+  /* The survey plate. A hydrographic stipple engraving (Brief 3, already drawn) sits behind the
+     lattice at low opacity: thousands of micro-dots and registration marks carrying the feeling of
+     structural complexity, so the copy above can stay restrained. Static art, no generation, no
+     runtime cost beyond one cached image; ::before keeps the opacity off the lattice itself. */
+  .sysstage{position:relative}
+  .sysstage::before{content:"";position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
+    width:70%;height:74%;background:url("img/confluence-plate.png") center/cover no-repeat;
+    opacity:.05;pointer-events:none;z-index:0;filter:grayscale(1);
+    /* feather every edge, so it reads as ground texture rather than a pasted plate */
+    -webkit-mask-image:radial-gradient(ellipse 62% 58% at 50% 50%,#000 38%,transparent 78%);
+    mask-image:radial-gradient(ellipse 62% 58% at 50% 50%,#000 38%,transparent 78%)}
+  @media(max-width:760px){.sysstage::before{display:none}}
+  .sysstage svg{width:100%;height:auto;display:block;overflow:visible;position:relative;z-index:1}
   .sysstage text{font-family:var(--sans)}
   /* the web, 21 hairlines among seven systems, near-silent at rest: the density IS the argument.
      A hovered system lifts only its own links; a traced decision lifts the chords among its set. */
@@ -235,14 +247,20 @@
   .trace{stroke:var(--accent-strike);stroke-width:1.5;fill:none;opacity:0;pointer-events:none;stroke-linecap:round}
   .flow{stroke:var(--ghost-line);stroke-width:.8;opacity:.32;transition:opacity .34s ease,stroke .34s ease}
   .flow.on{stroke:var(--accent-strike);opacity:.72}
-  .hub{fill:var(--muted);font-size:15px;font-weight:700;letter-spacing:.03em;transition:fill .34s ease}
+  /* the structural anchor. GOVERNANCE names the mechanism the practice actually sells and,
+     being at the centre, cannot collide with a rim node. Tracked caps at a size that keeps the
+     word inside the hub-bg mask; the live "One decision · N systems" string reuses this slot. */
+  .hub{fill:var(--muted);font-size:12.5px;font-weight:700;letter-spacing:.15em;transition:fill .34s ease}
   .hub.on{fill:var(--ink)}
   .keep{fill:var(--dim);font-size:22px;font-weight:700;letter-spacing:-.012em;transition:fill .34s ease}
   .keep.on{fill:var(--ink)}
   .node{cursor:pointer}
   .node .hit{fill:transparent}
   .node .dot{fill:var(--ghost-line);transition:fill .34s ease}
-  .node .lbl{fill:var(--dim);font-size:14.5px;font-weight:600;transition:fill .34s ease}
+  /* Registry typography: tracked caps in the committed sans (no third face is loaded). The label
+     text is uppercased in the markup rather than via text-transform, which SVG support for is
+     uneven; the accessible name comes from each node's aria-label, which stays sentence case. */
+  .node .lbl{fill:var(--dim);font-size:11px;font-weight:700;letter-spacing:.15em;transition:fill .34s ease}
   .node.lit .dot{fill:var(--accent-strike)}
   .node.lit .lbl{fill:var(--body)}
   .node.active .dot{fill:var(--ink)}
@@ -251,8 +269,19 @@
      Protection, Ownership, Purpose). This static, fully lit state is the DEFAULT for everyone, no-JS,
      reduced-motion, and the interactive default alike, so the plate makes its point at rest, with no
      animation. Hovering / focusing / tracing clears .seeded to light one specific scenario. */
-  .sysstage.seeded .net{stroke:var(--accent-strike);stroke-width:1;opacity:.72}
-  .sysstage.seeded .net--structural{stroke-width:1.7;opacity:.9}
+  /* THE REST STATE (spec, 2026-07-30). At rest only the six STRUCTURAL edges draw: the systems every
+     published decision moves. That keeps "no decision touches just one" provable on load, without
+     interaction, while the fifteen situational edges stay silent so the plate reads calm rather than
+     as a star-burst. Transitions are suppressed in this state so returning to rest SNAPS (0ms) instead
+     of fading, leaving no ghost strokes behind. */
+  .sysstage.seeded .net{opacity:0;transition:none}
+  /* The rim. Hiding every situational edge at rest left Estate, Protection and Business Ownership as
+     three unconnected dots, which reads as an unfinished drawing rather than a calm one. A hairline
+     micro-dashed perimeter (adjacent nodes only) restores the figure's outline so all seven systems
+     are visibly one object, without reintroducing the interior star-burst. */
+  .sysstage.seeded .net--rim:not(.net--structural){opacity:.2;stroke:var(--ghost-line);
+    stroke-width:.5;stroke-dasharray:1 3.5;transition:none}
+  .sysstage.seeded .net--structural{stroke:var(--accent-strike);stroke-width:1.3;opacity:.62;transition:none}
   .sysstage.seeded .node .dot{fill:var(--ink)}
   .sysstage.seeded .node .lbl{fill:var(--ink);font-weight:700}
   .node:focus{outline:none}
@@ -436,19 +465,19 @@
          touches. The whole argument is visible before a single paragraph. ── -->
     <div class="sysband" id="thesystem">
       <div class="sysband-in">
-        <div class="plate"><span class="pl-n">Plate II</span><span class="pl-r" aria-hidden="true"></span><span class="pl-t">The Coordination Engine</span></div>
+        <div class="plate"><span class="pl-n">Plate II</span><span class="pl-r" aria-hidden="true"></span><span class="pl-t">System Dependencies</span></div>
         <p class="sb-lead">Driftwood coordinates your financial life as one system.</p>
         <h2 class="sb-h">Seven systems. No decision touches just one.</h2>
         <div class="sysstage seeded" id="sysDiagram">
           <svg viewBox="0 0 640 546" role="group" aria-label="Seven financial systems, Investments, Taxes, Cash Flow, Estate and legacy, Risk and protection, Business Ownership and account structure, and Family / Purpose, in one coordinated network. Tap a system to see what it moves; what you keep is the result.">
             <!-- the lattice: every system connected to every other (near-silent at rest) -->
-            <line class="net net--structural" data-a="0" data-b="1" x1="320" y1="65" x2="457" y2="131"></line>
+            <line class="net net--rim net--structural" data-a="0" data-b="1" x1="320" y1="65" x2="457" y2="131"></line>
             <line class="net net--structural" data-a="0" data-b="2" x1="320" y1="65" x2="491" y2="279"></line>
             <line class="net net--structural" data-a="0" data-b="3" x1="320" y1="65" x2="244" y2="398"></line>
             <line class="net" data-a="0" data-b="4" x1="320" y1="65" x2="149" y2="279"></line>
-            <line class="net" data-a="0" data-b="5" x1="320" y1="65" x2="183" y2="131"></line>
+            <line class="net net--rim" data-a="0" data-b="5" x1="320" y1="65" x2="183" y2="131"></line>
             <line class="net" data-a="0" data-b="6" x1="320" y1="65" x2="396" y2="398"></line>
-            <line class="net net--structural" data-a="1" data-b="2" x1="457" y1="131" x2="491" y2="279"></line>
+            <line class="net net--rim net--structural" data-a="1" data-b="2" x1="457" y1="131" x2="491" y2="279"></line>
             <line class="net net--structural" data-a="1" data-b="3" x1="457" y1="131" x2="244" y2="398"></line>
             <line class="net" data-a="1" data-b="4" x1="457" y1="131" x2="149" y2="279"></line>
             <line class="net" data-a="1" data-b="5" x1="457" y1="131" x2="183" y2="131"></line>
@@ -456,48 +485,48 @@
             <line class="net net--structural" data-a="2" data-b="3" x1="491" y1="279" x2="244" y2="398"></line>
             <line class="net" data-a="2" data-b="4" x1="491" y1="279" x2="149" y2="279"></line>
             <line class="net" data-a="2" data-b="5" x1="491" y1="279" x2="183" y2="131"></line>
-            <line class="net" data-a="2" data-b="6" x1="491" y1="279" x2="396" y2="398"></line>
-            <line class="net" data-a="3" data-b="4" x1="244" y1="398" x2="149" y2="279"></line>
+            <line class="net net--rim" data-a="2" data-b="6" x1="491" y1="279" x2="396" y2="398"></line>
+            <line class="net net--rim" data-a="3" data-b="4" x1="244" y1="398" x2="149" y2="279"></line>
             <line class="net" data-a="3" data-b="5" x1="244" y1="398" x2="183" y2="131"></line>
-            <line class="net" data-a="3" data-b="6" x1="244" y1="398" x2="396" y2="398"></line>
-            <line class="net" data-a="4" data-b="5" x1="149" y1="279" x2="183" y2="131"></line>
+            <line class="net net--rim" data-a="3" data-b="6" x1="244" y1="398" x2="396" y2="398"></line>
+            <line class="net net--rim" data-a="4" data-b="5" x1="149" y1="279" x2="183" y2="131"></line>
             <line class="net" data-a="4" data-b="6" x1="149" y1="279" x2="396" y2="398"></line>
             <line class="net" data-a="5" data-b="6" x1="183" y1="131" x2="396" y2="398"></line>
             <!-- the flow: coordination carries down to the outcome -->
             <line class="flow" x1="320" y1="272" x2="320" y2="492"></line>
             <!-- the centre: coordination (an invisible paper mask keeps it legible over the lattice) -->
             <g class="traces" aria-hidden="true"><line class="trace" x1="320" y1="65" x2="457" y2="131" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="320" y1="65" x2="491" y2="279" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="320" y1="65" x2="244" y2="398" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="320" y1="65" x2="149" y2="279" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="320" y1="65" x2="183" y2="131" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="320" y1="65" x2="396" y2="398" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="457" y1="131" x2="491" y2="279" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="457" y1="131" x2="244" y2="398" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="457" y1="131" x2="149" y2="279" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="457" y1="131" x2="183" y2="131" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="457" y1="131" x2="396" y2="398" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="491" y1="279" x2="244" y2="398" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="491" y1="279" x2="149" y2="279" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="491" y1="279" x2="183" y2="131" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="491" y1="279" x2="396" y2="398" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="244" y1="398" x2="149" y2="279" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="244" y1="398" x2="183" y2="131" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="244" y1="398" x2="396" y2="398" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="149" y1="279" x2="183" y2="131" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="149" y1="279" x2="396" y2="398" style="transition: opacity 220ms; opacity: 0;"></line><line class="trace" x1="183" y1="131" x2="396" y2="398" style="transition: opacity 220ms; opacity: 0;"></line></g><rect class="hub-bg" x="257.5795593261719" y="224.72727966308594" width="124.84091186523438" height="30.90909194946289" fill="var(--bg)"></rect>
-            <text class="hub" x="320" y="246" text-anchor="middle">Coordination</text>
+            <text class="hub" x="320" y="246" text-anchor="middle">GOVERNANCE</text>
             <!-- the outcome, free, below the network; never boxed -->
             <text class="keep" x="320" y="518" text-anchor="middle">What you keep.</text>
             <!-- the seven systems (DOM order = SYS index); short labels, full names live in SYS + aria -->
             <g class="node" data-i="0" tabindex="0" role="button" aria-label="Investments, see what it moves">
               <circle class="hit" cx="320" cy="65" r="30"></circle><circle class="dot" cx="320" cy="65" r="5"></circle>
-              <text class="lbl" x="320" y="41" text-anchor="middle">Investments</text>
+              <text class="lbl" x="320" y="41" text-anchor="middle">INVESTMENTS</text>
             </g>
             <g class="node" data-i="1" tabindex="0" role="button" aria-label="Taxes, see what it moves">
               <circle class="hit" cx="457" cy="131" r="30"></circle><circle class="dot" cx="457" cy="131" r="5"></circle>
-              <text class="lbl" x="475" y="122" text-anchor="start">Taxes</text>
+              <text class="lbl" x="475" y="122" text-anchor="start">TAXES</text>
             </g>
             <g class="node" data-i="2" tabindex="0" role="button" aria-label="Cash Flow, see what it moves">
               <circle class="hit" cx="491" cy="279" r="30"></circle><circle class="dot" cx="491" cy="279" r="5"></circle>
-              <text class="lbl" x="511" y="284" text-anchor="start">Cash Flow</text>
+              <text class="lbl" x="511" y="284" text-anchor="start">CASH FLOW</text>
             </g>
             <g class="node" data-i="3" tabindex="0" role="button" aria-label="Family / Purpose, see what it moves">
               <circle class="hit" cx="244" cy="398" r="30"></circle><circle class="dot" cx="244" cy="398" r="5"></circle>
-              <text class="lbl" x="238" y="430" text-anchor="middle">Family / Purpose</text>
+              <text class="lbl" x="238" y="430" text-anchor="middle">FAMILY / PURPOSE</text>
             </g>
             <g class="node" data-i="4" tabindex="0" role="button" aria-label="Estate and legacy, see what it moves">
               <circle class="hit" cx="149" cy="279" r="30"></circle><circle class="dot" cx="149" cy="279" r="5"></circle>
-              <text class="lbl" x="129" y="284" text-anchor="end">Estate</text>
+              <text class="lbl" x="129" y="284" text-anchor="end">ESTATE</text>
             </g>
             <g class="node" data-i="5" tabindex="0" role="button" aria-label="Risk and protection, see what it moves">
               <circle class="hit" cx="183" cy="131" r="30"></circle><circle class="dot" cx="183" cy="131" r="5"></circle>
-              <text class="lbl" x="165" y="122" text-anchor="end">Protection</text>
+              <text class="lbl" x="165" y="122" text-anchor="end">PROTECTION</text>
             </g>
             <g class="node" data-i="6" tabindex="0" role="button" aria-label="Business Ownership and account structure, see what it moves">
               <circle class="hit" cx="396" cy="398" r="30"></circle><circle class="dot" cx="396" cy="398" r="5"></circle>
-              <text class="lbl" x="402" y="430" text-anchor="middle">Business Ownership</text>
+              <text class="lbl" x="402" y="430" text-anchor="middle">BUSINESS OWNERSHIP</text>
             </g>
           </svg>
         </div>
@@ -637,7 +666,7 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
   var chain = document.getElementById("mchain");
   var proof = document.getElementById("mproof");
   if(!nodes.length || !story) return;
-  var HUB0 = "Coordination";
+  var HUB0 = "GOVERNANCE";
   // Each system: a concise centre label, a memorable lead, one consequence, and the one proof.
   var SYS = [
     { center:"Investment coordination", lead:"Investments set everything downstream.",
@@ -682,11 +711,16 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
       body:"Health doesn\u2019t sit alongside the money; it surrounds it. Protection is tested first, then the cash flow a long care period actually needs, the tax treatment of what gets sold to fund it, the estate documents and powers that have to be current, the portfolio\u2019s liquidity and horizon, and the conversation about what the family wants this money to do.",
       href:"manual.html", proof:"See the Operating Manual" }
   ];
+  // The centre text block is bounded: the mask never grows past 40% of the canvas width (256 of the
+  // 640 viewBox), so a long live string can never reach far enough to collide with the rim nodes or
+  // swallow the lattice behind it. The mask still shrink-wraps text narrower than the bound.
+  var HUB_MAX_W = 256;
   function fitHub(){
     if(!hubBg || !hub.getBBox) return;
     try{ var b = hub.getBBox();
-      hubBg.setAttribute("x", b.x - 14); hubBg.setAttribute("y", b.y - 6);
-      hubBg.setAttribute("width", b.width + 28); hubBg.setAttribute("height", b.height + 12);
+      var w = Math.min(b.width + 28, HUB_MAX_W);
+      hubBg.setAttribute("x", 320 - w / 2); hubBg.setAttribute("y", b.y - 6);
+      hubBg.setAttribute("width", w); hubBg.setAttribute("height", b.height + 12);
     }catch(e){}
   }
   // A traced decision stays pinned until a system is hovered, another trigger is pressed,

@@ -40,8 +40,23 @@ RETIRED = ("After-Tax Review", "Concentrated Position Navigator")
 _REVIEW_RE = re.compile(r"\b([A-Z][A-Za-z-]*(?:\s+[A-Z][A-Za-z-]*){0,3})\s+Reviews?\b")
 
 
+DOCS = ROOT / "docs"
+
+
 def _pages():
     return sorted(WEB.glob("*.html"))
+
+
+def _shipped():
+    """The BUILT pages, not the templates.
+
+    A shipped page is template + injected `window.__STATE__` data. The templates only contain the
+    placeholder, so a name baked into the engine's JSON is invisible to any check that reads src/ —
+    and that is exactly where two instances of the retired name survived, including the exhibit card
+    titled "After-Tax Review" on the homepage itself. Scanning what deploys is the only scan that
+    covers both halves.
+    """
+    return sorted(DOCS.glob("*.html"))
 
 
 def _flat(text: str) -> str:
@@ -57,7 +72,7 @@ def _flat(text: str) -> str:
 
 def test_no_page_still_uses_a_retired_tool_name():
     bad = []
-    for p in _pages():
+    for p in _pages() + _shipped():
         t = _flat(p.read_text(encoding="utf-8"))
         for name in RETIRED:
             if name in t:

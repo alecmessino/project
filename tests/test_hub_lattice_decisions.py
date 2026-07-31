@@ -192,23 +192,87 @@ def test_every_trace_lead_matches_the_size_of_its_own_set():
 
 
 def test_the_section_leads_with_the_readers_problem_not_the_ontology():
-    """Progressive disclosure: the page stopped opening with Driftwood's vocabulary.
+    """Progressive disclosure: the page does not open with Driftwood's vocabulary.
 
     "Seven systems" as a headline asks a first-time reader to learn an ontology before being given a
-    reason to care. The seven systems are now what the reader DISCOVERS by using the diagram — the
-    heading states the consequence they already worry about."""
+    reason to care. The seven systems are what the reader DISCOVERS by using the diagram.
+
+    This guard briefly required the heading to POINT AT the diagram instead ("trace", "watch",
+    "move"). That was a mistake worth naming: a rule requiring a headline to behave like a control
+    label reliably produces control-label prose in the headline slot — two stacked imperatives in
+    product-tour register, vague where the rest of the page is specific. The affordance belongs to
+    the picker's own label (see test_the_decision_picker_carries_a_visible_control_label), which
+    frees this slot to make a claim. The constraint here is back to the simple one.
+    """
     t = _src()
     h2 = re.search(r'<h2 class="sb-h">(.*?)</h2>', t, re.S)
-    assert h2, "the lattice heading is missing"
-    head = h2.group(1)
-    assert "consequences" in head.lower()
+    assert h2, "the lattice section lost its heading"
+    head = h2.group(1).strip()
     assert not re.search(r"seven systems", head, re.I), (
         f"the heading leads with the ontology again: {head!r}"
     )
-    # and the subhead must follow the headline, not precede it — "Driftwood maps them" needs an
-    # antecedent, and it ran before the sentence naming what "them" was, twice.
-    assert t.index('class="sb-h"') < t.index('class="sb-lead"'), \
-        "the subhead sits above the headline, so its pronoun has no antecedent"
+    # It must not re-close the hero. These are the headline's own words.
+    for echo in ("consequences", "expensive", "leak what you keep", "uncoordinated"):
+        assert echo not in head.lower(), (
+            f"the lattice heading recycles the hero headline ({echo!r}): {head!r}"
+        )
+    # One line. The subhead went with the closer and may not return unnoticed.
+    assert 'class="sb-lead"' not in t, "a second line is back under the lattice heading"
+
+
+def test_the_lattice_headings_count_is_derived_from_the_published_traces():
+    """The heading claims a quantity, so the quantity has to come from the traces, not from taste.
+
+    The five published traces touch 7, 7, 6, 6 and 6 systems, which makes "at least six" the
+    strongest true form — "four" would have understated it and "seven" would have overstated three
+    of the five. Edit a trace set without following the sentence and this fails.
+    """
+    t = _src()
+    words = {4: "four", 5: "five", 6: "six", 7: "seven"}
+    sizes = [len(set(int(x) for x in re.findall(r"\d+", raw)))
+             for raw in re.findall(r"set:\s*\[([\d,\s]+)\]", t)]
+    assert sizes, "no traces parsed"
+    head = re.search(r'<h2 class="sb-h">(.*?)</h2>', t, re.S).group(1).lower()
+    claimed = [n for n, w in words.items() if w in head]
+    assert claimed, f"the heading states no quantity to check: {head!r}"
+    assert len(claimed) == 1, f"the heading states more than one quantity: {claimed}"
+    n = claimed[0]
+    assert n == min(sizes), (
+        f"the heading claims {words[n]} systems but the smallest published trace touches "
+        f"{min(sizes)} — the claim and the demonstration disagree"
+    )
+    assert "at least" in head or "or more" in head, (
+        "a bare number reads as exact while the traces range "
+        f"{min(sizes)}-{max(sizes)}; qualify it"
+    )
+
+
+def test_the_decision_picker_carries_a_visible_control_label():
+    """The affordance lives here, not in the heading.
+
+    The lattice is the only interactive thing on the page, and for a long time nothing visible said
+    so — the instruction sat in the SVG's aria-label, so sighted readers got none. The fix is a
+    control label on the picker, in the page's small-caps utility register, which reads as operable
+    without a sentence selling the interaction.
+
+    It must also BE the group's accessible name, so what a screen reader announces and what the eye
+    sees are the same string.
+    """
+    t = _src()
+    lab = re.search(r'<p class="trig-lab" id="([^"]+)">([^<]+)</p>', t)
+    assert lab, "the decision picker has no visible control label"
+    lab_id, text = lab.group(1), lab.group(2).strip()
+    assert text, "the control label is empty"
+    assert len(text.split()) <= 4, f"a control label, not a sentence: {text!r}"
+    assert not text.endswith("."), f"a control label takes no full stop: {text!r}"
+    trig = re.search(r'<div class="trig"[^>]*>', t).group(0)
+    assert f'aria-labelledby="{lab_id}"' in trig, (
+        "the picker does not use its visible label as its accessible name"
+    )
+    assert "aria-label=" not in trig, (
+        "the picker carries a separate aria-label, so the announced name and the visible label can "
+        "drift apart"
+    )
 
 
 def test_the_folio_plate_labels_are_gone():
@@ -304,3 +368,46 @@ def test_the_caption_decodes_the_spokes_it_now_describes():
     assert "centre" in body.lower() or "center" in body.lower(), \
         f"the caption still points at the rim rather than the spokes: {body!r}"
     assert "move in all of them" not in body, "the caption still decodes the retired encoding"
+
+
+def test_the_survey_rail_carries_one_finding_not_three():
+    """Two of the three restated the paragraph above it.
+
+    "Nothing falls through / every open matter has a named owner" and "One record / every adviser
+    works from the same one" are the paragraph's own claims in fewer words — the seams, and the
+    single party responsible for them. Only "Open until finished / not until the meeting ends" says
+    something the paragraph did not: how long a decision stays open, which is a promise a prospect
+    has not been made before.
+    """
+    t = _src()
+    rail = re.search(r'<div class="rail[^"]*">(.*?)</div>\s*<div class="sysband"', t, re.S)
+    assert rail, "the survey rail is gone or no longer sits above the lattice"
+    body = rail.group(1)
+    findings = re.findall(r'<span class="mono rk">([^<]+)</span>', body)
+    assert findings == ["Open until finished"], (
+        f"the rail is back to restating the paragraph: {findings}"
+    )
+    # A lone cell in the three-column grid would read as two things that failed to load.
+    assert 'class="rail rail--one"' in t, "the single-finding rail keeps the three-column grid"
+
+
+def test_the_booking_cta_is_never_decorated_with_household_parameters():
+    """The one URL a visitor copies, shares, or hands to Calendly as a referrer.
+
+    coordination-review.html reads none of these params — there is not a single qp.get() on it — so
+    ?state=IL&bracket=37&port=250000 was noise that carried a household's tax bracket and portfolio
+    size into analytics, referrer headers, and anyone's clipboard. The page loads dw-context.js like
+    every other, so if it ever needs the household it reads dwTaxContext.get() in the browser.
+    """
+    ctx = (HUB.with_name("dw-context.js")).read_text(encoding="utf-8")
+    consumers = re.search(r"var CONSUMERS = \[(.*?)\n  \];", ctx, re.S)
+    assert consumers, "the CONSUMERS list moved"
+    decorated = re.findall(r'\{\s*prefix:\s*"([^"]+)"', consumers.group(1))
+    assert "coordination-review.html" not in decorated, (
+        "the booking CTA is decorated with household parameters again"
+    )
+    booking = (HUB.with_name("coordination-review.html")).read_text(encoding="utf-8")
+    assert "qp.get(" not in booking, (
+        "the booking page now reads URL params — if that is intended, the privacy tradeoff above "
+        "needs revisiting deliberately"
+    )

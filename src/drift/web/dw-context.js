@@ -137,7 +137,13 @@
     // the other redirect stubs.)
     { prefix: "the-record.html", params: ["state", "bracket", "port"] },
     { prefix: "the-practice.html", params: ["state", "bracket", "port"] },
-    { prefix: "coordination-review.html", params: ["state", "bracket", "port"] },
+    // coordination-review.html is deliberately NOT decorated. It is the booking page, and it reads
+    // none of these params — there is not a single qp.get() on it — so they were pure noise on the
+    // one URL a visitor is most likely to copy, share, or hand to Calendly as a referrer. Putting a
+    // household's tax bracket and portfolio size in a query string is a habit worth not having:
+    // it travels into analytics, referrer headers, and anyone's clipboard. The page loads
+    // dw-context.js like every other, so if it ever needs the household it reads dwTaxContext.get()
+    // in the browser, where the data already lives and never leaves.
     // The Coordination Assessment is the front of the funnel: a link into it carries the household
     // so the visitor is not asked twice, and carries drivers so a shared link restores the boxes.
     // (concentration.html reads nothing from the context, so it is deliberately NOT decorated —

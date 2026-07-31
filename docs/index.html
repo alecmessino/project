@@ -108,10 +108,19 @@
   }
   /* Editorial data footnote, a bracketed superscript that opens a dark margin note. */
   .fn{line-height:0}
-  .fn-btn{font-family:var(--sans);font-size:10.5px;font-weight:700;color:var(--accent-strike);
-    background:none;border:0;border-bottom:1px solid var(--accent-strike-soft);cursor:pointer;
-    padding:0 1px;margin-left:3px}
-  .fn-btn:hover{color:var(--ink)}
+  /* A 10.5px superscript with a hairline under it was invisible as a control: a reader reported a
+     "[1] with no footnote attached", meaning the note opens on click but nothing says so. Give it
+     the affordance of a real button — a boxed chip, a hit area that clears the 44px touch minimum
+     via padding on the parent line, and an explicit open/close state — so the note is discoverable
+     rather than a reward for guessing. */
+  .fn-btn{font-family:var(--sans);font-size:10px;font-weight:700;color:var(--accent-strike);
+    background:var(--soft);border:1px solid var(--accent-strike-soft);cursor:pointer;
+    padding:2px 6px;margin-left:5px;letter-spacing:.04em;vertical-align:2px;line-height:1.5;
+    transition:background-color .15s ease,color .15s ease,border-color .15s ease}
+  .fn-btn::after{content:" source";letter-spacing:.08em}
+  .fn-btn[aria-expanded="true"]::after{content:" hide"}
+  .fn-btn:hover{color:#f4f1ea;background:var(--accent-strike);border-color:var(--accent-strike)}
+  .fn-btn:focus-visible{outline:2px solid var(--accent-strike);outline-offset:2px}
   .fn-note{margin-top:20px;background:var(--navy);color:var(--on-dark);font-family:var(--sans);
     font-size:12.5px;line-height:1.62;padding:15px 17px;max-width:46ch}
   .fn-note b{color:var(--on-dark-strong);font-weight:700}
@@ -179,7 +188,15 @@
   .rail .rk{display:block;margin-bottom:9px;opacity:1;color:var(--dim);
     font-size:11px;font-weight:700;letter-spacing:.16em}
   .rail .rv{font-family:var(--serif);font-size:22px;line-height:1.25;color:var(--ink);margin:0}
-  @media(max-width:760px){.rail{grid-template-columns:1fr;gap:22px;padding:28px 22px 26px}}
+  /* Down to one finding: a lone cell in a three-column grid would sit in a third of the measure
+     with two empty tracks beside it, reading as two things that failed to load. One column, and
+     the label sits inline with the finding so the band stays a rule-bounded line rather than
+     becoming a stack. */
+  .rail--one{grid-template-columns:1fr;padding-top:26px;padding-bottom:24px}
+  .rail--one > div{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+  .rail--one .rk{margin-bottom:0;flex:none}
+  @media(max-width:760px){.rail{grid-template-columns:1fr;gap:22px;padding:28px 22px 26px}
+    .rail--one > div{gap:6px 14px}}
 
   /* ── The colophon. Not a footer: the last page of a publication. The wide gap between the identity
      block and the index row is load-bearing, it is what stops the eye reading those links as nav. ── */
@@ -437,7 +454,15 @@
   .mstory.swapping .mlead,.mstory.swapping .mcascade,.mstory.swapping .mchain,.mstory.swapping .mproof{opacity:0;transition:opacity .18s ease}
   /* the trigger rail, trace a common decision; specimen labels, not software buttons. Sits directly
      under the reading panel (no rule) so the two read as one exhibit block, not two boxed zones. */
-  .trig{margin:14px auto 0;max-width:590px;
+  /* The instrument's control label. The diagram needed an affordance, not a headline: a small-caps
+     utility label sitting on the picker reads as operable without a sentence trying to sell the
+     interaction, and it leaves the heading free to say something true. Same register as the page's
+     other utility labels (.reg-lead, .rail .rk) so it reads as apparatus, not as copy. It is also
+     the group's accessible name via aria-labelledby, so what a screen reader announces and what the
+     eye sees are the same string. */
+  .trig-lab{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--muted);text-align:center;margin:26px 0 0}
+  .trig{margin:10px auto 0;max-width:590px;
     display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:center}
   .trig-btn{font-family:var(--sans);font-size:12.5px;font-weight:500;color:var(--body);background:none;
     border:1px solid var(--line);border-radius:var(--surface-radius);padding:9px 14px;cursor:pointer;
@@ -626,17 +651,32 @@
          hovering a system teaches what it moves, and tracing a common decision lights everything it
          touches. The whole argument is visible before a single paragraph. ── -->
 
-    <!-- The survey rail: three measured facts, written as survey findings rather than statistics. -->
-    <div class="rail">
-      <div><span class="mono rk">Nothing falls through</span><p class="rv">Every open matter has a named owner</p></div>
-      <div><span class="mono rk">One record</span><p class="rv">Every adviser works from the same one</p></div>
+    <!-- One finding, not three. "Nothing falls through / every open matter has a named owner" and
+         "One record / every adviser works from the same one" both restated the paragraph above —
+         the seams, and the single party responsible for them. This is the only one of the three
+         that says something the paragraph did not: it names how long a decision stays open, which
+         is the part a prospect has never been promised before. -->
+    <div class="rail rail--one">
       <div><span class="mono rk">Open until finished</span><p class="rv">Not until the meeting ends</p></div>
     </div>
     <div class="sysband" id="thesystem">
       <span class="regmark" aria-hidden="true"><i></i></span>
       <div class="sysband-in">
-        <h2 class="sb-h">Every important decision creates consequences you can’t see yet.</h2>
-        <p class="sb-lead">Driftwood maps them before they become expensive.</p>
+        <!-- Two jobs, kept apart.
+             (1) THE HEADING states something true and specific. It used to close the argument again
+             ("Every important decision creates consequences you can't see yet. / Driftwood maps them
+             before they become expensive.") — the headline in different words, after the CTA, which
+             made four passes at one thesis before a first scroll. A replacement that pointed at the
+             diagram ("Trace a decision. Watch what it moves.") was worse in a quieter way: two
+             stacked imperatives is product-tour register, not the voice of the paragraph three
+             inches above, and "what it moves" names nothing where the seams paragraph names a
+             rebalance, a title, a state line.
+             (2) THE AFFORDANCE is a control label on the picker below, not a sentence selling the
+             interaction. See .trig-lab.
+             The number is derived, not chosen: the five published traces touch 7, 7, 6, 6 and 6
+             systems, so "at least six" is the strongest true form. A guard re-derives it from the
+             trace sets and fails if a trace is edited without the sentence following. -->
+        <h2 class="sb-h">Every decision here touches at least six systems. Most households plan for one.</h2>
         <div class="sysstage seeded" id="sysDiagram">
           <svg viewBox="0 0 640 546" role="group" aria-label="Seven financial systems, Investments, Taxes, Cash Flow, Estate and legacy, Risk and protection, Business Ownership and account structure, and Family / Purpose, in one coordinated network. Tap a system to see what it moves; what you keep is the result.">
             <!-- the lattice: every system connected to every other (near-silent at rest) -->
@@ -708,13 +748,14 @@
           </svg>
         </div>
         <div class="mstory" id="mstory">
-          <p class="mrest" id="mrest">The heavier lines run to the centre: every system reaches the others through coordination. Start with a decision below.</p>
+          <p class="mrest" id="mrest">The heavier lines run to the centre: every system reaches the others through coordination.</p>
           <p class="mlead" id="mlead"></p>
           <p class="mcascade" id="mcascade" aria-hidden="true"></p>
           <p class="mchain" id="mchain"></p>
           <a class="mproof" id="mproof" href="#"></a>
         </div>
-        <div class="trig" id="trig" role="group" aria-label="Trace a common decision, press one to see the systems it moves">
+        <p class="trig-lab" id="trigLab">Select a decision</p>
+        <div class="trig" id="trig" role="group" aria-labelledby="trigLab">
           <button class="trig-btn" data-t="0" aria-pressed="false">Buy a home</button>
           <button class="trig-btn" data-t="1" aria-pressed="false">Sell a business</button>
           <button class="trig-btn" data-t="2" aria-pressed="false">Exercise stock options</button>

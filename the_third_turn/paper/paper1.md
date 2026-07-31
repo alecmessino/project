@@ -321,6 +321,15 @@ function, an executable form of the protocol in Section 3.3. The frozen result f
 scripts that produce them are sufficient to reconstruct every figure and number without access to
 the original feeds.
 
+The full pipeline, including the collector, is released at
+`https://github.com/alecmessino/third-turn`, with citation metadata in `CITATION.cff`. Release
+`v1.0` corresponds to the results reported here. The environment is Python 3.11 with dependencies
+pinned in `requirements.txt`, and the analysis is versioned on three independent axes, Protocol 1.0,
+Collector 1.1, and Benchmark Dataset 2026.06, because method, engineering, and data evolve
+separately. From a clean checkout of the release tag, installing the pinned requirements and running
+the figure and build scripts regenerates every figure and the manuscript from the committed
+inputs.
+
 ---
 
 ## 4. Results
@@ -748,10 +757,10 @@ forecast error is unpredictable.
 ## Data and code availability
 
 The cleaned data, feature schema, and frozen result files are released as the Third Turn Benchmark
-Dataset (v1), and the Third Turn Protocol is specified in an accompanying document with a
-safeguard registry and objective stopping rules; reference implementations reproduce every number
-reported here from the committed inputs. A persistent DOI and packaged archive are pending
-publication. Until then, materials are available from the author.
+Dataset (v1), openly available at `https://github.com/alecmessino/third-turn` under release tag
+`v1.0`, together with the Third Turn Protocol, its safeguard registry, and its objective stopping
+rules. Reference implementations reproduce every number reported here from the committed inputs. A
+persistent archival DOI is being minted and will be added on deposit.
 
 ## References
 

@@ -2,14 +2,14 @@
 <h1>What Prices Cannot Tell You: Identifying Information Transmission in Live Markets</h1>
 <p class="epigraph">A companion study asked whether prices contain public information. This paper asks whether prices reveal how that information entered the market.</p>
 <p class="author">Alec Messino<br/><span class="affil">The Third Turn Research Initiative &middot; alec.messino@gmail.com</span></p>
-<p class="wp">Working Paper &middot; DRAFT, Sections 1-5 &middot; Results not yet written</p>
+<p class="wp">Working Paper &middot; DRAFT, Sections 1-6 &middot; Results not yet written</p>
 </div>
 
 > **Draft status.** This manuscript is complete through the Methods section. The Results and
 > Discussion sections are deliberately unwritten: they are gated on four objective measurement
-> conditions stated in Section 5.6, and the analysis plan in Section 5.5 is pre-registered so that
+> conditions stated in Section 6.6, and the analysis plan in Section 6.5 is pre-registered so that
 > the design cannot be shaped by the evidence. Nothing in the sections below reports an empirical
-> finding from the dataset described in Section 4.
+> finding from the dataset described in Section 5.
 
 ## Abstract
 
@@ -37,7 +37,10 @@ estimators of information leadership are mechanically confounded by update frequ
 analyst's choice of which posted line to treat as the main line, and we characterize the resolution
 floor below which this class of instrument is silent. The design admits three outcomes, all of which
 we regard as publishable: identification of a pricing contrast, identification of bounds only, or a
-demonstration that the quantity is not identifiable without richer instrumentation. The third is not
+demonstration that the quantity is not identifiable without richer instrumentation. The price
+discovery literature answers our question directly where venue timestamps and order identifiers are
+available, because there the publication stage is pinned by the data rather than estimated; the
+contribution here is to characterize what remains learnable when it is not. The third is not
 a failure of the study. Much of the microstructure literature studies environments in which richer
 event and timestamp information is available than sportsbook endpoints provide, so the decomposition
 we confront can often be assumed away there rather than established. Showing precisely where it
@@ -112,7 +115,7 @@ Two prices are therefore the minimum. A single book's response time confounds ho
 reprices with how fast its infrastructure publishes and how fast the analyst happens to be sampling.
 Comparing two books raises the possibility that the shared components difference out. Whether they
 actually do is an architectural question about publishing infrastructure, not a statistical one, and
-it is the question on which the paper's central estimand stands or falls. Section 3 shows that three
+it is the question on which the paper's central estimand stands or falls. Section 4 shows that three
 materially different markets generate numerically identical timestamp data, so the possibility cannot
 be settled by any statistic computed from the timestamps themselves; that result, illustrated in
 Figure 4, is the paper's core.
@@ -138,8 +141,8 @@ cannot resolve sub-second price formation. If the economically interesting actio
 sampling floor, no amount of care in the analysis will recover it, and the honest report is that the
 question is out of reach for this apparatus.
 
-The paper is organized around those three commitments. Section 2 develops the conceptual framework
-and decomposes the observed delay. Section 3, the heart of the paper, treats identification: what can
+The paper is organized around those three commitments. Section 3 develops the conceptual framework
+and decomposes the observed delay. Section 4, the heart of the paper, treats identification: what can
 and cannot be learned from a two-book panel, and under exactly which assumptions. Section 4 describes
 the data and explains why this instrument differs fundamentally from the one used in the companion
 study, a difference that precludes any direct comparison of results. Section 5 states the estimation
@@ -148,9 +151,115 @@ must be satisfied before results may be reported.
 
 ---
 
-## 2. Conceptual framework
+## 2. Related literature and the identification gap
 
-### 2.1 The transmission chain
+A referee's first question about a paper like this is why the problem has not already been solved.
+The answer is not that the literatures below overlooked it. It is that in the settings where price
+discovery has been studied most carefully, the instrumentation available to the researcher resolves
+the problem by construction, and the question therefore never has to be posed. We organize this
+section around what each literature identifies, what data it identifies it with, and what happens to
+the argument when those data are unavailable.
+
+### 2.1 What prices contain
+
+The efficiency literature asks whether prices already embody available information. Fama (1970) sets
+the frame; the event-study tradition sharpened it to the speed of adjustment, with Patell and Wolfson
+(1984) measuring intraday adjustment to earnings and dividend announcements and Busse and Green
+(2002) tracking incorporation of televised analyst reports in real time. In wagering markets the
+same question has an unusually clean form because contracts settle against ground truth: Sauer
+(1998) surveys the evidence, Woodland and Woodland (1994) document a reverse favorite-longshot bias
+in baseball too small to exploit, and Thaler and Ziemba (1988) place the setting in the anomalies
+tradition. Croxson and Reade (2014) show soccer exchange prices updating swiftly and essentially
+fully on goal arrivals. More recent work finds imperfections in the price process itself: Simon
+(2024, 2025) rejects weak-form efficiency in moneyline movement, and Angelini and De Angelis (2026)
+measure contemporaneous underreaction to benchmark probability changes with predictable subsequent
+drift.
+
+These studies identify a property of the price. None of them requires knowing *when the bookmaker or
+the exchange internally decided to move*, because the object of inference is the price level and its
+relation to information, not the timing of the mechanism that produced it. Our companion study sits
+squarely here: it applies the forecast encompassing framework of Chong and Hendry (1986) to a live
+betting line treated as an incumbent forecast, and its null is a statement of the same type.
+
+### 2.2 How information enters prices
+
+The price discovery literature asks where a common efficient price is formed when the same asset
+trades in several venues. Hasbrouck's (1995) information shares and the Gonzalo and Granger (1995)
+permanent-transitory decomposition are the standard tools, and Putniņš (2013) offers a careful
+account of what those metrics do and do not measure. This literature is the closest ancestor of the
+present paper: it asks precisely our question, which venue moves first and why.
+
+Its instrumentation is what makes it work. Information shares are estimated on venue-level quote and
+trade series carrying exchange-side timestamps, applied to a common clock, at a granularity fine
+relative to the leads being estimated. The publication stage is not a nuisance term to be estimated
+because it is pinned directly by the venue's own timestamp. Where that is unavailable, the metric
+does not become noisier; it becomes a different quantity.
+
+### 2.3 Timing across markets
+
+A related tradition estimates leads and lags directly. Hasbrouck (1991) recovers the information
+content of trades from a bivariate vector autoregression; Chan (1992) analyzes the lead-lag relation
+between index futures and the cash market. Later work pushes to the latency frontier: Hasbrouck and
+Saar (2013) identify low-latency strategic activity using millisecond-stamped order-level messages,
+and Budish, Cramton, and Shim (2015) analyze the speed race itself using synchronized data on
+correlated instruments.
+
+Two features of these designs deserve emphasis, because their absence defines our problem. First,
+order-level identifiers let the researcher follow an individual message rather than infer activity
+from a price series. Second, the timestamps are applied at the venue, so transport to the researcher
+does not enter the estimand. Ding, Hanna, and Hendershott (2014) make the second point especially
+clearly: they compare the consolidated feed with direct exchange feeds and quantify the dissemination
+latency between them, which is possible precisely because both feeds are observable. Their result is
+the strongest evidence we know of that transport latency is economically material rather than a
+rounding error, and it is also a demonstration that measuring it requires holding the two feeds side
+by side.
+
+### 2.4 The observational setting of this study
+
+Public sportsbook endpoints supply none of that instrumentation. There are no order-level
+identifiers, because there is no order book to observe; a bookmaker posts a price rather than
+matching a queue. There is no venue-side timestamp on the price change, only the time at which our
+own poll retrieved it. There is no second feed from the same book against which dissemination could
+be differenced, as Ding, Hanna, and Hendershott could difference the consolidated and direct feeds.
+And the sampling interval is set by the researcher's own polling rather than by the venue's
+messaging.
+
+The consequence is not that estimation becomes harder. It is that the estimand changes. In the price
+discovery setting the object of inference is a property of the market, and the apparatus is
+transparent. Here the apparatus enters the estimand, and the observed quantity is a sum of a market
+component and two infrastructure components that no amount of additional sampling separates. That is
+the gap this paper occupies.
+
+### 2.5 Where this paper sits
+
+The relevant methodological literature is therefore not price discovery but identification. Manski
+(2003) and Tamer (2010) develop the position we adopt: when a parameter is not point-identified by
+the available data, the disciplined response is to characterize what the data do support, report
+bounds where bounds exist, and state the additional information that would restore identification.
+Applied to transmission, that means treating a latency estimate as a joint statement about a market
+and about the instrument that observed it, and refusing to report the first without defending the
+second.
+
+**The present paper is motivated not by disagreement with these literatures, but by a different
+observational setting.** Where venue timestamps and order identifiers are available, the questions of
+Sections 2.2 and 2.3 are answerable as posed and our concerns do not arise. Where they are not, an
+estimate that would be unremarkable in those settings becomes an inference resting on an unstated
+assumption about publishing infrastructure. We take the second case seriously because it is the case
+most outside researchers actually face, and because sportsbook markets make it possible to state the
+problem precisely rather than in the abstract.
+
+This positioning has a consequence we want to be explicit about. **The contribution stated here does
+not depend on the sign or significance of any latency estimate we eventually report.** If every
+estimate proves null, the paper still establishes what a public-endpoint observer can and cannot
+learn about price formation, which assumptions would have to hold for a leadership claim to be
+warranted, and what instrumentation a subsequent study would need to build. The identification
+problem, not the baseball application, is the durable object.
+
+---
+
+## 3. Conceptual framework
+
+### 3.1 The transmission chain
 
 Consider a discrete, publicly observable event in a baseball game occurring at clock time
 `t_E`: a run scores. The event changes the conditional distribution of the game's final total, and a
@@ -197,7 +306,7 @@ single book's series recovers the individual terms, because only the left-hand s
 observed.** Everything difficult about this paper follows from that sentence, which is why the
 identification section is longer than the estimation section.
 
-### 2.2 Why two books might help
+### 3.2 Why two books might help
 
 If the second and third terms were identical across books, the cross-book difference would remove
 them:
@@ -224,7 +333,7 @@ is not. Two commercial sportsbooks run different infrastructure, and there is no
 for their publishing delays to match. Whether the difference is material relative to the pricing
 differences we hope to detect is precisely what Section 3 must establish.
 
-### 2.3 Why the estimand is anchored to the event
+### 3.3 Why the estimand is anchored to the event
 
 A tempting alternative avoids the event entirely: observe when each book arrives at a given price
 level and call the earlier one the leader. This is mechanically defective.
@@ -242,25 +351,25 @@ quoting behavior. Anchoring to it converts a comparison between two endogenous, 
 series into two comparisons against a common external clock. This does not solve the feed-latency
 problem, but it removes the frequency confound, which is a distinct and more easily made error.
 
-### 2.4 What the market is quoting
+### 3.4 What the market is quoting
 
 One structural fact about the instrument shapes the analysis and is easy to get wrong. The posted
 live number is a **full-game total**, not a forecast of remaining runs: it is the expected final
 combined score, incorporating runs already scored. Consequently a run that scores enters the posted
 number with a positive sign, partially offset by the reduction in scoring opportunities that remain.
 A revision following a run is therefore expected to be upward, and its magnitude is a pass-through
-fraction rather than an elasticity. We verify this property directly in Section 4 rather than
+fraction rather than an elasticity. We verify this property directly in Section 5 rather than
 assuming it, because the opposite convention would reverse the sign of every response we measure.
 
 ---
 
-## 3. Identification
+## 4. Identification
 
 This section is the paper's core contribution. We state the assumptions under which the cross-book
 contrast identifies a pricing difference, examine each against what is known about the instrument,
 and describe what remains estimable when an assumption fails.
 
-### 3.1 The estimand
+### 4.1 The estimand
 
 As Figure 4 makes clear, the target of inference cannot be read off the data; it must be defined and
 then argued for. Let `E` index discrete game events with clock times `t_E`, and let `t_b(E)` denote the time of book
@@ -271,7 +380,7 @@ then argued for. Let `E` index discrete game events with clock times `t_E`, and 
 and the cross-book contrast `Δλ = λ_A - λ_B`. The target of inference is `Δλ`, and the question the
 paper asks is under what conditions `Δλ` is a statement about pricing rather than about plumbing.
 
-### 3.2 The assumptions
+### 4.2 The assumptions
 
 **A1. Event exogeneity.** Game events are not caused by bookmaker quoting behavior. This is
 uncontroversial in this setting and is the reason event anchoring is available to us at all.
@@ -306,9 +415,9 @@ one.
 **A6. Non-arbitrary attribution.** The mapping from an event to "the revision caused by it" requires
 an attribution window. A window chosen after inspecting the data is a researcher degree of freedom
 capable of manufacturing an effect. A6 is satisfied by pre-registration, which is why the window is
-fixed in Section 5.5 before any estimate is produced.
+fixed in Section 6.5 before any estimate is produced.
 
-### 3.3 Three admissible outcomes
+### 4.3 Three admissible outcomes
 
 The design admits exactly three outcomes, and we commit in advance to reporting whichever obtains.
 
@@ -351,7 +460,7 @@ is what determines whether this paper reports Outcome A, B, or C.
 the reader can walk. All three terminal states are publishable, and the third is the one a study is
 least likely to report.
 
-### 3.4 The resolution floor
+### 4.4 The resolution floor
 
 An instrument cannot report structure below its sampling interval.
 
@@ -371,9 +480,9 @@ absorbs a publicly visible event, and whether two such processes can be distingu
 
 ---
 
-## 4. Data and institutional setting
+## 5. Data and institutional setting
 
-### 4.1 The instrument
+### 5.1 The instrument
 
 The data are generated by a continuously running collector that polls two sportsbooks and a
 game-state provider on a fixed schedule and appends every observation to an append-only panel. The
@@ -398,7 +507,7 @@ status. The July apparatus sees the second book and the status stream but is bli
 first could measure. Neither is better. They are blind in different places, which is why a result
 from one cannot confirm or contradict a result from the other.
 
-### 4.2 What this instrument does not contain
+### 5.2 What this instrument does not contain
 
 Three absences are load-bearing for interpretation and are properties of the design rather than
 accidents of a particular sample.
@@ -416,7 +525,7 @@ the other publishes nothing. Any analysis that filters on tradeability can there
 to one book, and applying it to one and not the other introduces selection that favors the filtered
 book.
 
-### 4.3 Why no comparison with the companion study is possible
+### 5.3 Why no comparison with the companion study is possible
 
 It is tempting to treat this dataset as a second sample of the companion study's population. It is
 not. The two differ in the benchmark book, in the available covariates, and in the sampling cadence.
@@ -427,38 +536,38 @@ requires re-running its own instrument, and is a separate exercise reported else
 
 ---
 
-## 5. Methods
+## 6. Methods
 
-### 5.1 Constructing the event series
+### 6.1 Constructing the event series
 
 Events are extracted from the game-state panel as changes in the combined score between consecutive
 observations. The event time is the timestamp of the first observation exhibiting the new score,
 which is itself subject to the provider's own publication delay; A2 concerns exactly this, and the
-audit described in Section 5.6 quantifies it. Events are typed by magnitude, since a solo home run
+audit described in Section 6.6 quantifies it. Events are typed by magnitude, since a solo home run
 and a bases-clearing double are different information arrivals.
 
-### 5.2 Constructing the price series
+### 6.2 Constructing the price series
 
 For each book, the main line is extracted per observation timestamp under a single fixed rule, and
 the series is reduced to the sequence of distinct quote states. Repeated identical quotes are not
 revisions and are collapsed. The extraction rule is fixed in advance, and the sensitivity of every
 reported quantity to that choice is reported alongside it, per A3.
 
-### 5.3 Attribution
+### 6.3 Attribution
 
 A revision is attributed to an event if it is the first distinct main-line change occurring within a
 fixed post-event window. The window is stated in the pre-registered plan below. Events whose windows
 overlap a subsequent event are flagged and analyzed separately, since attribution is ambiguous when
 two information arrivals are closer together than the response time being measured.
 
-### 5.4 Estimation and inference
+### 6.4 Estimation and inference
 
 The unit of replication is the game, not the observation. Quotes within a game are strongly
 dependent, and treating them as independent produces intervals that are far too narrow. All
 estimation therefore proceeds by computing a per-game statistic and treating the game as the
 sampling unit, with intervals constructed accordingly.
 
-### 5.5 Pre-registered analysis plan
+### 6.5 Pre-registered analysis plan
 
 Every item below exists to prevent one of the failure modes in Figure 4 from being mistaken for a
 finding. The following is fixed before any estimate is computed. Departures from it will be reported as
@@ -479,7 +588,7 @@ departures.
 8. **Reporting rule.** A null result is reported with the same prominence as a positive one. No
    estimand, window, or extraction rule is added or altered after inspecting the results.
 
-### 5.6 Conditions required before results may be reported
+### 6.6 Conditions required before results may be reported
 
 The Results section of this paper remains unwritten until all four of the following hold, each
 verified and recorded:
@@ -501,7 +610,7 @@ weight as a finding.
 
 ---
 
-## 6. Scope of the contribution
+## 7. Scope of the contribution
 
 Here the paper stops being about sportsbooks.
 
@@ -549,4 +658,68 @@ ends in a finding. The second ends, at best, in a set of conditions.
 
 ---
 
-*Sections 6 (Results) and 7 (Discussion) are intentionally not drafted. See Section 5.6.*
+*Sections 8 (Results) and 9 (Discussion) are intentionally not drafted. See Section 6.6.*
+
+## References
+
+Angelini, G., and L. De Angelis (2026). "When Do Markets Fully Process Public Information?
+Evidence from Real-Time Prediction Markets." arXiv:2606.07811.
+
+Budish, E., P. Cramton, and J. Shim (2015). "The High-Frequency Trading Arms Race: Frequent Batch
+Auctions as a Market Design Response." *Quarterly Journal of Economics* 130(4): 1547-1621.
+
+Busse, J. A., and T. C. Green (2002). "Market Efficiency in Real Time." *Journal of Financial
+Economics* 65(3): 415-437.
+
+Chan, K. (1992). "A Further Analysis of the Lead-Lag Relationship Between the Cash Market and Stock
+Index Futures Market." *Review of Financial Studies* 5(1): 123-152.
+
+Chong, Y. Y., and D. F. Hendry (1986). "Econometric Evaluation of Linear Macro-Economic Models."
+*Review of Economic Studies* 53(4): 671-690.
+
+Croxson, K., and J. J. Reade (2014). "Information and Efficiency: Goal Arrival in Soccer Betting."
+*The Economic Journal* 124(575): 62-91.
+
+Ding, S., J. Hanna, and T. Hendershott (2014). "How Slow Is the NBBO? A Comparison with Direct
+Exchange Feeds." *Financial Review* 49(2): 313-332.
+
+Fama, E. F. (1970). "Efficient Capital Markets: A Review of Theory and Empirical Work." *Journal of
+Finance* 25(2): 383-417.
+
+Gonzalo, J., and C. Granger (1995). "Estimation of Common Long-Memory Components in Cointegrated
+Systems." *Journal of Business & Economic Statistics* 13(1): 27-35.
+
+Hasbrouck, J. (1991). "Measuring the Information Content of Stock Trades." *Journal of Finance*
+46(1): 179-207.
+
+Hasbrouck, J. (1995). "One Security, Many Markets: Determining the Contributions to Price
+Discovery." *Journal of Finance* 50(4): 1175-1199.
+
+Hasbrouck, J., and G. Saar (2013). "Low-Latency Trading." *Journal of Financial Markets* 16(4):
+646-679.
+
+Manski, C. F. (2003). *Partial Identification of Probability Distributions.* Springer.
+
+Patell, J. M., and M. A. Wolfson (1984). "The Intraday Speed of Adjustment of Stock Prices to
+Earnings and Dividend Announcements." *Journal of Financial Economics* 13(2): 223-252.
+
+Putniņš, T. J. (2013). "What Do Price Discovery Metrics Really Measure?" *Journal of Empirical
+Finance* 23: 68-83.
+
+Sauer, R. D. (1998). "The Economics of Wagering Markets." *Journal of Economic Literature* 36(4):
+2021-2064.
+
+Simon, J. (2024). "Inefficient Forecasts at the Sportsbook: An Analysis of Real-Time Betting Line
+Movement." *Management Science*, doi:10.1287/mnsc.2022.00456.
+
+Simon, J. (2025). "Autocorrelation and Weekend Effects: Inefficiencies in Moneyline Movement for
+Three Major Sports." *International Journal of Sport Finance* 20: 211-231.
+
+Tamer, E. (2010). "Partial Identification in Econometrics." *Annual Review of Economics* 2: 167-195.
+
+Thaler, R. H., and W. T. Ziemba (1988). "Anomalies: Parimutuel Betting Markets: Racetracks and
+Lotteries." *Journal of Economic Perspectives* 2(2): 161-174.
+
+Woodland, L. M., and B. M. Woodland (1994). "Market Efficiency and the Favorite-Longshot Bias: The
+Baseball Betting Market." *Journal of Finance* 49(1): 269-279.
+

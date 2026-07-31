@@ -95,6 +95,77 @@ graph (a new signal/priority/action), not in the product.
 
 ---
 
+## The Private Wealth Operating System (runtime)
+
+The three layers above are a **build-time data** architecture: facts → graph → rendered pages. This
+section describes the **runtime** architecture that sits on top of them, in the browser. The two do
+not compete; they stack. Layer 3 above produces a set of pages, and the operating system is what
+makes those pages behave as one system rather than a shelf of calculators.
+
+The distinction that matters: **the platform is not the applications.**
+
+```
+Private Wealth Operating System   (runtime, browser, src/drift/web/dw-context.js)
+│
+├─ OS-1 · Shared household context     dw-context.js IIFE 1   window.dwTaxContext
+│     five pieces of state: household · drivers · steps · done · (recommendations, derived)
+│                     ↓
+├─ OS-2 · Recommendation engine        dw-context.js IIFE 5   window.dwNextBest
+│     candidates → requirements filter → ranking → ONE recommendation
+│                     ↓
+├─ OS-3 · Journey rail + analytics     scripts/phase2_nav.py  + renderJourney()
+│     three steps: Assess → Analyze → Coordination Review
+│                     ↓
+└─ OS-4 · Decision applications        the tool pages
+      Coordination Assessment · State Tax Atlas · After-Tax Lab · Tax Diagnostic ·
+      Concentrated Position Lab
+```
+
+**OS-1 to OS-3 are the platform. OS-4 is where tools live.** A module *declares itself* to the
+platform; it does not wire itself into it.
+
+### The rule for new modules
+
+> Every future interactive experience is implemented as a **decision module** within the operating
+> system. A new module inherits household context, recommendation logic, journey placement,
+> analytics instrumentation, and personalization automatically. **The operating system grows by
+> adding modules, not by creating isolated calculators.**
+
+Registering one is four declarations and no new plumbing:
+
+| # | Declaration | Where |
+|---|---|---|
+| 1 | a row on the Decision Tools shelf, under the decision it answers | `src/drift/web/insights.html` |
+| 2 | a `CURRENT` entry (and, if it belongs on the spine, a `JOURNEY` entry) | `scripts/phase2_nav.py` |
+| 3 | a `MODULES` record — priority, requirements, confidence, reason, outcomes — plus `SIBLINGS` | `src/drift/web/dw-context.js` |
+| 4 | `<div id="dw-household">` and `<div id="dw-next">` mounts | the module's own page |
+
+`tests/test_drift_insights_ia.py::test_no_decision_tool_is_orphaned` fails if any of the four is
+missing. That test exists because `score.html` shipped for months satisfying some of them and none
+of the others: built, deployed, in the sitemap, carrying the masthead — and reachable from no menu
+on the site.
+
+### Two rules the platform keeps
+
+1. **No score, no grade.** The platform surfaces constraints, opportunities, and a recommended next
+   decision. It never tells a household it scored 72. Enforced for the self-serve tools by
+   `test_the_self_serve_tools_never_grade_a_household`.
+2. **The recommendation renders no dollar or percent figure.** This is what keeps the engine outside
+   `FIGURE_PROVENANCE.md`'s standing mandate and outside the single-numeric-lineage guarantee in
+   `tests/test_drift_tool_consistency.py`. Enforced by `tests/web/test_next_decision.js`. If a
+   figure ever belongs there, it needs a provenance row *first*.
+
+### Why the rules are declarative
+
+A destination in OS-2 is a record — `{priority, requires, confidence, reason, outcomes}` — never an
+`if` buried in a branch. Ranking can get smarter (weighting by confidence, by recency, by completion)
+without anyone rewriting the engine, and the driver→tool weights stay a table a non-engineer can
+read and argue with. Three of the ten situation drivers (`trusts`, `estate-tax`, and partly
+`entities`) deliberately map to **no** tool: nothing self-serve answers them, so they route to the
+Coordination Review and say so, rather than being quietly pointed at a calculator that half fits.
+
+---
+
 ## Data flow
 
 ```

@@ -246,6 +246,32 @@ Work order, highest leverage first:
 
 Each item above traces to a specific page and dimension in §5. Close them, then run **v2**.
 
+### 6.1 · Exception granted, 2026-07-31 — the operating-system reframe
+
+The standing rule above is suspended for one initiative, then resumes. Recorded here rather than
+quietly worked around, because a rule that can be skipped without a note is not a rule.
+
+**What the rule protects is coherence** — that a homepage, an Atlas, a Comparison engine, and a fee
+page all speak one language, which is rarer and more valuable than any additional feature. The
+exception is granted because this change *serves* that purpose rather than trading against it:
+
+- **It ships no new analytical functionality.** No calculator is added and no tool's math is touched.
+  The work exposes capabilities that already existed, repairs navigation, unifies the shared
+  household context, and personalizes progression between the existing tools.
+- **It is this document's own backlog.** §3.3 names **Journey (3.6/5)** as one of the two systemic
+  gaps, with the recurring failure being *"competing co-equal CTAs dilute the single next step."*
+  The Next Decision component renders exactly one recommendation per page, which is item 2 of the
+  work order above applied to the tool suite instead of to one page at a time.
+- **It closed three defects the audit could not see**, all of which were live: `score.html`
+  reachable from no menu on the site; the retired name for `taxlab.html` shipping in five places
+  inside `dw-context.js`, invisible because the naming test globbed only `*.html`; and the
+  Coordination Assessment promising a "Coordination Index" its own code had deliberately stopped
+  producing.
+
+**Scope of the exception:** the navigation restructure, the decision-grouped Decision Tools shelf,
+and one new component. **Not** covered: new tools, new claims, or new figures. The rule resumes at
+this commit's merge; §6's work order is unchanged and still owed.
+
 ---
 
 ## 7 · Change log

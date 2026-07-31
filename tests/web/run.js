@@ -36,6 +36,19 @@ async function main() {
     }
   })()]);
 
+  // Layers 1-2 of the operating system (dw-context.js): the household context's drivers field and
+  // the "Your Next Decision" recommendation engine. Same subprocess pattern, so its own PASS/FAIL
+  // detail prints directly.
+  flows.push(['next-decision', await (async () => {
+    try {
+      const { execFileSync } = require('child_process');
+      execFileSync(process.execPath, [path.join(__dirname, 'test_next_decision.js')], { stdio: 'inherit' });
+      return {};
+    } catch (e) {
+      return { [`ERROR: ${e.message}`]: false };
+    }
+  })()]);
+
   let failed = 0, total = 0;
   for (const [name, out] of flows) {
     for (const k of Object.keys(out)) {

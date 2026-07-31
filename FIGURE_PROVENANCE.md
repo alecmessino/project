@@ -16,6 +16,24 @@ launch-audit companion to the pre-existing **[`docs/Evidence_Register.md`](docs/
   the label exists but gestures at authority it doesn't have (e.g. citing "published research" with no
   citation). Becomes a Phase 2 work item; a fiduciary's site should not carry these indefinitely.
 
+## Components that deliberately carry no figure
+
+Recorded so their absence from the table below reads as a decision rather than an omission.
+
+**Your Next Decision** (`.dw-next`, rendered by the recommendation engine in `dw-context.js` on all
+five Decision Tools, 2026-07-31) — **no rows, by design.** The component recommends the next analysis
+a household should run and says why, in words only: a headline, a reason naming the situation the
+visitor described, and three qualitative outcome bullets. It renders no dollar amount and no
+percentage, on any code path.
+
+This is a constraint on the component, not an observation about it. Keeping the recommendation
+qualitative is what keeps a personalized, per-visitor surface outside this mandate *and* outside the
+single-lineage guarantee in `tests/test_drift_tool_consistency.py` — a figure computed here would be
+a second place a household's numbers are derived, which is exactly the fork that test exists to
+prevent. `tests/web/test_next_decision.js` asserts the rendered HTML contains no `$` and no percent
+figure. **If a figure ever belongs there, it needs a row here first, and that test has to be updated
+deliberately rather than deleted.**
+
 ## Relationship to the Evidence Register
 
 `docs/Evidence_Register.md` already covers the equities/leakage/tax-lab figure family in depth (12

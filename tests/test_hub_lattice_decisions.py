@@ -113,3 +113,64 @@ def test_the_homepage_still_states_the_claim_the_lattice_demonstrates():
     assert "Seven" in t or "seven" in t
     assert re.search(r"no decision touches just one", t, re.I), \
         "the claim the lattice exists to demonstrate is missing from the page"
+
+
+# ── the rest state shows the whole figure ─────────────────────────────────────────────────────
+
+def test_every_edge_is_visible_at_rest():
+    """All twenty-one, not a subset.
+
+    Two passes shipped a diagram that contradicted its own headline. The first hid every situational
+    edge; the second drew a dashed hairline on the seven PERIMETER pairs only, leaving the eight
+    interior situational edges at opacity:0. Either way Estate, Protection and Business Ownership
+    rendered as loose dots — a reader counting connected nodes against the words "seven systems"
+    found four. Nothing in CSS may zero an edge at rest again.
+    """
+    t = _src()
+    rest = re.search(r"\.sysstage\.seeded \.net\{([^}]*)\}", t)
+    assert rest, "the lattice rest state is missing"
+    body = rest.group(1)
+    op = re.search(r"opacity:\s*([\d.]+)", body)
+    assert op and float(op.group(1)) > 0, f"situational edges are invisible at rest: {body!r}"
+    # and no later rule may re-hide a subset of them
+    for m in re.finditer(r"\.sysstage\.seeded \.net--[a-z]+[^{]*\{([^}]*)\}", t):
+        o = re.search(r"opacity:\s*([\d.]+)", m.group(1))
+        assert not o or float(o.group(1)) > 0, f"an edge class is hidden at rest: {m.group(0)[:80]}"
+
+
+def test_the_two_tiers_are_still_clearly_different():
+    """Complete does not mean flat. The derived structural claim needs to stay readable."""
+    t = _src()
+    base = re.search(r"\.sysstage\.seeded \.net\{([^}]*)\}", t).group(1)
+    stru = re.search(r"\.sysstage\.seeded \.net--structural\{([^}]*)\}", t).group(1)
+    bw = float(re.search(r"stroke-width:\s*([\d.]+)", base).group(1))
+    sw = float(re.search(r"stroke-width:\s*([\d.]+)", stru).group(1))
+    assert sw >= bw * 1.8, f"structural {sw} vs situational {bw} — the tiers are not distinguishable"
+    assert "--accent-strike" in stru and "--ghost-line" in base
+
+
+# ── the headline claim is derived, not asserted ───────────────────────────────────────────────
+
+def test_the_headline_number_matches_the_published_traces():
+    """The page says "One decision moves at least six." That is a claim about the decisions it
+    publishes, so it is checked against them. If a trace touching fewer systems is added, the copy
+    is wrong and this fails — which is the point."""
+    t = _src()
+    sizes = [len(set(int(n) for n in re.findall(r"\d+", s)))
+             for s in re.findall(r"set:\s*\[([\d,\s]+)\]", t)]
+    assert sizes, "no decision traces found"
+    words = {4: "four", 5: "five", 6: "six", 7: "seven"}
+    claimed = words[min(sizes)]
+    assert f"moves at least {claimed}" in t, (
+        f"the smallest published trace touches {min(sizes)} systems, so the headline should read "
+        f"'moves at least {claimed}' — trace sizes were {sorted(sizes)}"
+    )
+
+
+def test_the_folio_plate_labels_are_gone():
+    """"Plate I · The Constraint" named the page's own structure — something the reader had to read
+    past to reach the argument. Removed along with its CSS."""
+    t = _src()
+    assert 'class="plate"' not in t
+    for n in ("Plate I", "Plate II", "Plate III", "Plate IV"):
+        assert f">{n}<" not in t, f"the {n} folio label is back"

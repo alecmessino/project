@@ -256,16 +256,16 @@ def thesis(
 @app.command()
 def taxlab(
     docs: str = typer.Option("docs", "--docs", help="directory holding the exhibits"),
-    out: str = typer.Option("docs/taxlab.html", "--out", help="After-Tax Review page"),
+    out: str = typer.Option("docs/taxlab.html", "--out", help="After-Tax Lab page"),
 ):
-    """Build the interactive After-Tax Review (after-tax / TLH / asset location) from the ledger."""
+    """Build the interactive After-Tax Lab (after-tax / TLH / asset location) from the ledger."""
     from pathlib import Path
     from .taxlab import build_taxlab
     from .leakage import build_leakage
     from .exhibit import export_taxlab
     state = build_taxlab(docs)
     # The Advisor Workspace is a separate page over the same (heavy, ledger-driven) engine/state (internal, noindex).
-    # The public After-Tax Review is an illustrative exhibit: it needs only the per-state coordination-alpha
+    # The public After-Tax Lab is an illustrative exhibit: it needs only the per-state coordination-alpha
     # table (+ names) to localize to a visitor's state — the heavy workspace assumptions stay off the public page.
     leak = build_leakage()
     public = {"header": {"generated": state["header"]["generated"], "horizon_years": 30},

@@ -301,36 +301,58 @@ a playbook instructs, and the page does not instruct — it helps someone naviga
 
 ### Naming rule: "Review" belongs to the engagement, and to nothing else
 
-**Coordination Review is the product.** Every free artifact gets its own noun so that nothing on the
-site competes with the thing a visitor is meant to book. Each artifact type takes a distinct noun:
+**Coordination Review is the product.** Every free artifact takes a different noun so nothing on the
+site competes with the thing a visitor is meant to book. **"Lab" is the default suffix for new
+tools** — one suffix scales; six competing metaphors (Navigator / Planner / Explorer / Framework /
+Diagnostic) do not.
 
 | Noun | Means | Shipped |
 |---|---|---|
-| **Review** | *the engagement* — reserved | Coordination Review |
+| **Review** | *the engagement* — RESERVED | Coordination Review |
 | **Atlas** | reference / lookup | State Tax Atlas |
-| **Navigator** | tradeoff exploration | Concentrated Position Navigator |
+| **Lab** | interactive analysis — the default | After-Tax Lab · Concentrated Position Lab |
 | **Diagnostic** | finds what is wrong | Tax Diagnostic |
-| **Planner / Explorer / Framework** | sequencing · discovery · structure | *(roadmap)* |
 
-**Decision Tools roadmap (NOT advertised until built)** — renamed off "Review" under this rule:
-Business Exit **Planner** · Equity Compensation **Explorer** · Roth Conversion **Framework** ·
-Relocation **Navigator** · Estate Readiness **Diagnostic** · Household Balance Sheet **Atlas**.
+Also permitted to carry "Review": **The Driftwood Review** (the quarterly publication) and the
+**Annual Wealth Operating Review** (the client deliverable the engagement produces), plus their
+ordinary short forms in prose. `tests/test_naming_convention.py` enforces the rest, and normalises
+whitespace before matching — the first rename pass was a literal string replace and silently missed
+a link label broken across a line (`<a>After-Tax\n Review</a>`) on a nav-linked page.
+
+**Renames applied 2026-07-31.** After-Tax Review → **After-Tax Lab**; Concentrated Position
+Navigator → **Concentrated Position Lab**. The collision was not theoretical: `taxlab.html` carried
+a button reading *"Request a Private After-Tax Review"* pointing at `coordination-review.html`, and
+sat in the Coordination dropdown directly above *"Schedule a Coordination Review"*. That button now
+reads "Request a Coordination Review".
+
+**Decision Tools roadmap (NOT advertised until built).** Business Exit Lab · Equity Compensation Lab
+· Roth Conversion Lab · Estate Readiness Lab · Household Liquidity Lab · Charitable Giving Lab.
 `test_the_tools_advertised_are_only_the_ones_that_exist` fails if any reaches the shelf before its
 page does.
 
-**OPEN — "After-Tax Review" (`taxlab.html`) violates the rule that was just set.** It is a free tool
-carrying the engagement's noun, and it sits in the Coordination dropdown on 51 pages *directly above*
-"Schedule a Coordination Review" — the two read as the same thing. This was found while applying the
-naming convention and is **not** fixed here, because renaming a shipped product is a positioning
-call, not a cleanup. Candidates, in order of preference: **After-Tax Lab** (matches the file and the
-CLI verb, `drift taxlab`), **After-Tax Explorer**, **After-Tax Diagnostic** (though that overlaps the
-Tax Diagnostic next to it). Whichever is chosen, the change is mechanical: the label appears in
-`scripts/phase2_nav.py`, `insights.html`, and the page itself.
+**OPEN — "Tax Diagnostic" is the last tool outside the convention.** It does not collide with
+anything, and "Diagnostic" is an honest description of what it does (it finds the leak; the Lab
+measures the fix). Left as-is deliberately, but flagged: if the shelf should be *uniformly* Atlas +
+Lab, this is the one to change, and **After-Tax Lab** / **Tax Diagnostic** sitting adjacent is the
+place a visitor would notice the inconsistency first.
 
-**Decision Library gaps.** The agreed roster names nine decisions; eight exist. **Divorce** and
-**business succession** have no case page and were not invented — the library lists only decisions
-that are actually worked through. `test_decision_library_lists_every_worked_decision` compares the
-shelf against `case-*.html` on disk, so adding either page will fail the test until it is listed.
+### The editorial taxonomy
+
+Every piece of content has one job. Written down so a new piece gets filed rather than invented.
+
+| Type | Purpose | Length | Frequency |
+|---|---|---|---|
+| Commentary | timely observations | 300–700 words | weekly |
+| Essays | evergreen ideas | 1,000–2,500 words | monthly |
+| Research | original work | 10–40 pages | occasionally |
+| Decision Memo | single decision walkthrough | 2–4 pages | as needed *(category reserved, not built)* |
+| Decision Library | evergreen decision reference | living | continuous |
+| Decision Tool | interactive | living | continuous |
+| The Driftwood Review | quarterly publication | 20–40 pages | quarterly |
+
+**Commentary stays small on purpose** — 300–700 words, one observation, one idea. Closer to a
+personal blog than a briefing digest. That is what makes weekly publishing survivable, and it is
+why the Review does not absorb it (see the rhythm table above).
 
 ## The homepage lattice — the Brief-5 handoff README is superseded (2026-07-31)
 

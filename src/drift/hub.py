@@ -21,7 +21,7 @@ EXHIBITS = [
     ("How we invest", "thesis.html",
      "How Driftwood invests: evidence over prediction, taxes treated as part of investing, and a "
      "diversified core placed alongside a focused complement, one portfolio, measured after tax.", False),
-    ("After-Tax Review", "taxlab.html",
+    ("After-Tax Lab", "taxlab.html",
      "See your after-tax return, and where each holding belongs, taxable, Traditional, or Roth, with "
      "estate step-up and tax-loss harvesting, by your bracket and state.", False),
     ("The Tax Diagnostic", "leakage.html",

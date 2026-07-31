@@ -77,8 +77,13 @@
   .tnum{font-variant-numeric:tabular-nums}
 
   /* ── Gallery I · The Constraint, an asymmetric broadsheet, not a centered column. ──────────── */
-  .hero{display:block;padding:104px 52px 148px}
-  .hero-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:0 72px;align-items:end;min-height:576px}
+  /* Hero proportions, retuned 2026-07-31. It previously ran 104/148px padding with a hard
+     min-height:576px on the grid, which manufactured empty space rather than composing it: the
+     column had nothing left to fill the reserved height with, so the page opened on air. The
+     height is now set by the content, the padding is tighter, and the body copy is sized to hold
+     its own against a 70px headline instead of reading as a caption under it. */
+  .hero{display:block;padding:72px 52px 88px}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:0 72px;align-items:end}
   .hero h1{grid-column:1;font-family:var(--sans);font-weight:700;
     font-size:clamp(34px,4.4vw,70px);line-height:1.08;letter-spacing:-.024em;color:var(--ink);margin:0;max-width:21ch;text-wrap:balance}
   .hero h1 span{display:block}
@@ -86,13 +91,13 @@
      plate reads as one spread rather than two stacked blocks. */
   /* the margin argument sits under the headline, in column one: column two is deliberately empty
      air so the copy never lands on the densest part of the survey plate. */
-  .hero-aside{grid-column:1;margin-top:30px;padding-left:0;border-left:0;max-width:52ch}
-  .lede{font-family:var(--serif);font-size:16.5px;line-height:1.62;color:var(--dim);margin:0}
+  .hero-aside{grid-column:1;margin-top:26px;padding-left:0;border-left:0;max-width:640px}
+  .lede{font-family:var(--serif);font-size:19px;line-height:1.58;color:var(--dim);margin:0}
   .lede b{color:var(--ink);font-weight:500}
   /* second beat of the margin argument: separated by air and a change of face, so the two paragraphs
      read as claim then answer rather than one run-on column. */
   .hero-aside .lede2-note{margin:16px 0 0}
-  .hero .ctas{margin-top:26px;padding-top:24px;border-top:1px solid var(--line)}
+  .hero .ctas{margin-top:26px;padding-top:24px;border-top:1px solid var(--line);max-width:640px}
   @media(max-width:900px){
     .hero{padding-top:40px}
     .hero-grid{display:block}
@@ -189,21 +194,14 @@
   .hero h1{font-family:var(--serif);font-weight:400;letter-spacing:-.024em}
   .sb-h,.reg-h,.close-conv .conv{font-family:var(--serif);font-weight:400}
 
-  /* ── Plate labels (2026 four-plate homepage). The page is an engraved folio: each plate announces
-     itself in the margin the way an exhibition label does, "Plate II · The Coordination Engine".
-     Mirrors the "Exhibit I" convention already used on leakage.html, so the two pages read as one
-     publication. Numerals are Roman by intent: they date the argument, not the visit. ── */
-  .plate{display:flex;align-items:center;gap:12px;margin:0 0 26px}
-  /* the engine plate is centred copy, but its label belongs on the page's left margin like the others */
-  .sysband-in .plate{justify-content:flex-start;text-align:left}
-  .plate .pl-n,.plate .pl-t{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.22em;
-    text-transform:uppercase;color:var(--muted);white-space:nowrap}
-  .plate .pl-r{width:28px;height:1px;background:var(--ghost-line);flex:none}
-  .plate .pl-t{color:var(--accent-strike)}
-  @media(max-width:620px){ .plate{gap:9px;margin-bottom:20px} .plate .pl-n,.plate .pl-t{font-size:9.5px;letter-spacing:.16em} }
+  /* The folio "Plate I · The Constraint" labels were removed 2026-07-31 along with their CSS. They
+     were an exhibition-label device that named the page's own structure — information the reader
+     never needed and had to read past to reach the argument. Roman numerals on a landing page date
+     the argument rather than help anyone. The four sections still exist; they just stop announcing
+     themselves. (The Governance Register keeps its name in its own heading, not as a folio stamp.) */
   /* the plate's product line, a quiet serif framing above the seven-systems headline */
   .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw + 15px,19px);line-height:1.5;color:var(--dim);
-    margin:0 auto 20px;max-width:36ch}
+    margin:0 auto 20px;max-width:48ch}
 
   .lede2-note{font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--dim);margin:-6px 0 22px;max-width:58ch}
   .lede2-note a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
@@ -333,13 +331,16 @@
      interaction, while the fifteen situational edges stay silent so the plate reads calm rather than
      as a star-burst. Transitions are suppressed in this state so returning to rest SNAPS (0ms) instead
      of fading, leaving no ghost strokes behind. */
-  .sysstage.seeded .net{opacity:0;transition:none}
-  /* The rim. Hiding every situational edge at rest left Estate, Protection and Business Ownership as
-     three unconnected dots, which reads as an unfinished drawing rather than a calm one. A hairline
-     micro-dashed perimeter (adjacent nodes only) restores the figure's outline so all seven systems
-     are visibly one object, without reintroducing the interior star-burst. */
-  .sysstage.seeded .net--rim:not(.net--structural){opacity:.2;stroke:var(--ghost-line);
-    stroke-width:.5;stroke-dasharray:1 3.5;transition:none}
+  /* REST STATE: all twenty-one edges drawn, all seven systems connected.
+     Two earlier passes got this wrong in the same way. The first hid every situational edge, which
+     left Estate, Protection and Business Ownership as three loose dots. The second added a dashed
+     hairline on the seven PERIMETER pairs only — which still left the eight interior situational
+     edges at opacity:0, so the diagram showed 13 of 21 lines and the same three systems still read
+     as detached. A reader counting nodes against the words "seven systems" found four.
+     Every situational edge is now drawn at one calm weight. The two tiers still differ clearly
+     (accent + 1.3px vs graphite hairline), so the derived structural claim survives, but the figure
+     is complete: seven systems, twenty-one dependencies, nothing floating. */
+  .sysstage.seeded .net{opacity:.3;stroke:var(--ghost-line);stroke-width:.6;transition:none}
   .sysstage.seeded .net--structural{stroke:var(--accent-strike);stroke-width:1.3;opacity:.62;transition:none}
   .sysstage.seeded .node .dot{fill:var(--ink)}
   .sysstage.seeded .node .lbl{fill:var(--ink);font-weight:700}
@@ -418,9 +419,6 @@
      single source for structure. ── */
   .close-conv.on-ink{background:var(--navy);color:var(--on-dark);max-width:none;
     border-top:none;padding:64px 52px 66px}
-  .close-conv.on-ink .plate .pl-n{color:var(--on-dark-dim)}
-  .close-conv.on-ink .plate .pl-t{color:var(--gold)}
-  .close-conv.on-ink .plate .pl-r{background:rgba(169,194,214,.34)}
   .close-conv.on-ink .conv{color:var(--on-dark-strong);max-width:26ch}
   .close-conv.on-ink .conv b{color:#fff}
   .close-conv.on-ink .review-scope{color:var(--on-dark-dim)}
@@ -473,12 +471,19 @@
   /* ── The survey plates. They bleed off the edge and are never framed, carded, or bordered. The hero
      owns and clips its plate so nothing runs behind the masthead: the wordmark is the one element that
      has to read as fixed. ── */
-  .hero{position:relative;overflow:hidden;isolation:isolate;min-height:780px}
+  /* min-height was 780px, which left ~285px of empty plate below the CTA — the hero reserved a
+     height the content had nothing to fill. Now just enough to give the plate presence. */
+  .hero{position:relative;overflow:hidden;isolation:isolate;min-height:600px}
   /* Explicit box, not inset-stretched: an <img> is a replaced element, so width/height:auto with
      four insets resolves to intrinsic size rather than filling the box. Same geometry, stated
      directly: left 11% / top -6%, spanning to right -27% and bottom -3%. */
   .hero>.splate{position:absolute;left:11%;top:-6%;width:116%;height:109%;
-    object-fit:cover;object-position:left center;opacity:.85;z-index:0;pointer-events:none}
+    object-fit:cover;object-position:left center;opacity:.85;z-index:0;pointer-events:none;
+    /* Fade the plate out under the copy. It began at 11% of the hero — directly beneath the
+       headline — so the lede was reading over stipple. Masking rather than moving the plate keeps
+       the copy clean however the text reflows. */
+    -webkit-mask-image:linear-gradient(to right,transparent 0,transparent 26%,rgba(0,0,0,.45) 44%,#000 60%);
+    mask-image:linear-gradient(to right,transparent 0,transparent 26%,rgba(0,0,0,.45) 44%,#000 60%)}
   .hero>.hero-grid,.hero>.ctas{position:relative;z-index:1}
   .plateband{position:relative;height:190px;overflow:hidden;margin-top:56px}
   .plateband>.splate{position:absolute;top:-10%;left:-6%;width:112%;height:130%;object-fit:cover;
@@ -505,7 +510,7 @@
     <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fiduciary.html">Fiduciary Standard</a></div></div>
-      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="coordination-framework.html">The Seven Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="household-example.html">Household Example</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Review</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="coordination-framework.html">The Seven Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="household-example.html">Household Example</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Lab</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools">Decision Tools</a><a href="insights.html#decision-library">Decision Library</a></div></div>
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">CPA Collaboration</a><a href="estate-attorneys.html">Estate Attorneys</a><a href="referral.html">Referral Process</a></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
@@ -523,7 +528,6 @@
     <header class="hero">
       <span class="regmark" aria-hidden="true"><i></i></span>
       <img class="splate splot" src="img/survey-plate-hero.svg" alt="" aria-hidden="true">
-      <div class="plate"><span class="pl-n">Plate I</span><span class="pl-r" aria-hidden="true"></span><span class="pl-t">The Constraint</span></div>
       <div class="hero-grid">
         <h1><span>Uncoordinated decisions</span> <span>leak what you keep.</span></h1>
         <div class="hero-aside">
@@ -553,16 +557,15 @@
 
     <!-- The survey rail: three measured facts, written as survey findings rather than statistics. -->
     <div class="rail">
-      <div><span class="mono rk">Systems surveyed</span><p class="rv">Seven, none independent</p></div>
-      <div><span class="mono rk">Dependencies mapped</span><p class="rv">Twenty-one, all recorded</p></div>
-      <div><span class="mono rk">Register cadence</span><p class="rv">Reviewed each quarter</p></div>
+      <div><span class="mono rk">Read as one system</span><p class="rv">Seven systems, twenty-one dependencies</p></div>
+      <div><span class="mono rk">Owned by name</span><p class="rv">A person against every open matter</p></div>
+      <div><span class="mono rk">Held until it closes</span><p class="rv">Every item carries its next date</p></div>
     </div>
     <div class="sysband" id="thesystem">
       <span class="regmark" aria-hidden="true"><i></i></span>
       <div class="sysband-in">
-        <div class="plate"><span class="pl-n">Plate II</span><span class="pl-r" aria-hidden="true"></span><span class="pl-t">System Dependencies</span></div>
-        <p class="sb-lead">Driftwood coordinates your financial life as one system.</p>
-        <h2 class="sb-h">Seven systems. No decision touches just one.</h2>
+        <p class="sb-lead">Driftwood reads a household as one connected system.</p>
+        <h2 class="sb-h">Seven systems. One decision moves at least six.</h2>
         <div class="sysstage seeded" id="sysDiagram">
           <svg viewBox="0 0 640 546" role="group" aria-label="Seven financial systems, Investments, Taxes, Cash Flow, Estate and legacy, Risk and protection, Business Ownership and account structure, and Family / Purpose, in one coordinated network. Tap a system to see what it moves; what you keep is the result.">
             <!-- the lattice: every system connected to every other (near-silent at rest) -->
@@ -626,7 +629,7 @@
           </svg>
         </div>
         <div class="mstory" id="mstory">
-          <p class="mrest" id="mrest">Each line is a dependency. The heavier lines are the four systems every decision below moves: what you own, what you owe, what you can spend, and what it is for. Trace a decision, or explore a system.</p>
+          <p class="mrest" id="mrest">Twenty-one dependencies among the seven. The heavier lines are the four that move in every decision below — what you own, what you owe, what you can spend, and what it is for. Trace a decision, or explore a system.</p>
           <p class="mlead" id="mlead"></p>
           <p class="mchain" id="mchain"></p>
           <a class="mproof" id="mproof" href="#"></a>
@@ -650,7 +653,6 @@
          behind it. Two of eight rows are resolved-and-dated (25%), the floor set in OPERATIONS.md. ── -->
     <div class="sec gal" id="governance">
       <span class="regmark" aria-hidden="true"><i></i></span>
-      <div class="plate"><span class="pl-n">Plate III</span><span class="pl-r" aria-hidden="true"></span><span class="pl-t">Governance Register</span></div>
       <div class="reg seeded" id="register">
         <div class="reg-head">
           <p class="reg-lead">This is what standing attention looks like.</p>
@@ -695,7 +697,6 @@
          reads as a person taking a position, which is what the sentence is actually doing. ── -->
     <div class="sec close-conv on-ink" id="conversation">
       <span class="regmark" aria-hidden="true"><i></i></span>
-      <div class="plate"><span class="pl-n">Plate IV</span><span class="pl-r" aria-hidden="true"></span><span class="pl-t">The Ask</span></div>
       <p class="conv">Begin with a review, not a proposal.</p>
       <p class="review-scope">We inventory what exists, name what is uncoordinated, and hand you the
         register. If there is nothing worth coordinating, we will tell you that.</p>
@@ -783,7 +784,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-30 23:20:04 UTC"}, "hero": 
       href:"thesis.html", proof:"See how we invest" },
     { center:"Tax coordination", lead:"Taxes never change alone.",
       body:"A tax move also shifts withdrawals, portfolio construction, entity choices, and what the estate keeps.",
-      href:"taxlab.html", proof:"See the After-Tax Review" },
+      href:"taxlab.html", proof:"See the After-Tax Lab" },
     { center:"Cash Flow coordination", lead:"Cash flow decides what’s possible.",
       body:"What’s liquid, and what comes in each month, sets which lots are sold, the bracket you land in, and the plans you can actually fund.",
       href:"opportunity-register.html", proof:"See the Opportunity Register" },

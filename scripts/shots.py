@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 OUT = ROOT / "artifacts" / "shots"
 
-# (label, file, query) — the After-Tax Review is captured at its working-paper sections with populated state.
+# (label, file, query) — the After-Tax Lab is captured at its working-paper sections with populated state.
 PAGES = [
     ("home", "index.html", ""),
     ("taxlab-portfolio", "taxlab.html", "?view=portfolio&state=IL"),

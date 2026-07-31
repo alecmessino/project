@@ -25,7 +25,7 @@ FAMILIES = [
         ("Your First 90 Days", "first-90-days.html", "first-90-days.html"),
         ("Household Example", "household-example.html", "household-example.html"),
         ("Tax Diagnostic", "leakage.html", "leakage.html"),
-        ("After-Tax Review", "taxlab.html", "taxlab.html"),
+        ("After-Tax Lab", "taxlab.html", "taxlab.html"),
         ("Schedule a Coordination Review", "coordination-review.html", "coordination-review.html"),
     ]),
     # "Insights", not "Insights & Research" (2026-07-31). The family is named for what it will hold
@@ -204,7 +204,7 @@ STUB_TMPL = """<!DOCTYPE html>
       Coordination Review.</div>
     <div class="door">
       <div class="dh">Schedule a Coordination Review.</div>
-      <div class="ds">The guided engagement: Tax Diagnostic, State Tax Atlas, and After-Tax Review are
+      <div class="ds">The guided engagement: Tax Diagnostic, State Tax Atlas, and After-Tax Lab are
         supporting evidence. The Review is the product.</div>
       <a class="book" href="coordination-review.html">Request a Coordination Review &rarr;</a>
     </div>

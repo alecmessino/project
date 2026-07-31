@@ -102,7 +102,7 @@ _LEVERS = [
      "share": "the coordination",
      "desc": "The bridge between how you invest and how the household is structured, placing the "
              "higher-turnover strategy in Roth and Traditional accounts, where its short-term gains escape "
-             "tax entirely. Coordination itself; quantified for each household in the After-Tax Review."},
+             "tax entirely. Coordination itself; quantified for each household in the After-Tax Lab."},
     {"name": "Patient trading and lot selection",
      "share": "≈ 60–65%",
      "desc": "Holds positions through short-term noise and chooses which lots to sell, turning gains that "

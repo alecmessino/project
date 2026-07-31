@@ -879,19 +879,35 @@ def export_state_pages(out_dir: str | Path = "docs", edition: str = CURRENT_EDIT
 # Core (non-state) pages that also belong in the sitemap, with priorities. Every indexable public
 # page is listed; deliberately absent are the Core Alpha research series, workspace.html, and
 # waitlist.html (non-marketing / compliance-sensitive surfaces) and the noindex/redirect stubs.
+# Kept in step with the masthead: anything in the primary navigation belongs here, and anything
+# that has become a redirect stub does not. Audited 2026-07-31 with the Insights IA change —
+# `library.html` / `familyoffice.html` (deleted in 3caa0d6c, 404 on the live site) and
+# `howitworks.html` / `record.html` (now noindex redirect stubs) were removed; the Insights landing,
+# the quarterly, and the two live redesign pages were added. See tests/test_drift_sitemap_core.py.
 _CORE_SITEMAP = [
     ("index.html", "1.0", "weekly"), ("research.html", "0.9", "weekly"),
     ("coordination-review.html", "0.95", "monthly"),
+    ("insights.html", "0.9", "weekly"),
+    ("driftwood-review.html", "0.9", "monthly"),
+    ("commentary.html", "0.7", "weekly"),
+    ("coordination-framework.html", "0.8", "monthly"),
+    ("the-practice.html", "0.8", "monthly"), ("the-record.html", "0.8", "monthly"),
     ("every-portfolio-has-two-returns.html", "0.8", "monthly"),
     ("principles.html", "0.9", "monthly"),
-    ("howitworks.html", "0.9", "monthly"), ("fees.html", "0.9", "monthly"),
+    ("fees.html", "0.9", "monthly"),
     ("taxlab.html", "0.9", "weekly"),
     ("leakage.html", "0.9", "monthly"), ("statemap.html", "0.8", "monthly"),
     ("concentration.html", "0.8", "monthly"),
-    ("states.html", "0.8", "monthly"), ("thesis.html", "0.7", "monthly"),
+    ("thesis.html", "0.7", "monthly"),
     ("score.html", "0.8", "monthly"), ("coordination.html", "0.8", "monthly"),
-    ("library.html", "0.8", "monthly"), ("familyoffice.html", "0.8", "monthly"),
-    ("review.html", "0.8", "monthly"), ("record.html", "0.7", "monthly"),
+    ("review.html", "0.8", "monthly"),
+    # masthead destinations — if a page is in the primary navigation it gets announced
+    ("leadership.html", "0.7", "monthly"), ("fiduciary.html", "0.7", "monthly"),
+    ("first-90-days.html", "0.7", "monthly"), ("household-example.html", "0.7", "monthly"),
+    ("partners.html", "0.7", "monthly"), ("estate-attorneys.html", "0.7", "monthly"),
+    ("referral.html", "0.7", "monthly"),
+    # NOT listed, deliberately: private.html (Client Access) is noindex, and states.html is a
+    # permanent redirect alias for /atlas/<edition>/ which the generator emits in its place.
     ("manual.html", "0.7", "monthly"), ("awor.html", "0.7", "monthly"),
     ("decision-register.html", "0.7", "monthly"), ("opportunity-register.html", "0.7", "monthly"),
     ("constitution.html", "0.7", "monthly"), ("capital-allocation.html", "0.7", "monthly"),

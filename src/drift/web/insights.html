@@ -3,20 +3,265 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<!-- Insights folded into the single Research hub (2026). Canonical + refresh consolidate the equity. -->
-<meta http-equiv="refresh" content="0; url=research.html" />
-<link rel="canonical" href="https://driftwoodwealth.com/research.html" />
-<meta name="robots" content="noindex, follow" />
-<title>Research, Driftwood Wealth</title>
+<title>Insights, Driftwood Wealth</title>
+<meta name="description" content="Driftwood's editorial home — research and essays, short commentary, the quarterly Driftwood Review, the decision tools, and the library of worked household decisions." />
+<link rel="canonical" href="https://driftwoodwealth.com/insights.html" />
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
 <link rel="icon" href="favicon.svg" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftwood Wealth" />
+<meta property="og:title" content="Insights, Driftwood" />
+<meta property="og:description" content="Research, commentary, the quarterly Review, the decision tools, and the library of worked household decisions." />
+<meta property="og:url" content="https://driftwoodwealth.com/insights.html" />
 <style>
-  body{margin:0;background:#f1efe9;color:#3d4650;
-    font:16px/1.6 var(--sans, system-ui,-apple-system,"Segoe UI",sans-serif);
-    display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center;padding:24px}
-  a{color:#2c5878}
+  /* ═══════════════════════════════════════════════════════════════════════════════════════════
+     INSIGHTS — the editorial home.
+
+     This page WAS a noindex redirect stub pointing at research.html, and the masthead's "Articles"
+     entry pointed here — so the menu carried an item that bounced the reader sideways into another
+     item. It is now the landing the nav family actually names, and it is indexable.
+
+     FIVE DIVISIONS, and the set is the argument: Research (papers and essays), Commentary (short
+     notes), The Driftwood Review (quarterly synthesis), Decision Tools (the interactives), and the
+     Decision Library (worked household decisions). Named for what the practice publishes in three
+     to five years, not for what happens to exist today — which is why the family is "Insights" and
+     not "Insights & Research". "Research" is one division; it cannot name the set.
+
+     Decision Tools and Decision Library live HERE as sections rather than as their own pages: each
+     is a list of links today, and two thin pages read worse than two populated sections. The
+     masthead links straight to #decision-tools / #decision-library. They graduate to standalone
+     pages when they outgrow this (recorded in OPERATIONS.md).
+
+     Plates come from the canonical survey library as plain <img>. This page needs no per-article
+     density gating — that is a property of a Review card, not of a directory row — so referencing
+     the standalone files keeps the document small and lets each plate cache across the site.
+     ═══════════════════════════════════════════════════════════════════════════════════════════ */
+  :root{
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab;
+    --ghost-line:#b8b2a4; --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
+    --accent-strike:#2c5878; --navy:#1a2330; --on-dark:#e7ecf2;
+  }
+  *{box-sizing:border-box}
+  *,*::before,*::after{border-radius:0}
+  body{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.62 var(--sans);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px 96px}
+  a{color:inherit}
+
+  .mast{padding:74px 0 30px;border-bottom:1px solid var(--ink)}
+  .mast h1{font-family:var(--serif);font-weight:400;font-size:clamp(38px,5.2vw,68px);line-height:1;
+    letter-spacing:-.018em;color:var(--ink);margin:0 0 20px}
+  .mast .sub{font-family:var(--serif);font-size:clamp(17px,1.5vw,20px);line-height:1.5;
+    color:var(--dim);margin:0;max-width:52ch}
+
+  .sec{margin:70px 0 0;scroll-margin-top:20px}
+  .sec-head{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:baseline;gap:0 18px;
+    border-top:1px solid var(--ink);padding-top:14px}
+  .sec-num{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.2em;
+    color:var(--ghost-line)}
+  .sec-title{font-family:var(--sans);font-size:12.5px;font-weight:700;letter-spacing:.19em;
+    text-transform:uppercase;color:var(--ink);margin:0}
+  .sec-note{grid-column:2;font-family:var(--serif);font-size:15.5px;line-height:1.52;
+    color:var(--muted);margin:8px 0 0;max-width:58ch}
+  .band{grid-column:2;height:44px;overflow:hidden;margin:18px 0 0;opacity:.46}
+  .band img{width:100%;height:44px;object-fit:cover;object-position:left center;display:block}
+
+  /* one row shape, used by every division, so the page reads as a single system */
+  .rows{margin:22px 0 0;border-top:1px solid var(--line)}
+  .rows a{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 26px;align-items:baseline;
+    padding:19px 0;border-bottom:1px solid var(--line2);text-decoration:none}
+  .rows a:hover .t{color:var(--accent-strike)}
+  .rows .t{font-family:var(--serif);font-size:19px;line-height:1.28;color:var(--ink)}
+  .rows .k{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.17em;
+    text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  .rows .d{grid-column:1;font-family:var(--sans);font-size:14px;line-height:1.55;color:var(--body);
+    margin:4px 0 0;max-width:64ch}
+
+  /* the Review gets the one raised treatment on the page — it is the flagship */
+  .flag{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,4fr);gap:0 44px;
+    background:var(--soft);border-top:1px solid var(--frame-line);margin:22px 0 0;
+    padding:30px 32px 0}
+  .flag .body{padding-bottom:30px}
+  .flag h3{font-family:var(--serif);font-weight:400;font-size:clamp(24px,2.4vw,34px);
+    line-height:1.12;color:var(--ink);margin:0 0 13px}
+  .flag h3 a{text-decoration:none;
+    background-image:linear-gradient(var(--ghost-line),var(--ghost-line));
+    background-size:100% 1px;background-repeat:no-repeat;background-position:0 100%;padding-bottom:2px}
+  .flag h3 a:hover{color:var(--accent-strike)}
+  .flag p{font-family:var(--sans);font-size:14.5px;line-height:1.6;color:var(--body);margin:0;
+    max-width:50ch}
+  .flag .meta{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.17em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+  .flag .meta i{font-style:normal;color:var(--ghost-line);margin:0 8px}
+  .flag .art{margin:0 -32px 0 0;min-height:232px;overflow:hidden;border-left:1px solid var(--line2)}
+  .flag .art img{width:100%;height:100%;min-height:232px;object-fit:cover;display:block;opacity:.6}
+
+  .foot{padding:34px 0 0;margin-top:66px;border-top:1px solid var(--line);
+    font-size:11.5px;line-height:1.65;color:var(--muted)}
+  .foot a{color:var(--accent-strike)}
+
+  @media (max-width:820px){
+    .flag{grid-template-columns:1fr;padding:26px 24px 0}
+    .flag .art{margin:0 -24px;min-height:170px;border-left:0;border-top:1px solid var(--line2)}
+  }
+  @media (max-width:680px){
+    .wrap{padding:0 18px 64px}
+    .sec-head{grid-template-columns:1fr}
+    .sec-note,.band{grid-column:1}
+  }
 </style>
 </head>
 <body>
-  <p>Driftwood's essays now live in the <a href="research.html">Research hub</a>. Redirecting you there…</p>
+<div class="wrap">
+<nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fiduciary.html">Fiduciary Standard</a></div></div>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="coordination-framework.html">The Seven Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="household-example.html">Household Example</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Review</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
+      <div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools" aria-current="page">Decision Tools</a><a href="insights.html#decision-library" aria-current="page">Decision Library</a></div></div>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">CPA Collaboration</a><a href="estate-attorneys.html">Estate Attorneys</a><a href="referral.html">Referral Process</a></div></div>
+      <span class="dwnav-sep" aria-hidden="true"></span>
+      <a class="dwnav-access" href="private.html">Client Access</a>
+      <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review</a>
+    </nav>
+
+<header class="mast">
+  <h1>Insights</h1>
+  <p class="sub">Everything Driftwood publishes, and every tool it opens to the public: the
+    evidence, the short notes, the quarterly, and the decisions themselves — worked all the way
+    through.</p>
+</header>
+
+<main>
+
+<section class="sec" id="research">
+  <div class="sec-head">
+    <span class="sec-num">I</span>
+    <h2 class="sec-title">Research</h2>
+    <p class="sec-note">Papers, essays, and the exhibits behind them. What Driftwood believes, and
+      what it can show.</p>
+    <div class="band"><img src="img/plates/contour.svg" alt="" aria-hidden="true"></div>
+  </div>
+  <div class="rows">
+    <a href="research.html"><span class="t">The Research hub</span><span class="k">Index</span>
+      <span class="d">Every exhibit in one place — the thesis, the model portfolio, the tax
+        engines, and the essays that put them to work.</span></a>
+    <a href="every-portfolio-has-two-returns.html"><span class="t">Every Portfolio Has Two Returns</span><span class="k">Essay</span>
+      <span class="d">The return a portfolio reports, and the return a household keeps.</span></a>
+    <a href="the-worlds-largest-investors.html"><span class="t">The World's Largest Investors</span><span class="k">Essay</span>
+      <span class="d">What the largest pools of capital do that individual households generally
+        do not.</span></a>
+    <a href="enough-is-a-number.html"><span class="t">Enough Is a Number</span><span class="k">Essay</span>
+      <span class="d">Naming the figure that makes every subsequent decision easier.</span></a>
+    <a href="principles.html"><span class="t">Driftwood Principles</span><span class="k">Reference</span>
+      <span class="d">The commitments the practice is built on, written down.</span></a>
+  </div>
+</section>
+
+<section class="sec" id="commentary">
+  <div class="sec-head">
+    <span class="sec-num">II</span>
+    <h2 class="sec-title">Commentary</h2>
+    <p class="sec-note">Short observations on coordination, tax, and the moving parts — published
+      when there is something to say rather than on a schedule.</p>
+    <div class="band"><img src="img/plates/current.svg" alt="" aria-hidden="true"></div>
+  </div>
+  <div class="rows">
+    <a href="commentary.html"><span class="t">All commentary</span><span class="k">Index</span>
+      <span class="d">Short notes on what changed, what it moved, and what a coordinated read
+        would have caught earlier.</span></a>
+  </div>
+</section>
+
+<section class="sec" id="the-driftwood-review">
+  <div class="sec-head">
+    <span class="sec-num">III</span>
+    <h2 class="sec-title">The Driftwood Review</h2>
+    <p class="sec-note">The quarterly. Long-form synthesis on a fixed structure — the flagship
+      publication, not a blog.</p>
+  </div>
+  <div class="flag">
+    <div class="body">
+      <div class="meta">Volume I<i>·</i>Number I<i>·</i>Third Quarter 2026</div>
+      <h3><a href="driftwood-review.html">A quarterly record of coordination decisions</a></h3>
+      <p>Seven divisions in the same order every issue: Lead Essay, Research Notes, Tax &amp;
+        Planning, Market Structure, Practice Updates, Reading List, Appendix. The structure does
+        not move, which is what makes a run of issues a record rather than a feed.</p>
+    </div>
+    <div class="art"><img src="img/plates/confluence.svg" alt="" aria-hidden="true"></div>
+  </div>
+</section>
+
+<section class="sec" id="decision-tools">
+  <div class="sec-head">
+    <span class="sec-num">IV</span>
+    <h2 class="sec-title">Decision Tools</h2>
+    <p class="sec-note">Interactive reviews you can run yourself, on your own numbers, without
+      speaking to anyone. Each one answers a single question end to end.</p>
+    <div class="band"><img src="img/plates/gradient.svg" alt="" aria-hidden="true"></div>
+  </div>
+  <div class="rows">
+    <a href="statemap.html"><span class="t">State Tax Atlas</span><span class="k">Tool</span>
+      <span class="d">What a household actually keeps, state by state, once every layer of tax is
+        applied rather than just the headline rate.</span></a>
+    <a href="leakage.html"><span class="t">Tax Diagnostic</span><span class="k">Tool</span>
+      <span class="d">Where a portfolio loses return to tax before it reaches the household, and
+        what is recoverable by structure alone.</span></a>
+    <a href="taxlab.html"><span class="t">After-Tax Review</span><span class="k">Tool</span>
+      <span class="d">The same portfolio measured after tax rather than before — the number the
+        household actually spends.</span></a>
+    <a href="concentration.html"><span class="t">Concentrated Position Navigator</span><span class="k">Tool</span>
+      <span class="d">How to unwind a large single-stock position: the routes available, what each
+        one costs, and the order they run in.</span></a>
+  </div>
+</section>
+
+<section class="sec" id="decision-library">
+  <div class="sec-head">
+    <span class="sec-num">V</span>
+    <h2 class="sec-title">Decision Library</h2>
+    <p class="sec-note">One decision, worked all the way through all seven systems. These are the
+      moments where coordination is worth the most, because the systems move together whether or
+      not anyone is watching them.</p>
+    <div class="band"><img src="img/plates/delta.svg" alt="" aria-hidden="true"></div>
+  </div>
+  <div class="rows">
+    <a href="case-business-sale.html"><span class="t">Sell a business</span><span class="k">Decision</span>
+      <span class="d">The year before the sale decides most of what the sale is worth.</span></a>
+    <a href="case-inheritance.html"><span class="t">Receive an inheritance</span><span class="k">Decision</span>
+      <span class="d">The money arrives all at once; the decisions it triggers do not.</span></a>
+    <a href="case-stock-options.html"><span class="t">Exercise stock options</span><span class="k">Decision</span>
+      <span class="d">Timing, tax character, and concentration are one decision, not three.</span></a>
+    <a href="case-moving-states.html"><span class="t">Move states</span><span class="k">Decision</span>
+      <span class="d">Changing the line on a return is the last step, not the first.</span></a>
+    <a href="case-rmds.html"><span class="t">Retire and start distributions</span><span class="k">Decision</span>
+      <span class="d">Which account the spending comes from, and in which order.</span></a>
+    <a href="case-widowed.html"><span class="t">Death of a spouse</span><span class="k">Decision</span>
+      <span class="d">Filing status, titling, and beneficiaries all change at once.</span></a>
+    <a href="case-vacation-home.html"><span class="t">Buy a second home</span><span class="k">Decision</span>
+      <span class="d">The purchase price is rarely the expensive part.</span></a>
+    <a href="case-charitable-giving.html"><span class="t">Give to what matters</span><span class="k">Decision</span>
+      <span class="d">What you give, from which account, and in which year.</span></a>
+  </div>
+</section>
+
+</main>
+
+<!--FIRM_ANCHOR-->
+
+<div class="foot">
+  Research &amp; illustrative modeling, not investment, tax, or legal advice. Driftwood Wealth is the
+  private-wealth practice of Alec Messino. Securities products and advisory services offered through
+  Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative
+  and Financial Advisor of PAS and a Financial Representative of The Guardian Life Insurance Company
+  of America® (Guardian), New York, NY. PAS is a wholly owned subsidiary of Guardian. Capitol Wealth
+  Strategies, LLC is not an affiliate or subsidiary of PAS or Guardian. All figures are illustrative
+  models for educational purposes, not investment, tax, or legal advice, and not a recommendation.
+  <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
+</div>
+
+</div>
 </body>
 </html>

@@ -157,7 +157,26 @@ would require inventing a dollar figure) dissolved when the dollar column was re
 review" — a resolved row now carries a close date rather than a captured amount, so the floor can be
 held without any un-derived number.
 
-**Stale sitemap entries (`src/drift/statepage.py::_CORE_SITEMAP`, found 2026-07-26, not yet fixed).**
+**Sitemap — audited and fixed 2026-07-31** (the 2026-07-26 backlog item below is now closed).
+Removed: `library.html`, `familyoffice.html` (deleted in `3caa0d6c`, 404 live), `howitworks.html`,
+`record.html` (noindex redirect stubs), and `states.html` (a sentinel that was only ever filtered out
+and replaced by the edition index — its presence made the list read as if the flat alias were being
+announced). Added: `insights.html`, `driftwood-review.html`, `commentary.html`,
+`coordination-framework.html`, `the-practice.html`, `the-record.html`, and the seven masthead
+destinations that were missing. `tests/test_drift_sitemap_core.py` now enforces the standing rule —
+**anything in the primary navigation is in the sitemap, and nothing in the sitemap is a redirect stub
+or noindex** — so the next Insights-shaped omission fails rather than ships.
+
+Two things that audit surfaced:
+- **`partners.html` was `noindex`** while sitting in the masthead on 51 pages, carrying a
+  self-referential canonical and a search-written description. Nothing documented the directive and
+  no test asserted it; it read as a leftover from when the page was a draft, and was removed.
+- **OPEN — `partners.html` and `cpa-collab.html` overlap.** "For CPAs, Attorneys & Advisors" and
+  "For CPAs & Estate Attorneys" are near-duplicates; the masthead links the first, the second is
+  reachable only by URL. Not resolved here (it is an IA call, not a bug): either fold `cpa-collab`
+  into `partners` with a redirect, or give them genuinely different jobs.
+
+**Stale sitemap entries (`src/drift/statepage.py::_CORE_SITEMAP`, found 2026-07-26, FIXED 2026-07-31 — see above).**
 Four problems, same root cause (the list wasn't updated as pages were added/retired):
 - `library.html`, `familyoffice.html` — 404 on the live site (deleted in `3caa0d6c`, predates the
   2026 redesign).
@@ -198,17 +217,88 @@ Regenerating: edit `src/drift/plates.py` → `python3 scripts/build_plates.py` �
 `python3 scripts/sync_docs.py`. The generator is deterministic (local LCG, no `random`, no clock), so
 a run with no source change leaves an empty diff; a surprise diff means the geometry moved.
 
-**OPEN — the Review is not yet in the site navigation (Phase 2 item, deliberate).** 50 source pages
-carry the `.dwnav--phase2` masthead; only `driftwood-review.html` links the Review, from its own copy
-of the dropdown. Propagating it is one line in `scripts/phase2_nav.py` (`("The Driftwood Review",
-"driftwood-review.html", "driftwood-review.html")` under *Insights & Research*) followed by
-`python3 scripts/phase2_nav.py && python3 scripts/sync_docs.py`. **It was not run, because it forces
-an IA decision that should be made deliberately:** *Insights & Research* already holds State Tax
-Atlas / Research / Articles / Commentary, and `articles.html` + `insights.html` are already redirect
-stubs pointing at `research.html`. Adding a fifth entry makes a crowded menu worse. The real question
-is whether the Review *absorbs* Commentary and Articles — a quarterly with a Commentary division is
-arguably where that content now belongs — leaving *Insights & Research* as Atlas / Research /
-The Driftwood Review. Until that is settled the page is reachable by direct link only.
+## Information architecture — settled 2026-07-31
+
+Decided from what Driftwood publishes in **three to five years**, not from what the repo contains
+today. That is the whole rationale, and it is why the menu does not mirror the file system.
+
+**Primary navigation is five families and two actions, and that is all:** Our Firm · Coordination ·
+Insights · Professionals · Client Access · Request a Coordination Review. Guarded by
+`tests/test_drift_insights_ia.py`, which fails if a sixth family appears on any page.
+
+**"Insights & Research" → "Insights".** *Research* is one division inside the set; it cannot also
+name the set that contains it. Once the practice publishes papers, commentary, a quarterly, decision
+memos and a shelf of interactive tools, "Research" is too narrow to be the label.
+
+**Inside Insights, five divisions, in this order:**
+
+| Division | Destination | What it holds |
+|---|---|---|
+| Research | `research.html` | papers, essays, the exhibits behind them |
+| Commentary | `commentary.html` | short notes, published when there's something to say |
+| The Driftwood Review | `driftwood-review.html` | the quarterly — the flagship |
+| Decision Tools | `insights.html#decision-tools` | State Tax Atlas · Tax Diagnostic · After-Tax Review · Concentrated Position Navigator |
+| Decision Library | `insights.html#decision-library` | eight worked household decisions |
+
+**"Articles" was retired from the navigation.** It named a *format*, not a subject, and formats do
+not deserve navigation. It also pointed at `insights.html`, which was a `noindex` redirect stub back
+to `research.html` — a sibling entry in the same menu — so the slot round-tripped the reader.
+`articles.html` still exists at its URL; it is simply not in the masthead.
+
+**`insights.html` is now the editorial landing page**, indexable, self-canonical, no longer a stub.
+Decision Tools and Decision Library are **sections on it** rather than separate pages: each is a list
+of links today, and two thin pages read worse than two populated sections. They graduate to
+standalone pages when they outgrow it — at which point the two masthead hrefs change from
+`insights.html#…` to the new files and `test_every_insights_entry_resolves_to_a_built_page` keeps
+the menu honest through the move.
+
+**"Coordination Library" → "Decision Library"** across all nine pages that used it. The old label
+linked to `research.html`, which has no library section on it — the shelf named a place that did not
+exist. The Research hub's own "Library" card also pointed at `research.html` (i.e. at itself); it now
+points at the shelf.
+
+**`concentration.html` is the Concentrated Position Navigator.** It previously had no product name —
+it was an article headline ("How to de-risk a concentrated stock position") filed under a "Research"
+eyebrow, so nothing was renamed; it was *named*. Note for future tools: the roadmap below uses
+"… Review", which collides with **Coordination Review**, the paid engagement and the site's primary
+CTA. Worth resolving before the second tool ships, or the free tools and the conversion event share
+a noun.
+
+**Decision Tools roadmap (NOT advertised on the site until built).** Business Exit Review · Equity
+Compensation Review · Relocation Review · Roth Conversion Review · Estate Readiness Review ·
+Household Balance Sheet Review. `test_the_tools_advertised_are_only_the_ones_that_exist` fails if any
+of these reaches the shelf before its page does.
+
+**Decision Library gaps.** The agreed roster names nine decisions; eight exist. **Divorce** and
+**business succession** have no case page and were not invented — the library lists only decisions
+that are actually worked through. `test_decision_library_lists_every_worked_decision` compares the
+shelf against `case-*.html` on disk, so adding either page will fail the test until it is listed.
+
+## The homepage lattice — the Brief-5 handoff README is superseded (2026-07-31)
+
+The Brief-5 design-handoff README specified a **static** lattice: no interaction, no hover, no
+animation, all twenty-one edges equal graphite. The implementation that emerged is interactive,
+carries derived two-tier edge weights, and publishes five decision traces. **The decision is to keep
+the implementation and treat that README as historical.** The difference is not cosmetic: the static
+version *illustrates* the claim "seven systems, no decision touches just one"; the live version
+*demonstrates* it — a visitor picks a decision and watches six systems move. Documentation follows
+the product.
+
+Canonical, and pinned in `tests/test_hub_lattice_decisions.py`:
+
+- **Seven systems.** No eighth node — K8 puts four diameters through the centre, straight through
+  the hub label.
+- **Five decision traces**, each touching ≥5 systems. The most important interaction on the page.
+- **Two-tier edges** — structural vs situational, *derived* from the published traces
+  (`tests/test_hub_lattice_weights.py`), not asserted. This is what makes the diagram read as
+  researched rather than drawn.
+- **Graphite rest state, one blue accent**, no second hue, tokens only (no hardcoded hex).
+- **Interaction retained** — explanatory, not decorative — and `prefers-reduced-motion` honoured.
+
+**One correction taken from the review: the hub reads COORDINATION, not GOVERNANCE.** Governance is
+the operating principle the practice runs *by*, not one of the things being coordinated; putting it
+at the centre of the systems diagram quietly promoted it to an eighth system. It keeps its own home
+in **Plate III, the Governance Register**, where it belongs as a standing process.
 
 ## Disaster recovery
 - **Lost/corrupt `tests/data/matrix_history.json`** → `TILT_SWEEP_REFRESH=1 python scripts/tilt_sweep.py`

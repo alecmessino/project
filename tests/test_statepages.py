@@ -72,7 +72,12 @@ def test_page_has_honest_inline_capture(code):
 
 def test_sitemap_lists_editioned_canonicals_not_flat_aliases():
     xml = SP.render_sitemap()
-    assert xml.count("<loc>") == len(SP._CORE_SITEMAP) + len(SP.STATE_PAGE_CODES)
+    # core + the edition index + one URL per state. This used to read `len(_CORE_SITEMAP) +
+    # len(STATE_PAGE_CODES)`, which only balanced because "states.html" sat in _CORE_SITEMAP purely
+    # to be filtered out and replaced by the edition index — the +1 and the -1 cancelled. That
+    # sentinel was removed on 2026-07-31 (it was never emitted and made the list read as if the
+    # flat alias were being announced), so the arithmetic is now stated plainly.
+    assert xml.count("<loc>") == len(SP._CORE_SITEMAP) + 1 + len(SP.STATE_PAGE_CODES)
     for code in SP.STATE_PAGE_CODES:
         assert SP.atlas_url(code) in xml, f"sitemap missing editioned {code}"
     assert SP.edition_url() in xml                              # the edition index (replaces states.html)

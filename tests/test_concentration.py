@@ -69,7 +69,13 @@ def test_template_renders_and_carries_compliance_framing():
     assert "/*__STATE__*/null/*__END__*/" not in html          # placeholder replaced
     assert '"strategies"' in html and '"axes"' in html          # dataset embedded
     t = CONCENTRATION_TEMPLATE.read_text()
-    assert "How to de-risk a concentrated stock position" in t
+    # The tool carries a product NAME as of 2026-07-31 — it is the Concentrated Position Navigator,
+    # one of the Decision Tools, not a loose how-to article filed under Research. The old headline
+    # ("How to de-risk a concentrated stock position") survives as the subject line beneath it, so
+    # this guard is retargeted rather than relaxed: both the name and the subject stay pinned.
+    assert "Concentrated Position Navigator" in t
+    assert "concentrated, low-basis" in t          # the subject, still stated in the first screen
+    assert "Decision Tools" in t                   # filed on the right shelf
     assert "Single asset risk" in t
     # not-advice + RIA identity
     assert "not tax, legal, or investment advice" in t

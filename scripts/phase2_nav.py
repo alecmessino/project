@@ -28,11 +28,24 @@ FAMILIES = [
         ("After-Tax Review", "taxlab.html", "taxlab.html"),
         ("Schedule a Coordination Review", "coordination-review.html", "coordination-review.html"),
     ]),
-    ("Insights & Research", [
-        ("State Tax Atlas", "statemap.html", "statemap.html"),
+    # "Insights", not "Insights & Research" (2026-07-31). The family is named for what it will hold
+    # in three to five years, not what it happens to hold today: papers, commentary, a quarterly
+    # publication, decision memos, and a growing shelf of interactive tools. "Research" is one of
+    # those things and cannot name the set.
+    #
+    # "Articles" was dropped outright. It named a FORMAT, not a subject, and formats do not deserve
+    # navigation — it also pointed at insights.html, which was a redirect stub back to research.html,
+    # so the menu carried an entry that round-tripped the reader to a sibling entry.
+    #
+    # Decision Tools and Decision Library are sections of the Insights landing page rather than
+    # separate stubs: each is currently a list of links, and two thin pages would be worse than two
+    # well-populated sections. They graduate to their own pages when they outgrow it (OPERATIONS.md).
+    ("Insights", [
         ("Research", "research.html", "research.html"),
-        ("Articles", "insights.html", "insights.html"),
         ("Commentary", "commentary.html", "commentary.html"),
+        ("The Driftwood Review", "driftwood-review.html", "driftwood-review.html"),
+        ("Decision Tools", "insights.html#decision-tools", "insights.html"),
+        ("Decision Library", "insights.html#decision-library", "insights.html"),
     ]),
     ("Professionals", [
         ("CPA Collaboration", "partners.html", "partners.html"),
@@ -54,10 +67,24 @@ CURRENT = {
     "leakage.html": ("Coordination", "leakage.html"),
     "taxlab.html": ("Coordination", "taxlab.html"),
     "coordination-review.html": ("Coordination", "coordination-review.html"),
-    "statemap.html": ("Insights & Research", "statemap.html"),
-    "research.html": ("Insights & Research", "research.html"),
-    "insights.html": ("Insights & Research", "insights.html"),
-    "commentary.html": ("Insights & Research", "commentary.html"),
+    "research.html": ("Insights", "research.html"),
+    "insights.html": ("Insights", "insights.html"),
+    "commentary.html": ("Insights", "commentary.html"),
+    "driftwood-review.html": ("Insights", "driftwood-review.html"),
+    # Decision Tools — these have no menu entry of their own (the menu names the category, the
+    # landing page enumerates the tools), so they mark the Insights family and the category row.
+    "statemap.html": ("Insights", "insights.html"),
+    "concentration.html": ("Insights", "insights.html"),
+    # Decision Library — the worked decisions. Same rule: the family lights up, the category row
+    # lights up, and the reader can see where in the site they are standing.
+    "case-business-sale.html": ("Insights", "insights.html"),
+    "case-vacation-home.html": ("Insights", "insights.html"),
+    "case-inheritance.html": ("Insights", "insights.html"),
+    "case-moving-states.html": ("Insights", "insights.html"),
+    "case-stock-options.html": ("Insights", "insights.html"),
+    "case-rmds.html": ("Insights", "insights.html"),
+    "case-widowed.html": ("Insights", "insights.html"),
+    "case-charitable-giving.html": ("Insights", "insights.html"),
     "partners.html": ("Professionals", "partners.html"),
     "estate-attorneys.html": ("Professionals", "estate-attorneys.html"),
     "referral.html": ("Professionals", "referral.html"),

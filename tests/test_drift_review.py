@@ -175,8 +175,13 @@ def test_the_homepage_lattice_does_not_bleed_into_the_review():
     """The seven-node lattice is a claim about one household's systems moving together. Tiled
     behind editorial cards it would become decoration and stop being an argument."""
     t = _src()
-    for marker in ('class="net', "net--structural", "net--rim", 'class="sysstage', 'class="node',
-                   "GOVERNANCE"):
+    # Markers are read from the homepage itself so this cannot rot into checking for a string that
+    # no longer exists there — the hub label went GOVERNANCE -> COORDINATION on 2026-07-31, and a
+    # hardcoded "GOVERNANCE" check would have silently kept passing while guarding nothing.
+    hub = (WEB / "hub.html").read_text(encoding="utf-8")
+    for marker in ('class="net', "net--structural", "net--rim", 'class="sysstage', 'class="node"',
+                   "TRIG"):
+        assert marker in hub, f"{marker!r} is no longer a homepage lattice marker — update this test"
         assert marker not in t, f"homepage lattice markup leaked onto the Review: {marker!r}"
 
 

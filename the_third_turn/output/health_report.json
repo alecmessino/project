@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-31T01:34:08+00:00",
+  "generated": "2026-07-31T01:49:32+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 442872,
+    "rows": 443175,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 157703,
-      "live_total": 49619,
-      "live_today": 384,
-      "last_row_age_min": 0.2
+      "rows_total": 157865,
+      "live_total": 49701,
+      "live_today": 466,
+      "last_row_age_min": 0.3
     },
     "fanduel": {
-      "rows_total": 285163,
-      "live_total": 56799,
-      "live_today": 400,
-      "last_row_age_min": 0.2
+      "rows_total": 285304,
+      "live_total": 56872,
+      "live_today": 473,
+      "last_row_age_min": 0.3
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 35709.1
+      "last_row_age_min": 35724.5
     }
   },
   "books_reporting_live": [
@@ -37,19 +37,19 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 49619,
-    "OPEN": 52144,
-    "SUSPENDED": 4403,
-    "REMOVED": 252
+    "unset": 49701,
+    "OPEN": 52211,
+    "SUSPENDED": 4407,
+    "REMOVED": 254
   },
   "overlap": {
-    "simultaneous_pairs_total": 58437,
-    "simultaneous_pairs_today": 400,
-    "overlap_games": 109,
+    "simultaneous_pairs_total": 58508,
+    "simultaneous_pairs_today": 471,
+    "overlap_games": 110,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
-      "0_books": 17,
-      "2_books": 109
+      "0_books": 16,
+      "2_books": 110
     }
   },
   "fix_verification": {
@@ -86,14 +86,14 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 58437,
+        "current": 58508,
         "target": 2000,
         "pass": true,
         "progress": 1.0
       },
       {
         "criterion": "games with live overlap",
-        "current": 109,
+        "current": 110,
         "target": 100,
         "pass": true,
         "progress": 1.0

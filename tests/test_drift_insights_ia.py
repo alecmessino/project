@@ -416,3 +416,49 @@ def test_the_nav_wraps_its_families_in_the_mobile_disclosure_hook():
     for page in ("leakage.html", "score.html", "insights.html"):
         assert 'class="dwnav-links"' in (DOCS / page).read_text(encoding="utf-8"), \
             f"docs/{page} ships a masthead with no mobile disclosure hook"
+
+
+def test_the_collapsed_mobile_masthead_hides_the_index():
+    """The follow-up bug, and the assertion the first fix was missing.
+
+    Emitting .dwnav-links got the hamburger injected, but the index stayed on screen beside it: the
+    generic `.dwnav--menu .dwnav-links{display:none}` collapse rule is overridden by
+    `.dwnav--phase2 .dwnav-links{display:flex}`, which is declared unconditionally further down the
+    stylesheet — identical specificity, later in the cascade. The result was the worst of both
+    states: four family headers AND a hamburger, with the headers inert, because opening a panel
+    needs .dwnav--open and only the hamburger sets it.
+
+    The first fix passed its own checks because they measured nav HEIGHT (still one row, 85px) and
+    the presence of the toggle. Neither notices that the families never went away. This asserts the
+    collapse itself.
+
+    A stylesheet test rather than a rendered one: the repo has no browser harness in CI, and the
+    failure is a pure cascade question that reads honestly in the CSS text.
+    """
+    css = (WEB / "driftwood.css").read_text(encoding="utf-8")
+
+    def in_mobile_media_query(selector: str) -> bool:
+        """The rule must live under max-width:1199px — unconditionally it would break desktop.
+        There are several such blocks, so anchor on the nearest @media above the selector."""
+        i = css.find(selector)
+        if i == -1:
+            return False
+        opened = css.rfind("@media", 0, i)
+        return opened != -1 and "max-width:1199px" in css[opened:css.find("{", opened)]
+
+    collapse = ".dwnav--phase2.dwnav--menu .dwnav-links{ display:none; }"
+    reveal = ".dwnav--phase2.dwnav--menu.dwnav--open .dwnav-links{"
+    assert in_mobile_media_query(collapse), (
+        "the collapsed mobile masthead does not hide the index — the four family headers will "
+        "render next to the hamburger, and they do nothing when tapped"
+    )
+    assert in_mobile_media_query(reveal), "nothing re-shows the index when the menu opens"
+    # Both selectors must out-specify `.dwnav--phase2 .dwnav-links` (two classes) so they win on
+    # specificity rather than on source order, which is what broke the generic rule.
+    for sel in (".dwnav--phase2.dwnav--menu .dwnav-links",
+                ".dwnav--phase2.dwnav--menu.dwnav--open .dwnav-links"):
+        classes = sel.count(".")          # every class token starts with a dot; there are no ids
+        assert classes >= 3, (
+            f"{sel} carries {classes} classes and cannot out-specify the two-class "
+            ".dwnav--phase2 .dwnav-links, so it would depend on source order"
+        )

@@ -362,8 +362,21 @@
      Every situational edge is now drawn at one calm weight. The two tiers still differ clearly
      (accent + 1.3px vs graphite hairline), so the derived structural claim survives, but the figure
      is complete: seven systems, twenty-one dependencies, nothing floating. */
-  .sysstage.seeded .net{opacity:.3;stroke:var(--ghost-line);stroke-width:.6;transition:none}
-  .sysstage.seeded .net--structural{stroke:var(--accent-strike);stroke-width:1.3;opacity:.62;transition:none}
+  .sysstage.seeded .net{opacity:.4;stroke:var(--ghost-line);stroke-width:.6;transition:none}
+  /* GRAPHITE, NOT BLUE, AT REST.
+     The structural six were painted in the accent. That was the third and subtlest version of the
+     same bug: the underlying figure is a geometrically exact heptagon (radius 175.1–175.4, angular
+     gaps 51.3–51.5° against an ideal 51.4°), but the six accented edges connect only nodes 0,1,2,3
+     — which sit at 270°, 321°, 12° and 115°, three clustered right and one far lower-left. So the
+     colour drew a bold, lopsided quadrilateral ON TOP of the regular seven-point web, and that
+     quadrilateral is what the eye read: four emphasised nodes plus the hub label, i.e. a figure that
+     looks like five things in an odd shape. All twenty-one edges were present and visible the whole
+     time; the weighting was fighting the geometry.
+     Both tiers are graphite now and differ by weight alone, so the heptagon reads as one object and
+     the derived structural claim survives as emphasis rather than as a competing shape. The accent
+     is spent where it earns attention — on a traced decision — which is also what makes a trace
+     feel like something happening rather than a recolouring. */
+  .sysstage.seeded .net--structural{stroke:var(--dim);stroke-width:1.2;opacity:.58;transition:none}
   .sysstage.seeded .node .dot{fill:var(--ink)}
   .sysstage.seeded .node .lbl{fill:var(--ink);font-weight:700}
   .node:focus{outline:none}

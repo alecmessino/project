@@ -87,18 +87,31 @@ def test_the_two_tier_edge_weights_survive():
     assert len(re.findall(r'<line class="[^"]*net[^"]*"', t)) == 21
 
 
-def test_the_rest_state_is_graphite_with_a_single_blue_accent():
-    """No second accent colour. The blue budget is spent on the flow/trace only."""
+def test_the_rest_state_is_entirely_graphite():
+    """The diagram at rest carries no accent at all — the accent belongs to the demonstration.
+
+    This guard used to REQUIRE the accent in the rest state, which is how the lattice ended up with
+    six blue edges painting a four-node shape across a seven-node figure. Reserving the colour for a
+    traced decision does two things at once: the resting web reads as one object, and a trace reads
+    as something happening rather than as a recolouring of what was already there.
+    """
     t = _src()
-    stage = re.search(r"\.sysstage\.seeded[^}]*\}(?:[^.]|\.(?!sysstage))*", t, re.S)
-    assert stage, "the seeded rest state is missing"
-    block = re.search(r"(\.sysstage\.seeded.*?)\n\n", t, re.S)
-    assert block
-    # the rest state paints with the accent + the ghost line, and introduces no new hue
-    assert "--accent-strike" in block.group(1)
-    assert "--ghost-line" in block.group(1)
-    hexes = set(re.findall(r"#[0-9a-fA-F]{6}", block.group(1)))
+    rules = re.findall(r"\.sysstage\.seeded [^{]*\{[^}]*\}", t)
+    assert rules, "the seeded rest state is missing"
+    for rule in rules:
+        assert "--accent-strike" not in rule, f"the accent is back in the rest state: {rule[:90]}"
+    joined = "".join(rules)
+    assert "--ghost-line" in joined and "--dim" in joined, "the rest state lost its graphite tokens"
+    hexes = set(re.findall(r"#[0-9a-fA-F]{6}", joined))
     assert not hexes, f"the rest state hardcodes colour instead of using tokens: {hexes}"
+
+
+def test_the_accent_is_still_used_by_the_traces():
+    """Reserved, not removed. A traced decision is where the one colour is spent."""
+    t = _src()
+    trace = re.search(r"\.trace\{([^}]*)\}", t)
+    assert trace and "--accent-strike" in trace.group(1), \
+        "the trace overlay lost the accent, so a decision no longer reads as an event"
 
 
 def test_reduced_motion_is_respected():
@@ -146,7 +159,12 @@ def test_the_two_tiers_are_still_clearly_different():
     bw = float(re.search(r"stroke-width:\s*([\d.]+)", base).group(1))
     sw = float(re.search(r"stroke-width:\s*([\d.]+)", stru).group(1))
     assert sw >= bw * 1.8, f"structural {sw} vs situational {bw} — the tiers are not distinguishable"
-    assert "--accent-strike" in stru and "--ghost-line" in base
+    # Weight, not colour. Painting the structural six in the accent drew a lopsided quadrilateral
+    # over a regular heptagon and that shape became the figure — see the rest-state comment in
+    # hub.html. Both tiers are graphite tokens; neither may reach for the accent.
+    for block, name in ((base, "situational"), (stru, "structural")):
+        assert "--accent-strike" not in block, f"the {name} tier is painted in the accent at rest"
+        assert "var(--" in block, f"the {name} tier hardcodes a colour instead of using a token"
 
 
 # ── the headline claim is derived, not asserted ───────────────────────────────────────────────

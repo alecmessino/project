@@ -334,25 +334,18 @@ def test_the_caption_decodes_the_spokes_it_now_describes():
     assert "move in all of them" not in body, "the caption still decodes the retired encoding"
 
 
-def test_the_survey_rail_carries_one_finding_not_three():
-    """Two of the three restated the paragraph above it.
+def test_the_survey_rail_is_gone():
+    """The band is retired, not trimmed again.
 
-    "Nothing falls through / every open matter has a named owner" and "One record / every adviser
-    works from the same one" are the paragraph's own claims in fewer words — the seams, and the
-    single party responsible for them. Only "Open until finished / not until the meeting ends" says
-    something the paragraph did not: how long a decision stays open, which is a promise a prospect
-    has not been made before.
+    It carried three "survey findings" above the lattice. Two restated the hero paragraph outright
+    (the seams, and the single party responsible for them); cutting to the one that did not —
+    "Open until finished / not until the meeting ends" — left a single line of furniture between
+    the CTA and the diagram, which is vertical noise in the one place the page wants clean margin.
+    The diagram now anchors the upper half with empty space above it.
     """
     t = _src()
-    rail = re.search(r'<div class="rail[^"]*">(.*?)</div>\s*<div class="sysband"', t, re.S)
-    assert rail, "the survey rail is gone or no longer sits above the lattice"
-    body = rail.group(1)
-    findings = re.findall(r'<span class="mono rk">([^<]+)</span>', body)
-    assert findings == ["Open until finished"], (
-        f"the rail is back to restating the paragraph: {findings}"
-    )
-    # A lone cell in the three-column grid would read as two things that failed to load.
-    assert 'class="rail rail--one"' in t, "the single-finding rail keeps the three-column grid"
+    assert 'class="rail' not in t, "the survey rail is back above the lattice"
+    assert "Not until the meeting ends" not in t, "the rail's copy is back"
 
 
 def test_the_booking_cta_is_never_decorated_with_household_parameters():

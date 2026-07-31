@@ -151,32 +151,14 @@
   /* ── The survey rail: three measured facts between the hero and the engine, written as survey
      findings rather than statistics ("Seven, none independent", not "7 systems"). A calibration tick
      rail rides the top edge, major every 96px, minor every 24px. The only tick rail on the page. ── */
-  .rail{position:relative;padding:34px 52px 32px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-    display:grid;grid-template-columns:repeat(3,1fr);gap:48px}
-  .rail::before{content:"";position:absolute;left:0;right:0;top:0;height:7px;pointer-events:none;
-    background-image:repeating-linear-gradient(90deg,rgba(30,40,51,.28) 0 1px,transparent 1px 96px),
-                     repeating-linear-gradient(90deg,rgba(30,40,51,.18) 0 1px,transparent 1px 24px);
-    background-size:96px 7px,24px 4px;background-repeat:repeat-x}
   /* .mono carries a 55% alpha and this rule used to multiply another opacity:.5 on top of it —
      an effective 27.5% ink, about 1.6:1 on cream, at 10px. The labels were not faint, they were
      illegible. Set solid, sized and weighted to be read. */
-  .rail .rk{display:block;margin-bottom:9px;opacity:1;color:var(--dim);
-    font-size:11px;font-weight:700;letter-spacing:.16em}
-  .rail .rv{font-family:var(--serif);font-size:22px;line-height:1.25;color:var(--ink);margin:0}
-  /* Down to one finding: a lone cell in a three-column grid would sit in a third of the measure
-     with two empty tracks beside it, reading as two things that failed to load. One column, and
-     the label sits inline with the finding so the band stays a rule-bounded line rather than
-     becoming a stack. */
-  .rail--one{grid-template-columns:1fr;padding-top:26px;padding-bottom:24px}
-  .rail--one > div{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
-  .rail--one .rk{margin-bottom:0;flex:none}
-  @media(max-width:760px){.rail{grid-template-columns:1fr;gap:22px;padding:28px 22px 26px}
-    .rail--one > div{gap:6px 14px}}
 
   /* ── The colophon. Not a footer: the last page of a publication. The wide gap between the identity
      block and the index row is load-bearing, it is what stops the eye reading those links as nav. ── */
   .colophon{padding:76px 52px 0;text-align:center}
-  .colophon .cw{font-family:var(--serif);font-size:20px;color:var(--ink);margin:0 0 14px}
+  .colophon .cw{font-family:var(--serif);font-size:20px;color:var(--ink);margin:0 auto 14px}
   .colophon .cindex{display:flex;justify-content:center;flex-wrap:wrap;gap:14px 44px;margin:76px 0 0}
   .colophon .cindex a{font:400 12px/2 var(--sans);letter-spacing:.02em;color:rgba(30,40,51,.72);text-decoration:none}
   .colophon .cindex a:hover{color:var(--ink)}
@@ -240,24 +222,28 @@
      register is stored rather than what it is like to have one. Each matter is now a thing being
      carried: what it is, who has it, what it touches, when it is next looked at. Same eight
      entries, same data, different question answered. */
-  .reg-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:1px;
+  /* Three across, two down. auto-fill packed six cards into whatever fitted — four then two at
+     desktop width, a ragged last row — and 268px minimums made each one a widget. An explicit
+     3x2 with real padding reads as a ledger. */
+  .reg-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
     background:var(--line2);border:1px solid var(--line2);margin:30px 0 0}
-  .rc{background:var(--bg);padding:22px 22px 20px;display:flex;flex-direction:column}
+  .rc{background:var(--bg);padding:34px 32px 30px;display:flex;flex-direction:column}
   .reg.seeded .rc{opacity:0;transform:translateY(7px)}
   .reg.seeded.in .rc{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease;
     transition-delay:calc(var(--i) * 65ms)}
-  .rc-t{font-family:var(--serif);font-weight:400;font-size:19px;line-height:1.22;color:var(--ink);
+  .rc-t{font-family:var(--serif);font-weight:400;font-size:23px;line-height:1.2;color:var(--ink);
     margin:0 0 15px;letter-spacing:-.008em}
-  .rc-d{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;margin:0 0 18px}
-  .rc-d dt{font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.16em;
+  .rc-d{display:grid;grid-template-columns:auto minmax(0,1fr);gap:9px 18px;margin:0 0 22px}
+  .rc-d dt{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.16em;
     text-transform:uppercase;color:var(--ghost-line);padding-top:2px}
-  .rc-d dd{margin:0;font-family:var(--sans);font-size:13.5px;line-height:1.45;color:var(--body)}
+  .rc-d dd{margin:0;font-family:var(--sans);font-size:15px;line-height:1.5;color:var(--body)}
   .rc-s{margin:auto 0 0}
   /* a resolved matter stays on the record rather than disappearing — it is the most trust-building
      row type on the page, so it is quieted, never removed */
   .rc--done{background:var(--soft)}
   .rc--done .rc-t{color:var(--dim)}
-  @media(max-width:620px){ .reg-cards{grid-template-columns:1fr} .rc{padding:18px 18px 16px} }
+  @media(max-width:980px){ .reg-cards{grid-template-columns:repeat(2,1fr)} .rc{padding:26px 24px 22px} }
+  @media(max-width:620px){ .reg-cards{grid-template-columns:1fr} .rc{padding:22px 20px 18px} }
   .reg-foot{display:flex;justify-content:space-between;align-items:baseline;gap:16px 26px;flex-wrap:wrap;margin-top:16px}
   .reg-note{font-family:var(--sans);font-size:11.5px;line-height:1.55;color:var(--muted);margin:0;max-width:62ch}
   .reg-go{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--accent-strike);text-decoration:none;white-space:nowrap}
@@ -428,7 +414,7 @@
   /* The instrument's control label. The diagram needed an affordance, not a headline: a small-caps
      utility label sitting on the picker reads as operable without a sentence trying to sell the
      interaction, and it leaves the heading free to say something true. Same register as the page's
-     other utility labels (.reg-lead, .rail .rk) so it reads as apparatus, not as copy. It is also
+     other utility labels (.reg-lead, .rc-d dt) so it reads as apparatus, not as copy. It is also
      the group's accessible name via aria-labelledby, so what a screen reader announces and what the
      eye sees are the same string. */
   .trig-lab{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.2em;
@@ -622,15 +608,6 @@
     <!-- ── GALLERY II · THE SYSTEM (Plate I), the machine first: seven systems in one lattice;
          hovering a system teaches what it moves, and tracing a common decision lights everything it
          touches. The whole argument is visible before a single paragraph. ── -->
-
-    <!-- One finding, not three. "Nothing falls through / every open matter has a named owner" and
-         "One record / every adviser works from the same one" both restated the paragraph above —
-         the seams, and the single party responsible for them. This is the only one of the three
-         that says something the paragraph did not: it names how long a decision stays open, which
-         is the part a prospect has never been promised before. -->
-    <div class="rail rail--one">
-      <div><span class="mono rk">Open until finished</span><p class="rv">Not until the meeting ends</p></div>
-    </div>
     <div class="sysband" id="thesystem">
       <div class="sysband-in">
         <!-- No heading. The instrument is labelled (see .trig-lab, SELECT A DECISION) and a

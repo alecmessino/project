@@ -106,24 +106,6 @@
     .hero-aside{margin-top:28px;padding-left:20px;max-width:56ch}
     .hero .ctas{margin-top:32px}
   }
-  /* Editorial data footnote, a bracketed superscript that opens a dark margin note. */
-  .fn{line-height:0}
-  /* A 10.5px superscript with a hairline under it was invisible as a control: a reader reported a
-     "[1] with no footnote attached", meaning the note opens on click but nothing says so. Give it
-     the affordance of a real button — a boxed chip, a hit area that clears the 44px touch minimum
-     via padding on the parent line, and an explicit open/close state — so the note is discoverable
-     rather than a reward for guessing. */
-  .fn-btn{font-family:var(--sans);font-size:10px;font-weight:700;color:var(--accent-strike);
-    background:var(--soft);border:1px solid var(--accent-strike-soft);cursor:pointer;
-    padding:2px 6px;margin-left:5px;letter-spacing:.04em;vertical-align:2px;line-height:1.5;
-    transition:background-color .15s ease,color .15s ease,border-color .15s ease}
-  .fn-btn::after{content:" source";letter-spacing:.08em}
-  .fn-btn[aria-expanded="true"]::after{content:" hide"}
-  .fn-btn:hover{color:#f4f1ea;background:var(--accent-strike);border-color:var(--accent-strike)}
-  .fn-btn:focus-visible{outline:2px solid var(--accent-strike);outline-offset:2px}
-  .fn-note{margin-top:20px;background:var(--navy);color:var(--on-dark);font-family:var(--sans);
-    font-size:12.5px;line-height:1.62;padding:15px 17px;max-width:46ch}
-  .fn-note b{color:var(--on-dark-strong);font-weight:700}
   .ctas{display:flex;gap:12px 20px;flex-wrap:wrap;align-items:center}
   /* the qualifier does more trust work than a third paragraph would: it removes the reader's main
      objection to booking (being sold to) in six words, so it sits with the action, not in the prose. */
@@ -155,13 +137,6 @@
 
   /* 1 · The registration cross. One recurring artifact, same coordinates in every plate, the way a
      printed plate carries its own alignment mark. Never a second motif. */
-  .regmark{position:absolute;top:26px;left:26px;width:13px;height:13px;opacity:.4;pointer-events:none;z-index:2}
-  .regmark::before,.regmark::after{content:"";position:absolute;background:var(--ink)}
-  .regmark::before{left:6px;top:0;width:1px;height:13px}
-  .regmark::after{top:6px;left:0;height:1px;width:13px}
-  .regmark i{position:absolute;inset:3.5px;border:1px solid var(--ink);border-radius:50%;display:block}
-  .on-ink .regmark::before,.on-ink .regmark::after{background:var(--on-dark-strong)}
-  .on-ink .regmark i{border-color:var(--on-dark-strong)}
 
   /* 2 · Metadata registers. Mono for measured facts, .prov for plate provenance lines. */
   .mono{font:400 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.2em;text-transform:uppercase;color:rgba(30,40,51,.55)}
@@ -625,7 +600,6 @@
          already answered; the method sheet moved to the-practice.html, where "how the work runs" is
          the page's actual subject. Length was never the problem; duplicate questions were. ── -->
     <header class="hero">
-      <span class="regmark" aria-hidden="true"><i></i></span>
       <img class="splate splot" src="img/survey-plate-hero.svg" alt="" aria-hidden="true">
       <div class="hero-grid">
         <h1><span>Uncoordinated decisions</span> <span>leak what you keep.</span></h1>
@@ -633,12 +607,7 @@
           <p class="lede">Affluent households rarely lack investment options. They lack a single party
             responsible for the seams: the tax consequence of a rebalance, the estate consequence of a
             title, the entity consequence of a move across state
-            lines.<sup class="fn"><button class="fn-btn" id="fn1btn" aria-expanded="false" aria-controls="fn1">[1]</button></sup></p>
-          <aside class="fn-note" id="fn1" hidden="">
-            <b>[1]</b>&nbsp; One example from the Atlas: Illinois exempts an estate only to $4M, far below the
-            federal ~$15M, so a single titling or residency decision can move income, estate, and filing
-            outcomes at once. Illustrative, not advice.
-          </aside>
+            lines.</p>
           <p class="lede2-note">Driftwood is that party. We do not replace your CPA or your counsel. We
             convene them, hold the register of open decisions, and read the whole <b>after-tax system</b> as
             one, so the second-order effects are chosen rather than inherited.</p>
@@ -663,7 +632,6 @@
       <div><span class="mono rk">Open until finished</span><p class="rv">Not until the meeting ends</p></div>
     </div>
     <div class="sysband" id="thesystem">
-      <span class="regmark" aria-hidden="true"><i></i></span>
       <div class="sysband-in">
         <!-- No heading. The instrument is labelled (see .trig-lab, SELECT A DECISION) and a
              labelled instrument does not need a sentence introducing it. Everything tried in
@@ -768,7 +736,6 @@
          it proves the matter is *carried*, which is the actual claim, and it needs no model to stand
          behind it. Two of eight rows are resolved-and-dated (25%), the floor set in OPERATIONS.md. ── -->
     <div class="sec gal" id="governance">
-      <span class="regmark" aria-hidden="true"><i></i></span>
       <div class="reg seeded" id="register">
         <div class="reg-head">
           <p class="reg-lead">Between reviews, nothing is idle.</p>
@@ -852,7 +819,6 @@
          now sits in the founder's voice rather than as free-floating copy — attributed conviction
          reads as a person taking a position, which is what the sentence is actually doing. ── -->
     <div class="sec close-conv on-ink" id="conversation">
-      <span class="regmark" aria-hidden="true"><i></i></span>
       <p class="conv">Begin with a review, not a proposal.</p>
       <p class="review-scope">We inventory what exists, name what is uncoordinated, and hand you the
         register. If there is nothing worth coordinating, we will tell you that.</p>
@@ -1242,16 +1208,6 @@ window.__STATE__ = {"header": {"generated": "2026-07-30 23:20:04 UTC"}, "hero": 
   fitHub();
 })();
 
-// Gallery I, the data footnote: a bracketed superscript opens a dark margin note.
-(function(){
-  var btn = document.getElementById("fn1btn"), note = document.getElementById("fn1");
-  if(!btn || !note) return;
-  btn.addEventListener("click", function(){
-    var open = note.hasAttribute("hidden");
-    if(open){ note.removeAttribute("hidden"); } else { note.setAttribute("hidden",""); }
-    btn.setAttribute("aria-expanded", String(open));
-  });
-})();
 
 // Gallery III, the six conditions fade in (opacity only, no transform) as the ledger first scrolls into
 // view (once), a staggered fade that stays consistent with the now-static plate above (which bans

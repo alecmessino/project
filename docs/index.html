@@ -202,9 +202,6 @@
      block and the index row is load-bearing, it is what stops the eye reading those links as nav. ── */
   .colophon{padding:76px 52px 0;text-align:center}
   .colophon .cw{font-family:var(--serif);font-size:20px;color:var(--ink);margin:0 0 14px}
-  .colophon .cprov{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 22px;margin:0}
-  .colophon .cprov span{font:400 9.5px/2.35 ui-monospace,Menlo,monospace;letter-spacing:.26em;
-    text-transform:uppercase;color:rgba(30,40,51,.38)}
   .colophon .cindex{display:flex;justify-content:center;flex-wrap:wrap;gap:14px 44px;margin:76px 0 0}
   .colophon .cindex a{font:400 12px/2 var(--sans);letter-spacing:.02em;color:rgba(30,40,51,.72);text-decoration:none}
   .colophon .cindex a:hover{color:var(--ink)}
@@ -215,7 +212,7 @@
      driftwood.css for the homepage specifically; Erode is already committed and self-hosted, so no
      new font is loaded. ── */
   .hero h1{font-family:var(--serif);font-weight:400;letter-spacing:-.024em}
-  .sb-h,.reg-h,.close-conv .conv{font-family:var(--serif);font-weight:400}
+  .reg-h,.close-conv .conv{font-family:var(--serif);font-weight:400}
 
   /* The folio "Plate I · The Constraint" labels were removed 2026-07-31 along with their CSS. They
      were an exhibition-label device that named the page's own structure — information the reader
@@ -313,7 +310,6 @@
      transitions only, no motion, no scale, no spring. Teach through interaction, not paragraphs. */
   .sysband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:30px 52px 38px;margin:0;position:relative}
   .sysband-in{max-width:680px;margin:0 auto;text-align:center}
-  .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.4vw + 15px,40px);line-height:1.12;letter-spacing:-.022em;color:var(--ink);margin:0 auto;max-width:20ch}
   .sysstage{margin:16px auto 0;max-width:590px;opacity:1}
   /* NO SURVEY PLATE BEHIND THE LATTICE (removed 2026-07-31).
      A hydrographic stipple engraving used to sit here at 5% opacity as "ground texture". It was
@@ -507,6 +503,12 @@
   .founder-tag .ft-name{font-family:var(--sans);font-weight:700;font-size:14px;letter-spacing:-.005em;color:var(--ink)}
   .founder-tag .ft-cred{font-family:var(--sans);font-weight:700;font-size:9.5px;letter-spacing:.16em;
     text-transform:uppercase;color:var(--muted)}
+  .founder-tag .ft-bio{font-family:var(--sans);font-size:13px;line-height:1.62;color:var(--dim);
+    margin-top:6px;max-width:60ch}
+  .founder-tag .ft-bio + .ft-say{margin-top:12px;padding-top:11px;border-top:1px solid var(--line2)}
+  /* The block is a paragraph now, not a one-line caption, so the photo aligns to the top of the
+     text rather than to its centre. */
+  .founder-tag{align-items:flex-start}
   .founder-tag .ft-say{font-family:var(--serif);font-style:italic;font-size:14px;line-height:1.5;color:var(--dim);margin-top:2px;max-width:52ch}
   @media(max-width:620px){.close-conv{padding:64px 22px 56px}.review-cta{display:flex}
     .founder-tag{gap:14px}.founder-tag .ft-photo{width:56px;height:56px}}
@@ -527,6 +529,8 @@
   .close-conv.on-ink .founder-tag{border-top-color:rgba(169,194,214,.28)}
   .close-conv.on-ink .ft-name{color:var(--on-dark-strong)}
   .close-conv.on-ink .ft-cred{color:var(--gold)}
+  .close-conv.on-ink .ft-bio{color:var(--accent-strike-soft)}
+  .close-conv.on-ink .ft-bio + .ft-say{border-top-color:rgba(169,194,214,.28)}
   .close-conv.on-ink .ft-say{color:var(--on-dark-dim)}
   .close-conv.on-ink .ft-photo{border-color:rgba(169,194,214,.3);filter:grayscale(1) contrast(1.04)}
   /* the deliverable line: what the review physically hands over, held apart by a rule */
@@ -558,8 +562,7 @@
     .hero-grid{gap:0 44px}
     .sysstage{max-width:780px}
     .sysband-in{max-width:880px}
-    .sb-h{font-size:clamp(34px,1.6vw + 22px,48px)}
-  }
+    }
   @media(min-width:1560px){
     
     .sysstage{max-width:880px}
@@ -662,21 +665,13 @@
     <div class="sysband" id="thesystem">
       <span class="regmark" aria-hidden="true"><i></i></span>
       <div class="sysband-in">
-        <!-- Two jobs, kept apart.
-             (1) THE HEADING states something true and specific. It used to close the argument again
-             ("Every important decision creates consequences you can't see yet. / Driftwood maps them
-             before they become expensive.") — the headline in different words, after the CTA, which
-             made four passes at one thesis before a first scroll. A replacement that pointed at the
-             diagram ("Trace a decision. Watch what it moves.") was worse in a quieter way: two
-             stacked imperatives is product-tour register, not the voice of the paragraph three
-             inches above, and "what it moves" names nothing where the seams paragraph names a
-             rebalance, a title, a state line.
-             (2) THE AFFORDANCE is a control label on the picker below, not a sentence selling the
-             interaction. See .trig-lab.
-             The number is derived, not chosen: the five published traces touch 7, 7, 6, 6 and 6
-             systems, so "at least six" is the strongest true form. A guard re-derives it from the
-             trace sets and fails if a trace is edited without the sentence following. -->
-        <h2 class="sb-h">Every decision here touches at least six systems. Most households plan for one.</h2>
+        <!-- No heading. The instrument is labelled (see .trig-lab, SELECT A DECISION) and a
+             labelled instrument does not need a sentence introducing it. Everything tried in
+             this slot either re-closed the hero ("consequences you can't see yet" = the
+             headline in different words) or behaved like a control label in headline register
+             ("Trace a decision. Watch what it moves."). The claim it briefly made about six
+             systems is already made better by the traces themselves, each of which states its
+             own count at the moment the diagram proves it. -->
         <div class="sysstage seeded" id="sysDiagram">
           <svg viewBox="0 0 640 546" role="group" aria-label="Seven financial systems, Investments, Taxes, Cash Flow, Estate and legacy, Risk and protection, Business Ownership and account structure, and Family / Purpose, in one coordinated network. Tap a system to see what it moves; what you keep is the result.">
             <!-- the lattice: every system connected to every other (near-silent at rest) -->
@@ -811,24 +806,6 @@
             <p class="rc-s"><span class="st st-mon">Monitoring</span></p>
           </article>
           <article class="rc" style="--i:3">
-            <h3 class="rc-t">QSBS eligibility</h3>
-            <dl class="rc-d">
-              <dt>Owner</dt><dd>Assigned at review</dd>
-              <dt>Touches</dt><dd>Taxes · Estate</dd>
-              <dt>Next decision</dt><dd>At exit</dd>
-            </dl>
-            <p class="rc-s"><span class="st st-time">Time-sensitive</span></p>
-          </article>
-          <article class="rc" style="--i:4">
-            <h3 class="rc-t">Charitable gifting sequence</h3>
-            <dl class="rc-d">
-              <dt>Owner</dt><dd>Driftwood + CPA</dd>
-              <dt>Touches</dt><dd>Family / Purpose · Taxes</dd>
-              <dt>Next decision</dt><dd>December</dd>
-            </dl>
-            <p class="rc-s"><span class="st st-ready">Ready</span></p>
-          </article>
-          <article class="rc" style="--i:5">
             <h3 class="rc-t">Business liquidity</h3>
             <dl class="rc-d">
               <dt>Owner</dt><dd>Driftwood</dd>
@@ -837,7 +814,7 @@
             </dl>
             <p class="rc-s"><span class="st st-fut">Future event</span></p>
           </article>
-          <article class="rc rc--done" style="--i:6">
+          <article class="rc rc--done" style="--i:4">
             <h3 class="rc-t">Loss carryforward deployment</h3>
             <dl class="rc-d">
               <dt>Owner</dt><dd>Driftwood</dd>
@@ -846,7 +823,7 @@
             </dl>
             <p class="rc-s"><span class="st st-res">Resolved ✓</span></p>
           </article>
-          <article class="rc rc--done" style="--i:7">
+          <article class="rc rc--done" style="--i:5">
             <h3 class="rc-t">Reserve target</h3>
             <dl class="rc-d">
               <dt>Owner</dt><dd>Driftwood</dd>
@@ -887,11 +864,38 @@
       </div>
       <p class="deliver">The review produces your <a href="manual.html">Wealth Operating Manual</a>: the
         register, the owners, the dependencies, and the review dates, held in one document.</p>
+      <!-- Who this is for, stated plainly at the ask. Not a qualification form: a reader who does
+           not recognise themselves here should be able to tell in two lines and stop, and a reader
+           who does should feel named. Concrete on purpose — complexity, an operating business, and
+           a state line are the three conditions the practice is actually built around, and the
+           third is why the Atlas leads with Illinois. -->
+      <p class="fit"><span class="fit-k">Who this is for</span>
+        Households whose financial lives have outgrown a single adviser: several accounts, an
+        estate plan, and decisions that touch each other.
+        Most often an operating business or concentrated equity, and income or property that
+        crosses a state line &mdash; frequently Illinois, where an estate is exempt only to $4M.</p>
       <figure class="founder-tag" aria-label="Alec Messino, founder of Driftwood Wealth">
         <img class="ft-photo" src="Headshot.jpg" width="120" height="120" loading="lazy" alt="Alec Messino, founder of Driftwood Wealth" onerror="this.closest(&#39;.founder-tag&#39;).classList.add(&#39;no-photo&#39;)">
         <figcaption class="ft-cap">
           <span class="ft-name">Alec Messino</span>
           <span class="ft-cred">Founder</span>
+          <!-- Three sentences, because one italic line under a photo underweights the single
+               largest trust asset in a solo practice: what he is licensed as, what he actually does
+               in a review, and why the practice leads with Illinois. Licensure is stated only from
+               the facts the footer disclosure already carries (PAS / Guardian). No CRD is claimed —
+               site.py FIRM_CRD is deliberately empty until confirmed. No city or state is claimed
+               either: FIRM_LOCATION is empty by principal direction ("location belongs only in
+               legal/ADV disclosures"), so Illinois appears here as subject-matter focus — where the
+               estate cliff actually bites — never as an address. -->
+          <span class="ft-bio">A Registered Representative and Financial Advisor of Park Avenue
+            Securities, and a Financial Representative of Guardian, Alec founded Driftwood in 2024 to
+            practise coordination rather than product selection.
+            He conducts every Coordination Review personally: reading the seven systems against each
+            other, naming what is uncoordinated, and putting an owner and a date against each open
+            decision &mdash; then convening the CPA and the estate attorney you already have.
+            The practice leads with Illinois because that is where the seams show earliest: an estate
+            is exempt only to $4M against the federal ~$15M, so one titling or residency decision can
+            move income, estate, and filing outcomes at once.</span>
           <span class="ft-say">The best financial decisions are rarely investment decisions alone. They are coordination decisions.</span>
         </figcaption>
       </figure>
@@ -903,10 +907,9 @@
     <div class="plateband"><img class="splate splot" src="img/survey-plate-footer.svg" alt="" aria-hidden="true"></div>
     <div class="colophon">
       <p class="cw">Driftwood Wealth</p>
-      <p class="cprov"><span>Institutional Archive</span><span>Edition 2026</span><span>Household Systems</span><span>Revision IV</span></p>
       <div class="cindex">
         <a href="the-practice.html">Practice</a><a href="coordination-framework.html">Coordination</a>
-        <a href="statemap.html">Atlas</a><a href="research.html">Research</a><a href="private.html">Client Access</a>
+        <a href="statemap.html">Atlas</a><a href="research.html">Research</a><a href="illinois-tax.html">For attorneys and CPAs</a><a href="private.html">Client Access</a>
       </div>
     </div>
 
@@ -1002,7 +1005,7 @@ window.__STATE__ = {"header": {"generated": "2026-07-30 23:20:04 UTC"}, "hero": 
   var TRIG = [
     { set:[0,1,2,6,5,4,3], lead:"One purchase. Seven systems.",
       body:"Buying a home feels like a single decision. It moves the investments you sell for the down payment, your tax picture, monthly cash flow, how the property is titled, the protection you carry, the estate it becomes part of, and the life the purchase is really for.",
-      href:"atlas/2026/household/", proof:"See a Household Record" },
+      href:"case-vacation-home.html", proof:"See the second-home case" },
     { set:[0,1,2,6,5,4,3], lead:"One sale. Seven systems.",
       body:"A business sale is the clearest case. The proceeds become an investment problem, a tax event, a liquidity windfall, an entity-structure cleanup, a new protection profile, an estate and legacy question, and a fresh conversation about what the money is now for.",
       href:"case-business-sale.html", proof:"See the Business-Sale case" },

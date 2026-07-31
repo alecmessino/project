@@ -39,7 +39,23 @@ INSIGHTS_CHILDREN = (
     ("Decision Library", "insights.html#decision-library"),
 )
 
-DECISION_TOOLS = ("statemap.html", "leakage.html", "taxlab.html", "concentration.html")
+# The Decision Tools shelf, organized by the DECISION a visitor faces rather than by the discipline
+# a tool belongs to — clients do not think in disciplines. score.html joined on 2026-07-31: it had
+# shipped for months with no menu entry, no CURRENT mapping, no place on this shelf, and no journey
+# rail, so the one tool designed to be run first was the only one a visitor could not find.
+DECISION_TOOLS = ("score.html", "statemap.html", "taxlab.html", "leakage.html", "concentration.html")
+
+# A group ships only in the commit that gives it its first entry — the standing rule recorded in
+# scripts/phase2_nav.py, and the defect this repo has already shipped twice (menu entries with
+# nothing behind them). "Live off wealth" is reserved in OPERATIONS.md and must NOT appear until a
+# withdrawal or income tool exists.
+DECISION_GROUPS = (
+    ("Start here", ("score.html",)),
+    ("Build wealth", ("statemap.html", "taxlab.html")),
+    ("Protect wealth", ("leakage.html",)),
+    ("Unlock wealth", ("concentration.html",)),
+)
+RESERVED_GROUPS = ("Live off wealth",)
 DECISION_LIBRARY = ("case-business-sale.html", "case-inheritance.html", "case-stock-options.html",
                     "case-moving-states.html", "case-rmds.html", "case-widowed.html",
                     "case-vacation-home.html", "case-charitable-giving.html")
@@ -222,3 +238,143 @@ def test_every_case_study_points_back_at_the_library_shelf():
         t = (WEB / name).read_text(encoding="utf-8")
         assert 'href="insights.html#decision-library"' in t, \
             f"{name} does not link back to the Decision Library"
+
+
+# ── the operating system: the shelf, the groups, and no orphans ───────────────────────────────
+#
+# The suite is a Private Wealth Operating System, not a shelf of calculators: Layer 1 is the shared
+# household context, Layer 2 the recommendation engine, Layer 3 the journey rail, Layer 4 the tools
+# themselves. These guard the registration contract — a module that is not registered everywhere is
+# a module a visitor cannot reach, which is exactly how score.html went missing.
+
+def _tools_section() -> str:
+    m = re.search(r'id="decision-tools".*?</section>', INSIGHTS.read_text(encoding="utf-8"), re.S)
+    assert m, "the Decision Tools shelf is missing"
+    return m.group(0)
+
+
+def _phase2_nav():
+    """Load scripts/phase2_nav.py without executing its sweep (it is __main__-guarded)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("phase2_nav", ROOT / "scripts" / "phase2_nav.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_every_decision_group_ships_populated():
+    """A group heading with nothing under it advertises a capability that does not exist. Every
+    heading on the shelf must be a declared group, and every declared group must have entries."""
+    section = _tools_section()
+    for label, tools in DECISION_GROUPS:
+        assert tools, f"decision group {label!r} is declared with no tools"
+        assert f'class="grp">{label}<' in section, f"the shelf is missing the {label!r} group"
+    on_page = set(re.findall(r'class="grp">([^<]+)<', section))
+    assert on_page == {label for label, _ in DECISION_GROUPS}, (
+        f"shelf groups drifted from the specification: {sorted(on_page)}"
+    )
+
+
+def test_reserved_groups_are_not_on_the_shelf():
+    """The rule from phase2_nav.py: a category ships in the same commit as its first entry, never
+    before it. 'Live off wealth' waits for a withdrawal or income tool."""
+    section = _tools_section()
+    for label in RESERVED_GROUPS:
+        assert label not in section, f"{label!r} is reserved but already on the shelf"
+
+
+def test_every_decision_tool_leads_with_the_decision_it_answers():
+    """Clients think in decisions, not disciplines. Each row opens with a question, not a category."""
+    section = _tools_section()
+    questions = re.findall(r'<span class="q">([^<]+)</span>', section)
+    assert len(questions) == len(DECISION_TOOLS), (
+        f"{len(questions)} decision questions for {len(DECISION_TOOLS)} tools"
+    )
+    for q in questions:
+        assert q.strip().endswith("?"), f"decision label is not a question: {q!r}"
+
+
+def test_no_decision_tool_is_orphaned():
+    """The test that would have caught score.html.
+
+    It shipped, was in sync_docs.py and the sitemap, and carried the masthead — but had no CURRENT
+    entry, so no nav family lit up; no row on the shelf; and no journey rail. Being *built* is not
+    being *reachable*. Every tool must be registered in all four places at once.
+    """
+    nav = _phase2_nav()
+    section = _tools_section()
+    sync = (ROOT / "scripts" / "sync_docs.py").read_text(encoding="utf-8")
+    for tool in DECISION_TOOLS:
+        assert f'href="{tool}"' in section, f"{tool} is not listed on the Decision Tools shelf"
+        assert tool in nav.CURRENT, f"{tool} has no CURRENT entry, so its nav family never lights up"
+        assert tool in sync, f"{tool} is not registered in sync_docs.py, so it 404s in production"
+        assert (DOCS / tool).exists(), f"{tool} is advertised but not built"
+
+
+def test_every_tool_mounts_the_operating_system():
+    """A module plugs into the platform by declaring itself, not by re-implementing it: the shared
+    household bar (Layer 1), and the Next Decision recommendation (Layer 2)."""
+    ctx = (WEB / "dw-context.js").read_text(encoding="utf-8")
+    for tool in DECISION_TOOLS:
+        page = tool[:-len(".html")]
+        t = (WEB / tool).read_text(encoding="utf-8")
+        assert 'src="dw-context.js"' in t, f"{tool} does not load the operating system"
+        assert f'id="dw-household" data-page="{page}"' in t, f"{tool} has no household bar"
+        assert f'id="dw-next" data-page="{page}"' in t, f"{tool} has no Next Decision mount"
+        assert f"{page}:" in ctx, f"{page} has no SIBLINGS entry in dw-context.js"
+
+
+def test_the_journey_rail_is_generated_not_hand_written():
+    """It used to be four hand-duplicated copies, which is how two tools ended up off the path
+    entirely. One Python source of truth now emits it, byte for byte."""
+    nav = _phase2_nav()
+    for page in nav.JOURNEY:
+        t = (WEB / page).read_text(encoding="utf-8")
+        expected = nav.build_rail(page).strip()
+        m = re.search(r'<div class="journey-rail".*?</div>\s*</div>', t, re.S)
+        assert m, f"{page} is in JOURNEY but carries no rail"
+        assert m.group(0) == expected, f"{page}'s rail has drifted from build_rail()"
+
+
+def test_the_self_serve_tools_never_grade_a_household():
+    """The platform surfaces constraints, opportunities, and a recommended next decision. It does
+    not hand a visitor a score, an index, or a grade.
+
+    Scoped to the self-serve tools on purpose. The Assessment's own code has always honoured this
+    ("a factor tally + a neutral classification (no score, no meter, no ranked tiers)") while its
+    lede, its footer, and three meta tags still promised a "Coordination Index" — a grade the page
+    had deliberately stopped producing. The name survives on the *delivered* artifacts (the Annual
+    Wealth Operating Review's coverage tile, the Practice's third deliverable), where it tracks how
+    much of a household is in view rather than scoring the household; that is a different object and
+    a separate editorial decision.
+    """
+    for tool in DECISION_TOOLS:
+        t = (WEB / tool).read_text(encoding="utf-8")
+        assert "Coordination Index" not in t, \
+            f"{tool} promises an Index — a self-serve tool does not grade a household"
+
+
+def test_the_built_masthead_matches_the_source_masthead():
+    """docs/ is the DEPLOYED build. A regenerated source with a stale build ships the old site.
+
+    This shipped once: a merge resolved docs/ to the other side and the rebuild that followed was
+    never staged, so 51 built pages carried a masthead without the Coordination Assessment — the
+    exact nav fix the change existed to make. Every other test read src/, so the suite was green
+    while the deployable artifact was wrong. Compare what actually deploys against its template.
+    """
+    nav_re = re.compile(r'<nav class="dwnav dwnav--phase2".*?</nav>', re.S)
+    stale = []
+    for src in _nav_pages():
+        built = DOCS / src.name
+        if not built.exists():
+            continue                      # hub.html/report.html deploy under a different name
+        a = nav_re.search(src.read_text(encoding="utf-8"))
+        b = nav_re.search(built.read_text(encoding="utf-8"))
+        if not b:
+            stale.append(f"{src.name}: built page has no masthead")
+        elif a and a.group(0) != b.group(0):
+            stale.append(src.name)
+    assert not stale, (
+        "docs/ is out of date with src/ — run `python3 scripts/phase2_nav.py && "
+        f"python3 scripts/sync_docs.py` and commit the result: {sorted(stale)[:8]}"
+    )

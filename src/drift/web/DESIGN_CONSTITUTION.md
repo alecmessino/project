@@ -66,3 +66,42 @@ design measurably impedes understanding. Fix that. Everything else waits.
 The reason for the freeze is not that the design is perfect. It is that **the prospect's brain
 should be entirely focused on the paradigm shift** — wealth as a system — and visual churn is
 cognitive noise. Consistency is now worth more than any individual improvement.
+
+## Amendments
+
+The freeze admits one exception — a documented usability problem, not a preference — but until now
+it described no way to *record* one. An exception that leaves no trace is indistinguishable from
+drift six months later. Every amendment goes here, with what was added and, more importantly, what
+was not.
+
+### 2026-07-31 · The Next Decision component
+
+**The usability problem.** Two shipped tools (`statemap.html`, `concentration.html`) were reachable
+from no menu entry, and a third (`score.html`) was reachable from no menu at all — built, deployed,
+in the sitemap, and invisible. Every tool also ended in a dead stop: the reader finished an analysis
+with no idea what to do next, which the category audit independently scored as the site's
+joint-weakest dimension (Journey, 3.6/5). That is a comprehension failure, which is precisely what
+the exception clause is for.
+
+**What was added.** One component, `.dw-next`, in `driftwood.css` directly beneath `.onward` — the
+label, headline, reason, and the "you'll leave with" list. It reuses `.onward` / `.ow-t` /
+`.ow-cta` verbatim for its action row.
+
+**What was not touched.**
+
+- No `:root` token — no colour, radius, spacing step, transition, or font.
+- No border-radius value: the component is square, through `--surface-radius`, like every surface.
+- No new hover behaviour, no motion, no animation.
+- No new type family or weight; `--sans` and `--serif` as they already are.
+- The `.journey-rail` collapsed from four steps to three and added no CSS whatsoever — its existing
+  rules are generic over the `<ol>`, so the change was structural only.
+
+**One deliberate design decision worth defending:** the component renders **exactly one**
+recommendation, never a primary plus alternates. Offering three next steps is how the site got a
+3.6 on Journey in the first place. A recommendation that hedges is not a recommendation.
+
+**The CSS lives in `driftwood.css`, not in a JavaScript string.** The household bar injects its own
+styles from `dw-context.js`, and the same trick would have let this component claim the stylesheet
+was "untouched." That would have honoured the letter of the freeze while violating the sentence
+above it: *all of it lives in `driftwood.css`, linked last on every page.* Hiding new CSS to protect
+a clean diff is exactly the drift this document exists to prevent.

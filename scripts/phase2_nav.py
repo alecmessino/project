@@ -24,6 +24,13 @@ FAMILIES = [
         ("The Seven Systems", "coordination-framework.html", "coordination-framework.html"),
         ("Your First 90 Days", "first-90-days.html", "first-90-days.html"),
         ("Household Example", "household-example.html", "household-example.html"),
+        # The Coordination Assessment is the front of the funnel and had NO menu entry anywhere on
+        # the site — reachable only from four body links, so the one tool designed to be run first
+        # was the hardest to find. It sits above the Diagnostic because that is the order the
+        # journey rail walks. The two tools below keep their entries: they carry a link on every
+        # page, and which ordering converts better is a measured question (OPERATIONS.md), not a
+        # layout preference to settle by deletion.
+        ("Coordination Assessment", "score.html", "score.html"),
         ("Tax Diagnostic", "leakage.html", "leakage.html"),
         ("After-Tax Lab", "taxlab.html", "taxlab.html"),
         ("Schedule a Coordination Review", "coordination-review.html", "coordination-review.html"),
@@ -67,6 +74,7 @@ CURRENT = {
     "six-systems.html": ("Coordination", "coordination-framework.html"),
     "first-90-days.html": ("Coordination", "first-90-days.html"),
     "the-practice.html": ("Coordination", "the-practice.html"),
+    "score.html": ("Coordination", "score.html"),
     "leakage.html": ("Coordination", "leakage.html"),
     "taxlab.html": ("Coordination", "taxlab.html"),
     "coordination-review.html": ("Coordination", "coordination-review.html"),
@@ -131,11 +139,89 @@ def build_nav(page_file):
 
 NAV_RE = re.compile(r'<nav\b[^>]*>.*?</nav>', re.S)
 
+# ---- the journey rail (Layer 3) ----
+#
+# The rail says WHERE AM I in the engagement. It is not the recommendation engine, which says WHAT
+# SHOULD I DO NEXT and lives in dw-context.js — two different questions that were previously
+# answered by the same hardcoded list of four steps.
+#
+# Three steps, not six. The middle is deliberately NOT a sequence: the four analyses are parallel,
+# and which one a household should run is decided per-visitor by the recommendation engine. A
+# six-step linear rail would assert a funnel the information architecture has just denied, and it
+# wraps badly on a phone.
+#
+# Emitted from here rather than hand-written into each page for the same reason the masthead is:
+# it previously existed as four near-identical copies, and adding the Assessment and the
+# Concentrated Position Lab would have made six copies to keep in sync by hand.
+JOURNEY = {
+    # page                       (step, middle label,                middle href)
+    "score.html":               (1, "Choose your analysis",         "insights.html#decision-tools"),
+    "leakage.html":             (2, "Tax Diagnostic",               "leakage.html"),
+    "statemap.html":            (2, "State Tax Atlas",              "statemap.html"),
+    "taxlab.html":              (2, "After-Tax Lab",                "taxlab.html"),
+    "concentration.html":       (2, "Concentrated Position Lab",    "concentration.html"),
+    "coordination-review.html": (3, "Choose your analysis",         "insights.html#decision-tools"),
+}
+
+# Two closing divs, not three: the rail is .journey-rail > .jr-in, and .jr-in's children (<ol>, the
+# CTA anchor) contribute no divs of their own. Matching three swallowed ~5KB of the page beyond it.
+RAIL_RE = re.compile(r'\s*<div class="journey-rail".*?</div>\s*</div>', re.S)
+
+
+def build_rail(page_file):
+    """The three-step spine. Every class here already exists in driftwood.css."""
+    spec = JOURNEY.get(page_file)
+    if not spec:
+        return None
+    step, mid_label, mid_href = spec
+    steps = [(1, "Coordination Assessment", "score.html"),
+             (2, mid_label, mid_href),
+             (3, "Coordination Review", "coordination-review.html")]
+    items = []
+    for n, label, href in steps:
+        cur = ' aria-current="step"' if n == step else ""
+        items.append('<li%s><span class="num">%d</span><a href="%s">%s</a></li>' % (cur, n, href, label))
+        if n != 3:
+            items.append('<li class="sep" aria-hidden="true">&rarr;</li>')
+    return (
+        '\n    <div class="journey-rail" data-step="%d" aria-label="Your path through the engagement">'
+        '\n      <div class="jr-in">'
+        '\n        <span class="jr-k">Your path</span>'
+        '\n        <ol>%s</ol>'
+        '\n        <a class="jr-cta" href="coordination-review.html">The product &rarr;</a>'
+        '\n      </div>'
+        '\n    </div>' % (step, "".join(items))
+    )
+
+
+def install_rail(s, page_file):
+    """Idempotent: replace an existing rail, else insert one right after the masthead."""
+    rail = build_rail(page_file)
+    if rail is None:
+        return s
+    if RAIL_RE.search(s):
+        return RAIL_RE.sub(lambda _: rail, s, count=1)
+    m = re.search(r'</nav>\s*(<div id="dw-household"[^>]*></div>)?', s)
+    if not m:
+        return s
+    return s[:m.end()] + rail + s[m.end():]
+
 # A page that opens its content with <div class="wrap"> but has no <nav> never had a masthead to
 # replace, so the original "no nav -> skip" rule silently left it out of the sweep forever. Six pages
 # were in that state, including "The Seven Systems" and "Household Example" — both linked FROM the
 # Coordination dropdown, so a visitor who followed the menu landed somewhere with no way back.
 WRAP_OPEN_RE = re.compile(r'(<div class="wrap"[^>]*>)')
+
+
+def _tidy(rest):
+    """Drop the blank lines the removed masthead left behind.
+
+    Removing <nav> takes the element but not the newlines that surrounded it, and the re-insert then
+    adds its own — so every run grew each page by one blank line. The script is meant to be run
+    whenever the IA changes, which made "how many times has this been run?" visible in the diff of
+    51 files. Normalizing here makes install() genuinely idempotent: run it twice, get one result.
+    """
+    return rest.lstrip("\n")
 
 
 def install(page):
@@ -152,14 +238,15 @@ def install(page):
         stripped = NAV_RE.sub("", s, count=1)
         m = WRAP_OPEN_RE.search(stripped)
         if m:
-            new = stripped[:m.end()] + "\n" + build_nav(name) + stripped[m.end():]
+            new = stripped[:m.end()] + "\n" + build_nav(name) + _tidy(stripped[m.end():])
         else:
             new = NAV_RE.sub(lambda mm: build_nav(name), s, count=1)
     else:
         m = WRAP_OPEN_RE.search(s)
         if not m:
             return False                               # nothing to anchor to
-        new = s[:m.end()] + "\n" + build_nav(name) + s[m.end():]
+        new = s[:m.end()] + "\n" + build_nav(name) + _tidy(s[m.end():])
+    new = install_rail(new, name)
     if new != s:
         open(page, "w", encoding="utf-8").write(new)
         return True

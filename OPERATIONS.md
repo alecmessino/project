@@ -312,6 +312,19 @@ Diagnostic) do not.
 | **Atlas** | reference / lookup | State Tax Atlas |
 | **Lab** | interactive analysis — the default | After-Tax Lab · Concentrated Position Lab |
 | **Diagnostic** | finds what is wrong | Tax Diagnostic |
+| **Assessment** | self-classification — the visitor describes their situation; nothing is computed | Coordination Assessment |
+
+**"Assessment" was governed, not invented, on 2026-07-31.** `score.html` predates this table and was
+already shipping under the name. It is a real distinction rather than a sixth metaphor: a Lab
+*computes* against a household's numbers, a Diagnostic *finds* a defect, and an Assessment does
+neither — it asks what is true and reflects the shape back. It takes no dollar figure as input and
+produces none. **It also does not grade.** The page's own code has always said so ("a factor tally +
+a neutral classification, no score, no meter, no ranked tiers") while its lede, footer, and three
+meta tags still promised a "Coordination Index"; the copy was corrected to match the behaviour, and
+`test_the_self_serve_tools_never_grade_a_household` now holds the line. The name survives on the
+*delivered* artifacts (the Annual Wealth Operating Review's coverage tile, the Practice's third
+deliverable), where it tracks how much of a household is in view rather than scoring the household —
+a different object, and a separate editorial question if anyone wants to reopen it.
 
 Also permitted to carry "Review": **The Driftwood Review** (the quarterly publication) and the
 **Annual Wealth Operating Review** (the client deliverable the engagement produces), plus their
@@ -329,6 +342,45 @@ reads "Request a Coordination Review".
 · Roth Conversion Lab · Estate Readiness Lab · Household Liquidity Lab · Charitable Giving Lab.
 `test_the_tools_advertised_are_only_the_ones_that_exist` fails if any reaches the shelf before its
 page does.
+
+**The shelf is organized by decision, not by discipline (2026-07-31).** Clients do not think in
+planning disciplines; they think in decisions they are about to make. Each tool leads with the
+question it answers, under the group that question belongs to:
+
+| Group | Tools | The question each answers |
+|---|---|---|
+| **Start here** | Coordination Assessment | *How coordinated does your financial life need to be?* |
+| **Build wealth** | State Tax Atlas · After-Tax Lab | *Where should you build wealth?* · *What does your portfolio actually keep?* |
+| **Protect wealth** | Tax Diagnostic | *Where is your wealth leaking?* |
+| **Unlock wealth** | Concentrated Position Lab | *How do you unwind a concentrated position?* |
+| **Live off wealth** | — | **RESERVED** |
+
+**"Live off wealth" is reserved and must not ship empty.** It enters in the same commit as its first
+entry — most likely the Household Liquidity Lab or the Roth Conversion Lab from the roadmap above.
+This is the same rule that governed Decision Memos, and the defect this repo has already shipped
+twice (menu entries with nothing behind them). `test_reserved_groups_are_not_on_the_shelf` enforces
+it; `test_every_decision_group_ships_populated` enforces the converse, that no group heading appears
+without tools under it.
+
+**The graduation threshold to a standalone page is understood and not yet met.** Five tools in four
+groups is still a section; the trigger recorded above (`insights.html#…` → its own file, with
+`test_every_insights_entry_resolves_to_a_built_page` carrying the move) stands unchanged for when
+the roadmap Labs land.
+
+**`dw_tax_context.drivers` — the situation contract.** The Coordination Assessment's ten checkboxes
+write a list of stable slugs into the shared household context, and the recommendation engine reads
+it to choose each page's next step. The slug is the contract, shared by three surfaces that must
+agree: `data-key` on the buttons in `score.html`, the `?drivers=a,b` URL param, and `DRIVER_KEYS` in
+`dw-context.js`. **Never derive a slug from display copy**, which is edited freely.
+
+```
+business · entities · trusts · equity-comp · concentration
+multi-state · private · real-estate · charity · estate-tax
+```
+
+Three of them — `trusts`, `estate-tax`, and partly `entities` — deliberately map to no tool. Nothing
+self-serve answers them, so they route to the Coordination Review and say so. That is honest routing,
+and it is also the clearest signal of where the next Lab would earn its place.
 
 **OPEN — "Tax Diagnostic" is the last tool outside the convention.** It does not collide with
 anything, and "Diagnostic" is an honest description of what it does (it finds the leak; the Lab

@@ -43,8 +43,17 @@ _REVIEW_RE = re.compile(r"\b([A-Z][A-Za-z-]*(?:\s+[A-Z][A-Za-z-]*){0,3})\s+Revie
 DOCS = ROOT / "docs"
 
 
+# Non-HTML files that nonetheless ship product NAMES into the page. dw-context.js renders the
+# household bar and its sibling-tool links at runtime, so every label inside it reaches a visitor's
+# screen exactly as if it were markup — but a *.html glob cannot see it. "After-Tax Review" lived
+# there for months, in five places (the header comment, two SIBLINGS entries, the bar's own note
+# copy, and a comment), shipping the retired name onto three tool pages while this file reported the
+# site clean. A name scan has to follow the name, not the file extension.
+_NAME_BEARING_ASSETS = ("dw-context.js",)
+
+
 def _pages():
-    return sorted(WEB.glob("*.html"))
+    return sorted(WEB.glob("*.html")) + [WEB / a for a in _NAME_BEARING_ASSETS]
 
 
 def _shipped():
@@ -56,7 +65,7 @@ def _shipped():
     titled "After-Tax Review" on the homepage itself. Scanning what deploys is the only scan that
     covers both halves.
     """
-    return sorted(DOCS.glob("*.html"))
+    return sorted(DOCS.glob("*.html")) + [DOCS / a for a in _NAME_BEARING_ASSETS]
 
 
 def _flat(text: str) -> str:

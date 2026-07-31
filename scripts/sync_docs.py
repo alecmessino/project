@@ -18,12 +18,36 @@ sys.path.insert(0, str(ROOT / "src"))
 from drift.site import firm_anchor_html  # noqa: E402
 
 FIRM_ANCHOR_TOKEN = "<!--FIRM_ANCHOR-->"
+PLATE_LIBRARY_TOKEN = "<!--PLATE_LIBRARY-->"
+
+_plate_lib = None
+
+
+def _plate_library() -> str:
+    """The ten canonical survey plates as one inline <symbol> set (src/drift/plates.py).
+
+    Injected at build time rather than committed into the template: the library is ~170 KB of
+    generated coordinates, and pasting that into src/drift/web/*.html would bury the page's actual
+    markup and make every regeneration a giant, unreviewable diff. The template keeps the token;
+    docs/ gets the expansion.
+
+    It has to be INLINE rather than <img src="img/plates/x.svg"> because the publication type
+    (research / commentary / household) drives plate density through inherited CSS custom
+    properties, and those do not cross into an externally-referenced image.
+    """
+    global _plate_lib
+    if _plate_lib is None:
+        from drift.plates import build_all, render_symbols
+        _plate_lib = render_symbols(build_all())
+    return _plate_lib
 
 
 def _inject_tokens(html: str) -> str:
     """Replace build-time tokens with their single-source rendered value."""
     if FIRM_ANCHOR_TOKEN in html:
         html = html.replace(FIRM_ANCHOR_TOKEN, firm_anchor_html())
+    if PLATE_LIBRARY_TOKEN in html:
+        html = html.replace(PLATE_LIBRARY_TOKEN, _plate_library())
     return html
 
 # template -> docs output
@@ -85,7 +109,9 @@ def main() -> int:
                   # every one 404'd in production while the shared nav linked them from ~43 pages.
                   # If a page is in the nav it must be in this tuple; see the nav-integrity test.
                   "leadership.html", "fiduciary.html", "six-systems.html", "first-90-days.html",
-                  "commentary.html", "estate-attorneys.html", "referral.html"):
+                  "commentary.html", "estate-attorneys.html", "referral.html",
+                  # The Driftwood Review — the quarterly publication template
+                  "driftwood-review.html"):
         (DOCS / asset).write_text(_inject_tokens((WEB / asset).read_text()))
         print(f"   {asset:15} -> docs/{asset} (copied)")
     # Binary assets (e.g. the founder headshot) — copy through only if present, so the About page's
@@ -104,6 +130,15 @@ def main() -> int:
             for f in sorted(img_src.glob(pat)):
                 (DOCS / "img" / f.name).write_bytes(f.read_bytes())
                 print(f"   img/{f.name:22} -> docs/img/{f.name} (copied, binary)")
+        # The canonical survey library also ships as standalone files, so a page that does NOT
+        # need CSS-driven density can reference a plate with a plain <img> and let it cache.
+        plates_src = img_src / "plates"
+        if plates_src.is_dir():
+            (DOCS / "img" / "plates").mkdir(exist_ok=True)
+            for f in sorted(plates_src.glob("*.svg")):
+                (DOCS / "img" / "plates" / f.name).write_bytes(f.read_bytes())
+            print(f"   img/plates/*.svg     -> docs/img/plates/ "
+                  f"({len(list(plates_src.glob('*.svg')))} canonical plates)")
     if bad:
         print(f"FAILED: {bad} file(s) had problems")
         return 1

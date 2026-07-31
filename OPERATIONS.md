@@ -170,6 +170,34 @@ Four problems, same root cause (the list wasn't updated as pages were added/reti
 **Phase 2 item:** rewrite `_CORE_SITEMAP` (remove the four stale/stub entries, add the two missing
 live ones), regenerate `docs/sitemap.xml` via `drift states`, resubmit in Google Search Console.
 
+**The Driftwood Review — publication template (built 2026-07-30, `driftwood-review.html`).** A
+quarterly institutional publication whose credibility rests on being visibly *fixed*. Four decisions
+worth keeping:
+
+- **Seven divisions, unalterable order** (Lead Essay → Research Notes → Tax & Planning → Market
+  Structure → Practice Updates → Reading List → Appendix). A division may be thin in a quarter; it is
+  not reordered or dropped. The order lives in `tests/test_drift_review.py::DIVISIONS`, which is the
+  specification — changing the page without changing that tuple fails.
+- **Ten canonical survey plates, closed library** (`src/drift/plates.py`, rendered by
+  `scripts/build_plates.py` into `src/drift/web/img/plates/`). An article is assigned the plate whose
+  *structure* matches its subject; it never gets bespoke art. The plates are generated, not cropped
+  from `img/survey-plate-hero.svg` — that was tried and rejected, because the master plate is a single
+  confluence, so ten crops would be ten pictures of the same structure wearing ten names. They are
+  generated in the master plates' hand (same ink `#1E2833`, same sounding radii 0.75/0.85/1.3).
+- **Density is a property of the article, not the plate.** `data-type="research|commentary|household"`
+  on a card sets CSS custom properties that cross the `<use>` shadow boundary into the plate geometry
+  — the one thing that does. That is why ten files serve three disciplines without duplicating a
+  coordinate. Verified empirically in a browser before the architecture was committed.
+- **The Review publishes no dollar or percentage figure**, test-guarded
+  (`test_the_issue_publishes_no_dollar_or_percentage_figure`). It *links* to figures; it does not
+  restate them, so it adds no rows to FIGURE_PROVENANCE.md. A recurring publication is exactly where
+  an unsourced number would otherwise accumulate quietly. The plates carry no data either — no axis,
+  no scale, no legend — and that is guarded too.
+
+Regenerating: edit `src/drift/plates.py` → `python3 scripts/build_plates.py` → commit the SVGs →
+`python3 scripts/sync_docs.py`. The generator is deterministic (local LCG, no `random`, no clock), so
+a run with no source change leaves an empty diff; a surprise diff means the geometry moved.
+
 ## Disaster recovery
 - **Lost/corrupt `tests/data/matrix_history.json`** → `TILT_SWEEP_REFRESH=1 python scripts/tilt_sweep.py`
   re-pulls and rewrites the cache (needs `TIINGO_API_KEY`); then regenerate STATE_ALPHA (above).

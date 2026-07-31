@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Driftwood Review, Driftwood Wealth</title>
+<meta name="description" content="A quarterly record of coordination decisions — research notes, tax and planning, market structure, and practice updates, published on a fixed structure." />
+<link rel="canonical" href="https://driftwoodwealth.com/driftwood-review.html" />
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<link rel="icon" href="favicon.svg" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftwood Wealth" />
+<meta property="og:title" content="The Driftwood Review" />
+<meta property="og:description" content="A quarterly record of coordination decisions, published on a fixed structure." />
+<meta property="og:url" content="https://driftwoodwealth.com/driftwood-review.html" />
+<style>
+  /* ═══════════════════════════════════════════════════════════════════════════════════════════
+     THE DRIFTWOOD REVIEW — production template
+
+     The Review's whole argument is that it is a *continuing record*, so the layout is fixed and
+     the visual vocabulary is closed. Two rules carry that, and both are enforced by tests:
+
+     1. THE RUNNING ORDER NEVER CHANGES. Seven sections, same order, every issue: Lead Essay,
+        Research Notes, Tax & Planning, Market Structure, Practice Updates, Reading List,
+        Appendix. A section may be thin in a given quarter; it may not be reordered or dropped.
+
+     2. THE ARTWORK IS A CLOSED LIBRARY. Ten canonical survey plates (src/drift/plates.py). An
+        article is assigned the plate whose structure matches its subject — it never gets a
+        bespoke illustration, and it never gets an invented number rendered as a chart. If a
+        piece is about moving a household's entity footprint across a state line, it gets
+        `boundary`, because a boundary is what the piece is about.
+
+     DENSITY IS A PROPERTY OF THE ARTICLE, NOT THE PLATE. `data-type` on a card sets custom
+     properties that the plate geometry reads through the <use> shadow boundary — custom
+     properties are the one thing that crosses it. That is why ten files serve three disciplines
+     without duplicating a single coordinate:
+
+        research    dense contours, every sounding tier, uncompromising monochrome
+        commentary  lighter strokes, the fine tier dropped, more whitespace tension
+        household   near-silent: strict type, a small isolated fragment, almost no ink
+
+     NOT USED HERE, DELIBERATELY: the homepage's seven-node lattice. That diagram is an argument
+     about one household's systems moving together; tiling it behind editorial cards would turn
+     a claim into wallpaper. The Review's surfaces are survey plates only.
+     ═══════════════════════════════════════════════════════════════════════════════════════════ */
+
+  :root{
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab;
+    --ghost-line:#b8b2a4; --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
+    --accent-strike:#2c5878; --navy:#1a2330; --on-dark:#e7ecf2;
+  }
+  *{box-sizing:border-box}
+  /* Zero radius, everywhere, without exception — a survey sheet has corners. */
+  *,*::before,*::after{border-radius:0}
+  body{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.62 var(--sans);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px 96px}
+  a{color:inherit}
+
+  /* ── masthead ────────────────────────────────────────────────────────────────────────────── */
+  .mast{padding:74px 0 0;border-bottom:1px solid var(--ink);margin-bottom:0}
+  .mast h1{font-family:var(--serif);font-weight:400;font-size:clamp(38px,5.6vw,78px);line-height:.98;
+    letter-spacing:-.018em;color:var(--ink);margin:0 0 22px}
+  .mast .sub{font-family:var(--serif);font-size:clamp(17px,1.5vw,21px);line-height:1.45;color:var(--dim);
+    margin:0 0 30px;max-width:46ch}
+  .issue{display:flex;flex-wrap:wrap;gap:0 30px;padding:0 0 16px;
+    font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.19em;
+    text-transform:uppercase;color:var(--muted)}
+
+  /* ── running order ───────────────────────────────────────────────────────────────────────── */
+  .order{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:0;
+    border-bottom:1px solid var(--line);margin-bottom:76px}
+  .order a{display:block;padding:17px 16px 16px 0;text-decoration:none;
+    font-family:var(--sans);font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--dim);border-top:1px solid transparent}
+  .order a:hover{color:var(--accent-strike)}
+  .order .n{display:block;font-size:9.5px;letter-spacing:.2em;color:var(--ghost-line);margin-bottom:6px}
+
+  /* ── section ─────────────────────────────────────────────────────────────────────────────── */
+  .sec{margin:0 0 78px;scroll-margin-top:24px}
+  .sec-head{display:grid;grid-template-columns:64px 1fr;align-items:baseline;gap:0 18px;
+    border-top:1px solid var(--ink);padding-top:14px;margin-bottom:34px}
+  .sec-num{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.2em;
+    color:var(--ghost-line)}
+  .sec-title{font-family:var(--sans);font-size:12.5px;font-weight:700;letter-spacing:.19em;
+    text-transform:uppercase;color:var(--ink);margin:0}
+  .sec-note{grid-column:2;font-family:var(--serif);font-size:15px;line-height:1.5;color:var(--muted);
+    margin:8px 0 0;max-width:56ch}
+
+  /* ── the card ────────────────────────────────────────────────────────────────────────────── */
+  /* Exactly four elements, always this order: metadata, headline, summary, survey fragment.
+     Nothing else is permitted in a card — no tags, no read-time, no author chip, no counter. */
+  .cards{display:grid;gap:52px 44px}
+  .cards--3{grid-template-columns:repeat(3,1fr)}
+  .cards--2{grid-template-columns:repeat(2,1fr)}
+  .card{display:flex;flex-direction:column;background:var(--soft);padding:26px 26px 0;
+    border-top:1px solid var(--frame-line)}
+  .card .meta{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.17em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 15px}
+  .card .meta .sl{color:var(--ghost-line);margin:0 7px}
+  .card .hd{font-family:var(--serif);font-weight:400;font-size:23px;line-height:1.16;
+    letter-spacing:-.012em;color:var(--ink);margin:0 0 13px}
+  .card .hd a{text-decoration:none;background-image:linear-gradient(var(--ghost-line),var(--ghost-line));
+    background-size:100% 1px;background-repeat:no-repeat;background-position:0 100%;padding-bottom:2px}
+  .card .hd a:hover{background-image:linear-gradient(var(--accent-strike),var(--accent-strike));
+    color:var(--accent-strike)}
+  .card .sum{font-family:var(--sans);font-size:14px;line-height:1.58;color:var(--body);
+    margin:0 0 22px;max-width:44ch}
+  /* the fragment zone: artwork only, never type */
+  .card .frag{margin:auto -26px 0;height:var(--frag-h,124px);overflow:hidden;
+    border-top:1px solid var(--line2)}
+  .card .frag svg{display:block;width:100%;height:100%}
+
+  /* the lead essay runs 60/40 across the full measure */
+  .lead{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,4fr);gap:0 46px;
+    background:var(--soft);border-top:1px solid var(--ink);padding:34px 34px 0}
+  .lead .body{padding-bottom:34px}
+  .lead .hd{font-size:clamp(27px,2.7vw,40px);line-height:1.1;margin:0 0 16px}
+  .lead .sum{font-family:var(--serif);font-size:18px;line-height:1.55;color:var(--dim);max-width:50ch}
+  .lead .frag{margin:0 -34px 0 0;height:100%;min-height:280px;border-top:0;border-left:1px solid var(--line2)}
+
+  /* ── the three editorial disciplines ─────────────────────────────────────────────────────── */
+  .card[data-type="research"]{
+    --pl-ink:.60; --pl-sound:.44; --pl-w:1.05; --pl-s2:1; --pl-s3:1; --frag-h:132px}
+  .card[data-type="commentary"]{
+    --pl-ink:.40; --pl-sound:.26; --pl-w:.75;  --pl-s2:1; --pl-s3:0; --frag-h:120px}
+  .card[data-type="commentary"] .sum{margin-bottom:30px;line-height:1.66}
+  /* household: the visual language steps out of the way of the household's private numbers */
+  .card[data-type="household"]{
+    --pl-ink:.20; --pl-sound:.13; --pl-w:.6;   --pl-s2:0; --pl-s3:0; --frag-h:62px;
+    background:transparent;border-top:1px solid var(--line)}
+  .card[data-type="household"] .hd{font-family:var(--sans);font-weight:700;font-size:17px;
+    letter-spacing:-.01em;line-height:1.24}
+  .card[data-type="household"] .sum{font-size:13.5px;color:var(--dim);margin-bottom:26px}
+  .card[data-type="household"] .frag{margin-left:0;margin-right:auto;width:44%;
+    border-top:1px solid var(--line2)}
+
+  /* ── reading list & appendix: type only, no plate ────────────────────────────────────────── */
+  .rl{display:grid;gap:0;border-top:1px solid var(--line)}
+  .rl a{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 24px;align-items:baseline;
+    padding:18px 0;border-bottom:1px solid var(--line2);text-decoration:none;color:var(--ink)}
+  .rl a:hover{color:var(--accent-strike)}
+  .rl .t{font-family:var(--serif);font-size:18px;line-height:1.3}
+  .rl .k{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.17em;
+    text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  .apx{display:grid;grid-template-columns:200px minmax(0,1fr);gap:22px 30px;
+    border-top:1px solid var(--line);padding-top:24px}
+  .apx dt{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.17em;
+    text-transform:uppercase;color:var(--muted)}
+  .apx dd{margin:0;font-size:14.5px;line-height:1.62;color:var(--body);max-width:62ch}
+  .apx dd a{color:var(--accent-strike)}
+
+  .foot{padding:34px 0 0;margin-top:18px;border-top:1px solid var(--line);
+    font-size:11.5px;line-height:1.65;color:var(--muted)}
+  .foot a{color:var(--accent-strike)}
+
+  @media (max-width:1000px){
+    .cards--3{grid-template-columns:repeat(2,1fr)}
+    .lead{grid-template-columns:1fr;padding:28px 26px 0}
+    .lead .frag{margin:0 -26px;min-height:200px;border-left:0;border-top:1px solid var(--line2)}
+  }
+  @media (max-width:680px){
+    .wrap{padding:0 18px 64px}
+    .cards--3,.cards--2{grid-template-columns:1fr}
+    .apx{grid-template-columns:1fr;gap:6px 0}
+    .apx dd{margin-bottom:16px}
+    .card[data-type="household"] .frag{width:100%}
+  }
+</style>
+</head>
+<body>
+<!--PLATE_LIBRARY-->
+<div class="wrap">
+<nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fiduciary.html">Fiduciary Standard</a></div></div>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="coordination-framework.html">The Seven Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="household-example.html">Household Example</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Review</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
+      <div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights &amp; Research<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="driftwood-review.html" aria-current="page">The Driftwood Review</a><a href="statemap.html">State Tax Atlas</a><a href="research.html">Research</a><a href="insights.html">Articles</a><a href="commentary.html">Commentary</a></div></div>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">CPA Collaboration</a><a href="estate-attorneys.html">Estate Attorneys</a><a href="referral.html">Referral Process</a></div></div>
+      <span class="dwnav-sep" aria-hidden="true"></span>
+      <a class="dwnav-access" href="private.html">Client Access</a>
+      <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review</a>
+    </nav>
+
+<header class="mast">
+  <h1>The Driftwood&nbsp;Review</h1>
+  <p class="sub">A quarterly record of coordination decisions — what moved, what it touched,
+    and what was written down.</p>
+  <div class="issue">
+    <span>Volume I</span><span>Number I</span><span>Third Quarter 2026</span>
+    <span>Published quarterly</span>
+  </div>
+</header>
+
+<nav class="order" aria-label="In this issue">
+  <a href="#lead-essay"><span class="n">I</span>Lead Essay</a>
+  <a href="#research-notes"><span class="n">II</span>Research Notes</a>
+  <a href="#tax-planning"><span class="n">III</span>Tax &amp; Planning</a>
+  <a href="#market-structure"><span class="n">IV</span>Market Structure</a>
+  <a href="#practice-updates"><span class="n">V</span>Practice Updates</a>
+  <a href="#reading-list"><span class="n">VI</span>Reading List</a>
+  <a href="#appendix"><span class="n">VII</span>Appendix</a>
+</nav>
+
+<main>
+
+<!-- I ─────────────────────────────────────────────────────────────────────────────────────── -->
+<section class="sec" id="lead-essay">
+  <div class="sec-head">
+    <span class="sec-num">I</span>
+    <h2 class="sec-title">Lead Essay</h2>
+  </div>
+  <article class="card lead" data-type="research" data-plate="confluence">
+    <div class="body">
+      <div class="meta"><time datetime="2026-07-14">July 14, 2026</time><span class="sl">//</span>Lead Essay</div>
+      <h3 class="hd"><a href="coordination-framework.html">The Household as a System of Record</a></h3>
+      <p class="sum">Seven systems, one household. The argument: the record is the unit of
+        management, and the portfolio is one entry in it.</p>
+    </div>
+    <div class="frag"><svg viewBox="0 0 480 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#pl-confluence"/></svg></div>
+  </article>
+</section>
+
+<!-- II ────────────────────────────────────────────────────────────────────────────────────── -->
+<section class="sec" id="research-notes">
+  <div class="sec-head">
+    <span class="sec-num">II</span>
+    <h2 class="sec-title">Research Notes</h2>
+    <p class="sec-note">Evidence, and the method behind it. Every figure cited in this division is
+      traceable to a published exhibit.</p>
+  </div>
+  <div class="cards cards--3">
+    <article class="card" data-type="research" data-plate="watershed">
+      <div class="meta"><time datetime="2026-07-02">July 2, 2026</time><span class="sl">//</span>Research Note</div>
+      <h3 class="hd"><a href="coordination.html">What a Coordinated Read Catches First</a></h3>
+      <p class="sum">Reading the systems together, in one sitting, surfaces a different first
+        finding than reading any one of them alone.</p>
+      <div class="frag"><svg viewBox="0 0 480 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#pl-watershed"/></svg></div>
+    </article>
+    <article class="card" data-type="research" data-plate="contour">
+      <div class="meta"><time datetime="2026-06-19">June 19, 2026</time><span class="sl">//</span>Research Note</div>
+      <h3 class="hd"><a href="thesis.html">Factor Exposure Without a Factor Bet</a></h3>
+      <p class="sum">A systematic portfolio carries exposures whether or not anyone chose them.
+        Naming them is the first step to owning them.</p>
+      <div class="frag"><svg viewBox="0 0 480 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#pl-contour"/></svg></div>
+    </article>
+    <article class="card" data-type="research" data-plate="current">
+      <div class="meta"><time datetime="2026-06-05">June 5, 2026</time><span class="sl">//</span>Research Note</div>
+      <h3 class="hd"><a href="tearsheet.html">Momentum, Measured Out of Sample</a></h3>
+      <p class="sum">The model portfolio is hypothetical and append-only. What it is for is
+        testing a method, not advertising a result.</p>
+      <div class="frag"><svg viewBox="0 0 480 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#pl-current"/></svg></div>
+    </article>
+  </div>
+</section>
+
+<!-- III ───────────────────────────────────────────────────────────────────────────────────── -->
+<section class="sec" id="tax-planning">
+  <div class="sec-head">
+    <span class="sec-num">III</span>
+    <h2 class="sec-title">Tax &amp; Planning</h2>
+    <p class="sec-note">The decisions that are cheap to get right in advance and expensive to
+      revisit afterwards.</p>
+  </div>
+  <div class="cards cards--3">
+    <article class="card" data-type="research" data-plate="gradient">
+      <div class="meta"><time datetime="2026-07-21">July 21, 2026</time><span class="sl">//</span>Research Note</div>
+      <h3 class="hd"><a href="leakage.html">Bracket Friction in the Realization Year</a></h3>
+      <p class="sum">Where the marginal rate tightens fastest, the order of operations matters more
+        than the size of any single transaction.</p>
+      <div class="frag"><svg viewBox="0 0 480 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#pl-gradient"/></svg></div>
+    </article>
+    <article class="card" data-type="commentary" data-plate="boundary">
+      <div class="meta"><time datetime="2026-06-27">June 27, 2026</time><span class="sl">//</span>Commentary</div>
+      <h3 class="hd"><a href="statemap.html">Domicile: What Actually Has to Move</a></h3>
+      <p class="sum">Changing a state line on a tax return is the last step. The audit of what
+        precedes it is the work.</p>
+      <div class="frag"><svg viewBox="0 0 480 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#pl-boundary"/></svg></div>
+    </article>
+    <article class="card" data-type="commentary" data-plate="tributary">
+      <div class="meta"><time datetime="2026-05-28">May 28, 2026</time><span class="sl">//</span>Commentary</div>
+      <h3 class="hd"><a href="taxlab.html">Where the Distribution Actually Comes From</a></h3>
+      <p class="sum">Spending is met from several accounts at once. Which ones, in which order,
+        is a decision — usually an unmade one.</p>
+      <div class="frag"><svg viewBox="0 0 480 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#pl-tributary"/></svg></div>
+    </article>
+  </div>
+</section>
+
+<!-- IV ────────────────────────────────────────────────────────────────────────────────────── -->
+<section class="sec" id="market-structure">
+  <div class="sec-head">
+    <span class="sec-num">IV</span>
+    <h2 class="sec-title">Market Structure</h2>
+    <p class="sec-note">Where a household's capital is held, and what that structure does to the
+      choices available to it.</p>
+  </div>
+  <div class="cards cards--2">
+    <article class="card" data-type="research" data-plate="basin">
+      <div class="meta"><time datetime="2026-07-08">July 8, 2026</time><span class="sl">//</span>Research Note</div>
+      <h3 class="hd"><a href="case-business-sale.html">Trapped Capital Inside the Operating Company</a></h3>
+      <p class="sum">Retained capital inside a business is still household capital. It is simply
+        held where fewer decisions can reach it.</p>
+      <div class="frag"><svg viewBox="0 0 480 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#pl-basin"/></svg></div>
+    </article>
+    <article class="card" data-type="commentary" data-plate="delta">
+      <div class="meta"><time datetime="2026-06-11">June 11, 2026</time><span class="sl">//</span>Commentary</div>
+      <h3 class="hd"><a href="case-inheritance.html">Transfer Is a Sequence, Not an Event</a></h3>
+      <p class="sum">Wealth leaves a household through several channels over many years, and each
+        one splits again downstream.</p>
+      <div class="frag"><svg viewBox="0 0 480 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#pl-delta"/></svg></div>
+    </article>
+  </div>
+</section>
+
+<!-- V ─────────────────────────────────────────────────────────────────────────────────────── -->
+<section class="sec" id="practice-updates">
+  <div class="sec-head">
+    <span class="sec-num">V</span>
+    <h2 class="sec-title">Practice Updates</h2>
+    <p class="sec-note">Household briefings. Quiet by construction — the type carries these, not
+      the artwork.</p>
+  </div>
+  <div class="cards cards--2">
+    <article class="card" data-type="household" data-plate="divide">
+      <div class="meta"><time datetime="2026-07-25">July 25, 2026</time><span class="sl">//</span>Household Briefing</div>
+      <h3 class="hd"><a href="coordination-review.html">Coordination Reviews: What Changed This Quarter</a></h3>
+      <p class="sum">The standing agenda, the order the systems are read in, and what now carries
+        a named owner.</p>
+      <div class="frag"><svg viewBox="0 0 480 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#pl-divide"/></svg></div>
+    </article>
+    <article class="card" data-type="household" data-plate="watershed">
+      <div class="meta"><time datetime="2026-07-25">July 25, 2026</time><span class="sl">//</span>Household Briefing</div>
+      <h3 class="hd"><a href="opportunity-register.html">The Opportunity Register, Third Quarter</a></h3>
+      <p class="sum">Open items, each with an owner and a next review date. Closed items stay on
+        the record rather than disappearing.</p>
+      <div class="frag"><svg viewBox="0 0 480 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#pl-watershed"/></svg></div>
+    </article>
+  </div>
+</section>
+
+<!-- VI ────────────────────────────────────────────────────────────────────────────────────── -->
+<section class="sec" id="reading-list">
+  <div class="sec-head">
+    <span class="sec-num">VI</span>
+    <h2 class="sec-title">Reading List</h2>
+    <p class="sec-note">Published earlier, still current, and relevant to this issue.</p>
+  </div>
+  <div class="rl">
+    <a href="every-portfolio-has-two-returns.html">
+      <span class="t">Every Portfolio Has Two Returns</span><span class="k">Essay</span></a>
+    <a href="the-worlds-largest-investors.html">
+      <span class="t">The World's Largest Investors</span><span class="k">Essay</span></a>
+    <a href="enough-is-a-number.html">
+      <span class="t">Enough Is a Number</span><span class="k">Essay</span></a>
+    <a href="manual.html">
+      <span class="t">The Operating Manual</span><span class="k">Reference</span></a>
+    <a href="the-record.html">
+      <span class="t">The Record</span><span class="k">Reference</span></a>
+  </div>
+</section>
+
+<!-- VII ───────────────────────────────────────────────────────────────────────────────────── -->
+<section class="sec" id="appendix">
+  <div class="sec-head">
+    <span class="sec-num">VII</span>
+    <h2 class="sec-title">Appendix</h2>
+  </div>
+  <dl class="apx">
+    <dt>Structure</dt>
+    <dd>Every issue runs the same seven divisions in the same order. A division may be thin in a
+      given quarter; it is not reordered, and it is not dropped.</dd>
+
+    <dt>Survey plates</dt>
+    <dd>The artwork is a closed library of ten structural plates. A piece is assigned the plate
+      whose structure matches its subject. The plates carry no data: they are not charts, they
+      encode no measurement, and nothing in them should be read as a figure.</dd>
+
+    <dt>Figures</dt>
+    <dd>This issue publishes no dollar or percentage figure. Where a piece links to one, the
+      figure lives on the exhibit that derives it, alongside its provenance.</dd>
+
+    <dt>Model portfolio</dt>
+    <dd>References to the Model Portfolio describe a hypothetical, append-only backtest — not
+      actual trading and not any client account. Past performance, hypothetical or actual, does
+      not guarantee future results.</dd>
+
+    <dt>Corrections</dt>
+    <dd>Corrections are published in the following issue's Appendix and the original entry is
+      annotated rather than rewritten.</dd>
+  </dl>
+</section>
+
+</main>
+
+<!--FIRM_ANCHOR-->
+
+<div class="foot">
+  Research &amp; illustrative modeling, not investment, tax, or legal advice. Driftwood Wealth is the
+  private-wealth practice of Alec Messino. Securities products and advisory services offered through
+  Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative
+  and Financial Advisor of PAS and a Financial Representative of The Guardian Life Insurance Company
+  of America® (Guardian), New York, NY. PAS is a wholly owned subsidiary of Guardian. Capitol Wealth
+  Strategies, LLC is not an affiliate or subsidiary of PAS or Guardian. All figures are illustrative
+  models for educational purposes, not investment, tax, or legal advice, and not a recommendation.
+  <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,106 @@
+"""No build-time token may ever reach a shipped page.
+
+The templates carry tokens that are resolved at build time — `<!--FIRM_ANCHOR-->` renders the band
+naming the practice and its custodian ("A PRACTICE OF ALEC MESSINO · custody Park Avenue Securities
+LLC (PAS), member FINRA/SIPC"), and `<!--PLATE_LIBRARY-->` expands the canonical survey library.
+
+The failure mode is silent and it recurred for weeks. There are two build paths — `scripts/sync_docs.py`
+and the `drift` CLI (which the nightly pages job runs) — and only `render_hub` resolved the firm
+anchor. So `drift statemap|taxlab|leakage` wrote docs/ pages containing the literal HTML comment
+where the identity strip belongs. An HTML comment renders as nothing, so the page looked merely a
+little short rather than broken. Running sync_docs.py repaired it; the next nightly run regressed it.
+
+Two guards, because either alone is insufficient: the render functions must resolve tokens (or the
+CLI reintroduces it), and the shipped output must be clean (or a future template with a new token
+slips through a path nobody thought to update).
+"""
+import re
+from pathlib import Path
+
+import pytest
+
+from drift import exhibit
+
+DOCS = Path(__file__).resolve().parents[1] / "docs"
+WEB = Path(__file__).resolve().parents[1] / "src" / "drift" / "web"
+
+TOKENS = ("<!--FIRM_ANCHOR-->", "<!--PLATE_LIBRARY-->")
+
+# Deliberately unresolved, and it must stay that way. privacy.html and terms.html are structured
+# drafts awaiting counsel and the compliance principal; each carries `<!--LEGAL_DATE-->[date pending]`
+# so the *visible* text reads "Last updated: [date pending]" while the token marks where a real
+# effective date goes once the policy text is approved. Inventing a "last updated" date for a legal
+# document that has not been reviewed would be a false representation, so nothing resolves it. The
+# guard below pins it to those two draft pages so it cannot spread onto a live one.
+DEFERRED = {"LEGAL_DATE": {"privacy.html", "terms.html"}}
+
+# every render_* that turns a template into a shipped page
+RENDERERS = ("render_hub", "render_thesis", "render_taxlab", "render_leakage",
+             "render_statemap", "render_concentration")
+
+
+@pytest.mark.parametrize("name", RENDERERS)
+def test_no_render_path_emits_a_raw_token(name):
+    """The CLI path must resolve tokens, not just sync_docs.py."""
+    html = getattr(exhibit, name)({})
+    for token in TOKENS:
+        assert token not in html, f"{name}() ships a raw {token}"
+
+
+@pytest.mark.parametrize("name", RENDERERS)
+def test_every_render_path_carrying_the_anchor_actually_renders_it(name):
+    """Stronger than 'no token': if the template asks for the identity strip, the output has it.
+    A renderer that stripped the token without substituting anything would pass the test above."""
+    template_attr = {"render_hub": "HUB_TEMPLATE", "render_thesis": "THESIS_TEMPLATE",
+                     "render_taxlab": "TAXLAB_TEMPLATE", "render_leakage": "LEAKAGE_TEMPLATE",
+                     "render_statemap": "STATEMAP_TEMPLATE",
+                     "render_concentration": "CONCENTRATION_TEMPLATE"}[name]
+    template = getattr(exhibit, template_attr).read_text(encoding="utf-8")
+    if "<!--FIRM_ANCHOR-->" not in template:
+        pytest.skip(f"{template_attr} does not use the firm anchor")
+    html = getattr(exhibit, name)({})
+    assert 'class="firm-anchor"' in html, f"{name}() dropped the identity strip instead of rendering it"
+    assert "Park Avenue Securities" in html
+
+
+def test_no_shipped_page_contains_a_raw_token():
+    """The backstop. Covers every page and every build path, including ones added later."""
+    bad = []
+    for page in sorted(DOCS.glob("*.html")):
+        text = page.read_text(encoding="utf-8")
+        for token in TOKENS:
+            if token in text:
+                bad.append(f"{page.name}: {token}")
+    assert not bad, f"raw build tokens shipped in docs/: {bad}"
+
+
+def test_every_template_token_is_one_the_build_knows_how_to_resolve():
+    """A new <!--SOMETHING--> token in a template that no build path handles would ship raw. This
+    fails at authoring time instead of in production."""
+    known = {t.strip("<!->") for t in TOKENS}
+    unknown = set()
+    for tpl in sorted(WEB.glob("*.html")):
+        for m in re.findall(r"<!--([A-Z][A-Z0-9_]{3,})-->", tpl.read_text(encoding="utf-8")):
+            if m in known or tpl.name in DEFERRED.get(m, ()):
+                continue
+            unknown.add(f"{tpl.name}: <!--{m}-->")
+    assert not unknown, (
+        f"template tokens no build path resolves: {sorted(unknown)}. Add handling in "
+        "drift/exhibit.py::_embed and scripts/sync_docs.py::_inject_tokens, then list it in TOKENS."
+    )
+
+
+def test_deferred_tokens_stay_on_their_draft_pages_and_show_a_human_fallback():
+    """A deliberately-unresolved token is only acceptable where the visible text is honest about it.
+    If LEGAL_DATE spreads to a live page, or loses its "[date pending]" fallback, it would render as
+    an empty gap where a date should be — which reads as a date the reader simply missed."""
+    for token, pages in DEFERRED.items():
+        for tpl in sorted(WEB.glob("*.html")):
+            if f"<!--{token}-->" not in tpl.read_text(encoding="utf-8"):
+                continue
+            assert tpl.name in pages, f"<!--{token}--> escaped onto {tpl.name}"
+            shipped = (DOCS / tpl.name).read_text(encoding="utf-8")
+            assert "[date pending]" in shipped, f"{tpl.name} lost its visible fallback"
+            assert "structured draft" in shipped, (
+                f"{tpl.name} no longer declares itself a draft, so a pending date is no longer honest"
+            )

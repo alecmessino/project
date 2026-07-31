@@ -197,6 +197,21 @@ def export_ledger(state: dict, out: str | Path) -> Path:
     return out
 
 
+def _embed(template: str, state: dict) -> str:
+    """Embed the state blob AND resolve every build-time token.
+
+    Why this exists: for a long time only `render_hub` resolved <!--FIRM_ANCHOR-->, so the nightly
+    `drift statemap|taxlab|leakage` runs shipped docs/ pages containing the raw HTML comment where
+    the firm identity strip belongs — the band naming the practice and its custodian. Running
+    scripts/sync_docs.py repaired it, then the next nightly regressed it, so the live site lost that
+    strip on those pages between builds. Every render path now goes through one function; adding a
+    new token means editing one place, and test_no_build_token_ever_ships catches the rest.
+    """
+    from .site import firm_anchor_html
+    html = template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+    return html.replace("<!--FIRM_ANCHOR-->", firm_anchor_html())
+
+
 def render_hub(state: dict) -> str:
     """Static, self-contained markets-only landing hub with state embedded.
 
@@ -205,10 +220,7 @@ def render_hub(state: dict) -> str:
     pages job, and any test that renders the hub) resolves the <!--FIRM_ANCHOR-->
     token instead of shipping it raw.
     """
-    from .site import firm_anchor_html
-    template = HUB_TEMPLATE.read_text()
-    html = template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
-    return html.replace("<!--FIRM_ANCHOR-->", firm_anchor_html())
+    return _embed(HUB_TEMPLATE.read_text(), state)
 
 
 def export_hub(state: dict, out: str | Path) -> Path:
@@ -220,8 +232,7 @@ def export_hub(state: dict, out: str | Path) -> Path:
 
 def render_thesis(state: dict) -> str:
     """Static, self-contained thesis page with state embedded."""
-    template = THESIS_TEMPLATE.read_text()
-    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+    return _embed(THESIS_TEMPLATE.read_text(), state)
 
 
 def export_thesis(state: dict, out: str | Path) -> Path:
@@ -233,8 +244,7 @@ def export_thesis(state: dict, out: str | Path) -> Path:
 
 def render_taxlab(state: dict) -> str:
     """Static, self-contained Tax Lab page with state embedded."""
-    template = TAXLAB_TEMPLATE.read_text()
-    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+    return _embed(TAXLAB_TEMPLATE.read_text(), state)
 
 
 def export_taxlab(state: dict, out: str | Path) -> Path:
@@ -247,8 +257,7 @@ def export_taxlab(state: dict, out: str | Path) -> Path:
 
 def render_leakage(state: dict) -> str:
     """Static, self-contained Tax-Leakage Diagnostic (Before/After) with state embedded."""
-    template = LEAKAGE_TEMPLATE.read_text()
-    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+    return _embed(LEAKAGE_TEMPLATE.read_text(), state)
 
 
 def export_leakage(state: dict, out: str | Path) -> Path:
@@ -260,8 +269,7 @@ def export_leakage(state: dict, out: str | Path) -> Path:
 
 def render_statemap(state: dict) -> str:
     """Static, self-contained multi-dimension State Tax Map with state embedded."""
-    template = STATEMAP_TEMPLATE.read_text()
-    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+    return _embed(STATEMAP_TEMPLATE.read_text(), state)
 
 
 def export_statemap(state: dict, out: str | Path) -> Path:
@@ -273,8 +281,7 @@ def export_statemap(state: dict, out: str | Path) -> Path:
 
 def render_concentration(state: dict) -> str:
     """Static, self-contained "Single asset risk" heatmap with the strategy dataset embedded."""
-    template = CONCENTRATION_TEMPLATE.read_text()
-    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+    return _embed(CONCENTRATION_TEMPLATE.read_text(), state)
 
 
 def export_concentration(state: dict, out: str | Path) -> Path:

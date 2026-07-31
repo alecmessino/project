@@ -86,6 +86,16 @@
     text-transform:uppercase;color:var(--muted);white-space:nowrap}
   .rows .d{grid-column:1;font-family:var(--sans);font-size:14px;line-height:1.55;color:var(--body);
     margin:4px 0 0;max-width:64ch}
+  .rows .q{color:var(--ink);font-weight:700}
+
+  /* Decision groups. The shelf is organized by the decision a visitor is facing, not by the
+     discipline a tool belongs to — clients do not think in disciplines. The heading sits inside
+     .rows so the hairline grid stays continuous through it. A group ships only when it has an
+     entry: "Live off wealth" is reserved in OPERATIONS.md and deliberately absent here. */
+  .grp{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.17em;
+    text-transform:uppercase;color:var(--accent-strike);padding:24px 0 9px;
+    border-bottom:1px solid var(--line2)}
+  .grp:first-child{padding-top:15px}
 
   /* the Review gets the one raised treatment on the page — it is the flagship */
   .flag{background:var(--soft);border-top:1px solid var(--frame-line);margin:22px 0 0;
@@ -121,18 +131,13 @@
 <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fiduciary.html">Fiduciary Standard</a></div></div>
-      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="coordination-framework.html">The Seven Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="household-example.html">Household Example</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Lab</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="coordination-framework.html">The Seven Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="household-example.html">Household Example</a><a href="score.html">Coordination Assessment</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Lab</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
       <div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-memos" aria-current="page">Decision Memos</a><a href="insights.html#decision-tools" aria-current="page">Decision Tools</a><a href="insights.html#decision-library" aria-current="page">Decision Library</a></div></div>
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">CPA Collaboration</a><a href="estate-attorneys.html">Estate Attorneys</a><a href="referral.html">Referral Process</a></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
-    </nav>
-
-
-
-
-<header class="mast">
+    </nav><header class="mast">
   <h1>Insights</h1>
   <p class="sub">Everything Driftwood publishes, and every tool it opens to the public: the
     evidence, the short notes, the quarterly, and the decisions themselves — worked all the way
@@ -219,22 +224,38 @@
   <div class="sec-head">
     <span class="sec-num">V</span>
     <h2 class="sec-title">Decision Tools</h2>
-    <p class="sec-note">Interactive reviews you can run yourself, on your own numbers, without
-      speaking to anyone. Each one answers a single question end to end.</p>
+    <p class="sec-note">Interactive analyses you can run yourself, on your own numbers, without
+      speaking to anyone. Each one answers a single decision end to end, and each one hands you the
+      next. Set your household once and it follows you across all of them.</p>
   </div>
   <div class="rows">
+    <div class="grp">Start here</div>
+    <a href="score.html"><span class="t">Coordination Assessment</span><span class="k">Tool</span>
+      <span class="d"><span class="q">How coordinated does your financial life need to be?</span>
+        Check what's true for your household and see the systems it moves, the matters that implies,
+        and where the coordination is worth the most. No score, no grade.</span></a>
+
+    <div class="grp">Build wealth</div>
     <a href="statemap.html"><span class="t">State Tax Atlas</span><span class="k">Tool</span>
-      <span class="d">What a household actually keeps, state by state, once every layer of tax is
-        applied rather than just the headline rate.</span></a>
-    <a href="leakage.html"><span class="t">Tax Diagnostic</span><span class="k">Tool</span>
-      <span class="d">Where a portfolio loses return to tax before it reaches the household, and
-        what is recoverable by structure alone.</span></a>
+      <span class="d"><span class="q">Where should you build wealth?</span> What a household actually
+        keeps, state by state, once every layer of tax is applied rather than just the headline
+        rate.</span></a>
     <a href="taxlab.html"><span class="t">After-Tax Lab</span><span class="k">Tool</span>
-      <span class="d">The same portfolio measured after tax rather than before — the number the
-        household actually spends.</span></a>
+      <span class="d"><span class="q">What does your portfolio actually keep?</span> The same
+        portfolio measured after tax rather than before — the number the household actually
+        spends.</span></a>
+
+    <div class="grp">Protect wealth</div>
+    <a href="leakage.html"><span class="t">Tax Diagnostic</span><span class="k">Tool</span>
+      <span class="d"><span class="q">Where is your wealth leaking?</span> Where a portfolio loses
+        return to tax before it reaches the household, and what is recoverable by structure
+        alone.</span></a>
+
+    <div class="grp">Unlock wealth</div>
     <a href="concentration.html"><span class="t">Concentrated Position Lab</span><span class="k">Tool</span>
-      <span class="d">How to unwind a large single-stock position: the routes available, what each
-        one costs, and the order they run in.</span></a>
+      <span class="d"><span class="q">How do you unwind a concentrated position?</span> The routes
+        out of a large single-stock holding: what each one costs in tax, time, and liquidity, and the
+        order they run in.</span></a>
   </div>
 </section>
 

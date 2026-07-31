@@ -352,3 +352,29 @@ def test_the_self_serve_tools_never_grade_a_household():
         t = (WEB / tool).read_text(encoding="utf-8")
         assert "Coordination Index" not in t, \
             f"{tool} promises an Index — a self-serve tool does not grade a household"
+
+
+def test_the_built_masthead_matches_the_source_masthead():
+    """docs/ is the DEPLOYED build. A regenerated source with a stale build ships the old site.
+
+    This shipped once: a merge resolved docs/ to the other side and the rebuild that followed was
+    never staged, so 51 built pages carried a masthead without the Coordination Assessment — the
+    exact nav fix the change existed to make. Every other test read src/, so the suite was green
+    while the deployable artifact was wrong. Compare what actually deploys against its template.
+    """
+    nav_re = re.compile(r'<nav class="dwnav dwnav--phase2".*?</nav>', re.S)
+    stale = []
+    for src in _nav_pages():
+        built = DOCS / src.name
+        if not built.exists():
+            continue                      # hub.html/report.html deploy under a different name
+        a = nav_re.search(src.read_text(encoding="utf-8"))
+        b = nav_re.search(built.read_text(encoding="utf-8"))
+        if not b:
+            stale.append(f"{src.name}: built page has no masthead")
+        elif a and a.group(0) != b.group(0):
+            stale.append(src.name)
+    assert not stale, (
+        "docs/ is out of date with src/ — run `python3 scripts/phase2_nav.py && "
+        f"python3 scripts/sync_docs.py` and commit the result: {sorted(stale)[:8]}"
+    )

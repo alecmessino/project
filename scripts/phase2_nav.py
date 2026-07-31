@@ -126,7 +126,7 @@ def build_nav(page_file):
         parts.append('<div class="%s">%s%s</div>' % (cls, trigger, panel))
     parts.append('<span class="dwnav-sep" aria-hidden="true"></span>')
     parts.append('<a class="dwnav-access" href="private.html">Client Access</a>')
-    parts.append('<a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review</a>')
+    parts.append('<a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>')
     return '<nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">\n      %s\n    </nav>' % "\n      ".join(parts)
 
 NAV_RE = re.compile(r'<nav\b[^>]*>.*?</nav>', re.S)

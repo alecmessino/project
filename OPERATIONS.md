@@ -369,11 +369,44 @@ Canonical, and pinned in `tests/test_hub_lattice_decisions.py`:
 - **Seven systems.** No eighth node — K8 puts four diameters through the centre, straight through
   the hub label.
 - **Five decision traces**, each touching ≥5 systems. The most important interaction on the page.
+- **Seven spokes** centre-to-rim, the only bold figure on the plate, and a centre that is lit at all
+  times. Coordination is drawn, not asserted. See the 2026-08-01 note below.
 - **Two-tier edges** — structural vs situational, *derived* from the published traces
   (`tests/test_hub_lattice_weights.py`), not asserted. This is what makes the diagram read as
-  researched rather than drawn.
+  researched rather than drawn. Narrowed to a whisper at rest on 2026-08-01 so the spokes could
+  carry the emphasis alone; derivation and class unchanged.
 - **Graphite rest state, one blue accent**, no second hue, tokens only (no hardcoded hex).
 - **Interaction retained** — explanatory, not decorative — and `prefers-reduced-motion` honoured.
+
+### The spokes, and what they cost the structural tier (2026-08-01)
+
+The lattice had drawn twenty-one dependencies among seven systems and **nothing touching the
+centre**. COORDINATION was a floating word — the page's entire thesis was the one relation the
+diagram declined to draw. Seven spokes now run centre-to-rim, and they are the only bold figure on
+the plate. The centre also rests in ink permanently (it used to sit at `--muted` until a trace lit
+it, so a visitor who never interacted saw the hub as the *faintest* mark in a drawing built to say
+the hub is where everything meets).
+
+This revises an earlier decision and the revision should be visible rather than quiet. **Two
+emphasised figures cannot share one diagram** — that is the failure this lattice has now shipped
+three times, most recently as six accented chords painting a lopsided quadrilateral across a regular
+heptagon. With the spokes at full weight, keeping the structural six at their previous `.58/1.2`
+reproduced it exactly. So the rim dropped back to a quiet mesh.
+
+The derived structural tier is **narrowed, not deleted**: the six edges keep their class, keep their
+derivation from the published traces, and keep a real weight difference (`0.9` vs `0.5`, still the
+1.8× the tier guard requires). It is a whisper at rest — legible when the eye settles on the rim,
+invisible while the eye reads the figure as a whole. The claim survives; it stopped fighting the
+geometry.
+
+The rest caption moved with the encoding. It read *"the heavier lines are the ones that move in all
+of them"*, which decoded the rim tier; the heavy lines are the spokes now, so a caption left alone
+would have been actively pointing at the wrong marks. `test_the_caption_decodes_the_spokes_it_now_describes`
+fails if the two drift apart again.
+
+**Already correct, and worth recording as such:** the requested hover behaviour — a system and its
+direct dependencies in the accent, everything unrelated dropped back — was already implemented in
+`show(i)` and needed no change. Verified in-browser, not inferred.
 
 **No survey plate behind the lattice (removed 2026-07-31).** A hydrographic engraving used to sit
 under the diagram at 5% opacity as "ground texture". It was decoration competing with an argument —

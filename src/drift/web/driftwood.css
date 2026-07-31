@@ -4,14 +4,28 @@
    • Erode (--serif): editorial callouts ONLY — ledes, value statements, philosophy pull-quotes,
      introductory paragraphs — where the serif evokes emotional trust and prestige.
    Linked LAST in each <head> to unify tokens across all pages. */
-@font-face{font-family:'Satoshi';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/satoshi-400.woff2") format("woff2")}
-@font-face{font-family:'Satoshi';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/satoshi-500.woff2") format("woff2")}
-@font-face{font-family:'Satoshi';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/satoshi-700.woff2") format("woff2")}
+/* ── The two faces, self-hosted, complete ──────────────────────────────────────────────────────
+   Both families now ship as VARIABLE woff2: four files carry every weight the site can ask for,
+   where seven static files carried three Satoshi weights and four Erode weights and nothing else.
+   Smaller in total, and it removes two real defects:
+
+     · src/drift/web/fonts/ held only the three Satoshi statics — the four Erode files existed in
+       docs/ alone. The source tree could not rebuild the site's own editorial face.
+     · Nothing shipped an italic face, so every `font-style:italic` on the site (the founder's line,
+       editorial asides) was SYNTHESISED by the browser — a mechanical slant of the roman, not
+       Erode's drawn italic.
+
+   Self-hosted on purpose. Pulling these from a font CDN would put a render-blocking third-party
+   request in front of every page and hand a visitor's IP to that CDN, for files already committed
+   here — so no external stylesheet fetch, and the guards in tests/test_typography.py enforce it.
+   The src format is plain woff2: the older variations-specific format keyword is unrecognised by
+   some engines, which then skip the face entirely and fall through to Georgia. The weight RANGE is
+   what declares the face variable. */
+@font-face{font-family:'Satoshi';font-style:normal;font-weight:300 900;font-display:swap;src:url("fonts/Satoshi-Variable.woff2") format("woff2")}
+@font-face{font-family:'Satoshi';font-style:italic;font-weight:300 900;font-display:swap;src:url("fonts/Satoshi-VariableItalic.woff2") format("woff2")}
 /* Erode — editorial callouts / ledes / pull-quotes only, never headings or dense UI. */
-@font-face{font-family:'Erode';font-style:normal;font-weight:400;font-display:swap;src:url("fonts/erode-400.woff2") format("woff2")}
-@font-face{font-family:'Erode';font-style:normal;font-weight:500;font-display:swap;src:url("fonts/erode-500.woff2") format("woff2")}
-@font-face{font-family:'Erode';font-style:normal;font-weight:600;font-display:swap;src:url("fonts/erode-600.woff2") format("woff2")}
-@font-face{font-family:'Erode';font-style:normal;font-weight:700;font-display:swap;src:url("fonts/erode-700.woff2") format("woff2")}
+@font-face{font-family:'Erode';font-style:normal;font-weight:300 700;font-display:swap;src:url("fonts/Erode-Variable.woff2") format("woff2")}
+@font-face{font-family:'Erode';font-style:italic;font-weight:300 700;font-display:swap;src:url("fonts/Erode-VariableItalic.woff2") format("woff2")}
 
 :root{
   /* Rebrand (July 2026): limestone paper, slate-navy ink, editorial blue for identity/wayfinding.

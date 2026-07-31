@@ -111,7 +111,9 @@ def main() -> int:
                   "leadership.html", "fiduciary.html", "six-systems.html", "first-90-days.html",
                   "commentary.html", "estate-attorneys.html", "referral.html",
                   # The Driftwood Review — the quarterly publication template
-                  "driftwood-review.html"):
+                  "driftwood-review.html",
+                  # Decision Memos — the reasoning of record behind a Decision Register entry
+                  "decision-memo-domicile.html"):
         (DOCS / asset).write_text(_inject_tokens((WEB / asset).read_text()))
         print(f"   {asset:15} -> docs/{asset} (copied)")
     # Binary assets (e.g. the founder headshot) — copy through only if present, so the About page's

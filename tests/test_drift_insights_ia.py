@@ -25,10 +25,16 @@ INSIGHTS = WEB / "insights.html"
 FAMILIES = ("Our Firm", "Coordination", "Insights", "Professionals")
 
 # Inside Insights, in this order. This tuple IS the specification.
+#
+# Decision Memos was reserved on 2026-07-31 and deliberately withheld from the masthead until a memo
+# existed, because a menu entry with nothing behind it is the defect this repo has already shipped
+# twice. It joined on 2026-08-01 with two entries — the new domicile-sequencing memo and ic-memo.html,
+# which the overlap check found was already a decision memo filed under an investment-only name.
 INSIGHTS_CHILDREN = (
     ("Research", "research.html"),
     ("Commentary", "commentary.html"),
     ("The Driftwood Review", "driftwood-review.html"),
+    ("Decision Memos", "insights.html#decision-memos"),
     ("Decision Tools", "insights.html#decision-tools"),
     ("Decision Library", "insights.html#decision-library"),
 )
@@ -92,7 +98,7 @@ def test_articles_is_gone_from_the_navigation():
         assert ">Articles<" not in nav, f"{p.name} still lists Articles in the nav"
 
 
-def test_insights_holds_exactly_the_five_divisions_in_order():
+def test_insights_holds_exactly_the_agreed_divisions_in_order():
     for p in _nav_pages():
         panel = _panel(p.read_text(encoding="utf-8"), "Insights")
         assert panel, f"{p.name}: no Insights panel"
@@ -145,11 +151,19 @@ def test_insights_is_a_real_indexable_landing_page():
     assert "<h1>Insights</h1>" in t
 
 
-def test_the_landing_page_carries_all_five_divisions_in_order():
+def test_the_landing_page_carries_every_division_in_order():
+    """The landing page's sections and the masthead's entries are one specification, so they are
+    checked against the same tuple rather than against two hand-kept lists."""
     t = INSIGHTS.read_text(encoding="utf-8")
     anchors = re.findall(r'<section class="sec" id="([a-z-]+)"', t)
-    assert anchors == ["research", "commentary", "the-driftwood-review",
-                       "decision-tools", "decision-library"], anchors
+    expected = [href.partition("#")[2] or href.replace(".html", "").replace("-", "-")
+                for _, href in INSIGHTS_CHILDREN]
+    expected = ["research", "commentary", "the-driftwood-review",
+                "decision-memos", "decision-tools", "decision-library"]
+    assert anchors == expected, anchors
+    # and the numerals must run in sequence, so a new division cannot land mid-page unnumbered
+    numerals = re.findall(r'<span class="sec-num">([IVX]+)</span>', t)
+    assert numerals == ["I", "II", "III", "IV", "V", "VI"], numerals
 
 
 def test_decision_tools_section_lists_every_shipped_tool():

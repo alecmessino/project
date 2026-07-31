@@ -44,6 +44,9 @@ FAMILIES = [
         ("Research", "research.html", "research.html"),
         ("Commentary", "commentary.html", "commentary.html"),
         ("The Driftwood Review", "driftwood-review.html", "driftwood-review.html"),
+        # Reserved since 2026-07-31, entering the menu now that a memo exists — the rule was
+        # that the category ships in the same commit as its first entry, never before it.
+        ("Decision Memos", "insights.html#decision-memos", "insights.html"),
         ("Decision Tools", "insights.html#decision-tools", "insights.html"),
         ("Decision Library", "insights.html#decision-library", "insights.html"),
     ]),
@@ -71,6 +74,8 @@ CURRENT = {
     "insights.html": ("Insights", "insights.html"),
     "commentary.html": ("Insights", "commentary.html"),
     "driftwood-review.html": ("Insights", "driftwood-review.html"),
+    "decision-memo-domicile.html": ("Insights", "insights.html"),
+    "ic-memo.html": ("Insights", "insights.html"),
     # Decision Tools — these have no menu entry of their own (the menu names the category, the
     # landing page enumerates the tools), so they mark the Insights family and the category row.
     "statemap.html": ("Insights", "insights.html"),

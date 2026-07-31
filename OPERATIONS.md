@@ -405,19 +405,41 @@ The architecture is settled — one frame, one masthead position, one naming con
 holds. Further visual refinement has low marginal value. The remaining leverage is proof and funnel,
 in this order.
 
-**1. Decision Memos — the missing proof artifact.** Coordination is the product, and a visitor
-cannot currently see what coordinated *thinking* looks like. The category is reserved in the IA and
-deliberately not in the masthead until a memo exists.
+**1. Decision Memos — SHIPPED 2026-08-01.** The category reserved on 2026-07-31 is now live, with
+the rule honoured: it entered the masthead in the same commit as its first entry, never before it.
 
-> **OPEN QUESTION, answer before building.** A Decision Memo must be distinguishable from a Decision
-> Library entry or it is a sixth division duplicating the fifth. The distinction that seems right:
-> the **Library** is a reference — "here is what happens when a household sells a business",
-> evergreen, reader-situation-led. A **Memo** is a record of reasoning on one specific decision —
-> dated, with the evidence weighed, the options rejected, and the recommendation made. Closer to
-> `ic-memo.html` (which already exists) than to `case-business-sale.html`. If that is right, the
-> first memo should be authored from the existing fictional household so it needs no new
-> substantiation, and `ic-memo.html` / `decision-register.html` should be checked for overlap before
-> a new page is created rather than after.
+**The overlap check answered the open question, and changed the build.** `ic-memo.html` was already a
+decision memo — Harris household, front matter, alternatives weighed, recorded as DR-003 — filed
+under an investment-only name. So the shelf launched with **two** entries rather than one new page
+duplicating an old one. The distinction that survived the check:
+
+| | Decision Library | Decision Memo |
+|---|---|---|
+| **Answers** | what happens when a household does X | what we thought, and when |
+| **Reader** | has not decided yet | wants the reasoning behind a decision already taken |
+| **Tense** | evergreen | dated and attributed |
+| **Carries** | the systems a situation touches | alternatives rejected · assumptions · reopening trigger |
+| **Is** | a reference | evidence |
+
+**The first memo is `decision-memo-domicile.html` (DM 2026-01 → DR-002)**, deliberately *not* an
+investment decision — establish residency before sequencing a business sale, or after. `ic-memo.html`
+on its own left the impression that Driftwood writes memos about portfolios; between them the two
+show the format is about decisions, not asset classes.
+
+It adds one section the IC memo does not have: **§ VI, what the decision set in motion** — DR-004's
+conversion window exists only because this sequencing holds, and DR-005 is deferred until the sale
+terms it gates are set. That is the coordination claim made concrete inside a single artifact rather
+than asserted on a landing page, and it is the section to keep when writing the next memo.
+
+**It publishes no dollar or percentage figure**, so it adds no FIGURE_PROVENANCE row. Every claim is
+about order, exposure and substantiation, which is what the decision actually turned on. A memo is
+precisely where an illustrative number would look authoritative and be unsourced.
+
+Writing the next one: `tests/test_decision_memo.py` runs against every entry in `MEMOS` — add the
+filename there and the guards (dateline, register entry, ≥2 rejected alternatives, disclosure) apply
+automatically. Good candidates left on the Harris record: DR-005 (gifting held pending the sale — a
+memo about *deferring* as a decision) and DR-001 (the ILIT — an estate decision, widening the range
+again).
 
 **2. Tax Diagnostic → Coordination Review handoff.** The highest-value funnel. Current state on
 `leakage.html`: the **primary** button opens the After-Tax Lab (another free tool) and the booking

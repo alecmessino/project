@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<title>Decision Memo: sequencing a move against a sale, Driftwood Wealth</title>
+<meta name="description" content="A sample Decision Memo: establishing residency before sequencing a business sale, not after. The question, the systems it moves, the alternatives rejected, and what would reopen it. The reasoning of record behind Decision Register entry DR-002. An illustrative sample for a fictional family. Not advice." />
+<link rel="canonical" href="https://driftwoodwealth.com/decision-memo-domicile.html" />
+<link rel="icon" href="favicon.svg" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Driftwood Wealth" />
+<meta property="og:title" content="Decision Memo: sequencing a move against a sale" />
+<meta property="og:description" content="One decision, written before it was made: the question, the systems it moves, the alternatives rejected, and what would reopen it." />
+<meta property="og:url" content="https://driftwoodwealth.com/decision-memo-domicile.html" />
+<style>
+  /* ═══════════════════════════════════════════════════════════════════════════════════════════
+     DECISION MEMO — the first of the series, and the one that defines the format.
+
+     WHY THIS DECISION. `ic-memo.html` already publishes one memo, but it is an *investment*
+     committee memo about a concentrated position, so on its own it leaves the impression that
+     Driftwood writes memos about portfolios. This one is deliberately not an investment decision:
+     it is a question of ORDER — establish residency before sequencing a sale, or after — which is
+     the practice's actual subject. Between them the two memos show the format is about decisions,
+     not about asset classes.
+
+     WHAT MAKES IT A MEMO RATHER THAN A LIBRARY ENTRY. The Decision Library answers "what happens
+     when a household sells a business" — evergreen, reader-situation-led, written for someone who
+     has not decided yet. A Decision Memo is the reasoning of record on ONE decision already taken:
+     dated, attributed, with the alternatives that were rejected and the condition that would
+     reopen it. The Library is a reference; the memo is evidence.
+
+     § VI IS THE PART THAT IS NEW. The IC memo ends when its decision is made. This one carries a
+     final section on what the decision set in motion — DR-004's conversion window exists only
+     because this sequencing holds, and DR-005 is deferred until the sale terms it gates are set.
+     That is the coordination claim made concrete inside a single artifact rather than asserted on
+     a landing page.
+
+     NO FIGURES. The memo publishes no dollar or percentage figure at all. Every claim is about
+     order, exposure and substantiation, which is what the decision actually turned on — and it
+     means the page needs no FIGURE_PROVENANCE row. Guarded by tests/test_decision_memo.py.
+
+     Page-local scaffolding only; record components (frontmatter, stamp, rec-head, om-sections)
+     live in the shared driftwood.css, exactly as the sibling record pages declare them.
+     ═══════════════════════════════════════════════════════════════════════════════════════════ */
+  :root{ --card:#fff; --on-dark:#e7ecf2; --on-dark-strong:#f1ede3; --on-dark-dim:#9aa3ae; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:16px/1.62 var(--sans);
+    letter-spacing:-.004em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{margin:34px auto;padding-block:0 72px;}
+  .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
+  .inner{margin:0 7px 7px}
+
+  .doc{padding:44px 44px 6px}
+  .masthead-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--accent-strike);margin-bottom:14px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.6vw + 15px,42px);line-height:1.06;
+    letter-spacing:-.022em;color:var(--ink);margin:0 0 16px;max-width:20ch}
+  .lede{font-family:var(--serif);font-size:18.5px;line-height:1.55;color:var(--dim);margin:0;max-width:60ch}
+  .lede b{color:var(--ink);font-weight:500}
+
+  .sec{padding:26px 44px 6px}
+  .sec p.body{font-size:14.5px;line-height:1.64;color:var(--body);max-width:72ch;margin:0 0 14px}
+  .sec p.body b{color:var(--ink);font-weight:500}
+
+  /* The systems a decision moves. Named, not diagrammed — the homepage lattice is an argument
+     about households in general; here the reader wants the specific list for this decision. */
+  /* Three columns, not auto-fit. Seven items never fill a rectangular grid, and the hairline look
+     comes from a 1px gap over a ruled background — so an empty cell renders as a solid block of
+     rule colour. Six moved systems tile exactly at 3 (and at 2, and at 1); the one that did NOT
+     move spans the full width on its own row, which is also where it belongs in the reading. */
+  .moves{list-style:none;margin:10px 0 6px;padding:0;display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line)}
+  .moves .quiet{grid-column:1/-1}
+  @media(max-width:900px){ .moves{grid-template-columns:repeat(2,minmax(0,1fr))} }
+  @media(max-width:600px){ .moves{grid-template-columns:1fr} }
+  .moves li{background:var(--card);padding:14px 16px}
+  .moves .mk{font-family:var(--sans);font-weight:700;font-size:9.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--accent-strike);display:block;margin-bottom:6px}
+  .moves p{margin:0;font-size:13.5px;line-height:1.55;color:var(--body)}
+  .moves .quiet{background:var(--soft)}
+  .moves .quiet .mk{color:var(--muted)}
+  .moves .quiet p{color:var(--dim)}
+
+  .alts{list-style:none;margin:6px 0 4px;padding:0;display:flex;flex-direction:column;gap:14px}
+  .alts li{padding:2px 0 2px 18px;border-left:1px solid var(--line);max-width:74ch}
+  .alts .ak{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--accent-strike);display:block;margin-bottom:6px}
+  .alts p{font-size:14px;line-height:1.6;color:var(--body);margin:0}
+  .alts p b{color:var(--ink);font-weight:500}
+
+  .ruleset{list-style:none;margin:8px 0 4px;padding:0;display:flex;flex-direction:column}
+  .ruleset li{padding:13px 0;border-bottom:1px solid var(--line2);font-size:14px;line-height:1.58;
+    color:var(--body);max-width:76ch}
+  .ruleset li:first-child{border-top:1px solid var(--line2)}
+  .ruleset li b{color:var(--ink);font-weight:500}
+  .ruleset .rk{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--accent-strike);margin-right:10px}
+
+  /* Downstream entries. A decision that changes other decisions is the thing being demonstrated. */
+  .downstream{list-style:none;margin:10px 0 4px;padding:0;display:flex;flex-direction:column}
+  .downstream li{display:grid;grid-template-columns:96px minmax(0,1fr);gap:4px 18px;
+    padding:15px 0;border-bottom:1px solid var(--line2);max-width:76ch}
+  .downstream li:first-child{border-top:1px solid var(--line2)}
+  .downstream .dr{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.12em;
+    color:var(--accent-strike);font-variant-numeric:tabular-nums}
+  .downstream .dt{font-size:14px;line-height:1.5;color:var(--ink);font-weight:500}
+  .downstream .dd{grid-column:2;margin:0;font-size:13.5px;line-height:1.58;color:var(--body)}
+
+  .close{margin:40px 0 0;background:var(--navy);padding:40px 48px 34px}
+  .close .eyebrow{color:var(--accent-strike-soft)}
+  .close h2{font-family:var(--sans);font-weight:700;font-size:clamp(24px,2.4vw+13px,34px);
+    line-height:1.1;letter-spacing:-.022em;color:var(--on-dark-strong);margin:0 0 14px;max-width:22ch}
+  .close p{font-size:14.5px;line-height:1.62;color:var(--on-dark);margin:0 0 12px;max-width:68ch}
+  .close a{color:var(--accent-strike-soft)}
+  .foliobar{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:26px;
+    padding-top:14px;border-top:1px solid rgba(169,194,214,.24);
+    font-family:var(--sans);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--on-dark-dim)}
+  .foot{padding:30px 44px 34px;font-size:11.5px;line-height:1.66;color:var(--muted)}
+  .foot .colophon{font-size:11px;letter-spacing:.04em;color:var(--ghost-line);margin-bottom:12px}
+  .foot .note{color:var(--dim);font-weight:500}
+  .foot a{color:var(--accent-strike)}
+  @media(max-width:620px){
+    .doc,.sec{padding-left:22px;padding-right:22px}
+    .close{padding:30px 24px 26px}
+    .foot{padding:26px 22px 30px}
+    .downstream li{grid-template-columns:1fr}
+    .downstream .dd{grid-column:1}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fiduciary.html">Fiduciary Standard</a></div></div>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="coordination-framework.html">The Seven Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="household-example.html">Household Example</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Lab</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
+      <div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-memos" aria-current="page">Decision Memos</a><a href="insights.html#decision-tools" aria-current="page">Decision Tools</a><a href="insights.html#decision-library" aria-current="page">Decision Library</a></div></div>
+      <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">CPA Collaboration</a><a href="estate-attorneys.html">Estate Attorneys</a><a href="referral.html">Referral Process</a></div></div>
+      <span class="dwnav-sep" aria-hidden="true"></span>
+      <a class="dwnav-access" href="private.html">Client Access</a>
+      <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review</a>
+    </nav>
+<!--NAV-->
+  <div class="frame">
+    <div class="inner">
+
+    <div class="om-sections">
+      <a class="t" href="record.html">The Driftwood Record</a>
+      <a href="constitution.html">Constitution</a><span class="d">·</span><a href="capital-allocation.html">Capital Allocation</a><span class="d">·</span><a href="manual.html">The Manual</a><span class="d">·</span><a href="decision-register.html">Decision Register</a><span class="d">·</span><a href="opportunity-register.html">Opportunity Register</a><span class="d">·</span><a href="awor.html">Annual Review</a>
+    </div>
+
+    <!-- ── MASTHEAD / FRONT MATTER ── -->
+    <div class="doc">
+      <div class="masthead-top">
+        <div style="max-width:640px">
+          <div class="eyebrow">Sample work product · decision memo</div>
+          <h1>The order was the decision.</h1>
+          <p class="lede">A family selling a business also intended to leave the state. Both were
+            already decided. What had not been decided was <b>which one happened first</b> — and that,
+            not the sale terms, is what the outcome turned on. <b>This is an illustrative sample</b>
+            for a fictional family.</p>
+        </div>
+        <div class="stamp">
+          <div class="t">Confidential</div>
+          <div class="s">Prepared for the Harris household</div>
+        </div>
+      </div>
+
+      <div class="frontmatter" style="margin-top:30px">
+        <div class="cell"><div class="k">Memo</div><div class="v tnum">DM 2026-01</div></div>
+        <div class="cell"><div class="k">Household</div><div class="v">The Harris household</div></div>
+        <div class="cell"><div class="k">Date</div><div class="v tnum">Third quarter 2026</div></div>
+        <div class="cell"><div class="k">Present</div><div class="v">Tom &amp; Dana · adviser of record · business counsel · outside CPA</div></div>
+        <div class="cell"><div class="k">Status</div><div class="v">Decided · residency clock running</div></div>
+        <div class="cell"><div class="k">Authority</div><div class="v">Operational record</div></div>
+        <div class="cell"><div class="k">Recorded as</div><div class="v tnum">DR-002</div></div>
+      </div>
+    </div>
+
+    <!-- ── § I · THE QUESTION ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ I</span><span class="rt">The question before the room</span></div>
+      <p class="body">The family owns an operating business they intend to sell, and they intend to
+        move to Texas. Neither intention was in question. The business is worth what it is worth; the
+        buyer will pay what they pay; the family will live where they want to live. Every part of the
+        decision looked settled.</p>
+      <p class="body">What nobody had put a date on was the <b>sequence</b>. A sale that closes while
+        the family is still an Illinois household is sourced differently from the same sale, at the
+        same price, to the same buyer, closing after Texas domicile has been established and
+        substantiated. Same components, different order, different outcome.</p>
+      <p class="body">The question before the room was therefore not <i>whether</i> to move or
+        <i>whether</i> to sell. It was whether the move could be established early enough, and
+        defensibly enough, to precede a closing that no one fully controls.</p>
+    </div>
+
+    <!-- ── § II · WHAT THE ORDER MOVES ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ II</span><span class="rt">What the order moves</span></div>
+      <p class="body">A single question of sequence reaches six of the household's seven systems. It
+        is worth naming them, because each one is a place where the decision could have been made in
+        isolation and quietly cost something elsewhere.</p>
+      <ul class="moves">
+        <li><span class="mk">Taxes</span><p>Where the gain is sourced, and in which year it lands.
+          This is the system the decision is usually filed under — and the only one most processes
+          would have looked at.</p></li>
+        <li><span class="mk">Business Ownership</span><p>Entity footprint, the timing a buyer will
+          accept, and what counsel must have in place before a letter of intent hardens.</p></li>
+        <li><span class="mk">Cash Flow</span><p>Two households run in parallel during the transition,
+          and the move's own costs land before any sale proceeds do.</p></li>
+        <li><span class="mk">Estate</span><p>A move rewrites the state layer beneath documents drafted
+          under the old one; titling and trust situs are read against a different statute.</p></li>
+        <li><span class="mk">Investments</span><p>The concentrated sell-down already running on a
+          bracket-aware schedule (DR-003) now shares its bracket years with a sale and a series of
+          conversions.</p></li>
+        <li><span class="mk">Family / Purpose</span><p>Schools, proximity to family, and when the move
+          is actually livable — the constraints that decide whether a tax-optimal date is a real
+          one.</p></li>
+        <li class="quiet"><span class="mk">Protection — not moved</span><p>Carried unchanged. Named
+          here because a memo that finds every system implicated is not reading carefully.</p></li>
+      </ul>
+    </div>
+
+    <!-- ── § III · ALTERNATIVES ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ III</span><span class="rt">Alternatives weighed</span></div>
+      <ul class="alts">
+        <li><span class="ak">Sell first, move opportunistically after close</span>
+          <p>The path of least friction, and the one the family was already drifting toward, because
+            each step is individually reasonable. <b>Rejected:</b> it is the exact ordering error this
+            sequencing exists to prevent. Once a sale closes against the old domicile, no subsequent
+            move recovers the sourcing.</p></li>
+        <li><span class="ak">Split the sale across two tax years</span>
+          <p>A genuine option that was seriously considered, because it does real work. <b>Rejected as
+            insufficient rather than wrong:</b> it addresses bracket exposure but not sourcing
+            exposure. It answers a smaller question than the one on the table, and adopting it would
+            have felt like the problem had been handled.</p></li>
+        <li><span class="ak">Establish and substantiate residency first, then sequence the sale</span>
+          <p><b>Adopted.</b> It is the only order in which the tax question is decided by facts the
+            family controls — days, intent, documentation — rather than by a closing date set across
+            the table.</p></li>
+      </ul>
+    </div>
+
+    <!-- ── § IV · THE DECISION ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ IV</span><span class="rt">The decision, and what it rests on</span></div>
+      <p class="body">Establish Texas residency <b>before</b> sequencing the business sale, not after.
+        Counsel proceeds on the sale in parallel, but no closing is agreed until the residency facts
+        are substantiated rather than merely intended.</p>
+      <p class="body">The assumptions this rests on are recorded so that a future reader can tell
+        whether the decision aged or the world moved:</p>
+      <ul class="ruleset">
+        <li><span class="rk">Assumption</span>Current Illinois and Texas nexus and sourcing rules
+          hold.</li>
+        <li><span class="rk">Assumption</span>The sale does not close faster than residency can be
+          defensibly established.</li>
+        <li><span class="rk">Assumption</span>Days-in-state, intent and documentation are actually
+          executed, not merely claimed. <b>This is the assumption most likely to fail quietly</b>,
+          because it is the only one that depends on the family's own week-to-week behaviour.</li>
+      </ul>
+    </div>
+
+    <!-- ── § V · WHAT WOULD REOPEN IT ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ V</span><span class="rt">What would change our mind</span></div>
+      <p class="body">The field most processes skip. Without it, review is a re-read; with it, review
+        is an act with a pass/fail condition.</p>
+      <ul class="ruleset">
+        <li><span class="rk">Reopens if</span>A buyer's timeline forces a close before residency can
+          be defensibly established. The decision does not survive this; it is replaced.</li>
+        <li><span class="rk">Reopens if</span>Illinois changes its sourcing rules for a sold
+          business.</li>
+        <li><span class="rk">Reopens if</span>The family's residency facts drift in a way that would
+          fail a challenge — the failure mode that arrives without an announcement.</li>
+      </ul>
+      <p class="body">Checked at the most recent Operating Session: no trigger fired. Carried on the
+        risk register under <b>domicile</b>; on the Opportunity Register the matter reads
+        <i>residency clock running, sale sequencing pending</i>.</p>
+    </div>
+
+    <!-- ── § VI · WHAT IT SET IN MOTION ── -->
+    <div class="sec">
+      <div class="rec-head"><span class="rs">§ VI</span><span class="rt">What this decision set in motion</span></div>
+      <p class="body">A decision that only affected itself would not need a memo. This one changed
+        the conditions under which two other decisions are made, which is why it is recorded before
+        them rather than alongside them.</p>
+      <ul class="downstream">
+        <li><span class="dr">DR-004</span><span class="dt">Roth conversion ladder, timed to the
+          low-bracket years</span>
+          <p class="dd">The conversion window exists <b>because</b> of this sequencing — the gap
+            around the move and before the sale closes. If this decision's timeline shifts, the window
+            moves or closes with it, and DR-004 reopens on that trigger rather than on a calendar
+            date.</p></li>
+        <li><span class="dr">DR-005</span><span class="dt">Gifting strategy, held pending the sale
+          outcome</span>
+          <p class="dd">Deferred by design. A gift made ahead of a firm price risks being unwound or
+            second-guessed once the number is real, so the gifting question waits on the sale this
+            memo sequences. Deferring is a decision, and it is on the record as one.</p></li>
+        <li><span class="dr">DR-003</span><span class="dt">Concentrated position sell-down, on a
+          schedule</span>
+          <p class="dd">Already running, and unchanged by this memo — but it now competes for the
+            same bracket years as the sale and the conversions, so its annual sizing is read against
+            them rather than on its own.</p></li>
+      </ul>
+      <p class="body">Read forward: <a href="decision-register.html">the Decision Register</a> carries
+        all five entries and how each one reopens.</p>
+    </div>
+
+    <!-- ── CLOSE ── -->
+    <div class="close">
+      <div class="eyebrow">The point</div>
+      <h2>Decisions are written before they are made.</h2>
+      <p>Most of what this memo records is not the answer. It is the alternatives that were rejected,
+        the assumptions the answer rests on, and the condition that would reopen it — the parts that
+        are ordinarily remembered rather than written, and therefore lost.</p>
+      <p>Read it in context: <a href="decision-register.html">the Decision Register</a> carries the
+        entry · <a href="ic-memo.html">the investment-committee memo</a> shows the same form applied to
+        a portfolio decision · <a href="record.html">the Driftwood Record</a> holds the whole shelf.</p>
+      <div class="foliobar">
+        <span>§ Decision Memo · DM 2026-01 · fol. 1</span>
+        <span>The Harris household · est. 2026</span>
+      </div>
+    </div>
+
+    <div class="firm-anchor" role="contentinfo"><span><span class="firm-anchor-brand">Driftwood Wealth</span>&nbsp;&nbsp;·&nbsp;&nbsp;A PRACTICE OF ALEC MESSINO&nbsp;&nbsp;·&nbsp;&nbsp;custody Park Avenue Securities LLC (PAS), member FINRA/SIPC</span><span>MODEL DATA AS OF JULY 2026</span></div>
+
+    <!-- ── COLOPHON + DISCLOSURE ── -->
+    <div class="foot">
+      <div class="colophon">Set in Satoshi &amp; Erode · a sample decision memo · illustrative household, not a real client</div>
+      <span class="note">Illustrative and educational, not investment, tax, or legal advice.</span>
+      The Harris household, the business, and the circumstances above are hypothetical, drawn to show the
+      form a decision memo takes. Nothing here is a recommendation, and nothing here is a statement about
+      any particular state's tax law as applied to any real household. Residency and domicile are
+      fact-specific and contested; establishing them is a legal question for counsel. Driftwood coordinates
+      with your CPA and attorney; it does not provide tax or legal advice. Driftwood Wealth is the
+      private-wealth practice of Alec Messino. Securities products and advisory services offered through
+      Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and
+      Financial Advisor of PAS and a Financial Representative of The Guardian Life Insurance Company of
+      America® (Guardian), New York, NY. PAS is a wholly owned subsidiary of Guardian. Capitol Wealth
+      Strategies, LLC is not an affiliate or subsidiary of PAS or Guardian.
+      <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
+    </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

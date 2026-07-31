@@ -35,9 +35,12 @@
      masthead links straight to #decision-tools / #decision-library. They graduate to standalone
      pages when they outgrow this (recorded in OPERATIONS.md).
 
-     Plates come from the canonical survey library as plain <img>. This page needs no per-article
-     density gating — that is a property of a Review card, not of a directory row — so referencing
-     the standalone files keeps the document small and lets each plate cache across the site.
+     NO SURVEY PLATES ON THIS PAGE (2026-07-31). An earlier pass hung a plate band under every
+     section head and an art panel beside the Review. It was decoration on a directory: a reader
+     comes here to find something, and the plates slowed that down while spending the survey
+     vocabulary on a page that makes no argument. The vocabulary is reserved for publications and
+     articles (the Review's card fragments) and for page furniture (hero and footer plates). A
+     wayfinding page is carried by type, rule, and space.
      ═══════════════════════════════════════════════════════════════════════════════════════════ */
   :root{
     --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab;
@@ -66,8 +69,6 @@
     text-transform:uppercase;color:var(--ink);margin:0}
   .sec-note{grid-column:2;font-family:var(--serif);font-size:15.5px;line-height:1.52;
     color:var(--muted);margin:8px 0 0;max-width:58ch}
-  .band{grid-column:2;height:44px;overflow:hidden;margin:18px 0 0;opacity:.46}
-  .band img{width:100%;height:44px;object-fit:cover;object-position:left center;display:block}
 
   /* one row shape, used by every division, so the page reads as a single system */
   .rows{margin:22px 0 0;border-top:1px solid var(--line)}
@@ -81,10 +82,8 @@
     margin:4px 0 0;max-width:64ch}
 
   /* the Review gets the one raised treatment on the page — it is the flagship */
-  .flag{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,4fr);gap:0 44px;
-    background:var(--soft);border-top:1px solid var(--frame-line);margin:22px 0 0;
-    padding:30px 32px 0}
-  .flag .body{padding-bottom:30px}
+  .flag{background:var(--soft);border-top:1px solid var(--frame-line);margin:22px 0 0;
+    padding:30px 32px}
   .flag h3{font-family:var(--serif);font-weight:400;font-size:clamp(24px,2.4vw,34px);
     line-height:1.12;color:var(--ink);margin:0 0 13px}
   .flag h3 a{text-decoration:none;
@@ -96,21 +95,18 @@
   .flag .meta{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.17em;
     text-transform:uppercase;color:var(--muted);margin:0 0 14px}
   .flag .meta i{font-style:normal;color:var(--ghost-line);margin:0 8px}
-  .flag .art{margin:0 -32px 0 0;min-height:232px;overflow:hidden;border-left:1px solid var(--line2)}
-  .flag .art img{width:100%;height:100%;min-height:232px;object-fit:cover;display:block;opacity:.6}
 
   .foot{padding:34px 0 0;margin-top:66px;border-top:1px solid var(--line);
     font-size:11.5px;line-height:1.65;color:var(--muted)}
   .foot a{color:var(--accent-strike)}
 
   @media (max-width:820px){
-    .flag{grid-template-columns:1fr;padding:26px 24px 0}
-    .flag .art{margin:0 -24px;min-height:170px;border-left:0;border-top:1px solid var(--line2)}
+    .flag{padding:26px 24px}
   }
   @media (max-width:680px){
     .wrap{padding:0 18px 64px}
     .sec-head{grid-template-columns:1fr}
-    .sec-note,.band{grid-column:1}
+    .sec-note{grid-column:1}
   }
 </style>
 </head>
@@ -142,7 +138,6 @@
     <h2 class="sec-title">Research</h2>
     <p class="sec-note">Papers, essays, and the exhibits behind them. What Driftwood believes, and
       what it can show.</p>
-    <div class="band"><img src="img/plates/contour.svg" alt="" aria-hidden="true"></div>
   </div>
   <div class="rows">
     <a href="research.html"><span class="t">The Research hub</span><span class="k">Index</span>
@@ -166,7 +161,6 @@
     <h2 class="sec-title">Commentary</h2>
     <p class="sec-note">Short observations on coordination, tax, and the moving parts — published
       when there is something to say rather than on a schedule.</p>
-    <div class="band"><img src="img/plates/current.svg" alt="" aria-hidden="true"></div>
   </div>
   <div class="rows">
     <a href="commentary.html"><span class="t">All commentary</span><span class="k">Index</span>
@@ -183,14 +177,11 @@
       publication, not a blog.</p>
   </div>
   <div class="flag">
-    <div class="body">
       <div class="meta">Volume I<i>·</i>Number I<i>·</i>Third Quarter 2026</div>
       <h3><a href="driftwood-review.html">A quarterly record of coordination decisions</a></h3>
       <p>Seven divisions in the same order every issue: Lead Essay, Research Notes, Tax &amp;
         Planning, Market Structure, Practice Updates, Reading List, Appendix. The structure does
         not move, which is what makes a run of issues a record rather than a feed.</p>
-    </div>
-    <div class="art"><img src="img/plates/confluence.svg" alt="" aria-hidden="true"></div>
   </div>
 </section>
 
@@ -200,7 +191,6 @@
     <h2 class="sec-title">Decision Tools</h2>
     <p class="sec-note">Interactive reviews you can run yourself, on your own numbers, without
       speaking to anyone. Each one answers a single question end to end.</p>
-    <div class="band"><img src="img/plates/gradient.svg" alt="" aria-hidden="true"></div>
   </div>
   <div class="rows">
     <a href="statemap.html"><span class="t">State Tax Atlas</span><span class="k">Tool</span>
@@ -225,7 +215,6 @@
     <p class="sec-note">One decision, worked all the way through all seven systems. These are the
       moments where coordination is worth the most, because the systems move together whether or
       not anyone is watching them.</p>
-    <div class="band"><img src="img/plates/delta.svg" alt="" aria-hidden="true"></div>
   </div>
   <div class="rows">
     <a href="case-business-sale.html"><span class="t">Sell a business</span><span class="k">Decision</span>

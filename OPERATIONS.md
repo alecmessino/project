@@ -240,7 +240,44 @@ memos and a shelf of interactive tools, "Research" is too narrow to be the label
 | Decision Tools | `insights.html#decision-tools` | State Tax Atlas · Tax Diagnostic · After-Tax Review · Concentrated Position Navigator |
 | Decision Library | `insights.html#decision-library` | eight worked household decisions |
 
-**"Articles" was retired from the navigation.** It named a *format*, not a subject, and formats do
+**Commentary is NOT absorbed by the Review, and that is deliberate.** The two were considered for
+merging and the answer is no: they are different publishing *rhythms*, and collapsing them would
+cost both. Keep the distinction sharp when writing:
+
+| | Research | Commentary | The Driftwood Review |
+|---|---|---|---|
+| **Job** | evidence, papers, frameworks | thinking out loud | synthesis |
+| **Cadence** | evergreen | weekly-ish, as things happen | quarterly |
+| **Length** | long | 300–800 words | long-form |
+| **Register** | reference | reaction, observation | what mattered, why, what's changing |
+| **Lifespan** | permanent | current | archival |
+
+A quarterly that also absorbs every short note stops being something readers look forward to. The
+model is a memo series, not a blog with a fancy wrapper.
+
+**RESERVED — Decision Memos (a sixth division, not built).** It slots between The Driftwood Review
+and Decision Tools:
+
+```
+Insights
+├── Research
+├── Commentary
+├── The Driftwood Review
+├── Decision Memos      ← reserved
+├── Decision Tools
+└── Decision Library
+```
+
+It bridges evergreen research and short commentary, and it maps onto Driftwood's core idea directly:
+one decision, many downstream consequences — closer to Federal Reserve working notes than to
+commentary. **Deliberately not in the masthead yet:** a menu entry with nothing behind it is the
+exact defect this repo has already shipped twice (nav items that 404'd; an "Articles" entry that
+round-tripped to a sibling). The category is reserved here, in writing, and enters the nav in the
+same commit as its first memo — one row added to `FAMILIES` in `scripts/phase2_nav.py` and to
+`INSIGHTS_CHILDREN` in `tests/test_drift_insights_ia.py`, which are the only two places the IA is
+defined.
+
+**Articles was retired from the navigation.** It named a *format*, not a subject, and formats do
 not deserve navigation. It also pointed at `insights.html`, which was a `noindex` redirect stub back
 to `research.html` — a sibling entry in the same menu — so the slot round-tripped the reader.
 `articles.html` still exists at its URL; it is simply not in the masthead.
@@ -259,15 +296,36 @@ points at the shelf.
 
 **`concentration.html` is the Concentrated Position Navigator.** It previously had no product name —
 it was an article headline ("How to de-risk a concentrated stock position") filed under a "Research"
-eyebrow, so nothing was renamed; it was *named*. Note for future tools: the roadmap below uses
-"… Review", which collides with **Coordination Review**, the paid engagement and the site's primary
-CTA. Worth resolving before the second tool ships, or the free tools and the conversion event share
-a noun.
+eyebrow, so nothing was renamed; it was *named*. "Navigator" over "Playbook" is a real distinction:
+a playbook instructs, and the page does not instruct — it helps someone navigate tradeoffs.
 
-**Decision Tools roadmap (NOT advertised on the site until built).** Business Exit Review · Equity
-Compensation Review · Relocation Review · Roth Conversion Review · Estate Readiness Review ·
-Household Balance Sheet Review. `test_the_tools_advertised_are_only_the_ones_that_exist` fails if any
-of these reaches the shelf before its page does.
+### Naming rule: "Review" belongs to the engagement, and to nothing else
+
+**Coordination Review is the product.** Every free artifact gets its own noun so that nothing on the
+site competes with the thing a visitor is meant to book. Each artifact type takes a distinct noun:
+
+| Noun | Means | Shipped |
+|---|---|---|
+| **Review** | *the engagement* — reserved | Coordination Review |
+| **Atlas** | reference / lookup | State Tax Atlas |
+| **Navigator** | tradeoff exploration | Concentrated Position Navigator |
+| **Diagnostic** | finds what is wrong | Tax Diagnostic |
+| **Planner / Explorer / Framework** | sequencing · discovery · structure | *(roadmap)* |
+
+**Decision Tools roadmap (NOT advertised until built)** — renamed off "Review" under this rule:
+Business Exit **Planner** · Equity Compensation **Explorer** · Roth Conversion **Framework** ·
+Relocation **Navigator** · Estate Readiness **Diagnostic** · Household Balance Sheet **Atlas**.
+`test_the_tools_advertised_are_only_the_ones_that_exist` fails if any reaches the shelf before its
+page does.
+
+**OPEN — "After-Tax Review" (`taxlab.html`) violates the rule that was just set.** It is a free tool
+carrying the engagement's noun, and it sits in the Coordination dropdown on 51 pages *directly above*
+"Schedule a Coordination Review" — the two read as the same thing. This was found while applying the
+naming convention and is **not** fixed here, because renaming a shipped product is a positioning
+call, not a cleanup. Candidates, in order of preference: **After-Tax Lab** (matches the file and the
+CLI verb, `drift taxlab`), **After-Tax Explorer**, **After-Tax Diagnostic** (though that overlaps the
+Tax Diagnostic next to it). Whichever is chosen, the change is mechanical: the label appears in
+`scripts/phase2_nav.py`, `insights.html`, and the page itself.
 
 **Decision Library gaps.** The agreed roster names nine decisions; eight exist. **Divorce** and
 **business succession** have no case page and were not invented — the library lists only decisions
@@ -294,6 +352,25 @@ Canonical, and pinned in `tests/test_hub_lattice_decisions.py`:
   researched rather than drawn.
 - **Graphite rest state, one blue accent**, no second hue, tokens only (no hardcoded hex).
 - **Interaction retained** — explanatory, not decorative — and `prefers-reduced-motion` honoured.
+
+**No survey plate behind the lattice (removed 2026-07-31).** A hydrographic engraving used to sit
+under the diagram at 5% opacity as "ground texture". It was decoration competing with an argument —
+every stray mark behind the lattice is noise a reader must subtract before the seven nodes and the
+structural six resolve. Removing it also made the ghosted *situational* edges legible, which the
+texture had been masking. The 907 KB source asset was deleted with it.
+
+**Where the survey vocabulary is allowed** (standing rule, so the plates stop creeping):
+
+| Allowed | Not allowed |
+|---|---|
+| publications & articles — the Review's card fragments | diagrams that carry a claim (the lattice, the coordination surface) |
+| page furniture — hero and footer plates | wayfinding & directory pages (Insights) |
+| | anything where the plate is texture rather than content |
+
+The Insights landing page had grown a plate band under every section head and an art panel beside
+the Review; both were removed the same day. A directory is a page someone uses to *find* something,
+and the plates slowed that down while spending the vocabulary on a page that makes no argument. It
+is carried by type, rule, and space. Guarded by `tests/test_survey_plate_scope.py`.
 
 **One correction taken from the review: the hub reads COORDINATION, not GOVERNANCE.** Governance is
 the operating principle the practice runs *by*, not one of the things being coordinated; putting it

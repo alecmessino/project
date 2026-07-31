@@ -270,18 +270,14 @@
   .sysband-in{max-width:680px;margin:0 auto;text-align:center}
   .sb-h{font-family:var(--sans);font-weight:700;font-size:clamp(28px,2.4vw + 15px,40px);line-height:1.12;letter-spacing:-.022em;color:var(--ink);margin:0 auto;max-width:20ch}
   .sysstage{margin:16px auto 0;max-width:590px;opacity:1}
-  /* The survey plate. A hydrographic stipple engraving (Brief 3, already drawn) sits behind the
-     lattice at low opacity: thousands of micro-dots and registration marks carrying the feeling of
-     structural complexity, so the copy above can stay restrained. Static art, no generation, no
-     runtime cost beyond one cached image; ::before keeps the opacity off the lattice itself. */
+  /* NO SURVEY PLATE BEHIND THE LATTICE (removed 2026-07-31).
+     A hydrographic stipple engraving used to sit here at 5% opacity as "ground texture". It was
+     decoration competing with an argument: the lattice is the site's central diagram — seven
+     systems, twenty-one edges, six of them structural — and every stray mark behind it is noise a
+     reader has to subtract before they can read the thing. The survey vocabulary is reserved for
+     publications and page furniture (the Review's card fragments, the hero and footer plates), not
+     for the diagrams that carry claims. The stage keeps position:relative for the trace overlay. */
   .sysstage{position:relative}
-  .sysstage::before{content:"";position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
-    width:70%;height:74%;background:url("img/confluence-plate.png") center/cover no-repeat;
-    opacity:.05;pointer-events:none;z-index:0;filter:grayscale(1);
-    /* feather every edge, so it reads as ground texture rather than a pasted plate */
-    -webkit-mask-image:radial-gradient(ellipse 62% 58% at 50% 50%,#000 38%,transparent 78%);
-    mask-image:radial-gradient(ellipse 62% 58% at 50% 50%,#000 38%,transparent 78%)}
-  @media(max-width:760px){.sysstage::before{display:none}}
   .sysstage svg{width:100%;height:auto;display:block;overflow:visible;position:relative;z-index:1}
   .sysstage text{font-family:var(--sans)}
   /* the web, 21 hairlines among seven systems, near-silent at rest: the density IS the argument.

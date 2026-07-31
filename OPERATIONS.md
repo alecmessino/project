@@ -399,6 +399,41 @@ the operating principle the practice runs *by*, not one of the things being coor
 at the centre of the systems diagram quietly promoted it to an eighth system. It keeps its own home
 in **Plate III, the Governance Register**, where it belongs as a standing process.
 
+## Next: evidence and conversion, not layout (agreed 2026-07-31)
+
+The architecture is settled — one frame, one masthead position, one naming convention, an IA that
+holds. Further visual refinement has low marginal value. The remaining leverage is proof and funnel,
+in this order.
+
+**1. Decision Memos — the missing proof artifact.** Coordination is the product, and a visitor
+cannot currently see what coordinated *thinking* looks like. The category is reserved in the IA and
+deliberately not in the masthead until a memo exists.
+
+> **OPEN QUESTION, answer before building.** A Decision Memo must be distinguishable from a Decision
+> Library entry or it is a sixth division duplicating the fifth. The distinction that seems right:
+> the **Library** is a reference — "here is what happens when a household sells a business",
+> evergreen, reader-situation-led. A **Memo** is a record of reasoning on one specific decision —
+> dated, with the evidence weighed, the options rejected, and the recommendation made. Closer to
+> `ic-memo.html` (which already exists) than to `case-business-sale.html`. If that is right, the
+> first memo should be authored from the existing fictional household so it needs no new
+> substantiation, and `ic-memo.html` / `decision-register.html` should be checked for overlap before
+> a new page is created rather than after.
+
+**2. Tax Diagnostic → Coordination Review handoff.** The highest-value funnel. Current state on
+`leakage.html`: the **primary** button opens the After-Tax Lab (another free tool) and the booking
+link is the secondary "or book a 15-minute introductory call". That is a legitimate
+progressive-commitment ladder — Diagnostic → Lab → Review — but it means the Diagnostic's strongest
+call to action spends the click on a second calculator. **Not flipped, deliberately:** which
+ordering converts better is a question to measure, and inverting it on instinct would contradict
+item 4. Instrument first (`diagnostic_to_taxlab` already fires; `booking_opened` /
+`booking_scheduled` are the outcome), then decide.
+
+**3. Research integration.** The working papers should reinforce the commercial narrative rather
+than interrupt it — each Research entry ending in the decision it informs, not in a bibliography.
+
+**4. Homepage CTA measurement.** Baseline the current flow before any further structural change.
+`booking_scheduled` is the true conversion; everything upstream is a proxy.
+
 ## Disaster recovery
 - **Lost/corrupt `tests/data/matrix_history.json`** → `TILT_SWEEP_REFRESH=1 python scripts/tilt_sweep.py`
   re-pulls and rewrites the cache (needs `TIINGO_API_KEY`); then regenerate STATE_ALPHA (above).

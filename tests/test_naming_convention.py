@@ -44,14 +44,38 @@ def _pages():
     return sorted(WEB.glob("*.html"))
 
 
+def _flat(text: str) -> str:
+    """Collapse whitespace AND HTML space entities before matching.
+
+    Both rename passes leaked through this gap. The first was a literal string replace and missed a
+    link label broken across a line. The second normalised `\\s+` — which does not match `&nbsp;` —
+    and so missed "After-Tax&nbsp;Review" sitting in the copy directly above the Tax Diagnostic's
+    primary call to action, on a page in the main funnel.
+    """
+    return re.sub(r"(?:\s|&nbsp;|&#160;)+", " ", text)
+
+
 def test_no_page_still_uses_a_retired_tool_name():
     bad = []
     for p in _pages():
-        t = p.read_text(encoding="utf-8")
+        t = _flat(p.read_text(encoding="utf-8"))
         for name in RETIRED:
             if name in t:
                 bad.append(f"{p.name}: {name}")
     assert not bad, f"retired tool names still shipping: {bad}"
+
+
+def test_nothing_asks_a_visitor_to_request_a_free_tool():
+    """A Lab, an Atlas or a Diagnostic is opened, not requested. Only the engagement is requested.
+
+    The rename produced exactly this: "Request a Private After-Tax Lab" — grammatical nonsense, and
+    a button competing with the Coordination Review while pointing at a free calculator."""
+    bad = []
+    for p in _pages():
+        for m in re.finditer(r"Request[^<]{0,40}\b(Lab|Atlas|Diagnostic|Navigator)\b",
+                             _flat(p.read_text(encoding="utf-8"))):
+            bad.append(f"{p.name}: {m.group(0).strip()!r}")
+    assert not bad, f"a free tool is being 'requested' like an engagement: {bad}"
 
 
 def test_review_is_reserved_for_the_engagement_and_the_quarterly():
@@ -64,7 +88,7 @@ def test_review_is_reserved_for_the_engagement_and_the_quarterly():
     """
     offenders = set()
     for p in _pages():
-        flat = re.sub(r"\s+", " ", p.read_text(encoding="utf-8"))
+        flat = _flat(p.read_text(encoding="utf-8"))
         for m in _REVIEW_RE.finditer(flat):
             phrase = re.sub(r"^The\s+", "", f"{m.group(1)} Review").strip()
             # a bare "the Review" in prose, once the subject is established, is not a product name

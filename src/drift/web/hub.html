@@ -92,7 +92,9 @@
   /* the margin argument sits under the headline, in column one: column two is deliberately empty
      air so the copy never lands on the densest part of the survey plate. */
   .hero-aside{grid-column:1;margin-top:26px;padding-left:0;border-left:0;max-width:640px}
-  .lede{font-family:var(--serif);font-size:19px;line-height:1.58;color:var(--dim);margin:0}
+  /* --body, not --dim. At --dim this ran 5.20:1 — it passes AA but it was the weakest text on the
+     page, and it is the hero's argument. Body copy elsewhere sits at 8.34:1; the lede now matches. */
+  .lede{font-family:var(--serif);font-size:19px;line-height:1.58;color:var(--body);margin:0}
   .lede b{color:var(--ink);font-weight:500}
   /* second beat of the margin argument: separated by air and a change of face, so the two paragraphs
      read as claim then answer rather than one run-on column. */
@@ -171,7 +173,11 @@
     background-image:repeating-linear-gradient(90deg,rgba(30,40,51,.28) 0 1px,transparent 1px 96px),
                      repeating-linear-gradient(90deg,rgba(30,40,51,.18) 0 1px,transparent 1px 24px);
     background-size:96px 7px,24px 4px;background-repeat:repeat-x}
-  .rail .rk{display:block;margin-bottom:9px;opacity:.5}
+  /* .mono carries a 55% alpha and this rule used to multiply another opacity:.5 on top of it —
+     an effective 27.5% ink, about 1.6:1 on cream, at 10px. The labels were not faint, they were
+     illegible. Set solid, sized and weighted to be read. */
+  .rail .rk{display:block;margin-bottom:9px;opacity:1;color:var(--dim);
+    font-size:11px;font-weight:700;letter-spacing:.16em}
   .rail .rv{font-family:var(--serif);font-size:22px;line-height:1.25;color:var(--ink);margin:0}
   @media(max-width:760px){.rail{grid-template-columns:1fr;gap:22px;padding:28px 22px 26px}}
 
@@ -203,7 +209,9 @@
   .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw + 15px,19px);line-height:1.5;color:var(--dim);
     margin:14px auto 0;max-width:48ch}
 
-  .lede2-note{font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--dim);margin:-6px 0 22px;max-width:58ch}
+  /* was 14px/--dim: smaller than the site's own body copy, in the hero, carrying the sentence that
+     says what Driftwood actually does. */
+  .lede2-note{font-family:var(--sans);font-size:15.5px;line-height:1.56;color:var(--body);margin:-6px 0 22px;max-width:58ch}
   .lede2-note a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
   .lede2-note a:hover{border-bottom-color:var(--accent-strike)}
   /* the centerpiece, the four proprietary standing records the method produces, given real weight:
@@ -316,6 +324,14 @@
      rather than busy. Applied to every scenario, so the 3-system webs gain the same restraint. */
   .net.lit.sec{stroke-width:.7;opacity:.3}
   .net.dim{opacity:.05}
+  /* THE SPOKES (added 2026-08-01). Seven lines, centre to rim — the only bold figure on the plate.
+     They carry the claim the whole page is about: nothing reaches a system without passing through
+     coordination. That is true by construction rather than by assertion, which is why it earns the
+     weight. Their inner ends need no trimming: they are drawn BEFORE the hub-bg mask, so the paper
+     rectangle behind the COORDINATION label clips them and the label stays legible. */
+  .spoke{stroke:var(--dim);stroke-width:1.6;opacity:.42;transition:opacity .34s ease,stroke .34s ease}
+  .spoke.lit{stroke:var(--accent-strike);opacity:.85}
+  .spoke.dim{opacity:.1}
   /* the signal, an accent stroke that draws along a relationship on demand, then rests. The web
      itself never redraws (no flicker); this overlay carries all the motion, and reduced-motion skips it. */
   .trace{stroke:var(--accent-strike);stroke-width:1.5;fill:none;opacity:0;pointer-events:none;stroke-linecap:round}
@@ -328,9 +344,14 @@
      own home — Plate III, the Governance Register — where it belongs as a standing process rather
      than a node. Seven systems, coordinated; that is what the centre names.
      Tracked caps at a size that keeps the word inside the hub-bg mask; the live
-     "One decision · N systems" string reuses this slot. */
-  .hub{fill:var(--muted);font-size:12.5px;font-weight:700;letter-spacing:.15em;transition:fill .34s ease}
-  .hub.on{fill:var(--ink)}
+     "One decision · N systems" string reuses this slot.
+
+     THE CENTRE IS ALWAYS LIT (2026-08-01). It used to rest at --muted and reach --ink only while a
+     decision was being shown, so a visitor who never interacted saw the hub as the faintest mark in
+     a diagram whose entire argument is that the hub is where everything meets. It is ink at all
+     times now; the state change is carried by the text itself, which swaps to "One decision · N
+     systems" during a trace — a stronger signal than a colour shift the reader has no key for. */
+  .hub{fill:var(--ink);font-size:12.5px;font-weight:700;letter-spacing:.15em;transition:fill .34s ease}
   .keep{fill:var(--dim);font-size:22px;font-weight:700;letter-spacing:-.012em;transition:fill .34s ease}
   .keep.on{fill:var(--ink)}
   .node{cursor:pointer}
@@ -362,7 +383,16 @@
      Every situational edge is now drawn at one calm weight. The two tiers still differ clearly
      (accent + 1.3px vs graphite hairline), so the derived structural claim survives, but the figure
      is complete: seven systems, twenty-one dependencies, nothing floating. */
-  .sysstage.seeded .net{opacity:.4;stroke:var(--ghost-line);stroke-width:.6;transition:none}
+  /* 2026-08-01: THE RIM DROPPED BACK SO THE SPOKES COULD BE THE FIGURE.
+     Two bold figures cannot occupy one diagram. With seven centre spokes at full weight, keeping the
+     six structural chords at their old .58/1.2 reproduced the exact failure the comment below
+     describes — a second emphasised shape laid across the heptagon, competing to be read as "the
+     drawing". So the rim is now a quiet uniform mesh and the spokes carry the emphasis alone.
+     The derived structural tier is NOT deleted: the six edges keep their class, keep their
+     derivation from the published traces, and keep a real weight difference (0.9 vs 0.5). It is now
+     a whisper at rest rather than a shout — visible when the eye settles on the rim, invisible while
+     the eye is reading the overall figure. The claim survives; it no longer fights the geometry. */
+  .sysstage.seeded .net{opacity:.18;stroke:var(--ghost-line);stroke-width:.5;transition:none}
   /* GRAPHITE, NOT BLUE, AT REST.
      The structural six were painted in the accent. That was the third and subtlest version of the
      same bug: the underlying figure is a geometrically exact heptagon (radius 175.1–175.4, angular
@@ -376,7 +406,8 @@
      the derived structural claim survives as emphasis rather than as a competing shape. The accent
      is spent where it earns attention — on a traced decision — which is also what makes a trace
      feel like something happening rather than a recolouring. */
-  .sysstage.seeded .net--structural{stroke:var(--dim);stroke-width:1.2;opacity:.58;transition:none}
+  .sysstage.seeded .net--structural{stroke:var(--ghost-line);stroke-width:.9;opacity:.26;transition:none}
+  .sysstage.seeded .spoke{stroke:var(--dim);stroke-width:1.6;opacity:.42;transition:none}
   .sysstage.seeded .node .dot{fill:var(--ink)}
   .sysstage.seeded .node .lbl{fill:var(--ink);font-weight:700}
   .node:focus{outline:none}
@@ -413,7 +444,7 @@
     transition:border-color .2s ease,color .2s ease}
   .trig-btn:hover{border-color:var(--ghost-line);color:var(--ink)}
   .trig-btn.showing{border-color:var(--accent-strike);color:var(--ink)}
-  @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mcascade,.mchain,.mproof,.trig-btn,.diag-item,.review-cta .rc-main::after{transition:none}}
+  @media(prefers-reduced-motion:reduce){.net,.spoke,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mcascade,.mchain,.mproof,.trig-btn,.diag-item,.review-cta .rc-main::after{transition:none}}
   @media(prefers-reduced-motion:reduce){.mstory.swapping .mlead,.mstory.swapping .mcascade,.mstory.swapping .mchain,.mstory.swapping .mproof{transition:none;opacity:1}}
   @media(max-width:620px){.sysband{padding:32px 22px 40px}.sysstage{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}}
   /* the reading panel wraps taller as the column narrows; reserve the tallest scenario at each phone tier so
@@ -556,7 +587,7 @@
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">CPA Collaboration</a><a href="estate-attorneys.html">Estate Attorneys</a><a href="referral.html">Referral Process</a></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
-      <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review</a>
+      <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
     </nav>  <div class="frame">
     <div class="inner">
     
@@ -633,6 +664,14 @@
             <line class="net net--rim" data-a="4" data-b="5" x1="149" y1="279" x2="183" y2="131"></line>
             <line class="net" data-a="4" data-b="6" x1="149" y1="279" x2="396" y2="398"></line>
             <line class="net" data-a="5" data-b="6" x1="183" y1="131" x2="396" y2="398"></line>
+            <!-- the spokes: every system routes through coordination (centre 320,240) -->
+            <line class="spoke" data-i="0" x1="320" y1="240" x2="320" y2="65"></line>
+            <line class="spoke" data-i="1" x1="320" y1="240" x2="457" y2="131"></line>
+            <line class="spoke" data-i="2" x1="320" y1="240" x2="491" y2="279"></line>
+            <line class="spoke" data-i="3" x1="320" y1="240" x2="244" y2="398"></line>
+            <line class="spoke" data-i="4" x1="320" y1="240" x2="149" y2="279"></line>
+            <line class="spoke" data-i="5" x1="320" y1="240" x2="183" y2="131"></line>
+            <line class="spoke" data-i="6" x1="320" y1="240" x2="396" y2="398"></line>
             <!-- the flow: coordination carries down to the outcome -->
             <line class="flow" x1="320" y1="272" x2="320" y2="492"></line>
             <!-- the centre: coordination (an invisible paper mask keeps it legible over the lattice) -->
@@ -672,7 +711,7 @@
           </svg>
         </div>
         <div class="mstory" id="mstory">
-          <p class="mrest" id="mrest">Start with a decision below. The heavier lines are the ones that move in all of them.</p>
+          <p class="mrest" id="mrest">The heavier lines run to the centre: every system reaches the others through coordination. Start with a decision below.</p>
           <p class="mlead" id="mlead"></p>
           <p class="mcascade" id="mcascade" aria-hidden="true"></p>
           <p class="mchain" id="mchain"></p>
@@ -869,6 +908,16 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
   var svg = stage.querySelector("svg"); if(!svg) return;
   var nodes = [].slice.call(svg.querySelectorAll(".node"));
   var nets  = [].slice.call(svg.querySelectorAll(".net"));
+  // The seven centre spokes, indexed by system. They follow whatever the plate is showing: a hovered
+  // system lights its own spoke, a traced decision lights the spokes of every system in its set, so
+  // "this ran through coordination" is drawn rather than claimed.
+  var spokes = [].slice.call(svg.querySelectorAll(".spoke"));
+  function paintSpokes(on){
+    spokes.forEach(function(sp, j){
+      var lit = on(j);
+      sp.classList.toggle("lit", lit); sp.classList.toggle("dim", !lit);
+    });
+  }
   var flow  = svg.querySelector(".flow");
   var hub   = svg.querySelector(".hub");
   var hubBg = svg.querySelector(".hub-bg");
@@ -1038,6 +1087,10 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
     stage.classList.remove("seeded");
     pinned = -1; userPinned = -1; paintShowing(-1); setPinned();
     var d = SYS[i];
+    // Only the hovered system's own spoke. Every system is a direct dependency of every other in a
+    // complete graph, so lighting all seven would encode nothing; one lit spoke reads as "this is
+    // the system in hand, and here is its route to the centre".
+    paintSpokes(function(j){ return j === i; });
     hub.textContent = d.center; hub.classList.add("on"); fitHub();
     if(keep) keep.classList.add("on");
     if(flow) flow.classList.add("on");
@@ -1070,6 +1123,7 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
     var d = TRIG[t], set = d.set;
     var inSet = function(k){ return set.indexOf(k) >= 0; };
     pinned = t; paintShowing(t); setPinned();
+    paintSpokes(inSet);
     hub.textContent = "One decision · " + word(set.length) + " systems"; hub.classList.add("on"); fitHub();
     if(keep) keep.classList.add("on");
     if(flow) flow.classList.add("on");
@@ -1107,6 +1161,7 @@ window.__STATE__ = /*__STATE__*/null/*__END__*/;
     pinned = -1; userPinned = -1; paintShowing(-1); setPinned();
     nodes.forEach(function(nd){ nd.classList.remove("active","lit"); });
     nets.forEach(function(ln){ ln.classList.remove("lit","dim","sec"); });
+    spokes.forEach(function(sp){ sp.classList.remove("lit","dim"); });
     deactivateTraces();
     if(flow) flow.classList.remove("on");
     hub.textContent = HUB0; hub.classList.remove("on"); fitHub();

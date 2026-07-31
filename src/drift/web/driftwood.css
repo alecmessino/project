@@ -870,6 +870,15 @@ details.exhibit-method{ margin-top:14px; border-top:1px solid var(--line2); padd
 .dwnav--phase2{ display:flex; align-items:center; gap:clamp(14px,1.8vw,24px); flex-wrap:wrap;
   padding:0 clamp(18px,4vw,40px); border-bottom:1px solid var(--ink); }
 .dwnav--phase2 .brand{ height:60px; flex:none; }
+/* The mark is drawn on a 90-unit viewBox at stroke-width 4.6 and rendered ~27px wide in the
+   masthead, which puts its strokes at roughly 1.4px — thin enough that the logo reads as a faint
+   scratch rather than a mark. Optical correction at small size only; the artwork is unchanged. */
+.dwnav--phase2 .brand-mark{ height:24px; width:auto; }
+/* The masthead CTA and the hero CTA carry the same words; they now carry the same glyph. */
+.dwnav-cta .cta-arrow{ margin-left:7px; }
+.dwnav--phase2 .brand-mark polyline,
+.dwnav--phase2 .brand-mark line{ stroke-width:7; }
+.dwnav--phase2 .brand-mark line:last-of-type{ stroke-width:9.5; }
 /* A masthead that is NOT inside a page frame still has to line up with the ones that are.
    the-practice / the-record hang the nav directly off <body>, so it spanned the full viewport and
    put the wordmark at x=30 while every other page put it at x=120 — the single element a visitor

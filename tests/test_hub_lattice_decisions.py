@@ -218,3 +218,89 @@ def test_the_folio_plate_labels_are_gone():
     assert 'class="plate"' not in t
     for n in ("Plate I", "Plate II", "Plate III", "Plate IV"):
         assert f">{n}<" not in t, f"the {n} folio label is back"
+
+
+# ── the spokes: coordination is drawn, not asserted (2026-08-01) ──────────────────────────────
+
+def test_seven_spokes_run_from_the_centre_to_every_system():
+    """The plate's whole argument is that everything routes through coordination, and until now the
+    centre was a floating word with no lines touching it — the one claim the diagram did NOT draw.
+    Seven spokes, one per system, indexed so a renamed or reordered system cannot silently orphan
+    one."""
+    t = _src()
+    spokes = re.findall(r'<line class="spoke" data-i="(\d)" x1="(\d+)" y1="(\d+)" '
+                        r'x2="(\d+)" y2="(\d+)"></line>', t)
+    assert len(spokes) == 7, f"{len(spokes)} spokes, expected one per system"
+    assert [s[0] for s in spokes] == list("0123456"), "spokes are not indexed to the seven systems"
+    # every spoke starts at the centre...
+    for s in spokes:
+        assert (s[1], s[2]) == ("320", "240"), f"spoke {s[0]} does not start at the hub"
+    # ...and lands exactly on its node's dot, so no spoke points into empty space
+    dots = {i: (cx, cy) for i, cx, cy in re.findall(
+        r'<g class="node" data-i="(\d)"[^>]*>\s*<circle class="hit"[^>]*></circle>'
+        r'<circle class="dot" cx="(\d+)" cy="(\d+)"', t)}
+    assert len(dots) == 7, f"could not read the seven node positions: {dots}"
+    for s in spokes:
+        assert dots[s[0]] == (s[3], s[4]), f"spoke {s[0]} misses its node"
+
+
+def test_the_spokes_are_drawn_before_the_hub_mask_that_clips_them():
+    """The paper rectangle behind COORDINATION is what keeps the label legible where seven lines
+    converge. SVG has no z-index: if the spokes were emitted after the mask they would cross the
+    word. This is a paint-order dependency, so it is pinned rather than left to a future reorder."""
+    t = _src()
+    assert t.index('class="spoke"') < t.index('class="hub-bg"') < t.index('<text class="hub"')
+
+
+def test_the_spokes_are_the_only_bold_figure_at_rest():
+    """Two emphasised figures cannot share one diagram — that is the failure this lattice already
+    shipped three times, most recently as six accented chords painting a lopsided quadrilateral over
+    a regular heptagon. The spokes now carry the emphasis, so the rim must stay quieter than they
+    are: heavier than the spokes, or equal to them, and the eye has two drawings to reconcile."""
+    t = _src()
+    def rule(sel):
+        return re.search(r"\.sysstage\.seeded %s\{([^}]*)\}" % re.escape(sel), t).group(1)
+    def num(block, prop):
+        return float(re.search(prop + r":\s*([\d.]+)", block).group(1))
+    spoke = rule(".spoke")
+    for sel in (".net", ".net--structural"):
+        rim = rule(sel)
+        assert num(rim, "stroke-width") < num(spoke, "stroke-width"), \
+            f"{sel} is as heavy as the spokes at rest"
+        assert num(rim, "opacity") < num(spoke, "opacity"), \
+            f"{sel} is as prominent as the spokes at rest"
+
+
+def test_the_centre_is_lit_at_rest_and_never_goes_out():
+    """"The operating system is always running." A hub that rests at --muted and reaches --ink only
+    during a trace tells a non-interacting visitor the opposite: that the centre is the faintest
+    thing in a diagram built to say the centre is where everything meets."""
+    t = _src()
+    hub = re.search(r"\n  \.hub\{([^}]*)\}", t).group(1)
+    assert "fill:var(--ink)" in hub, f"the hub does not rest in ink: {hub}"
+    assert not re.search(r"\.hub\.on\{[^}]*fill", t), \
+        "a .hub.on fill rule is back — the centre's lit state must not be conditional"
+
+
+def test_the_spokes_follow_the_interaction():
+    """A spoke layer that never changes is wallpaper. Hovering a system lights its own route to the
+    centre; a traced decision lights the route of every system in its set."""
+    t = _src()
+    assert "function paintSpokes(" in t
+    assert re.search(r"paintSpokes\(function\(j\)\{ return j === i; \}\)", t), \
+        "a hovered system does not light its own spoke"
+    assert "paintSpokes(inSet)" in t, "a traced decision does not light its systems' spokes"
+    assert 'spokes.forEach(function(sp){ sp.classList.remove("lit","dim"); });' in t, \
+        "clearing the plate leaves spokes stuck lit or dimmed"
+
+
+def test_the_caption_decodes_the_spokes_it_now_describes():
+    """The caption used to read "the heavier lines are the ones that move in all of them", which
+    decoded the structural rim tier. The heavy lines are the spokes now, so the sentence had to move
+    with the encoding or it would be actively describing the wrong marks."""
+    t = _src()
+    body = re.search(r'<p class="mrest"[^>]*>(.*?)</p>', t, re.S).group(1)
+    assert "heavier" in body.lower()
+    assert "centre" in body.lower() or "center" in body.lower(), \
+        f"the caption still points at the rim rather than the spokes: {body!r}"
+    assert "move in all of them" not in body, "the caption still decodes the retired encoding"

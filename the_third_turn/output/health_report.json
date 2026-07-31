@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-31T01:16:24+00:00",
+  "generated": "2026-07-31T01:34:08+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 442566,
+    "rows": 442872,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 157569,
-      "live_total": 49558,
-      "live_today": 323,
-      "last_row_age_min": 0.1
+      "rows_total": 157703,
+      "live_total": 49619,
+      "live_today": 384,
+      "last_row_age_min": 0.2
     },
     "fanduel": {
-      "rows_total": 284991,
-      "live_total": 56720,
-      "live_today": 321,
-      "last_row_age_min": 0.1
+      "rows_total": 285163,
+      "live_total": 56799,
+      "live_today": 400,
+      "last_row_age_min": 0.2
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 35691.4
+      "last_row_age_min": 35709.1
     }
   },
   "books_reporting_live": [
@@ -37,14 +37,14 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 49558,
-    "OPEN": 52067,
-    "SUSPENDED": 4401,
+    "unset": 49619,
+    "OPEN": 52144,
+    "SUSPENDED": 4403,
     "REMOVED": 252
   },
   "overlap": {
-    "simultaneous_pairs_total": 58358,
-    "simultaneous_pairs_today": 321,
+    "simultaneous_pairs_total": 58437,
+    "simultaneous_pairs_today": 400,
     "overlap_games": 109,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
@@ -64,9 +64,9 @@
     "verified": true
   },
   "coverage": {
-    "live_games_seen": 110,
+    "live_games_seen": 111,
     "book_panel_games": 126,
-    "team_total_rows": 27890,
+    "team_total_rows": 27915,
     "innings_seen": [
       1,
       2,
@@ -86,7 +86,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 58358,
+        "current": 58437,
         "target": 2000,
         "pass": true,
         "progress": 1.0

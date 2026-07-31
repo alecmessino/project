@@ -191,47 +191,87 @@ def test_every_trace_lead_matches_the_size_of_its_own_set():
         assert "system" in lead.lower()
 
 
-def test_the_lattice_slot_introduces_the_diagram_instead_of_restating_the_headline():
-    """This slot is allowed one job, and it is not arguing.
+def test_the_section_leads_with_the_readers_problem_not_the_ontology():
+    """Progressive disclosure: the page does not open with Driftwood's vocabulary.
 
-    It previously read "Every important decision creates consequences you can't see yet. /
-    Driftwood maps them before they become expensive." That heading was written to lead with the
-    reader's problem rather than the ontology, which was the right fix for the problem it was
-    solving — but it left the page stating one thesis four times before a first scroll: the
-    headline, the paragraph, the three-item rail, and this. "Consequences you can't see yet"
-    restates "uncoordinated decisions"; "before they become expensive" restates "leak what you
-    keep." It also traded the paragraph's specifics back for abstraction, and it sat AFTER the
-    CTA — arguing with a reader who had already decided.
+    "Seven systems" as a headline asks a first-time reader to learn an ontology before being given a
+    reason to care. The seven systems are what the reader DISCOVERS by using the diagram.
 
-    The slot now introduces what follows. The diagram is the only interactive thing on the page and
-    nothing visible ever said so; the SVG's aria-label carried the instruction and sighted readers
-    got none. So the rule is inverted from the old one: the heading must point at the diagram, and
-    must NOT recycle the headline's vocabulary.
-
-    "Seven systems" stays banned. It was banned for a reason that has not changed — it asks a
-    first-time reader to learn Driftwood's ontology before being given a reason to care.
+    This guard briefly required the heading to POINT AT the diagram instead ("trace", "watch",
+    "move"). That was a mistake worth naming: a rule requiring a headline to behave like a control
+    label reliably produces control-label prose in the headline slot — two stacked imperatives in
+    product-tour register, vague where the rest of the page is specific. The affordance belongs to
+    the picker's own label (see test_the_decision_picker_carries_a_visible_control_label), which
+    frees this slot to make a claim. The constraint here is back to the simple one.
     """
     t = _src()
     h2 = re.search(r'<h2 class="sb-h">(.*?)</h2>', t, re.S)
-    assert h2, "the lattice section lost its heading — a major section with no h2"
+    assert h2, "the lattice section lost its heading"
     head = h2.group(1).strip()
-
     assert not re.search(r"seven systems", head, re.I), (
         f"the heading leads with the ontology again: {head!r}"
     )
-    # The headline's own words. Echoing any of them is the repetition this cut removed.
-    for echo in ("consequences", "expensive", "leak", "uncoordinated"):
+    # It must not re-close the hero. These are the headline's own words.
+    for echo in ("consequences", "expensive", "leak what you keep", "uncoordinated"):
         assert echo not in head.lower(), (
             f"the lattice heading recycles the hero headline ({echo!r}): {head!r}"
         )
-    # It has to point at the diagram — an instruction, not a claim.
-    assert re.search(r"\b(trace|tap|watch|follow|move)", head, re.I), (
-        f"the heading does not introduce the diagram: {head!r}"
+    # One line. The subhead went with the closer and may not return unnoticed.
+    assert 'class="sb-lead"' not in t, "a second line is back under the lattice heading"
+
+
+def test_the_lattice_headings_count_is_derived_from_the_published_traces():
+    """The heading claims a quantity, so the quantity has to come from the traces, not from taste.
+
+    The five published traces touch 7, 7, 6, 6 and 6 systems, which makes "at least six" the
+    strongest true form — "four" would have understated it and "seven" would have overstated three
+    of the five. Edit a trace set without following the sentence and this fails.
+    """
+    t = _src()
+    words = {4: "four", 5: "five", 6: "six", 7: "seven"}
+    sizes = [len(set(int(x) for x in re.findall(r"\d+", raw)))
+             for raw in re.findall(r"set:\s*\[([\d,\s]+)\]", t)]
+    assert sizes, "no traces parsed"
+    head = re.search(r'<h2 class="sb-h">(.*?)</h2>', t, re.S).group(1).lower()
+    claimed = [n for n, w in words.items() if w in head]
+    assert claimed, f"the heading states no quantity to check: {head!r}"
+    assert len(claimed) == 1, f"the heading states more than one quantity: {claimed}"
+    n = claimed[0]
+    assert n == min(sizes), (
+        f"the heading claims {words[n]} systems but the smallest published trace touches "
+        f"{min(sizes)} — the claim and the demonstration disagree"
     )
-    # The subhead is gone with the closer; nothing may reintroduce a second line here without a
-    # deliberate edit to this test, which is what kept the old pair in place unexamined.
-    assert 'class="sb-lead"' not in t, (
-        "a second line is back under the lattice heading — the slot gets one line"
+    assert "at least" in head or "or more" in head, (
+        "a bare number reads as exact while the traces range "
+        f"{min(sizes)}-{max(sizes)}; qualify it"
+    )
+
+
+def test_the_decision_picker_carries_a_visible_control_label():
+    """The affordance lives here, not in the heading.
+
+    The lattice is the only interactive thing on the page, and for a long time nothing visible said
+    so — the instruction sat in the SVG's aria-label, so sighted readers got none. The fix is a
+    control label on the picker, in the page's small-caps utility register, which reads as operable
+    without a sentence selling the interaction.
+
+    It must also BE the group's accessible name, so what a screen reader announces and what the eye
+    sees are the same string.
+    """
+    t = _src()
+    lab = re.search(r'<p class="trig-lab" id="([^"]+)">([^<]+)</p>', t)
+    assert lab, "the decision picker has no visible control label"
+    lab_id, text = lab.group(1), lab.group(2).strip()
+    assert text, "the control label is empty"
+    assert len(text.split()) <= 4, f"a control label, not a sentence: {text!r}"
+    assert not text.endswith("."), f"a control label takes no full stop: {text!r}"
+    trig = re.search(r'<div class="trig"[^>]*>', t).group(0)
+    assert f'aria-labelledby="{lab_id}"' in trig, (
+        "the picker does not use its visible label as its accessible name"
+    )
+    assert "aria-label=" not in trig, (
+        "the picker carries a separate aria-label, so the announced name and the visible label can "
+        "drift apart"
     )
 
 

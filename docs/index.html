@@ -454,7 +454,15 @@
   .mstory.swapping .mlead,.mstory.swapping .mcascade,.mstory.swapping .mchain,.mstory.swapping .mproof{opacity:0;transition:opacity .18s ease}
   /* the trigger rail, trace a common decision; specimen labels, not software buttons. Sits directly
      under the reading panel (no rule) so the two read as one exhibit block, not two boxed zones. */
-  .trig{margin:14px auto 0;max-width:590px;
+  /* The instrument's control label. The diagram needed an affordance, not a headline: a small-caps
+     utility label sitting on the picker reads as operable without a sentence trying to sell the
+     interaction, and it leaves the heading free to say something true. Same register as the page's
+     other utility labels (.reg-lead, .rail .rk) so it reads as apparatus, not as copy. It is also
+     the group's accessible name via aria-labelledby, so what a screen reader announces and what the
+     eye sees are the same string. */
+  .trig-lab{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--muted);text-align:center;margin:26px 0 0}
+  .trig{margin:10px auto 0;max-width:590px;
     display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:center}
   .trig-btn{font-family:var(--sans);font-size:12.5px;font-weight:500;color:var(--body);background:none;
     border:1px solid var(--line);border-radius:var(--surface-radius);padding:9px 14px;cursor:pointer;
@@ -654,16 +662,21 @@
     <div class="sysband" id="thesystem">
       <span class="regmark" aria-hidden="true"><i></i></span>
       <div class="sysband-in">
-        <!-- This slot used to close the argument again: "Every important decision creates
-             consequences you can't see yet. / Driftwood maps them before they become expensive."
-             That was the headline in different words — "consequences you can't see yet" restates
-             "uncoordinated decisions", "before they become expensive" restates "leak what you
-             keep" — so the page said one thing four times (headline, paragraph, rail, closer)
-             before the reader had scrolled. It also traded the paragraph's specifics back for
-             abstraction, and it sat AFTER the CTA, arguing with someone who had already decided.
-             The slot now introduces the next idea instead of re-closing the last one: it tells the
-             reader the diagram is theirs to operate, which is the one thing the prose never said. -->
-        <h2 class="sb-h">Trace a decision. Watch what it moves.</h2>
+        <!-- Two jobs, kept apart.
+             (1) THE HEADING states something true and specific. It used to close the argument again
+             ("Every important decision creates consequences you can't see yet. / Driftwood maps them
+             before they become expensive.") — the headline in different words, after the CTA, which
+             made four passes at one thesis before a first scroll. A replacement that pointed at the
+             diagram ("Trace a decision. Watch what it moves.") was worse in a quieter way: two
+             stacked imperatives is product-tour register, not the voice of the paragraph three
+             inches above, and "what it moves" names nothing where the seams paragraph names a
+             rebalance, a title, a state line.
+             (2) THE AFFORDANCE is a control label on the picker below, not a sentence selling the
+             interaction. See .trig-lab.
+             The number is derived, not chosen: the five published traces touch 7, 7, 6, 6 and 6
+             systems, so "at least six" is the strongest true form. A guard re-derives it from the
+             trace sets and fails if a trace is edited without the sentence following. -->
+        <h2 class="sb-h">Every decision here touches at least six systems. Most households plan for one.</h2>
         <div class="sysstage seeded" id="sysDiagram">
           <svg viewBox="0 0 640 546" role="group" aria-label="Seven financial systems, Investments, Taxes, Cash Flow, Estate and legacy, Risk and protection, Business Ownership and account structure, and Family / Purpose, in one coordinated network. Tap a system to see what it moves; what you keep is the result.">
             <!-- the lattice: every system connected to every other (near-silent at rest) -->
@@ -735,13 +748,14 @@
           </svg>
         </div>
         <div class="mstory" id="mstory">
-          <p class="mrest" id="mrest">The heavier lines run to the centre: every system reaches the others through coordination. Start with a decision below.</p>
+          <p class="mrest" id="mrest">The heavier lines run to the centre: every system reaches the others through coordination.</p>
           <p class="mlead" id="mlead"></p>
           <p class="mcascade" id="mcascade" aria-hidden="true"></p>
           <p class="mchain" id="mchain"></p>
           <a class="mproof" id="mproof" href="#"></a>
         </div>
-        <div class="trig" id="trig" role="group" aria-label="Trace a common decision, press one to see the systems it moves">
+        <p class="trig-lab" id="trigLab">Select a decision</p>
+        <div class="trig" id="trig" role="group" aria-labelledby="trigLab">
           <button class="trig-btn" data-t="0" aria-pressed="false">Buy a home</button>
           <button class="trig-btn" data-t="1" aria-pressed="false">Sell a business</button>
           <button class="trig-btn" data-t="2" aria-pressed="false">Exercise stock options</button>

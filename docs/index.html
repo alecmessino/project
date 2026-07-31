@@ -201,7 +201,7 @@
      themselves. (The Governance Register keeps its name in its own heading, not as a folio stamp.) */
   /* the plate's product line, a quiet serif framing above the seven-systems headline */
   .sb-lead{font-family:var(--serif);font-size:clamp(16.5px,.5vw + 15px,19px);line-height:1.5;color:var(--dim);
-    margin:0 auto 20px;max-width:48ch}
+    margin:14px auto 0;max-width:48ch}
 
   .lede2-note{font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--dim);margin:-6px 0 22px;max-width:58ch}
   .lede2-note a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
@@ -239,6 +239,28 @@
   .reg-done .reg-when{color:var(--ghost-line)}
   .reg.seeded .reg-r{opacity:0;transform:translateY(7px)}
   .reg.seeded.in .reg-r{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease;transition-delay:calc(var(--i) * 65ms)}
+  /* THE CARDS. This was a table, and a table is a picture of a mechanism — it showed how the
+     register is stored rather than what it is like to have one. Each matter is now a thing being
+     carried: what it is, who has it, what it touches, when it is next looked at. Same eight
+     entries, same data, different question answered. */
+  .reg-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:1px;
+    background:var(--line2);border:1px solid var(--line2);margin:30px 0 0}
+  .rc{background:var(--bg);padding:22px 22px 20px;display:flex;flex-direction:column}
+  .reg.seeded .rc{opacity:0;transform:translateY(7px)}
+  .reg.seeded.in .rc{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease;
+    transition-delay:calc(var(--i) * 65ms)}
+  .rc-t{font-family:var(--serif);font-weight:400;font-size:19px;line-height:1.22;color:var(--ink);
+    margin:0 0 15px;letter-spacing:-.008em}
+  .rc-d{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;margin:0 0 18px}
+  .rc-d dt{font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ghost-line);padding-top:2px}
+  .rc-d dd{margin:0;font-family:var(--sans);font-size:13.5px;line-height:1.45;color:var(--body)}
+  .rc-s{margin:auto 0 0}
+  /* a resolved matter stays on the record rather than disappearing — it is the most trust-building
+     row type on the page, so it is quieted, never removed */
+  .rc--done{background:var(--soft)}
+  .rc--done .rc-t{color:var(--dim)}
+  @media(max-width:620px){ .reg-cards{grid-template-columns:1fr} .rc{padding:18px 18px 16px} }
   .reg-foot{display:flex;justify-content:space-between;align-items:baseline;gap:16px 26px;flex-wrap:wrap;margin-top:16px}
   .reg-note{font-family:var(--sans);font-size:11.5px;line-height:1.55;color:var(--muted);margin:0;max-width:62ch}
   .reg-go{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--accent-strike);text-decoration:none;white-space:nowrap}
@@ -353,14 +375,22 @@
   .mstory{position:relative;max-width:60ch;margin:24px auto 0;min-height:166px;padding-top:20px;border-top:1px solid var(--line2)}
   .mrest{position:absolute;top:24px;left:0;right:0;font-family:var(--sans);font-size:12px;color:var(--muted);letter-spacing:.03em;margin:0;transition:opacity .34s ease}
   .mlead{font-family:var(--serif);font-size:18px;line-height:1.4;color:var(--ink);margin:0 0 11px;opacity:0;transition:opacity .34s ease}
+  /* The cascade. The ordered chain of systems a decision runs through — derived from the trace's
+     own set order, so it cannot drift from what the diagram just animated. This is the thing the
+     lit circles could not say: not merely THAT six systems moved, but in what order one ran into
+     the next. */
+  .mcascade{font-family:var(--sans);font-size:11.5px;font-weight:700;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--dim);margin:0 0 12px;line-height:1.9;opacity:0;
+    transition:opacity .34s ease}
+  .mcascade .cx{color:var(--ghost-line);margin:0 7px;font-weight:400}
   .mchain{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--muted);margin:0 auto;max-width:52ch;opacity:0;transition:opacity .34s ease}
   .mproof{display:inline-block;margin-top:18px;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.02em;color:var(--accent-strike);text-decoration:none;opacity:0;transition:opacity .34s ease}
   .mproof:hover{text-decoration:underline}
   .mstory.show .mrest{opacity:0}
-  .mstory.show .mlead,.mstory.show .mchain,.mstory.show .mproof{opacity:1}
+  .mstory.show .mlead,.mstory.show .mcascade,.mstory.show .mchain,.mstory.show .mproof{opacity:1}
   /* moving between scenarios (hovering one system, then another) the panel dips out quickly, swaps text,
      then eases back in, a composed crossfade rather than a hard flash. */
-  .mstory.swapping .mlead,.mstory.swapping .mchain,.mstory.swapping .mproof{opacity:0;transition:opacity .18s ease}
+  .mstory.swapping .mlead,.mstory.swapping .mcascade,.mstory.swapping .mchain,.mstory.swapping .mproof{opacity:0;transition:opacity .18s ease}
   /* the trigger rail, trace a common decision; specimen labels, not software buttons. Sits directly
      under the reading panel (no rule) so the two read as one exhibit block, not two boxed zones. */
   .trig{margin:14px auto 0;max-width:590px;
@@ -370,8 +400,8 @@
     transition:border-color .2s ease,color .2s ease}
   .trig-btn:hover{border-color:var(--ghost-line);color:var(--ink)}
   .trig-btn.showing{border-color:var(--accent-strike);color:var(--ink)}
-  @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mchain,.mproof,.trig-btn,.diag-item,.review-cta .rc-main::after{transition:none}}
-  @media(prefers-reduced-motion:reduce){.mstory.swapping .mlead,.mstory.swapping .mchain,.mstory.swapping .mproof{transition:none;opacity:1}}
+  @media(prefers-reduced-motion:reduce){.net,.trace,.flow,.hub,.keep,.node .dot,.node .lbl,.mrest,.mlead,.mcascade,.mchain,.mproof,.trig-btn,.diag-item,.review-cta .rc-main::after{transition:none}}
+  @media(prefers-reduced-motion:reduce){.mstory.swapping .mlead,.mstory.swapping .mcascade,.mstory.swapping .mchain,.mstory.swapping .mproof{transition:none;opacity:1}}
   @media(max-width:620px){.sysband{padding:32px 22px 40px}.sysstage{max-width:410px}.node .lbl{font-size:12px}.mlead{font-size:17px}}
   /* the reading panel wraps taller as the column narrows; reserve the tallest scenario at each phone tier so
      the scenario buttons never shift while the plate auto-rotates (the 166px desktop reservation holds >=560px). */
@@ -557,15 +587,15 @@
 
     <!-- The survey rail: three measured facts, written as survey findings rather than statistics. -->
     <div class="rail">
-      <div><span class="mono rk">Read as one system</span><p class="rv">Seven systems, twenty-one dependencies</p></div>
-      <div><span class="mono rk">Owned by name</span><p class="rv">A person against every open matter</p></div>
-      <div><span class="mono rk">Held until it closes</span><p class="rv">Every item carries its next date</p></div>
+      <div><span class="mono rk">Nothing falls through</span><p class="rv">Every open matter has a named owner</p></div>
+      <div><span class="mono rk">One record</span><p class="rv">Every adviser works from the same one</p></div>
+      <div><span class="mono rk">Open until finished</span><p class="rv">Not until the meeting ends</p></div>
     </div>
     <div class="sysband" id="thesystem">
       <span class="regmark" aria-hidden="true"><i></i></span>
       <div class="sysband-in">
-        <p class="sb-lead">Driftwood reads a household as one connected system.</p>
-        <h2 class="sb-h">Seven systems. One decision moves at least six.</h2>
+        <h2 class="sb-h">Every important decision creates consequences you can’t see yet.</h2>
+        <p class="sb-lead">Driftwood maps them before they become expensive.</p>
         <div class="sysstage seeded" id="sysDiagram">
           <svg viewBox="0 0 640 546" role="group" aria-label="Seven financial systems, Investments, Taxes, Cash Flow, Estate and legacy, Risk and protection, Business Ownership and account structure, and Family / Purpose, in one coordinated network. Tap a system to see what it moves; what you keep is the result.">
             <!-- the lattice: every system connected to every other (near-silent at rest) -->
@@ -629,8 +659,9 @@
           </svg>
         </div>
         <div class="mstory" id="mstory">
-          <p class="mrest" id="mrest">Twenty-one dependencies among the seven. The heavier lines are the four that move in every decision below — what you own, what you owe, what you can spend, and what it is for. Trace a decision, or explore a system.</p>
+          <p class="mrest" id="mrest">Start with a decision below. The heavier lines are the ones that move in all of them.</p>
           <p class="mlead" id="mlead"></p>
+          <p class="mcascade" id="mcascade" aria-hidden="true"></p>
           <p class="mchain" id="mchain"></p>
           <a class="mproof" id="mproof" href="#"></a>
         </div>
@@ -655,27 +686,85 @@
       <span class="regmark" aria-hidden="true"><i></i></span>
       <div class="reg seeded" id="register">
         <div class="reg-head">
-          <p class="reg-lead">This is what standing attention looks like.</p>
-          <h2 class="reg-h">Everything we find is written down and owned.</h2>
-          <p class="reg-sub">Every client household runs on a standing Opportunity Register: each open
-            matter carried with the systems it touches, a named owner, and the date it is next examined,
-            held until it is resolved and dated. Not tasks. Not reminders. The wealth opportunities
-            themselves, held open until they close.</p>
+          <p class="reg-lead">Between reviews, nothing is idle.</p>
+          <h2 class="reg-h">This household isn’t waiting for the next annual review.</h2>
+          <p class="reg-sub">Eight matters are already being carried — each one with the systems it
+            touches, a person responsible, and the date it is next examined. They stay open until they
+            are resolved and dated. Not tasks. Not reminders. The decisions themselves.</p>
         </div>
-        <div class="reg-table" role="table" aria-label="A sample Opportunity Register: six open matters and two resolved.">
-          <div class="reg-r reg-th" role="row">
-            <span role="columnheader">Item</span><span role="columnheader">Systems touched</span>
-            <span role="columnheader">Owner</span><span role="columnheader">Next review</span>
-            <span role="columnheader" class="reg-st">Status</span>
-          </div>
-          <div class="reg-r" role="row" style="--i:0"><span class="reg-m" role="cell">Asset location</span><span class="reg-sys" role="cell">Investments &middot; Taxes</span><span class="reg-o" role="cell">Driftwood</span><span class="reg-when" role="cell">Sep 2026</span><span class="reg-st" role="cell"><span class="st st-open">Open</span></span></div>
-          <div class="reg-r" role="row" style="--i:1"><span class="reg-m" role="cell">Trust funding &amp; titling</span><span class="reg-sys" role="cell">Estate &middot; Business Ownership</span><span class="reg-o" role="cell">Estate attorney</span><span class="reg-when" role="cell">Aug 2026</span><span class="reg-st" role="cell"><span class="st st-wait">Waiting</span></span></div>
-          <div class="reg-r" role="row" style="--i:2"><span class="reg-m" role="cell">Roth conversion window</span><span class="reg-sys" role="cell">Taxes</span><span class="reg-o" role="cell">Driftwood + CPA</span><span class="reg-when" role="cell">Nov 2026</span><span class="reg-st" role="cell"><span class="st st-mon">Monitoring</span></span></div>
-          <div class="reg-r" role="row" style="--i:3"><span class="reg-m" role="cell">QSBS eligibility</span><span class="reg-sys" role="cell">Taxes &middot; Estate</span><span class="reg-o" role="cell">Assigned at review</span><span class="reg-when" role="cell">At exit</span><span class="reg-st" role="cell"><span class="st st-time">Time-sensitive</span></span></div>
-          <div class="reg-r" role="row" style="--i:4"><span class="reg-m" role="cell">Charitable gifting sequence</span><span class="reg-sys" role="cell">Family / Purpose &middot; Taxes</span><span class="reg-o" role="cell">Driftwood + CPA</span><span class="reg-when" role="cell">Dec 2026</span><span class="reg-st" role="cell"><span class="st st-ready">Ready</span></span></div>
-          <div class="reg-r" role="row" style="--i:5"><span class="reg-m" role="cell">Business liquidity</span><span class="reg-sys" role="cell">Cash Flow &middot; Risk</span><span class="reg-o" role="cell">Driftwood</span><span class="reg-when" role="cell">At event</span><span class="reg-st" role="cell"><span class="st st-fut">Future event</span></span></div>
-          <div class="reg-r reg-done" role="row" style="--i:6"><span class="reg-m" role="cell">Loss carryforward deployment</span><span class="reg-sys" role="cell">Taxes</span><span class="reg-o" role="cell">Driftwood</span><span class="reg-when" role="cell">Closed Mar 2026</span><span class="reg-st" role="cell"><span class="st st-res">Resolved &#10003;</span></span></div>
-          <div class="reg-r reg-done" role="row" style="--i:7"><span class="reg-m" role="cell">Reserve target</span><span class="reg-sys" role="cell">Cash Flow</span><span class="reg-o" role="cell">Driftwood</span><span class="reg-when" role="cell">Closed May 2026</span><span class="reg-st" role="cell"><span class="st st-res">Resolved &#10003;</span></span></div>
+        <div class="reg-cards" role="list" aria-label="Eight matters currently carried for one household: six open, two resolved.">
+          <article class="rc" style="--i:0">
+            <h3 class="rc-t">Asset location</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Driftwood</dd>
+              <dt>Touches</dt><dd>Investments · Taxes</dd>
+              <dt>Next decision</dt><dd>September</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-open">Open</span></p>
+          </article>
+          <article class="rc" style="--i:1">
+            <h3 class="rc-t">Trust funding &amp; titling</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Estate attorney</dd>
+              <dt>Touches</dt><dd>Estate · Business Ownership</dd>
+              <dt>Next decision</dt><dd>August</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-wait">Waiting</span></p>
+          </article>
+          <article class="rc" style="--i:2">
+            <h3 class="rc-t">Roth conversion window</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Driftwood + CPA</dd>
+              <dt>Touches</dt><dd>Taxes</dd>
+              <dt>Next decision</dt><dd>November</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-mon">Monitoring</span></p>
+          </article>
+          <article class="rc" style="--i:3">
+            <h3 class="rc-t">QSBS eligibility</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Assigned at review</dd>
+              <dt>Touches</dt><dd>Taxes · Estate</dd>
+              <dt>Next decision</dt><dd>At exit</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-time">Time-sensitive</span></p>
+          </article>
+          <article class="rc" style="--i:4">
+            <h3 class="rc-t">Charitable gifting sequence</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Driftwood + CPA</dd>
+              <dt>Touches</dt><dd>Family / Purpose · Taxes</dd>
+              <dt>Next decision</dt><dd>December</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-ready">Ready</span></p>
+          </article>
+          <article class="rc" style="--i:5">
+            <h3 class="rc-t">Business liquidity</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Driftwood</dd>
+              <dt>Touches</dt><dd>Cash Flow · Protection</dd>
+              <dt>Next decision</dt><dd>At event</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-fut">Future event</span></p>
+          </article>
+          <article class="rc rc--done" style="--i:6">
+            <h3 class="rc-t">Loss carryforward deployment</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Driftwood</dd>
+              <dt>Touches</dt><dd>Taxes</dd>
+              <dt>Next decision</dt><dd>Closed March</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-res">Resolved ✓</span></p>
+          </article>
+          <article class="rc rc--done" style="--i:7">
+            <h3 class="rc-t">Reserve target</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Driftwood</dd>
+              <dt>Touches</dt><dd>Cash Flow</dd>
+              <dt>Next decision</dt><dd>Closed May</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-res">Resolved ✓</span></p>
+          </article>
         </div>
         <div class="reg-foot">
           <p class="reg-note">Illustrative sample entries, a fictional household, not client data. A live
@@ -771,6 +860,12 @@ window.__STATE__ = {"header": {"generated": "2026-07-30 23:20:04 UTC"}, "hero": 
   var hub   = svg.querySelector(".hub");
   var hubBg = svg.querySelector(".hub-bg");
   var keep  = svg.querySelector(".keep");
+  var cascade = document.getElementById("mcascade");
+  // Labels come from the rendered <text class="lbl"> nodes rather than a second hardcoded list:
+  // one source of truth, so a renamed system cannot say one thing on the plate and another in the
+  // cascade beneath it.
+  var NODE_LABEL = [].slice.call(document.querySelectorAll("#sysDiagram .node .lbl"))
+    .map(function(el){ return (el.textContent || "").trim(); });
   var story = document.getElementById("mstory");
   var lead  = document.getElementById("mlead");
   var chain = document.getElementById("mchain");
@@ -849,8 +944,22 @@ window.__STATE__ = {"header": {"generated": "2026-07-30 23:20:04 UTC"}, "hero": 
   function paintShowing(t){ trigBtns.forEach(function(b){ b.classList.toggle("showing", +b.getAttribute("data-t")===t); }); }
   function setPinned(){ trigBtns.forEach(function(b){ b.setAttribute("aria-pressed", String(+b.getAttribute("data-t")===userPinned)); }); }
   var storyTimer = 0;
+  // The ordered chain of systems the decision runs through. Built from d.set, the SAME array the
+  // animation walks, so the words can never disagree with the diagram. A system hover carries no
+  // set, so the cascade simply empties rather than showing a stale one.
+  function cascade_text(d){
+    if(!cascade) return;
+    while(cascade.firstChild) cascade.removeChild(cascade.firstChild);
+    if(!d || !d.set || !d.set.length) return;
+    d.set.forEach(function(i, k){
+      if(k){ var sep = document.createElement("span"); sep.className = "cx";
+             sep.textContent = "→"; cascade.appendChild(sep); }
+      cascade.appendChild(document.createTextNode(NODE_LABEL[i] || ""));
+    });
+  }
   function story_apply(d){
     lead.textContent = d.lead; chain.textContent = d.body;
+    cascade_text(d);
     proof.textContent = d.proof + " →"; proof.setAttribute("href", d.href);
     story.classList.remove("swapping"); story.classList.add("show");
   }

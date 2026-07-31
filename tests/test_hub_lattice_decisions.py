@@ -151,20 +151,46 @@ def test_the_two_tiers_are_still_clearly_different():
 
 # ── the headline claim is derived, not asserted ───────────────────────────────────────────────
 
-def test_the_headline_number_matches_the_published_traces():
-    """The page says "One decision moves at least six." That is a claim about the decisions it
-    publishes, so it is checked against them. If a trace touching fewer systems is added, the copy
-    is wrong and this fails — which is the point."""
+def test_every_trace_lead_matches_the_size_of_its_own_set():
+    """The count moved from the headline into the demonstration, and got stronger for it.
+
+    The section used to assert "One decision moves at least six" above the diagram — one claim, made
+    before the reader had any reason to believe it. The headline now states the reader's problem, and
+    each trace states its own result ("One sale. Seven systems.") at the moment the diagram proves
+    it. So there are five claims to check instead of one, and each is checked against the set the
+    animation actually walks. Add a trace whose lead says six while its set touches five, and this
+    fails.
+    """
     t = _src()
-    sizes = [len(set(int(n) for n in re.findall(r"\d+", s)))
-             for s in re.findall(r"set:\s*\[([\d,\s]+)\]", t)]
-    assert sizes, "no decision traces found"
-    words = {4: "four", 5: "five", 6: "six", 7: "seven"}
-    claimed = words[min(sizes)]
-    assert f"moves at least {claimed}" in t, (
-        f"the smallest published trace touches {min(sizes)} systems, so the headline should read "
-        f"'moves at least {claimed}' — trace sizes were {sorted(sizes)}"
+    words = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven"}
+    traces = re.findall(r"set:\s*\[([\d,\s]+)\][^}]*?lead:\s*\"([^\"]+)\"", t, re.S)
+    assert len(traces) == 5, f"expected five traces with leads, parsed {len(traces)}"
+    for raw, lead in traces:
+        n = len(set(int(x) for x in re.findall(r"\d+", raw)))
+        assert words[n] in lead.lower(), (
+            f"trace lead {lead!r} does not state its own size — the set touches {n} systems"
+        )
+        assert "system" in lead.lower()
+
+
+def test_the_section_leads_with_the_readers_problem_not_the_ontology():
+    """Progressive disclosure: the page stopped opening with Driftwood's vocabulary.
+
+    "Seven systems" as a headline asks a first-time reader to learn an ontology before being given a
+    reason to care. The seven systems are now what the reader DISCOVERS by using the diagram — the
+    heading states the consequence they already worry about."""
+    t = _src()
+    h2 = re.search(r'<h2 class="sb-h">(.*?)</h2>', t, re.S)
+    assert h2, "the lattice heading is missing"
+    head = h2.group(1)
+    assert "consequences" in head.lower()
+    assert not re.search(r"seven systems", head, re.I), (
+        f"the heading leads with the ontology again: {head!r}"
     )
+    # and the subhead must follow the headline, not precede it — "Driftwood maps them" needs an
+    # antecedent, and it ran before the sentence naming what "them" was, twice.
+    assert t.index('class="sb-h"') < t.index('class="sb-lead"'), \
+        "the subhead sits above the headline, so its pronoun has no antecedent"
 
 
 def test_the_folio_plate_labels_are_gone():

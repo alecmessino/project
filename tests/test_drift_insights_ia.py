@@ -378,3 +378,41 @@ def test_the_built_masthead_matches_the_source_masthead():
         "docs/ is out of date with src/ — run `python3 scripts/phase2_nav.py && "
         f"python3 scripts/sync_docs.py` and commit the result: {sorted(stale)[:8]}"
     )
+
+
+# ── the masthead has to work on a phone ───────────────────────────────────────────────────────
+
+def test_the_nav_wraps_its_families_in_the_mobile_disclosure_hook():
+    """The bug that shipped: build_nav() never emitted .dwnav-links.
+
+    That one missing element broke the masthead on every viewport under 1200px, and nothing caught
+    it because every other nav test asserts on families and hrefs, which were all present and
+    correct. The failure was structural:
+
+      * dw-context.js's disclosure enhancer does `nav.querySelector(".dwnav-links")` and returns
+        early when it is missing, so the hamburger was never injected and .dwnav--menu — the class
+        every mobile rule in driftwood.css is scoped to — was never added.
+      * .dwnav-panel is display:none by default, revealed only by .dwnav-drop--open (desktop only;
+        open() is a no-op below 1200px) or .dwnav--menu.dwnav--open. With neither reachable, all
+        four family triggers were dead buttons on a phone and ~20 destinations had no route.
+
+    The CSS had always styled .dwnav-links at both breakpoints. Only the generator disagreed.
+    """
+    nav = _phase2_nav()
+    markup = nav.build_nav("leakage.html")
+    assert 'class="dwnav-links"' in markup, "the masthead has no mobile disclosure hook"
+
+    # Every family must sit INSIDE the wrapper — that is what the enhancer toggles.
+    wrapper = re.search(r'<div class="dwnav-links">(.*?)</div>\s*<span class="dwnav-sep"', markup, re.S)
+    assert wrapper, "the .dwnav-links wrapper is not closed before the separator"
+    assert wrapper.group(1).count('class="dwnav-drop') == len(nav.FAMILIES), \
+        "not every nav family sits inside .dwnav-links"
+
+    # Client Access and the CTA must stay OUTSIDE it: the mobile rules target them separately.
+    tail = markup[markup.index('<span class="dwnav-sep"'):]
+    assert 'class="dwnav-access"' in tail and 'class="dwnav-cta"' in tail
+
+    # And it has to survive into the built pages, not just the generator.
+    for page in ("leakage.html", "score.html", "insights.html"):
+        assert 'class="dwnav-links"' in (DOCS / page).read_text(encoding="utf-8"), \
+            f"docs/{page} ships a masthead with no mobile disclosure hook"

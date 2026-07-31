@@ -916,7 +916,12 @@ body > .dwnav--phase2{ max-width:calc(1300px - 40px); margin-inline:auto; }
 @media (min-width:1200px){
   .dwnav--phase2{ align-items:center; padding:14px 30px; }
   .dwnav--phase2 .brand{ margin-right:clamp(16px,2vw,28px); }
-  .dwnav--phase2 .dwnav-links{ gap:0 clamp(14px,1.6vw,26px); }
+  /* margin-left:0 overrides the generic .dwnav-links rule above, which adds up to 30px on top of
+     the brand's own margin-right — double-spacing the same gap. The row needs ~1230px of a 1260px
+     frame, so those 30px were the difference between a one-line masthead and the CTA wrapping to a
+     second row. Only visible once .dwnav-links actually existed: the Phase-2 generator never
+     emitted the wrapper, so every rule targeting it was dead until 2026-07-31. */
+  .dwnav--phase2 .dwnav-links{ gap:0 clamp(14px,1.6vw,26px); margin-left:0; }
   .dwnav--phase2 .dwnav-access{ margin-left:auto; }
   .dwnav--phase2 .dwnav-panel{ position:absolute; top:100%; left:-14px; margin-top:9px; min-width:236px;
     flex-direction:column; background:var(--soft); border:1px solid var(--frame-line); padding:10px 16px;

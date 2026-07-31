@@ -119,6 +119,7 @@ def build_nav(page_file):
     cur = CURRENT.get(page_file)
     fam_cur, sub_cur = cur if cur else (None, None)
     parts = [BRAND]
+    families = []
     for fam_label, items in FAMILIES:
         is_current = (fam_label == fam_cur)
         cls = "dwnav-drop" + (" dwnav-drop--current" if is_current else "")
@@ -131,7 +132,22 @@ def build_nav(page_file):
         panel = '<div class="dwnav-panel">%s</div>' % "".join(links)
         trigger = ('<button type="button" class="dwnav-trigger" aria-haspopup="true" '
                    'aria-expanded="false">%s<span class="caret" aria-hidden="true"></span></button>' % fam_label)
-        parts.append('<div class="%s">%s%s</div>' % (cls, trigger, panel))
+        families.append('<div class="%s">%s%s</div>' % (cls, trigger, panel))
+    # The families MUST be wrapped in .dwnav-links. This is not cosmetic markup — it is the hook the
+    # entire mobile masthead hangs from, and omitting it broke the nav on every phone and tablet:
+    #
+    #   * dw-context.js's disclosure enhancer does `nav.querySelector(".dwnav-links")` and returns
+    #     early when it is absent, so the hamburger was never injected and .dwnav--menu was never
+    #     added — which is what activates every mobile rule in driftwood.css.
+    #   * .dwnav-panel is display:none by default. It is revealed by .dwnav-drop--open (desktop
+    #     only — open() is a no-op below 1200px) or by .dwnav--menu.dwnav--open. With neither
+    #     reachable, all four family triggers were dead buttons under 1200px and roughly twenty
+    #     destinations had no route to them at all.
+    #
+    # The CSS has always expected this element (it styles .dwnav-links at both breakpoints); only
+    # the generator failed to emit it. Keep the separator, Client Access, and the CTA OUTSIDE it —
+    # the mobile rules target those three separately.
+    parts.append('<div class="dwnav-links">%s</div>' % "".join(families))
     parts.append('<span class="dwnav-sep" aria-hidden="true"></span>')
     parts.append('<a class="dwnav-access" href="private.html">Client Access</a>')
     parts.append('<a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>')

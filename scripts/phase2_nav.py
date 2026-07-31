@@ -126,12 +126,35 @@ def build_nav(page_file):
 
 NAV_RE = re.compile(r'<nav\b[^>]*>.*?</nav>', re.S)
 
+# A page that opens its content with <div class="wrap"> but has no <nav> never had a masthead to
+# replace, so the original "no nav -> skip" rule silently left it out of the sweep forever. Six pages
+# were in that state, including "The Seven Systems" and "Household Example" — both linked FROM the
+# Coordination dropdown, so a visitor who followed the menu landed somewhere with no way back.
+WRAP_OPEN_RE = re.compile(r'(<div class="wrap"[^>]*>)')
+
+
 def install(page):
     s = open(page, encoding="utf-8").read()
-    if not NAV_RE.search(s):
-        return False  # redirect stub or no nav
+    if 'http-equiv="refresh"' in s:
+        return False                                   # redirect stub: no chrome by design
     name = os.path.basename(page)
-    new = NAV_RE.sub(lambda m: build_nav(name), s, count=1)
+    if NAV_RE.search(s):
+        # Lift the masthead to the TOP of .wrap. On many pages it sat inside .frame > .inner, i.e.
+        # inside the narrow reading shell — so the nav itself was 920–1080px wide depending on the
+        # page while the homepage's was 1300px. Moving between pages visibly resized the masthead,
+        # which is the one element a visitor sees on every screen. Content columns stay narrow;
+        # the frame and the nav on it do not.
+        stripped = NAV_RE.sub("", s, count=1)
+        m = WRAP_OPEN_RE.search(stripped)
+        if m:
+            new = stripped[:m.end()] + "\n" + build_nav(name) + stripped[m.end():]
+        else:
+            new = NAV_RE.sub(lambda mm: build_nav(name), s, count=1)
+    else:
+        m = WRAP_OPEN_RE.search(s)
+        if not m:
+            return False                               # nothing to anchor to
+        new = s[:m.end()] + "\n" + build_nav(name) + s[m.end():]
     if new != s:
         open(page, "w", encoding="utf-8").write(new)
         return True

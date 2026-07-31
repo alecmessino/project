@@ -61,6 +61,30 @@
   --serif:'Erode','Georgia','Times New Roman',serif;   /* editorial callouts / ledes / pull-quotes only */
   --fz-xs:11px; --fz-sm:12.5px; --fz-md:15px; --fz-lg:18px; --fz-hero:30px;
 }
+/* ── The page measure, defined once ─────────────────────────────────────────────────────────
+   Every page frame is this wide. It used to be declared inline on each page and had drifted into
+   NINE different values — 880 / 900 / 920 / 960 / 1000 / 1040 / 1060 / 1080 / 1180 — so moving
+   between pages visibly resized the site. A frame that jumps between the homepage and the next
+   click reads as a stitched-together site rather than one publication.
+
+   This sets the FRAME only. Reading columns keep their own ch-based caps inside it (the editorial
+   pages hold text at 680px), so a wider frame gives the rules, plates and headers more room without
+   ever stretching a line of prose past a comfortable measure.
+
+   `.wrap` in a page's own <style> may still set margin and padding; it must not set max-width. */
+.wrap,.sheet{ max-width:1060px; margin-inline:auto; padding-inline:20px; }
+/* Reading measure. Widening the frame must not widen the prose. Several editorial pages had no cap
+   of their own and were relying on a narrow .wrap to hold their line length — at 1300px their body
+   copy ran to ~110 characters. These shells now carry an explicit measure, so the frame and the
+   reading column are independent, which is what they should always have been. */
+.inner p, .doc p, .exec p, .pt-sec p, .missing p, .lab p, .wrap.reveal > p{ max-width:70ch; }
+@media (min-width:1180px){ .wrap,.sheet{ max-width:1300px; } }
+@media (min-width:1560px){ .wrap,.sheet{ max-width:1380px; } }
+/* the-practice / the-record key their nav, body and footer to one custom property; ladder it too so
+   those three stay aligned with each other and with every other page. */
+@media (min-width:1180px){ :root{ --col:1300px; } }
+@media (min-width:1560px){ :root{ --col:1380px; } }
+
 body{ font-family:var(--sans); -webkit-font-smoothing:antialiased; letter-spacing:-.004em; }
 /* Satoshi carries all heading levels (sentence case, tight tracking) + their print equivalents. */
 h1,h2,h3,.ph-title,.es-h{ font-family:var(--sans); letter-spacing:-.02em; }
@@ -821,6 +845,13 @@ details.exhibit-method{ margin-top:14px; border-top:1px solid var(--line2); padd
 .dwnav--phase2{ display:flex; align-items:center; gap:clamp(14px,1.8vw,24px); flex-wrap:wrap;
   padding:0 clamp(18px,4vw,40px); border-bottom:1px solid var(--ink); }
 .dwnav--phase2 .brand{ height:60px; flex:none; }
+/* A masthead that is NOT inside a page frame still has to line up with the ones that are.
+   the-practice / the-record hang the nav directly off <body>, so it spanned the full viewport and
+   put the wordmark at x=30 while every other page put it at x=120 — the single element a visitor
+   sees on every screen, jumping 90px on navigation. The width here is the frame minus its gutter, i.e. exactly the box a
+   framed masthead occupies, so the band edge, the rule beneath it, the wordmark and the CTA all
+   land on the same x as they do inside a frame. */
+body > .dwnav--phase2{ max-width:calc(1300px - 40px); margin-inline:auto; }
 .dwnav--phase2 .dwnav-links{ display:flex; gap:clamp(10px,1.4vw,22px); align-items:center; flex-wrap:nowrap; }
 .dwnav--phase2 .dwnav-trigger{ font-family:var(--sans); font-size:13px; font-weight:700;
   letter-spacing:.02em; text-transform:none; color:var(--body); background:none; border:0; cursor:pointer;

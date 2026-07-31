@@ -41,7 +41,7 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--body);font:16px/1.6 var(--sans);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  .wrap{max-width:960px;margin:36px auto;padding:0 20px 60px}
+  .wrap{margin:36px auto;padding-block:0 60px;}
   .frame{background:var(--paper);border-radius:var(--surface-radius);overflow:hidden;}
   .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
     border-bottom:1px solid var(--line)}
@@ -73,7 +73,9 @@
   .exec .st .v{font-family:var(--sans);font-weight:700;font-size:34px;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums}
   .exec .st .k{font-size:11.5px;color:#aeb7c1;margin-top:5px;line-height:1.3}
   .exec .st .v.g{color:#5ccaa6}
-  .exec p.note{color:#c3ccd6;font-size:13.5px;line-height:1.6;margin:16px 0 0;max-width:none}
+  /* was max-width:none, written when .wrap capped the page at 960px; with the shared 1300px
+     frame that let a 13.5px note run to ~155 characters. */
+  .exec p.note{color:#c3ccd6;font-size:13.5px;line-height:1.6;margin:16px 0 0;max-width:78ch}
 
   /* Dashboard tiles */
   .dash{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
@@ -150,9 +152,7 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="frame">
-    <div class="inner">
-    <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+<nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fiduciary.html">Fiduciary Standard</a></div></div>
       <div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="coordination-framework.html">The Seven Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="household-example.html">Household Example</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Lab</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div>
@@ -162,6 +162,9 @@
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review</a>
     </nav>
+  <div class="frame">
+    <div class="inner">
+    
     <div class="om-sections">
       <a class="t" href="record.html">The Driftwood Record</a>
       <a href="constitution.html">Constitution</a><span class="d">·</span><a href="capital-allocation.html">Capital Allocation</a><span class="d">·</span><a href="manual.html">The Manual</a><span class="d">·</span><a href="decision-register.html">Decision Register</a><span class="d">·</span><a href="opportunity-register.html">Opportunity Register</a><span class="d">·</span><a href="awor.html" aria-current="page">Annual Review</a>

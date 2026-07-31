@@ -1,0 +1,478 @@
+<title>What Prices Cannot Tell You</title>
+<style>
+  :root{
+    --ink:#16191C; --ink-2:#3E464D; --ink-3:#6B757D;
+    --paper:#F5F7F8; --panel:#FFFFFF; --instrument:#ECEFF1; --rule:#D7DDE1;
+    --a:#0072B2; --b:#E69F00; --ok:#009E73; --no:#D55E00; --fog:#B9C2C8;
+    --a-soft:rgba(0,114,178,.12); --b-soft:rgba(230,159,0,.14);
+    --measure:66ch;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --ink:#E7ECEF; --ink-2:#B4BEC5; --ink-3:#8B959C;
+      --paper:#101417; --panel:#171C20; --instrument:#1D2429; --rule:#2C353B;
+      --a:#4DA6DC; --b:#F0B44A; --ok:#3FBF9A; --no:#F07C43; --fog:#4A555C;
+      --a-soft:rgba(77,166,220,.16); --b-soft:rgba(240,180,74,.16);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#E7ECEF; --ink-2:#B4BEC5; --ink-3:#8B959C;
+    --paper:#101417; --panel:#171C20; --instrument:#1D2429; --rule:#2C353B;
+    --a:#4DA6DC; --b:#F0B44A; --ok:#3FBF9A; --no:#F07C43; --fog:#4A555C;
+    --a-soft:rgba(77,166,220,.16); --b-soft:rgba(240,180,74,.16);
+  }
+  :root[data-theme="light"]{
+    --ink:#16191C; --ink-2:#3E464D; --ink-3:#6B757D;
+    --paper:#F5F7F8; --panel:#FFFFFF; --instrument:#ECEFF1; --rule:#D7DDE1;
+    --a:#0072B2; --b:#E69F00; --ok:#009E73; --no:#D55E00; --fog:#B9C2C8;
+    --a-soft:rgba(0,114,178,.12); --b-soft:rgba(230,159,0,.14);
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font:400 17px/1.62 var(--serif);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px 96px}
+  .col{max-width:var(--measure);margin:0 auto}
+  p{margin:0 0 1.05em}
+  a{color:var(--a)}
+  h1,h2,h3{text-wrap:balance;margin:0}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+           color:var(--ink-3);margin:0 0 18px}
+
+  header{padding:72px 0 40px}
+  h1{font-size:clamp(32px,5.2vw,52px);line-height:1.08;letter-spacing:-.015em;font-weight:400}
+  h1 em{font-style:italic;color:var(--a)}
+  .standfirst{font-size:19px;color:var(--ink-2);margin:22px 0 0;max-width:56ch}
+  .byline{font:400 13px/1.5 var(--mono);color:var(--ink-3);margin-top:26px;
+          padding-top:16px;border-top:1px solid var(--rule);max-width:56ch}
+
+  h2{font-size:26px;font-weight:400;letter-spacing:-.01em;margin:0 0 6px}
+  .sec{margin:76px auto 0}
+  .sec .lede{color:var(--ink-2);margin-bottom:0}
+
+  /* instrument panels break the measure */
+  .panel{background:var(--instrument);border:1px solid var(--rule);border-radius:3px;
+         margin:34px 0 14px;padding:26px 24px 22px;overflow-x:auto}
+  .panel-head{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:baseline;
+              justify-content:space-between;margin-bottom:20px}
+  .panel-title{font:600 11px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3)}
+  figcaption{font-size:14.5px;color:var(--ink-2);margin:14px auto 0;max-width:var(--measure)}
+  figcaption b{color:var(--ink);font-weight:400;font-style:italic}
+  figure{margin:0}
+
+  /* readouts */
+  .readouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:1px;
+            background:var(--rule);border:1px solid var(--rule);border-radius:3px;margin-top:22px}
+  .ro{background:var(--panel);padding:14px 16px}
+  .ro .k{font:500 10.5px/1.3 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+  .ro .v{font:600 27px/1.15 var(--mono);font-variant-numeric:tabular-nums;margin-top:5px;letter-spacing:-.02em}
+  .ro .n{font:400 11.5px/1.35 var(--mono);color:var(--ink-3);margin-top:4px}
+  .ro.frozen .v{color:var(--no)} .ro.moving .v{color:var(--ok)}
+
+  /* controls */
+  .controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:16px 26px;margin-top:22px}
+  .ctl label{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+             font:500 11px/1.3 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+  .ctl .num{font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink);letter-spacing:0}
+  input[type=range]{width:100%;margin:9px 0 0;accent-color:var(--a);height:22px}
+  .ctl.b input[type=range]{accent-color:var(--b)}
+  input[type=range]:focus-visible{outline:2px solid var(--a);outline-offset:3px}
+  .toggle{display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+          font:500 11.5px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);
+          border:1px solid var(--rule);background:var(--panel);padding:9px 13px;border-radius:2px}
+  .toggle:focus-within{outline:2px solid var(--a);outline-offset:2px}
+  .toggle input{accent-color:var(--no);width:15px;height:15px;margin:0}
+  .toggle[data-on="true"]{border-color:var(--no);color:var(--no)}
+  .btn{font:500 11.5px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;
+       border:1px solid var(--rule);background:var(--panel);color:var(--ink-2);
+       padding:9px 13px;border-radius:2px;cursor:pointer}
+  .btn:hover{border-color:var(--ink-3)} .btn:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+
+  svg{display:block;width:100%;height:auto}
+  .mono{font-family:var(--mono)}
+  .verdict{margin-top:20px;padding:15px 17px;border-left:3px solid var(--no);
+           background:var(--panel);font-size:15.5px;color:var(--ink-2)}
+  .verdict.ok{border-left-color:var(--ok)}
+  .verdict strong{color:var(--ink);font-weight:600}
+
+  .pull{font-size:22px;line-height:1.42;color:var(--ink);margin:40px auto;max-width:52ch;
+        padding-left:20px;border-left:2px solid var(--a);font-style:italic}
+  .ladder{list-style:none;padding:0;margin:26px 0 0;display:flex;flex-direction:column;gap:1px;
+          background:var(--rule);border:1px solid var(--rule);border-radius:3px}
+  .rung{background:var(--panel);padding:15px 18px;display:grid;
+        grid-template-columns:26px 1fr auto;gap:16px;align-items:center}
+  .rung .dot{width:11px;height:11px;border-radius:50%;justify-self:center}
+  .rung .t{font-size:15.5px} .rung .t small{display:block;color:var(--ink-3);font-size:13px;font-family:var(--mono)}
+  .rung .tag{font:600 10.5px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase}
+  footer{margin-top:84px;padding-top:22px;border-top:1px solid var(--rule);
+         font:400 13px/1.7 var(--mono);color:var(--ink-3);max-width:var(--measure)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  rect,line,text,circle{transition:none}
+</style>
+
+<div class="wrap">
+
+<header class="col">
+  <p class="eyebrow">The Third Turn &middot; Paper 2 &middot; Interactive companion</p>
+  <h1>What prices <em>cannot</em> tell you</h1>
+  <p class="standfirst">A market that has already priced everything public must have priced it
+  somehow. This page lets you try to recover that mechanism from the data an outside observer
+  actually holds, and watch yourself fail.</p>
+  <p class="byline">Companion to <span class="mono">Identifying Information Transmission in Live
+  Markets</span>. Every control below is live. Nothing here reports an estimated result.</p>
+</header>
+
+<section class="sec">
+  <div class="col">
+    <h2>1. The equivalence you cannot escape</h2>
+    <p class="lede">A run scores. Two sportsbooks re-price. We record one timestamp from each. The
+    interval we record is a sum: how long the book took to decide, plus how long its feed took to
+    publish. Only the first is economics.</p>
+  </div>
+
+  <figure>
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">Latency sandbox</span>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <label class="toggle" id="lockWrap" data-on="false">
+          <input type="checkbox" id="lock"> Hold observed &Delta;t fixed
+        </label>
+        <button class="btn" id="shuffle">Try another world</button>
+      </div>
+    </div>
+
+    <svg id="sandbox" viewBox="0 0 900 264" role="img"
+         aria-label="Two stacked latency bars, each split into a pricing segment and a feed segment.">
+    </svg>
+
+    <div class="controls">
+      <div class="ctl"><label>Book A pricing <span class="num" id="pAv"></span></label>
+        <input type="range" id="pA" min="2" max="60" step="1" value="14" aria-label="Book A pricing latency, seconds"></div>
+      <div class="ctl"><label>Book A feed <span class="num" id="fAv"></span></label>
+        <input type="range" id="fA" min="2" max="60" step="1" value="20" aria-label="Book A feed latency, seconds"></div>
+      <div class="ctl b"><label>Book B pricing <span class="num" id="pBv"></span></label>
+        <input type="range" id="pB" min="2" max="60" step="1" value="30" aria-label="Book B pricing latency, seconds"></div>
+      <div class="ctl b"><label>Book B feed <span class="num" id="fBv"></span></label>
+        <input type="range" id="fB" min="2" max="60" step="1" value="20" aria-label="Book B feed latency, seconds"></div>
+    </div>
+
+    <div class="readouts">
+      <div class="ro moving"><div class="k">True pricing gap</div><div class="v" id="truth"></div>
+        <div class="n">B minus A, unobservable</div></div>
+      <div class="ro frozen"><div class="k">Observed &Delta;t</div><div class="v" id="obs"></div>
+        <div class="n">all the data contain</div></div>
+      <div class="ro"><div class="k">Worlds visited</div><div class="v" id="worlds">0</div>
+        <div class="n" id="worldsNote">distinct mechanisms tried</div></div>
+    </div>
+    <div class="verdict" id="verdict"></div>
+  </div>
+  <figcaption><b>The identification problem, as something you do rather than read.</b> Switch on
+  <span class="mono">Hold observed &Delta;t fixed</span> and move any slider. The true pricing gap
+  moves. The observed interval does not. Every configuration you reach is a different market that
+  produces byte-identical data, and no statistic computed from timestamps can tell them apart.</figcaption>
+  </figure>
+
+  <div class="col">
+    <p class="pull">Markets reveal prices. They do not reveal how those prices came to be.</p>
+    <p>This is not a power problem. Collecting a thousand more games moves every configuration above
+    by exactly nothing, because the ambiguity is in the mapping from mechanism to observation rather
+    than in the sample. Separating the two requires information from outside the timing series: an
+    independent measurement of feed transport, or a defensible argument that transport is common to
+    both books.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="col">
+    <h2>2. The instrument has a floor</h2>
+    <p class="lede">The second constraint is our own. We poll the books on a fixed schedule, so
+    everything that happens between two polls arrives as one observation. Drag the interval and watch
+    the game blur.</p>
+  </div>
+
+  <figure>
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">Sampling floor</span>
+      <span class="panel-title" id="pollLabel" style="color:var(--ink)"></span>
+    </div>
+    <svg id="floor" viewBox="0 0 900 210" role="img"
+         aria-label="A timeline of game events above a set of polling windows."></svg>
+    <div class="controls" style="grid-template-columns:1fr">
+      <div class="ctl"><label>Polling interval <span class="num" id="pollv"></span></label>
+        <input type="range" id="poll" min="1" max="45" step="1" value="31" aria-label="Polling interval, seconds"></div>
+    </div>
+    <div class="readouts">
+      <div class="ro"><div class="k">Events</div><div class="v" id="nEv">12</div>
+        <div class="n">in this half inning</div></div>
+      <div class="ro"><div class="k">Distinguishable</div><div class="v" id="nSlots"></div>
+        <div class="n">separate observation slots</div></div>
+      <div class="ro"><div class="k">Resolution lost</div><div class="v" id="lost"></div>
+        <div class="n">events sharing a slot</div></div>
+    </div>
+    <div class="verdict" id="floorVerdict"></div>
+  </div>
+  <figcaption><b>Our own sampling sets a floor on what any analysis can resolve.</b> At a one second
+  interval the sequence survives. At the interval we actually run, most of the half inning collapses
+  into a handful of slots, and a book that re-priced two seconds after the run is recorded
+  identically to one that took twenty five. The paper makes no claim below this floor.</figcaption>
+  </figure>
+</section>
+
+<section class="sec">
+  <div class="col">
+    <h2>3. What each rung would buy</h2>
+    <p class="lede">Identification is not computed, it is assumed and then defended. These are the
+    assumptions in order of dependence: each rung needs the one above it.</p>
+
+    <ol class="ladder">
+      <li class="rung"><span class="dot" style="background:var(--ok)"></span>
+        <span class="t">Observed timestamps<small>we hold these</small></span>
+        <span class="tag" style="color:var(--ok)">have</span></li>
+      <li class="rung"><span class="dot" style="background:var(--ok)"></span>
+        <span class="t">A common event clock<small>event and quote times comparable</small></span>
+        <span class="tag" style="color:var(--ok)">auditable</span></li>
+      <li class="rung"><span class="dot" style="background:var(--b)"></span>
+        <span class="t">One well defined price series<small>books post several lines at once</small></span>
+        <span class="tag" style="color:var(--b)">bounded</span></li>
+      <li class="rung"><span class="dot" style="background:var(--no)"></span>
+        <span class="t">Feed latency known or common mode<small>not measurable from a public endpoint</small></span>
+        <span class="tag" style="color:var(--no)">open</span></li>
+      <li class="rung"><span class="dot" style="background:var(--no)"></span>
+        <span class="t">Pricing latency identified<small>the quantity we actually want</small></span>
+        <span class="tag" style="color:var(--no)">blocked</span></li>
+    </ol>
+
+    <p style="margin-top:28px">The fourth rung is the one that decides the paper. Where exchange side
+    timestamps and order identifiers exist, it is satisfied by construction and none of this arises.
+    Where they do not, an estimate that would be unremarkable elsewhere becomes an inference resting
+    on an unstated assumption about publishing infrastructure.</p>
+
+    <p class="pull">Observation survives. Identification does not.</p>
+  </div>
+</section>
+
+<footer class="col">
+  Companion to a working paper drafted through Methods. Results and Discussion are deliberately
+  unwritten, gated on four measurement conditions. Figures here illustrate logical structure only:
+  no axis carries an estimated quantity.
+</footer>
+</div>
+
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+  function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+  /* ---------------- 1. equivalence sandbox ---------------- */
+  var ids=["pA","fA","pB","fB"], R={}, lock=document.getElementById("lock"),
+      lockWrap=document.getElementById("lockWrap"), svg=document.getElementById("sandbox"),
+      worlds=0, seen={}, lastObs=null;
+  ids.forEach(function(i){R[i]=document.getElementById(i);});
+
+  var X0=118, XW=700, SEC=90;           // seconds mapped across XW
+  function x(s){return X0 + s/SEC*XW;}
+
+  function drawSandbox(){
+    var pA=+R.pA.value, fA=+R.fA.value, pB=+R.pB.value, fB=+R.fB.value;
+    var A=pA+fA, B=pB+fB, obs=B-A, truth=pB-pA;
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+
+    var ink=css("--ink"), ink3=css("--ink-3"), rule=css("--rule"),
+        ca=css("--a"), cb=css("--b"), fog=css("--fog"), ok=css("--ok"), no=css("--no");
+
+    // event line
+    svg.appendChild(el("line",{x1:X0,y1:34,x2:X0,y2:210,stroke:ok,"stroke-width":2.5}));
+    var ev=el("text",{x:X0,y:26,fill:ok,"font-size":12,"font-family":"var(--mono)",
+                      "font-weight":600,"text-anchor":"middle"});
+    ev.textContent="RUN SCORES"; svg.appendChild(ev);
+
+    [["A",pA,fA,ca,66],["B",pB,fB,cb,134]].forEach(function(r){
+      var name=r[0],p=r[1],f=r[2],c=r[3],y=r[4],h=38;
+      var lb=el("text",{x:X0-14,y:y+h/2+5,fill:c,"font-size":14,"font-weight":700,
+                        "font-family":"var(--mono)","text-anchor":"end"});
+      lb.textContent="BOOK "+name; svg.appendChild(lb);
+      svg.appendChild(el("rect",{x:X0,y:y,width:p/SEC*XW,height:h,fill:c,rx:1}));
+      svg.appendChild(el("rect",{x:x(p),y:y,width:f/SEC*XW,height:h,fill:fog,rx:1}));
+      if(p/SEC*XW>58){var t1=el("text",{x:X0+p/SEC*XW/2,y:y+h/2+4,fill:"#fff","font-size":11,
+        "font-family":"var(--mono)","font-weight":600,"text-anchor":"middle"});
+        t1.textContent="pricing"; svg.appendChild(t1);}
+      if(f/SEC*XW>44){var t2=el("text",{x:x(p)+f/SEC*XW/2,y:y+h/2+4,fill:ink,"font-size":11,
+        "font-family":"var(--mono)","text-anchor":"middle"});
+        t2.textContent="feed"; svg.appendChild(t2);}
+      // observation tick
+      svg.appendChild(el("line",{x1:x(p+f),y1:y-9,x2:x(p+f),y2:y+h+9,stroke:ink,"stroke-width":2.5}));
+      svg.appendChild(el("line",{x1:x(p+f),y1:y+h+9,x2:x(p+f),y2:192,stroke:ink,
+                                 "stroke-width":1,"stroke-dasharray":"3 3",opacity:.55}));
+    });
+
+    // observed interval bracket
+    var xa=x(A), xb=x(B), lo=Math.min(xa,xb), hi=Math.max(xa,xb);
+    svg.appendChild(el("line",{x1:lo,y1:192,x2:hi,y2:192,stroke:ink,"stroke-width":2}));
+    [lo,hi].forEach(function(p){svg.appendChild(el("line",{x1:p,y1:186,x2:p,y2:198,
+      stroke:ink,"stroke-width":2}));});
+    var ob=el("text",{x:(lo+hi)/2,y:212,fill:ink,"font-size":12,"font-family":"var(--mono)",
+                      "font-weight":600,"text-anchor":"middle"});
+    ob.textContent="observed Δt = "+Math.abs(obs)+" s"; svg.appendChild(ob);
+
+    // truth bracket (the thing that moves)
+    var ta=x(pA), tb=x(pB), tlo=Math.min(ta,tb), thi=Math.max(ta,tb);
+    if(thi-tlo>2){
+      svg.appendChild(el("line",{x1:tlo,y1:54,x2:thi,y2:54,stroke:ok,"stroke-width":2}));
+      [tlo,thi].forEach(function(q){svg.appendChild(el("line",{x1:q,y1:49,x2:q,y2:59,
+        stroke:ok,"stroke-width":2}));});
+      var tt=el("text",{x:(tlo+thi)/2,y:46,fill:ok,"font-size":11.5,"font-family":"var(--mono)",
+                        "font-weight":600,"text-anchor":"middle"});
+      tt.textContent="true pricing gap "+Math.abs(truth)+" s"; svg.appendChild(tt);
+    }
+
+    // axis
+    svg.appendChild(el("line",{x1:X0,y1:238,x2:X0+XW,y2:238,stroke:rule,"stroke-width":1}));
+    [0,30,60,90].forEach(function(s){
+      svg.appendChild(el("line",{x1:x(s),y1:238,x2:x(s),y2:243,stroke:rule}));
+      var g=el("text",{x:x(s),y:255,fill:ink3,"font-size":10.5,"font-family":"var(--mono)",
+                       "text-anchor":"middle"}); g.textContent=s+"s"; svg.appendChild(g);
+    });
+
+    // readouts
+    document.getElementById("truth").textContent=(truth>=0?"+":"")+truth+"s";
+    document.getElementById("obs").textContent=(obs>=0?"+":"")+obs+"s";
+    ids.forEach(function(i){document.getElementById(i+"v").textContent=R[i].value+"s";});
+
+    var key=[pA,fA,pB,fB].join("|");
+    if(lock.checked && !seen[key]){seen[key]=1;worlds++;document.getElementById("worlds").textContent=worlds;}
+
+    var v=document.getElementById("verdict");
+    if(lock.checked){
+      v.className="verdict";
+      v.innerHTML="<strong>Locked.</strong> You have visited "+worlds+" distinct market"+
+        (worlds===1?"":"s")+". Their true pricing gaps differ, and the one you are looking at is "+
+        (truth>=0?"+":"")+truth+"s. Every single one produced the same observed "+
+        Math.abs(obs)+"s. The data cannot tell them apart.";
+      document.getElementById("worldsNote").textContent="all identical in the data";
+    }else{
+      v.className="verdict ok";
+      v.innerHTML="<strong>Unlocked.</strong> Move the sliders freely, then switch on "+
+        "<span class='mono'>Hold observed Δt fixed</span> and try to change what the data show.";
+      document.getElementById("worldsNote").textContent="switch on the lock to count";
+    }
+    lastObs=obs;
+  }
+
+  /* When locked we hold each book's TOTAL fixed, so both observation ticks are pinned
+     and the observed interval cannot move. Changing one segment spends the other. */
+  var totA=null, totB=null;
+  function captureTotals(){ totA=+R.pA.value + +R.fA.value; totB=+R.pB.value + +R.fB.value; }
+  function compensate(changed){
+    var book = changed.charAt(1);                 // "A" or "B"
+    var tot  = (book==="A") ? totA : totB;
+    var self = R[changed], mate = R[(changed.charAt(0)==="p"?"f":"p")+book];
+    var want = tot - (+self.value);
+    var min=+mate.min, max=+mate.max;
+    if(want<min){ want=min; self.value = tot - min; }
+    else if(want>max){ want=max; self.value = tot - max; }
+    mate.value = want;
+  }
+
+  ids.forEach(function(i){
+    R[i].addEventListener("input",function(){ if(lock.checked) compensate(i); drawSandbox(); });
+  });
+  lock.addEventListener("change",function(){
+    lockWrap.setAttribute("data-on",lock.checked?"true":"false");
+    if(lock.checked){worlds=0;seen={};document.getElementById("worlds").textContent="0";captureTotals();}
+    drawSandbox();
+  });
+  document.getElementById("shuffle").addEventListener("click",function(){
+    if(lock.checked){
+      // a different mechanism with identical data: redistribute inside each fixed total
+      [["pA","fA",totA],["pB","fB",totB]].forEach(function(g){
+        var lo=Math.max(2, g[2]-60), hi=Math.min(60, g[2]-2);
+        if(hi<lo) return;
+        var v=lo+Math.floor(Math.random()*(hi-lo+1));
+        R[g[0]].value=v; R[g[1]].value=g[2]-v;
+      });
+    }else{
+      ids.forEach(function(i){R[i].value=2+Math.floor(Math.random()*50);});
+    }
+    drawSandbox();
+  });
+
+  /* ---------------- 2. sampling floor ---------------- */
+  var EV=[[2,"pitch",0],[11,"ball",0],[19,"pitch",0],[26,"strike",0],[34,"pitch",0],
+          [43,"single",1],[52,"pitch",0],[58,"ball",0],[66,"pitch",0],[73,"RUN",2],
+          [84,"pitch",0],[91,"out",1]];
+  var fsvg=document.getElementById("floor"), poll=document.getElementById("poll");
+  var FX0=26, FXW=848, SPAN=100;
+  function fx(s){return FX0+s/SPAN*FXW;}
+
+  function drawFloor(){
+    var iv=+poll.value;
+    while(fsvg.firstChild) fsvg.removeChild(fsvg.firstChild);
+    var ink=css("--ink"), ink3=css("--ink-3"), rule=css("--rule"),
+        ca=css("--a"), cb=css("--b"), ok=css("--ok"), no=css("--no"), fog=css("--fog");
+
+    // windows
+    var n=Math.ceil(SPAN/iv), slots={};
+    for(var i=0;i<n;i++){
+      var s=i*iv, w=Math.min(iv,SPAN-s);
+      fsvg.appendChild(el("rect",{x:fx(s),y:78,width:w/SPAN*FXW,height:44,
+        fill:(i%2?cb:ca),opacity:.16,stroke:"#fff","stroke-width":1.5}));
+    }
+    // events
+    EV.forEach(function(e){
+      var slot=Math.floor(e[0]/iv); slots[slot]=(slots[slot]||0)+1;
+      var big=e[2], c= big===2?ok : (big===1?ca:fog);
+      fsvg.appendChild(el("circle",{cx:fx(e[0]),cy:44,r:big===2?7:(big===1?5.5:3.5),fill:c}));
+      if(big){var t=el("text",{x:fx(e[0]),y:28,fill:c,"font-size":11,"font-family":"var(--mono)",
+        "font-weight":big===2?700:500,"text-anchor":"middle"}); t.textContent=e[1]; fsvg.appendChild(t);}
+      fsvg.appendChild(el("line",{x1:fx(e[0]),y1:50,x2:fx(e[0]),y2:78,stroke:c,
+        "stroke-width":1,"stroke-dasharray":"2 2",opacity:.6}));
+    });
+    var lab=el("text",{x:FX0,y:14,fill:ink3,"font-size":11,"font-family":"var(--mono)",
+      "letter-spacing":"0.09em"}); lab.textContent="WHAT HAPPENS"; fsvg.appendChild(lab);
+    var lab2=el("text",{x:FX0,y:140,fill:ink3,"font-size":11,"font-family":"var(--mono)",
+      "letter-spacing":"0.09em"}); lab2.textContent="WHAT WE RECORD"; fsvg.appendChild(lab2);
+
+    // recorded marks: one per occupied slot
+    var occupied=Object.keys(slots), collapsed=0;
+    occupied.forEach(function(k){
+      var cx=fx(Math.min((+k+1)*iv,SPAN));
+      fsvg.appendChild(el("path",{d:"M"+(cx-6)+" 156 L"+(cx+6)+" 156 L"+cx+" 168 Z",fill:ink}));
+      if(slots[k]>1){
+        collapsed+=slots[k];
+        var c2=el("text",{x:cx,y:184,fill:no,"font-size":10.5,"font-family":"var(--mono)",
+          "font-weight":600,"text-anchor":"middle"});
+        c2.textContent=slots[k]+" merged"; fsvg.appendChild(c2);
+      }
+    });
+    fsvg.appendChild(el("line",{x1:FX0,y1:196,x2:FX0+FXW,y2:196,stroke:rule}));
+
+    document.getElementById("nSlots").textContent=occupied.length;
+    document.getElementById("lost").textContent=collapsed;
+    document.getElementById("pollv").textContent=iv+"s";
+    document.getElementById("pollLabel").textContent=iv+" second interval";
+    var fv=document.getElementById("floorVerdict");
+    if(iv<=3){ fv.className="verdict ok";
+      fv.innerHTML="<strong>Fine enough.</strong> Nearly every event lands in its own slot, so the "+
+        "order of the half inning survives into the data."; }
+    else if(occupied.length>=8){ fv.className="verdict";
+      fv.innerHTML="<strong>Coarsening.</strong> "+collapsed+" events now share a slot with another. "+
+        "Their relative order is no longer recoverable."; }
+    else { fv.className="verdict";
+      fv.innerHTML="<strong>Below the floor.</strong> The half inning has collapsed to "+
+        occupied.length+" observations. A book that re-priced two seconds after the run and one that "+
+        "took twenty five are recorded identically."; }
+  }
+  poll.addEventListener("input",drawFloor);
+
+  drawSandbox(); drawFloor();
+  var mq=window.matchMedia("(prefers-color-scheme:dark)");
+  if(mq.addEventListener) mq.addEventListener("change",function(){drawSandbox();drawFloor();});
+  new MutationObserver(function(){drawSandbox();drawFloor();})
+    .observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+})();
+</script>

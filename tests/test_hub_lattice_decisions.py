@@ -191,64 +191,28 @@ def test_every_trace_lead_matches_the_size_of_its_own_set():
         assert "system" in lead.lower()
 
 
-def test_the_section_leads_with_the_readers_problem_not_the_ontology():
-    """Progressive disclosure: the page does not open with Driftwood's vocabulary.
 
-    "Seven systems" as a headline asks a first-time reader to learn an ontology before being given a
-    reason to care. The seven systems are what the reader DISCOVERS by using the diagram.
 
-    This guard briefly required the heading to POINT AT the diagram instead ("trace", "watch",
-    "move"). That was a mistake worth naming: a rule requiring a headline to behave like a control
-    label reliably produces control-label prose in the headline slot — two stacked imperatives in
-    product-tour register, vague where the rest of the page is specific. The affordance belongs to
-    the picker's own label (see test_the_decision_picker_carries_a_visible_control_label), which
-    frees this slot to make a claim. The constraint here is back to the simple one.
+def test_the_lattice_section_has_no_heading_only_a_labelled_instrument():
+    """The slot above the diagram is empty on purpose, and three attempts explain why.
+
+    It closed the argument again ("Every important decision creates consequences you can't see yet."
+    — the hero headline in different words, after the CTA). Replacing it with an instruction
+    ("Trace a decision. Watch what it moves.") put control-label prose in a headline slot: two
+    stacked imperatives in product-tour register, vague where the rest of the page is specific.
+    Replacing THAT with a derived claim about six systems said something the traces already say
+    better, each at the moment the diagram proves it.
+
+    A labelled instrument does not need a sentence introducing it. The affordance is the picker's
+    own control label; the claims are the traces' own leads.
     """
     t = _src()
-    h2 = re.search(r'<h2 class="sb-h">(.*?)</h2>', t, re.S)
-    assert h2, "the lattice section lost its heading"
-    head = h2.group(1).strip()
-    assert not re.search(r"seven systems", head, re.I), (
-        f"the heading leads with the ontology again: {head!r}"
-    )
-    # It must not re-close the hero. These are the headline's own words.
-    for echo in ("consequences", "expensive", "leak what you keep", "uncoordinated"):
-        assert echo not in head.lower(), (
-            f"the lattice heading recycles the hero headline ({echo!r}): {head!r}"
-        )
-    # One line. The subhead went with the closer and may not return unnoticed.
-    assert 'class="sb-lead"' not in t, "a second line is back under the lattice heading"
-
-
-def test_the_lattice_headings_count_is_derived_from_the_published_traces():
-    """The heading claims a quantity, so the quantity has to come from the traces, not from taste.
-
-    The five published traces touch 7, 7, 6, 6 and 6 systems, which makes "at least six" the
-    strongest true form — "four" would have understated it and "seven" would have overstated three
-    of the five. Edit a trace set without following the sentence and this fails.
-    """
-    t = _src()
-    words = {4: "four", 5: "five", 6: "six", 7: "seven"}
-    sizes = [len(set(int(x) for x in re.findall(r"\d+", raw)))
-             for raw in re.findall(r"set:\s*\[([\d,\s]+)\]", t)]
-    assert sizes, "no traces parsed"
-    head = re.search(r'<h2 class="sb-h">(.*?)</h2>', t, re.S).group(1).lower()
-    claimed = [n for n, w in words.items() if w in head]
-    assert claimed, f"the heading states no quantity to check: {head!r}"
-    assert len(claimed) == 1, f"the heading states more than one quantity: {claimed}"
-    n = claimed[0]
-    assert n == min(sizes), (
-        f"the heading claims {words[n]} systems but the smallest published trace touches "
-        f"{min(sizes)} — the claim and the demonstration disagree"
-    )
-    assert "at least" in head or "or more" in head, (
-        "a bare number reads as exact while the traces range "
-        f"{min(sizes)}-{max(sizes)}; qualify it"
-    )
+    assert 'class="sb-h"' not in t, "a heading is back above the lattice"
+    assert 'class="sb-lead"' not in t, "a subhead is back above the lattice"
 
 
 def test_the_decision_picker_carries_a_visible_control_label():
-    """The affordance lives here, not in the heading.
+    """The affordance lives here, and it is the only thing that introduces the diagram.
 
     The lattice is the only interactive thing on the page, and for a long time nothing visible said
     so — the instruction sat in the SVG's aria-label, so sighted readers got none. The fix is a

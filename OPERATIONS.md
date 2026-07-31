@@ -198,6 +198,18 @@ Regenerating: edit `src/drift/plates.py` → `python3 scripts/build_plates.py` �
 `python3 scripts/sync_docs.py`. The generator is deterministic (local LCG, no `random`, no clock), so
 a run with no source change leaves an empty diff; a surprise diff means the geometry moved.
 
+**OPEN — the Review is not yet in the site navigation (Phase 2 item, deliberate).** 50 source pages
+carry the `.dwnav--phase2` masthead; only `driftwood-review.html` links the Review, from its own copy
+of the dropdown. Propagating it is one line in `scripts/phase2_nav.py` (`("The Driftwood Review",
+"driftwood-review.html", "driftwood-review.html")` under *Insights & Research*) followed by
+`python3 scripts/phase2_nav.py && python3 scripts/sync_docs.py`. **It was not run, because it forces
+an IA decision that should be made deliberately:** *Insights & Research* already holds State Tax
+Atlas / Research / Articles / Commentary, and `articles.html` + `insights.html` are already redirect
+stubs pointing at `research.html`. Adding a fifth entry makes a crowded menu worse. The real question
+is whether the Review *absorbs* Commentary and Articles — a quarterly with a Commentary division is
+arguably where that content now belongs — leaving *Insights & Research* as Atlas / Research /
+The Driftwood Review. Until that is settled the page is reachable by direct link only.
+
 ## Disaster recovery
 - **Lost/corrupt `tests/data/matrix_history.json`** → `TILT_SWEEP_REFRESH=1 python scripts/tilt_sweep.py`
   re-pulls and rewrites the cache (needs `TIINGO_API_KEY`); then regenerate STATE_ALPHA (above).

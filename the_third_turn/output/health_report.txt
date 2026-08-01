@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-08-01T07:37:40+00:00
+ THE THIRD TURN — collection health   2026-08-01T07:53:19+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,9 +12,9 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ████████████████··  live=54262 (today 3591)  last 99.9m ago ⚠STALE
-  fanduel   ██████████████████  live=61461 (today 3281)  last 16.5m ago
-  pinnacle  ··················  live=    0 (today    0)  last 37512.7m ago ⚠STALE
+  bovada    ████████████████··  live=54262 (today 3591)  last 15.4m ago
+  fanduel   ██████████████████  live=61461 (today 3281)  last 32.1m ago ⚠STALE
+  pinnacle  ··················  live=    0 (today    0)  last 37528.3m ago ⚠STALE
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
@@ -27,11 +27,11 @@ QUOTE LIFECYCLE (live rows)
   market status: {'unset': 54262, 'OPEN': 56519, 'SUSPENDED': 4661, 'REMOVED': 281}
 
 COVERAGE
-  live games seen: 122   book-panel games: 127   team-total rows: 28295
+  live games seen: 122   book-panel games: 127   team-total rows: 28296
   innings seen: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 INTEGRITY
-  rows=482801  malformed=0  missing-fields=0  duplicates=0  future-ts=0
+  rows=482802  malformed=0  missing-fields=0  duplicates=0  future-ts=0
   status: ✅ clean
 
 SR-1 GATE (leadership analysis — blocked until all pass)

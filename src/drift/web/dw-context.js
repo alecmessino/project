@@ -674,24 +674,9 @@
   else enhance();
 })();
 
-/* Inline Letter subscribe strip (foot of each essay): post to Web3Forms with no backend, then swap
- * the form for the quiet confirmation. Mirrors the /letter page behaviour; scoped to .essay-sub so it
- * never touches any other form. Progressive enhancement, with JS off the form still submits normally. */
-(function () {
-  if (typeof document === "undefined") return;
-  function enhance() {
-    var forms = [].slice.call(document.querySelectorAll(".essay-sub .es-form"));
-    forms.forEach(function (f) {
-      f.addEventListener("submit", function (e) {
-        e.preventDefault();
-        var strip = f.closest(".essay-sub");
-        var data = new FormData(f);
-        fetch("https://api.web3forms.com/submit", { method: "POST", body: data })
-          .then(function () { if (strip) strip.classList.add("done"); if (window.plausible) plausible("letter_subscribe"); })
-          .catch(function () { if (strip) strip.classList.add("done"); });
-      });
-    });
-  }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", enhance);
-  else enhance();
-})();
+/* The essay subscribe strip is handled by dw-capture.js, which posts to /api/subscribe.
+ * What used to be here posted the address straight to api.web3forms.com with the access key
+ * visible in the page source, and — worse — marked the form successful inside its own .catch,
+ * so a reader whose subscription failed outright was still shown the confirmation. Removed
+ * 2026-08-01 rather than repaired: the address belongs on Driftwood's own provider. */
+

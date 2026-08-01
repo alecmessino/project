@@ -8,6 +8,7 @@
 <link rel="canonical" href="https://driftwoodwealth.com/commentary.html" />
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
+<script src="dw-capture.js" defer></script>
 <link rel="icon" href="favicon.svg" />
 <style>
   :root{ --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4;
@@ -30,13 +31,22 @@
   .door a.book{display:inline-block;text-decoration:none;font-family:var(--sans);font-size:15px;font-weight:700;
     padding:14px 28px;background:var(--accent-strike);color:#f1ede3}
   .foot{padding:30px 44px;font-size:11px;line-height:1.6;color:var(--muted);border-top:1px solid var(--line)}
+  /* the commentary index */
+  .cx-list{margin:0 44px;border-top:1px solid var(--ink)}
+  .cx{display:block;padding:24px 0 26px;border-bottom:1px solid var(--line2);text-decoration:none;color:inherit}
+  .cx:hover .cx-t{color:var(--accent-strike)}
+  .cx-k{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .cx-t{font-family:var(--sans);font-weight:700;font-size:23px;line-height:1.2;letter-spacing:-.018em;color:var(--ink);margin-bottom:8px}
+  .cx-d{font-family:var(--sans);font-size:14.5px;line-height:1.6;color:var(--body);max-width:66ch}
+  .essay-sub{margin:0 44px}
+  @media(max-width:620px){.cx-list,.essay-sub{margin-left:22px;margin-right:22px}.cx-t{font-size:20px}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination-framework.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html" aria-current="page">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
+      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html" aria-current="page">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
@@ -47,12 +57,58 @@
       <h1>Commentary</h1>
       <p class="lede">Short notes on coordination, tax, and the moving parts</p>
     </div>
+
+    <!-- The index was a headline and a lede over nothing: a menu entry that resolved to an empty
+         room. Pieces are listed newest first, by subject rather than by format. -->
+    <div class="cx-list">
+      <a class="cx" href="count-the-pairs.html">
+        <div class="cx-k">Portfolio structure</div>
+        <div class="cx-t">Count the Pairs, Not the People</div>
+        <div class="cx-d">Twenty-three people in a room produce 253 pairs. A portfolio of twenty-three
+          holdings produces 253 covariances. It is the same arithmetic on a different set of objects, and
+          it explains why diversification stops working long before anyone notices it has stopped.</div>
+      </a>
+      <a class="cx" href="every-portfolio-has-two-returns.html">
+        <div class="cx-k">Tax</div>
+        <div class="cx-t">Every Portfolio Has Two Returns</div>
+        <div class="cx-d">The one it earns, and the one you keep. The gap between them is the most
+          expensive line on no statement.</div>
+      </a>
+      <a class="cx" href="the-worlds-largest-investors.html">
+        <div class="cx-k">Method</div>
+        <div class="cx-t">The World's Largest Investors Pay Attention Differently</div>
+        <div class="cx-d">What the largest pools of capital spend their attention on, and what they do
+          not.</div>
+      </a>
+      <a class="cx" href="enough-is-a-number.html">
+        <div class="cx-k">Planning</div>
+        <div class="cx-t">Enough Is a Number</div>
+        <div class="cx-d">Most households have never written theirs down, which is why the question keeps
+          getting answered by accident.</div>
+      </a>
+    </div>
+
+    <aside class="essay-sub" aria-label="Subscribe to The Driftwood Review">
+      <p class="es-eyebrow">The Driftwood Review</p>
+      <p class="es-lead">A quarterly note on coordinating the whole picture: taxes, estate, liquidity, and investments read as one system.</p>
+      <form class="es-form" method="POST" action="/api/subscribe" data-topic="driftwood-review">
+        <input type="text" name="botcheck" class="es-bot" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="sr-only" for="esEmail">Email address</label>
+        <input id="esEmail" type="email" name="email" required placeholder="you@email.com" autocomplete="email">
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="es-fine">Four issues a year on how the seven systems fit together. You will receive one message asking you to confirm, and nothing before you do. An educational interest list, not an offer, solicitation, or the start of an advisory relationship. We never share your address, and every issue unsubscribes in one click.</p>
+      <p class="es-err" role="alert"></p>
+      <p class="es-ok">Check your inbox for a note asking you to confirm. Nothing is sent until you do.</p>
+    </aside>
+
     <div class="door">
       <div class="dh">Schedule a Coordination Review.</div>
       <div class="ds">The guided engagement: Tax Diagnostic, State Tax Atlas, and After-Tax Lab are
         supporting evidence. The Review is the product.</div>
       <a class="book" href="coordination-review.html">Request a Coordination Review &rarr;</a>
     </div>
+    <!--FIRM_ANCHOR-->
     <div class="foot">
       Educational, not investment, tax, or legal advice. Driftwood Wealth is the private-wealth practice of
       Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS),

@@ -28,14 +28,20 @@ BASE_URL = "https://driftwoodwealth.com"
 # left to counsel and the existing (test-guarded) disclosures. See FOUNDATION_FACTS.md.
 
 # Currently live, operational, safe to flip via scripts/set_contact.py:
-CONTACT_EMAIL = "hello@driftwoodplanning.com"
+# alec@driftwoodwealth.com, not hello@driftwoodplanning.com: twelve pages already hardcode the
+# former, and the latter is a different domain from the one the site ships on.
+CONTACT_EMAIL = "alec@driftwoodwealth.com"
 BOOKING_URL = "https://calendly.com/alec-messino/15-minute-introductory-meeting"
 
 # Confirmed firm facts (principal-directed, July 2026):
 FIRM_LEGAL_NAME = "Driftwood Wealth"
-FIRM_LOCATION = ""  # de-localized: Driftwood reads as institutional, not regional, so no city/state is
-                    # stamped in marketing/branding. Location belongs only in legal/ADV disclosures.
+# 2026-08-01, reversing the de-localization above at the principal's direction. The canonical foot
+# now has to make the firm reachable, and a reader deciding whether to hand over trust documents is
+# entitled to know what city the practice is in. CITY AND STATE ONLY — no street address, which
+# remains a legal/ADV disclosure and must not appear in marketing.
+FIRM_LOCATION = "Chicago, Illinois"
 FIRM_SINCE = "2024"              # founding year, for the "Founded" line
+FIRM_PHONE = "(708) 548-7600"    # rendered in the canonical foot; tel: href is derived from it
 
 # Deferred, consumed by the firm-anchor band once confirmed; empty means "render nothing":
 FIRM_CRD = ""        # SEC/IARD CRD number
@@ -52,6 +58,7 @@ def firm_facts() -> dict:
         "legal_name": FIRM_LEGAL_NAME,
         "location": FIRM_LOCATION,
         "since": FIRM_SINCE,
+        "phone": FIRM_PHONE,
         "crd": FIRM_CRD,
         "custodian": FIRM_CUSTODIAN,
         "contact_email": CONTACT_EMAIL,
@@ -76,15 +83,25 @@ def firm_anchor_html() -> str:
     treatment. 'One logo, one case, one type, everywhere' (2026 wordmark unification)."""
     f = firm_facts()
     left = [f'<span class="firm-anchor-brand">{FIRM_LEGAL_NAME}</span>']
-    if f.get("location"):
-        left.append(f["location"].upper())
     # Not registered: the practice is named for its principal, not a "Founded" year.
     left.append("A PRACTICE OF ALEC MESSINO")
+    if f.get("location"):
+        left.append(f["location"].upper())
     if f.get("crd"):
         left.append(f"CRD {f['crd']}")
+    # Reachability moved into the anchor, 2026-08-01. The band used to be pure provenance, which meant
+    # the pages a professional is most likely to land on carried no way to make contact at all.
+    # Rendered as real tel:/mailto: links so a phone can act on them.
+    if f.get("phone"):
+        digits = "".join(c for c in FIRM_PHONE if c.isdigit())
+        left.append(f'<a href="tel:+1{digits}">{FIRM_PHONE}</a>')
+    if f.get("contact_email"):
+        left.append(f'<a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL.upper()}</a>')
+    # custody is provenance, not a coordinate: it belongs on the right with the data vintage.
+    right = []
     if f.get("custodian"):
-        left.append(f"custody {f['custodian']}")
-    right = [f"MODEL DATA AS OF {MODEL_ASOF.upper()}"]
+        right.append(f"custody {f['custodian']}")
+    right.append(f"MODEL DATA AS OF {MODEL_ASOF.upper()}")
     return ('<div class="firm-anchor" role="contentinfo">'
             f'<span>{_ANCHOR_SEP.join(left)}</span>'
             f'<span>{_ANCHOR_SEP.join(right)}</span></div>')

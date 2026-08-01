@@ -30,8 +30,10 @@ FAMILIES = ("Our Firm", "Coordination", "Insights", "For Professionals")
 # 2026-08-01: organised BY READER rather than by artifact, cutting twenty destinations to thirteen.
 # Fees enters (it was among the strongest pages on the site and reachable from exactly one other
 # page); Coordination sheds the four instruments to Insights → Tools & References; the two
-# near-homonyms whose labels inverted their filenames merge into "How Coordination Works", which
-# points at coordination-framework.html — the page that actually enumerates the seven systems.
+# near-homonyms whose labels inverted their filenames merge into "How Coordination Works". That
+# entry pointed at coordination-framework.html until 2026-08-01, when the merge finished the other
+# way: coordination.html carries the argument and ~30 inbound links, the seven definitions moved
+# into it as a reference band, and coordination-framework.html became a redirect.
 #
 # TWO APPROVED ENTRIES ARE DELIBERATELY ABSENT. "Fiduciary Standard" (Our Firm) and "Your First 90
 # Days" (Coordination) are in the signed-off mockup but are NOT in this tuple, because
@@ -46,7 +48,7 @@ MASTHEAD = (
         ("Fees", "fees.html"),
     )),
     ("Coordination", (
-        ("How Coordination Works", "coordination-framework.html"),
+        ("How Coordination Works", "coordination.html"),
         ("A Household, Coordinated", "household-example.html"),
         ("The Coordination Review", "coordination-review.html"),
     )),
@@ -66,7 +68,11 @@ MASTHEAD = (
 )
 
 # The pages that must never be advertised while they remain stubs, and the family each would join.
-UNLINKED_PLACEHOLDERS = (("fiduciary.html", "Our Firm"), ("first-90-days.html", "Coordination"))
+# first-90-days.html left this tuple on 2026-08-01. It was never missing content, only a link: the
+# artifact it stood for already existed as transition-plan.html ("The first ninety days, written
+# down"), which was itself orphaned. The stub is now a redirect onto the real page, so there is no
+# placeholder left to withhold. fiduciary.html is still genuinely unwritten and stays.
+UNLINKED_PLACEHOLDERS = (("fiduciary.html", "Our Firm"),)
 
 # Inside Insights, in this order — the slice of MASTHEAD the rest of this file leans on.
 INSIGHTS_CHILDREN = dict(MASTHEAD)["Insights"]

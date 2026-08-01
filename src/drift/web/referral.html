@@ -134,6 +134,27 @@
     .pt-risk:last-child{border-bottom:none}
     .pt-cta{margin-left:22px;margin-right:22px}
   }
+
+  /* 390px: a five-row, three-column table does not survive a phone. .tscroll made it scroll
+     sideways, which is technically not broken and practically unread — a CPA scanning between
+     meetings will not drag a table horizontally. Below 640px each row becomes its own stacked
+     block, with the column header carried down as a label so the three cells stay distinguishable
+     once the <thead> is gone. */
+  @media(max-width:640px){
+    .tscroll{overflow-x:visible}
+    .pt-table{min-width:0;display:block}
+    .pt-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+    .pt-table tbody,.pt-table tr,.pt-table td{display:block;width:auto}
+    .pt-table tr{border-bottom:1px solid var(--ink);padding:16px 0 14px}
+    .pt-table tr:last-child{border-bottom:none}
+    .pt-table td{border-bottom:none;padding:0 0 9px}
+    .pt-table td:last-child{padding-bottom:0}
+    .pt-table td::before{content:attr(data-l);display:block;font-size:9.5px;letter-spacing:.13em;
+      text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:4px}
+    .pt-table .t-when,.pt-table .t-step{white-space:normal;width:auto;font-size:15px}
+    .pt-table .t-when::before,.pt-table .t-step::before{content:none}
+    .pt-table .t-step .s-n{margin-bottom:2px}
+  }
   @media print{
     .dwnav,.pt-cta{break-inside:avoid}
   }
@@ -143,7 +164,7 @@
 <div class="wrap">
 <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination-framework.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html" aria-current="page">Making a Referral</a></div></div></div>
+      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html" aria-current="page">Making a Referral</a></div></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
@@ -164,28 +185,28 @@
         <thead><tr><th>Step</th><th>What happens</th><th>What you receive</th><th>When</th></tr></thead>
         <tbody>
           <tr>
-            <td class="t-step"><span class="s-n">01</span>The introduction</td>
-            <td>A name, or a note on what looks uncoordinated. No forms, no client data, no portal to log into.</td>
-            <td class="t-get">Acknowledgement the same day, naming who will call and when.</td>
-            <td class="t-when">Same day</td>
+            <td class="t-step" data-l="Step"><span class="s-n">01</span>The introduction</td>
+            <td data-l="What happens">A name, or a note on what looks uncoordinated. No forms, no client data, no portal to log into.</td>
+            <td class="t-get" data-l="What you receive">Acknowledgement the same day, naming who will call and when.</td>
+            <td class="t-when" data-l="When">Same day</td>
           </tr>
           <tr>
-            <td class="t-step"><span class="s-n">02</span>Fifteen minutes with your client</td>
-            <td>No products and no proposal. One question: is the problem coordination, or is it something you already have covered.</td>
-            <td class="t-get">We will let you know whether the engagement proceeds or closes.</td>
-            <td class="t-when">Week 1</td>
+            <td class="t-step" data-l="Step"><span class="s-n">02</span>Fifteen minutes with your client</td>
+            <td data-l="What happens">No products and no proposal. One question: is the problem coordination, or is it something you already have covered.</td>
+            <td class="t-get" data-l="What you receive">We will let you know whether the engagement proceeds or closes.</td>
+            <td class="t-when" data-l="When">Week 1</td>
           </tr>
           <tr>
-            <td class="t-step"><span class="s-n">03</span>The Coordination Review</td>
-            <td>Every system read together, the findings written down, an owner against every gap. You are consulted during the review, in your own domain, not shown the result afterwards.</td>
-            <td class="t-get">The Coordination Report and the Opportunity Register, with your client's written consent.</td>
-            <td class="t-when">Weeks 2 to 4</td>
+            <td class="t-step" data-l="Step"><span class="s-n">03</span>The Coordination Review</td>
+            <td data-l="What happens">Every system read together, the findings written down, an owner against every gap. You are consulted during the review, in your own domain, not shown the result afterwards.</td>
+            <td class="t-get" data-l="What you receive">The Coordination Report and the Opportunity Register, with your client's written consent.</td>
+            <td class="t-when" data-l="When">Weeks 2 to 4</td>
           </tr>
           <tr>
-            <td class="t-step"><span class="s-n">04</span>Standing coordination</td>
-            <td>The register stays open. Nothing in your lane moves before you are called, and the realized gain picture is reconciled through the year rather than in April.</td>
-            <td class="t-get">The register, kept current, and a call before any decision that touches your work.</td>
-            <td class="t-when">Ongoing</td>
+            <td class="t-step" data-l="Step"><span class="s-n">04</span>Standing coordination</td>
+            <td data-l="What happens">The register stays open. Nothing in your lane moves before you are called, and the realized gain picture is reconciled through the year rather than in April.</td>
+            <td class="t-get" data-l="What you receive">The register, kept current, and a call before any decision that touches your work.</td>
+            <td class="t-when" data-l="When">Ongoing</td>
           </tr>
         </tbody>
       </table>
@@ -225,6 +246,8 @@
         <span class="c">(708) 548-7600</span>
       </div>
     </div>
+
+    <!--FIRM_ANCHOR-->
 
     <div class="foot">
       <span class="note">Educational, not investment, tax, or legal advice.</span>

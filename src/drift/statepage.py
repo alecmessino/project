@@ -532,17 +532,23 @@ _HEAD_CSS = """
   @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}
 """
 
-# Web3Forms lead-capture (public key, safe in client code; mirrors taxlab.html CONFIG).
-_FORM_EP = "https://api.web3forms.com/submit"
-_FORM_KEY = "cf6b1c2d-9971-4256-9ff9-72d6918c84e6"
+# Lead capture posts to Driftwood's own endpoint (api/request.js), not to a third party.
+#
+# It used to POST straight from the browser to api.web3forms.com with the access key inline in the
+# page source — on all fifty-one Atlas pages. That meant a third party held every address, the key
+# was public to anyone who viewed source, and nothing recorded what the reader had agreed to. The
+# key below is deliberately gone rather than rotated: there is nothing left to authenticate to.
+_FORM_EP = "/api/request"
 _FORM_HP = "botcheck"
-_CONTACT = "hello@driftwoodplanning.com"
+_CONTACT = "alec@driftwoodwealth.com"
 
 
 def _capture(code: str, name: str, alpha, rate: str) -> str:
-    """An inline email capture so a state page converts in place, no click-through required. Posts to
-    Web3Forms tagged with the state + a lead-quality flag; honest manual-follow-up copy (no auto-report
-    promise). Falls back to a mailto on failure."""
+    """An inline email capture so a state page converts in place, no click-through required.
+
+    Posts to Driftwood's own /api/request with the state code; the endpoint sends the Tax Diagnostic
+    pointed at that state and notifies the principal. Falls back to a mailto on failure, which is the
+    one case where telling the reader plainly beats a silent retry."""
     a = f"{alpha:.1f}" if alpha is not None else ""
     nm = _esc(name)
     return f"""    <div class="capture" id="capture">
@@ -552,7 +558,7 @@ def _capture(code: str, name: str, alpha, rate: str) -> str:
         <input type="text" id="caphp" name="{_FORM_HP}" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <button type="submit" id="capsend">Email me {nm}'s brief →</button>
       </form>
-      <div class="capnote" id="capnote">A one-page, {nm}-specific after-tax breakdown, we'll follow up by email, usually within a business day. We never share your address.</div>
+      <div class="capnote" id="capnote">We will email you the Tax Diagnostic set to {nm}, straight away, and follow up personally within a business day. One message, no list, and we never share your address.</div>
     </div>
     <script>
     (function(){{
@@ -563,15 +569,14 @@ def _capture(code: str, name: str, alpha, rate: str) -> str:
         var el=document.getElementById("capemail"), email=(el.value||"").trim();
         if(!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email)){{ if(el.reportValidity)el.reportValidity(); return; }}
         var btn=document.getElementById("capsend"); btn.disabled=true; btn.textContent="Sending…";
-        var p={{email:email, access_key:"{_FORM_KEY}", from_name:"Driftwood",
-          _subject:"New {nm} state-page lead", state:"{code}", state_name:"{nm}",
-          tax_impact_pct:"{a}", top_lt_rate:"{_esc(rate)}", source:"state_page",
-          lead_quality:({a or 0}>=4.5?"high":"standard")}};
+        var p={{email:email, artifact:"state-brief", state:"{code}",
+          source:"atlas/{code}",
+          consent_text:(document.getElementById("capnote").textContent||"").trim().slice(0,500)}};
         ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(function(k){{var v=qp.get(k); if(v)p[k]=v;}});
         p["{_FORM_HP}"]=(document.getElementById("caphp").value||"");
         fetch("{_FORM_EP}",{{method:"POST",headers:{{"Content-Type":"application/json",Accept:"application/json"}},body:JSON.stringify(p)}})
           .then(function(r){{ if(!r.ok) throw 0;
-            document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Thanks, we\\'ll email your {nm} after-tax breakdown, usually within a business day.</div>';
+            document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Sent. Check your inbox for your {nm} tax picture, and we will follow up personally.</div>';
             if(window.plausible) plausible("lead_submitted",{{props:{{source:"state_page",state:"{code}"}}}}); }})
           .catch(function(){{ btn.disabled=false; btn.textContent="Email me {nm}'s brief →";
             document.getElementById("capnote").innerHTML='Sorry, that didn\\'t send. Email us at <a href="mailto:{_CONTACT}">{_CONTACT}</a>.'; }});
@@ -890,7 +895,6 @@ _CORE_SITEMAP = [
     ("insights.html", "0.9", "weekly"),
     ("driftwood-review.html", "0.9", "monthly"),
     ("commentary.html", "0.7", "weekly"),
-    ("coordination-framework.html", "0.8", "monthly"),
     ("the-practice.html", "0.8", "monthly"), ("the-record.html", "0.8", "monthly"),
     ("every-portfolio-has-two-returns.html", "0.8", "monthly"),
     ("principles.html", "0.9", "monthly"),
@@ -915,6 +919,7 @@ _CORE_SITEMAP = [
     ("constitution.html", "0.7", "monthly"), ("capital-allocation.html", "0.7", "monthly"),
     ("ic-memo.html", "0.7", "monthly"), ("transition-plan.html", "0.7", "monthly"),
     ("enough-is-a-number.html", "0.7", "monthly"),
+    ("count-the-pairs.html", "0.7", "monthly"),
     ("the-worlds-largest-investors.html", "0.7", "monthly"),
     ("case-business-sale.html", "0.6", "monthly"), ("case-charitable-giving.html", "0.6", "monthly"),
     ("case-inheritance.html", "0.6", "monthly"), ("case-moving-states.html", "0.6", "monthly"),

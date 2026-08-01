@@ -27,7 +27,7 @@ PAGES = [
     ("coordination-review", "coordination-review.html", ""),
     ("household-example", "household-example.html", ""),
     ("our-story", "our-story.html", ""),
-    ("coordination-framework", "coordination-framework.html", ""),
+    ("coordination", "coordination.html", ""),
     ("articles", "articles.html", ""),
     ("cpa-collab", "cpa-collab.html", ""),
     ("ledger", "ledger.html", ""),

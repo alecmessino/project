@@ -12,6 +12,10 @@ import re, glob, os, sys
 
 SRC = "src/drift/web"
 
+# Same token sync_docs.py substitutes firm_anchor_html() into. Declared here because this script
+# is what puts it on the page; sync_docs.py is what fills it in.
+FIRM_ANCHOR_TOKEN = "<!--FIRM_ANCHOR-->"
+
 
 def _esc(label):
     """Menu labels are authored as plain text and escaped once, here.
@@ -61,18 +65,20 @@ FAMILIES = [
         # Fiduciary Standard belongs here and is deliberately withheld: fiduciary.html is a stub.
         ("Fees", "fees.html", "fees.html"),
     ]),
-    # The two near-homonyms are merged into one entry. Their labels inverted their own filenames:
-    # "The Coordination Framework" pointed at coordination.html, which is a WORKED EXAMPLE ("What
-    # coordination is actually worth"), while "The Seven Systems" pointed at
-    # coordination-framework.html, which is the actual framework ("seven systems, one plan").
-    # A reader choosing between two adjacent entries could not have guessed which was which.
+    # The two near-homonyms were merged into one entry, and on 2026-08-01 the merge finished: the
+    # surviving FILE flipped. coordination-framework.html was 10KB of definitional list plus a CTA;
+    # coordination.html is 49KB carrying the actual argument (the tumour-board opening, the worked
+    # $8M estate, the method note) and ~30 inbound body links from the case studies, the registers,
+    # and the homepage essay chain. Keeping the thin page as the destination meant the menu's one
+    # Coordination door opened onto the weaker of the two.
     #
-    # coordination-framework.html survives as "How Coordination Works" because it is the page that
-    # explains the model. coordination.html leaves the menu but keeps its ~30 inbound body links
-    # from the case studies, the registers, and the homepage essay chain — it is an argument a
-    # reader meets in context, not a door they pick off a masthead.
+    # So coordination.html takes the name, the seven definitions moved into it as a reference band,
+    # and coordination-framework.html became a canonical + refresh redirect — the same pattern
+    # about.html uses into principles.html. One page, one name: the nav label and the <title> both
+    # read "How Coordination Works" while the h1 stays as written, because a headline is not a page
+    # name.
     ("Coordination", [
-        ("How Coordination Works", "coordination-framework.html", "coordination-framework.html"),
+        ("How Coordination Works", "coordination.html", "coordination.html"),
         # Your First 90 Days belongs here and is deliberately withheld: first-90-days.html is a stub.
         ("A Household, Coordinated", "household-example.html", "household-example.html"),
         ("The Coordination Review", "coordination-review.html", "coordination-review.html"),
@@ -115,11 +121,9 @@ CURRENT = {
     "principles.html": ("Our Firm", "principles.html"),
     "leadership.html": ("Our Firm", "leadership.html"),
     "fees.html": ("Our Firm", "fees.html"),
-    "our-story.html": ("Our Firm", "our-story.html"),
     # Unlinked stub: family only, so anyone arriving from a bookmark or a body link is still oriented.
     "fiduciary.html": ("Our Firm", "fiduciary.html"),
-    "coordination-framework.html": ("Coordination", "coordination-framework.html"),
-    "six-systems.html": ("Coordination", "coordination-framework.html"),
+    "coordination.html": ("Coordination", "coordination.html"),
     "household-example.html": ("Coordination", "household-example.html"),
     "coordination-review.html": ("Coordination", "coordination-review.html"),
     # Merged out of the menu (see FAMILIES) but still very much a Coordination page.
@@ -233,7 +237,11 @@ JOURNEY = {
     "statemap.html":            (2, "State Tax Atlas",              "statemap.html"),
     "taxlab.html":              (2, "After-Tax Lab",                "taxlab.html"),
     "concentration.html":       (2, "Concentrated Position Lab",    "concentration.html"),
-    "coordination-review.html": (3, "Choose your analysis",         "insights.html#decision-tools"),
+    # coordination-review.html carried step 3 and no longer does (2026-08-01). It is the destination,
+    # not a waypoint: a reader who lands here has the highest intent on the site, and the rail greeted
+    # them by naming two steps they had skipped and framing a considered engagement as the end of a
+    # funnel. Nothing else on the page depends on it. Removing the entry is what removes the rail —
+    # install_rail() strips any rail it finds on a page that is not listed here.
 }
 
 # Two closing divs, not three: the rail is .journey-rail > .jr-in, and .jr-in's children (<ol>, the
@@ -271,7 +279,9 @@ def install_rail(s, page_file):
     """Idempotent: replace an existing rail, else insert one right after the masthead."""
     rail = build_rail(page_file)
     if rail is None:
-        return s
+        # Not merely "leave it alone": a page dropped from JOURNEY must lose the rail it was built
+        # with, or the removal only takes effect on pages that never had one.
+        return RAIL_RE.sub("", s, count=1)
     if RAIL_RE.search(s):
         return RAIL_RE.sub(lambda _: rail, s, count=1)
     m = re.search(r'</nav>\s*(<div id="dw-household"[^>]*></div>)?', s)
@@ -284,6 +294,29 @@ def install_rail(s, page_file):
 # were in that state, including "The Seven Systems" and "Household Example" — both linked FROM the
 # Coordination dropdown, so a visitor who followed the menu landed somewhere with no way back.
 WRAP_OPEN_RE = re.compile(r'(<div class="wrap"[^>]*>)')
+
+
+FOOT_RE = re.compile(r'(\n\s*)(<div class="foot"[ >])')
+
+
+def install_anchor(s):
+    """Put the canonical firm strip above every page's disclosure block.
+
+    The strip carries the firm name, the descriptor, the city, the phone, and the email, rendered
+    once from site.py. It existed before this, but only ten of sixty-five pages carried the
+    <!--FIRM_ANCHOR--> token that sync_docs.py substitutes it into — and the pages missing it were
+    disproportionately the ones a professional actually lands on, which meant the reader most likely
+    to want to pick up a phone was on a page with no number on it.
+
+    Idempotent by construction: the token is inserted only where a .foot exists and no token is
+    already present, so re-running never stacks a second strip.
+    """
+    if FIRM_ANCHOR_TOKEN in s:
+        return s
+    m = FOOT_RE.search(s)
+    if not m:
+        return s
+    return s[:m.start()] + m.group(1) + FIRM_ANCHOR_TOKEN + m.group(1) + m.group(2) + s[m.end():]
 
 
 def _tidy(rest):
@@ -320,6 +353,7 @@ def install(page):
             return False                               # nothing to anchor to
         new = s[:m.end()] + "\n" + build_nav(name) + _tidy(s[m.end():])
     new = install_rail(new, name)
+    new = install_anchor(new)
     if new != s:
         open(page, "w", encoding="utf-8").write(new)
         return True

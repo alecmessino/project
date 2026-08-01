@@ -890,7 +890,6 @@ _CORE_SITEMAP = [
     ("insights.html", "0.9", "weekly"),
     ("driftwood-review.html", "0.9", "monthly"),
     ("commentary.html", "0.7", "weekly"),
-    ("coordination-framework.html", "0.8", "monthly"),
     ("the-practice.html", "0.8", "monthly"), ("the-record.html", "0.8", "monthly"),
     ("every-portfolio-has-two-returns.html", "0.8", "monthly"),
     ("principles.html", "0.9", "monthly"),

@@ -125,6 +125,16 @@
   .pt-contact a:hover{border-bottom-color:#f1ede3}
   .pt-contact .c{font-size:13.5px;color:var(--accent-strike-soft)}
 
+  /* Hidden by default and shown only on a phone: see the block's own comment in the body. */
+  .pt-hail{display:none}
+  @media(max-width:720px){
+    .pt-hail{display:block;margin:20px 22px 0;padding:18px 20px;background:var(--navy);
+      border-radius:var(--surface-radius);font-family:var(--sans)}
+    .pt-hail .nm{display:block;font-weight:700;font-size:15px;color:#f1ede3;margin-bottom:10px}
+    .pt-hail a{display:block;font-size:14.5px;color:var(--accent-strike-soft);text-decoration:none;
+      padding:5px 0;border-bottom:1px solid rgba(169,194,214,.3);width:fit-content}
+    .pt-hail a:last-child{border-bottom:none}
+  }
   @media(max-width:720px){
     .doc{padding-left:22px;padding-right:22px}
     .pt-sec{padding-left:22px;padding-right:22px}
@@ -137,6 +147,27 @@
     .pt-risk:last-child{border-bottom:none}
     .pt-cta{margin-left:22px;margin-right:22px}
   }
+
+  /* 390px: a five-row, three-column table does not survive a phone. .tscroll made it scroll
+     sideways, which is technically not broken and practically unread — a CPA scanning between
+     meetings will not drag a table horizontally. Below 640px each row becomes its own stacked
+     block, with the column header carried down as a label so the three cells stay distinguishable
+     once the <thead> is gone. */
+  @media(max-width:640px){
+    .tscroll{overflow-x:visible}
+    .pt-table{min-width:0;display:block}
+    .pt-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+    .pt-table tbody,.pt-table tr,.pt-table td{display:block;width:auto}
+    .pt-table tr{border-bottom:1px solid var(--ink);padding:16px 0 14px}
+    .pt-table tr:last-child{border-bottom:none}
+    .pt-table td{border-bottom:none;padding:0 0 9px}
+    .pt-table td:last-child{padding-bottom:0}
+    .pt-table td::before{content:attr(data-l);display:block;font-size:9.5px;letter-spacing:.13em;
+      text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:4px}
+    .pt-table .t-when,.pt-table .t-step{white-space:normal;width:auto;font-size:15px}
+    .pt-table .t-when::before,.pt-table .t-step::before{content:none}
+    .pt-table .t-step .s-n{margin-bottom:2px}
+  }
   @media print{
     .dwnav,.pt-cta{break-inside:avoid}
     .pt-tool:hover{background:none}
@@ -147,7 +178,7 @@
 <div class="wrap">
 <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination-framework.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html" aria-current="page">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
+      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html" aria-current="page">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
@@ -160,6 +191,16 @@
       <p class="lede">Driftwood does not draft, amend, or interpret. It keeps titling, beneficiaries, and
         funding consistent with what you drafted, holds the open decisions in one register, and brings you
         in <b>before</b> a decision moves rather than after it has.</p>
+    </div>
+
+    <!-- Phone only. A referrer at 390px arrived from an emailed link and wants a person, not an
+         argument: the name and the two ways to reach it sit directly under the lede, and the full
+         case follows for whoever keeps reading. On a desktop the close does this job, so this block
+         is not rendered there rather than being duplicated into the layout twice. -->
+    <div class="pt-hail" aria-label="Contact Driftwood">
+      <span class="nm">Alec Messino</span>
+      <a href="tel:+17085487600">(708)&nbsp;548-7600</a>
+      <a href="mailto:alec@driftwoodwealth.com">alec@driftwoodwealth.com</a>
     </div>
 
     <div class="pt-sec">
@@ -211,21 +252,21 @@
       <table class="pt-table">
         <thead><tr><th>When this happens</th><th>What we bring you</th><th>So the outcome is</th></tr></thead>
         <tbody>
-          <tr><td class="t-when">A new or amended trust</td>
-            <td>A funding schedule and the current titling of every account, in one page</td>
-            <td>The instrument is funded as drafted, on a date, rather than eventually</td></tr>
-          <tr><td class="t-when">Death of a spouse</td>
-            <td>The basis picture, an account inventory, and the survivor's bracket</td>
-            <td>Elections are made inside their windows, and nothing is sold to fund them</td></tr>
-          <tr><td class="t-when">A business sale or transfer</td>
-            <td>Entity structure, valuation timing, and remaining gifting capacity</td>
-            <td>Gifting happens before value is locked in, not in the year after</td></tr>
-          <tr><td class="t-when">A move across state lines</td>
-            <td>Domicile facts, the situs of each trust, and the new estate exposure</td>
-            <td>Illinois exposure above its $4M exemption is priced before the move</td></tr>
-          <tr><td class="t-when">A gift or charitable transfer</td>
-            <td>Basis and holding period by lot, and which asset should move</td>
-            <td>The right asset leaves the estate, and the deduction is not wasted</td></tr>
+          <tr><td class="t-when" data-l="When this happens">A new or amended trust</td>
+            <td data-l="What we bring you">A funding schedule and the current titling of every account, in one page</td>
+            <td data-l="So the outcome is">The instrument is funded as drafted, on a date, rather than eventually</td></tr>
+          <tr><td class="t-when" data-l="When this happens">Death of a spouse</td>
+            <td data-l="What we bring you">The basis picture, an account inventory, and the survivor's bracket</td>
+            <td data-l="So the outcome is">Elections are made inside their windows, and nothing is sold to fund them</td></tr>
+          <tr><td class="t-when" data-l="When this happens">A business sale or transfer</td>
+            <td data-l="What we bring you">Entity structure, valuation timing, and remaining gifting capacity</td>
+            <td data-l="So the outcome is">Gifting happens before value is locked in, not in the year after</td></tr>
+          <tr><td class="t-when" data-l="When this happens">A move across state lines</td>
+            <td data-l="What we bring you">Domicile facts, the situs of each trust, and the new estate exposure</td>
+            <td data-l="So the outcome is">Illinois exposure above its $4M exemption is priced before the move</td></tr>
+          <tr><td class="t-when" data-l="When this happens">A gift or charitable transfer</td>
+            <td data-l="What we bring you">Basis and holding period by lot, and which asset should move</td>
+            <td data-l="So the outcome is">The right asset leaves the estate, and the deduction is not wasted</td></tr>
         </tbody>
       </table>
       </div>
@@ -268,6 +309,8 @@
         <span class="c">(708) 548-7600</span>
       </div>
     </div>
+
+    <!--FIRM_ANCHOR-->
 
     <div class="foot">
       <span class="note">Educational, not investment, tax, or legal advice.</span>

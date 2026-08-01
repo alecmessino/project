@@ -622,6 +622,8 @@ table.exhibit-table{ width:100%; border-collapse:collapse; font-family:var(--san
   letter-spacing:.14em; text-transform:uppercase; color:var(--dim); font-variant-numeric:tabular-nums; }
 /* The firm NAME is the wordmark — title-case everywhere else on the site — so it overrides the meta
    strip's tracked caps here too. 2026 wordmark unification: one logo, one case, one type. */
+.firm-anchor a{ color:inherit; text-decoration:none; border-bottom:1px solid rgba(0,0,0,.18); }
+.firm-anchor a:hover{ border-bottom-color:currentColor; }
 .firm-anchor-brand{ text-transform:none; letter-spacing:-.01em; font-weight:700; color:var(--ink,#1d242d); }
 @media(max-width:620px){ .firm-anchor{ font-size:9px; letter-spacing:.1em; padding:10px 14px; gap:4px 16px; } }
 

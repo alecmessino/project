@@ -92,6 +92,35 @@
   .step .sh2{font-family:var(--sans);font-weight:700;font-size:15px;color:var(--ink);margin-bottom:4px}
   .step .sd{font-family:var(--sans);font-size:13.5px;line-height:1.56;color:var(--body);max-width:60ch}
 
+  /* qualification: the page already promises "if it isn't warranted we will say so". Stating the
+     criteria is what makes that promise checkable rather than a courtesy. */
+  .qual{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--ink)}
+  .qc{padding:20px 24px 22px;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2)}
+  .qc:last-child{border-right:none}
+  .qc--not{background:var(--soft)}
+  .qc .qk{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .qc ul{list-style:none;margin:0;padding:0}
+  .qc li{font-family:var(--sans);font-size:13.5px;line-height:1.5;color:var(--body);padding:11px 0;border-top:1px solid var(--ghost-line)}
+  .qc li:first-child{border-top:none;padding-top:0}
+  .qual-note{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--muted);margin:16px 0 0;max-width:64ch}
+  @media(max-width:720px){.qual{grid-template-columns:1fr}.qc{border-right:none}}
+
+  /* what we ask for: the objection a reader actually has at this point in the page */
+  .ask{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--ink);border-left:1px solid var(--line2)}
+  .ak{padding:18px 20px;border-bottom:1px solid var(--line2);border-right:1px solid var(--line2)}
+  .ak .akh{font-family:var(--sans);font-weight:700;font-size:13.5px;color:var(--ink);margin-bottom:6px}
+  .ak .akd{font-family:var(--sans);font-size:13px;line-height:1.5;color:var(--body)}
+  @media(max-width:900px){.ask{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.ask{grid-template-columns:1fr}}
+
+  /* duration: three plain facts, no ornament */
+  .dur{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink);border-left:1px solid var(--line2)}
+  .du{padding:18px 20px;border-bottom:1px solid var(--line2);border-right:1px solid var(--line2)}
+  .du .duk{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .du .duv{font-family:var(--sans);font-weight:700;font-size:16px;color:var(--ink)}
+  .du .dud{font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--body);margin-top:5px}
+  @media(max-width:720px){.dur{grid-template-columns:1fr}}
+
   .feenote{padding:26px 44px 6px}
   .feenote p{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--muted);margin:0;max-width:64ch}
   .feenote b{color:var(--ink);font-weight:600}
@@ -105,6 +134,12 @@
   .door a.book{display:inline-block;text-decoration:none;font-family:var(--sans);font-size:15px;font-weight:700;
     padding:15px 30px;border-radius:var(--surface-radius);background:var(--accent-strike);color:#f1ede3}
   .door a.book:hover{filter:brightness(1.08)}
+  /* A second route in. A reader who will not put their name on a stranger's calendar as a first
+     move currently has no way to make contact at all, so the page loses them silently. */
+  .door .alt{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--accent-strike-soft);margin-top:14px}
+  .door .alt a{color:#f1ede3;text-decoration:none;border-bottom:1px solid rgba(241,237,227,.4)}
+  .door .alt a:hover{border-bottom-color:#f1ede3}
+  @media(min-width:721px){.door .alt{display:inline-block;margin-left:20px;margin-top:0}}
   .door .founder{display:flex;align-items:center;gap:14px;margin-top:26px;padding-top:22px;border-top:1px solid rgba(169,194,214,.24)}
   .door .fimg{width:52px;height:52px;border-radius:0;object-fit:cover;flex-shrink:0;filter:grayscale(1) contrast(1.02)}
   .door .fmeta{font-family:var(--sans)}
@@ -124,19 +159,12 @@
 <div class="wrap">
 <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination-framework.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html" aria-current="page">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
+      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html" aria-current="page">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
     </nav>  <div class="frame">
     <div class="inner">
-    <div class="journey-rail" data-step="3" aria-label="Your path through the engagement">
-      <div class="jr-in">
-        <span class="jr-k">Your path</span>
-        <ol><li><span class="num">1</span><a href="score.html">Coordination Assessment</a></li><li class="sep" aria-hidden="true">&rarr;</li><li><span class="num">2</span><a href="insights.html#decision-tools">Choose your analysis</a></li><li class="sep" aria-hidden="true">&rarr;</li><li aria-current="step"><span class="num">3</span><a href="coordination-review.html">Coordination Review</a></li></ol>
-        <a class="jr-cta" href="coordination-review.html">The product &rarr;</a>
-      </div>
-    </div>
 
     <div class="doc">
       <div class="eyebrow">The flagship engagement</div>
@@ -193,16 +221,16 @@
             advisor.</div>
           <div class="dgo">See the Manual &rarr;</div>
         </a>
-        <!-- Named, not linked. The 90-Day Plan is a real deliverable of the Review, but the page that
-             would explain it is still an unwritten stub, and no placeholder ships. Rendered as a div so
-             the four-card grid keeps its shape without promising a destination that does not exist. -->
-        <div class="dv dv--soon">
+        <!-- Linked again. The destination was never missing: transition-plan.html is "The first ninety
+             days, written down", a written sample that had no inbound link from anywhere on the site.
+             The stub this card used to point at (first-90-days.html) now redirects here. -->
+        <a class="dv" href="transition-plan.html">
           <div class="dn">04 · The opening plan</div>
           <div class="dt">Your 90-Day Plan</div>
           <div class="dd">The first owned decisions, sequenced: which matters move first, who executes them, and
             the date each closes. The review's conclusions become a schedule, not a stack of recommendations.</div>
-          <div class="dgo">Delivered with the Review</div>
-        </div>
+          <div class="dgo">See a specimen transition plan &rarr;</div>
+        </a>
       </div>
       <p class="recv-more">Two artifacts run beneath the four above and sustain them: the <b>Decision Log</b> records
         every judgment as it is made and why — the institutional memory of the relationship — and the
@@ -235,6 +263,86 @@
       </div>
     </div>
 
+    <div class="sec">
+      <div class="k">Who the review is for, and who it is not for</div>
+      <div class="qual">
+        <div class="qc">
+          <div class="qk">A review is warranted when</div>
+          <ul>
+            <li>Several accounts, and an estate plan already drafted.</li>
+            <li>An operating business, or a concentrated position.</li>
+            <li>Income or property that crosses a state line.</li>
+          </ul>
+        </div>
+        <div class="qc qc--not">
+          <div class="qk">It is not warranted when</div>
+          <ul>
+            <li>One account, and no estate documents yet.</li>
+            <li>Nothing has changed in years, and nothing is planned.</li>
+            <li>You want someone to run a portfolio, not coordinate a household.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="qual-note">In any of those three cases we will say so on the introduction call, and no proposal
+        follows.</p>
+    </div>
+
+    <div class="sec">
+      <div class="k">What we will ask you for</div>
+      <p class="qual-note" style="margin:0 0 18px">A review of holdings, documents, and a state implies handing
+        statements and trust documents to someone you have met once. Here is the whole list, in advance.</p>
+      <div class="ask">
+        <div class="ak">
+          <div class="akh">Statements</div>
+          <div class="akd">One recent statement per account, including the ones we will not manage.</div>
+        </div>
+        <div class="ak">
+          <div class="akh">Documents</div>
+          <div class="akd">The estate documents as executed, and the entity documents if there is a business.</div>
+        </div>
+        <div class="ak">
+          <div class="akh">Last year's return</div>
+          <div class="akd">The whole return, not a summary. The bracket picture comes from it.</div>
+        </div>
+        <div class="ak">
+          <div class="akh">Nothing, at first</div>
+          <div class="akd">The introduction call requires no documents at all.</div>
+        </div>
+      </div>
+      <!-- HOW THEY ARE HANDLED — deliberately not written here, and not by me.
+           The mockup asks for one sentence stating how documents are transmitted, where they are held,
+           how long they are kept, and that they are shared with no third party without written
+           instruction. Every clause of that is a factual claim about a real firm's data practice and a
+           representation to a prospect; inventing it would be worse than omitting it. It also has to
+           agree with privacy.html, which is itself still unfinished (five bracketed placeholders as of
+           2026-08-01). Write the sentence, finish the privacy policy so the two agree, then uncomment:
+
+      <p class="qual-note"><b>How they are handled.</b> [one sentence, supplied by the principal, matching
+        privacy.html exactly]</p>
+      -->
+    </div>
+
+    <div class="sec">
+      <div class="k">How long it takes</div>
+      <div class="dur">
+        <div class="du">
+          <div class="duk">The introduction</div>
+          <div class="duv">Fifteen minutes</div>
+          <div class="dud">Nothing to prepare, and no documents.</div>
+        </div>
+        <div class="du">
+          <div class="duk">The review itself</div>
+          <div class="duv">Two to three weeks</div>
+          <div class="dud">Your systems are read one at a time, on your own holdings.</div>
+        </div>
+        <div class="du">
+          <div class="duk">The report, walked through</div>
+          <div class="duv">One sitting</div>
+          <div class="dud">With your CPA and counsel where the findings touch them.</div>
+        </div>
+      </div>
+    </div>
+
     <div class="feenote">
       <p><b>On fees.</b> Driftwood charges to coordinate decisions, not to manage a number. The review's fee is a
         defined engagement fee, agreed in writing before any work begins. How we are paid, and why, is set out in
@@ -246,6 +354,8 @@
       <div class="ds">It begins with the fifteen-minute introduction. There is nothing to prepare, and if a review
         isn't warranted, we'll tell you on the call.</div>
       <a class="book" href="https://calendly.com/alec-messino/15-minute-introductory-meeting" target="_blank" rel="noopener">Schedule the introduction &rarr;</a>
+      <div class="alt">Or call <a href="tel:+17085487600">(708)&nbsp;548-7600</a>, or write to
+        <a href="mailto:alec@driftwoodwealth.com">alec@driftwoodwealth.com</a>.</div>
       <div class="founder">
         <img class="fimg" src="Headshot.jpg" width="52" height="52" loading="lazy"
              alt="Alec Messino, founder of Driftwood Wealth"
@@ -256,6 +366,8 @@
         </div>
       </div>
     </div>
+
+    <div class="firm-anchor" role="contentinfo"><span><span class="firm-anchor-brand">Driftwood Wealth</span>&nbsp;&nbsp;·&nbsp;&nbsp;A PRACTICE OF ALEC MESSINO&nbsp;&nbsp;·&nbsp;&nbsp;CHICAGO, ILLINOIS&nbsp;&nbsp;·&nbsp;&nbsp;<a href="tel:+17085487600">(708) 548-7600</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="mailto:alec@driftwoodwealth.com">ALEC@DRIFTWOODWEALTH.COM</a></span><span>custody Park Avenue Securities LLC (PAS), member FINRA/SIPC&nbsp;&nbsp;·&nbsp;&nbsp;MODEL DATA AS OF JULY 2026</span></div>
 
     <div class="foot">
       <span class="note">Educational, not investment, tax, or legal advice.</span>

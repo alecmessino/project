@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-01T04:59:30+00:00",
+  "generated": "2026-08-01T05:17:06+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 482693,
+    "rows": 482793,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 174120,
-      "live_total": 54231,
-      "live_today": 3560,
-      "last_row_age_min": 0.4
+      "rows_total": 174194,
+      "live_total": 54261,
+      "live_today": 3590,
+      "last_row_age_min": 0.3
     },
     "fanduel": {
-      "rows_total": 308567,
-      "live_total": 61455,
-      "live_today": 3275,
-      "last_row_age_min": 0.4
+      "rows_total": 308593,
+      "live_total": 61461,
+      "live_today": 3281,
+      "last_row_age_min": 12.4
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 37354.5
+      "last_row_age_min": 37372.1
     }
   },
   "books_reporting_live": [
@@ -37,14 +37,14 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 54231,
-    "OPEN": 56516,
-    "SUSPENDED": 4660,
-    "REMOVED": 279
+    "unset": 54261,
+    "OPEN": 56519,
+    "SUSPENDED": 4661,
+    "REMOVED": 281
   },
   "overlap": {
-    "simultaneous_pairs_total": 63142,
-    "simultaneous_pairs_today": 3366,
+    "simultaneous_pairs_total": 63172,
+    "simultaneous_pairs_today": 3396,
     "overlap_games": 121,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
@@ -66,7 +66,7 @@
   "coverage": {
     "live_games_seen": 122,
     "book_panel_games": 127,
-    "team_total_rows": 28260,
+    "team_total_rows": 28287,
     "innings_seen": [
       1,
       2,
@@ -86,7 +86,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 63142,
+        "current": 63172,
         "target": 2000,
         "pass": true,
         "progress": 1.0

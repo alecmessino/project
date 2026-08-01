@@ -3,5 +3,8 @@
   "buildCommand": null,
   "outputDirectory": "docs",
   "framework": null,
-  "github": { "silent": true }
+  "github": {
+    "silent": true
+  },
+  "ignoreCommand": "case \"$VERCEL_GIT_COMMIT_REF\" in *third-turn*) exit 0 ;; esac; exit 1"
 }

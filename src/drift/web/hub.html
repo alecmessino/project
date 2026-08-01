@@ -487,13 +487,13 @@
   /* on ink the primary inverts to paper, the strongest contrast available without a new hue */
   .close-conv.on-ink .review-cta{background:var(--on-dark-strong);color:var(--navy)}
   .close-conv.on-ink .review-cta .rc-sub{color:#3d4650}
-  .close-conv.on-ink .founder-tag{border-top-color:rgba(169,194,214,.28)}
-  .close-conv.on-ink .ft-name{color:var(--on-dark-strong)}
-  .close-conv.on-ink .ft-cred{color:var(--gold)}
-  .close-conv.on-ink .ft-bio{color:var(--accent-strike-soft)}
-  .close-conv.on-ink .ft-bio + .ft-say{border-top-color:rgba(169,194,214,.28)}
-  .close-conv.on-ink .ft-say{color:var(--on-dark-dim)}
-  .close-conv.on-ink .ft-photo{border-color:rgba(169,194,214,.3);filter:grayscale(1) contrast(1.04)}
+  /* The seven .founder-tag / .ft-* reversals that used to sit here were deleted 2026-08-01 with the
+     resequence: the founder tag and "Who this is for" moved out of this plate to the limestone plate
+     above it, so nothing in the ink surface can match them any more. They are not re-stated for the
+     new plate — the base .founder-tag rules further up were always the light-surface version
+     (--ink name, --muted credential, --dim bio and quote, --ghost-line rule, --line photo edge, and
+     an unfiltered photograph), which is exactly what the block needs where it now sits. A dead
+     override left behind reads, six months from now, as a colour the block is supposed to have. */
   /* the deliverable line: what the review physically hands over, held apart by a rule */
   .close-conv.on-ink .deliver{margin:26px 0 0;max-width:58ch;padding-top:20px;
     border-top:1px solid rgba(169,194,214,.22);font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--on-dark-dim)}
@@ -570,7 +570,7 @@
 <div class="wrap">
 <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fiduciary.html">Fiduciary Standard</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="coordination-framework.html">The Seven Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="household-example.html">Household Example</a><a href="score.html">Coordination Assessment</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Lab</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-memos">Decision Memos</a><a href="insights.html#decision-tools">Decision Tools</a><a href="insights.html#decision-library">Decision Library</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">CPA Collaboration</a><a href="estate-attorneys.html">Estate Attorneys</a><a href="referral.html">Referral Process</a></div></div></div>
+      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination-framework.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
@@ -580,8 +580,11 @@
 
     <main id="main" tabindex="-1">
     <!-- ══ PLATE I · THE CONSTRAINT ═══════════════════════════════════════════════════════════
-         The 2026 folio homepage: four plates, one argument. Problem (I) → mechanism (II) →
-         artifact (III) → ask (IV). The three sections this replaced (a six-condition self-audit, a
+         The 2026 folio homepage: one argument, in plates. Problem (I) → mechanism (II) →
+         artifact (III) → who it is for (IV) → ask (V). Plate IV is not new material; it is the
+         self-qualification and the founder tag, moved up from inside the ask on 2026-08-01 so the
+         reader recognises themselves before they are asked rather than after. The three sections
+         this replaced (a six-condition self-audit, a
          four-step method sheet, and a standalone dollar band) each answered a question another plate
          already answered; the method sheet moved to the-practice.html, where "how the work runs" is
          the page's actual subject. Length was never the problem; duplicate questions were. ── -->
@@ -790,28 +793,24 @@
       </div>
     </div>
 
-    <!-- ══ PLATE IV · THE ASK ═════════════════════════════════════════════════════════════════
-         Reversed to ink: the three plates above argue, this one asks, and the change of surface marks
-         the change of register without adding an element. The thesis line ("coordination decisions")
-         now sits in the founder's voice rather than as free-floating copy — attributed conviction
-         reads as a person taking a position, which is what the sentence is actually doing. ── -->
-    <div class="sec close-conv on-ink" id="conversation">
-      <p class="conv">Begin with a review, not a proposal.</p>
-      <p class="review-scope">We inventory what exists, name what is uncoordinated, and hand you the
-        register. If there is nothing worth coordinating, we will tell you that.</p>
-      <div class="review">
-        <a class="review-cta" href="coordination-review.html">
-          <span class="rc-main">Request a Coordination Review</span>
-          <span class="rc-sub">Every system read together, the findings written down, and an owner against every gap, yours to keep.</span>
-        </a>
-      </div>
-      <p class="deliver">The review produces your <a href="manual.html">Wealth Operating Manual</a>: the
-        register, the owners, the dependencies, and the review dates, held in one document.</p>
-      <!-- Who this is for, stated plainly at the ask. Not a qualification form: a reader who does
-           not recognise themselves here should be able to tell in two lines and stop, and a reader
-           who does should feel named. Concrete on purpose — complexity, an operating business, and
-           a state line are the three conditions the practice is actually built around, and the
-           third is why the Atlas leads with Illinois. -->
+    <!-- ══ PLATE IV · WHO THIS IS FOR ═════════════════════════════════════════════════════════
+         Resequenced 2026-08-01 (council). Nothing here is added, rewritten, or removed: the "Who
+         this is for" paragraph and the founder tag are the same copy, moved out of the closing ask
+         and set immediately before it. They are the two elements that answer "is this me" and "who
+         are you", and they used to sit AFTER the reader had already been asked to book — where
+         self-qualification does no work, because a reader who has not yet recognised themselves has
+         already decided. Read last before the ask, they are the reader's final "yes, that is my
+         household" and a face to have the conversation with. The ask itself is unchanged.
+
+         Consequence of the move: the block now sits on limestone rather than ink, so it falls back
+         to the light .founder-tag rules that were always the base — the .close-conv.on-ink colour
+         overrides for it are deleted below rather than duplicated here. -->
+    <div class="sec gal" id="fit">
+      <!-- Who this is for, stated plainly before the ask. Not a qualification form: a reader who
+           does not recognise themselves here should be able to tell in two lines and stop, and a
+           reader who does should feel named. Concrete on purpose — complexity, an operating
+           business, and a state line are the three conditions the practice is actually built
+           around, and the third is why the Atlas leads with Illinois. -->
       <p class="fit"><span class="fit-k">Who this is for</span>
         Households whose financial lives have outgrown a single adviser: several accounts, an
         estate plan, and decisions that touch each other.
@@ -843,6 +842,26 @@
         </figcaption>
       </figure>
     </div>
+
+    <!-- ══ PLATE V · THE ASK ══════════════════════════════════════════════════════════════════
+         Reversed to ink: the plates above argue and qualify, this one asks, and the change of
+         surface marks the change of register without adding an element. The thesis line
+         ("coordination decisions") sits in the founder's voice on the plate immediately above,
+         rather than as free-floating copy — attributed conviction reads as a person taking a
+         position, which is what the sentence is actually doing. ── -->
+    <div class="sec close-conv on-ink" id="conversation">
+      <p class="conv">Begin with a review, not a proposal.</p>
+      <p class="review-scope">We inventory what exists, name what is uncoordinated, and hand you the
+        register. If there is nothing worth coordinating, we will tell you that.</p>
+      <div class="review">
+        <a class="review-cta" href="coordination-review.html">
+          <span class="rc-main">Request a Coordination Review</span>
+          <span class="rc-sub">Every system read together, the findings written down, and an owner against every gap, yours to keep.</span>
+        </a>
+      </div>
+      <p class="deliver">The review produces your <a href="manual.html">Wealth Operating Manual</a>: the
+        register, the owners, the dependencies, and the review dates, held in one document.</p>
+    </div>
     </main>
 
     <!-- Colophon. The wide gap between the identity block and the index row is load-bearing: it is
@@ -852,7 +871,13 @@
       <p class="cw">Driftwood Wealth</p>
       <div class="cindex">
         <a href="the-practice.html">Practice</a><a href="coordination-framework.html">Coordination</a>
-        <a href="statemap.html">Atlas</a><a href="research.html">Research</a><a href="atlas/2026/illinois/">For attorneys and CPAs</a><a href="private.html">Client Access</a>
+        <!-- Repointed 2026-08-01 (council): this read "For attorneys and CPAs" and opened
+             atlas/2026/illinois/ — a state-tax reference page. One line of markup stood between the
+             referral audience and the one page written for them. It now opens partners.html, the
+             CPA Collaboration page. The label leads with CPAs to match the destination and the
+             Professionals menu's own order ("For CPAs", then "For Estate Attorneys"); attorneys
+             reach their own page from that menu rather than through a link that lands elsewhere. -->
+        <a href="statemap.html">Atlas</a><a href="research.html">Research</a><a href="partners.html">For CPAs and attorneys</a><a href="private.html">Client Access</a>
       </div>
     </div>
 

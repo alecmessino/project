@@ -3,68 +3,235 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Referral Process, Driftwood Wealth</title>
-<meta name="description" content="For CPAs and attorneys who recognize a coordination gap in a client's life: how a referral works, what the client receives, and how the introducing advisor stays informed." />
-<link rel="canonical" href="https://driftwoodwealth.com/referral.html" />
+<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
+<title>Making a Referral, Driftwood Wealth</title>
+<meta name="description" content="What happens after a CPA or attorney makes the introduction: four steps, what you are told at each one, and what Driftwood will not do. No client information is collected on this page." />
+<link rel="canonical" href="https://driftwoodwealth.com/referral.html" />
 <link rel="icon" href="favicon.svg" />
-<title>Referral Process</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftwood Wealth" />
+<meta property="og:title" content="Making a Referral, Driftwood Wealth" />
+<meta property="og:description" content="What happens after you make the introduction. Four steps, you are told where it stands at each one, and your client is never routed away from you." />
+<meta property="og:url" content="https://driftwoodwealth.com/referral.html" />
+<meta property="og:image" content="https://driftwoodwealth.com/og/index.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Making a Referral, Driftwood Wealth" />
+<meta name="twitter:description" content="Four steps. You are told where it stands at each one, and your client is never routed away from you." />
+<meta name="twitter:image" content="https://driftwoodwealth.com/og/index.png" />
+<!-- COMPLIANCE: professional-education page by a registered representative (advertising). Route the
+     copy through PAS/OSJ for approval before relying on it.
+
+     No client data is collected on this page, and the page says so in its own body copy — there is
+     no form, no capture, and no portal. The interactive referral workflow (client-data entry,
+     invitation links) stays deferred pending privacy, compliance, and backend architecture.
+
+     Referral compensation is stated flatly and must not be softened: Driftwood does not pay or
+     receive compensation for professional referrals. No solicitor or promoter arrangement exists,
+     so none is described. If one is ever entered into, disclose the ACTUAL arrangement here rather
+     than editing this sentence into something vaguer.
+
+     Step 02 promises exactly one thing — that the referrer is told whether the engagement proceeds
+     or closes. It deliberately does not promise a reason, a summary, or any detail of the
+     conversation, none of which can be shared without the client's consent.
+
+     Structure, classes and CSS are partners.html's, deliberately and verbatim — the council's
+     instruction was "no new design". The only additions are the measure modifiers noted in the
+     style block. No new colour, radius, shadow, motion, or type. If partners.html's shell changes,
+     change it there and copy across rather than forking a second set of rules here. -->
 <style>
-  :root{ --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4;
-    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a; --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6;
-    --navy:#1a2330; --on-dark:#e7ecf2; }
+  :root{
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4;
+    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
+    --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6;
+    --teal:#15463a; --teal2:#15806a; --accent:#15806a; --neg:#9b4439; --navy:#1a2330; --on-dark:#e7ecf2;
+    --brass:#2c5878; --gold:#a9c2d6;
+  }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.62 var(--sans);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{margin:36px auto;padding-block:0 60px;}
-  .frame{background:var(--bg);overflow:hidden}
-  .doc{padding:46px 44px 8px;max-width:760px}
-  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
-    color:var(--accent-strike);margin-bottom:16px}
-  h1{font-family:var(--sans);font-weight:700;font-size:clamp(32px,3vw+16px,46px);line-height:1.06;letter-spacing:-.022em;
-    color:var(--ink);margin:0 0 18px;max-width:20ch}
-  .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:62ch}
-  .note{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--muted);margin:28px 44px 0;max-width:64ch}
-  .door{margin:30px 44px 8px;padding:30px 34px;background:var(--navy);color:var(--on-dark);border-radius:0}
-  .door .dh{font-family:var(--sans);font-weight:700;font-size:24px;letter-spacing:-.02em;color:#f1ede3;margin:0 0 10px}
-  .door .ds{font-family:var(--sans);font-size:14px;line-height:1.55;color:var(--accent-strike-soft);margin:0 0 20px;max-width:56ch}
-  .door a.book{display:inline-block;text-decoration:none;font-family:var(--sans);font-size:15px;font-weight:700;
-    padding:14px 28px;background:var(--accent-strike);color:#f1ede3}
-  .foot{padding:30px 44px;font-size:11px;line-height:1.6;color:var(--muted);border-top:1px solid var(--line)}
+  .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
+  .inner{margin:0 7px 7px}
+
+  .doc{padding:50px 44px 6px}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(34px,3.2vw+16px,48px);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:20ch}
+  .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:60ch}
+  .lede b{color:var(--ink);font-weight:500}
+
+  /* section shell */
+  .pt-sec{padding:36px 44px 6px}
+  .pt-k{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 12px}
+  .pt-h{font-family:var(--sans);font-weight:700;font-size:23px;line-height:1.18;letter-spacing:-.018em;color:var(--ink);margin:0 0 10px;max-width:26ch}
+  /* estate-attorneys.html's modifier, same meaning: the 22px gap a section uses when it has no
+     .pt-lead under the headline. */
+  .pt-h--last{margin-bottom:22px}
+  .pt-lead{font-family:var(--sans);font-size:15px;line-height:1.6;color:var(--body);margin:0 0 22px;max-width:64ch}
+  .pt-lead b{color:var(--ink);font-weight:600}
+  .pt-note{font-family:var(--sans);font-size:12.5px;line-height:1.55;color:var(--muted);margin:0;max-width:64ch}
+  .pt-note b{color:var(--dim);font-weight:600}
+  /* A gap, not a style: this note follows a bordered band rather than sitting inside a section's
+     normal flow, so it needs the rhythm .pt-lead would otherwise have supplied. */
+  .pt-note--gap{margin-top:16px}
+
+  /* the terms — partners.html's .pt-risks band, unchanged */
+  .pt-risks{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);max-width:900px;margin:0}
+  .pt-risk{padding:20px 22px 20px 0;border-right:1px solid var(--line2)}
+  .pt-risk:not(:first-child){padding-left:22px}
+  .pt-risk:last-child{border-right:none}
+  .pt-risk .r-x{font-family:var(--serif);font-style:italic;font-size:15.5px;line-height:1.4;color:var(--ink);margin:0 0 11px}
+  .pt-risk .r-fix{font-family:var(--sans);font-size:13px;line-height:1.56;color:var(--body);margin:0}
+  .pt-risk .r-fix b{color:var(--ink);font-weight:600}
+
+  /* the sequence */
+  .tscroll{overflow-x:auto}
+  .pt-table{width:100%;border-collapse:collapse;max-width:900px;font-family:var(--sans)}
+  .pt-table th{text-align:left;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:0 16px 9px 0;border-bottom:1px solid var(--ink)}
+  .pt-table td{font-size:13.5px;line-height:1.5;color:var(--body);padding:13px 16px 13px 0;border-bottom:1px solid var(--line2);vertical-align:top}
+  .pt-table tr:last-child td{border-bottom:none}
+  .pt-table .t-when{font-weight:600;color:var(--ink);white-space:nowrap}
+  /* This table carries a fourth column, so two measure modifiers — no new colour, type, or rule
+     weight. The step cell must WRAP (.t-when's nowrap would push "Fifteen minutes with your client"
+     off the page), and its numeral reuses the <th> label treatment already defined above. The
+     min-width makes .tscroll actually scroll on a phone instead of crushing four columns to
+     one word each. */
+  .pt-table--seq{min-width:660px}
+  .pt-table .t-step{font-weight:600;color:var(--ink);white-space:normal;width:18%}
+  .pt-table .t-step .s-n{display:block;font-size:10px;letter-spacing:.13em;color:var(--muted);font-weight:700;margin-bottom:4px}
+  .pt-table .t-get{width:25%}
+
+  /* the next step */
+  .pt-cta{margin:16px 44px 8px;padding:28px 30px;background:var(--navy);color:var(--on-dark);border-radius:var(--surface-radius)}
+  .pt-cta .ch{font-family:var(--sans);font-weight:700;font-size:22px;letter-spacing:-.02em;color:#f1ede3;margin:0 0 8px}
+  .pt-cta .cs{font-family:var(--sans);font-size:13.5px;line-height:1.55;color:var(--accent-strike-soft);margin:0 0 18px;max-width:60ch}
+  .pt-cta .cs b{color:#f1ede3;font-weight:600}
+  .pt-cta .cs a{color:#f1ede3;text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
+  .pt-cta .cs a:hover{border-bottom-color:#f1ede3}
+  .pt-contact{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 22px;font-family:var(--sans)}
+  .pt-contact .nm{font-weight:700;font-size:15px;color:#f1ede3}
+  .pt-contact .rl{font-size:12.5px;color:var(--accent-strike-soft)}
+  .pt-contact a{font-size:13.5px;color:#f1ede3;text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
+  .pt-contact a:hover{border-bottom-color:#f1ede3}
+  .pt-contact .c{font-size:13.5px;color:var(--accent-strike-soft)}
+
+  @media(max-width:720px){
+    .doc{padding-left:22px;padding-right:22px}
+    .pt-sec{padding-left:22px;padding-right:22px}
+    .pt-risks{display:block}
+    .pt-risk{border-right:none;border-bottom:1px solid var(--line2);padding:18px 0}
+    .pt-risk:not(:first-child){padding-left:0}
+    .pt-risk:last-child{border-bottom:none}
+    .pt-cta{margin-left:22px;margin-right:22px}
+  }
+  @media print{
+    .dwnav,.pt-cta{break-inside:avoid}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
 <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fiduciary.html">Fiduciary Standard</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">The Coordination Framework</a><a href="coordination-framework.html">The Seven Systems</a><a href="first-90-days.html">Your First 90 Days</a><a href="household-example.html">Household Example</a><a href="score.html">Coordination Assessment</a><a href="leakage.html">Tax Diagnostic</a><a href="taxlab.html">After-Tax Lab</a><a href="coordination-review.html">Schedule a Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-memos">Decision Memos</a><a href="insights.html#decision-tools">Decision Tools</a><a href="insights.html#decision-library">Decision Library</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">CPA Collaboration</a><a href="estate-attorneys.html">Estate Attorneys</a><a href="referral.html" aria-current="page">Referral Process</a></div></div></div>
+      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination-framework.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html" aria-current="page">Making a Referral</a></div></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
-    </nav><div class="frame">
+    </nav>  <div class="frame">
+    <div class="inner">
 
     <div class="doc">
-      <div class="eyebrow">Referral Process</div>
-      <h1>Referral Process</h1>
-      <p class="lede">How a referral reaches the right desk</p>
+      <div class="eyebrow">Making a referral</div>
+      <h1>What happens after you make the introduction.</h1>
+      <p class="lede">Four steps. You are told where it stands at each one, and your client is never routed
+        away from you. If coordination is not the problem, the referral closes and we tell you why.</p>
     </div>
-    <div class="note">This page is part of the Driftwood Coordination framework. The full experience —
-      the systems read together, the findings written down, and an owner against every gap — is the
-      Coordination Review.</div>
-    <div class="door">
-      <div class="dh">Schedule a Coordination Review.</div>
-      <div class="ds">The guided engagement: Tax Diagnostic, State Tax Atlas, and After-Tax Lab are
-        supporting evidence. The Review is the product.</div>
-      <a class="book" href="coordination-review.html">Request a Coordination Review &rarr;</a>
+
+    <div class="pt-sec">
+      <div class="pt-k">The sequence</div>
+      <div class="tscroll">
+      <table class="pt-table pt-table--seq">
+        <thead><tr><th>Step</th><th>What happens</th><th>What you receive</th><th>When</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="t-step"><span class="s-n">01</span>The introduction</td>
+            <td>A name, or a note on what looks uncoordinated. No forms, no client data, no portal to log into.</td>
+            <td class="t-get">Acknowledgement the same day, naming who will call and when.</td>
+            <td class="t-when">Same day</td>
+          </tr>
+          <tr>
+            <td class="t-step"><span class="s-n">02</span>Fifteen minutes with your client</td>
+            <td>No products and no proposal. One question: is the problem coordination, or is it something you already have covered.</td>
+            <td class="t-get">We will let you know whether the engagement proceeds or closes.</td>
+            <td class="t-when">Week 1</td>
+          </tr>
+          <tr>
+            <td class="t-step"><span class="s-n">03</span>The Coordination Review</td>
+            <td>Every system read together, the findings written down, an owner against every gap. You are consulted during the review, in your own domain, not shown the result afterwards.</td>
+            <td class="t-get">The Coordination Report and the Opportunity Register, with your client's written consent.</td>
+            <td class="t-when">Weeks 2 to 4</td>
+          </tr>
+          <tr>
+            <td class="t-step"><span class="s-n">04</span>Standing coordination</td>
+            <td>The register stays open. Nothing in your lane moves before you are called, and the realized gain picture is reconciled through the year rather than in April.</td>
+            <td class="t-get">The register, kept current, and a call before any decision that touches your work.</td>
+            <td class="t-when">Ongoing</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
     </div>
+
+    <div class="pt-sec">
+      <div class="pt-k">The terms</div>
+      <div class="pt-h pt-h--last">What we will not do.</div>
+      <div class="pt-risks">
+        <div class="pt-risk">
+          <p class="r-x">Take work that is yours.</p>
+          <p class="r-fix">We do not file returns, draft or amend documents, or offer your client a second opinion on your work.</p>
+        </div>
+        <div class="pt-risk">
+          <p class="r-x">Route your client around you.</p>
+          <p class="r-fix">Your engagement stays yours. Where a decision is yours to make, the register names you as its owner.</p>
+        </div>
+        <div class="pt-risk">
+          <p class="r-x">Pay for the introduction.</p>
+          <p class="r-fix">Driftwood does not pay or receive compensation for professional referrals. Your reason to refer is the outcome, and nothing else.</p>
+        </div>
+      </div>
+      <p class="pt-note pt-note--gap">No client information is collected on this page. Any exchange of client
+        data happens only with your client's written consent, and through the channel their engagement
+        specifies.</p>
+    </div>
+
+    <div class="pt-cta">
+      <div class="ch">Make an introduction.</div>
+      <div class="cs">An email is enough. If you would rather test the fit first, send the situation and not
+        the name, and we will tell you whether it is worth a conversation.</div>
+      <div class="pt-contact">
+        <span class="nm">Alec Messino</span>
+        <span class="rl">Founder &amp; Financial Advisor</span>
+        <a href="mailto:alec@driftwoodwealth.com">alec@driftwoodwealth.com</a>
+        <span class="c">(708) 548-7600</span>
+      </div>
+    </div>
+
     <div class="foot">
-      Educational, not investment, tax, or legal advice. Driftwood Wealth is the private-wealth practice of
-      Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS),
-      member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS and a
-      Financial Representative of Guardian. All figures illustrative, not a recommendation.
-      <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a>.
+      <span class="note">Educational, not investment, tax, or legal advice.</span>
+      Driftwood coordinates with your CPA and attorney; it does not provide tax or legal advice. Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS and a Financial Representative of The Guardian Life Insurance Company of America® (Guardian), New York, NY. PAS is a wholly owned subsidiary of Guardian. Capitol Wealth Strategies, LLC and Driftwood Wealth are not affiliates or subsidiaries of PAS or Guardian. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation. This material is for professional discussion and is not an offer or solicitation. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
     </div>
-</div></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

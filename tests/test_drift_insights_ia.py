@@ -11,6 +11,7 @@ were never registered in sync_docs.py, so they 404'd in production from ~43 link
 sibling entry in the same menu. Menu entries that don't resolve, or that round-trip the reader, are
 the thing these tests exist to prevent.
 """
+import html
 import re
 from pathlib import Path
 
@@ -21,23 +22,54 @@ WEB = ROOT / "src" / "drift" / "web"
 DOCS = ROOT / "docs"
 INSIGHTS = WEB / "insights.html"
 
-# The primary masthead. Five families and two actions — the whole navigation.
-FAMILIES = ("Our Firm", "Coordination", "Insights", "Professionals")
+# The primary masthead. Four families and two actions — the whole navigation.
+FAMILIES = ("Our Firm", "Coordination", "Insights", "For Professionals")
 
-# Inside Insights, in this order. This tuple IS the specification.
+# The whole masthead, in order. This tuple IS the specification.
 #
-# Decision Memos was reserved on 2026-07-31 and deliberately withheld from the masthead until a memo
-# existed, because a menu entry with nothing behind it is the defect this repo has already shipped
-# twice. It joined on 2026-08-01 with two entries — the new domicile-sequencing memo and ic-memo.html,
-# which the overlap check found was already a decision memo filed under an investment-only name.
-INSIGHTS_CHILDREN = (
-    ("Research", "research.html"),
-    ("Commentary", "commentary.html"),
-    ("The Driftwood Review", "driftwood-review.html"),
-    ("Decision Memos", "insights.html#decision-memos"),
-    ("Decision Tools", "insights.html#decision-tools"),
-    ("Decision Library", "insights.html#decision-library"),
+# 2026-08-01: organised BY READER rather than by artifact, cutting twenty destinations to thirteen.
+# Fees enters (it was among the strongest pages on the site and reachable from exactly one other
+# page); Coordination sheds the four instruments to Insights → Tools & References; the two
+# near-homonyms whose labels inverted their filenames merge into "How Coordination Works", which
+# points at coordination-framework.html — the page that actually enumerates the seven systems.
+#
+# TWO APPROVED ENTRIES ARE DELIBERATELY ABSENT. "Fiduciary Standard" (Our Firm) and "Your First 90
+# Days" (Coordination) are in the signed-off mockup but are NOT in this tuple, because
+# fiduciary.html and first-90-days.html are still the shared placeholder stub. The mockup describes
+# the end state; "no placeholders ship" governs what ships today, and an entry with nothing behind
+# it is the exact defect this file exists to prevent. Each returns to its family in the same commit
+# that writes its page — the rule Decision Memos already followed.
+MASTHEAD = (
+    ("Our Firm", (
+        ("Our Story", "principles.html"),
+        ("Leadership", "leadership.html"),
+        ("Fees", "fees.html"),
+    )),
+    ("Coordination", (
+        ("How Coordination Works", "coordination-framework.html"),
+        ("A Household, Coordinated", "household-example.html"),
+        ("The Coordination Review", "coordination-review.html"),
+    )),
+    ("Insights", (
+        ("Research", "research.html"),
+        ("Commentary", "commentary.html"),
+        ("The Driftwood Review", "driftwood-review.html"),
+        # One entry, not three. Decision Memos / Tools / Library were three rows pointing at three
+        # scroll positions on one page. This lands on the section that enumerates the instruments.
+        ("Tools & References", "insights.html#decision-tools"),
+    )),
+    ("For Professionals", (
+        ("For CPAs", "partners.html"),
+        ("For Estate Attorneys", "estate-attorneys.html"),
+        ("Making a Referral", "referral.html"),
+    )),
 )
+
+# The pages that must never be advertised while they remain stubs, and the family each would join.
+UNLINKED_PLACEHOLDERS = (("fiduciary.html", "Our Firm"), ("first-90-days.html", "Coordination"))
+
+# Inside Insights, in this order — the slice of MASTHEAD the rest of this file leans on.
+INSIGHTS_CHILDREN = dict(MASTHEAD)["Insights"]
 
 # The Decision Tools shelf, organized by the DECISION a visitor faces rather than by the discipline
 # a tool belongs to — clients do not think in disciplines. score.html joined on 2026-07-31: it had
@@ -82,6 +114,16 @@ def _panel(text: str, family: str) -> str:
     return m.group(1) if m else ""
 
 
+def _entries(panel: str):
+    """(label, href) for each row of a panel, with the label un-escaped.
+
+    Labels are authored as plain text in phase2_nav.FAMILIES and escaped once at emit time, so
+    "Tools & References" ships as "Tools &amp; References". The specification tuples above stay
+    readable; the comparison unescapes rather than encoding markup into the spec."""
+    return [(html.unescape(lbl), href)
+            for href, lbl in re.findall(r'<a href="([^"]+)"[^>]*>([^<]+)</a>', panel)]
+
+
 # ── the masthead is the same everywhere ───────────────────────────────────────────────────────
 
 def test_every_page_carries_the_same_four_families():
@@ -118,9 +160,45 @@ def test_insights_holds_exactly_the_agreed_divisions_in_order():
     for p in _nav_pages():
         panel = _panel(p.read_text(encoding="utf-8"), "Insights")
         assert panel, f"{p.name}: no Insights panel"
-        found = re.findall(r'<a href="([^"]+)"[^>]*>([^<]+)</a>', panel)
-        assert [(lbl, href) for href, lbl in found] == list(INSIGHTS_CHILDREN), \
-            f"{p.name}: Insights panel is {found}"
+        assert _entries(panel) == list(INSIGHTS_CHILDREN), \
+            f"{p.name}: Insights panel is {_entries(panel)}"
+
+
+@pytest.mark.parametrize("family,children", MASTHEAD)
+def test_every_family_holds_exactly_the_agreed_entries_in_order(family, children):
+    """The whole masthead is pinned, not just Insights.
+
+    The 2026-08-01 restructure moved entries BETWEEN families (the four instruments left
+    Coordination for Insights), which a per-family check on one family cannot see: an entry deleted
+    here and re-added there passes any test that only counts one drawer."""
+    for p in _nav_pages():
+        panel = _panel(p.read_text(encoding="utf-8"), family)
+        assert panel, f"{p.name}: no {family!r} panel"
+        assert _entries(panel) == list(children), f"{p.name}: {family} panel is {_entries(panel)}"
+
+
+@pytest.mark.parametrize("page,family", UNLINKED_PLACEHOLDERS)
+def test_the_remaining_placeholders_are_not_advertised(page, family):
+    """An absent page costs nothing; an empty one costs the reader's confidence in everything else.
+
+    fiduciary.html and first-90-days.html are still the shared stub, whose tell is an eyebrow that
+    just repeats the headline over one sentence fragment. They are approved menu entries in the
+    mockup and they will return, but not while there is nothing behind them. This fails the day
+    someone adds the row back without writing the page — and from the other side too: once the page
+    is written, delete its line from UNLINKED_PLACEHOLDERS and add it to MASTHEAD in one commit.
+    """
+    src = WEB / page
+    assert src.exists(), f"{page} must keep building even while unlinked"
+    body = src.read_text(encoding="utf-8")
+    eyebrow = re.search(r'<div class="eyebrow">([^<]+)</div>', body)
+    heading = re.search(r"<h1>([^<]+)</h1>", body)
+    assert eyebrow and heading and eyebrow.group(1).strip() == heading.group(1).strip(), (
+        f"{page} no longer reads as the placeholder stub — if it has been written, move it out of "
+        "UNLINKED_PLACEHOLDERS and into MASTHEAD"
+    )
+    for p in _nav_pages():
+        panel = _panel(p.read_text(encoding="utf-8"), family)
+        assert page not in panel, f"{p.name} advertises the unfinished {page} in {family}"
 
 
 def test_the_masthead_carries_no_more_than_the_agreed_families():
@@ -135,25 +213,52 @@ def test_the_masthead_carries_no_more_than_the_agreed_families():
 
 # ── every menu entry resolves ─────────────────────────────────────────────────────────────────
 
-@pytest.mark.parametrize("label,href", INSIGHTS_CHILDREN)
-def test_every_insights_entry_resolves_to_a_built_page(label, href):
-    """The bug this repo shipped: nav entries whose pages were never registered in sync_docs.py."""
+_ALL_ENTRIES = [(fam, lbl, href) for fam, kids in MASTHEAD for lbl, href in kids]
+
+
+@pytest.mark.parametrize("family,label,href", _ALL_ENTRIES)
+def test_every_menu_entry_resolves_to_a_built_page(family, label, href):
+    """The bug this repo shipped: nav entries whose pages were never registered in sync_docs.py.
+
+    Checked for the whole masthead, not just Insights. The 2026-08-01 restructure added Fees and
+    three reader-addressed professional pages, and every one of them is exactly the shape of the
+    original defect — a page that exists in src/ and is linked from ~50 pages, but 404s in
+    production because nobody added it to the copy-through tuple."""
     page, _, anchor = href.partition("#")
+    assert (WEB / page).exists(), f"{family}/{label} -> src/drift/web/{page} does not exist"
+    sync = (ROOT / "scripts" / "sync_docs.py").read_text(encoding="utf-8")
+    assert f'"{page}"' in sync, (
+        f"{family}/{label} -> {page} is not registered in scripts/sync_docs.py, so it 404s in "
+        "production while the shared masthead links it from every page"
+    )
     built = DOCS / page
-    assert built.exists(), f"{label} -> {page} is not built (register it in scripts/sync_docs.py)"
+    assert built.exists(), f"{family}/{label} -> {page} is not built"
     if anchor:
         assert f'id="{anchor}"' in built.read_text(encoding="utf-8"), \
-            f"{label} -> #{anchor} does not exist on {page}"
+            f"{family}/{label} -> #{anchor} does not exist on {page}"
 
 
-def test_no_menu_entry_round_trips_the_reader_to_a_sibling():
+@pytest.mark.parametrize("family,label,href", _ALL_ENTRIES)
+def test_no_menu_entry_round_trips_the_reader_to_a_sibling(family, label, href):
     """An entry that redirects to another entry in the same menu wastes a slot and confuses the
     reader — exactly what Articles -> insights.html -> research.html used to do."""
-    for label, href in INSIGHTS_CHILDREN:
+    page = href.partition("#")[0]
+    t = (DOCS / page).read_text(encoding="utf-8")
+    assert 'http-equiv="refresh"' not in t, f"{family}/{label} -> {page} is a redirect stub"
+    assert not _is_noindex(t), f"{family}/{label} -> {page} is noindex but sits in the primary nav"
+
+
+def test_no_page_is_reachable_from_two_menu_entries():
+    """Twenty destinations became thirteen partly because two rows pointed at near-identical pages.
+    One destination, one row: a reader choosing between two entries should never land in the same
+    place, and should never have to guess which of two labels means which of two files."""
+    seen = {}
+    for family, label, href in _ALL_ENTRIES:
         page = href.partition("#")[0]
-        t = (DOCS / page).read_text(encoding="utf-8")
-        assert 'http-equiv="refresh"' not in t, f"{label} -> {page} is a redirect stub"
-        assert not _is_noindex(t), f"{label} -> {page} is noindex but sits in the primary nav"
+        assert page not in seen, (
+            f"{family}/{label} and {seen.get(page)} both point at {page}"
+        )
+        seen[page] = f"{family}/{label}"
 
 
 # ── the Insights landing page ─────────────────────────────────────────────────────────────────
@@ -168,15 +273,24 @@ def test_insights_is_a_real_indexable_landing_page():
 
 
 def test_the_landing_page_carries_every_division_in_order():
-    """The landing page's sections and the masthead's entries are one specification, so they are
-    checked against the same tuple rather than against two hand-kept lists."""
+    """The landing page keeps all six divisions; the masthead now names four of them.
+
+    Until 2026-08-01 these were one list checked twice — Decision Memos, Decision Tools, and
+    Decision Library each had a menu row pointing at their section. The restructure collapsed those
+    three rows into one entry, "Tools & References", because three menu rows for three scroll
+    positions on one page is a table of contents, not a navigation. The page still carries all six
+    sections in order; only the number of doors into it changed. Anything the masthead DOES name
+    must still be a real anchor here, which is what the entry-resolution test above enforces."""
     t = INSIGHTS.read_text(encoding="utf-8")
     anchors = re.findall(r'<section class="sec" id="([a-z-]+)"', t)
-    expected = [href.partition("#")[2] or href.replace(".html", "").replace("-", "-")
-                for _, href in INSIGHTS_CHILDREN]
     expected = ["research", "commentary", "the-driftwood-review",
                 "decision-memos", "decision-tools", "decision-library"]
     assert anchors == expected, anchors
+    # every masthead entry that lands on this page must land on one of those sections
+    for _, label, href in _ALL_ENTRIES:
+        page, _, anchor = href.partition("#")
+        if page == "insights.html" and anchor:
+            assert anchor in expected, f"{label} points at #{anchor}, which is not a division"
     # and the numerals must run in sequence, so a new division cannot land mid-page unnumbered
     numerals = re.findall(r'<span class="sec-num">([IVX]+)</span>', t)
     assert numerals == ["I", "II", "III", "IV", "V", "VI"], numerals

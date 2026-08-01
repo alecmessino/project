@@ -149,6 +149,11 @@
   .close .tag{font-family:var(--sans);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
     color:var(--muted);display:block;margin-bottom:16px;font-weight:700}
   .q{font-family:var(--serif);font-size:19px;line-height:1.42;margin:0 0 16px;color:var(--ink)}
+  /* The one forward link in the piece. Set as quiet prose rather than a button: the reader who
+     wants it will find it, and the piece's authority comes from never having asked. */
+  .q-next{font-family:var(--sans);font-size:14px;line-height:1.6;margin:22px 0 0}
+  .q-next a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
+  .q-next a:hover{border-bottom-color:var(--accent-strike)}
   .sources{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-family:var(--sans);
     font-size:12.5px;line-height:1.6;color:var(--muted)}
   .sources p{font-size:12.5px;line-height:1.6;margin-bottom:9px}
@@ -999,6 +1004,73 @@
         </tbody>
       </table>
 
+
+      <!-- Deliberately Figure 1's drawing, with the objects swapped. The argument of the whole piece
+           is that these are the same picture; saying so is weaker than showing the same picture
+           twice. Same cell treatment, same accent on the diagonal, same axis furniture. -->
+      <figure>
+        <div class="figbar"><span class="lab">Figure 5</span><span>The same grid, drawn on a household</span></div>
+        <svg viewBox="0 0 394 394" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A 41 by 41 grid. The 41 diagonal cells are the household objects themselves. The 1,640 off-diagonal cells are the relationships between them, 820 of them distinct.">
+        <defs>
+        <pattern id="hcell" width="8.4390" height="8.4390" patternUnits="userSpaceOnUse">
+        <rect x="0" y="0" width="7.426" height="7.426" fill="#1E2833" fill-opacity="0.10" stroke="#1E2833" stroke-opacity="0.28" stroke-width="0.4"/>
+        </pattern></defs>
+        <rect x="34.0" y="34.0" width="346.0" height="346.0" fill="url(#hcell)"/>
+        <rect x="34.00" y="34.00" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="42.44" y="42.44" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="50.88" y="50.88" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="59.32" y="59.32" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="67.76" y="67.76" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="76.20" y="76.20" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="84.63" y="84.63" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="93.07" y="93.07" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="101.51" y="101.51" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="109.95" y="109.95" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="118.39" y="118.39" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="126.83" y="126.83" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="135.27" y="135.27" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="143.71" y="143.71" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="152.15" y="152.15" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="160.59" y="160.59" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="169.02" y="169.02" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="177.46" y="177.46" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="185.90" y="185.90" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="194.34" y="194.34" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="202.78" y="202.78" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="211.22" y="211.22" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="219.66" y="219.66" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="228.10" y="228.10" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="236.54" y="236.54" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="244.98" y="244.98" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="253.41" y="253.41" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="261.85" y="261.85" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="270.29" y="270.29" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="278.73" y="278.73" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="287.17" y="287.17" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="295.61" y="295.61" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="304.05" y="304.05" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="312.49" y="312.49" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="320.93" y="320.93" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="329.37" y="329.37" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="337.80" y="337.80" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="346.24" y="346.24" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="354.68" y="354.68" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="363.12" y="363.12" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <rect x="371.56" y="371.56" width="7.426" height="7.426" fill="#2C5878" fill-opacity="1" stroke="#2C5878" stroke-opacity="0.28" stroke-width="0.4"/>
+        <line x1="34.0" y1="25" x2="380.0" y2="25" stroke="#1E2833" stroke-width="0.5" stroke-opacity="0.5"/>
+        <line x1="25" y1="34.0" x2="25" y2="380.0" stroke="#1E2833" stroke-width="0.5" stroke-opacity="0.5"/>
+        <text x="34.0" y="18" font-size="8.5" letter-spacing="1.4" fill="#1E2833" fill-opacity="0.62">OBJECT j</text>
+        <text x="18" y="34.0" font-size="8.5" letter-spacing="1.4" fill="#1E2833" fill-opacity="0.62" transform="rotate(-90 18 34)">OBJECT i</text>
+        </svg>
+        <div class="legend">
+          <span><i class="sw d"></i> 41 objects, the diagonal</span>
+          <span><i class="sw o"></i> 1,640 off-diagonal entries, 820 distinct pairs</span>
+        </div>
+        <figcaption>The diagonal is what a statement lists, and what an account-opening form adds one
+          to. Everything else is a place where two things can disagree. Compare it with Figure 1: the
+          objects changed and the drawing did not.</figcaption>
+      </figure>
+
       <p>Between the first row and the third, the objects grew by a factor of 4.6. The pairs grew by a factor of 22.8. In most households the balance sheet over that same span grows by considerably less than 22.8.</p>
 
       <div class="pull">Wealth compounds exponentially. The coordination surface compounds quadratically. Only one of them appears on a statement.</div>
@@ -1028,7 +1100,8 @@
         <p class="q">At what position did the diversification benefit flatten, and how many positions were added after that?</p>
         <p class="q">What does the correlation structure look like under stress rather than under the trailing period being reported?</p>
         <p class="q">Which household objects are supposed to agree with each other, and who has been assigned to confirm that they still do?</p>
-      </div>
+              <p class="q-next"><a href="coordination-review.html">A framework for measuring these household connections exists in the Coordination Review &rarr;</a></p>
+</div>
 
       <p style="margin-top:34px">Twenty-three people is a small room. It is also 253 chances for something to line up.</p>
 

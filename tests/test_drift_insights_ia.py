@@ -201,6 +201,42 @@ def test_the_remaining_placeholders_are_not_advertised(page, family):
         assert page not in panel, f"{p.name} advertises the unfinished {page} in {family}"
 
 
+@pytest.mark.parametrize("page,family", UNLINKED_PLACEHOLDERS)
+def test_no_page_body_links_an_unfinished_placeholder(page, family):
+    """Keeping a stub out of the masthead is not the same as keeping it out of the site.
+
+    The menu guard above reads only the generated nav panels, so it stayed green while
+    coordination-review.html — the product page, and the target of the standing masthead CTA —
+    linked its fourth deliverable card straight at the first-90-days.html stub. Prose and card
+    links reach a reader exactly as well as a menu entry does. This scans every shipped page with
+    the nav stripped out, so a body link to an unwritten page fails here even when the menu is clean.
+    """
+    del family  # the masthead family is this test's sibling's concern, not ours
+    for p in _nav_pages():
+        body = re.sub(r"<nav class=\"dwnav dwnav--phase2\".*?</nav>", "",
+                      p.read_text(encoding="utf-8"), flags=re.S)
+        body = re.sub(r"<!--.*?-->", "", body, flags=re.S)  # a comment naming it is not a link
+        assert f'href="{page}"' not in body, (
+            f"{p.name} links the unfinished {page} from its body — name the deliverable without "
+            "linking it, or write the page"
+        )
+
+
+@pytest.mark.parametrize("page,family", UNLINKED_PLACEHOLDERS)
+def test_no_unfinished_placeholder_is_submitted_to_search_engines(page, family):
+    """A sitemap entry advertises the page to every reader who will ever search for it.
+
+    _CORE_SITEMAP listed both stubs under a "masthead destinations" comment that had gone stale —
+    they were pulled from the masthead and the sitemap line stayed. Announcing a placeholder to
+    Google ships it as surely as linking it does.
+    """
+    del family
+    from drift.statepage import _CORE_SITEMAP
+    assert page not in [row[0] for row in _CORE_SITEMAP], (
+        f"{page} is still in _CORE_SITEMAP — add it back in the commit that writes the page"
+    )
+
+
 def test_the_masthead_carries_no_more_than_the_agreed_families():
     """Guards against a sixth family quietly appearing. Adding one is a deliberate edit to FAMILIES
     above, not a change to fifty pages."""

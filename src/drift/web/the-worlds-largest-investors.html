@@ -11,6 +11,7 @@
 </script>
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
+<script src="dw-capture.js" defer></script>
 <title>The World's Largest Investors Pay Attention Differently, Driftwood Wealth</title>
 <meta name="description" content="The largest investors don't have access to different markets. They pay attention to different things. What an endowment actually discusses, and why families can do the same." />
 <link rel="canonical" href="https://driftwoodwealth.com/the-worlds-largest-investors.html" />
@@ -139,21 +140,18 @@
       </ol>
     </article>
 
-    <aside class="essay-sub" aria-label="Subscribe to the Driftwood Letter">
-      <p class="es-eyebrow">The Driftwood Letter</p>
+    <aside class="essay-sub" aria-label="Subscribe to The Driftwood Review">
+      <p class="es-eyebrow">The Driftwood Review</p>
       <p class="es-lead">A quarterly note on coordinating the whole picture: taxes, estate, liquidity, and investments read as one system. If this essay was useful, the next one comes quarterly.</p>
-      <form class="es-form" action="https://api.web3forms.com/submit" method="POST">
-        <input type="hidden" name="access_key" value="cf6b1c2d-9971-4256-9ff9-72d6918c84e6">
-        <input type="hidden" name="subject" value="New Driftwood Letter subscriber">
-        <input type="hidden" name="from_name" value="Driftwood Letter">
-        <input type="hidden" name="source" value="essay">
+      <form class="es-form" method="POST" action="/api/subscribe" data-topic="driftwood-review">
         <input type="text" name="botcheck" class="es-bot" tabindex="-1" autocomplete="off" aria-hidden="true">
         <label class="sr-only" for="esEmail">Email address</label>
         <input id="esEmail" type="email" name="email" required placeholder="you@email.com" autocomplete="email">
         <button type="submit">Subscribe</button>
       </form>
-      <p class="es-fine">Four issues a year on how the seven systems fit together. An educational interest list and sign-up, not an offer, solicitation, or the start of an advisory relationship. We never share your address, and every issue unsubscribes in one click.</p>
-      <p class="es-ok">You are on the list. We'll send the next issue when it's ready, and be in touch personally, no automated sequence.</p>
+      <p class="es-fine">Four issues a year on how the seven systems fit together. You will receive one message asking you to confirm, and nothing before you do. An educational interest list, not an offer, solicitation, or the start of an advisory relationship. We never share your address, and every issue unsubscribes in one click.</p>
+      <p class="es-err" role="alert"></p>
+      <p class="es-ok">Check your inbox for a note asking you to confirm. Nothing is sent until you do.</p>
     </aside>
 
     <!--FIRM_ANCHOR-->

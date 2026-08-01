@@ -134,6 +134,8 @@ CURRENT = {
     "research.html": ("Insights", "research.html"),
     "insights.html": ("Insights", "insights.html"),
     "commentary.html": ("Insights", "commentary.html"),
+    # A deep essay: lights the family, no menu row of its own.
+    "count-the-pairs.html": ("Insights", "count-the-pairs.html"),
     "articles.html": ("Insights", "articles.html"),
     "driftwood-review.html": ("Insights", "driftwood-review.html"),
     "decision-memo-domicile.html": ("Insights", "insights.html"),

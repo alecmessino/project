@@ -240,7 +240,7 @@
         <input type="text" id="caphp" name="botcheck" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <button type="submit" id="capsend">Email me Nevada's brief →</button>
       </form>
-      <div class="capnote" id="capnote">A one-page, Nevada-specific after-tax breakdown, we'll follow up by email, usually within a business day. We never share your address.</div>
+      <div class="capnote" id="capnote">We will email you the Tax Diagnostic set to Nevada, straight away, and follow up personally within a business day. One message, no list, and we never share your address.</div>
     </div>
     <script>
     (function(){
@@ -251,18 +251,17 @@
         var el=document.getElementById("capemail"), email=(el.value||"").trim();
         if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ if(el.reportValidity)el.reportValidity(); return; }
         var btn=document.getElementById("capsend"); btn.disabled=true; btn.textContent="Sending…";
-        var p={email:email, access_key:"cf6b1c2d-9971-4256-9ff9-72d6918c84e6", from_name:"Driftwood",
-          _subject:"New Nevada state-page lead", state:"NV", state_name:"Nevada",
-          tax_impact_pct:"3.7", top_lt_rate:"0%", source:"state_page",
-          lead_quality:(3.7>=4.5?"high":"standard")};
+        var p={email:email, artifact:"state-brief", state:"NV",
+          source:"atlas/NV",
+          consent_text:(document.getElementById("capnote").textContent||"").trim().slice(0,500)};
         ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(function(k){var v=qp.get(k); if(v)p[k]=v;});
         p["botcheck"]=(document.getElementById("caphp").value||"");
-        fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(p)})
+        fetch("/api/request",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(p)})
           .then(function(r){ if(!r.ok) throw 0;
-            document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Thanks, we\'ll email your Nevada after-tax breakdown, usually within a business day.</div>';
+            document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Sent. Check your inbox for your Nevada tax picture, and we will follow up personally.</div>';
             if(window.plausible) plausible("lead_submitted",{props:{source:"state_page",state:"NV"}}); })
           .catch(function(){ btn.disabled=false; btn.textContent="Email me Nevada's brief →";
-            document.getElementById("capnote").innerHTML='Sorry, that didn\'t send. Email us at <a href="mailto:hello@driftwoodplanning.com">hello@driftwoodplanning.com</a>.'; });
+            document.getElementById("capnote").innerHTML='Sorry, that didn\'t send. Email us at <a href="mailto:alec@driftwoodwealth.com">alec@driftwoodwealth.com</a>.'; });
       });
     })();
     </script>

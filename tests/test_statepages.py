@@ -62,12 +62,31 @@ def test_page_alpha_matches_the_source_of_truth(code):
 
 @pytest.mark.parametrize("code", ["CA", "TX", "NY", "IL"])
 def test_page_has_honest_inline_capture(code):
+    """The capture converts in place, posts to Driftwood, and promises only what it can keep.
+
+    This test used to assert the OPPOSITE of its first rule: it required "api.web3forms.com" and
+    "access_key" to be present, which pinned all fifty-one Atlas pages to posting a stranger's
+    address straight from the browser to a third party, under a key anyone could read in the page
+    source. The honesty guardrails it carried are kept verbatim below, because they were right.
+    """
     h = SP.render_state_html(PAGES[code])
     assert 'id="capform"' in h                              # inline lead capture, converts in place
-    assert "api.web3forms.com" in h and "access_key" in h
-    assert 'source:"state_page"' in h                       # tagged for attribution
+    assert '"/api/request"' in h                            # Driftwood's own endpoint
+    assert f'state:"{code}"' in h                           # tagged for attribution
     assert "report is on its way" not in h                  # honesty guardrail (mirror of the taxlab test)
-    assert "usually within a business day" in h             # honest manual-follow-up framing
+    assert "within a business day" in h                     # honest manual-follow-up framing
+    assert "consent_text" in h                              # what they agreed to is recorded
+
+
+@pytest.mark.parametrize("code", ["CA", "TX", "NY", "IL"])
+def test_no_state_page_hands_an_address_to_a_third_party(code):
+    """A prospect's email address leaves the browser for exactly one destination: Driftwood's own
+    endpoint. No form service, no embedded key, no cross-origin POST — this is the specific defect
+    that shipped on every Atlas page until 2026-08-01, and the reason it survived so long is that
+    the test above required it."""
+    h = SP.render_state_html(PAGES[code])
+    for token in ("web3forms", "access_key", "formspree", "cf6b1c2d"):
+        assert token not in h.lower(), f"{code}: capture still references {token!r}"
 
 
 def test_sitemap_lists_editioned_canonicals_not_flat_aliases():

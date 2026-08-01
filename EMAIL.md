@@ -29,6 +29,29 @@ anyone agreed to, and the essay handler in `dw-context.js` added its success cla
 subscribed people to *The Driftwood Letter*, a publication that had been renamed The Driftwood
 Review. Two test files asserted parts of that arrangement were correct, which is why it survived.
 
+## Setup status, as of 2026-08-01
+
+Verified from outside the dashboard by resolving each record, not by trusting a green tick.
+
+| Step | State |
+|---|---|
+| Vercel framework preset (was `python`) | done, now Other |
+| `ignoreCommand` for the_third_turn | in `vercel.json` **and** as the project-level Ignored Build Step. The dashboard one is the operative fix; `vercel.json` alone cannot stop a branch whose own `vercel.json` lacks it |
+| SPF | done, one record, both includes |
+| DMARC | already present at `p=none`; `dmarc@` routing rule active |
+| Postmark DKIM (`20260801200543pm._domainkey`) | done, 224 chars, intact |
+| Postmark Return-Path (`pm-bounces` → `pm.mtasv.net`) | done, grey cloud confirmed |
+| Postmark approval (out of Test mode) | **outstanding** — real recipients receive nothing until this clears |
+| Vercel env vars | **outstanding** |
+| Buttondown account, key, DNS, postal address | **outstanding** |
+| Apex still on GitHub Pages | **outstanding** — `/api/*` cannot run until the domain moves |
+
+Two notes worth keeping. Postmark no longer requires an SPF include (`pm-bounces` provides alignment
+instead), so `include:spf.mtasv.net` is belt-and-braces rather than a requirement; it is harmless and
+costs one of the ten permitted lookups. And Postmark's "Monitor email authentication" panel reporting
+an unverified DKIM while two panels above it confirm the opposite is its DMARC-digest product going
+stale, not a sending problem — DNS is the arbiter.
+
 ## The blocker, before any of the rest
 
 **`driftwoodwealth.com` is served by GitHub Pages, so `/api/subscribe` and `/api/request` cannot

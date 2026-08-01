@@ -1,12 +1,11 @@
 # Count the Pairs, Not the People
 
-*Ready to paste into Buttondown. Written to be read in an email client, which means: no webfonts,
-no inline SVG, no two-column anything. The three figures and the full argument live on the page —
-this note's job is to make the case worth a click, not to reproduce it.*
+*Buttondown-ready. Paste the body below into a new email. Buttondown renders Markdown and appends
+the unsubscribe link and postal address from your footer settings, so neither is repeated here.*
 
-*Subject line:* **Twenty-three people. Two hundred fifty-three pairs.**
+**Subject:** Twenty-three people. Two hundred fifty-three pairs.
 
-*Preview text:* Your statement reports the diagonal. Your risk lives in the off diagonal.
+**Preview text:** Your statement reports the diagonal. Your risk lives in the off diagonal.
 
 ---
 
@@ -14,43 +13,41 @@ Put twenty-three people in a room and the odds that two of them share a birthday
 Most people guess something closer to five percent.
 
 The gap between those two numbers is not a failure of arithmetic. It is a failure to notice which
-question is being asked. The intuitive guess answers a different one: what are the odds that someone
-shares *my* birthday. That number is small and it stays small. The actual question is whether *any*
-two people match, and that question is not about people. It is about pairs.
+question is being asked. The intuitive guess answers a different one: what are the odds someone
+shares *my* birthday? That number stays small. The actual question is whether *any* two people match.
 
-Twenty-three people generate 253 pairs.
+The math is indifferent to the individual. It is counting the system. Twenty-three people generate
+253 pairs.
 
-There is one place where this stops being an analogy and becomes the same formula operating on the
-same kind of object. A portfolio of 23 holdings has 23 variances, one per position. It also has 253
-distinct covariances, one per pair.
+There is one place where this stops being an analogy and becomes the exact same formula operating on
+the exact same kind of object. A portfolio of 23 holdings has 23 variances, one per position. It also
+has 253 distinct covariances, one per pair.
 
-For an equally weighted portfolio, 4.3 percent of the variance traces to the individual positions.
-The remaining 95.7 percent traces to how they move against one another.
+For an equally weighted portfolio, just 4.3 percent of the variance traces to the individual
+positions. The remaining 95.7 percent traces to how they move against one another.
 
 **Your statement reports the diagonal. Your risk lives in the off diagonal.**
 
 Diversification does not converge toward zero risk. It converges toward the average covariance of
-the things being held — and when correlations rise, that floor rises with them, because the floor
-was always the shared term. A portfolio of thirty positions that all draw on the same underlying
-condition is not thirty bets. It is closer to one bet, expressed thirty ways, with a longer
-statement.
+the things being held — and when correlations rise, that floor rises with them. A portfolio of thirty
+positions that all draw on the same underlying condition is not thirty bets. It is closer to one bet,
+expressed thirty ways, with a longer statement.
 
-The formula does not stop at the portfolio. Count what a household actually holds — not the
+And the arithmetic does not stop at the portfolio. Count what a household actually holds — not the
 balances, but the objects that have to stay consistent with one another: accounts, entities, trusts,
-beneficiary designations, titling, state jurisdictions, professional relationships. Go from nine of
-those to forty-one and the objects grow by a factor of 4.6. The pairs grow by a factor of 22.8.
+beneficiary designations, and professional relationships.
+
+Go from nine of those objects to forty-one, and the objects grow by a factor of 4.6. The pairs grow
+by a factor of 22.8.
 
 **Wealth compounds exponentially. The coordination surface compounds quadratically. Only one of them
 appears on a statement.**
 
-Which is why an eighth account rarely feels like a decision. It arrives as paperwork, and leaves
-behind forty new relationships that someone is now responsible for keeping consistent — usually
-unassigned, because it was never visible enough to assign.
+The full note draws the covariance matrix, maps the exact point where diversification stops paying,
+and then draws the same grid again on a household — forty-one objects, eight hundred and twenty
+pairs, the identical picture with the labels changed.
 
-The full piece has the covariance matrix drawn out, the curve showing where diversification stops,
-and the two places this analogy is usually stretched past what it can carry:
-
-**Read it → https://driftwoodwealth.com/count-the-pairs.html**
+**[Read the full piece →](https://driftwoodwealth.com/count-the-pairs.html)**
 
 Alec Messino
 Driftwood Wealth
@@ -58,19 +55,47 @@ Chicago, Illinois
 
 ---
 
-*Educational and illustrative, not investment, tax, or legal advice, and not a recommendation.
-Figures are illustrations with stated assumptions, not estimates of any market's parameters.
-Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory
-services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a
-Registered Representative and Financial Advisor of PAS and a Financial Representative of The
-Guardian Life Insurance Company of America® (Guardian), New York, NY. PAS is a wholly owned
-subsidiary of Guardian. Driftwood Wealth is not an affiliate or subsidiary of PAS or Guardian.*
+<div style="text-align:center;max-width:680px;margin:0 auto;padding:40px 20px 8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#6b6e6a;font-size:13px;line-height:1.6">
+  <div style="font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#1e2833;margin-bottom:8px">Driftwood Wealth</div>
+  <div style="font-size:12px;letter-spacing:.04em;color:#6b6e6a;margin-bottom:20px">CHICAGO, ILLINOIS &nbsp;·&nbsp; (708) 548-7600 &nbsp;·&nbsp; ALEC@DRIFTWOODWEALTH.COM</div>
+  <hr style="border:none;border-top:1px solid #d8d3c6;margin:20px auto;width:60%" />
+  <div style="font-size:11px;color:#6b6e6a;max-width:640px;margin:0 auto;line-height:1.55;text-align:left">
+    Educational and illustrative, not investment, tax, or legal advice, and not a recommendation.
+    Figures are illustrations with stated assumptions, not estimates of any market's parameters.
+    Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory
+    services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a
+    Registered Representative and Financial Advisor of PAS and a Financial Representative of The
+    Guardian Life Insurance Company of America&reg; (Guardian), New York, NY. PAS is a wholly owned
+    subsidiary of Guardian. Driftwood Wealth is not an affiliate or subsidiary of PAS or Guardian.
+  </div>
+  <div style="margin-top:14px;font-size:11px">
+    <a href="https://driftwoodwealth.com/privacy.html" style="color:#6b6e6a;margin-right:12px">Privacy Policy</a>
+    <a href="https://driftwoodwealth.com/terms.html" style="color:#6b6e6a">Terms of Use</a>
+  </div>
+</div>
 
-<!-- BEFORE SENDING:
-     1. Buttondown's footer must carry the unsubscribe link AND a valid physical postal address.
-        CAN-SPAM requires the address in every commercial message; a PO box qualifies. Buttondown
-        inserts both from Settings, so set them there once rather than pasting them here.
-     2. Route this body through PAS/OSJ. It is an advertising communication by a registered
-        representative, and approval is not the same as matching the site's disclosure.
-     3. Send yourself a test first and read it in Gmail and on a phone. The em-dash-free, single
-        column shape above survives both; anything you add may not. -->
+<!-- ON THE FOOTER, AND WHY IT READS THE WAY IT DOES
+
+     The centred stack, the uppercase wordmark, the meta bar, the hairline rule at 60% width, the
+     constrained measure and the Privacy/Terms links are all adopted as proposed. They are a real
+     improvement on a left-aligned block of grey text.
+
+     Two departures, both deliberate:
+
+     1. The firm is named. A proposed revision replaced "Park Avenue Securities LLC (PAS), member
+        FINRA, SIPC" with "a registered broker-dealer and investment advisor, member FINRA/SIPC".
+        FINRA Rule 2210(d)(3) requires a retail communication by a registered representative to
+        identify the member firm; a generic description identifies nobody, and the disclosure exists
+        so a reader can tell who is responsible for what they just read. The same revision dropped
+        "Driftwood Wealth is not an affiliate or subsidiary of PAS or Guardian" — the sentence that
+        stops a reader concluding Driftwood is itself the broker-dealer. Removing the name and the
+        affiliate line together makes the relationship unreadable, which is the outcome the rule is
+        written to prevent. Both stay, and both match the site's own footer exactly, which is what
+        the OSJ approved.
+
+     2. The fine print is left-aligned inside a centred block. Centred rag on nine lines of dense
+        regulatory prose is hard to read and looks like a receipt. The block is centred; the
+        sentences are not.
+
+     Buttondown appends the unsubscribe link and the postal address from Settings, so do not paste
+     either here. Set the Westchester address in Buttondown before any send that is not a test. -->

@@ -308,7 +308,7 @@ DISCLOSURE = (
     'results</b>. Intended for sophisticated investors; it may not be relevant to your situation, and '
     'your actual figure depends on your own holdings, basis, and bracket. State tax facts reflect tax '
     'year 2025 and can change, confirm with a tax advisor. Driftwood Wealth is the private-wealth '
-    'practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS and a Financial Representative of The Guardian Life Insurance Company of America® (Guardian), New York, NY. PAS is a wholly owned subsidiary of Guardian. Capitol Wealth Strategies, LLC is not an affiliate or subsidiary of PAS or Guardian. All figures are illustrative models for educational '
+    'practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS and a Financial Representative of The Guardian Life Insurance Company of America® (Guardian), New York, NY. PAS is a wholly owned subsidiary of Guardian. Driftwood Wealth is not an affiliate or subsidiary of PAS or Guardian. All figures are illustrative models for educational '
     'purposes, not investment, tax, or legal advice, and not a recommendation.'
     '</div>'
 )
@@ -902,8 +902,10 @@ _CORE_SITEMAP = [
     ("score.html", "0.8", "monthly"), ("coordination.html", "0.8", "monthly"),
     ("review.html", "0.8", "monthly"),
     # masthead destinations — if a page is in the primary navigation it gets announced
-    ("leadership.html", "0.7", "monthly"), ("fiduciary.html", "0.7", "monthly"),
-    ("first-90-days.html", "0.7", "monthly"), ("household-example.html", "0.7", "monthly"),
+    # NOT listed, deliberately: fiduciary.html and first-90-days.html are still unwritten stubs.
+    # They build and resolve by URL, but announcing them to search engines ships a placeholder as
+    # surely as linking one does. Add them back in the same commit that writes the pages.
+    ("leadership.html", "0.7", "monthly"), ("household-example.html", "0.7", "monthly"),
     ("partners.html", "0.7", "monthly"), ("estate-attorneys.html", "0.7", "monthly"),
     ("referral.html", "0.7", "monthly"),
     # NOT listed, deliberately: private.html (Client Access) is noindex, and states.html is a

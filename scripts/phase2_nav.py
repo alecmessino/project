@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Phase 2: install the canonical dropdown nav across every source page.
 
-Builds a single .dwnav--phase2 masthead (Our Firm / Coordination / Insights & Research /
-Professionals + Client Access + Request a Coordination Review) and injects it into every
-non-redirect source page, marking the current page + its family. Also creates the seven
-sub-pages that do not yet exist so no dropdown link 404s.
+Builds a single .dwnav--phase2 masthead (Our Firm / Coordination / Insights / For Professionals
++ Client Access + Request a Coordination Review) and injects it into every non-redirect source
+page, marking the current page + its family. Also creates the sub-pages that do not yet exist so
+no dropdown link 404s.
 
 Run from repo root: python3 scripts/phase2_nav.py
 """
@@ -12,28 +12,70 @@ import re, glob, os, sys
 
 SRC = "src/drift/web"
 
+
+def _esc(label):
+    """Menu labels are authored as plain text and escaped once, here.
+
+    Only "Tools & References" needs it today, but a raw ampersand in an attribute-free text node is
+    the kind of thing that stays valid right up until a label gains an angle bracket. Escaping at
+    emit time keeps FAMILIES readable as a specification rather than as markup.
+    """
+    return label.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
 # (family label, [(sub-label, href, src-page-key), ...])
+#
+# ── 2026-08-01: reorganised BY READER, not by artifact ────────────────────────────────────────
+# Twenty destinations became thirteen. The design council read the site as three arriving readers
+# (a prospect, a referring CPA, an estate attorney) and found the masthead was a directory of the
+# file system: it listed what the firm had made, in the order it had been made, and left the two
+# best documents on the site (Fees, the CPA page) either unlinked or buried.
+#
+# Three changes carry the whole restructure:
+#   * Fees enters Our Firm. It is among the three best pages on the site and was reachable from
+#     exactly one other page.
+#   * Coordination drops from eight entries to three. It had become the drawer everything went in:
+#     a framework, a near-homonym of that framework, four tools, and the booking page.
+#   * The four instruments (Assessment, Diagnostic, Lab, Atlas) move under Insights → Tools &
+#     References, where a reader already expects instruments to live. They are not the product;
+#     the Coordination Review is, and it keeps its own row plus the standing CTA.
+#
+# ── the five placeholders, and why only three of them are linked ───────────────────────────────
+# The council's HIGH-priority call was to unlink five unfinished pages — Leadership, Fiduciary
+# Standard, Your First 90 Days, Estate Attorneys, Referral Process — on the principle that "an
+# absent page costs nothing, an empty one costs the reader's confidence in everything else."
+# Three of those five have since been written into finished pages (leadership.html,
+# estate-attorneys.html, referral.html) and are linked here.
+#
+# fiduciary.html and first-90-days.html have NOT been written. They are still the shared stub
+# template — an eyebrow repeating the headline over a single sentence fragment — so they do not
+# appear below, even though the approved mockup's "proposed" column lists them. The mockup
+# describes the eventual end state; the standing rule ("no placeholders ship") governs what ships
+# today. Both pages still build and still resolve by URL; they are simply not advertised. They
+# join their family the day they are written, and not before — the same rule that kept Decision
+# Memos out of the menu until a memo existed.
 FAMILIES = [
     ("Our Firm", [
         ("Our Story", "principles.html", "principles.html"),
         ("Leadership", "leadership.html", "leadership.html"),
-        ("Fiduciary Standard", "fiduciary.html", "fiduciary.html"),
+        # Fiduciary Standard belongs here and is deliberately withheld: fiduciary.html is a stub.
+        ("Fees", "fees.html", "fees.html"),
     ]),
+    # The two near-homonyms are merged into one entry. Their labels inverted their own filenames:
+    # "The Coordination Framework" pointed at coordination.html, which is a WORKED EXAMPLE ("What
+    # coordination is actually worth"), while "The Seven Systems" pointed at
+    # coordination-framework.html, which is the actual framework ("seven systems, one plan").
+    # A reader choosing between two adjacent entries could not have guessed which was which.
+    #
+    # coordination-framework.html survives as "How Coordination Works" because it is the page that
+    # explains the model. coordination.html leaves the menu but keeps its ~30 inbound body links
+    # from the case studies, the registers, and the homepage essay chain — it is an argument a
+    # reader meets in context, not a door they pick off a masthead.
     ("Coordination", [
-        ("The Coordination Framework", "coordination.html", "coordination.html"),
-        ("The Seven Systems", "coordination-framework.html", "coordination-framework.html"),
-        ("Your First 90 Days", "first-90-days.html", "first-90-days.html"),
-        ("Household Example", "household-example.html", "household-example.html"),
-        # The Coordination Assessment is the front of the funnel and had NO menu entry anywhere on
-        # the site — reachable only from four body links, so the one tool designed to be run first
-        # was the hardest to find. It sits above the Diagnostic because that is the order the
-        # journey rail walks. The two tools below keep their entries: they carry a link on every
-        # page, and which ordering converts better is a measured question (OPERATIONS.md), not a
-        # layout preference to settle by deletion.
-        ("Coordination Assessment", "score.html", "score.html"),
-        ("Tax Diagnostic", "leakage.html", "leakage.html"),
-        ("After-Tax Lab", "taxlab.html", "taxlab.html"),
-        ("Schedule a Coordination Review", "coordination-review.html", "coordination-review.html"),
+        ("How Coordination Works", "coordination-framework.html", "coordination-framework.html"),
+        # Your First 90 Days belongs here and is deliberately withheld: first-90-days.html is a stub.
+        ("A Household, Coordinated", "household-example.html", "household-example.html"),
+        ("The Coordination Review", "coordination-review.html", "coordination-review.html"),
     ]),
     # "Insights", not "Insights & Research" (2026-07-31). The family is named for what it will hold
     # in three to five years, not what it happens to hold today: papers, commentary, a quarterly
@@ -44,52 +86,65 @@ FAMILIES = [
     # navigation — it also pointed at insights.html, which was a redirect stub back to research.html,
     # so the menu carried an entry that round-tripped the reader to a sibling entry.
     #
-    # Decision Tools and Decision Library are sections of the Insights landing page rather than
-    # separate stubs: each is currently a list of links, and two thin pages would be worse than two
-    # well-populated sections. They graduate to their own pages when they outgrow it (OPERATIONS.md).
+    # Decision Memos / Decision Tools / Decision Library were three menu rows pointing at three
+    # sections of one landing page. They collapse into "Tools & References" (2026-08-01, the agreed
+    # label — NOT "Decision Library and Tools"), which lands on #decision-tools, the section that
+    # enumerates the instruments; Memos and Library are the next two sections down the same page.
+    # One entry, one page, no menu row that is really a scroll position.
     ("Insights", [
         ("Research", "research.html", "research.html"),
         ("Commentary", "commentary.html", "commentary.html"),
         ("The Driftwood Review", "driftwood-review.html", "driftwood-review.html"),
-        # Reserved since 2026-07-31, entering the menu now that a memo exists — the rule was
-        # that the category ships in the same commit as its first entry, never before it.
-        ("Decision Memos", "insights.html#decision-memos", "insights.html"),
-        ("Decision Tools", "insights.html#decision-tools", "insights.html"),
-        ("Decision Library", "insights.html#decision-library", "insights.html"),
+        ("Tools & References", "insights.html#decision-tools", "insights.html"),
     ]),
-    ("Professionals", [
-        ("CPA Collaboration", "partners.html", "partners.html"),
-        ("Estate Attorneys", "estate-attorneys.html", "estate-attorneys.html"),
-        ("Referral Process", "referral.html", "referral.html"),
+    # "For Professionals", and every child addressed to the reader rather than describing the
+    # artifact: a CPA scanning a masthead is looking for themselves, not for a noun.
+    ("For Professionals", [
+        ("For CPAs", "partners.html", "partners.html"),
+        ("For Estate Attorneys", "estate-attorneys.html", "estate-attorneys.html"),
+        ("Making a Referral", "referral.html", "referral.html"),
     ]),
 ]
 
-# page file -> (family_label, sub_href) that should read as current
+# page file -> (family_label, sub_href) that should read as current.
+#
+# A sub_href that matches no entry in FAMILIES lights the FAMILY only — which is the correct read
+# for a page that legitimately has no menu row of its own (an unlinked stub, a merged sibling, a
+# deep essay). The reader still learns where in the site they are standing.
 CURRENT = {
     "principles.html": ("Our Firm", "principles.html"),
     "leadership.html": ("Our Firm", "leadership.html"),
+    "fees.html": ("Our Firm", "fees.html"),
+    "our-story.html": ("Our Firm", "our-story.html"),
+    # Unlinked stub: family only, so anyone arriving from a bookmark or a body link is still oriented.
     "fiduciary.html": ("Our Firm", "fiduciary.html"),
-    "coordination.html": ("Coordination", "coordination.html"),
     "coordination-framework.html": ("Coordination", "coordination-framework.html"),
     "six-systems.html": ("Coordination", "coordination-framework.html"),
-    "first-90-days.html": ("Coordination", "first-90-days.html"),
-    "the-practice.html": ("Coordination", "the-practice.html"),
-    "score.html": ("Coordination", "score.html"),
-    "leakage.html": ("Coordination", "leakage.html"),
-    "taxlab.html": ("Coordination", "taxlab.html"),
+    "household-example.html": ("Coordination", "household-example.html"),
     "coordination-review.html": ("Coordination", "coordination-review.html"),
+    # Merged out of the menu (see FAMILIES) but still very much a Coordination page.
+    "coordination.html": ("Coordination", "coordination.html"),
+    "the-practice.html": ("Coordination", "the-practice.html"),
+    # Unlinked stub: family only.
+    "first-90-days.html": ("Coordination", "first-90-days.html"),
     "research.html": ("Insights", "research.html"),
     "insights.html": ("Insights", "insights.html"),
     "commentary.html": ("Insights", "commentary.html"),
+    "articles.html": ("Insights", "articles.html"),
     "driftwood-review.html": ("Insights", "driftwood-review.html"),
     "decision-memo-domicile.html": ("Insights", "insights.html"),
     "ic-memo.html": ("Insights", "insights.html"),
-    # Decision Tools — these have no menu entry of their own (the menu names the category, the
-    # landing page enumerates the tools), so they mark the Insights family and the category row.
+    # The four instruments. They moved out of Coordination on 2026-08-01: a tool is evidence, not
+    # the engagement, and putting them beside "The Coordination Review" made the free artifact and
+    # the product look like siblings. They mark Insights → Tools & References, which is the row
+    # that names the shelf they sit on.
+    "score.html": ("Insights", "insights.html"),
+    "leakage.html": ("Insights", "insights.html"),
+    "taxlab.html": ("Insights", "insights.html"),
     "statemap.html": ("Insights", "insights.html"),
     "concentration.html": ("Insights", "insights.html"),
-    # Decision Library — the worked decisions. Same rule: the family lights up, the category row
-    # lights up, and the reader can see where in the site they are standing.
+    # Decision Library — the worked decisions. Same rule: the family lights up, the Tools &
+    # References row lights up, and the reader can see where in the site they are standing.
     "case-business-sale.html": ("Insights", "insights.html"),
     "case-vacation-home.html": ("Insights", "insights.html"),
     "case-inheritance.html": ("Insights", "insights.html"),
@@ -98,9 +153,10 @@ CURRENT = {
     "case-rmds.html": ("Insights", "insights.html"),
     "case-widowed.html": ("Insights", "insights.html"),
     "case-charitable-giving.html": ("Insights", "insights.html"),
-    "partners.html": ("Professionals", "partners.html"),
-    "estate-attorneys.html": ("Professionals", "estate-attorneys.html"),
-    "referral.html": ("Professionals", "referral.html"),
+    "partners.html": ("For Professionals", "partners.html"),
+    "estate-attorneys.html": ("For Professionals", "estate-attorneys.html"),
+    "referral.html": ("For Professionals", "referral.html"),
+    "cpa-collab.html": ("For Professionals", "cpa-collab.html"),
 }
 
 BRAND = ('<a class="brand" href="index.html" aria-label="Driftwood Wealth, home">'
@@ -128,10 +184,11 @@ def build_nav(page_file):
             attrs = ' href="%s"' % href
             if key == sub_cur:
                 attrs += ' aria-current="page"'
-            links.append('<a%s>%s</a>' % (attrs, label))
+            links.append('<a%s>%s</a>' % (attrs, _esc(label)))
         panel = '<div class="dwnav-panel">%s</div>' % "".join(links)
         trigger = ('<button type="button" class="dwnav-trigger" aria-haspopup="true" '
-                   'aria-expanded="false">%s<span class="caret" aria-hidden="true"></span></button>' % fam_label)
+                   'aria-expanded="false">%s<span class="caret" aria-hidden="true"></span></button>'
+                   % _esc(fam_label))
         families.append('<div class="%s">%s%s</div>' % (cls, trigger, panel))
     # The families MUST be wrapped in .dwnav-links. This is not cosmetic markup — it is the hook the
     # entire mobile masthead hangs from, and omitting it broke the nav on every phone and tablet:
@@ -268,7 +325,16 @@ def install(page):
         return True
     return False
 
-# ---- 7 stub sub-pages ----
+# ---- stub sub-pages ----
+#
+# create-if-missing only: every file below already exists, so make_stubs() is a no-op today. The
+# dict is kept as the safety net that stops a deleted file from breaking sync_docs.py's copy-through
+# (which reads each name unconditionally).
+#
+# Note that being in STUBS no longer implies being in the menu. fiduciary.html and first-90-days.html
+# are generated, built, and reachable by URL, but unlinked from the masthead until they are written —
+# see the FAMILIES header. Writing one of them means replacing the stub AND adding its row back to
+# its family, in the same commit.
 STUBS = {
     "leadership.html": ("Leadership", "The people and the standard behind the practice",
         "Driftwood is the private-wealth practice of Alec Messino, who conducts every Coordination Review personally. This page introduces the practice's leadership and the fiduciary standard it is held to."),
@@ -297,7 +363,6 @@ STUB_TMPL = """<!DOCTYPE html>
 <link rel="stylesheet" href="driftwood.css">
 <script src="dw-context.js"></script>
 <link rel="icon" href="favicon.svg" />
-<title>{title}</title>
 <style>
   :root{{ --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4;
     --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a; --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6;
@@ -313,7 +378,6 @@ STUB_TMPL = """<!DOCTYPE html>
   h1{{font-family:var(--sans);font-weight:700;font-size:clamp(32px,3vw+16px,46px);line-height:1.06;letter-spacing:-.022em;
     color:var(--ink);margin:0 0 18px;max-width:20ch}}
   .lede{{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:62ch}}
-  .note{{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--muted);margin:28px 44px 0;max-width:64ch}}
   .door{{margin:30px 44px 8px;padding:30px 34px;background:var(--navy);color:var(--on-dark);border-radius:0}}
   .door .dh{{font-family:var(--sans);font-weight:700;font-size:24px;letter-spacing:-.02em;color:#f1ede3;margin:0 0 10px}}
   .door .ds{{font-family:var(--sans);font-size:14px;line-height:1.55;color:var(--accent-strike-soft);margin:0 0 20px;max-width:56ch}}
@@ -330,9 +394,6 @@ STUB_TMPL = """<!DOCTYPE html>
       <h1>{title}</h1>
       <p class="lede">{lede}</p>
     </div>
-    <div class="note">This page is part of the Driftwood Coordination framework. The full experience —
-      the systems read together, the findings written down, and an owner against every gap — is the
-      Coordination Review.</div>
     <div class="door">
       <div class="dh">Schedule a Coordination Review.</div>
       <div class="ds">The guided engagement: Tax Diagnostic, State Tax Atlas, and After-Tax Lab are

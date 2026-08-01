@@ -7,6 +7,8 @@ disclosure language or the Model-Portfolio framing is ever dropped, or if the ol
 "live track record" framing creeps back in.
 """
 
+import re
+
 from drift.exhibit import (
     LEDGER_TEMPLATE,
     TEARSHEET_TEMPLATE,
@@ -100,6 +102,32 @@ def test_no_cws_planning_brand_anywhere():
         t = p.read_text()
         assert "CWS Planning" not in t and "CWS&nbsp;Planning" not in t, \
             f"{p.name} still references the retired 'CWS Planning' brand"
+
+
+def test_one_affiliate_sentence_names_one_firm():
+    """The affiliate disclaimer must name Driftwood Wealth, and only Driftwood Wealth.
+
+    test_no_cws_planning_brand_anywhere above purges the short brand "CWS Planning" but not the
+    long legal form, and that gap shipped: four pages — including hub.html, which sync_docs.py
+    renders as docs/index.html, the front door — carried "Capitol Wealth Strategies, LLC" in the
+    affiliate sentence while forty-four siblings named Driftwood Wealth. Two of those four named
+    both firms at once. site.py's FIRM_LEGAL_NAME is the arbiter, and one firm identity means one
+    sentence, not a majority of one.
+    """
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    canonical = "Driftwood Wealth is not an affiliate or subsidiary of PAS or Guardian."
+    for p in sorted((root / "src" / "drift" / "web").glob("*.html")):
+        raw = p.read_text()
+        assert "Capitol Wealth Strategies" not in raw, \
+            f"{p.name} names the retired legal entity 'Capitol Wealth Strategies, LLC'"
+        # These pages hard-wrap their disclosure paragraph, so compare on collapsed whitespace —
+        # the sentence is the unit under test, not the column the author happened to wrap at.
+        t = re.sub(r"\s+", " ", raw)
+        for sentence in re.findall(r"[A-Za-z,. ]*?\b(?:is|are) not (?:an affiliate|affiliates) or "
+                                   r"subsidiar(?:y|ies) of PAS or Guardian\.", t):
+            assert sentence.strip().endswith(canonical), \
+                f"{p.name} varies the affiliate sentence: {sentence.strip()!r}"
 
 
 def test_hypothetical_exhibits_carry_an_audience_statement():

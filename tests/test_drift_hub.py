@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 
 from drift.hub import build_hub
@@ -145,6 +146,12 @@ def test_capability_sequence_lives_on_the_practice_not_the_homepage():
     so neither the path nor the reason it was moved can be lost silently."""
     from drift.exhibit import HUB_TEMPLATE
     practice = (WEB / "the-practice.html").read_text()
+    # Read the page BODY, not the generated masthead. The nav is written by scripts/phase2_nav.py and
+    # shares the page's vocabulary, so a menu label can collide with a capability name and silently
+    # decide this test's answer: the 2026-08-01 IA restructure added "A Household, Coordinated",
+    # whose "Coordinated" contains "Coordinate", which then matched ~8KB above the real sequence and
+    # reported the order as drifted while the section itself was untouched.
+    practice = re.sub(r'<nav class="dwnav dwnav--phase2".*?</nav>', "", practice, flags=re.S)
     caps = ("Diagnose", "Measure", "Coordinate", "Manage")
     for cap in caps:
         assert cap in practice, f"the {cap} capability should anchor the guided path on The Practice"

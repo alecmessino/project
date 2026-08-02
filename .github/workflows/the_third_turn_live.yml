@@ -79,7 +79,8 @@ jobs:
             python3 the_third_turn/collection_health.py >/dev/null 2>&1 || true
             git add "$LEDGER" 2>/dev/null || true
             git add -f "$PANEL" "$TTPANEL" "$GSPANEL" "$HEALTH_TXT" "$HEALTH_JSON" \
-                       "the_third_turn/output/metrics_history.jsonl" 2>/dev/null || true
+                       "the_third_turn/output/metrics_history.jsonl" \
+                       "the_third_turn/output/provenance_probe.jsonl" 2>/dev/null || true
             git diff --cached --quiet && return 0
             git commit -q -m "ledger + odds/state panels + health checkpoint [skip ci]" || return 0
             for a in 1 2 3; do

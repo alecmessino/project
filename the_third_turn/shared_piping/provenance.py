@@ -121,13 +121,30 @@ def server_date(headers: Any) -> Optional[float]:
         return None
 
 
-def capture(book: str, headers: Any, payload: Any, recv_wall: Optional[float] = None) -> dict:
-    """Build one provenance record for a single fetch."""
+def capture(book: str, headers: Any, payload: Any, recv_wall: Optional[float] = None,
+            quotes: Any = None) -> dict:
+    """Build one provenance record for a single fetch.
+
+    ``quotes`` (the parsed result) is used only to record which market states this fetch
+    actually observed. Coverage, not volume, is what licenses a claim about the schema:
+    a payload shape we never sampled cannot be ruled out by any number of fetches of the
+    shapes we did.
+    """
     recv = time.time() if recv_wall is None else recv_wall
     sd = server_date(headers)
+    n_q = n_live = 0
+    try:
+        if quotes:
+            n_q = len(quotes)
+            n_live = sum(1 for q in quotes if getattr(q, "live_game", False))
+    except Exception:  # noqa: BLE001
+        pass
     return {
         "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "book": book,
+        "n_quotes": n_q,
+        "n_live": n_live,
+        "state": ("live" if n_live else ("pregame" if n_q else "empty")),
         "server_date": sd,
         # Positive means the server's clock reads behind our receive time. With `Date`
         # granularity of one second this bounds transport only coarsely, which is the point:

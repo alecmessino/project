@@ -114,8 +114,10 @@ class FanDuelSource:
                                         payload_bytes=len(body),
                                         error=f"HTTP {status}")
                 data = await resp.json(content_type=None)
-                _prov.record(_PROV_LOG, _prov.capture(self.name, resp.headers, data))
+                _hdrs = dict(resp.headers)
             quotes = self._parse(data, ts=t0)
+            _prov.record(_PROV_LOG,
+                         _prov.capture(self.name, _hdrs, data, quotes=quotes))
             return SourceResult(self.name, ok=True, http_status=status,
                                 latency_ms=(time.monotonic() - t0) * 1000,
                                 payload_bytes=len(body), quotes=quotes)

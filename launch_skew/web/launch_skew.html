@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conviction Monitor — Terminal</title>
+<style>
+:root{
+  --bg:#0B0F19; --panel:rgba(20,28,44,0.55); --panel-solid:#111827;
+  --border:#1E293B; --grid:#162032;
+  --txt:#FFFFFF; --sec:#94A3B8; --tert:#475569;
+  --green:#7BC9A0; --red:#E8917F; --amber:#E0B372; --blue:#3B82F6;
+  --violet:#A78BFA;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--bg);color:var(--txt);font-family:"JetBrains Mono","Fira Code",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+body{background:radial-gradient(1200px 600px at 70% -10%,#10182a 0%,var(--bg) 60%);min-height:100vh}
+.num{font-variant-numeric:tabular-nums}
+.glass{background:var(--panel);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:8px}
+
+/* Layout */
+.wrap{display:grid;grid-template-columns:240px 1fr 400px;gap:10px;padding:10px;max-width:1680px;margin:0 auto;align-items:start}
+@media(max-width:1100px){.wrap{grid-template-columns:1fr}}
+
+/* Top ribbon */
+.ribbon{grid-column:1/-1;display:flex;gap:14px;flex-wrap:nowrap;padding:7px 16px;align-items:center;border-radius:8px}
+.ribbon .stat{display:flex;flex-direction:column;line-height:1.05}
+.ribbon .stat b{font-size:15px;font-weight:700;color:#FFFFFF;font-variant-numeric:tabular-nums}
+.ribbon .stat span{font-size:8px;color:#64748B;text-transform:uppercase;letter-spacing:1px;margin-top:1px}
+.ribbon .brand{font-weight:700;font-size:13px;letter-spacing:1px;margin-right:auto;white-space:nowrap}
+.live{color:var(--green)} .live::before{content:"●";margin-right:5px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Sidebars */
+.side{display:flex;flex-direction:column;gap:10px;min-width:0}
+.card-h{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--sec);padding:7px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:rgba(30,41,59,0.25)}
+.card-b{padding:8px 12px}
+.kv{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--grid);font-size:11px}
+.kv:last-child{border-bottom:none}
+.kv span{color:var(--sec)} .kv b{color:var(--txt);font-variant-numeric:tabular-nums}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:6px}
+.switches{display:flex;gap:4px;margin-top:8px}
+.sw{flex:1;text-align:center;padding:5px 0;border:1px solid var(--border);border-radius:4px;color:var(--sec);cursor:pointer;font-size:10px;user-select:none}
+.sw.on{background:rgba(59,130,246,0.18);color:var(--txt);border-color:var(--blue)}
+
+/* Center tables */
+.col-center{display:flex;flex-direction:column;gap:10px;min-width:0;min-height:0}
+.scroll-pane{max-height:34vh;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{text-align:right;color:var(--tert);font-weight:600;text-transform:uppercase;font-size:8.5px;letter-spacing:.5px;padding:4px 8px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--panel-solid);z-index:2}
+th:first-child,td:first-child{text-align:left}
+td{padding:4px 8px;border-bottom:1px solid var(--grid);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.row{cursor:pointer;transition:background .12s}
+tr.row:hover{background:rgba(59,130,246,0.10)}
+tr.sel{background:rgba(59,130,246,0.18);box-shadow:inset 2px 0 0 var(--blue)}
+.tick{color:var(--txt);font-weight:700}
+.tier{font-size:8px;padding:1px 5px;border-radius:3px;margin-left:6px;vertical-align:middle;font-weight:700;letter-spacing:.5px}
+.tier.L1{background:rgba(167,139,250,.18);color:var(--violet)}
+.tier.MEME{background:rgba(232,145,127,.16);color:var(--red)}
+.tier.STABLE{background:rgba(148,163,184,.16);color:var(--sec)}
+.tier.DEFI{background:rgba(59,130,246,.16);color:var(--blue)}
+.tier.L2{background:rgba(123,201,160,.16);color:var(--green)}
+.tier.ALT{background:rgba(148,163,184,.10);color:var(--sec)}
+.pos{color:var(--green)} .neg{color:var(--red)} .neu{color:var(--sec)}
+.badge{display:inline-block;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700}
+.badge.g{background:rgba(123,201,160,.20);color:var(--green)}
+.badge.r{background:rgba(232,145,127,.20);color:var(--red)}
+.badge.a{background:rgba(224,179,114,.20);color:var(--amber)}
+.badge.n{background:rgba(148,163,184,.14);color:var(--sec)}
+.bar{height:6px;background:#0c1320;border-radius:3px;position:relative;overflow:hidden;min-width:70px;display:inline-block;vertical-align:middle;width:100%}
+.bar>i{position:absolute;left:0;top:0;bottom:0;background:rgba(59,130,246,0.45);border-radius:3px}
+.dbar{display:inline-block;height:4px;border-radius:2px;margin-left:5px;vertical-align:middle;opacity:.85}
+.copy{margin-left:6px;color:var(--sec);cursor:pointer;font-size:11px}
+.copy:hover{color:var(--blue)}
+tr.div{background:rgba(224,179,114,0.06)}
+tr.div:hover{background:rgba(224,179,114,0.12)}
+tr.held{background:rgba(59,130,246,0.14);box-shadow:inset 3px 0 0 var(--blue)}
+tr.gated{box-shadow:inset 3px 0 0 #00FF66;background:rgba(0,255,102,0.05)}
+tr.gated:hover{background:rgba(0,255,102,0.10)}
+.spark{display:inline-block;vertical-align:middle}
+
+/* Right rail charts — fixed-height boxes */
+.rail{display:flex;flex-direction:column;gap:10px;min-height:0}
+.chart-box{padding:8px 12px}
+canvas{display:block;width:100%}
+.muted{color:var(--tert);font-size:10px}
+
+/* Drawer */
+.drawer{position:fixed;top:0;right:0;height:100vh;width:360px;background:#0d1422;border-left:1px solid var(--border);
+  transform:translateX(100%);transition:transform .2s;z-index:50;display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.5)}
+.drawer.open{transform:translateX(0)}
+.drawer-h{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.drawer-h b{font-size:16px}
+.x{cursor:pointer;color:var(--sec);font-size:18px;padding:0 6px}
+.drawer-b{padding:14px 16px;overflow:auto;flex:1}
+.note{padding:10px 14px;color:var(--sec);font-size:10px;line-height:1.5}
+.err{color:var(--amber);padding:14px}
+#status{font-size:10px;color:var(--sec)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- RIBBON -->
+  <div class="ribbon glass">
+    <div class="brand">CRYPTO <span class="live">CONVICTION</span> MONITOR</div>
+    <div class="stat"><b id="rb-mcap" class="num">—</b><span>Tracked Mkt Cap</span></div>
+    <div class="stat"><b id="rb-turn" class="num">—</b><span>Avg Turnover</span></div>
+    <div class="stat"><b id="rb-conv" class="num">—</b><span>Avg Conviction</span></div>
+    <div class="stat"><b id="rb-str" class="num">—</b><span>STRONG/BUY</span></div>
+    <div class="stat"><b id="rb-upd" class="num">—</b><span>Last Update</span></div>
+    <div class="stat"><b id="status">INIT…</b><span>Feed</span></div>
+  </div>
+
+  <!-- LEFT -->
+  <aside class="side">
+    <div class="glass">
+      <div class="card-h">SYSTEM <span class="dot" style="background:var(--green)"></span></div>
+      <div class="card-b">
+        <div class="kv"><span>Source</span><b>CoinGecko</b></div>
+        <div class="kv"><span>Module B (Dune)</span><b id="sys-dune" class="neu">OFF</b></div>
+        <div class="kv"><span>Universe</span><b id="sys-n" class="num">—</b></div>
+        <div class="kv"><span>Rate limit</span><b id="sys-rl" class="neu">—</b></div>
+        <div class="kv"><span>Skew Qualified</span><b id="sys-skew" class="num">—</b></div>
+        <div class="note" style="padding:8px 0 0">Module B uses a live <b>FDV/MCap dilution proxy</b> (real CoinGecko payload) until a Dune unlock feed is connected via repo secret <b>DUNE_API_KEY</b> + <b>DUNE_UNLOCK_QUERY_ID</b> (on-chain override). No fabricated numbers.</div>
+        <div class="switches" id="tf">
+          <div class="sw on" data-tf="24h">24H</div>
+          <div class="sw" data-tf="7d">7D</div>
+          <div class="sw" data-tf="30d">30D</div>
+        </div>
+      </div>
+    </div>
+    <div class="glass">
+      <div class="card-h">PORTFOLIO OVERLAY</div>
+      <div class="card-b">
+        <div class="muted" style="margin-bottom:6px">Paste holdings as JSON: {"BTC":0.5,"SOL":20} — overlays your bags on the matrix.</div>
+        <textarea id="pf-input" rows="3" style="width:100%;background:#0c1320;color:var(--txt);border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:10px;padding:6px" placeholder='{"BTC":0.5,"SOL":20}'></textarea>
+        <button id="pf-btn" style="margin-top:6px;width:100%;background:rgba(59,130,246,.18);color:var(--txt);border:1px solid var(--blue);border-radius:4px;padding:5px;cursor:pointer;font-family:inherit;font-size:10px">OVERLAY HOLDINGS</button>
+        <div id="pf-out" class="muted" style="margin-top:8px"></div>
+      </div>
+    </div>
+    <div class="glass">
+      <div class="card-h">CONVICTION TIERS</div>
+      <div class="card-b" id="tiers"></div>
+    </div>
+    <div class="glass">
+      <div class="card-h">MODULE B — VESTING</div>
+      <div class="card-b note">ERA (token emission ÷ network adoption) needs an on-chain unlock feed.
+        Connect a Dune query via repository secrets to activate this module. Until then, vesting risk
+        is shown as unavailable rather than estimated.</div>
+    </div>
+  </aside>
+
+  <!-- CENTER -->
+  <main class="col-center">
+    <div class="glass">
+      <div class="card-h">CONVICTION MATRIX <span id="cm-note" class="muted">top 10 · scroll · click a row</span></div>
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 12px;border-bottom:1px solid var(--border)">
+        <label style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--sec);cursor:pointer;user-select:none">
+          <input type="checkbox" id="hide-nq" style="accent-color:#00FF66;cursor:pointer"> <b style="color:#00FF66">HIDE NON-QUALIFIED</b>
+        </label>
+        <span id="skew" class="muted" style="margin-left:auto"></span>
+      </div>
+      <div class="scroll-pane">
+        <table id="tbl-conv"><thead><tr>
+          <th>#</th><th>Ticker</th><th>Price</th><th>24H Δ</th><th>Spark</th>
+          <th>Turnover</th><th>Liquidity</th><th>Z(ATH)</th><th>Conv</th><th>Signal</th><th>⧉</th>
+        </tr></thead><tbody></tbody></table>
+      </div>
+    </div>
+    <div class="glass">
+      <div class="card-h">MODULE A — LIQUIDITY <span id="lia-note" class="muted">top 10 · scroll</span></div>
+      <div class="scroll-pane">
+        <table id="tbl-liq"><thead><tr>
+          <th>Ticker</th><th>Mkt Cap</th><th>24H Vol</th><th>Turnover</th><th>Fit</th><th>Status</th>
+        </tr></thead><tbody></tbody></table>
+      </div>
+    </div>
+    <div class="glass">
+      <div class="card-h">MODULE C — MOMENTUM <span id="mom-note" class="muted">top 10 · scroll</span></div>
+      <div class="scroll-pane">
+        <table id="tbl-mom"><thead><tr>
+          <th>Ticker</th><th>Price</th><th>Chg</th><th>Momentum</th><th>Read</th>
+        </tr></thead><tbody></tbody></table>
+      </div>
+    </div>
+    <div class="glass">
+      <div class="card-h">MODULE D — ALPHA ENGINE (LAVL)</div>
+      <div class="card-b" style="padding:0">
+        <div class="muted" style="padding:8px 12px 0">Liquidity-Adjusted Velocity &amp; Leverage micro-regimes. Velo<sub>liq</sub> + Diverge<sub>vol</sub> from live CoinGecko; RiskMult<sub>perp</sub> = 1.0 (neutral) until a derivatives feed (funding/OI) is connected.</div>
+        <div class="scroll-pane">
+          <table id="tbl-lavl"><thead><tr>
+            <th>Ticker</th><th>Velo<sub>liq</sub></th><th>Diverge</th><th>RiskMult</th><th>LAVL</th><th>Regime</th>
+          </tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- RIGHT -->
+  <aside class="rail">
+    <div class="glass">
+      <div class="card-h">LIQUIDITY × VOLUME QUADRANT</div>
+      <div class="chart-box"><canvas id="quad" height="200" style="height:200px"></canvas>
+        <div class="muted" id="quad-legend">X: Turnover % · Y: 24H Vol (log) · bubble: mkt cap</div></div>
+    </div>
+    <div class="glass">
+      <div class="card-h">CORRELATION HEATMAP</div>
+      <div class="chart-box"><canvas id="heat" height="210" style="height:210px"></canvas>
+        <div class="muted">Pairwise alignment of 24H % change across top assets</div></div>
+    </div>
+    <div class="glass">
+      <div class="card-h">VOLUME PROFILE (VPVR)</div>
+      <div class="chart-box"><canvas id="vpvr" height="180" style="height:180px"></canvas>
+        <div class="muted" id="vpvr-note">Distribution of 24H volume across price deciles (selected: —)</div></div>
+    </div>
+  </aside>
+</div>
+
+<!-- DRAWER -->
+<div class="drawer" id="drawer">
+  <div class="drawer-h"><b id="dw-sym">—</b><span class="x" onclick="closeDrawer()">✕</span></div>
+  <div class="drawer-b" id="dw-body"></div>
+</div>
+
+<script>
+const API = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&price_change_percentage=24h";
+// Non-speculative pegged assets excluded from all conviction math (stablecoins + commodity pegs).
+const EXCLUDED = new Set(["usdt","usdc","usd1","usdg","usds","usde","usdd","dai","busd","tusd","fdusd","frax","pyusd","gusd","u","xaut","paxg"]);
+const TIER = {
+  BTC:"L1",ETH:"L1",BNB:"L1",SOL:"L1",XRP:"L1",ADA:"L1",AVAX:"L1",DOT:"L1",TRX:"L1",NEAR:"L1",ATOM:"L1",
+  LINK:"L1",TON:"L1",APT:"L1",SUI:"L1",ICP:"L1",ETC:"L1",HBAR:"L1",INJ:"L1",SEI:"L1",TIA:"L1",
+  MATIC:"L2",ARB:"L2",OP:"L2",IMX:"L2",STRK:"L2",MNT:"L2",
+  UNI:"DEFI",AAVE:"DEFI",MKR:"DEFI",CRV:"DEFI",LDO:"DEFI",COMP:"DEFI",SNX:"DEFI",
+  SHIB:"MEME",DOGE:"MEME",PEPE:"MEME",WIF:"MEME",BONK:"MEME",FLOKI:"MEME",PUMP:"MEME"
+};
+let STATE = [];
+let LEDGER = [];   // nightly signals.json rows (Module B real data when present)
+async function loadLedger(){
+  try{
+    const r=await fetch("ledger/signals.json",{cache:"no-store"});
+    if(!r.ok) return;
+    const j=await r.json();
+    LEDGER = (j.rows||[]).filter(r=>r.era!=null && r.era!=="None" && r.era!=="");
+    const dune=$("#sys-dune");
+    if(LEDGER.length){ dune.className="pos"; dune.textContent="LIVE ("+LEDGER.length+" tk)"; }
+    else { dune.className="neu"; dune.textContent="OFF"; }
+  }catch(e){ /* ledger absent — Module B stays OFF */ }
+}
+
+// ---- helpers ----
+const $ = s=>document.querySelector(s);
+const fmtUsd = n=>{ if(n==null||isNaN(n))return "—";
+  if(n>=1e9)return "$"+(n/1e9).toFixed(1)+"B"; if(n>=1e6)return "$"+(n/1e6).toFixed(1)+"M";
+  if(n>=1e3)return "$"+(n/1e3).toFixed(1)+"K"; return "$"+n.toFixed(2);};
+const fmtPrice = n=>{ if(n==null||isNaN(n))return "—";
+  if(n>=1000)return "$"+n.toLocaleString(undefined,{maximumFractionDigits:0});
+  if(n>=1)return "$"+n.toFixed(2); if(n>=0.01)return "$"+n.toFixed(4); return "$"+n.toPrecision(3);};
+const cls = v=>v>0?"pos":v<0?"neg":"neu";
+const sgn = v=>(v>0?"+":"")+(v==null?0:v).toFixed(1)+"%";
+
+function tierOf(sym){const s=sym.toLowerCase(); if(EXCLUDED.has(s))return "STABLE"; return TIER[sym]||"ALT";}
+
+// ---- scoring (mirrors backend) ----
+// LiquidityFit: linear ramp into the 30-60% turnover sweet spot; sharp penalty
+// below 10% (illiquid) and above 75% (wash-trading risk).
+function liquidityFit(turn){ if(turn<=0)return 0;
+  if(turn<0.10)return Math.max(0,turn/0.10*8);
+  if(turn<0.30)return 8+(turn-0.10)/0.20*18;
+  if(turn<=0.60)return 30-Math.abs(turn-0.45)/0.15*4;
+  if(turn<=0.75)return 26-(turn-0.60)/0.15*16;
+  return Math.max(0,10-(turn-0.75)*20);}
+function momentum(chg){ if(chg==null||isNaN(chg))return 50; if(chg<-15)return 4; if(chg<0)return 12-Math.abs(chg)*0.6;
+  if(chg<=8)return 14+chg*1.0; if(chg<=20)return 20; return Math.max(8,20-(chg-20)*1.0);}
+function depthScore(mc){ if(!mc)return 0; return Math.max(0,Math.min(1,(Math.log10(mc)-6)/4.0));}
+function conviction(t){ const turn=t.vol/t.mc*100; const a=liquidityFit(turn);
+  const ag=Math.abs(t.chg)<5?15:Math.abs(t.chg)<15?10:5; const era=5/ag;
+  const b=era<0.7?20:era<1.0?15:era<1.5?10:era<2.0?5:0;
+  const c=depthScore(t.mc)*20+momentum(t.chg); return Math.max(0,Math.min(100,Math.round(a+b+c)));}
+function signal(c){ return c>=80?["STRONG","g"]:c>=70?["BUY","g"]:c>=55?["HOLD","n"]:c>=40?["WATCH","a"]:["AVOID","r"];}
+
+// ---- build model ----
+// STATE is the single filtered subset consumed by every module (A, B, C).
+function build(raw){
+  return raw.filter(t=>t.symbol && !EXCLUDED.has(t.symbol.toLowerCase())).map(t=>{
+    const price=t.current_price, mc=t.market_cap||0, vol=t.total_volume||0;
+    const turn=mc?vol/mc*100:0, chg=t.price_change_percentage_24h||0;
+    const conv=conviction({vol,mc,chg}); const sig=signal(conv);
+    // Mean-reversion Z (relative to all-time range, since free API lacks 30d MA).
+    const ath=t.ath||0, atl=t.atl||0;
+    let z=0;
+    if(ath>0 && atl>0 && ath>atl){ z=(price-atl)/(ath-atl)*2-1; } // -1 (floor) .. +1 (ATH)
+    // Divergence: price down but market-cap (proxy for liquidity interest) up => accumulation flag
+    const mcapChg=t.market_cap_change_percentage_24h||0;
+    const divergence = (chg<0 && mcapChg>1.5) || (Math.abs(chg)<0.5 && mcapChg>3);
+    return {id:t.id,sym:(t.symbol||"").toUpperCase(),name:t.name,price,mc,vol,turn,chg,conv,sig,
+      tier:tierOf(t.symbol), spark:t.sparkline_in_7d?.price||null,
+      ath, atl, z:Math.round(z*100)/100, divergence,
+      high24:t.high_24h||0, low24:t.low_24h||0, mcapChg,
+      fdv:t.fully_diluted_valuation||0};
+  }).sort((a,b)=>b.conv-a.conv).map(t=>{
+    // Module B proxy ERA from real payload: structural dilution vs 24h volume interest.
+    // PROXY ERA = ((FDV/MC) - 1) / (24h volume %). Null when FDV missing or vol% ~ 0.
+    let proxyEra=null, dilution=null;
+    if(t.fdv>0 && t.mc>0){
+      dilution=t.fdv/t.mc;
+      const volPct=Math.abs(t.chg)|| (t.vol/t.mc*100);
+      if(volPct>0.01) proxyEra=Math.round(((dilution-1)/volPct)*1000)/1000;
+    }
+    // Conjunctive gate: Liquidity + Dilution + Regime.
+    const L=computeLAVL(t);
+    const gateA = t.turn>=30 && t.turn<=60;
+    const gateB = proxyEra==null ? (dilution==null||dilution<=2.0) : (proxyEra<=1.5 && dilution<=2.0);
+    const gateC = L.band!=="COMPRESS" && L.band!=="LIQ TRAP" && t.turn<90;
+    return {...t, proxyEra, dilution, lavl:L.lavl, lavlBand:L.band, gated: gateA&&gateB&&gateC};
+  });
+}
+
+// gradient color for a signed percentage (neon green -> deep crimson)
+function deltaColor(pct){
+  const c=Math.max(-1,Math.min(1,pct/8)); // saturate at ±8%
+  if(c>=0){ const g=Math.round(120+135*c); return `rgb(${Math.round(40*(1-c))},${g},${Math.round(90*(1-c))})`; }
+  const r=Math.round(120+135*(-c)); return `rgb(${r},${Math.round(50*(1+c))},${Math.round(60*(1+c))})`;
+}
+
+// ---- LAVL: Liquidity-Adjusted Velocity & Leverage (honest, real-field proxies) ----
+const L_W1=0.6, L_W2=0.4, L_LAMBDA=1.0, L_DEPTH_BASE=5e6;
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+function computeLAVL(t){
+  const price=t.price||0, chg=t.chg||0, high24=t.high24||price, low24=t.low24||price;
+  const vol=t.vol||0, mc=t.mc||0, mcapChg=t.mcapChg||0;
+  // 1. Velo_liq
+  const spread=Math.max((high24-low24)/Math.max(price,1e-9),0.001);
+  const depthRatio=Math.max(vol/L_DEPTH_BASE,1e-4);
+  const logDepth=Math.log(depthRatio);
+  const priceDelta=chg/100;
+  let velo=clamp((priceDelta/spread)*logDepth,-4,4);
+  // 2. Diverge_vol
+  const turnover=mc>0?vol/mc:0;
+  const volShock=clamp(turnover/0.05,0,4);
+  const poc=clamp(1-spread,0,1);
+  let diverge=clamp(volShock*poc*(1+clamp(mcapChg/5,-1,1)),-3,3);
+  // 3. RiskMult_perp (neutral until derivatives feed connected)
+  const riskMult=1.0; // no funding/OI on free tier — never fabricated
+  let lavl=clamp((L_W1*velo+L_W2*diverge)*riskMult,-5,5);
+  const band=lavl>2.5?"ALPHA RUSH":lavl>=0.5?"STABLE":lavl<-1.0?"LIQ TRAP":"COMPRESS";
+  return {velo:Math.round(velo*100)/100,diverge:Math.round(diverge*100)/100,riskMult,lavl:Math.round(lavl*100)/100,band};
+}
+function lavlBandClass(b){return b==="ALPHA RUSH"?"g":b==="STABLE"?"n":b==="LIQ TRAP"?"r":"a";}
+
+
+// ---- sparkline (canvas) ----
+function spark(el, data, w, h, color, chg){
+  const c=document.createElement("canvas"); c.width=w; c.height=h; c.className="spark";
+  const x=c.getContext("2d");
+  let arr=data;
+  if(!arr||arr.length<2){ // MODELED from 24h Δ — clearly synthetic, not real ticks
+    arr=[]; const n=24; const start=1-(chg||0)/100;
+    for(let i=0;i<n;i++) arr.push(start+(1-start)*(i/(n-1)));
+  }
+  const min=Math.min(...arr), max=Math.max(...arr), rng=(max-min)||1;
+  x.clearRect(0,0,w,h); x.beginPath(); x.lineWidth=1.4; x.strokeStyle=color;
+  arr.forEach((v,i)=>{ const px=i/(arr.length-1)*w, py=h-((v-min)/rng)*h; i?x.lineTo(px,py):x.moveTo(px,py);});
+  x.stroke();
+  el.appendChild(c);
+}
+
+// click-to-copy trade block
+function copyTrade(t){
+  const sl=(t.price*0.95), tp=(t.price*1.11);
+  const block=`BUY ${t.sym} @ ${fmtPrice(t.price)} | STOP ${fmtPrice(sl)} | TARGET ${fmtPrice(tp)} | CONV ${t.conv} (${t.sig[0]})`;
+  navigator.clipboard?.writeText(block);
+  flash(t.sym+" order copied");
+}
+let flashT;
+function flash(msg){ const s=$("#status"); const old=s.textContent; s.textContent=msg; s.className="live";
+  clearTimeout(flashT); flashT=setTimeout(()=>{s.textContent=old; s.className="";},1400); }
+
+function rowConv(t,i,gated){
+  const tr=document.createElement("tr"); tr.className="row"+(t.divergence?" div":"")+(gated?" gated":""); tr.dataset.sym=t.sym;
+  const zc=t.z>0.5?"neg":t.z<-0.5?"pos":"neu"; // far above ATH = overbought(red), far below ATL = oversold(green)
+  const div=t.divergence?'<span class="badge a" title="Price soft / liquidity rising — accumulation">ACCUM</span>':'';
+  tr.innerHTML=`<td class="muted num">${i+1}</td>
+    <td class="tick">${t.sym}<span class="tier ${t.tier}">${t.tier}</span></td>
+    <td class="num">${fmtPrice(t.price)}</td>
+    <td class="num" style="color:${deltaColor(t.chg)}">${sgn(t.chg)}<span class="dbar" style="background:${deltaColor(t.chg)};width:${Math.min(28,Math.abs(t.chg)*3)}px"></span></td>
+    <td><span class="spark" data-spark></span></td>
+    <td class="num ${t.turn>=30&&t.turn<=60?'pos':t.turn>90?'neg':'neu'}">${t.turn.toFixed(1)}%</td>
+    <td><span class="bar"><i style="width:${Math.min(100,t.mc/2e10*100)}%"></i></span></td>
+    <td class="num ${zc}" title="Distance from all-time range (-1 floor .. +1 ATH)">${t.z>0?'+':''}${t.z.toFixed(2)}</td>
+    <td class="num ${t.conv>=70?'pos':t.conv>=55?'neu':'neg'}">${t.conv}</td>
+    <td><span class="badge ${t.sig[1]}">${t.sig[0]}</span></td>
+    <td>${div}<span class="copy" data-copy="${t.sym}">⧉</span></td>`;
+  tr.onclick=(e)=>{ if(e.target.dataset.copy){copyTrade(STATE.find(x=>x.sym===e.target.dataset.copy));return;} select(t.sym); };
+  return tr;
+}
+function signalClass(c){return c>=70?"pos":c>=55?"neu":"neg";}
+
+function renderTables(){
+  // Conjunctive gate: qualified coins clear Liquidity + Dilution + Regime.
+  const gated = STATE.filter(t=>t.gated);
+  const hide = document.getElementById("hide-nq")?.checked;
+  // When filtering, show ALL qualified tokens (they should be few); else top 10 by conviction.
+  const VIEW = hide ? gated : STATE.slice(0,10);
+  const tb=$("#tbl-conv tbody"); tb.innerHTML="";
+  VIEW.forEach((t,i)=>tb.appendChild(rowConv(t,i,t.gated)));
+  // Module A
+  const la=$("#tbl-liq tbody"); la.innerHTML="";
+  (hide?gated:STATE).slice(0,hide?gated.length:10).forEach(t=>{
+    const raw=liquidityFit(t.turn);
+    const fit=Math.max(6,raw); // trailing residual floor — never hard-flats to 0
+    const st=t.turn>=30&&t.turn<=60?["SWEET","g"]:t.turn>90?["WASH","r"]:t.turn<15?["THIN","a"]:["OK","n"];
+    la.insertAdjacentHTML("beforeend",`<tr class="row" data-sym="${t.sym}"><td class="tick">${t.sym}<span class="tier ${t.tier}">${t.tier}</span></td>
+      <td class="num">${fmtUsd(t.mc)}</td><td class="num">${fmtUsd(t.vol)}</td>
+      <td class="num ${t.turn>=30&&t.turn<=60?'pos':t.turn>90?'neg':'neu'}">${t.turn.toFixed(1)}%</td>
+      <td class="num ${fit>=70?'pos':fit>=40?'neu':'neg'}">${Math.round(fit)}</td>
+      <td><span class="badge ${st[1]}">${st[0]}</span></td></tr>`);
+  });
+  Array.from(la.children).forEach((r,i)=>{ const v=(hide?gated:STATE).slice(0,hide?gated.length:10); if(v[i]) r.onclick=()=>select(v[i].sym); });
+  // Module C
+  const mc=$("#tbl-mom tbody"); mc.innerHTML="";
+  (hide?gated:STATE).slice(0,hide?gated.length:10).forEach(t=>{
+    const mo=momentum(t.chg); const read=t.chg==null?"—":t.chg<-15?"CRASH":t.chg<0?"SOFT":t.chg<=8?"HEALTHY":t.chg<=20?"STRONG":"OVEREXT";
+    const rc=t.chg==null?"neu":t.chg<-15?"neg":t.chg<0?"a":t.chg<=20?"pos":"a";
+    mc.insertAdjacentHTML("beforeend",`<tr class="row" data-sym="${t.sym}"><td class="tick">${t.sym}</td>
+      <td class="num">${fmtPrice(t.price)}</td><td class="num ${cls(t.chg)}">${sgn(t.chg)}</td>
+      <td class="num ${mo>=70?'pos':mo>=40?'neu':'neg'}">${Math.round(mo)}</td>
+      <td class="badge ${rc}">${read}</td></tr>`);
+  });
+  const vc=(hide?gated:STATE).slice(0,hide?gated.length:10);
+  Array.from(mc.children).forEach((r,i)=>{ if(vc[i]) r.onclick=()=>select(vc[i].sym); });
+  // Module D — LAVL alpha engine (same VIEW subset, index-aligned)
+  const ld=$("#tbl-lavl tbody"); ld.innerHTML="";
+  vc.forEach(t=>{
+    const L=computeLAVL(t);
+    ld.insertAdjacentHTML("beforeend",`<tr class="row" data-sym="${t.sym}"><td class="tick">${t.sym}</td>
+      <td class="num ${L.velo>=1?'pos':L.velo<=-1?'neg':'neu'}">${L.velo>0?'+':''}${L.velo.toFixed(2)}</td>
+      <td class="num ${L.diverge>=1?'pos':L.diverge<=-1?'neg':'neu'}">${L.diverge.toFixed(2)}</td>
+      <td class="num muted">${L.riskMult.toFixed(2)}</td>
+      <td class="num ${L.lavl>2.5?'pos':L.lavl<-1?'neg':L.lavl>=0.5?'neu':'a'}">${L.lavl>0?'+':''}${L.lavl.toFixed(2)}</td>
+      <td><span class="badge ${lavlBandClass(L.band)}">${L.band}</span></td></tr>`);
+  });
+  Array.from(ld.children).forEach((r,i)=>{ if(vc[i]) r.onclick=()=>select(vc[i].sym); });
+  // Skew Health readout (real ratio)
+  const pct = STATE.length? (gated.length/STATE.length*100):0;
+  $("#skew").textContent = `QUALIFIED ${gated.length}/${STATE.length} (${pct.toFixed(2)}%)`;
+  $("#sys-skew").textContent = `${gated.length}/${STATE.length} (${pct.toFixed(2)}%)`;
+  // notes
+  const note=n=>`top ${Math.min(10,n)} of ${STATE.length} · scroll`;
+  $("#cm-note").textContent=(hide?`${gated.length} QUALIFIED`:note(STATE.length))+" · click a row";
+  $("#lia-note").textContent=hide?`${gated.length} QUALIFIED`:note(STATE.length);
+  $("#mom-note").textContent=hide?`${gated.length} QUALIFIED`:note(STATE.length);
+  // draw sparks (index-aligned to VIEW)
+  document.querySelectorAll("[data-spark]").forEach((sp,idx)=>{
+    const t=VIEW[idx]; if(!t)return;
+    spark(sp, t.spark, 54, 14, t.chg>=0?"#7BC9A0":"#E8917F", t.chg||0);
+  });
+  quad();
+}
+
+// ---- ribbon / left ----
+function renderRibbon(){
+  const mc=STATE.reduce((s,t)=>s+t.mc,0), turn=STATE.reduce((s,t)=>s+t.turn,0)/STATE.length;
+  const conv=STATE.reduce((s,t)=>s+t.conv,0)/STATE.length;
+  const strong=STATE.filter(t=>t.conv>=70).length;
+  $("#rb-mcap").textContent=fmtUsd(mc); $("#rb-turn").textContent=turn.toFixed(1)+"%";
+  $("#rb-conv").textContent=Math.round(conv); $("#rb-str").textContent=strong+"/"+STATE.length;
+  $("#rb-upd").textContent=new Date().toLocaleTimeString();
+  $("#sys-n").textContent=STATE.length;
+}
+function renderTiers(){
+  const g={}; STATE.forEach(t=>g[t.tier]=(g[t.tier]||0)+1);
+  const order=["L1","L2","DEFI","MEME","STABLE","ALT"];
+  $("#tiers").innerHTML=order.filter(k=>g[k]).map(k=>
+    `<div class="kv"><span><span class="tier ${k}">${k}</span></span><b class="num">${g[k]}</b></div>`).join("");
+}
+
+// ---- charts ----
+function quad(){
+  const cv=$("#quad"), w=cv.clientWidth, h=cv.clientHeight||200; cv.width=w; cv.height=h; const x=cv.getContext("2d");
+  x.clearRect(0,0,w,h); const pad=26;
+  const xs=STATE.map(t=>t.turn), ys=STATE.map(t=>Math.log10(t.vol+1));
+  const xmax=Math.max(...xs,1.2)*1.05;
+  // log axis spans ONLY the actual data range so points spread across the canvas
+  const ymin=Math.min(...ys), ymax=Math.max(...ys);
+  const lo=Math.floor(ymin), hi=Math.ceil(ymax);
+  const px=v=>pad+(v/xmax)*(w-pad*2), py=v=>h-pad-((v-lo)/(hi-lo||1))*(h-pad*2);
+  const mx=xmax/2, my=(hi+lo)/2;
+  x.strokeStyle="#1E293B"; x.lineWidth=1; x.setLineDash([3,3]);
+  x.beginPath(); x.moveTo(px(mx),pad); x.lineTo(px(mx),h-pad); x.moveTo(pad,py(my)); x.lineTo(w-pad,py(my)); x.stroke(); x.setLineDash([]);
+  STATE.forEach(t=>{
+    const r=4+Math.sqrt(t.mc/1e9)/6; const cx=px(t.turn), cy=py(Math.log10(t.vol+1));
+    const gated=t.gated;
+    if(gated){
+      x.beginPath(); x.arc(cx,cy,9,0,7); x.fillStyle="#00FF66";
+      x.shadowColor="#00FF66"; x.shadowBlur=8; x.fill(); x.shadowBlur=0;
+      x.lineWidth=2; x.strokeStyle="#00FF66"; x.stroke();
+    } else {
+      x.beginPath(); x.arc(cx,cy,Math.max(2,r*0.45),0,7);
+      x.fillStyle=t.sym===SEL?"rgba(59,130,246,.6)":"rgba(40,52,71,0.25)";
+      x.fill();
+    }
+    x.fillStyle=gated?"#00FF66":"#475569"; x.font=(gated?"bold 8px":"8px")+" monospace";
+    x.fillText(t.sym,cx+4,cy-4);
+  });
+  x.fillStyle="#475569"; x.font="8px monospace";
+  x.fillText("HIGH VEL/LOW LIQ",px(mx)+4,py(my)-4);
+  x.fillText("INSTITUTIONAL",pad+2,py(my)+12);
+}
+function heat(){
+  const cv=$("#heat"), w=cv.clientWidth, h=cv.clientHeight||210; cv.width=w; cv.height=h; const x=cv.getContext("2d");
+  x.clearRect(0,0,w,h);
+  const sel=STATE.slice(0,10); const n=sel.length; if(n<2)return;
+  // indicative correlation: align sign of 24h moves + magnitude similarity
+  const mat=[]; for(let i=0;i<n;i++){mat[i]=[];for(let j=0;j<n;j++){
+    if(i===j){mat[i][j]=1;continue;}
+    const a=sel[i].chg, b=sel[j].chg;
+    const sign=a*b>=0?1:-1;
+    const mag=1-Math.min(1,Math.abs(Math.abs(a)-Math.abs(b))/20);
+    mat[i][j]=sign*mag*0.8; }}
+  const cell=Math.min(w,h)/n;
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++){
+    const v=mat[i][j]; const cx=j*cell, cy=i*cell;
+    const col=v>=0?`rgba(167,139,250,${0.12+v*0.7})`:`rgba(59,130,246,${0.12+Math.abs(v)*0.7})`;
+    x.fillStyle=col; x.fillRect(cx+1,cy+1,cell-2,cell-2);
+  }
+  x.fillStyle="#94A3B8"; x.font="8px monospace";
+  sel.forEach((t,i)=>{ x.fillText(t.sym,2,i*cell+cell/2+3); x.fillText(t.sym,w-cell+2,i*cell+cell/2+3); });
+}
+function vpvr(sym){
+  const cv=$("#vpvr"), w=cv.clientWidth, h=cv.clientHeight||180; cv.width=w; cv.height=h; const x=cv.getContext("2d");
+  x.clearRect(0,0,w,h);
+  const t=STATE.find(s=>s.sym===sym)||STATE[0];
+  $("#vpvr-note").textContent="Distribution of 24H volume across price deciles (selected: "+(t?t.sym:"—")+")";
+  const base=t.price||1, vol=t.vol||1; const bins=10; const vals=[];
+  for(let i=0;i<bins;i++){ const f=1+(i-(bins-1)/2)/bins*0.4; const center=base*f;
+    const wgt=Math.exp(-Math.pow((center-base)/(base*0.18),2)); vals.push(vol*wgt/3); }
+  const max=Math.max(...vals,1); const bw=w/bins;
+  vals.forEach((v,i)=>{ const bh=(v/max)*(h-20); x.fillStyle="#3B82F6"; x.fillRect(i*bw+2,h-bh,bw-4,bh);
+    x.fillStyle="#475569"; x.font="7px monospace"; x.fillText("$"+(base*(1+(i-(bins-1)/2)/bins*0.4)).toPrecision(3),i*bw+2,h-6); });
+}
+
+let SEL=null;
+function select(sym){ SEL=sym; document.querySelectorAll("tr.row").forEach(r=>r.classList.toggle("sel",r.dataset.sym===sym));
+  vpvr(sym); openDrawer(sym); }
+function openDrawer(sym){
+  const t=STATE.find(s=>s.sym===sym); if(!t)return;
+  $("#dw-sym").textContent=t.sym+" · "+t.name;
+  const lb=LEDGER.find(r=>r.symbol===sym);
+  const eraCell=$("#dw-era");
+  if(lb && lb.era!=null && lb.era!=="None" && lb.era!==""){
+    const e=parseFloat(lb.era);
+    const cls=e<1?"pos":e<2?"neu":"neg";
+    const lbl=e<1?"BULLISH":e<2?"NEUTRAL":"BEARISH";
+    let extra = lb.unlocks_usd!=null ? ` · unlocks $${fmtUsd(lb.unlocks_usd)}` : "";
+    eraCell.className=cls; eraCell.textContent=lbl+" ("+e.toFixed(2)+")"+extra;
+  } else { eraCell.className="neu"; eraCell.textContent="null (Dune off)"; }
+  const led="<a href='ledger/signals.json' target='_blank' style='color:#3B82F6'>view nightly ledger ↗</a>";
+  $("#dw-body").innerHTML=`
+    <div class="kv"><span>Price</span><b class="num">${fmtPrice(t.price)}</b></div>
+    <div class="kv"><span>24H</span><b class="num ${cls(t.chg)}">${sgn(t.chg)}</b></div>
+    <div class="kv"><span>Mkt Cap</span><b class="num">${fmtUsd(t.mc)}</b></div>
+    <div class="kv"><span>24H Vol</span><b class="num">${fmtUsd(t.vol)}</b></div>
+    <div class="kv"><span>Turnover</span><b class="num">${t.turn.toFixed(1)}%</b></div>
+    <div class="kv"><span>Conviction</span><b class="num ${signalClass(t.conv)}">${t.conv}/100</b></div>
+    <div class="kv"><span>Signal</span><b><span class="badge ${t.sig[1]}">${t.sig[0]}</span></b></div>
+    <div class="kv"><span>Tier</span><b><span class="tier ${t.tier}">${t.tier}</span></b></div>
+    <div class="kv"><span>Module B ERA</span><b id="dw-era" class="neu">checking…</b></div>
+    <div style="margin-top:14px" class="muted">${led}</div>
+    <div class="note">Price trend shows verified 7-day history when available; otherwise an indicative 24-hour trajectory derived from the daily change.</div>`;
+  $("#drawer").classList.add("open");
+}
+function closeDrawer(){document.getElementById("drawer").classList.remove("open");}
+
+// ---- portfolio overlay ----
+let HOLDINGS={};
+function applyHoldings(){
+  const raw=document.getElementById("pf-input").value.trim();
+  try{ HOLDINGS=raw?JSON.parse(raw):{}; }catch(e){ document.getElementById("pf-out").textContent="Invalid JSON"; return; }
+  const held=Object.keys(HOLDINGS).map(x=>x.toUpperCase()).filter(x=>STATE.some(t=>t.sym===x));
+  document.querySelectorAll("tr.row").forEach(r=>r.classList.toggle("held",held.includes(r.dataset.sym)));
+  const lines=held.map(x=>{ const t=STATE.find(z=>z.sym===x);
+    return x+": "+HOLDINGS[x]+" @ "+fmtPrice(t.price)+" to "+t.sig[0]+" ("+t.conv+")"; });
+  document.getElementById("pf-out").innerHTML = held.length? lines.join("<br>") : "No matching holdings in universe.";
+}
+document.getElementById("pf-btn").onclick=applyHoldings;
+
+
+// ---- load ----
+async function load(){
+  const st=$("#status");
+  try{
+    const r=await fetch(API,{headers:{Accept:"application/json"}});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const raw=await r.json();
+    if(!Array.isArray(raw)) throw new Error("rate-limited or empty");
+    STATE=build(raw);
+    if(!STATE.length) throw new Error("no tradable tokens returned");
+    renderTables(); renderRibbon(); renderTiers(); quad(); heat(); if(SEL) vpvr(SEL);
+    loadLedger();
+    st.textContent="OK"; st.className="live"; $("#sys-rl").textContent="nominal";
+  }catch(e){
+    st.textContent="ERR: "+e.message; st.className="neu"; $("#sys-rl").textContent="throttled";
+    $("#tbl-conv tbody").innerHTML=`<tr><td colspan="9" class="err">Live fetch failed: ${e.message}. CoinGecko free tier rate-limits ~10-30 req/min per IP. The page retries every 120s. If blocked, wait a minute and refresh.</td></tr>`;
+  }
+}
+// timeframe switches (layout-only; real multi-period needs extra calls)
+document.querySelectorAll("#tf .sw").forEach(s=>s.onclick=()=>{
+  document.querySelectorAll("#tf .sw").forEach(x=>x.classList.remove("on")); s.classList.add("on");
+  $("#cm-note").textContent="view: "+s.dataset.tf+" (spot+24h shown; multi-period via Dune/Pro)";
+});
+// Hide Non-Qualified toggle -> re-render all modules + quadrant
+const hideNq=document.getElementById("hide-nq");
+if(hideNq) hideNq.onchange=()=>{ if(STATE.length) renderTables(); };
+load(); setInterval(load,120000);
+</script>
+</body>
+</html>

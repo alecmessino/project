@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""Paper 2 conceptual figures — teach the identification problem before any equation.
+"""Paper 2 conceptual figures.
 
-Design philosophy carried over from Paper 1: each figure introduces a CONCEPT, and a
-reader flipping through the figures alone should follow the paper's central argument.
-Paper 1's figures explained why the statistical test answered the question; these
-explain why the question is hard to answer at all.
+Each figure teaches ONE concept, and a reader flipping through the figures alone should
+follow the paper's central argument. Paper 1's figures explained why the statistical test
+answered the question; these explain why the question is hard to answer at all.
 
-None of these plots an unconfirmed empirical result (GD-15/GD-16).
+Visual system shared by every figure here:
+  - soft tinted fills with a saturated stroke, never flat saturated blocks
+  - generous internal padding; labels in Liberation Sans with tracked small-caps eyebrows
+  - hairline rules, softened ink, annotation on leader lines
+  - colour vocabulary: green identified, orange bounded, red fails, grey unknowable
+  - GD-17: no axis carries a quantity that has not been estimated or derived
 
     python3 the_third_turn/paper/make_paper2_figures.py
 """
@@ -19,531 +23,571 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch, Polygon, Rectangle
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch, Polygon, Rectangle
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import figstyle as fs  # noqa: E402
 
 FIG = HERE / "figures"
+
+# ---------------------------------------------------------------- visual system
 BLUE, ORANGE, GREEN, RED = fs.PALETTE[0], fs.PALETTE[1], fs.PALETTE[2], fs.PALETTE[3]
-SKY, PLUM = fs.PALETTE[4], fs.PALETTE[5]
-INK, MUTED, GRID = fs.INK, fs.MUTED, fs.GRID
-FOG = "#E8E8E8"
-
-# Shared colour vocabulary across the research program (Paper 1 and Paper 2):
-#   GREEN  = identified / observable          ORANGE = bounded only
-#   RED    = identification fails             FOG/MUTED = unknowable, outside the boundary
-IDENTIFIED, BOUNDED, FAILED, UNKNOWABLE = GREEN, ORANGE, RED, MUTED
-
-
-def box(ax, x, y, w, h, label, sub=None, fc="white", ec=INK, lw=1.4, tc=None, fsz=9.5, z=3):
-    ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.010,rounding_size=0.018",
-                                fc=fc, ec=ec, lw=lw, zorder=z))
-    ax.text(x + w / 2, y + h / 2 + (0.030 if sub else 0), label, ha="center", va="center",
-            fontsize=fsz, color=tc or INK, zorder=z + 2, weight="bold")
-    if sub:
-        ax.text(x + w / 2, y + h / 2 - 0.042, sub, ha="center", va="center",
-                fontsize=8.0, color=MUTED, zorder=z + 2)
+INK   = "#1F2933"     # softened ink with a faint cool bias, never pure black
+MUTED = "#7B8794"
+HAIR  = "#E1E5EA"
+FOG   = "#EEF1F4"     # the unobservable ground
+CARD  = "#FFFFFF"
+IDENTIFIED, BOUNDED, FAILED = GREEN, ORANGE, RED
+FONT = "Liberation Sans"
 
 
-def arrow(ax, p, q, color=INK, lw=1.6, style="-|>", ls="-", z=4, rad=0.0, ms=13):
-    ax.add_patch(FancyArrowPatch(p, q, arrowstyle=style, mutation_scale=ms, lw=lw,
-                                 color=color, zorder=z, linestyle=ls,
-                                 connectionstyle=f"arc3,rad={rad}"))
+def _init():
+    fs.setup()
+    matplotlib.rcParams.update({
+        "font.family": FONT, "text.color": INK,
+        "figure.facecolor": "white", "savefig.facecolor": "white",
+        "axes.grid": False, "figure.constrained_layout.use": False,
+    })
 
 
-
-# ----------------------------------------------------------------------------- FIG 0
-def fig_boundary():
-    """Negative space: the only two stages we cannot see are the two we need."""
-    fig, ax = plt.subplots(figsize=(9.6, 6.2))
+def canvas(w, h, top=0.92):
+    fig, ax = plt.subplots(figsize=(w, h))
+    fig.subplots_adjust(top=top, bottom=0.04, left=0.02, right=0.98)
     ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
+    return fig, ax
 
-    rows = [
-        ("Game event", 0.800, True, "from the state feed"),
-        ("Book pricing engine", 0.615, False, "when the book decided"),
-        ("Feed transport", 0.455, False, "when it was published"),
-        ("Collector sampling", 0.270, True, "our 31 s poll"),
-        ("Recorded timestamp", 0.110, True, "what lands in the panel"),
-    ]
 
-    # the fog covers ONLY the hidden stages
-    ax.add_patch(Rectangle((0.055, 0.425), 0.89, 0.283, fc=FOG, ec=MUTED, lw=1.3,
-                           ls=(0, (6, 4)), alpha=0.9, zorder=1))
-    ax.text(0.098, 0.566, "UNOBSERVED PROCESS", ha="center", va="center", fontsize=10.5,
-            color=MUTED, weight="bold", rotation=90, zorder=6)
+def eyebrow(ax, x, y, s, color=MUTED, size=8.4, ha="left"):
+    ax.text(x, y, " ".join(s.upper()), ha=ha, va="center", fontsize=size,
+            color=color, fontweight="bold", zorder=9)
 
-    for lab, yy, seen, sub in rows:
+
+def title(fig, s, sub=None, y=0.985):
+    fig.text(0.5, y, s, ha="center", va="top", fontsize=13.2, color=INK, fontweight="bold")
+    if sub:
+        fig.text(0.5, y - 0.058, sub, ha="center", va="top", fontsize=9.6, color=MUTED)
+
+
+def note(fig, s, y=0.0, size=9.3):
+    fig.text(0.5, y, s, ha="center", va="top", fontsize=size, color=INK, linespacing=1.62)
+
+
+def card(ax, x, y, w, h, fc=CARD, ec=HAIR, lw=1.1, r=0.016, z=2):
+    ax.add_patch(FancyBboxPatch((x, y), w, h,
+                                boxstyle=f"round,pad=0.004,rounding_size={r}",
+                                fc=fc, ec=ec, lw=lw, zorder=z))
+
+
+def tinted(ax, x, y, w, h, color, z=3, r=0.012, lw=1.5, alpha=0.13):
+    """Soft fill plus saturated stroke: the workhorse shape of this system."""
+    ax.add_patch(FancyBboxPatch((x, y), w, h,
+                                boxstyle=f"round,pad=0.003,rounding_size={r}",
+                                fc=color, ec="none", zorder=z, alpha=alpha))
+    ax.add_patch(FancyBboxPatch((x, y), w, h,
+                                boxstyle=f"round,pad=0.003,rounding_size={r}",
+                                fc="none", ec=color, lw=lw, zorder=z + 1))
+
+
+def arrow(ax, p, q, color=INK, lw=1.5, style="-|>", ls="-", z=6, ms=12, alpha=1.0):
+    ax.add_patch(FancyArrowPatch(p, q, arrowstyle=style, mutation_scale=ms, lw=lw,
+                                 color=color, zorder=z, linestyle=ls, alpha=alpha))
+
+
+def leader(ax, xy, xytext, s, color=MUTED, size=8.6, ha="left"):
+    ax.annotate(s, xy=xy, xytext=xytext, fontsize=size, color=color, ha=ha, va="center",
+                zorder=9, linespacing=1.45, fontweight="bold",
+                arrowprops=dict(arrowstyle="-", color=color, lw=0.8, alpha=0.7,
+                                shrinkA=2, shrinkB=4))
+
+
+def chip(ax, x, y, s, color, size=8.4):
+    ax.text(x, y, s.upper(), ha="center", va="center", fontsize=size, color="white",
+            fontweight="bold", zorder=9,
+            bbox=dict(boxstyle="round,pad=0.42", fc=color, ec="none"))
+
+
+# ------------------------------------------------------------------- FIG 1
+def fig_boundary():
+    fig, ax = canvas(9.4, 6.0)
+    rows = [("Game event",       0.790, True,  "recorded by the state feed"),
+            ("Bookmaker prices", 0.618, False, "when the book decided to move"),
+            ("Feed publishes",   0.466, False, "when that decision became visible"),
+            ("We sample",        0.294, True,  "our fixed polling interval"),
+            ("Row in the panel", 0.142, True,  "the timestamp we actually hold")]
+
+    card(ax, 0.055, 0.438, 0.895, 0.262, fc=FOG, ec=HAIR, lw=1.2, r=0.02, z=1)
+    ax.text(0.087, 0.569, "UNOBSERVED", rotation=90, ha="center", va="center",
+            fontsize=9.0, color=MUTED, fontweight="bold", zorder=8)
+
+    h = 0.108
+    for lab, y, seen, sub in rows:
         c = IDENTIFIED if seen else FAILED
-        ax.add_patch(FancyBboxPatch((0.215, yy), 0.475, 0.098,
-                                    boxstyle="round,pad=0.008,rounding_size=0.015",
-                                    fc="white", ec=INK if seen else MUTED,
-                                    lw=1.5 if seen else 1.0,
-                                    ls="-" if seen else (0, (4, 2)), zorder=4))
-        ax.text(0.4525, yy + 0.062, lab, ha="center", va="center", fontsize=10,
-                color=INK if seen else MUTED, weight="bold", zorder=6)
-        ax.text(0.4525, yy + 0.026, sub, ha="center", va="center", fontsize=7.8,
-                color=MUTED, zorder=6)
-        ax.text(0.735, yy + 0.049, "observed" if seen else "hidden", fontsize=9.2,
-                color=c, va="center", weight="bold", zorder=6)
-        ax.text(0.178, yy + 0.049, "\u2713" if seen else "\u2717", fontsize=14, color=c,
-                ha="center", va="center", weight="bold", zorder=6)
+        card(ax, 0.155, y, 0.60, h, fc=CARD, ec=HAIR, lw=1.2, z=4)
+        ax.add_patch(Rectangle((0.157, y + 0.009), 0.0075, h - 0.018,
+                               fc=c, ec="none", zorder=6))
+        ax.text(0.188, y + h / 2 + 0.019, lab, fontsize=10.6, color=INK,
+                fontweight="bold", va="center", zorder=6)
+        ax.text(0.188, y + h / 2 - 0.024, sub, fontsize=8.5, color=MUTED,
+                va="center", zorder=6)
+        ax.text(0.660, y + h / 2, "observed" if seen else "hidden", fontsize=9.2,
+                color=c, va="center", fontweight="bold", zorder=6)
 
-    for y0, y1 in [(0.800, 0.717), (0.615, 0.557), (0.455, 0.372), (0.270, 0.212)]:
-        hidden_arrow = y0 in (0.615, 0.800)
-        arrow(ax, (0.4525, y0), (0.4525, y1), lw=1.5,
-              color=MUTED if y0 in (0.615, 0.455) else INK,
-              ls=(0, (3, 2)) if y0 in (0.615, 0.455) else "-")
+    for a, b, hidden in [(0.790, 0.726, False), (0.618, 0.574, True),
+                         (0.466, 0.402, True), (0.294, 0.250, False)]:
+        arrow(ax, (0.455, a), (0.455, b), lw=1.4,
+              color=MUTED if hidden else INK,
+              ls=(0, (2.5, 2)) if hidden else "-", alpha=0.9 if hidden else 1)
 
-    ax.text(0.5, 0.045, "The only two stages we cannot see are the only two we need.",
-            ha="center", fontsize=11.4, color=INK, weight="bold")
-    ax.text(0.5, -0.012,
-            "Markets reveal prices. They do not reveal how those prices came to be.",
-            ha="center", fontsize=10.2, color=MUTED, style="italic")
-    ax.set_title("The boundary of observation", fontsize=13, color=INK, pad=12)
-    fig.savefig(FIG / "p2_boundary.png", dpi=200, bbox_inches="tight")
+    leader(ax, (0.757, 0.542), (0.828, 0.542),
+           "the two stages\nthe question\nis about", color=FAILED, size=8.8)
+
+    ax.text(0.5, 0.048, "The only two stages we cannot see are the only two we need.",
+            ha="center", fontsize=11.4, color=INK, fontweight="bold")
+    ax.text(0.5, 0.000, "Markets reveal prices. They do not reveal how those prices came to be.",
+            ha="center", fontsize=9.8, color=MUTED, style="italic")
+    title(fig, "The boundary of observation")
+    fig.savefig(FIG / "p2_boundary.png", dpi=220, bbox_inches="tight")
     plt.close(fig)
 
 
-# ----------------------------------------------------------------------------- FIG 9
-def fig_bridge():
-    """The closing conceptual figure: how Paper 2 follows from Paper 1."""
-    fig, axes = plt.subplots(1, 2, figsize=(11.4, 5.0))
+# ------------------------------------------------------------------- FIG 2
+def fig_race():
+    fig, ax = canvas(10.2, 5.0)
+    card(ax, 0.172, 0.200, 0.548, 0.645, fc=FOG, ec=HAIR, lw=1.2, r=0.02, z=1)
+    ax.text(0.446, 0.800, "N O T   O B S E R V A B L E", ha="center", fontsize=9.4,
+            color=MUTED, fontweight="bold", zorder=8)
+
+    ax.plot([0.113, 0.113], [0.182, 0.792], color=GREEN, lw=2.6, zorder=5,
+            solid_capstyle="round")
+    eyebrow(ax, 0.113, 0.845, "run scores", color=GREEN, size=9.4, ha="center")
+
+    for y, lab, c, xe in [(0.698, "Book A decides to re-price", BLUE, 0.300),
+                          (0.576, "Book A's feed publishes", MUTED, 0.437),
+                          (0.453, "Book B decides to re-price", ORANGE, 0.520),
+                          (0.331, "Book B's feed publishes", MUTED, 0.652)]:
+        ax.plot([0.113, xe], [y, y], color=c, lw=1.7, zorder=5, solid_capstyle="round")
+        ax.plot([xe], [y], "o", ms=6.4, color=c, zorder=6,
+                markeredgecolor="white", markeredgewidth=1.2)
+        ax.text(xe + 0.016, y, lab, fontsize=8.9, color=c, va="center", zorder=6)
+
+    ax.plot([0.793, 0.793], [0.182, 0.792], color=INK, lw=2.2, zorder=5,
+            solid_capstyle="round")
+    eyebrow(ax, 0.793, 0.845, "we look", color=INK, size=9.4, ha="center")
+    ax.text(0.793, 0.150, "every 31 s", ha="center", fontsize=8.5, color=MUTED)
+
+    for y, c in [(0.643, BLUE), (0.396, ORANGE)]:
+        ax.plot([0.722, 0.780], [y, y], color=c, lw=1.2, ls=(0, (2, 2)), zorder=5, alpha=.8)
+        ax.plot([0.793], [y], "o", ms=7.6, color=INK, zorder=7,
+                markeredgecolor="white", markeredgewidth=1.4)
+        ax.text(0.818, y, "one timestamp", fontsize=8.9, color=INK, va="center")
+
+    ax.text(0.5, 0.082, "Four internal events. Two recorded numbers.",
+            ha="center", fontsize=11.4, color=INK, fontweight="bold")
+    ax.text(0.5, 0.026,
+            "The interval we can measure is a sum of intervals we cannot measure separately.",
+            ha="center", fontsize=9.6, color=MUTED)
+    title(fig, "The information race, and how little of it we see")
+    fig.savefig(FIG / "p2_race.png", dpi=220, bbox_inches="tight")
+    plt.close(fig)
+
+
+# ------------------------------------------------------------------- FIG 3
+def fig_why_paper1():
+    fig, axes = plt.subplots(1, 2, figsize=(11.0, 4.9))
     for ax in axes:
         ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
 
     ax = axes[0]
-    ax.text(0.5, 0.96, "PAPER 1", ha="center", fontsize=12.5, color=INK, weight="bold")
-    ax.text(0.5, 0.895, "does public information beat the price?",
-            ha="center", fontsize=8.8, color=MUTED)
-    for lab, yy, fc in [("Public information", 0.700, "white"),
-                        ("Market", 0.455, "white"),
-                        ("No increment", 0.210, "#E7F4EE")]:
-        box(ax, 0.22, yy, 0.56, 0.135, lab, fc=fc,
-            ec=IDENTIFIED if fc != "white" else INK,
-            tc=IDENTIFIED if fc != "white" else INK)
-    for y0, y1 in [(0.700, 0.605), (0.455, 0.360)]:
-        arrow(ax, (0.5, y0), (0.5, y1), lw=1.8)
-    ax.text(0.5, 0.115, "answered", ha="center", fontsize=10, color=IDENTIFIED, weight="bold")
+    eyebrow(ax, 0.5, 0.950, "paper 1", color=INK, size=10.2, ha="center")
+    ax.text(0.5, 0.884, "does the variable beat the price?", ha="center",
+            fontsize=9.2, color=MUTED)
+    for lab, y in [("Public variable", 0.655), ("Market price", 0.400), ("Outcome", 0.145)]:
+        tinted(ax, 0.20, y, 0.60, 0.135, GREEN, alpha=0.10, lw=1.3)
+        ax.text(0.50, y + 0.0675, lab, ha="center", va="center", fontsize=10.4,
+                color=INK, fontweight="bold", zorder=6)
+    for a, b in [(0.655, 0.545), (0.400, 0.290)]:
+        arrow(ax, (0.5, a), (0.5, b), lw=1.8)
+    leader(ax, (0.802, 0.4675), (0.882, 0.4675), "every node\nobservable",
+           color=IDENTIFIED, size=8.8)
 
     ax = axes[1]
-    ax.text(0.5, 0.96, "PAPER 2", ha="center", fontsize=12.5, color=INK, weight="bold")
-    ax.text(0.5, 0.895, "how did the price come to be?",
-            ha="center", fontsize=8.8, color=MUTED)
-    for lab, yy, hidden in [("Game event", 0.735, False),
-                            ("Hidden market process", 0.545, True),
-                            ("Observed timestamp", 0.355, False),
-                            ("Identification depends\non assumptions", 0.145, None)]:
-        if hidden is None:
-            box(ax, 0.16, yy, 0.68, 0.155, lab.split("\n")[0], lab.split("\n")[1],
-                fc="#FBF1E6", ec=BOUNDED, tc=BOUNDED, lw=1.7)
+    eyebrow(ax, 0.5, 0.950, "paper 2", color=INK, size=10.2, ha="center")
+    ax.text(0.5, 0.884, "how did the price get there?", ha="center",
+            fontsize=9.2, color=MUTED)
+    for lab, y, hidden in [("Game event", 0.730, False), ("Book pricing", 0.515, True),
+                           ("Feed publication", 0.300, True), ("What we record", 0.085, False)]:
+        if hidden:
+            card(ax, 0.20, y, 0.60, 0.125, fc=FOG, ec=HAIR, lw=1.1, z=3)
+            ax.text(0.50, y + 0.0625, lab, ha="center", va="center", fontsize=10.2,
+                    color=MUTED, zorder=6)
+            ax.text(0.828, y + 0.0625, "hidden", fontsize=8.6, color=FAILED,
+                    va="center", fontweight="bold", zorder=6)
         else:
-            box(ax, 0.22, yy, 0.56, 0.115, lab, fc=FOG if hidden else "white",
-                ec=MUTED if hidden else INK, tc=MUTED if hidden else INK,
-                lw=1.0 if hidden else 1.4)
-    for y0, y1 in [(0.735, 0.665), (0.545, 0.475), (0.355, 0.305)]:
-        arrow(ax, (0.5, y0), (0.5, y1), lw=1.6, color=MUTED, ls=(0, (3, 2)))
+            tinted(ax, 0.20, y, 0.60, 0.125, GREEN, alpha=0.10, lw=1.3)
+            ax.text(0.50, y + 0.0625, lab, ha="center", va="center", fontsize=10.4,
+                    color=INK, fontweight="bold", zorder=6)
+    for a, b in [(0.730, 0.645), (0.515, 0.430), (0.300, 0.215)]:
+        arrow(ax, (0.5, a), (0.5, b), lw=1.4, color=MUTED, ls=(0, (2.5, 2)))
 
-    fig.subplots_adjust(top=0.86)
-    fig.suptitle("From efficiency to identification", fontsize=13.5, color=INK, y=1.02)
-    fig.text(0.5, -0.045,
-             "Paper 2 does not overturn Paper 1. It asks the question Paper 1 leaves open, and finds\n"
-             "that answering it depends on assumptions rather than on computation.",
-             ha="center", fontsize=9.6, color=INK, linespacing=1.6)
-    fig.savefig(FIG / "p2_bridge.png", dpi=200, bbox_inches="tight")
+    title(fig, "Why Paper 1 never had to face this", y=1.025)
+    note(fig,
+         "Paper 1 compared two endpoints and could stay agnostic about the machinery between them.\n"
+         "Paper 2's question is the machinery, and half its stages are invisible.", y=0.020)
+    fig.savefig(FIG / "p2_why_paper1.png", dpi=220, bbox_inches="tight")
     plt.close(fig)
 
 
-# ----------------------------------------------------------------------------- FIG 1
-def fig_information_race():
-    """We observe only the last step of a process with several hidden stages."""
-    fig, ax = plt.subplots(figsize=(10.6, 5.4))
-    ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
-
-    # the fog of unobservability
-    ax.add_patch(Rectangle((0.185, 0.235), 0.545, 0.60, fc=FOG, ec=MUTED, lw=1.1,
-                           ls=(0, (5, 3)), alpha=0.75, zorder=1))
-    ax.text(0.4575, 0.795, "EVERYTHING IN HERE IS UNOBSERVABLE", ha="center", fontsize=9.6,
-            color=MUTED, weight="bold", zorder=6)
-
-    # event
-    ax.plot([0.115, 0.115], [0.20, 0.90], color=GREEN, lw=2.6, zorder=5)
-    ax.text(0.115, 0.925, "RUN SCORES", ha="center", fontsize=10.2, color=GREEN, weight="bold")
-    ax.text(0.115, 0.163, "$t_E$", ha="center", fontsize=10.5, color=GREEN)
-
-    rows = [
-        (0.70, "Book A decides to re-price", BLUE, 0.30),
-        (0.575, "Book A's feed publishes it", MUTED, 0.44),
-        (0.45, "Book B decides to re-price", ORANGE, 0.52),
-        (0.325, "Book B's feed publishes it", MUTED, 0.66),
-    ]
-    for yy, lab, c, xend in rows:
-        arrow(ax, (0.115, yy), (xend, yy), color=c, lw=1.7, ms=12, z=5)
-        ax.plot([xend], [yy], "o", ms=7, color=c, zorder=6)
-        ax.text(xend + 0.018, yy, lab, fontsize=8.9, color=c, va="center", zorder=6)
-
-    # what we actually see
-    ax.plot([0.79, 0.79], [0.20, 0.90], color=INK, lw=2.2, zorder=5)
-    ax.text(0.79, 0.925, "WE LOOK", ha="center", fontsize=10.2, color=INK, weight="bold")
-    ax.text(0.79, 0.163, "poll at 31 s", ha="center", fontsize=8.6, color=MUTED)
-    for yy, c in [(0.70, BLUE), (0.45, ORANGE)]:
-        arrow(ax, (0.735, yy - 0.055), (0.785, yy - 0.055), color=c, lw=1.4, ls=(0, (2, 2)), ms=10)
-    ax.plot([0.79, 0.79], [0.645, 0.395], "o", ms=8, color=INK, zorder=6)
-    ax.text(0.815, 0.645, "one timestamp for A", fontsize=8.9, color=INK, va="center")
-    ax.text(0.815, 0.395, "one timestamp for B", fontsize=8.9, color=INK, va="center")
-
-    ax.text(0.5, 0.085,
-            "Four internal events. Two recorded numbers.",
-            ha="center", fontsize=11.2, color=INK, weight="bold")
-    ax.text(0.5, 0.022,
-            "The paper's problem is not measuring the gap. It is that the gap we can measure is a sum\n"
-            "of things we cannot measure separately.",
-            ha="center", fontsize=9.2, color=MUTED, linespacing=1.55)
-
-    ax.set_title("The information race, and how little of it we see",
-                 fontsize=13, color=INK, pad=14)
-    fig.savefig(FIG / "p2_race.png", dpi=200, bbox_inches="tight")
-    plt.close(fig)
-
-
-# ----------------------------------------------------------------------------- FIG 2
+# ------------------------------------------------------------------- FIG 4 (centerpiece)
 def fig_three_worlds():
-    """THE figure: three different markets, one identical dataset."""
-    fig, axes = plt.subplots(1, 3, figsize=(15.4, 6.0))
-    X0, HB, TOT = 0.11, 0.105, 0.72
-    yA, yB = 0.60, 0.36
+    fig, axes = plt.subplots(1, 3, figsize=(15.0, 5.6))
+    X0, BH = 0.105, 0.105
+    yA, yB = 0.605, 0.455
+    worlds = [("World A", "A prices faster; plumbing matches",
+               0.20, 0.44, 0.26, 0.26, "the lag is real", GREEN),
+              ("World B", "identical pricing; B's feed is slower",
+               0.28, 0.28, 0.18, 0.42, "the lag is plumbing", RED),
+              ("World C", "both differ, and partly cancel",
+               0.24, 0.38, 0.22, 0.32, "the lag is a blend", ORANGE)]
 
-    worlds = [
-        ("WORLD A", "A prices fast, feeds equal",
-         0.20, 0.44, 0.28, 0.28, "the lag is real: A is quicker", GREEN),
-        ("WORLD B", "identical pricing, B's feed is slow",
-         0.28, 0.28, 0.20, 0.44, "the lag is pure plumbing", RED),
-        ("WORLD C", "both differ, and offset",
-         0.24, 0.38, 0.24, 0.34, "the lag mixes the two", ORANGE),
-    ]
     for ax, (name, sub, pA, pB, fA, fB, verdict, vc) in zip(axes, worlds):
         ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
-        ax.text(0.5, 0.95, name, ha="center", fontsize=12, color=INK, weight="bold")
-        ax.text(0.5, 0.875, sub, ha="center", fontsize=8.8, color=MUTED)
-        for bk, c, yy, pr, fd in [("A", BLUE, yA, pA, fA), ("B", ORANGE, yB, pB, fB)]:
-            ax.text(0.035, yy + HB / 2, bk, fontsize=10, color=c, weight="bold", va="center")
-            ax.add_patch(Rectangle((X0, yy), pr, HB, fc=c, ec="white", lw=1.2, zorder=3))
-            ax.add_patch(Rectangle((X0 + pr, yy), fd, HB, fc=MUTED, ec="white", lw=1.2,
-                                   alpha=0.38, zorder=3))
-            ax.text(X0 + pr / 2, yy + HB / 2, "pricing", ha="center", va="center",
-                    fontsize=7.4, color="white", weight="bold", zorder=5)
-            ax.text(X0 + pr + fd / 2, yy + HB / 2, "feed", ha="center", va="center",
-                    fontsize=7.4, color=INK, zorder=5)
-        # identical observed endpoints, with guides so the eye sees they never move
-        for yy, pr, fd in [(yA, pA, fA), (yB, pB, fB)]:
-            xe = X0 + pr + fd
-            ax.plot([xe, xe], [0.245, 0.775], color=INK, lw=1.0, ls=(0, (3, 3)),
-                    alpha=0.55, zorder=2)
-            ax.plot([xe], [yy + HB / 2], "|", ms=18, color=INK, mew=2.6, zorder=6)
-        ax.annotate("", xy=(X0 + pB + fB, 0.265), xytext=(X0 + pA + fA, 0.265),
-                    arrowprops=dict(arrowstyle="<|-|>", color=INK, lw=1.7))
-        ax.text((X0 * 2 + pA + fA + pB + fB) / 2, 0.205, "observed lag",
-                ha="center", fontsize=9, color=INK, weight="bold")
-        ax.add_patch(Rectangle((0.06, 0.055), 0.88, 0.085, fc=vc, ec="none", alpha=0.13, zorder=2))
-        ax.text(0.5, 0.0975, verdict, ha="center", va="center", fontsize=9.2,
-                color=vc, weight="bold", zorder=4)
+        card(ax, 0.02, 0.045, 0.96, 0.905, fc=CARD, ec=HAIR, lw=1.3, r=0.022, z=1)
+        chip(ax, 0.148, 0.885, name, INK)
+        ax.text(0.575, 0.885, sub, ha="center", va="center", fontsize=8.8, color=MUTED)
+        ax.plot([0.05, 0.95], [0.815, 0.815], color=HAIR, lw=1.0, zorder=2)
 
-    fig.subplots_adjust(top=0.78)
-    fig.suptitle("Three different markets. One identical dataset.",
-                 fontsize=13.5, color=INK, y=1.045)
-    fig.text(0.5, -0.045,
-             "In every panel the two observed timestamps are the same, so the data are the same. "
-             "The mechanisms are not.\nNo statistic computed from timestamps alone can tell these "
-             "worlds apart. That is the identification problem.",
-             ha="center", fontsize=9.6, color=INK, linespacing=1.6)
-    fig.savefig(FIG / "p2_three_worlds.png", dpi=200, bbox_inches="tight")
+        endA, endB = X0 + pA + fA, X0 + pB + fB
+        for xe in (endA, endB):
+            ax.add_patch(Rectangle((xe - 0.004, 0.175), 0.008, 0.560,
+                                   fc=INK, ec="none", alpha=0.07, zorder=2))
+            ax.plot([xe, xe], [0.175, 0.735], color=INK, lw=1.0,
+                    ls=(0, (2.5, 2.5)), alpha=0.5, zorder=3)
+
+        eyebrow(ax, 0.05, 0.762, "the mechanism", color=MUTED, size=7.6)
+        for lab, c, y, pr, fd in [("A", BLUE, yA, pA, fA), ("B", ORANGE, yB, pB, fB)]:
+            ax.text(0.058, y + BH / 2, lab, fontsize=10.6, color=c,
+                    fontweight="bold", va="center", ha="center", zorder=8)
+            tinted(ax, X0, y, pr, BH, c, alpha=0.28, lw=1.6, r=0.010)
+            tinted(ax, X0 + pr, y, fd, BH, MUTED, alpha=0.15, lw=1.1, r=0.010)
+            if pr > 0.17:
+                ax.text(X0 + pr / 2, y + BH / 2, "pricing", ha="center", va="center",
+                        fontsize=8.2, color=c, fontweight="bold", zorder=7)
+            if fd > 0.155:
+                ax.text(X0 + pr + fd / 2, y + BH / 2, "feed", ha="center", va="center",
+                        fontsize=8.2, color=MUTED, zorder=7)
+
+        lo, hi = min(endA, endB), max(endA, endB)
+        ax.annotate("", xy=(hi, 0.365), xytext=(lo, 0.365),
+                    arrowprops=dict(arrowstyle="<|-|>", color=INK, lw=1.6,
+                                    mutation_scale=11))
+        ax.text((lo + hi) / 2, 0.318, "observed", ha="center", fontsize=8.8,
+                color=INK, fontweight="bold")
+
+        # what actually lands on disk: identical in all three panels
+        ax.plot([0.05, 0.95], [0.258, 0.258], color=HAIR, lw=1.0, zorder=2)
+        eyebrow(ax, 0.05, 0.225, "what reaches disk", color=MUTED, size=7.6)
+        for xe in (endA, endB):
+            ax.plot([xe], [0.163], "|", ms=15, mew=2.8, color=INK, zorder=6)
+        ax.text(0.50, 0.112, "identical in every panel", ha="center", fontsize=8.2,
+                color=MUTED, style="italic")
+        ax.text(0.50, 0.070, verdict, ha="center", va="center", fontsize=9.6,
+                color=vc, fontweight="bold", zorder=8,
+                bbox=dict(boxstyle="round,pad=0.40", fc=vc, ec="none", alpha=0.12))
+
+    fig.subplots_adjust(top=0.90, bottom=0.03, left=0.012, right=0.988, wspace=0.10)
+    title(fig, "Three different markets. One identical dataset.", y=0.995)
+    note(fig,
+         "The bars differ in every panel; the two recorded timestamps do not. Read the strip along "
+         "the bottom of each panel:\nwhat reaches disk is the same in all three, so no statistic "
+         "computed from it can tell these worlds apart.", y=0.028)
+    fig.savefig(FIG / "p2_three_worlds.png", dpi=220, bbox_inches="tight")
     plt.close(fig)
 
 
-# ----------------------------------------------------------------------------- FIG 3
-def fig_why_paper1_could_ignore():
-    """Same visual language as Paper 1's opening figure; different question."""
-    fig, axes = plt.subplots(1, 2, figsize=(11.4, 4.8))
-    for ax in axes:
-        ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
-
-    ax = axes[0]
-    ax.text(0.5, 0.95, "PAPER 1", ha="center", fontsize=12, color=INK, weight="bold")
-    ax.text(0.5, 0.885, "does the variable beat the price?", ha="center", fontsize=9, color=MUTED)
-    steps = [("Public variable", 0.66), ("Sharp market price", 0.40), ("Outcome", 0.14)]
-    for lab, yy in steps:
-        box(ax, 0.22, yy, 0.56, 0.145, lab, fc="#F2F7FA")
-    for y0, y1 in [(0.66, 0.545), (0.40, 0.285)]:
-        arrow(ax, (0.5, y0), (0.5, y1), lw=1.9)
-    ax.text(0.845, 0.40, "every node\nobservable", fontsize=8.6, color=GREEN,
-            ha="center", va="center", weight="bold", linespacing=1.5)
-
-    ax = axes[1]
-    ax.text(0.5, 0.95, "PAPER 2", ha="center", fontsize=12, color=INK, weight="bold")
-    ax.text(0.5, 0.885, "how did the price get there?", ha="center", fontsize=9, color=MUTED)
-    steps2 = [("Game event", 0.735, "white", INK, False),
-              ("Book pricing", 0.515, FOG, MUTED, True),
-              ("Feed publication", 0.295, FOG, MUTED, True),
-              ("Collector observes", 0.075, "white", INK, False)]
-    for lab, yy, fc, tc, hidden in steps2:
-        box(ax, 0.22, yy, 0.56, 0.135, lab, fc=fc, ec=MUTED if hidden else INK,
-            lw=1.1 if hidden else 1.4, tc=tc)
-        if hidden:
-            ax.text(0.845, yy + 0.0675, "hidden", fontsize=8.4, color=RED,
-                    ha="center", va="center", weight="bold")
-    for y0, y1 in [(0.735, 0.655), (0.515, 0.435), (0.295, 0.215)]:
-        arrow(ax, (0.5, y0), (0.5, y1), lw=1.6, color=MUTED, ls=(0, (3, 2)))
-
-    fig.subplots_adjust(top=0.84)
-    fig.suptitle("Why Paper 1 never had to face this", fontsize=13.5, color=INK, y=1.03)
-    fig.text(0.5, -0.05,
-             "Paper 1 compared two endpoints and could stay agnostic about the machinery between them.\n"
-             "Paper 2's question is the machinery, and two of its four stages are invisible.",
-             ha="center", fontsize=9.6, color=INK, linespacing=1.6)
-    fig.savefig(FIG / "p2_why_paper1.png", dpi=200, bbox_inches="tight")
-    plt.close(fig)
-
-
-
-# ----------------------------------------------------------------------------- FIG 3b
+# ------------------------------------------------------------------- FIG 5
 def fig_anchoring():
-    """Why book-to-book timing fails and event-anchoring is required."""
     fig, axes = plt.subplots(1, 2, figsize=(11.0, 4.3))
-    for ax, title in zip(axes, ["Timing one book against the other: confounded",
-                                "Timing each book against the game: the estimand"]):
+    for ax, t in zip(axes, ["Timing one book against the other",
+                            "Timing each book against the game"]):
         ax.set_xlim(0, 10); ax.set_ylim(0, 1); ax.set_yticks([])
-        ax.set_xlabel("time (minutes)")
+        ax.set_xlabel("time (minutes)", fontsize=9, color=MUTED, labelpad=6)
+        ax.tick_params(colors=MUTED, labelsize=8.4)
         for s in ("top", "right", "left"):
             ax.spines[s].set_visible(False)
-        ax.text(5.0, 1.10, title, ha="center", fontsize=10.4, color=INK, weight="bold")
-        ax.axvline(2.0, color=GREEN, lw=2.2, zorder=2)
+        ax.spines["bottom"].set_color(HAIR)
+        ax.text(5.0, 1.13, t, ha="center", fontsize=10.4, color=INK, fontweight="bold")
+        ax.axvspan(1.93, 2.07, color=GREEN, alpha=0.28, zorder=1)
+        ax.plot([2, 2], [0.04, 0.90], color=GREEN, lw=2.2, zorder=3, solid_capstyle="round")
+        ax.text(2.0, 0.955, "event", ha="center", fontsize=8.8, color=GREEN, fontweight="bold")
 
     ax = axes[0]
-    ax.text(2.0, 0.93, "event", ha="center", fontsize=9, color=GREEN, weight="bold")
     fast = [2.4, 2.9, 3.4, 3.9, 4.4, 4.9, 5.4, 5.9, 6.4, 6.9, 7.4]
-    ax.plot(fast, [0.62] * len(fast), "o", color=BLUE, ms=6, zorder=4)
-    ax.plot([3.6, 7.2], [0.30, 0.30], "o", color=ORANGE, ms=8.5, zorder=4)
-    ax.text(0.15, 0.70, "re-prices often", fontsize=8.6, color=BLUE, weight="bold")
-    ax.text(0.15, 0.38, "re-prices rarely", fontsize=8.6, color=ORANGE, weight="bold")
-    ax.annotate("", xy=(3.6, 0.46), xytext=(2.4, 0.46),
-                arrowprops=dict(arrowstyle="<|-|>", color=RED, lw=1.6))
-    ax.text(3.0, 0.51, "'lead'", fontsize=9, color=RED, ha="center", weight="bold")
-    ax.text(5.2, 0.11, "the dense book reaches any price level first\nby construction, informed or not",
-            fontsize=8.6, color=RED, ha="center", style="italic", linespacing=1.5)
+    ax.plot(fast, [0.63] * len(fast), "o", color=BLUE, ms=5.6, zorder=5,
+            markeredgecolor="white", markeredgewidth=1.0)
+    ax.plot([3.6, 7.2], [0.31, 0.31], "o", color=ORANGE, ms=8.0, zorder=5,
+            markeredgecolor="white", markeredgewidth=1.1)
+    ax.text(0.16, 0.72, "re-prices often", fontsize=8.6, color=BLUE, fontweight="bold")
+    ax.text(0.16, 0.40, "re-prices rarely", fontsize=8.6, color=ORANGE, fontweight="bold")
+    ax.annotate("", xy=(3.6, 0.47), xytext=(2.4, 0.47),
+                arrowprops=dict(arrowstyle="<|-|>", color=RED, lw=1.5, mutation_scale=10))
+    ax.text(3.0, 0.522, "apparent lead", fontsize=8.6, color=RED, ha="center",
+            fontweight="bold")
+    ax.text(5.4, 0.105, "the denser book arrives first by construction",
+            fontsize=8.6, color=RED, ha="center", style="italic")
 
     ax = axes[1]
-    ax.text(2.0, 0.93, "event $t_E$", ha="center", fontsize=9, color=GREEN, weight="bold")
-    ax.plot([3.3], [0.62], "o", color=BLUE, ms=9, zorder=4)
-    ax.plot([4.6], [0.30], "o", color=ORANGE, ms=9, zorder=4)
-    for xe, yy, c, lab in [(3.3, 0.62, BLUE, "$\\lambda_A$"), (4.6, 0.30, ORANGE, "$\\lambda_B$")]:
-        ax.annotate("", xy=(xe, yy), xytext=(2.0, yy),
-                    arrowprops=dict(arrowstyle="<|-|>", color=c, lw=1.6))
-        ax.text((2.0 + xe) / 2, yy + 0.07, lab, fontsize=11, color=c, ha="center")
-    ax.text(5.2, 0.11, "each book measured against a clock\nneither book controls",
-            fontsize=8.6, color=GREEN, ha="center", style="italic", linespacing=1.5)
+    for xe, y, c, lab in [(3.3, 0.63, BLUE, r"$\lambda_A$"),
+                          (4.6, 0.31, ORANGE, r"$\lambda_B$")]:
+        ax.annotate("", xy=(xe, y), xytext=(2.0, y),
+                    arrowprops=dict(arrowstyle="<|-|>", color=c, lw=1.5, mutation_scale=10))
+        ax.plot([xe], [y], "o", color=c, ms=8.6, zorder=5,
+                markeredgecolor="white", markeredgewidth=1.1)
+        ax.text((2.0 + xe) / 2, y + 0.085, lab, fontsize=11.5, color=c, ha="center")
+    ax.text(5.4, 0.105, "each book measured against a clock neither controls",
+            fontsize=8.6, color=GREEN, ha="center", style="italic")
 
-    fig.savefig(FIG / "p2_anchoring.png", dpi=200, bbox_inches="tight")
+    title(fig, "Why the estimand is anchored to the event", y=1.055)
+    fig.savefig(FIG / "p2_anchoring.png", dpi=220, bbox_inches="tight")
     plt.close(fig)
 
 
-# ----------------------------------------------------------------------------- FIG 4
-def fig_identification_ladder():
-    """Paper 1's elimination-ladder language, applied to identification requirements."""
-    fig, ax = plt.subplots(figsize=(9.8, 6.1))
-    ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
+# ------------------------------------------------------------------- FIG 6
+def fig_ladder():
+    fig, ax = canvas(9.6, 6.2)
+    rungs = [("Observed timestamps", "we hold these", IDENTIFIED, "have"),
+             ("A common event clock", "event and quote times comparable", IDENTIFIED, "auditable"),
+             ("One well defined price series", "the extraction rule is a free parameter",
+              BOUNDED, "bounded"),
+             ("Feed latency known or common mode", "not measurable from a public endpoint",
+              FAILED, "open"),
+             ("Pricing latency identified", "the quantity we actually want", FAILED, "blocked")]
 
-    rungs = [
-        ("Observed timestamps", "we have these", GREEN, "HAVE"),
-        ("A common event clock", "event and quote times comparable", GREEN, "AUDITABLE"),
-        ("A single well-defined price series", "main-line rule fixed and tested", ORANGE, "BOUNDED"),
-        ("Feed latency known or common-mode", "no way to measure it from outside", RED, "OPEN"),
-        ("Pricing latency identified", "the quantity we actually want", RED, "BLOCKED"),
-    ]
-    h, gap = 0.135, 0.038
-    y = 0.80
+    h, gap, y = 0.130, 0.041, 0.790
     for i, (lab, sub, c, tag) in enumerate(rungs):
-        ax.add_patch(FancyBboxPatch((0.10, y), 0.66, h,
-                                    boxstyle="round,pad=0.008,rounding_size=0.015",
-                                    fc=c, ec=c, lw=1.4, alpha=0.16, zorder=3))
-        ax.add_patch(Rectangle((0.10, y), 0.014, h, fc=c, ec="none", zorder=4))
-        ax.text(0.145, y + h / 2 + 0.024, lab, fontsize=10.3, color=INK, va="center", weight="bold")
-        ax.text(0.145, y + h / 2 - 0.030, sub, fontsize=8.4, color=MUTED, va="center")
-        ax.text(0.885, y + h / 2, tag, fontsize=8.8, color=c, ha="center", va="center",
-                weight="bold")
+        tinted(ax, 0.095, y, 0.660, h, c, alpha=0.09, lw=1.3, r=0.014)
+        ax.add_patch(Rectangle((0.098, y + 0.010), 0.008, h - 0.020,
+                               fc=c, ec="none", zorder=6))
+        ax.text(0.128, y + h / 2 + 0.023, lab, fontsize=10.4, color=INK,
+                va="center", fontweight="bold", zorder=7)
+        ax.text(0.128, y + h / 2 - 0.026, sub, fontsize=8.5, color=MUTED,
+                va="center", zorder=7)
+        ax.text(0.878, y + h / 2, tag.upper(), fontsize=8.5, color=c, ha="center",
+                va="center", fontweight="bold", zorder=7)
         if i < len(rungs) - 1:
-            arrow(ax, (0.43, y), (0.43, y - gap + 0.004), lw=1.5, color=MUTED, ms=11)
+            arrow(ax, (0.425, y), (0.425, y - gap + 0.005), lw=1.3, color=MUTED, ms=10)
         y -= (h + gap)
 
-    for c, lab, yy in [(GREEN, "identifiable", 0.055), (ORANGE, "bounded only", 0.020),
-                       (RED, "not identifiable with this instrument", -0.015)]:
-        ax.add_patch(Rectangle((0.10, yy), 0.022, 0.022, fc=c, ec="none", alpha=0.8))
-        ax.text(0.135, yy + 0.011, lab, fontsize=8.6, color=INK, va="center")
+    leader(ax, (0.757, 0.255), (0.830, 0.150),
+           "this rung decides\nthe paper", color=FAILED, size=8.8)
 
-    ax.set_title("The identification ladder: each rung requires the one above it",
-                 fontsize=13, color=INK, pad=16)
-    fig.text(0.5, -0.075,
-             "The ladder is climbed from the top. We hold the first two rungs; the third is a\n"
-             "methodological choice we can fix; the fourth is not obtainable from public endpoints,\n"
-             "and it is the one the fifth depends on.",
-             ha="center", fontsize=9.4, color=INK, linespacing=1.6)
-    fig.savefig(FIG / "p2_ladder.png", dpi=200, bbox_inches="tight")
+    for c, lab, yy in [(IDENTIFIED, "identifiable", 0.048),
+                       (BOUNDED, "bounded only", 0.014),
+                       (FAILED, "not identifiable here", -0.020)]:
+        ax.add_patch(Rectangle((0.095, yy), 0.020, 0.020, fc=c, ec="none", alpha=0.85))
+        ax.text(0.127, yy + 0.010, lab, fontsize=8.6, color=MUTED, va="center")
+
+    title(fig, "The identification ladder", "each rung requires the one above it")
+    fig.savefig(FIG / "p2_ladder.png", dpi=220, bbox_inches="tight")
     plt.close(fig)
 
 
-# ----------------------------------------------------------------------------- FIG 5
-def fig_resolution_ceiling():
-    """Draw the sampling window over real game granularity."""
-    fig, ax = plt.subplots(figsize=(11.0, 4.4))
-    ax.set_xlim(-2, 96); ax.set_ylim(0, 1); ax.axis("off")
+# ------------------------------------------------------------------- FIG 7
+def fig_decision_tree():
+    fig, ax = canvas(10.4, 6.0)
 
-    ax.plot([-1, 95], [0.70, 0.70], color=INK, lw=1.3, zorder=2)
-    evs = [(2, "pitch"), (11, "ball"), (19, "pitch"), (26, "strike"), (34, "pitch"),
-           (43, "single"), (52, "pitch"), (58, "ball"), (66, "pitch"), (73, "RUN"),
-           (84, "pitch"), (91, "out")]
-    for x, lab in evs:
-        big = lab in ("RUN", "single", "out")
-        c = GREEN if lab == "RUN" else (BLUE if big else MUTED)
-        ax.plot([x], [0.70], "o", ms=10 if lab == "RUN" else (7 if big else 4.5),
-                color=c, zorder=4)
-        ax.text(x, 0.775, lab, ha="center", fontsize=8.0 if big else 7.2,
-                color=c, weight="bold" if lab == "RUN" else "normal", rotation=0)
-    ax.text(-1, 0.855, "what happens in the game", fontsize=9.4, color=INK, weight="bold")
+    def diamond(cx, cy, w, h, label):
+        ax.add_patch(Polygon([[cx, cy + h], [cx + w, cy], [cx, cy - h], [cx - w, cy]],
+                             closed=True, fc=CARD, ec=INK, lw=1.3, zorder=4,
+                             joinstyle="round"))
+        ax.text(cx, cy, label, ha="center", va="center", fontsize=8.8, color=INK,
+                fontweight="bold", zorder=6, linespacing=1.5)
 
-    # the poll windows
+    tinted(ax, 0.355, 0.858, 0.29, 0.095, INK, alpha=0.05, lw=1.2)
+    ax.text(0.50, 0.9055, "Observed lag", ha="center", va="center", fontsize=10.4,
+            color=INK, fontweight="bold", zorder=7)
+
+    diamond(0.50, 0.718, 0.150, 0.074, "common\nevent clock?")
+    arrow(ax, (0.50, 0.858), (0.50, 0.796), lw=1.5)
+    diamond(0.50, 0.520, 0.162, 0.074, "feed latency known\nor common mode?")
+    arrow(ax, (0.50, 0.644), (0.50, 0.598), lw=1.5)
+    ax.text(0.524, 0.622, "yes", fontsize=8.4, color=IDENTIFIED, fontweight="bold")
+    diamond(0.50, 0.322, 0.155, 0.072, "price series\nwell defined?")
+    arrow(ax, (0.50, 0.446), (0.50, 0.398), lw=1.5)
+    ax.text(0.524, 0.424, "yes", fontsize=8.4, color=IDENTIFIED, fontweight="bold")
+    arrow(ax, (0.50, 0.250), (0.50, 0.198), lw=1.5)
+    ax.text(0.524, 0.226, "yes", fontsize=8.4, color=IDENTIFIED, fontweight="bold")
+
+    def outcome(x, y, w, tag, label, c):
+        tinted(ax, x, y, w, 0.105, c, alpha=0.11, lw=1.6)
+        ax.text(x + w / 2, y + 0.068, tag, ha="center", va="center", fontsize=9.6,
+                color=c, fontweight="bold", zorder=7)
+        ax.text(x + w / 2, y + 0.032, label, ha="center", va="center", fontsize=8.5,
+                color=MUTED, zorder=7)
+
+    outcome(0.335, 0.088, 0.33, "OUTCOME A", "pricing latency identified", IDENTIFIED)
+    arrow(ax, (0.345, 0.322), (0.224, 0.322), lw=1.4, color=BOUNDED)
+    ax.text(0.285, 0.346, "no", fontsize=8.4, color=BOUNDED, ha="center", fontweight="bold")
+    outcome(0.022, 0.270, 0.20, "OUTCOME B", "bounds only", BOUNDED)
+    arrow(ax, (0.662, 0.520), (0.782, 0.520), lw=1.4, color=FAILED)
+    ax.text(0.722, 0.544, "no", fontsize=8.4, color=FAILED, ha="center", fontweight="bold")
+    outcome(0.780, 0.468, 0.20, "OUTCOME C", "not identifiable", FAILED)
+    arrow(ax, (0.350, 0.718), (0.224, 0.718), lw=1.4, color=FAILED)
+    ax.text(0.287, 0.742, "no", fontsize=8.4, color=FAILED, ha="center", fontweight="bold")
+    ax.text(0.112, 0.718, "audit first", ha="center", va="center", fontsize=8.8,
+            color=FAILED, fontweight="bold")
+
+    ax.text(0.5, 0.024, "All three outcomes are publishable. C is a contribution, not a failure.",
+            ha="center", fontsize=10.6, color=INK, fontweight="bold")
+    title(fig, "The identification decision, walked through")
+    fig.savefig(FIG / "p2_decision_tree.png", dpi=220, bbox_inches="tight")
+    plt.close(fig)
+
+
+# ------------------------------------------------------------------- FIG 8
+def fig_resolution():
+    fig, ax = plt.subplots(figsize=(11.0, 4.6))
+    ax.set_xlim(-4, 100); ax.set_ylim(0, 1); ax.axis("off")
+    evs = [(2, "pitch", 0), (11, "ball", 0), (19, "pitch", 0), (26, "strike", 0),
+           (34, "pitch", 0), (43, "single", 1), (52, "pitch", 0), (58, "ball", 0),
+           (66, "pitch", 0), (73, "RUN", 2), (84, "pitch", 0), (91, "out", 1)]
+
+    eyebrow(ax, -3, 0.900, "what happens in the game", color=MUTED)
+    ax.plot([-1, 96], [0.755, 0.755], color=HAIR, lw=1.1, zorder=2)
+    for x, lab, big in evs:
+        c = GREEN if big == 2 else (BLUE if big == 1 else MUTED)
+        ax.plot([x], [0.755], "o", ms=9.5 if big == 2 else (6.6 if big else 4.0),
+                color=c, zorder=5, markeredgecolor="white",
+                markeredgewidth=1.2 if big else 0.8)
+        if big:
+            ax.text(x, 0.828, lab, ha="center", fontsize=8.4 if big == 2 else 8.0,
+                    color=c, fontweight="bold" if big == 2 else "normal")
+        ax.plot([x, x], [0.732, 0.518], color=MUTED, lw=0.7, ls=(0, (1.6, 2)),
+                alpha=0.5, zorder=2)
+
+    eyebrow(ax, -3, 0.580, "what the instrument samples", color=MUTED)
     for i, x0 in enumerate([0, 31, 62]):
-        ax.add_patch(Rectangle((x0, 0.36), 31, 0.16, fc=ORANGE, ec="white", lw=2.0,
-                               alpha=0.28, zorder=3))
-        ax.text(x0 + 15.5, 0.44, f"poll window {i+1}\n31 s", ha="center", va="center",
-                fontsize=8.4, color=INK, linespacing=1.4, zorder=5)
-    ax.text(-1, 0.565, "what our instrument samples", fontsize=9.4, color=ORANGE, weight="bold")
+        w = min(31, 100 - x0)
+        ax.add_patch(Rectangle((x0, 0.358), w, 0.155,
+                               fc=(BLUE if i % 2 == 0 else ORANGE), alpha=0.11,
+                               ec="white", lw=2.0, zorder=3))
+        ax.text(x0 + w / 2, 0.462, f"poll window {i+1}", ha="center", va="center",
+                fontsize=8.4, color=INK, zorder=6)
+        ax.text(x0 + w / 2, 0.408, "31 s", ha="center", va="center",
+                fontsize=7.8, color=MUTED, zorder=6)
 
-    ax.plot([31, 62, 93], [0.24, 0.24, 0.24], "v", ms=11, color=INK, zorder=5)
-    ax.text(-1, 0.155, "what we record", fontsize=9.4, color=INK, weight="bold")
-    for x in (31, 62, 93):
-        ax.text(x, 0.175, "one\nquote", ha="center", fontsize=7.6, color=INK, linespacing=1.35)
-        ax.plot([x, x], [0.36, 0.28], color=INK, lw=0.9, ls=":", zorder=3)
+    eyebrow(ax, -3, 0.242, "what we record", color=MUTED)
+    for x0 in [0, 31, 62]:
+        n = sum(1 for x, _, _ in evs if x0 <= x < x0 + 31)
+        cx = min(x0 + 31, 96)
+        ax.plot([cx, cx], [0.358, 0.202], color=INK, lw=0.9, ls=":", zorder=3)
+        ax.add_patch(Polygon([[cx - 5, 0.182], [cx + 5, 0.182], [cx, 0.132]],
+                             closed=True, fc=INK, ec="none", zorder=6))
+        ax.text(cx, 0.080, f"{n} events collapse\ninto 1 observation", ha="center",
+                fontsize=8.0, color=RED, linespacing=1.45, fontweight="bold")
 
-    ax.text(47, 0.055,
-            "Everything inside a window collapses to a single observation. "
-            "A book that re-priced 2 s after the run\nand one that re-priced 25 s after it are "
-            "recorded identically. Sub-window claims are unsupportable.",
-            ha="center", fontsize=9.3, color=INK, linespacing=1.6)
-    ax.set_title("The resolution ceiling: the game is finer than the instrument",
-                 fontsize=13, color=INK, pad=14)
-    fig.savefig(FIG / "p2_resolution.png", dpi=200, bbox_inches="tight")
+    title(fig, "The resolution ceiling", "the game is finer than the instrument")
+    note(fig,
+         "A book that re-priced two seconds after the run and one that took twenty five are "
+         "recorded identically.\nNo claim below the window is supportable, and the paper makes none.",
+         y=0.040)
+    fig.savefig(FIG / "p2_resolution.png", dpi=220, bbox_inches="tight")
     plt.close(fig)
 
 
-# ----------------------------------------------------------------------------- FIG 6
-def fig_instrument_windows():
-    """Two instruments, two different windows onto the same market."""
-    fig, ax = plt.subplots(figsize=(10.2, 5.6))
-    ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
-
-    caps = ["Sharp benchmark book", "Multiple books at once", "Pitch-level (Statcast)",
+# ------------------------------------------------------------------- FIG 9
+def fig_windows():
+    fig, ax = canvas(10.0, 5.8)
+    caps = ["Sharp benchmark book", "Two books at once", "Pitch-level measurement",
             "Weather and park", "Live market status", "Cross-book comparison",
             "Sub-minute timing"]
     june = [1, 0, 1, 1, 0, 0, 0]
     july = [0, 1, 0, 0, 1, 1, 0]
 
-    x1, x2, w = 0.46, 0.70, 0.175
-    ax.text(x1 + w / 2, 0.90, "JUNE\ninstrument", ha="center", fontsize=10.2, color=BLUE,
-            weight="bold", linespacing=1.4)
-    ax.text(x2 + w / 2, 0.90, "JULY\ninstrument", ha="center", fontsize=10.2, color=ORANGE,
-            weight="bold", linespacing=1.4)
+    x1, x2, w, hh = 0.475, 0.712, 0.183, 0.088
+    for x, lab, c in [(x1, "june", BLUE), (x2, "july", ORANGE)]:
+        eyebrow(ax, x + w / 2, 0.922, lab, color=c, size=9.6, ha="center")
+        ax.text(x + w / 2, 0.874, "instrument", ha="center", fontsize=8.6, color=MUTED)
 
-    y = 0.775
-    hh = 0.088
+    y = 0.758
     for cap, a, b in zip(caps, june, july):
-        ax.text(0.42, y + hh / 2, cap, fontsize=9.3, color=INK, ha="right", va="center")
+        ax.text(0.438, y + hh / 2, cap, fontsize=9.6, color=INK, ha="right", va="center")
         for x, v, c in [(x1, a, BLUE), (x2, b, ORANGE)]:
-            ax.add_patch(Rectangle((x, y), w, hh, fc=c if v else "white", ec=c if v else GRID,
-                                   lw=1.3, alpha=0.85 if v else 1.0, zorder=3))
-            ax.text(x + w / 2, y + hh / 2, "sees it" if v else "blind",
-                    ha="center", va="center", fontsize=8.4,
-                    color="white" if v else MUTED, weight="bold" if v else "normal", zorder=5)
-        y -= (hh + 0.014)
+            if v:
+                tinted(ax, x, y, w, hh, c, alpha=0.20, lw=1.5, r=0.010)
+                ax.text(x + w / 2, y + hh / 2, "sees it", ha="center", va="center",
+                        fontsize=8.6, color=c, fontweight="bold", zorder=7)
+            else:
+                card(ax, x, y, w, hh, fc=CARD, ec=HAIR, lw=1.1, r=0.010, z=3)
+                ax.text(x + w / 2, y + hh / 2, "blind", ha="center", va="center",
+                        fontsize=8.6, color=MUTED, zorder=7)
+        y -= (hh + 0.016)
 
-    ax.text(0.5, 0.075,
-            "Neither instrument is better. They are blind in different places.",
-            ha="center", fontsize=11, color=INK, weight="bold")
-    ax.text(0.5, 0.012,
-            "This is why the July data cannot replicate the June study, and why a difference between\n"
-            "them could never be attributed to the passage of time.",
-            ha="center", fontsize=9.3, color=MUTED, linespacing=1.6)
-    ax.set_title("What each instrument can see", fontsize=13, color=INK, pad=14)
-    fig.savefig(FIG / "p2_windows.png", dpi=200, bbox_inches="tight")
+    ax.text(0.5, 0.070, "Neither instrument is better. They are blind in different places.",
+            ha="center", fontsize=11.2, color=INK, fontweight="bold")
+    ax.text(0.5, 0.016,
+            "This is why a result from one could never confirm or contradict a result from the other.",
+            ha="center", fontsize=9.5, color=MUTED)
+    title(fig, "What each instrument can see")
+    fig.savefig(FIG / "p2_windows.png", dpi=220, bbox_inches="tight")
     plt.close(fig)
 
 
-# ----------------------------------------------------------------------------- FIG 7
-def fig_decision_tree():
-    """Walk the reader through the identification decision, Third Turn Protocol style."""
-    fig, ax = plt.subplots(figsize=(10.6, 6.0))
-    ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
+# ------------------------------------------------------------------- FIG 10
+def fig_bridge():
+    fig, axes = plt.subplots(1, 2, figsize=(11.2, 5.0))
+    for ax in axes:
+        ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
 
-    box(ax, 0.355, 0.855, 0.29, 0.10, "Observed lag", fc="#F2F7FA")
+    ax = axes[0]
+    eyebrow(ax, 0.5, 0.950, "paper 1", color=INK, size=10.2, ha="center")
+    ax.text(0.5, 0.886, "information in prices", ha="center", fontsize=9.4,
+            color=MUTED, style="italic")
+    for lab, y, done in [("Public information", 0.672, False), ("Market", 0.428, False),
+                         ("No increment", 0.184, True)]:
+        tinted(ax, 0.20, y, 0.60, 0.130, GREEN, alpha=0.18 if done else 0.08,
+               lw=1.7 if done else 1.2)
+        ax.text(0.50, y + 0.065, lab, ha="center", va="center", fontsize=10.4,
+                color=IDENTIFIED if done else INK, fontweight="bold", zorder=6)
+    for a, b in [(0.672, 0.566), (0.428, 0.322)]:
+        arrow(ax, (0.5, a), (0.5, b), lw=1.8)
+    ax.text(0.5, 0.100, "answered", ha="center", fontsize=10, color=IDENTIFIED,
+            fontweight="bold")
 
-    def diamond(cx, cy, w, h, label):
-        ax.add_patch(Polygon([[cx, cy + h], [cx + w, cy], [cx, cy - h], [cx - w, cy]],
-                             closed=True, fc="white", ec=INK, lw=1.4, zorder=3))
-        ax.text(cx, cy, label, ha="center", va="center", fontsize=8.9, color=INK,
-                weight="bold", zorder=5)
+    ax = axes[1]
+    eyebrow(ax, 0.5, 0.950, "paper 2", color=INK, size=10.2, ha="center")
+    ax.text(0.5, 0.886, "formation of prices", ha="center", fontsize=9.4,
+            color=MUTED, style="italic")
+    tinted(ax, 0.22, 0.708, 0.56, 0.090, GREEN, alpha=0.08, lw=1.2)
+    ax.text(0.5, 0.753, "Game event", ha="center", va="center", fontsize=10.2,
+            color=INK, fontweight="bold", zorder=6)
+    card(ax, 0.22, 0.518, 0.56, 0.100, fc=FOG, ec=HAIR, lw=1.1, z=3)
+    ax.text(0.5, 0.568, "Hidden market process", ha="center", va="center",
+            fontsize=10.2, color=MUTED, zorder=6)
+    tinted(ax, 0.22, 0.338, 0.56, 0.090, GREEN, alpha=0.08, lw=1.2)
+    ax.text(0.5, 0.383, "Observed timestamp", ha="center", va="center",
+            fontsize=10.2, color=INK, fontweight="bold", zorder=6)
+    tinted(ax, 0.15, 0.124, 0.70, 0.132, ORANGE, alpha=0.13, lw=1.7)
+    ax.text(0.5, 0.219, "Identification depends", ha="center", va="center",
+            fontsize=10.4, color=BOUNDED, fontweight="bold", zorder=6)
+    ax.text(0.5, 0.166, "on assumptions", ha="center", va="center",
+            fontsize=10.4, color=BOUNDED, fontweight="bold", zorder=6)
+    for a, b in [(0.708, 0.626), (0.518, 0.434), (0.338, 0.264)]:
+        arrow(ax, (0.5, a), (0.5, b), lw=1.4, color=MUTED, ls=(0, (2.5, 2)))
 
-    diamond(0.50, 0.715, 0.145, 0.072, "common\nevent clock?")
-    arrow(ax, (0.50, 0.855), (0.50, 0.792), lw=1.6)
-
-    diamond(0.50, 0.520, 0.155, 0.072, "feed latency known\nor common-mode?")
-    arrow(ax, (0.50, 0.643), (0.50, 0.597), lw=1.6)
-    ax.text(0.525, 0.622, "yes", fontsize=8.4, color=GREEN, weight="bold")
-
-    diamond(0.50, 0.325, 0.150, 0.070, "price series\nwell defined?")
-    arrow(ax, (0.50, 0.448), (0.50, 0.400), lw=1.6)
-    ax.text(0.525, 0.427, "yes", fontsize=8.4, color=GREEN, weight="bold")
-
-    arrow(ax, (0.50, 0.255), (0.50, 0.205), lw=1.6)
-    ax.text(0.525, 0.232, "yes", fontsize=8.4, color=GREEN, weight="bold")
-    box(ax, 0.335, 0.095, 0.33, 0.105, "OUTCOME A", "pricing latency identified",
-        fc="#E7F4EE", ec=GREEN, lw=1.7, tc=GREEN)
-
-    # side exits
-    arrow(ax, (0.345, 0.325), (0.215, 0.325), lw=1.5, color=ORANGE)
-    ax.text(0.283, 0.348, "no", fontsize=8.4, color=ORANGE, weight="bold", ha="center")
-    box(ax, 0.015, 0.270, 0.20, 0.105, "OUTCOME B", "bounds only", fc="#FBF1E6",
-        ec=ORANGE, lw=1.7, tc=ORANGE)
-
-    arrow(ax, (0.655, 0.520), (0.785, 0.520), lw=1.5, color=RED)
-    ax.text(0.720, 0.543, "no", fontsize=8.4, color=RED, weight="bold", ha="center")
-    box(ax, 0.785, 0.465, 0.20, 0.105, "OUTCOME C", "not identifiable", fc="#FBEAE6",
-        ec=RED, lw=1.7, tc=RED)
-
-    arrow(ax, (0.355, 0.715), (0.215, 0.715), lw=1.5, color=RED)
-    ax.text(0.285, 0.738, "no", fontsize=8.4, color=RED, weight="bold", ha="center")
-    ax.text(0.115, 0.715, "audit first\n(Section 5.6)", ha="center", va="center",
-            fontsize=8.6, color=RED, linespacing=1.45)
-
-    ax.text(0.5, 0.038,
-            "All three outcomes are publishable. C is a contribution, not a failure.",
-            ha="center", fontsize=10.6, color=INK, weight="bold")
-    ax.set_title("The identification decision, walked through",
-                 fontsize=13, color=INK, pad=14)
-    fig.savefig(FIG / "p2_decision_tree.png", dpi=200, bbox_inches="tight")
+    title(fig, "From efficiency to identification", y=1.03)
+    note(fig,
+         "Paper 1 asked whether prices contain public information. Paper 2 asks whether prices\n"
+         "reveal how that information entered the market.", y=0.018)
+    fig.savefig(FIG / "p2_bridge.png", dpi=220, bbox_inches="tight")
     plt.close(fig)
 
 
 def main() -> int:
-    fs.setup()
-    fig_boundary()
-    fig_information_race()
-    fig_three_worlds()
-    fig_why_paper1_could_ignore()
-    fig_anchoring()
-    fig_identification_ladder()
-    fig_resolution_ceiling()
-    fig_instrument_windows()
-    fig_decision_tree()
-    fig_bridge()
+    _init()
+    for f in (fig_boundary, fig_race, fig_why_paper1, fig_three_worlds, fig_anchoring,
+              fig_ladder, fig_decision_tree, fig_resolution, fig_windows, fig_bridge):
+        f()
     print("wrote 10 figures")
     return 0
 

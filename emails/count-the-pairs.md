@@ -3,7 +3,7 @@
 *Buttondown-ready. Paste the body below into a new email. Buttondown renders Markdown and appends
 the unsubscribe link and postal address from your footer settings, so neither is repeated here.*
 
-**Subject:** Twenty-three people. Two hundred fifty-three pairs.
+**Subject:** The 95.7 percent your statement doesn't show
 
 **Preview text:** Your statement reports the diagonal. Your risk lives in the off diagonal.
 
@@ -64,9 +64,7 @@ Chicago, Illinois
     Figures are illustrations with stated assumptions, not estimates of any market's parameters.
     Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory
     services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a
-    Registered Representative and Financial Advisor of PAS and a Financial Representative of The
-    Guardian Life Insurance Company of America&reg; (Guardian), New York, NY. PAS is a wholly owned
-    subsidiary of Guardian. Driftwood Wealth is not an affiliate or subsidiary of PAS or Guardian.
+    Registered Representative and Financial Advisor of PAS, New York, NY.
   </div>
   <div style="margin-top:14px;font-size:11px">
     <a href="https://driftwoodwealth.com/privacy.html" style="color:#6b6e6a;margin-right:12px">Privacy Policy</a>
@@ -82,16 +80,13 @@ Chicago, Illinois
 
      Two departures, both deliberate:
 
-     1. The firm is named. A proposed revision replaced "Park Avenue Securities LLC (PAS), member
-        FINRA, SIPC" with "a registered broker-dealer and investment advisor, member FINRA/SIPC".
-        FINRA Rule 2210(d)(3) requires a retail communication by a registered representative to
-        identify the member firm; a generic description identifies nobody, and the disclosure exists
-        so a reader can tell who is responsible for what they just read. The same revision dropped
-        "Driftwood Wealth is not an affiliate or subsidiary of PAS or Guardian" — the sentence that
-        stops a reader concluding Driftwood is itself the broker-dealer. Removing the name and the
-        affiliate line together makes the relationship unreadable, which is the outcome the rule is
-        written to prevent. Both stay, and both match the site's own footer exactly, which is what
-        the OSJ approved.
+     1. The disclosure is the principal's final text, supplied 2026-08-02, and it names the member
+        firm. An earlier revision would have replaced "Park Avenue Securities LLC (PAS), member
+        FINRA, SIPC" with "a registered broker-dealer and investment advisor" — FINRA Rule
+        2210(d)(3) requires a retail communication by a registered representative to identify the
+        member firm, and a generic description identifies nobody. The final text keeps the name.
+        It is shorter than the site's footer: the Guardian sentence and the affiliate sentence are
+        not carried here. That is the principal's call and it is recorded rather than argued.
 
      2. The fine print is left-aligned inside a centred block. Centred rag on nine lines of dense
         regulatory prose is hard to read and looks like a receipt. The block is centred; the

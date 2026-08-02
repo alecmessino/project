@@ -26,11 +26,11 @@
 <meta property="og:title" content="Count the Pairs, Not the People" />
 <meta property="og:description" content="Wealth compounds exponentially. The coordination surface compounds quadratically. Only one of them appears on a statement." />
 <meta property="og:url" content="https://driftwoodwealth.com/count-the-pairs.html" />
-<meta property="og:image" content="https://driftwoodwealth.com/og/index.png" />
+<meta property="og:image" content="https://driftwoodwealth.com/og/count-the-pairs.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Count the Pairs, Not the People" />
 <meta name="twitter:description" content="Twenty-three holdings produce 253 covariances. Your statement reports the diagonal; your risk lives in the off diagonal." />
-<meta name="twitter:image" content="https://driftwoodwealth.com/og/index.png" />
+<meta name="twitter:image" content="https://driftwoodwealth.com/og/count-the-pairs.png" />
 <style>
   :root{
     --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6;
@@ -154,6 +154,13 @@
   .q-next{font-family:var(--sans);font-size:14px;line-height:1.6;margin:22px 0 0}
   .q-next a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
   .q-next a:hover{border-bottom-color:var(--accent-strike)}
+  /* The reading column is .doc at 648px. Everything below the article was inheriting the frame's
+     full width instead — .essay-sub landed 200px left of centre and the disclosure ran more than
+     twice the measure of the prose above it. Three different widths stacked at the foot of one
+     page. They align to the article now. */
+  .essay-sub,.firm-anchor,.foot{max-width:648px;margin-left:auto;margin-right:auto;padding-left:44px;padding-right:44px}
+  .firm-anchor{justify-content:center;text-align:center;gap:6px 16px}
+  @media(max-width:620px){.essay-sub,.firm-anchor,.foot{padding-left:22px;padding-right:22px}}
   .sources{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-family:var(--sans);
     font-size:12.5px;line-height:1.6;color:var(--muted)}
   .sources p{font-size:12.5px;line-height:1.6;margin-bottom:9px}
@@ -172,7 +179,7 @@
     <article class="doc">
       <div class="kicker">Commentary &nbsp;·&nbsp; <a href="commentary.html">Portfolio structure</a></div>
       <h1>Count the Pairs,<br>Not the People</h1>
-      <p class="dek">Twenty-three people in a room. Two hundred fifty-three pairs. The same arithmetic governs a portfolio, and it explains why diversification stops working long before anyone notices it has stopped.</p>
+      <p class="dek">Twenty-three people in a room. Two hundred fifty-three pairs. The same arithmetic governs a portfolio, and then a household, and it explains why diversification stops working long before anyone notices it has stopped.</p>
 
       <p class="lead-in">Put twenty-three people in a room and the odds that two of them share a birthday are 50.7 percent. Most people guess something closer to five percent. The gap between those two numbers is not a failure of arithmetic. It is a failure to notice which question is being asked.</p>
 
@@ -788,22 +795,22 @@
       <text x="536.4" y="280" font-size="9" text-anchor="middle" fill="#1E2833" fill-opacity="0.55">40</text>
       <text x="658.0" y="280" font-size="9" text-anchor="middle" fill="#1E2833" fill-opacity="0.55">50</text>
       <line x1="62" y1="196.0" x2="658" y2="196.0" stroke="#2C5878" stroke-width="0.7" stroke-dasharray="4 4" stroke-opacity="0.85"/>
-      <text x="654" y="188.0" font-size="9.5" letter-spacing="0.8" text-anchor="end" fill="#2C5878">FLOOR / AVERAGE COVARIANCE</text>
+      <text x="654" y="184.0" font-size="9.5" letter-spacing="0.8" text-anchor="end" fill="#2C5878">FLOOR / AVERAGE COVARIANCE</text>
       <polyline points="62.0,37.3 74.2,116.7 86.3,143.1 98.5,156.3 110.7,164.3 122.8,169.6 135.0,173.3 147.1,176.2 159.3,178.4 171.5,180.1 183.6,181.6 195.8,182.8 208.0,183.8 220.1,184.7 232.3,185.4 244.4,186.1 256.6,186.7 268.8,187.2 280.9,187.6 293.1,188.1 305.3,188.4 317.4,188.8 329.6,189.1 341.8,189.4 353.9,189.7 366.1,189.9 378.2,190.1 390.4,190.3 402.6,190.5 414.7,190.7 426.9,190.9 439.1,191.0 451.2,191.2 463.4,191.3 475.6,191.5 487.7,191.6 499.9,191.7 512.0,191.8 524.2,191.9 536.4,192.0 548.5,192.1 560.7,192.2 572.9,192.3 585.0,192.4 597.2,192.5 609.3,192.6 621.5,192.6 633.7,192.7 645.8,192.8 658.0,192.8" fill="none" stroke="#1E2833" stroke-width="1.6"/>
       <circle cx="329.6" cy="189.1" r="3" fill="#1E2833"/>
-      <text x="338.6" y="182.1" font-size="9.5" letter-spacing="0.8" fill="#1E2833" fill-opacity="0.75">23 HOLDINGS</text>
+      <text x="329.6" y="172.0" font-size="9.5" letter-spacing="0.8" text-anchor="middle" fill="#1E2833" fill-opacity="0.75">23 HOLDINGS</text>
       <text x="62" y="300" font-size="8.5" letter-spacing="1.4" fill="#1E2833" fill-opacity="0.5">NUMBER OF HOLDINGS, EQUALLY WEIGHTED</text>
       </svg>
         <figcaption>Illustration, not a market estimate. Assumes average variance of 1.00 and average pairwise covariance of 0.30, held constant. The curve falls onto the covariance floor and stays there. It does not approach zero, and no number of additional holdings will move it, because the floor is the average relationship among the holdings rather than a property of any one of them.</figcaption>
       </figure>
 
-      <p>This is the part that matters in a crisis. Diversification does not converge toward zero risk. It converges toward the average covariance of the things being held. When correlations rise, the floor rises with them, and every holding rises together because the floor was always the shared term.</p>
+      <p>Diversification does not converge toward zero risk. It converges toward the average covariance of the things being held. When correlations rise, the floor rises with them, and every holding rises together because the floor was always the shared term.</p>
 
       <p>A portfolio of thirty positions that all draw on the same underlying condition is not thirty bets. It is closer to one bet, expressed thirty ways, with a longer statement.</p>
 
       <h2><span class="num">02</span>Both curves flatten</h2>
 
-      <p>The birthday problem is usually described as accelerating: the curve said to start flat and
+      <p>The birthday problem is usually described as accelerating: the curve is said to start flat and
         finish vertically, with the last additions doing most of the work. It is a natural thing to
         assume and it is the reverse of what happens.</p>
 
@@ -964,36 +971,6 @@
 
       <p>Count what a household actually holds. Not the balances. The objects that must remain consistent with one another: accounts, entities, trusts, beneficiary designations, titling, state jurisdictions, professional relationships. Each pair is a place where two things can disagree.</p>
 
-      <figure>
-        <div class="figbar"><span class="lab">Figure 4</span><span>Objects grow in a line. Pairs do not.</span></div>
-        <svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two curves. Holdings rise as a straight line. Pairs rise as a steep quadratic curve, reaching 780 pairs at 40 holdings.">
-      <line x1="62" y1="284.0" x2="658" y2="284.0" stroke="#1E2833" stroke-width="0.4" stroke-opacity="0.5"/>
-      <text x="53" y="287.0" font-size="9" text-anchor="end" fill="#1E2833" fill-opacity="0.55">0</text>
-      <line x1="62" y1="219.5" x2="658" y2="219.5" stroke="#1E2833" stroke-width="0.4" stroke-opacity="0.13"/>
-      <text x="53" y="222.5" font-size="9" text-anchor="end" fill="#1E2833" fill-opacity="0.55">195</text>
-      <line x1="62" y1="155.0" x2="658" y2="155.0" stroke="#1E2833" stroke-width="0.4" stroke-opacity="0.13"/>
-      <text x="53" y="158.0" font-size="9" text-anchor="end" fill="#1E2833" fill-opacity="0.55">390</text>
-      <line x1="62" y1="90.5" x2="658" y2="90.5" stroke="#1E2833" stroke-width="0.4" stroke-opacity="0.13"/>
-      <text x="53" y="93.5" font-size="9" text-anchor="end" fill="#1E2833" fill-opacity="0.55">585</text>
-      <line x1="62" y1="26.0" x2="658" y2="26.0" stroke="#1E2833" stroke-width="0.4" stroke-opacity="0.13"/>
-      <text x="53" y="29.0" font-size="9" text-anchor="end" fill="#1E2833" fill-opacity="0.55">780</text>
-      <text x="62.0" y="300" font-size="9" text-anchor="middle" fill="#1E2833" fill-opacity="0.55">0</text>
-      <text x="211.0" y="300" font-size="9" text-anchor="middle" fill="#1E2833" fill-opacity="0.55">10</text>
-      <text x="360.0" y="300" font-size="9" text-anchor="middle" fill="#1E2833" fill-opacity="0.55">20</text>
-      <text x="404.7" y="300" font-size="9" text-anchor="middle" fill="#1E2833" fill-opacity="0.55">23</text>
-      <text x="509.0" y="300" font-size="9" text-anchor="middle" fill="#1E2833" fill-opacity="0.55">30</text>
-      <text x="658.0" y="300" font-size="9" text-anchor="middle" fill="#1E2833" fill-opacity="0.55">40</text>
-      <polyline points="62.0,284.0 658.0,270.8" fill="none" stroke="#1E2833" stroke-width="1" stroke-opacity="0.42" stroke-dasharray="3 3"/>
-      <polyline points="62.0,284.0 76.9,284.0 91.8,283.7 106.7,283.0 121.6,282.0 136.5,280.7 151.4,279.0 166.3,277.1 181.2,274.7 196.1,272.1 211.0,269.1 225.9,265.8 240.8,262.2 255.7,258.2 270.6,253.9 285.5,249.3 300.4,244.3 315.3,239.0 330.2,233.4 345.1,227.4 360.0,221.2 374.9,214.5 389.8,207.6 404.7,200.3 419.6,192.7 434.5,184.8 449.4,176.5 464.3,167.9 479.2,159.0 494.1,149.7 509.0,140.1 523.9,130.2 538.8,119.9 553.7,109.4 568.6,98.4 583.5,87.2 598.4,75.6 613.3,63.7 628.2,51.5 643.1,38.9 658.0,26.0" fill="none" stroke="#2C5878" stroke-width="1.6"/>
-      <line x1="404.7" y1="200.3" x2="404.7" y2="284" stroke="#2C5878" stroke-width="0.5" stroke-opacity="0.55" stroke-dasharray="2 3"/>
-      <circle cx="404.7" cy="200.3" r="3" fill="#2C5878"/>
-      <text x="413.7" y="194.3" font-size="9.5" letter-spacing="0.8" fill="#2C5878">23 HOLDINGS / 253 PAIRS</text>
-      <text x="654.0" y="42.0" font-size="9.5" letter-spacing="0.8" text-anchor="end" fill="#2C5878">PAIRS</text>
-      <text x="654.0" y="262.8" font-size="9.5" letter-spacing="0.8" text-anchor="end" fill="#1E2833" fill-opacity="0.6">HOLDINGS</text>
-      <text x="62" y="320" font-size="8.5" letter-spacing="1.4" fill="#1E2833" fill-opacity="0.5">NUMBER OF HOLDINGS</text>
-      </svg>
-        <figcaption>Adding one object to a set of forty adds forty new pairs. The last account opened is not the marginal complication it appears to be on the account-opening form.</figcaption>
-      </figure>
 
       <table class="left">
         <thead><tr><th>Household stage</th><th>Objects</th><th>Pairs</th></tr></thead>
@@ -1005,11 +982,14 @@
       </table>
 
 
+
+      <p>Between the first row and the third, the objects grew by a factor of 4.6. The pairs grew by a factor of 22.8. In most households the balance sheet over that same span grows by considerably less than 22.8.</p>
+
       <!-- Deliberately Figure 1's drawing, with the objects swapped. The argument of the whole piece
            is that these are the same picture; saying so is weaker than showing the same picture
            twice. Same cell treatment, same accent on the diagonal, same axis furniture. -->
       <figure>
-        <div class="figbar"><span class="lab">Figure 5</span><span>The same grid, drawn on a household</span></div>
+        <div class="figbar"><span class="lab">Figure 4</span><span>The same grid, drawn on a household</span></div>
         <svg viewBox="0 0 394 394" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A 41 by 41 grid. The 41 diagonal cells are the household objects themselves. The 1,640 off-diagonal cells are the relationships between them, 820 of them distinct.">
         <defs>
         <pattern id="hcell" width="8.4390" height="8.4390" patternUnits="userSpaceOnUse">
@@ -1071,8 +1051,6 @@
           objects changed and the drawing did not.</figcaption>
       </figure>
 
-      <p>Between the first row and the third, the objects grew by a factor of 4.6. The pairs grew by a factor of 22.8. In most households the balance sheet over that same span grows by considerably less than 22.8.</p>
-
       <div class="pull">Wealth compounds exponentially. The coordination surface compounds quadratically. Only one of them appears on a statement.</div>
 
       <p>This is why an eighth account rarely feels like a decision. It arrives as paperwork. It leaves behind forty new relationships that someone is now responsible for keeping consistent, and the responsibility is usually unassigned because it was never visible enough to assign.</p>
@@ -1092,7 +1070,9 @@
         <li>The largest single-name exposure in most affluent households is not in the portfolio. It is the employer, appearing simultaneously as salary, equity compensation, deferred compensation, and frequently real property in the same metropolitan tax jurisdiction. Correlation measured inside the portfolio will not detect it, because the correlated assets are outside the portfolio.</li>
       </ul>
 
-      <p>The last point is the one that generalizes. Every version of this problem has the same shape. The object being measured is smaller than the system it sits inside, and the interactions live in the part that was not measured.</p>\n\n      <p>Most advice optimizes individual decisions. The harder and less visible problem is the connections between them.</p>
+      <p>The last point is the one that generalizes. Every version of this problem has the same shape. The object being measured is smaller than the system it sits inside, and the interactions live in the part that was not measured.</p>
+
+      <p>Most advice optimizes individual decisions. The harder and less visible problem is the connections between them.</p>
 
       <div class="close">
         <span class="tag">Open questions</span>
@@ -1100,14 +1080,16 @@
         <p class="q">At what position did the diversification benefit flatten, and how many positions were added after that?</p>
         <p class="q">What does the correlation structure look like under stress rather than under the trailing period being reported?</p>
         <p class="q">Which household objects are supposed to agree with each other, and who has been assigned to confirm that they still do?</p>
-              <p class="q-next"><a href="coordination-review.html">A framework for measuring these household connections exists in the Coordination Review &rarr;</a></p>
 </div>
 
       <p style="margin-top:34px">Twenty-three people is a small room. It is also 253 chances for something to line up.</p>
+            <p class="q-next"><a href="coordination-review.html">A framework for measuring these household connections exists in the Coordination Review &rarr;</a></p>
 
       <div class="sources">
         <p><strong>Notes.</strong> Birthday probabilities computed exactly as 1 minus the product of (365 &minus; i)/365 for i from 0 to n &minus; 1, assuming uniformly distributed birthdays across 365 days and ignoring leap years and seasonal birth patterns. Both simplifications raise the true probability of a match slightly. Marginal contributions are first differences of that series.</p>
-        <p>The portfolio variance decomposition for equally weighted portfolios is standard and appears in Elton, Gruber, Brown and Goetzmann, <em>Modern Portfolio Theory and Investment Analysis</em>. Figure 2 is an illustration with stated assumptions and is not an estimate of any market's parameters.</p>
+        <p>The portfolio variance decomposition for equally weighted portfolios is standard and appears in Elton, Gruber, Brown and Goetzmann, <em>Modern Portfolio Theory and Investment Analysis</em>. Figure 2 is the only illustration here: its assumptions are stated and it is not an estimate
+        of any market's parameters. Figures 1, 3 and 4 are exact combinatorial facts, not estimates
+        of anything.</p>
         <p>Household object counts in the table are illustrative compositions, not survey data.</p>
       </div>
     </article>

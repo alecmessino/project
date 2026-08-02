@@ -76,15 +76,24 @@ def test_firm_anchor_carries_a_city_but_never_a_street_address():
 
 
 def test_firm_anchor_omits_unset_facts_never_a_placeholder():
-    # Honesty rule: a fact produces output only when it has a real value — never a blank or
-    # placeholder line. Custodian is now set to the verified PAS value; CRD stays empty
-    # (publish-gated) and must still produce no output.
+    """A fact produces output only when it has a real value, never a blank or a placeholder.
+
+    This asserted the custodian was "Park Avenue Securities LLC (PAS), member FINRA/SIPC" until
+    2026-08-02, which pinned a factual misstatement: PAS is the broker-dealer, and naming it as the
+    custodian says something untrue about where client assets are held, inside a disclosure line.
+    The value is withheld until confirmed. The test now guards the PRINCIPLE the original was
+    reaching for — unset renders nothing — rather than one particular unverified value.
+    """
     facts = site.firm_facts()
-    assert "custodian" in facts and facts["custodian"] == "Park Avenue Securities LLC (PAS), member FINRA/SIPC"
-    assert "crd" not in facts  # CRD is publish-gated; empty must render nothing, never a placeholder
+    for gated in ("crd", "custodian"):
+        if not getattr(site, f"FIRM_{gated.upper().replace('CUSTODIAN', 'CUSTODIAN')}", ""):
+            assert gated not in facts, f"{gated} is empty and must not reach the anchor"
     a = site.firm_anchor_html()
-    assert "PARK AVENUE SECURITIES" in a.upper()
-    assert "CRD" not in a and "CUSTODIAN" not in a and "None" not in a
+    assert "None" not in a and "CRD" not in a
+    # No orphaned label: "custody" only ever appears attached to a value.
+    assert "custody " not in a or site.FIRM_CUSTODIAN
+    # Whatever is withheld, the coordinates the reader needs are still there.
+    assert "Driftwood Wealth" in a and "CHICAGO, ILLINOIS" in a.upper()
 
 
 def test_firm_anchor_band_reaches_pages_via_the_build_token():

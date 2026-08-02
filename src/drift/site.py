@@ -45,7 +45,15 @@ FIRM_PHONE = "(708) 548-7600"    # rendered in the canonical foot; tel: href is 
 
 # Deferred, consumed by the firm-anchor band once confirmed; empty means "render nothing":
 FIRM_CRD = ""        # SEC/IARD CRD number
-FIRM_CUSTODIAN = "Park Avenue Securities LLC (PAS), member FINRA/SIPC"  # custody/clearing
+# CORRECTED 2026-08-02. This held "Park Avenue Securities LLC (PAS), member FINRA/SIPC", which named
+# the broker-dealer as the custodian. Those are different roles: PAS is the broker-dealer, Pershing
+# custodies. Where client assets are actually held is a factual claim sitting inside a disclosure
+# line, which is the worst place to be approximately right.
+#
+# CONFIRM THE EXACT LEGAL FORM with compliance before this is relied on — "Pershing LLC" is the
+# registered entity, but the disclosure convention may be "BNY Mellon | Pershing" or similar. Empty
+# renders nothing, by design, so clearing it is always the safe move.
+FIRM_CUSTODIAN = "Pershing LLC"
 
 # The month/year the model data is current to, one place; bump at each data refresh.
 MODEL_ASOF = "July 2026"
@@ -100,7 +108,7 @@ def firm_anchor_html() -> str:
     # custody is provenance, not a coordinate: it belongs on the right with the data vintage.
     right = []
     if f.get("custodian"):
-        right.append(f"custody {f['custodian']}")
+        right.append(f"custody at {f['custodian']}")
     right.append(f"MODEL DATA AS OF {MODEL_ASOF.upper()}")
     return ('<div class="firm-anchor" role="contentinfo">'
             f'<span>{_ANCHOR_SEP.join(left)}</span>'

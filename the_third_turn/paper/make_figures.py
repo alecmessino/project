@@ -160,7 +160,12 @@ def fig3_encompassing():
     y = np.arange(len(names))
     bar_cols = [fs.NEUTRAL if abs(v) < 0.003 else (fs.PALETTE[2] if v > 0 else fs.PALETTE[3])
                 for v in dvals]
-    axR.barh(y, dvals, color=bar_cols, zorder=3, height=0.66)
+    bar_hatch = [fs.HATCH if abs(v) < 0.003 else "" for v in dvals]
+    bars = axR.barh(y, dvals, color=bar_cols, zorder=3, height=0.66,
+                    edgecolor=fs.MUTED, linewidth=0.0)
+    for b, hh in zip(bars, bar_hatch):          # texture only on the neutral band
+        if hh:
+            b.set_hatch(hh); b.set_edgecolor(fs.MUTED); b.set_linewidth(0.6)
     axR.axvline(0, color=fs.MUTED, linewidth=1)
     axR.axvline(0.003, color=fs.GRID, linewidth=1, linestyle="--")
     axR.axvline(-0.003, color=fs.GRID, linewidth=1, linestyle="--")
@@ -471,8 +476,10 @@ def fig_power():
     for y, (k, v) in zip(ys, items):
         col = fs.NEUTRAL if abs(v) < 0.003 else (fs.PALETTE[0] if v > 0 else fs.PALETTE[3])
         ax.plot([0, v], [y, y], color=fs.GRID, lw=1.0, zorder=1)
-        ax.plot([v], [y], marker="o", ms=8, color=col, markeredgecolor="white",
-                markeredgewidth=1.0, zorder=3)
+        near0 = abs(v) < 0.003
+        ax.plot([v], [y], marker="o", ms=8, color=col,
+                markeredgecolor=fs.MUTED if near0 else "white",
+                markeredgewidth=1.2 if near0 else 1.0, zorder=3)
     ax.axvline(0, color=fs.MUTED, lw=1.0)
     ax.axvline(floor, color=fs.INK, lw=1.4, ls="--")
     ax.text(floor + 0.0003, len(items) - 0.4,

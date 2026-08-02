@@ -13,7 +13,10 @@ import numpy as np
 PALETTE = ["#0072B2", "#E69F00", "#009E73", "#D55E00", "#56B4E9", "#CC79A7"]
 INK, MUTED, GRID = "#222222", "#666666", "#DDDDDD"
 PASS, FAIL, NA = "#1B7837", "#B2182B", "#999999"   # reserved status (with symbols, never color-alone)
-NEUTRAL = "#8C8C8C"                                 # for near-zero / not-significant bars
+NEUTRAL = "#C4CACF"   # near-zero / not-significant bars. Light enough to separate from every
+                      # PALETTE hue in grayscale (min luminance gap 16.9%, vs 0.5% for #8C8C8C);
+                      # pair with HATCH so it also reads without colour at all.
+HATCH = "///"         # texture for neutral bars: CVD, grayscale print, forced-colors
 
 
 def setup():

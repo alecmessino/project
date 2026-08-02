@@ -48,12 +48,14 @@ blockquote p:last-child { margin-bottom: 0; }
 blockquote h3 { margin-top: 0; }
 code { font-family: 'DejaVu Sans Mono', monospace; font-size: 9pt; background: #f2f2f0; padding: 0 2px; }
 hr { border: none; border-top: 0.5pt solid #ccc; margin: 16pt 0; }
-p:has(> img) { text-align: center; margin: 12pt 0 4pt; break-inside: avoid; }
+p:has(> img) { text-align: center; margin: 14pt 0 4pt; break-inside: avoid; break-after: avoid; }
 img { max-width: 88%; }
-p:has(> img) + p { font-size: 9pt; color: #333; text-align: center; margin: 0 6% 16pt; }
+p:has(> img) + p { font-size: 9pt; color: #333; text-align: center; margin: 0 6% 18pt;
+                   break-before: avoid; break-inside: avoid; }
 table { border-collapse: collapse; font-size: 8.4pt; margin: 10pt auto 14pt; width: 100%; }
 th { border-top: 1pt solid #333; border-bottom: 0.5pt solid #333; padding: 3pt 5pt; text-align: left; }
-td { border-bottom: 0.25pt solid #ccc; padding: 3pt 5pt; vertical-align: top; }
+td { border-bottom: 0.25pt solid #ccc; padding: 3pt 5pt; vertical-align: top;
+     text-align: left; hyphens: auto; overflow-wrap: break-word; }
 table { break-inside: auto; }
 tr { break-inside: avoid; }
 .protocol-box {

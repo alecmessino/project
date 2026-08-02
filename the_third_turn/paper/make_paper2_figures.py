@@ -270,6 +270,10 @@ def fig_three_worlds():
                     fontweight="bold", va="center", ha="center", zorder=8)
             tinted(ax, X0, y, pr, BH, c, alpha=0.28, lw=1.6, r=0.010)
             tinted(ax, X0 + pr, y, fd, BH, MUTED, alpha=0.15, lw=1.1, r=0.010)
+            ax.add_patch(FancyBboxPatch((X0 + pr, y), fd, BH,
+                                        boxstyle="round,pad=0.003,rounding_size=0.010",
+                                        fc="none", ec=MUTED, lw=0.0, hatch="////",
+                                        alpha=0.55, zorder=5))
             if pr > 0.17:
                 ax.text(X0 + pr / 2, y + BH / 2, "pricing", ha="center", va="center",
                         fontsize=8.2, color=c, fontweight="bold", zorder=7)
@@ -317,8 +321,8 @@ def fig_anchoring():
             ax.spines[s].set_visible(False)
         ax.spines["bottom"].set_color(HAIR)
         ax.text(5.0, 1.13, t, ha="center", fontsize=10.4, color=INK, fontweight="bold")
-        ax.axvspan(1.93, 2.07, color=GREEN, alpha=0.28, zorder=1)
-        ax.plot([2, 2], [0.04, 0.90], color=GREEN, lw=2.2, zorder=3, solid_capstyle="round")
+        ax.axvspan(1.90, 2.10, color=GREEN, alpha=0.22, zorder=1)
+        ax.plot([2, 2], [0.02, 0.92], color=GREEN, lw=3.4, zorder=3, solid_capstyle="round")
         ax.text(2.0, 0.955, "event", ha="center", fontsize=8.8, color=GREEN, fontweight="bold")
 
     ax = axes[0]
@@ -419,7 +423,7 @@ def fig_decision_tree():
     ax.text(0.524, 0.226, "yes", fontsize=8.4, color=IDENTIFIED, fontweight="bold")
 
     def outcome(x, y, w, tag, label, c):
-        tinted(ax, x, y, w, 0.105, c, alpha=0.11, lw=1.6)
+        tinted(ax, x, y, w, 0.105, c, alpha=0.11, lw=2.4)
         ax.text(x + w / 2, y + 0.068, tag, ha="center", va="center", fontsize=9.6,
                 color=c, fontweight="bold", zorder=7)
         ax.text(x + w / 2, y + 0.032, label, ha="center", va="center", fontsize=8.5,

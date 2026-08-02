@@ -2,7 +2,7 @@ name: The Third Turn — live ledger (24/7 self-rearming)
 
 # The reliable live runner for the baseball totals daemon, independent of any Claude
 # session. GitHub jobs run up to ~6h: this runs the_third_turn/live_engine.py for
-# ~5.5h, checkpoints the ledger back to the branch hourly (so fires are durable
+# ~5.5h, checkpoints the ledger back to the branch every 15 min (so fires are durable
 # even if the run is cancelled), then RE-ARMS itself so coverage is continuous. Mirrors
 # the sentinel_watch pattern — the schedule is only a bootstrap; landing on a game is
 # the long-running loop's job, not cron's.
@@ -88,20 +88,8 @@ jobs:
             done
           }
 
-          # Periodic checkpoint so fires survive a cancelled run.
-          #
-          # CADENCE IS A SHARED-QUOTA DECISION, NOT JUST A DURABILITY ONE (2026-08-02). Every
-          # checkpoint pushes, and every push to this branch creates a Vercel deployment on the
-          # project that also serves driftwoodwealth.com. At 900s that was 96 deployments a day
-          # against a 100/day account limit: this service consumed the entire allowance and the
-          # website could not deploy at all. Vercel's Ignored Build Step does not help, because it
-          # cancels the BUILD while the limit counts deployments CREATED.
-          #
-          # 3600s is 24 a day and leaves 76 for everything else. The cost is real and worth naming:
-          # a platform-cancelled run can now lose up to 60 minutes of ledger rather than 15. The
-          # end-of-run checkpoint below and the always() re-arm are unchanged, so an orderly exit
-          # still banks everything. 1800s (48/day) is the middle option if an hour is too much.
-          ( while true; do sleep 3600; checkpoint; done ) &
+          # periodic checkpoint every 15 min so fires survive a cancelled run
+          ( while true; do sleep 900; checkpoint; done ) &
           CK=$!
 
           timeout -s INT "$((MAX_MINUTES*60))" python3 the_third_turn/live_engine.py || true

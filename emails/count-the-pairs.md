@@ -61,7 +61,8 @@ Chicago, Illinois
   <hr style="border:none;border-top:1px solid #d8d3c6;margin:20px auto;width:60%" />
   <div style="font-size:11px;color:#6b6e6a;max-width:640px;margin:0 auto;line-height:1.55;text-align:left">
     Educational and illustrative, not investment, tax, or legal advice, and not a recommendation.
-    Figures are illustrations with stated assumptions, not estimates of any market's parameters.
+    Where a figure is an illustration its assumptions are stated, and it is not an estimate of any
+    market's parameters.
     Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory
     services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a
     Registered Representative and Financial Advisor of PAS, New York, NY.

@@ -155,3 +155,67 @@ def test_every_nav_tool_label_follows_the_convention():
         assert any(a in label for a in ALLOWED_REVIEWS), (
             f"nav entry {label!r} uses the reserved noun"
         )
+
+
+# ── the systems taxonomy ──────────────────────────────────────────────────────────────────────
+#
+# The count is part of the architecture, not a turn of phrase. SEVEN systems radiate from the
+# coordination engine: Investments, Taxes, Cash Flow, Family / Purpose, Estate, Protection, and
+# Business Ownership. The site said "seven systems" in fourteen places and the filename
+# six-systems.html survived from an earlier taxonomy, which is exactly the sort of split that gets
+# a stale count copied into new copy by someone reading the file tree instead of the pages.
+#
+# six-systems.html itself is fine and stays: it has been a redirect stub onto coordination.html for
+# some time, so no visitor ever reads the number in its name. What must never ship is a VISIBLE
+# "six systems", which is why these tests read rendered prose rather than raw markup.
+
+_SEVEN_SYSTEMS = ("Investments", "Taxes", "Cash Flow", "Family / Purpose", "Estate",
+                  "Protection", "Business Ownership")
+
+
+def _visible(text: str) -> str:
+    """What a reader actually sees: markup, comments, script and style removed.
+
+    Authoring comments are deliberately out of scope. hub.html carries one describing a decision
+    cascade ("not merely THAT six systems moved, but in what order one ran into the next"), which
+    may well be counting the hops in one animated trace rather than the taxonomy. Rewriting a
+    comment whose intent is ambiguous is not what this guard is for; shipping the wrong number to a
+    prospect is.
+    """
+    for pattern in (r"<!--[\s\S]*?-->", r"<script[\s\S]*?</script>", r"<style[\s\S]*?</style>"):
+        text = re.sub(pattern, " ", text)
+    return _flat(re.sub(r"<[^>]+>", " ", text))
+
+
+def test_no_shipped_page_tells_a_visitor_there_are_six_systems():
+    """The deploy-blocking half. A stale count in visible copy is an architectural mismatch the
+    reader can see, and it undercuts every other number on the site."""
+    offenders = []
+    for page in _shipped():
+        if page.suffix != ".html":
+            continue
+        prose = _visible(page.read_text(encoding="utf-8", errors="replace"))
+        if re.search(r"\bsix systems\b", prose, re.I):
+            offenders.append(page.name)
+    assert not offenders, (
+        f"pages telling a visitor there are six systems: {offenders}. The taxonomy is seven: "
+        f"{', '.join(_SEVEN_SYSTEMS)}.")
+
+
+def test_the_canonical_page_still_names_all_seven():
+    """The other half, and the one that actually decays. Banning the wrong count is worthless if
+    the right one quietly loses a member: 'seven systems' would still read fine over six names."""
+    canon = (DOCS / "coordination.html").read_text(encoding="utf-8")
+    missing = [s for s in _SEVEN_SYSTEMS if s not in canon]
+    assert not missing, f"coordination.html no longer names: {missing}"
+    assert "seven systems" in _visible(canon), \
+        "coordination.html no longer states the count it enumerates"
+
+
+def test_the_six_systems_url_is_a_redirect_and_not_a_page():
+    """It may keep its filename only for as long as nobody reads it. The moment it becomes a real
+    page again, its name is a claim, and this fails."""
+    stub = WEB / "six-systems.html"
+    assert 'http-equiv="refresh"' in stub.read_text(encoding="utf-8"), (
+        "six-systems.html is a live page again; its filename now asserts a taxonomy the firm "
+        "does not use. Rename it, or point it at coordination.html as before.")

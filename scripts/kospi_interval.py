@@ -505,17 +505,31 @@ def _day(iso: str) -> str:
     return dt.date.fromisoformat(iso).strftime("%B %-d")
 
 
+def _session_is_over(data: dict) -> bool:
+    """True once the Seoul session that produced the last row has settled (15:00 KST).
+
+    The distinction is the difference between "sits at" and "closed at", and it is not pedantry:
+    an intraday level is a number that will be wrong shortly, while a close is a fact. The page
+    should say which one it is holding, because every other figure on it is a close.
+    """
+    stamp = dt.datetime.fromisoformat(data["asOf"])
+    return (stamp.strftime("%Y-%m-%d") == data["latest"]["date"]
+            and stamp.time() >= dt.time(15, 0))
+
+
 def update_block(data: dict) -> str:
     """The dated stamp above the essay. The market facts come from the series; the reporting
     around them (the sidecar, the two chipmakers) is the morning's press and is stated as such."""
     latest = data["latest"]
     day = dt.date.fromisoformat(latest["date"])
     down = latest["change"] < 0
+    verb = "closed at" if _session_is_over(data) else "sits at"
     return (
         f'<p class="u-h"><span>Update</span><span class="u-when" id="u-when">'
         f'{day.strftime("%A, %B %-d, %Y")}</span></p>\n'
         f'      <p>The Kospi opened sharply lower in Seoul and triggered a five-minute program '
-        f'trading suspension after falling more than five percent at the open. The index sits at '
+        f'trading suspension after falling more than five percent at the open. The index '
+        f'<span id="u-verb">{verb}</span> '
         f'<span class="u-quote" id="u-level">{latest["level"]:,.2f}</span>, '
         f'<span class="u-move" id="u-move">'
         f'{"down" if down else "up"} {abs(latest["points"]):,.2f} points, or '

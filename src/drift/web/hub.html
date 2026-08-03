@@ -571,7 +571,10 @@
   .housemark{
     /* Initial tuning. Raise only if it disappears against the limestone; do not exceed .18. */
     --mark-o:.14;
-    position:absolute;top:4%;right:2.5%;height:92%;width:auto;max-width:52%;
+    /* The master's canvas carries the plate's own margins (art 726x1146 inside 1100x1500, and
+       deliberately not centred), so the box is oversized and pulled out past the hero's edges to
+       land the *bird* — not the canvas — at 92% of the hero's height with air on its right. */
+    position:absolute;top:-13.3%;right:-7%;height:120.4%;width:auto;max-width:62%;
     opacity:var(--mark-o);z-index:0;pointer-events:none;-webkit-user-select:none;user-select:none;
     /* One ink, neutralised and softened. No editorial blue reaches the page from the plate's ink,
        and the mark introduces no accent colour of its own. */
@@ -587,7 +590,7 @@
        it whole rather than cropping a fragment of body no one can name. The copy is stacked
        *above* the mark here rather than beside it, so the fade turns with it: quietest at the top
        where the paragraphs run, settling as it reaches the floor of the hero. */
-    .housemark{--mark-o:.12;top:auto;bottom:0;right:3%;width:118%;height:50%;max-width:none;
+    .housemark{--mark-o:.12;top:auto;bottom:-9%;right:3%;width:118%;height:65%;max-width:none;
       object-fit:contain;object-position:right bottom;
       -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.42) 0,rgba(0,0,0,.78) 34%,#000 66%);
       mask-image:linear-gradient(to bottom,rgba(0,0,0,.42) 0,rgba(0,0,0,.78) 34%,#000 66%)}

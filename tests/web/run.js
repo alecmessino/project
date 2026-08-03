@@ -62,6 +62,17 @@ async function main() {
     }
   })()]);
 
+  // the-shortest-line.html's window instrument, driven through ?stop=.
+  flows.push(['shortest-line', await (async () => {
+    try {
+      const { execFileSync } = require('child_process');
+      execFileSync(process.execPath, [path.join(__dirname, 'test_shortest_line.js')], { stdio: 'inherit' });
+      return {};
+    } catch (e) {
+      return { [`ERROR: ${e.message}`]: false };
+    }
+  })()]);
+
   let failed = 0, total = 0;
   for (const [name, out] of flows) {
     for (const k of Object.keys(out)) {

@@ -138,6 +138,8 @@ CURRENT = {
     "count-the-pairs.html": ("Insights", "count-the-pairs.html"),
     # Same rule. It is filed under Research, so the Research row is what lights up.
     "the-interval-problem.html": ("Insights", "research.html"),
+    # A short note rather than a paper, so it lights Commentary.
+    "the-shortest-line.html": ("Insights", "commentary.html"),
     "articles.html": ("Insights", "articles.html"),
     "driftwood-review.html": ("Insights", "driftwood-review.html"),
     "decision-memo-domicile.html": ("Insights", "insights.html"),

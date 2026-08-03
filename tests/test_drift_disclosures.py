@@ -116,7 +116,8 @@ def test_one_affiliate_sentence_names_one_firm():
     """
     from pathlib import Path
     root = Path(__file__).resolve().parents[1]
-    canonical = "Driftwood Wealth is not an affiliate or subsidiary of PAS or Guardian."
+    canonical = "Driftwood Wealth is not an affiliate or subsidiary of PAS."
+    seen: list[str] = []
     for p in sorted((root / "src" / "drift" / "web").glob("*.html")):
         raw = p.read_text()
         assert "Capitol Wealth Strategies" not in raw, \
@@ -124,10 +125,18 @@ def test_one_affiliate_sentence_names_one_firm():
         # These pages hard-wrap their disclosure paragraph, so compare on collapsed whitespace —
         # the sentence is the unit under test, not the column the author happened to wrap at.
         t = re.sub(r"\s+", " ", raw)
-        for sentence in re.findall(r"[A-Za-z,. ]*?\b(?:is|are) not (?:an affiliate|affiliates) or "
-                                   r"subsidiar(?:y|ies) of PAS or Guardian\.", t):
+        found = re.findall(r"[A-Za-z,. ]*?\b(?:is|are) not (?:an affiliate|affiliates) or "
+                           r"subsidiar(?:y|ies) of PAS\.", t)
+        for sentence in found:
             assert sentence.strip().endswith(canonical), \
                 f"{p.name} varies the affiliate sentence: {sentence.strip()!r}"
+        seen.extend(found)
+    # A regex that matches nothing passes every assertion under it. When the Guardian entity was
+    # removed on 2026-08-03 this pattern stopped matching anywhere and the test went green while
+    # checking nothing at all, which is the failure mode a disclosure guard can least afford.
+    assert len(seen) > 30, (
+        f"the affiliate sentence was found on only {len(seen)} pages, so this test is no longer "
+        "checking the thing it names")
 
 
 def test_hypothetical_exhibits_carry_an_audience_statement():
@@ -179,3 +188,43 @@ def test_core_alpha_exhibits_carry_the_research_banner():
         assert "Core Alpha Research" in t, f"{tmpl.name}: banner not labeled Core Alpha Research"
         assert "Structural Alpha" in t, f"{tmpl.name}: banner does not name the flagship strategy"
         assert "hypothetical" in t.lower(), f"{tmpl.name}: banner must label the track hypothetical"
+
+
+def test_the_guardian_entity_is_gone_from_every_shipped_surface():
+    """Removed 2026-08-03 at the principal's direction: the practice is under Park Avenue
+    Securities with custody at BNY Pershing, and the Guardian affiliation no longer describes it.
+
+    Scanned across BOTH trees plus the generators, because the disclosure reaches a page by three
+    different routes (a hand-written template, sync_docs.py, and the state-page generator), and a
+    stale affiliation surviving on one of them is a false statement about who the firm is.
+    """
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    targets = (list((root / "src" / "drift" / "web").glob("*.html"))
+               + list((root / "docs").glob("*.html"))
+               + [root / "src" / "drift" / "statepage.py", root / "scripts" / "phase2_nav.py"])
+    offenders = [str(p.relative_to(root)) for p in targets
+                 if "Guardian" in p.read_text(encoding="utf-8", errors="replace")]
+    assert not offenders, f"the Guardian affiliation is back on: {offenders[:8]}"
+
+
+def test_the_park_avenue_disclosure_survived_the_removal():
+    """The other half. Cutting Guardian must not have taken the broker-dealer with it, and the
+    sentence that remains has to still read as a sentence rather than as a seam."""
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    import re as _re
+    checked = 0
+    for p in sorted((root / "docs").glob("*.html")):
+        t = _re.sub(r"\s+", " ", p.read_text(encoding="utf-8", errors="replace"))
+        if "Park Avenue Securities" not in t:
+            continue
+        checked += 1
+        assert "Registered Representative" in t, f"{p.name} lost the representative disclosure"
+        # The seam the removal could leave: the clause that was cut carried the space in front of
+        # it, so "Financial Advisor of PAS and a Financial Representative of ..." collapses to
+        # "Financial Advisor of PAS ." if the space is not taken with it. Scoped to the sentence
+        # rather than the document, because a stylesheet is full of " ." class selectors.
+        assert not _re.search(r"of PAS\s+\.", t), f"{p.name} has a dangling space before a period"
+        assert not _re.search(r"subsidiary of PAS\s+\.", t), f"{p.name} has a seam in the affiliate line"
+    assert checked > 40, f"only {checked} pages carry the PAS disclosure"

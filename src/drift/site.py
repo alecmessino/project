@@ -39,9 +39,16 @@ FIRM_LEGAL_NAME = "Driftwood Wealth"
 # now has to make the firm reachable, and a reader deciding whether to hand over trust documents is
 # entitled to know what city the practice is in. CITY AND STATE ONLY — no street address, which
 # remains a legal/ADV disclosure and must not appear in marketing.
-FIRM_LOCATION = "Chicago, Illinois"
+# 2026-08-03: two offices, and they are rendered as two coordinates rather than joined with "and".
+# The band already separates its items with a middot, so "CHICAGO, ILLINOIS · AUSTIN, TEXAS" reads
+# as a list in the band's own grammar, while "CHICAGO, ILLINOIS AND AUSTIN, TEXAS" reads as one
+# long string with a conjunction buried in tracked caps.
+FIRM_LOCATIONS = ("Chicago, Illinois", "Austin, Texas")
+FIRM_LOCATION = FIRM_LOCATIONS[0]   # kept for callers that want a single city
 FIRM_SINCE = "2024"              # founding year, for the "Founded" line
-FIRM_PHONE = "(708) 548-7600"    # rendered in the canonical foot; tel: href is derived from it
+# 2026-08-03, principal-directed: the phone leaves the canonical foot. The email remains, so the
+# band still makes the practice reachable; a number is a different commitment from an inbox.
+FIRM_PHONE = ""
 
 # Deferred, consumed by the firm-anchor band once confirmed; empty means "render nothing":
 FIRM_CRD = ""        # SEC/IARD CRD number
@@ -53,7 +60,8 @@ FIRM_CRD = ""        # SEC/IARD CRD number
 # CONFIRM THE EXACT LEGAL FORM with compliance before this is relied on — "Pershing LLC" is the
 # registered entity, but the disclosure convention may be "BNY Mellon | Pershing" or similar. Empty
 # renders nothing, by design, so clearing it is always the safe move.
-FIRM_CUSTODIAN = "Pershing LLC"
+# 2026-08-03, principal-directed: BNY Pershing.
+FIRM_CUSTODIAN = "BNY Pershing"
 
 # The month/year the model data is current to, one place; bump at each data refresh.
 MODEL_ASOF = "July 2026"
@@ -64,6 +72,7 @@ def firm_facts() -> dict:
     firm renders exactly the lines that are true today and grows as facts are confirmed."""
     candidates = {
         "legal_name": FIRM_LEGAL_NAME,
+        "locations": FIRM_LOCATIONS,
         "location": FIRM_LOCATION,
         "since": FIRM_SINCE,
         "phone": FIRM_PHONE,
@@ -77,39 +86,46 @@ def firm_facts() -> dict:
 
 _ANCHOR_SEP = "&nbsp;&nbsp;·&nbsp;&nbsp;"
 
+# Each coordinate wraps as a unit. Without it the line breaks wherever it runs out of room, and a
+# footer that reads "CUSTODY AT / BNY PERSHING" or "CHICAGO, / ILLINOIS" is a footer that has been
+# typeset by the viewport rather than by anyone.
+
 
 def firm_anchor_html() -> str:
-    """The coordinates band (Launch Standard, item D): a restrained institution + provenance strip for
-    page footers, 'Driftwood Wealth · A PRACTICE OF ALEC MESSINO' left, provenance right. Renders
-    only confirmed facts, so an unset fact (CRD, custodian) simply does not appear, never a placeholder.
-    One source; change a fact in site.py and every footer follows on the next build.
+    """The coordinates band: the wordmark on its own line, then a hairline meta strip of coordinates
+    and provenance. Renders only confirmed facts, so an unset fact (CRD, phone) simply does not
+    appear, never a placeholder. One source; change a fact in site.py and every footer follows.
 
-    The band is styled as a small tracked-caps meta strip (.firm-anchor, driftwood.css) — but the firm
-    NAME is the wordmark, and the wordmark is title-case everywhere else on the site (nav brand lockup,
-    hub.html hero). .firm-anchor-brand overrides the parent's text-transform so the name renders in its
-    one true case here too, while the surrounding descriptor/provenance text keeps the meta-strip
-    treatment. 'One logo, one case, one type, everywhere' (2026 wordmark unification)."""
+    2026-08-03. The band used to run everything on one line: wordmark, descriptor, city, phone,
+    email, custody, data vintage. Seven things in tracked caps at 10px, and the firm's own NAME was
+    the least prominent thing in it, because it was competing with six coordinates set in the same
+    size. The name now sits above the strip at a size that lets it read as a wordmark, and the
+    strip below it carries the coordinates alone.
+
+    Dropped at the principal's direction: "A PRACTICE OF ALEC MESSINO" (the descriptor repeats what
+    the page's disclosure already says at length), the phone number, and "MODEL DATA AS OF ...".
+    The last of those was provenance for the exhibits and had no business on an essay.
+    """
     f = firm_facts()
-    left = [f'<span class="firm-anchor-brand">{FIRM_LEGAL_NAME}</span>']
-    # Not registered: the practice is named for its principal, not a "Founded" year.
-    left.append("A PRACTICE OF ALEC MESSINO")
-    if f.get("location"):
-        left.append(f["location"].upper())
+    left = []
+    for city in f.get("locations", ()):
+        left.append(city.upper())
     if f.get("crd"):
         left.append(f"CRD {f['crd']}")
-    # Reachability moved into the anchor, 2026-08-01. The band used to be pure provenance, which meant
-    # the pages a professional is most likely to land on carried no way to make contact at all.
-    # Rendered as real tel:/mailto: links so a phone can act on them.
     if f.get("phone"):
         digits = "".join(c for c in FIRM_PHONE if c.isdigit())
         left.append(f'<a href="tel:+1{digits}">{FIRM_PHONE}</a>')
     if f.get("contact_email"):
         left.append(f'<a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL.upper()}</a>')
-    # custody is provenance, not a coordinate: it belongs on the right with the data vintage.
-    right = []
+    # Custody used to sit in its own right-hand span, opposite the coordinates. That split earned
+    # its keep when the right side carried custody AND the data vintage against five coordinates on
+    # the left. With one item on each side it is structure for its own sake, and a two-column flex
+    # under a centred wordmark wraps into two rows that no longer agree about their alignment. One
+    # row, in the band's own separator, follows whatever the page does.
     if f.get("custodian"):
-        right.append(f"custody at {f['custodian']}")
-    right.append(f"MODEL DATA AS OF {MODEL_ASOF.upper()}")
+        left.append(f"CUSTODY AT {f['custodian'].upper()}")
     return ('<div class="firm-anchor" role="contentinfo">'
-            f'<span>{_ANCHOR_SEP.join(left)}</span>'
-            f'<span>{_ANCHOR_SEP.join(right)}</span></div>')
+            f'<span class="firm-anchor-brand">{FIRM_LEGAL_NAME}</span>'
+            '<span class="firm-anchor-meta">'
+            + _ANCHOR_SEP.join(f'<span class="fa-i">{item}</span>' for item in left)
+            + '</span></div>')

@@ -145,7 +145,7 @@ def test_the_mark_is_decorative_and_unlinked():
 # ── restraint: it never competes with the typography ──────────────────────────────────────────
 
 def test_the_mark_stays_under_the_opacity_ceiling():
-    """Tuned at .19 and capped at .20.
+    """Tuned at .19, working band .17–.20.
 
     The first cut sat at .14 and was a ghost on limestone — present only if you went looking for
     it, which is the opposite of what a house mark is for. The ceiling still matters in the other
@@ -155,7 +155,7 @@ def test_the_mark_stays_under_the_opacity_ceiling():
     levels = [float(v) for v in re.findall(r"--mark-o:\s*(\.\d+|0?\.\d+)", t)]
     assert levels, "the house mark's opacity token is gone"
     assert max(levels) <= 0.20, f"the house mark is too loud: {levels}"
-    assert max(levels) >= 0.16, f"the house mark is a ghost again: {levels}"
+    assert max(levels) >= 0.17, f"the house mark is a ghost again: {levels}"
 
 
 def test_the_mark_sits_behind_the_copy():

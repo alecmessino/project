@@ -261,7 +261,12 @@ def compute(rows: list[list], quote: dict) -> dict:
 # also get a static default state here, so the page is complete and truthful with JavaScript
 # turned off and the script only ever enhances what is already on the screen.
 
-INK, LINE, ACCENT, POS, NEG, MUTED = "#1E2833", "#D8D3C6", "#2C5878", "#2F6F5B", "#9B4439", "#6B6E6A"
+INK, LINE, ACCENT, MUTED = "#1E2833", "#D8D3C6", "#2C5878", "#6B6E6A"
+# Two weights of one ink, not two hues. The green/red diverging pair reads as a retail trading
+# screen, and it was doing no work the geometry was not already doing: a bar's sign is which side
+# of the zero rule it sits on, which is unambiguous before any colour is applied. Same treatment
+# the five drawdown paths use on the companion piece, so the two read as one system.
+UP, DOWN = 1.0, 0.42
 # The two surfaces a figure can sit on: the page itself, and the ruled sheet an instrument is
 # drawn on. A marker that overlaps its own line needs a ring in the colour behind it.
 PAPER, SHEET = "#F1EFE9", "#F7F5F0"
@@ -300,7 +305,8 @@ def fig_july(data: dict) -> str:
         cx = pad_l + slot * (i + 0.5)
         y = zero - r * span if r >= 0 else zero
         out.append(f'<rect x="{cx - bw / 2:.1f}" y="{y:.1f}" width="{bw:.1f}" '
-                   f'height="{abs(r) * span:.1f}" fill="{POS if r >= 0 else NEG}"/>')
+                   f'height="{abs(r) * span:.1f}" fill="{INK}" '
+                   f'fill-opacity="{UP if r >= 0 else DOWN}"/>')
         if day[-2:] in ("01", "06", "13", "20", "28", "31"):
             out.append(f'<text x="{cx:.1f}" y="{h - bot + 18:.1f}" text-anchor="middle" '
                        f'font-size="9.5" letter-spacing=".08em" fill="{MUTED}">'
@@ -472,9 +478,10 @@ def fig_ladder(data: dict, missed: int = 0) -> str:
         cx = pad_l + slot * (n + 0.5)
         y = zero - v * span if v >= 0 else zero
         active = n == missed
+        weight = (UP if v >= 0 else DOWN) * (1 if active else 0.34)
         out.append(f'<rect data-bar="{n}" x="{cx - bw / 2:.1f}" y="{y:.1f}" width="{bw:.1f}" '
-                   f'height="{abs(v) * span:.1f}" fill="{POS if v >= 0 else NEG}" '
-                   f'fill-opacity="{1 if active else 0.3}"/>')
+                   f'height="{abs(v) * span:.1f}" fill="{INK}" '
+                   f'fill-opacity="{weight:.3f}"/>')
         out.append(f'<text x="{cx:.1f}" y="{h - bot + 17:.1f}" text-anchor="middle" '
                    f'font-size="9.5" fill="{INK if active else MUTED}" '
                    f'font-weight="{700 if active else 400}">{n}</text>')

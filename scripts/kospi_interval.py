@@ -587,9 +587,18 @@ def main() -> int:
         print(f"   cache    {CACHE.relative_to(ROOT)} ({len(rows)} sessions)")
     else:
         rows, quote = fetch()
-        CACHE.parent.mkdir(parents=True, exist_ok=True)
-        CACHE.write_text(json.dumps({"symbol": SYMBOL, "quote": quote, "rows": rows}, indent=0))
-        print(f"   fetched  {SYMBOL}: {len(rows)} sessions, last {rows[-1][0]} at {rows[-1][1]}")
+        if args.check:
+            # --check writes NOTHING, and the cache is a write. Refreshing it here would leave the
+            # committed series ahead of the page that was generated from it, which is a state the
+            # suite (correctly) fails on: the page would be quoting a level the cache no longer
+            # holds. A read-only mode that moves the source of truth is not read-only.
+            print(f"   fetched  {SYMBOL}: {len(rows)} sessions, last {rows[-1][0]} at "
+                  f"{rows[-1][1]} (not written)")
+        else:
+            CACHE.parent.mkdir(parents=True, exist_ok=True)
+            CACHE.write_text(json.dumps({"symbol": SYMBOL, "quote": quote, "rows": rows},
+                                        indent=0))
+            print(f"   fetched  {SYMBOL}: {len(rows)} sessions, last {rows[-1][0]} at {rows[-1][1]}")
 
     data = compute(rows, quote)
     f = data["facts"]

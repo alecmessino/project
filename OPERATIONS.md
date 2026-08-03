@@ -505,34 +505,28 @@ resting with the neck folded — the pose is the argument (observation, composur
 judgment, deliberate action). Native canvas `1100 × 1500`, art bounding box 726 × 1146; the right
 margin is deliberately 80px wider than the left and the bird is **not** centred.
 
-**The technique, cut to the plate specification (2026-08-03).** One ink (`#1E2833`), 100% opaque —
-all apparent grey is stroke coverage at the pixel level, never transparency, never a gradient.
+**The technique (final pass, 2026-08-03).** One ink (`#1E2833`), line hatch and stipple only, and
+**no outlines anywhere** — the bird's edge is simply where the tone stops, which is what lets it
+survive being embossed, where a contour would not.
 
-- **The lay is global.** Family A runs at a constant **+26°** across the entire figure: neck,
-  torso, wing plane, tail, bill, legs. It does **not** follow the anatomy. Form is described
-  *entirely* by continuous variation in stroke weight. Bending the hatch around the form is the
-  single most common way this technique is faked, and it is what makes a result read as
-  illustration-with-texture instead of as an engraving. Family B crosses at **−68°** (94° off A,
-  deliberately not orthogonal, so the shadows never resolve into a printed screen) and Family C at
-  **+82°** deepens the darkest passages. A stipple layer carries the mid-tones and the transitions.
-- **Every mark is a filled ribbon** — a closed variable-width shape, `fill` only, `stroke="none"`.
-  Nothing is an SVG stroked line, because `stroke-width` is constant along a path and the whole
-  technique depends on width swelling and dying along one burin pass.
-- **No outlines anywhere.** The silhouette exists only as a `<clipPath>` that is never painted; the
-  bird's edge is where hatch strokes stop against it. Where the hatch is dense the edge reads
-  crisp; where weight has fallen under the 0.06px visibility floor — the top of the back, the
-  upper surface of the bill, the lit side of the legs — the edge genuinely disappears and the eye
-  closes the form. One hairline contour collapses the whole effect. It is also why the mark
-  survives being embossed, where a contour would not.
-- **The tonal architecture:** darkest at the lower breast and under the folded wing; the neck a
-  *lighter* passage than the torso, which is what makes it read as a separate cylinder; the head
-  the lightest large form at ~12–15% coverage, which draws the eye upward without using contrast
-  or an outline; the legs lightest of all at ~10%, beaded and broken rather than solid bars. The
-  eye is a single solid 10px disc at (341.3, 230.8) — the only fully saturated element in the
-  drawing, and the reason a dot that small holds the composition.
-- Measured against the specification's acceptance checks after every regeneration: FFT lay
-  +26.6° @ 8.1px and −67.2° @ 9.7px, lower body 50.7%, head 15.0%, legs 9.3%, median perpendicular
-  stroke width 3.2px, art bbox 724 × 1143, zero painted paths coincident with the silhouette.
+The hatch is **streamlines through a flow field** built from the bird's own armatures — the bill's
+axis, the neck's S, the body's sweep to the tail, the wing's feather direction — spaced evenly by
+the Jobard–Lefebvre rule and inked as *runs*: long unbroken burin passes in shadow, breaking into
+nicks and then nothing in the light. Cross-hatching is a shadow technique only; laid over the whole
+form it turns an engraving into a basket. Stroke weight is bucketed by tone. Tone falls off into
+the perimeter so the edge dissolves rather than reading as a cut-out.
+
+A constant-angle version was built to a supplied plate specification and rejected on the live page:
+it hit every acceptance number and still read as a faint, unfinished hatch field. **The pose study
+is the visual authority, not the theory.** Two things followed from that:
+
+- **Density.** The plate is cut for the opacity it actually lives at. At `.14` it was a ghost on
+  limestone — visible only if you went looking for it, which is the opposite of a house mark. The
+  core now carries real ink, the legs are continuous and structural rather than beaded, and the
+  hero sits at **`.19`** (band `.16–.20`, ceiling `.20`). Judge it on the page, never in isolation.
+- **Placement.** It is a counterweight to the text block, not something parked in the margin: right
+  half of the hero, ~9% of the hero's width as air to its right so it is anchored against the frame
+  rather than pressed into it, at 96% of the hero's height so the legs reach the floor of the plate.
 
 **The hero placement (`hub.html`).** It replaced the generic hydrographic plate that had been in
 that slot — page furniture with nothing to say. Anchored right as the counterweight to the text

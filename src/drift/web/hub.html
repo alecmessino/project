@@ -569,12 +569,14 @@
      Typography always wins: the mark stays on z-index 0, and it is masked back — not cropped —
      where it approaches the copy. ── */
   .housemark{
-    /* Initial tuning. Raise only if it disappears against the limestone; do not exceed .18. */
-    --mark-o:.14;
-    /* The master's canvas carries the plate's own margins (art 726x1146 inside 1100x1500, and
-       deliberately not centred), so the box is oversized and pulled out past the hero's edges to
-       land the *bird* — not the canvas — at 92% of the hero's height with air on its right. */
-    position:absolute;top:-13.3%;right:-7%;height:120.4%;width:auto;max-width:62%;
+    /* Presence first. At .14 the mark was a ghost on limestone — visible only if you went looking
+       for it, which is the opposite of a house mark. .19 is where the form holds its weight and
+       still sits behind the typography; the ceiling is .20. */
+    --mark-o:.19;
+    /* Placed as a counterweight, not parked in the margin. The bird sits in the right half of the
+       hero with ~9% of the hero's width as air to its right, so it is anchored against the frame
+       rather than pressed into it, and the legs have room to reach the floor of the plate. */
+    position:absolute;top:2%;right:9%;height:96%;width:auto;max-width:46%;
     opacity:var(--mark-o);z-index:0;pointer-events:none;-webkit-user-select:none;user-select:none;
     /* One ink, neutralised and softened. No editorial blue reaches the page from the plate's ink,
        and the mark introduces no accent colour of its own. */
@@ -582,15 +584,15 @@
     /* The same masking approach the survey plates use, aimed the other way: the bill is the part
        of the engraving that reaches toward the headline, so the bill is the part that gives way.
        Nothing is cropped — the whole bird is present, it simply thins where the words are. */
-    -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.58) 0,rgba(0,0,0,.84) 24%,#000 50%);
-    mask-image:linear-gradient(to right,rgba(0,0,0,.58) 0,rgba(0,0,0,.84) 24%,#000 50%)}
+    -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.55) 0,rgba(0,0,0,.84) 26%,#000 52%);
+    mask-image:linear-gradient(to right,rgba(0,0,0,.55) 0,rgba(0,0,0,.84) 26%,#000 52%)}
   @media(max-width:900px){
     /* Ground texture beneath the stacked content, not a picture beside it. The band is wider than
        the hero so the bird sits hard against the right edge with air to its left; `contain` keeps
        it whole rather than cropping a fragment of body no one can name. The copy is stacked
        *above* the mark here rather than beside it, so the fade turns with it: quietest at the top
        where the paragraphs run, settling as it reaches the floor of the hero. */
-    .housemark{--mark-o:.12;top:auto;bottom:-9%;right:3%;width:118%;height:65%;max-width:none;
+    .housemark{--mark-o:.16;top:auto;bottom:0;right:4%;width:118%;height:56%;max-width:none;
       object-fit:contain;object-position:right bottom;
       -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.42) 0,rgba(0,0,0,.78) 34%,#000 66%);
       mask-image:linear-gradient(to bottom,rgba(0,0,0,.42) 0,rgba(0,0,0,.78) 34%,#000 66%)}

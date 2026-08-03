@@ -45,43 +45,24 @@ def test_the_committed_master_matches_the_generator():
 
 
 def test_the_engraving_is_hatch_and_stipple_only():
-    """Engraved vocabulary, stated structurally: filled ribbons, stipple dots, one solid disc for
-    the eye, and the clip that is never painted. A gradient or a filter would be a different kind
-    of picture — all apparent grey here is stroke coverage at the pixel level, never transparency
-    and never a ramp."""
+    """Engraved vocabulary, stated structurally: paths of open marks, one solid dot for the eye,
+    and nothing else. A <rect>, a gradient, or a filter would be a different kind of picture."""
     svg = MASTER.read_text(encoding="utf-8")
     tags = set(re.findall(r"<([a-zA-Z][a-zA-Z0-9]*)", svg))
-    assert tags <= {"svg", "defs", "clipPath", "g", "path", "circle"}, \
-        f"non-engraving elements in the master: {tags}"
+    assert tags <= {"svg", "g", "path", "circle"}, f"non-engraving elements in the master: {tags}"
     assert "gradient" not in svg and "filter" not in svg and "<image" not in svg
-    assert "opacity" not in svg, "the ink is 100% opaque; grey comes from coverage, not alpha"
-
-
-def test_nothing_in_the_master_is_stroked():
-    """Every mark is a filled ribbon. `stroke-width` is constant along a path, and the whole
-    technique depends on width swelling and dying along a single burin pass — so a stroked line
-    cannot express it. Section 3: fill only, stroke="none"."""
-    svg = MASTER.read_text(encoding="utf-8")
-    assert "stroke-width" not in svg and "stroke-linecap" not in svg
-    assert set(re.findall(r'stroke="([^"]*)"', svg)) <= {"none"}
 
 
 def test_the_engraving_carries_no_outline():
-    """Acceptance check 8, and the load-bearing rule of the whole mark.
-
-    The silhouette exists only as a `<clipPath>`; the bird's edge is where hatch strokes stop
-    against it. Where the hatch is dense the edge reads crisp, and where the weight has fallen
-    under the visibility floor — the top of the back, the upper surface of the bill, the lit side
-    of the legs — the edge genuinely disappears and the eye closes the form. One hairline contour
-    would collapse the whole effect, so: no painted path may be coincident with any clip path.
-    """
+    """**No outlines** is the load-bearing rule of the whole mark: the bird's edge is where the
+    tone stops, which is what makes it read as atmosphere before illustration — and what lets it
+    survive being embossed, where a contour would not. Every subpath is an open mark; nothing
+    closes, so nothing can be a silhouette."""
     svg = MASTER.read_text(encoding="utf-8")
-    clip = svg[svg.index("<clipPath"):svg.index("</clipPath>")]
-    outline = set(re.findall(r' d="([^"]*)"', clip))
-    painted = set(re.findall(r' d="([^"]*)"', svg[svg.index("</defs>"):]))
-    assert outline, "the silhouette clip is gone"
-    assert not (outline & painted), "a silhouette path is being painted — that is an outline"
-    assert 'clip-path="url(#' in svg, "the tone is no longer clipped by the silhouette"
+    for d in re.findall(r' d="([^"]*)"', svg):
+        assert "z" not in d.lower(), "a closed subpath appeared — the mark has grown an outline"
+        # Every mark is a single move plus one short segment: M..l.. or M..h0 (a stipple dot).
+        assert not re.search(r"[CcSsQqTtAa]", d), "curves are not the engraver's vocabulary here"
 
 
 def test_the_engraving_is_one_ink():
@@ -92,53 +73,21 @@ def test_the_engraving_is_one_ink():
     assert colours == {heron.INK}, f"the master is no longer a single ink: {sorted(colours)}"
 
 
-def test_the_hatch_angle_is_global():
-    """Acceptance checks 1 and 2, at the source. The primary lay is a constant +26 degrees across
-    the entire figure — neck, torso, wing plane, tail, bill, legs. It does not follow the form;
-    form is described entirely by stroke weight. Rotating the hatch per region is the single most
-    common way this technique is faked. Family B crosses at 94 degrees off A, deliberately not
-    orthogonal, so the cross-hatched shadows never resolve into a printed screen."""
-    fam = {f[0]: f for f in heron._FAMILIES}
-    assert fam["A"][1] == 26.0 and abs(fam["A"][2] - 8.2) < 1e-9
-    assert fam["B"][1] == -68.0 and abs(fam["B"][2] - 10.0) < 1e-9
-    assert abs((fam["A"][1] - fam["B"][1]) - 94.0) < 1e-9, "A and B must sit 94 degrees apart"
-    # one angle per family, applied once, to everything
-    src = (ROOT / "src" / "drift" / "heron.py").read_text(encoding="utf-8")
-    assert src.count("_FAMILIES") == 2, "a second angle table means the lay has gone per-region"
-
-
 def test_the_bird_faces_left_into_the_page():
-    """Standing, Alert, facing left — toward the headline. The bill tip is the leftmost thing on
-    the plate and the eye sits well behind it; if that ever inverts, the pose has been redrawn."""
-    bill_x = min(x for x, _ in heron._HEAD)
-    assert bill_x < heron._EYE[0], "the bird is no longer facing left"
-    assert bill_x < 0.15 * heron.W, "the bill should reach the left of the plate"
+    """Standing, Alert, facing left — toward the headline. The bill is the leftmost thing on the
+    plate and the eye sits well behind it; if that ever inverts, the pose has been redrawn."""
+    bill_x = min(x for x, _ in heron._CULMEN)
+    eye_x, _ = heron._EYE
+    assert bill_x < eye_x, "the bird is no longer facing left"
+    assert bill_x < 0.15 * heron.W, "the bill should reach the left edge of the plate"
 
 
 def test_the_pose_is_standing_alert_on_two_legs():
     """Not striking, not in flight, not resting: both legs down and carrying weight, head above
     the body, nothing folded."""
-    assert heron._LEG_NEAR[-1][1] > 0.85 * heron.H and heron._LEG_FAR[-1][1] > 0.85 * heron.H, \
+    assert heron._LEG_A[-1][1] > 0.9 * heron.H and heron._LEG_B[-1][1] > 0.9 * heron.H, \
         "a leg has left the ground — this is no longer the standing pose"
     assert heron._EYE[1] < 0.2 * heron.H, "the head has dropped; the alert pose carries it high"
-
-
-def test_the_far_leg_is_pushed_back_in_space():
-    """Section 6.3 — the clearest available improvement on the source plate, which renders both
-    legs at the same tonal weight. An engraver lightens the far one so it sits behind."""
-    src = (ROOT / "src" / "drift" / "heron.py").read_text(encoding="utf-8")
-    scale = float(re.search(r"return (0\.\d+) if \(far\.inside", src).group(1))
-    assert 0.80 <= scale <= 0.85, f"the far leg is at {scale:.2f} of the near leg; want 15-20% off"
-
-
-def test_the_eye_is_a_single_solid_disc():
-    """Not a stipple cluster. It is the only fully saturated element in the drawing and it sits in
-    the lightest zone; that contrast is what lets a 10px dot hold the whole composition."""
-    svg = MASTER.read_text(encoding="utf-8")
-    eye = re.search(r'<circle id="eye" cx="([\d.]+)" cy="([\d.]+)" r="([\d.]+)"', svg)
-    assert eye, "the eye is no longer a single filled circle"
-    assert abs(float(eye.group(1)) - 341.3) < 0.5 and abs(float(eye.group(2)) - 230.8) < 0.5
-    assert abs(float(eye.group(3)) - 5.0) < 0.05, "the eye must stay 10px across"
 
 
 # ── scarcity: where the mark may and may not appear ───────────────────────────────────────────
@@ -196,12 +145,17 @@ def test_the_mark_is_decorative_and_unlinked():
 # ── restraint: it never competes with the typography ──────────────────────────────────────────
 
 def test_the_mark_stays_under_the_opacity_ceiling():
-    """Tuned at .14 and capped at .18. Past that it stops being the ground the words sit on and
-    starts being a picture they sit in front of."""
+    """Tuned at .19 and capped at .20.
+
+    The first cut sat at .14 and was a ghost on limestone — present only if you went looking for
+    it, which is the opposite of what a house mark is for. The ceiling still matters in the other
+    direction: past .20 the mark stops being the ground the words sit on and starts being a
+    picture they sit in front of."""
     t = HUB.read_text(encoding="utf-8")
     levels = [float(v) for v in re.findall(r"--mark-o:\s*(\.\d+|0?\.\d+)", t)]
     assert levels, "the house mark's opacity token is gone"
-    assert max(levels) <= 0.18, f"the house mark is too loud: {levels}"
+    assert max(levels) <= 0.20, f"the house mark is too loud: {levels}"
+    assert max(levels) >= 0.16, f"the house mark is a ghost again: {levels}"
 
 
 def test_the_mark_sits_behind_the_copy():

@@ -102,6 +102,10 @@ def main() -> int:
                   # the four production pages of the 2026 redesign
                   "the-practice.html", "the-record.html", "tax-atlas.html",
                   "letter.html", "private.html", "count-the-pairs.html",
+                  # Data-backed essay: its figures and its prose numbers are written into the
+                  # source page by scripts/kospi_interval.py, so it ships like any other static
+                  # page and the generator is what keeps it true.
+                  "the-interval-problem.html",
                   # Phase 2 dropdown-nav sub-pages (plain editorial stubs)
                   "household-example.html", "our-story.html",
                   "coordination-framework.html", "articles.html", "cpa-collab.html",

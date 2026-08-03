@@ -49,6 +49,19 @@ async function main() {
     }
   })()]);
 
+  // the-interval-problem.html's two instruments, driven through ?cadence= and ?missed=. Same
+  // subprocess pattern; the flow also pins the essay's own claim that the period return is
+  // identical on every checking cadence.
+  flows.push(['interval-instruments', await (async () => {
+    try {
+      const { execFileSync } = require('child_process');
+      execFileSync(process.execPath, [path.join(__dirname, 'test_interval_instruments.js')], { stdio: 'inherit' });
+      return {};
+    } catch (e) {
+      return { [`ERROR: ${e.message}`]: false };
+    }
+  })()]);
+
   let failed = 0, total = 0;
   for (const [name, out] of flows) {
     for (const k of Object.keys(out)) {

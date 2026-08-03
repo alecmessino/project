@@ -106,6 +106,8 @@ def main() -> int:
                   # source page by scripts/kospi_interval.py, so it ships like any other static
                   # page and the generator is what keeps it true.
                   "the-interval-problem.html",
+                  # Its companion note, on the comparison the essay's argument gets applied to.
+                  "the-shortest-line.html",
                   # Phase 2 dropdown-nav sub-pages (plain editorial stubs)
                   "household-example.html", "our-story.html",
                   "coordination-framework.html", "articles.html", "cpa-collab.html",

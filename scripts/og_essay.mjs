@@ -39,6 +39,25 @@ const ESSAYS = {
       <circle cx="376" cy="62" r="9" fill="${ACCENT}" stroke="none"/>
     </svg>`,
   },
+  'the-shortest-line': {
+    kicker: 'Commentary \u00b7 Market structure',
+    title: 'The Shortest Line\non the Chart',
+    sub: 'Korea\u2019s crash looks like the worst in Asian history because it is the only one still in progress.',
+    // Five drawdowns from one peak. The bold short one is the newest, and the reason it looks
+    // worst is that the others are still falling past the edge of the frame.
+    art: `<svg viewBox="0 0 400 400" fill="none" stroke="${INK}" aria-hidden="true">
+      <line x1="40" y1="40" x2="380" y2="40" stroke-width="1.5" stroke-opacity=".45"/>
+      <path d="M40 40 L86 92 L132 78 L178 140 L224 126 L270 196 L316 178 L362 246"
+        stroke-width="2.2" stroke-opacity=".26" stroke-linejoin="round"/>
+      <path d="M40 40 L86 70 L132 118 L178 104 L224 168 L270 214 L316 262 L362 300"
+        stroke-width="2.2" stroke-opacity=".2" stroke-linejoin="round"/>
+      <path d="M40 40 L86 118 L132 96 L178 158 L224 190 L270 250 L316 300 L362 352"
+        stroke-width="2.2" stroke-opacity=".15" stroke-linejoin="round"/>
+      <path d="M40 40 L70 104 L100 86 L130 168 L160 150 L190 244" stroke="${ACCENT}"
+        stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="190" cy="244" r="9" fill="${ACCENT}" stroke="none"/>
+    </svg>`,
+  },
   'count-the-pairs': {
     kicker: 'Commentary · Portfolio structure',
     title: 'Count the Pairs,\nNot the People',

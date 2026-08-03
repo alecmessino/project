@@ -223,6 +223,48 @@
     figure svg text{font-size:16px}
   }
   @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* ── Print, and the PDF that is cut from it ───────────────────────────────────────────────
+     A research essay gets saved and forwarded, so the printed object has to be a document
+     rather than a screenshot of a web page. Three things have to go: the site chrome (a
+     masthead and a booking button are navigation, and paper does not navigate), the controls
+     (a slider printed at 50 percent opacity is a picture of a thing you cannot use), and the
+     subscribe form. What stays is the argument, the four exhibits in whatever state the page
+     was in when it was printed, and the whole disclosure.
+     ───────────────────────────────────────────────────────────────────────────────────────── */
+  @media print{
+    @page{margin:16mm 15mm 15mm}
+    body{background:#fff;font-size:11pt;line-height:1.55}
+    .dwnav,.essay-sub,.switch,.stepper,details.tabular,.q-next{display:none!important}
+    .wrap{margin:0}
+    .doc{max-width:none;padding:0}
+    figure,.instrument{width:auto;margin-inline:0}
+    /* Text holds a reading measure; exhibits take the full page. The same relationship the web
+       page has, for the same reason: prose set to the width of a chart is prose nobody finishes.
+       36em lands at roughly seventy characters, which is where a line stops needing to be
+       re-found on the way back. */
+    .doc > p,.doc > h2,.dek,.update,.aside,.close,.sources,.instrument .i-d,
+    .instrument .i-t,figcaption{max-width:36em}
+    p{font-size:11pt;line-height:1.55;margin-bottom:11pt;orphans:3;widows:3}
+    h1{font-size:30pt;margin-bottom:8pt}
+    h2{font-size:15pt;margin:20pt 0 6pt;break-after:avoid}
+    .dek{font-size:12pt}
+    .lead-in{font-size:12pt}
+    /* An exhibit split across a page break is an exhibit nobody can read. */
+    figure,.instrument,.aside,.update,.readout{break-inside:avoid}
+    figcaption,.legend{break-before:avoid}
+    .instrument{background:#fff;padding:12pt 14pt}
+    .instrument .i-d{margin-bottom:10pt}
+    .close{break-inside:avoid;margin-top:22pt}
+    .sources,.foot{font-size:8pt;line-height:1.45}
+    .foot{border-top:1px solid var(--line);padding:10pt 0 0;margin-top:16pt}
+    .firm-anchor,.sources{padding-left:0;padding-right:0;max-width:none}
+    .foot{padding-left:0;padding-right:0;max-width:none}
+    a{color:var(--ink);text-decoration:none}
+    /* The URL is the only navigation paper can offer, so the one that matters is printed. */
+    .update::after{content:"driftwoodwealth.com/the-interval-problem.html";display:block;
+      margin-top:12pt;font-size:8pt;letter-spacing:.08em;color:var(--muted)}
+  }
 </style>
 </head>
 <body>
@@ -610,6 +652,12 @@
         <p><strong>Everything else.</strong> Index weights, leveraged-product balances, margin loan
           totals, monetary policy and company results as reported by Reuters, Yahoo Finance, LSEG,
           Bloomberg, Korea JoongAng Daily and other market press, July and August 2026.</p>
+        <!-- The one place a download belongs: a reader who has finished and wants to forward it.
+             Put at the top it competes with the headline and invites people to defer the piece
+             rather than read it. -->
+        <p><strong>Print edition.</strong> This piece is also available as a
+          <a href="The-Interval-Problem-Driftwood-Wealth.pdf">PDF</a>, cut from this page with the
+          interval instrument set to quarterly and the ladder to five sessions missed.</p>
         <p><strong>Limits.</strong> The missed-session figures are arithmetic illustrations of index
           returns. They are not an account, not an investable product, and not a strategy: no one
           could have known in advance which sessions to miss, which is the point being made rather

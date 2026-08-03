@@ -38,6 +38,7 @@
     --brass:#2c5878; --teal2:#15806a; --pos:#2f6f5b; --neg:#9b4439; --navy:#1a2330;
   }
   *{box-sizing:border-box}
+  *,*::before,*::after{border-radius:0}
   body{margin:0;background:var(--bg);color:var(--body);font:18px/1.78 var(--sans);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{margin:40px auto;padding-block:0 60px;}
@@ -58,7 +59,8 @@
   h2{font-family:var(--sans);font-weight:700;font-size:26px;line-height:1.15;letter-spacing:-.015em;
     color:var(--ink);margin:52px 0 10px}
   h2 .num{display:block;font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.2em;
-    color:var(--accent-strike);margin-bottom:11px;text-transform:uppercase}
+    color:var(--accent-strike);text-transform:uppercase;margin-bottom:9px;padding-bottom:9px;
+    border-bottom:1px solid var(--line);width:32px}
   strong{color:var(--ink);font-weight:600}
   .pull{font-family:var(--serif);font-weight:500;font-size:23px;line-height:1.4;color:var(--ink);
     margin:34px 0;padding-left:20px;border-left:3px solid var(--brass)}
@@ -80,7 +82,15 @@
 
   .stepper{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 8px}
   .stepper label{font-family:var(--sans);font-size:13px;color:var(--dim);font-weight:500}
-  .stepper input[type=range]{flex:1 1 240px;min-width:200px;accent-color:var(--accent-strike);height:22px}
+  .stepper input[type=range]{flex:1 1 240px;min-width:200px;height:22px;
+    -webkit-appearance:none;appearance:none;background:transparent;cursor:pointer}
+  .stepper input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--frame-line)}
+  .stepper input[type=range]::-moz-range-track{height:2px;background:var(--frame-line)}
+  .stepper input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:11px;height:18px;margin-top:-8px;background:var(--accent-strike);border:0;border-radius:0}
+  .stepper input[type=range]::-moz-range-thumb{width:11px;height:18px;background:var(--accent-strike);
+    border:0;border-radius:0}
+  .stepper input[type=range]:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
   .stepper output{font-family:var(--sans);font-size:22px;font-weight:700;color:var(--ink);
     font-variant-numeric:tabular-nums;min-width:4ch;text-align:right}
   .marks{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
@@ -103,18 +113,22 @@
   .rank li.lead .n{font-weight:700}
   .rank li .flag{font-size:11.5px;color:var(--muted);font-weight:400}
 
+  /* Three rules and no more: above the header, below it, and under the last row. Ruling every row
+     boxes the numbers in; the eye tracks a row perfectly well on alignment alone. */
   table{width:100%;border-collapse:collapse;margin:30px 0;font-family:var(--sans);font-size:14.5px;
     font-variant-numeric:tabular-nums}
+  thead{border-top:1px solid var(--ink)}
   th{text-align:left;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
-    color:var(--muted);border-bottom:1px solid var(--ink);padding:0 12px 8px 0;line-height:1.4}
-  td{padding:10px 12px 10px 0;border-bottom:1px solid var(--line);color:var(--body)}
+    color:var(--muted);border-bottom:1px solid var(--ink);padding:9px 12px 8px 0;line-height:1.4}
+  td{padding:10px 12px 10px 0;border:0;color:var(--body)}
+  tbody tr:last-child td{border-bottom:1px solid var(--ink)}
   tr.hi td{color:var(--accent-strike);font-weight:600}
   th:not(:first-child),td:not(:first-child){text-align:right;padding-right:0}
   .tscroll{overflow-x:auto}
 
   .close{border-top:1px solid var(--ink);margin-top:60px;padding-top:26px}
-  .close .tag{font-family:var(--sans);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
-    color:var(--muted);display:block;margin-bottom:16px;font-weight:700}
+  .close .tag{font-family:var(--sans);font-size:13px;letter-spacing:.01em;color:var(--muted);
+    display:block;margin-bottom:16px;font-weight:700}
   .q{font-family:var(--serif);font-size:19px;line-height:1.42;margin:0 0 16px;color:var(--ink)}
   .signoff{font-family:var(--sans);font-size:13px;letter-spacing:.02em;color:var(--muted);margin:36px 0 0}
   .q-next{font-family:var(--sans);font-size:14px;line-height:1.6;margin:22px 0 0}
@@ -177,7 +191,7 @@
 
       <p><b>The window is the whole claim.</b> Korea's line is the shortest one on the chart, because Korea's crash is the youngest by eleven years. The other four had not finished falling when the window closed. Three of them had barely started.</p>
 
-      <h2><span class="num">01</span>Where each line actually ended</h2>
+      <h2><span class="num">01</span> Where each line actually ended</h2>
 
       <p>Follow the same five series past fifty sessions and the ranking inverts. Korea's 38.6 percent is the shallowest decline of the five, not the deepest. The Nikkei lost 81.9 percent from its 1989 peak. Hong Kong lost 65.2 percent from 2007, Korea itself lost 64.7 percent in the Asian financial crisis, and Shanghai lost 52.3 percent after 2015.</p>
 
@@ -200,7 +214,7 @@
 
       <p>Depth and duration are different questions, and neither is the question a fifty-session window answers.</p>
 
-      <h2><span class="num">02</span>Move the window</h2>
+      <h2><span class="num">02</span> Move the window</h2>
 
       <p>The useful way to see this is not to argue about which frame is correct. It is to watch the title change hands.</p>
 
@@ -281,7 +295,7 @@
 
       <p class="pull">Every one of those statements is true. They describe the same five events, from the same peaks, in the same currency.</p>
 
-      <h2><span class="num">03</span>Why this keeps happening</h2>
+      <h2><span class="num">03</span> Why this keeps happening</h2>
 
       <p>A superlative is not a fact about a market. It is a fact about a market and a window, and the window is usually chosen by whatever is convenient: the length of the shortest series, the width of a chart, the period a data vendor happens to return.</p>
 

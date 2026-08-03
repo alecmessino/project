@@ -38,6 +38,10 @@
     --brass:#2c5878; --gold:#a9c2d6; --teal:#15463a; --teal2:#15806a; --pos:#2f6f5b; --neg:#9b4439; --navy:#1a2330;
   }
   *{box-sizing:border-box}
+  /* Every corner on this page is square. The site's constitution says surfaces are paper, and the
+     one element that ignored it was the range input, which every browser draws as a pill with a
+     round thumb: the single most recognisable "framework default" on the page. */
+  *,*::before,*::after{border-radius:0}
   body{margin:0;background:var(--bg);color:var(--body);font:18px/1.78 var(--sans);
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{margin:40px auto;padding-block:0 60px;}
@@ -60,8 +64,14 @@
   a{color:var(--teal2)}
   h2{font-family:var(--sans);font-weight:700;font-size:26px;line-height:1.15;letter-spacing:-.015em;
     color:var(--ink);margin:52px 0 10px}
+  /* The number sits above the heading with a short rule under it. It already rendered on its own
+     line; what it lacked was a boundary, so on a fast scroll it read as a coloured prefix rather
+     than as a section marker. The literal space before the heading text in the markup is not
+     decorative: a block-level span emits no whitespace character, so copy-paste, PDF text layers
+     and screen readers all produced "01The July sequence". */
   h2 .num{display:block;font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.2em;
-    color:var(--accent-strike);margin-bottom:11px;text-transform:uppercase}
+    color:var(--accent-strike);text-transform:uppercase;margin-bottom:9px;padding-bottom:9px;
+    border-bottom:1px solid var(--line);width:32px}
   ul{margin:0 0 22px;padding-left:20px}
   li{margin-bottom:10px;line-height:1.7}
   li::marker{color:var(--accent-strike)}
@@ -69,6 +79,26 @@
   .pull{font-family:var(--serif);font-weight:500;font-size:23px;line-height:1.4;color:var(--ink);
     margin:34px 0;padding-left:20px;border-left:3px solid var(--brass)}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+  /* ── Marginalia. Two figures the argument turns on, lifted out of the paragraph they sit in and
+     set in the left margin. The measure does not change; the note hangs off it. Below the
+     breakpoint where a margin exists there is no margin, so it falls back into the flow as a
+     ruled aside rather than disappearing.
+
+     Set in the site's own data voice, not a monospace: there is no monospace face on Driftwood,
+     and adding one would put a third family on a frozen type system for the sake of two numbers.
+     Tracked-caps label over a tabular figure is what every other number on the site wears. ── */
+  .marg{position:relative}
+  .marg .mnote{font-family:var(--sans);border-top:1px solid var(--ink);padding-top:8px;
+    margin:26px 0 22px;max-width:34ch}
+  .marg .mk{display:block;font-size:9.5px;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:7px;line-height:1.45}
+  .marg .mv{display:block;font-size:26px;font-weight:700;letter-spacing:-.02em;color:var(--ink);
+    font-variant-numeric:tabular-nums;line-height:1.05}
+  .marg .md{display:block;font-size:12px;line-height:1.5;color:var(--muted);margin-top:7px}
+  @media(min-width:1120px){
+    .marg .mnote{position:absolute;left:-232px;top:2px;width:196px;margin:0;max-width:none}
+  }
 
   /* ── The dated update. It sits ABOVE the essay because it is newer than the essay, and it is
        bracketed rather than boxed so it reads as a stamp on a document rather than as a banner
@@ -102,7 +132,6 @@
   .legend{display:flex;gap:24px;flex-wrap:wrap;margin:16px 0 0;font-family:var(--sans);font-size:12.5px;color:var(--muted)}
   .legend span{display:flex;align-items:center;gap:8px}
   .sw{width:11px;height:11px;display:inline-block;border:.5px solid rgba(30,40,51,.4)}
-  .sw.up{background:var(--pos)} .sw.dn{background:var(--neg)}
   .sw.rd{background:var(--accent-strike)} .sw.al{background:rgba(30,40,51,.22)}
 
   /* ── The two instruments. Square surfaces, hairline borders, no shadow: they are ruled sheets
@@ -150,34 +179,56 @@
   /* the stepper: the ladder's control, a range plus its own value */
   .stepper{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 18px}
   .stepper label{font-family:var(--sans);font-size:13px;color:var(--dim);font-weight:500}
-  .stepper input[type=range]{flex:1 1 240px;min-width:200px;accent-color:var(--accent-strike);height:22px}
+  .stepper input[type=range]{flex:1 1 240px;min-width:200px;height:22px;
+    -webkit-appearance:none;appearance:none;background:transparent;cursor:pointer}
+  .stepper input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--frame-line)}
+  .stepper input[type=range]::-moz-range-track{height:2px;background:var(--frame-line)}
+  .stepper input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:11px;height:18px;margin-top:-8px;background:var(--accent-strike);border:0;border-radius:0}
+  .stepper input[type=range]::-moz-range-thumb{width:11px;height:18px;background:var(--accent-strike);
+    border:0;border-radius:0}
+  .stepper input[type=range]:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
   .stepper output{font-family:var(--sans);font-size:22px;font-weight:700;color:var(--ink);
     font-variant-numeric:tabular-nums;min-width:2ch;text-align:right}
   .stepper .s-note{font-family:var(--sans);font-size:12.5px;color:var(--muted);flex-basis:100%;margin:0}
 
-  /* the table view, for anyone the chart does not serve */
-  details.tabular{margin:16px 0 0;font-family:var(--sans)}
-  details.tabular summary{font-size:12px;letter-spacing:.06em;color:var(--muted);cursor:pointer;
-    padding:8px 0;border-top:1px solid var(--line2)}
-  details.tabular summary:hover{color:var(--ink)}
-  details.tabular table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0 0;
+  /* The controls row: what the instrument shows on the left, how it is drawn on the right. The
+     table used to hide behind a "Show the figures as a table" text link under the chart, which
+     read as developer furniture and buried the one view a screen reader can actually use. */
+  .controls{display:flex;justify-content:space-between;align-items:center;gap:10px 14px;
+    flex-wrap:wrap;margin:0 0 20px}
+  .controls .switch{margin:0}          /* the row owns the spacing, not the controls in it */
+  .viewswitch{margin-left:auto}
+
+  /* the table view, on equal footing with the chart */
+  .tabular{font-family:var(--sans)}
+  .tabular table{width:100%;border-collapse:collapse;font-size:14px;margin:0;
     font-variant-numeric:tabular-nums}
-  details.tabular th{text-align:left;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
-    font-weight:700;color:var(--muted);border-bottom:1px solid var(--ink);padding:0 12px 7px 0}
-  details.tabular td{padding:8px 12px 8px 0;border-bottom:1px solid var(--line2);color:var(--body)}
-  details.tabular th:not(:first-child),details.tabular td:not(:first-child){text-align:right;padding-right:0}
+  /* Three rules and no more: above the header, below it, and under the last row. Ruling every row
+     boxes the numbers in; the eye tracks a row perfectly well on alignment alone. */
+  .tabular thead{border-top:1px solid var(--ink)}
+  .tabular th{text-align:left;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+    font-weight:700;color:var(--muted);border-bottom:1px solid var(--ink);padding:9px 12px 8px 0}
+  .tabular td{padding:9px 12px 9px 0;border:0;color:var(--body)}
+  .tabular tbody tr:last-child td{border-bottom:1px solid var(--ink)}
+  .tabular tbody tr.hi td{color:var(--accent-strike);font-weight:600}
+  .tabular th:not(:first-child),.tabular td:not(:first-child){text-align:right;padding-right:0}
+  [data-view-target][hidden]{display:none}
 
   /* the digression, set apart rather than cut */
   .aside{border:1px solid var(--line);padding:24px 26px;margin:42px 0;background:var(--soft)}
-  .aside .tag{font-family:var(--sans);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
-    color:var(--accent-strike);font-weight:700;display:block;margin-bottom:12px}
+  /* Sentence case, not tracked caps. Six words of uppercase is a headline wearing a label's
+     clothes; the tracked-caps treatment is reserved for short trackers (INSTRUMENT, FIGURE 1) and
+     the masthead. */
+  .aside .tag{font-family:var(--sans);font-size:13px;letter-spacing:.01em;font-weight:700;
+    color:var(--accent-strike);display:block;margin-bottom:12px}
   .aside p{margin-bottom:14px;font-size:15.5px;line-height:1.65}
   .aside p:last-child{margin-bottom:0}
 
   /* the close: the piece stops, it does not sell */
   .close{border-top:1px solid var(--ink);margin-top:70px;padding-top:26px}
-  .close .tag{font-family:var(--sans);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
-    color:var(--muted);display:block;margin-bottom:16px;font-weight:700}
+  .close .tag{font-family:var(--sans);font-size:13px;letter-spacing:.01em;color:var(--muted);
+    display:block;margin-bottom:16px;font-weight:700}
   .q{font-family:var(--serif);font-size:19px;line-height:1.42;margin:0 0 16px;color:var(--ink)}
   .signoff{font-family:var(--sans);font-size:13px;letter-spacing:.02em;color:var(--muted);margin:36px 0 0}
   .q-next{font-family:var(--sans);font-size:14px;line-height:1.6;margin:22px 0 0}
@@ -244,7 +295,8 @@
        36em lands at roughly seventy characters, which is where a line stops needing to be
        re-found on the way back. */
     .doc > p,.doc > h2,.dek,.update,.aside,.close,.sources,.instrument .i-d,
-    .instrument .i-t,figcaption{max-width:36em}
+    .instrument .i-t,figcaption,.marg > p{max-width:36em}
+    .marg .mnote{position:static;width:auto;margin:14pt 0 12pt}
     p{font-size:11pt;line-height:1.55;margin-bottom:11pt;orphans:3;widows:3}
     h1{font-size:30pt;margin-bottom:8pt}
     h2{font-size:15pt;margin:20pt 0 6pt;break-after:avoid}
@@ -305,7 +357,7 @@
 
       <p>That distinction sounds academic until you notice that it governs almost everything an investor believes about their own portfolio.</p>
 
-      <h2><span class="num">01</span>The July sequence</h2>
+      <h2><span class="num">01</span> The July sequence</h2>
 
       <p>Some context is owed before the arithmetic. The Kospi entered July at 8,476.48, up 96.7 percent on the year, and the index had become a proxy for two companies. Samsung Electronics and SK Hynix carried more than half its market capitalization, and once single-stock leveraged products are counted, the pair regularly exceeded 70 percent of daily turnover. Korea had not so much doubled as its memory sector had, and the benchmark came along.</p>
 
@@ -313,7 +365,11 @@
 
       <p>Then the inputs turned. The Bank of Korea raised rates for the first time since 2023, the global AI trade cooled, and on July 28 came reports that China had begun mass production of domestic DUV lithography tools. SK Hynix reported record second-quarter revenue of 79.3 trillion won the following day and still missed consensus, which was 84 trillion.</p>
 
-      <p>The scale is easier to see from the top. The index closed at 9,114.55 on June 22 and at 5,593.56 on July 30, a decline of 38.6 percent across twenty-seven trading sessions. Bloomberg data at the end of July put the Kospi's year-to-date return volatility at 63 percent, against 48 percent for Bitcoin over the same period.</p>
+      <div class="marg">
+        <p class="mnote"><span class="mk">Year-to-date volatility</span><span class="mv">63%</span>
+          <span class="md">Kospi, to end-July. Bitcoin over the same period: 48 percent.</span></p>
+        <p>The scale is easier to see from the top. The index closed at 9,114.55 on June 22 and at 5,593.56 on July 30, a decline of 38.6 percent across twenty-seven trading sessions. Bloomberg data at the end of July put the Kospi's year-to-date return volatility at 63 percent, against 48 percent for Bitcoin over the same period.</p>
+      </div>
 
       <p>The decline itself was faster than most coverage suggested. July 2 fell 7.9 percent, and by the close on July 13 the index sat at 6,806.93, having given back 19.7 percent in nine trading sessions. What followed was less a slide than a sequence of shocks: a 10.8 percent drop on July 28, the second-worst session of the year, then 6.0 percent the next day, leaving the index at 5,593.56 on July 30.</p>
 
@@ -335,48 +391,44 @@
 <text x="46" y="205.9" text-anchor="end" font-size="9.5" letter-spacing=".08em" fill="#6B6E6A">-5%</text>
 <line x1="54" y1="242.1" x2="648" y2="242.1" stroke="#D8D3C6" stroke-width="0.5" stroke-opacity="1"/>
 <text x="46" y="245.5" text-anchor="end" font-size="9.5" letter-spacing=".08em" fill="#6B6E6A">-10%</text>
-<rect x="58.6" y="162.8" width="17.8" height="16.2" fill="#9B4439"/>
+<rect x="58.6" y="162.8" width="17.8" height="16.2" fill="#1E2833" fill-opacity="0.42"/>
 <text x="67.5" y="276.0" text-anchor="middle" font-size="9.5" letter-spacing=".08em" fill="#6B6E6A">1</text>
-<rect x="85.6" y="162.8" width="17.8" height="62.6" fill="#9B4439"/>
-<rect x="112.6" y="117.1" width="17.8" height="45.7" fill="#2F6F5B"/>
-<rect x="139.6" y="162.8" width="17.8" height="3.6" fill="#9B4439"/>
+<rect x="85.6" y="162.8" width="17.8" height="62.6" fill="#1E2833" fill-opacity="0.42"/>
+<rect x="112.6" y="117.1" width="17.8" height="45.7" fill="#1E2833" fill-opacity="1.0"/>
+<rect x="139.6" y="162.8" width="17.8" height="3.6" fill="#1E2833" fill-opacity="0.42"/>
 <text x="148.5" y="276.0" text-anchor="middle" font-size="9.5" letter-spacing=".08em" fill="#6B6E6A">6</text>
-<rect x="166.6" y="162.8" width="17.8" height="39.0" fill="#9B4439"/>
-<rect x="193.6" y="162.8" width="17.8" height="42.4" fill="#9B4439"/>
-<rect x="220.6" y="157.9" width="17.8" height="4.9" fill="#2F6F5B"/>
-<rect x="247.6" y="142.8" width="17.8" height="20.0" fill="#2F6F5B"/>
-<rect x="274.6" y="162.8" width="17.8" height="71.0" fill="#9B4439"/>
+<rect x="166.6" y="162.8" width="17.8" height="39.0" fill="#1E2833" fill-opacity="0.42"/>
+<rect x="193.6" y="162.8" width="17.8" height="42.4" fill="#1E2833" fill-opacity="0.42"/>
+<rect x="220.6" y="157.9" width="17.8" height="4.9" fill="#1E2833" fill-opacity="1.0"/>
+<rect x="247.6" y="142.8" width="17.8" height="20.0" fill="#1E2833" fill-opacity="1.0"/>
+<rect x="274.6" y="162.8" width="17.8" height="71.0" fill="#1E2833" fill-opacity="0.42"/>
 <text x="283.5" y="276.0" text-anchor="middle" font-size="9.5" letter-spacing=".08em" fill="#6B6E6A">13</text>
-<rect x="301.6" y="157.0" width="17.8" height="5.8" fill="#2F6F5B"/>
-<rect x="328.6" y="113.3" width="17.8" height="49.5" fill="#2F6F5B"/>
-<rect x="355.6" y="162.8" width="17.8" height="50.5" fill="#9B4439"/>
-<rect x="382.6" y="162.8" width="17.8" height="35.4" fill="#9B4439"/>
+<rect x="301.6" y="157.0" width="17.8" height="5.8" fill="#1E2833" fill-opacity="1.0"/>
+<rect x="328.6" y="113.3" width="17.8" height="49.5" fill="#1E2833" fill-opacity="1.0"/>
+<rect x="355.6" y="162.8" width="17.8" height="50.5" fill="#1E2833" fill-opacity="0.42"/>
+<rect x="382.6" y="162.8" width="17.8" height="35.4" fill="#1E2833" fill-opacity="0.42"/>
 <text x="391.5" y="276.0" text-anchor="middle" font-size="9.5" letter-spacing=".08em" fill="#6B6E6A">20</text>
-<rect x="409.6" y="134.6" width="17.8" height="28.2" fill="#2F6F5B"/>
-<rect x="436.6" y="156.9" width="17.8" height="5.9" fill="#2F6F5B"/>
-<rect x="463.6" y="127.9" width="17.8" height="34.9" fill="#2F6F5B"/>
-<rect x="490.6" y="162.8" width="17.8" height="45.4" fill="#9B4439"/>
-<rect x="517.6" y="155.1" width="17.8" height="7.7" fill="#2F6F5B"/>
-<rect x="544.6" y="162.8" width="17.8" height="86.0" fill="#9B4439"/>
+<rect x="409.6" y="134.6" width="17.8" height="28.2" fill="#1E2833" fill-opacity="1.0"/>
+<rect x="436.6" y="156.9" width="17.8" height="5.9" fill="#1E2833" fill-opacity="1.0"/>
+<rect x="463.6" y="127.9" width="17.8" height="34.9" fill="#1E2833" fill-opacity="1.0"/>
+<rect x="490.6" y="162.8" width="17.8" height="45.4" fill="#1E2833" fill-opacity="0.42"/>
+<rect x="517.6" y="155.1" width="17.8" height="7.7" fill="#1E2833" fill-opacity="1.0"/>
+<rect x="544.6" y="162.8" width="17.8" height="86.0" fill="#1E2833" fill-opacity="0.42"/>
 <text x="553.5" y="276.0" text-anchor="middle" font-size="9.5" letter-spacing=".08em" fill="#6B6E6A">28</text>
-<rect x="571.6" y="162.8" width="17.8" height="47.4" fill="#9B4439"/>
-<rect x="598.6" y="162.8" width="17.8" height="9.8" fill="#9B4439"/>
-<rect x="625.6" y="20.7" width="17.8" height="142.1" fill="#2F6F5B"/>
+<rect x="571.6" y="162.8" width="17.8" height="47.4" fill="#1E2833" fill-opacity="0.42"/>
+<rect x="598.6" y="162.8" width="17.8" height="9.8" fill="#1E2833" fill-opacity="0.42"/>
+<rect x="625.6" y="20.7" width="17.8" height="142.1" fill="#1E2833" fill-opacity="1.0"/>
 <text x="634.5" y="276.0" text-anchor="middle" font-size="9.5" letter-spacing=".08em" fill="#6B6E6A">31</text>
 <text x="643.4" y="11.7" text-anchor="end" font-size="10.5" font-weight="700" fill="#1E2833">Jul 31, +17.9%</text>
 </svg>
 <!--/FIG-JULY-->
-        <div class="legend">
-          <span><i class="sw up"></i> Session closed higher</span>
-          <span><i class="sw dn"></i> Session closed lower</span>
-        </div>
         <figcaption>Ten of the month's twenty-two sessions moved more than five percent in one
           direction or the other. Across the year to that point, thirty-two of one hundred forty-two
           did, and they did not arrive evenly: seven in March, seven in June, ten in July. Volatility
           is not spread across a calendar. It arrives in weather.</figcaption>
       </figure>
 
-      <h2><span class="num">02</span>Three frames, one dataset</h2>
+      <h2><span class="num">02</span> Three frames, one dataset</h2>
 
       <p>Look at the month and you see a collapse of 22.2 percent. Look at Friday and you see the best session the index has ever recorded. Look at the year and you see the Kospi up 53.0 percent through July 31.</p>
 
@@ -430,7 +482,7 @@
           sampling frequency did.</figcaption>
       </figure>
 
-      <h2><span class="num">03</span>Why the best day arrives inside the worst month</h2>
+      <h2><span class="num">03</span> Why the best day arrives inside the worst month</h2>
 
       <p>The obvious reading is that Korea is unusually volatile and therefore unusually prone to this effect. That reading is too comfortable. Korea makes the problem legible because the magnitudes are large. It does not create the problem.</p>
 
@@ -450,11 +502,15 @@
           is doing more work than the number.</p>
       </div>
 
-      <h2><span class="num">04</span>The arithmetic of stepping out</h2>
+      <h2><span class="num">04</span> The arithmetic of stepping out</h2>
 
       <p>This is where the interval stops being an abstraction and starts costing money, and the arithmetic is worth sitting with.</p>
 
-      <p>An investor who held the Kospi from January 2 through July 31, 2026 earned 53.0 percent. An investor who held the same index and missed only July 31, a single session, earned 29.8 percent. <b>One day accounted for 23.2 percentage points of the year.</b></p>
+      <div class="marg">
+        <p class="mnote"><span class="mk">Cost of one session</span><span class="mv">23.2 pts</span>
+          <span class="md">July 31 alone, out of a 53.0 percent year.</span></p>
+        <p>An investor who held the Kospi from January 2 through July 31, 2026 earned 53.0 percent. An investor who held the same index and missed only July 31, a single session, earned 29.8 percent. <b>One day accounted for 23.2 percentage points of the year.</b></p>
+      </div>
 
       <p>Widen it and the effect compounds. Without the three best sessions the year returns 9.2 percent. Without the five best it is negative, at minus 6.9 percent, in a market that finished up 53.0 percent, and without the ten best the position is down 31.8 percent.</p>
 
@@ -468,6 +524,11 @@
           sessions removed. Missing a session means not holding through it, which is what stepping
           out actually does.</p>
 
+        <div class="viewswitch switch" role="group" aria-label="View" data-for="stepping-out">
+          <button type="button" data-view="chart" aria-pressed="true">Chart</button>
+          <button type="button" data-view="table" aria-pressed="false">Table</button>
+        </div>
+
         <div class="stepper">
           <label for="missed">Best sessions missed</label>
           <input type="range" id="missed" min="0" max="10" step="1" value="0"
@@ -476,7 +537,7 @@
           <p class="s-note" id="missed-note">Nothing missed. The full period, held throughout.</p>
         </div>
 
-        <figure>
+        <figure data-view-target="chart">
           <!--FIG-LADDER-->
 <svg viewBox="0 0 660 300" xmlns="http://www.w3.org/2000/svg" data-ladder-figure="0" role="img" aria-label="Cumulative return for 2026 through July 31 as the best sessions are removed one at a time, falling from 53.0 percent holding every session to -31.8 percent without the ten best.">
 <line x1="56" y1="47.4" x2="646" y2="47.4" stroke="#D8D3C6" stroke-width="0.5" stroke-opacity="1"/>
@@ -487,28 +548,28 @@
 <text x="48" y="165.8" text-anchor="end" font-size="9.5" fill="#6B6E6A">+0%</text>
 <line x1="56" y1="219.9" x2="646" y2="219.9" stroke="#D8D3C6" stroke-width="0.5" stroke-opacity="1"/>
 <text x="48" y="223.3" text-anchor="end" font-size="9.5" fill="#6B6E6A">-25%</text>
-<rect data-bar="0" x="67.8" y="40.4" width="30.0" height="122.0" fill="#2F6F5B" fill-opacity="1"/>
+<rect data-bar="0" x="67.8" y="40.4" width="30.0" height="122.0" fill="#1E2833" fill-opacity="1.000"/>
 <text x="82.8" y="271.0" text-anchor="middle" font-size="9.5" fill="#1E2833" font-weight="700">0</text>
 <text data-bar-label="1" x="82.8" y="32.4" text-anchor="middle" font-size="11" font-weight="700" fill="#1E2833">+53.0%</text>
-<rect data-bar="1" x="121.5" y="93.9" width="30.0" height="68.5" fill="#2F6F5B" fill-opacity="0.3"/>
+<rect data-bar="1" x="121.5" y="93.9" width="30.0" height="68.5" fill="#1E2833" fill-opacity="0.340"/>
 <text x="136.5" y="271.0" text-anchor="middle" font-size="9.5" fill="#6B6E6A" font-weight="400">1</text>
-<rect data-bar="2" x="175.1" y="120.1" width="30.0" height="42.3" fill="#2F6F5B" fill-opacity="0.3"/>
+<rect data-bar="2" x="175.1" y="120.1" width="30.0" height="42.3" fill="#1E2833" fill-opacity="0.340"/>
 <text x="190.1" y="271.0" text-anchor="middle" font-size="9.5" fill="#6B6E6A" font-weight="400">2</text>
-<rect data-bar="3" x="228.7" y="141.3" width="30.0" height="21.1" fill="#2F6F5B" fill-opacity="0.3"/>
+<rect data-bar="3" x="228.7" y="141.3" width="30.0" height="21.1" fill="#1E2833" fill-opacity="0.340"/>
 <text x="243.7" y="271.0" text-anchor="middle" font-size="9.5" fill="#6B6E6A" font-weight="400">3</text>
-<rect data-bar="4" x="282.4" y="160.8" width="30.0" height="1.6" fill="#2F6F5B" fill-opacity="0.3"/>
+<rect data-bar="4" x="282.4" y="160.8" width="30.0" height="1.6" fill="#1E2833" fill-opacity="0.340"/>
 <text x="297.4" y="271.0" text-anchor="middle" font-size="9.5" fill="#6B6E6A" font-weight="400">4</text>
-<rect data-bar="5" x="336.0" y="162.4" width="30.0" height="15.9" fill="#9B4439" fill-opacity="0.3"/>
+<rect data-bar="5" x="336.0" y="162.4" width="30.0" height="15.9" fill="#1E2833" fill-opacity="0.143"/>
 <text x="351.0" y="271.0" text-anchor="middle" font-size="9.5" fill="#6B6E6A" font-weight="400">5</text>
-<rect data-bar="6" x="389.6" y="162.4" width="30.0" height="29.7" fill="#9B4439" fill-opacity="0.3"/>
+<rect data-bar="6" x="389.6" y="162.4" width="30.0" height="29.7" fill="#1E2833" fill-opacity="0.143"/>
 <text x="404.6" y="271.0" text-anchor="middle" font-size="9.5" fill="#6B6E6A" font-weight="400">6</text>
-<rect data-bar="7" x="443.3" y="162.4" width="30.0" height="42.5" fill="#9B4439" fill-opacity="0.3"/>
+<rect data-bar="7" x="443.3" y="162.4" width="30.0" height="42.5" fill="#1E2833" fill-opacity="0.143"/>
 <text x="458.3" y="271.0" text-anchor="middle" font-size="9.5" fill="#6B6E6A" font-weight="400">7</text>
-<rect data-bar="8" x="496.9" y="162.4" width="30.0" height="53.8" fill="#9B4439" fill-opacity="0.3"/>
+<rect data-bar="8" x="496.9" y="162.4" width="30.0" height="53.8" fill="#1E2833" fill-opacity="0.143"/>
 <text x="511.9" y="271.0" text-anchor="middle" font-size="9.5" fill="#6B6E6A" font-weight="400">8</text>
-<rect data-bar="9" x="550.5" y="162.4" width="30.0" height="64.2" fill="#9B4439" fill-opacity="0.3"/>
+<rect data-bar="9" x="550.5" y="162.4" width="30.0" height="64.2" fill="#1E2833" fill-opacity="0.143"/>
 <text x="565.5" y="271.0" text-anchor="middle" font-size="9.5" fill="#6B6E6A" font-weight="400">9</text>
-<rect data-bar="10" x="604.2" y="162.4" width="30.0" height="73.2" fill="#9B4439" fill-opacity="0.3"/>
+<rect data-bar="10" x="604.2" y="162.4" width="30.0" height="73.2" fill="#1E2833" fill-opacity="0.143"/>
 <text x="619.2" y="271.0" text-anchor="middle" font-size="9.5" fill="#6B6E6A" font-weight="400">10</text>
 </svg>
 <!--/FIG-LADDER-->
@@ -519,18 +580,17 @@
           </figcaption>
         </figure>
 
-        <details class="tabular">
-          <summary>Show the figures as a table</summary>
+        <div class="tabular" data-view-target="table" hidden>
           <table id="ladder-table">
             <thead><tr><th>Best sessions missed</th><th>Return, Jan 2 to Jul 31</th></tr></thead>
             <tbody></tbody>
           </table>
-        </details>
+        </div>
       </div>
 
       <p>The arithmetic is not an argument for enduring volatility as a matter of character. It is a structural observation about when the best sessions occur. They occur inside the worst stretches, because that is when prices are dislocated enough to move that far. <b>An investor who sold on July 30 to stop the pain was positioned to miss July 31 by exactly one session.</b></p>
 
-      <h2><span class="num">05</span>An interval you did not choose</h2>
+      <h2><span class="num">05</span> An interval you did not choose</h2>
 
       <p>Every investor has a measurement interval, and very few have chosen one.</p>
 
@@ -547,14 +607,20 @@
           The marked line is what an investor on that cadence would ever have seen. This one runs
           through the most recent close, so it includes today's session in Seoul.</p>
 
-        <div class="switch" role="group" aria-label="Checking cadence">
-          <button type="button" data-cadence="daily" aria-pressed="true">Every day</button>
-          <button type="button" data-cadence="weekly" aria-pressed="false">Every week</button>
-          <button type="button" data-cadence="monthly" aria-pressed="false">Every month</button>
-          <button type="button" data-cadence="quarterly" aria-pressed="false">Every quarter</button>
+        <div class="controls">
+          <div class="switch" role="group" aria-label="Checking cadence">
+            <button type="button" data-cadence="daily" aria-pressed="true">Every day</button>
+            <button type="button" data-cadence="weekly" aria-pressed="false">Every week</button>
+            <button type="button" data-cadence="monthly" aria-pressed="false">Every month</button>
+            <button type="button" data-cadence="quarterly" aria-pressed="false">Every quarter</button>
+          </div>
+          <div class="viewswitch switch" role="group" aria-label="View" data-for="interval">
+            <button type="button" data-view="chart" aria-pressed="true">Chart</button>
+            <button type="button" data-view="table" aria-pressed="false">Table</button>
+          </div>
         </div>
 
-        <figure>
+        <figure data-view-target="chart">
           <!--FIG-CADENCE-->
 <svg viewBox="0 0 660 300" xmlns="http://www.w3.org/2000/svg" data-cadence-figure="daily" role="img" aria-label="The Kospi Composite from January 2 to 2026-08-03, drawn faintly, with the 143 closing levels an investor checking daily would have seen marked on it.">
 <line x1="56" y1="239.7" x2="646" y2="239.7" stroke="#1E2833" stroke-width="1" stroke-opacity="0.55"/>
@@ -593,7 +659,7 @@
           </div>
         </figure>
 
-        <div class="readout" aria-live="polite">
+        <div class="readout" data-view-target="chart" aria-live="polite">
           <!--READOUT-->
           <div><p class="r-k">Times you looked</p><p class="r-v" id="c-count">143</p></div>
           <div><p class="r-k">Worst single reading</p><p class="r-v" id="c-step">−12.1%</p>
@@ -605,19 +671,18 @@
 <!--/READOUT-->
         </div>
 
-        <figcaption id="cadence-cap">
+        <figcaption id="cadence-cap" data-view-target="chart">
         <!--CAP-CADENCE-->
         Checking every day over this period meant 143 readings, a worst single reading of −12.1%, and a deepest observed fall of −38.6%. The quarterly observer saw −26.2%. The money did the same thing in both cases.
 <!--/CAP-CADENCE-->
         </figcaption>
 
-        <details class="tabular">
-          <summary>Show all four cadences as a table</summary>
+        <div class="tabular" data-view-target="table" hidden>
           <table id="cadence-table">
             <thead><tr><th>Cadence</th><th>Readings</th><th>Worst reading</th><th>Deepest fall</th><th>Period return</th></tr></thead>
             <tbody></tbody>
           </table>
-        </details>
+        </div>
       </div>
 
       <p>Two things in that table deserve attention, and they point in opposite directions.</p>
@@ -630,7 +695,7 @@
 
       <p>The interval is not only a matter of feeling, which is the part that gets written about. It is also the trigger on a set of irreversible decisions. Selling inside a drawdown converts a paper loss into a realized one, and it does so in a specific tax year, against a specific cost basis, with specific consequences for the harvesting that was scheduled for December and for the gain the household was going to recognize next year at a lower rate. The custodian that set the interval is not coordinating any of that. <b>Whatever chose the interval is, in practice, choosing when the household transacts.</b> For most people, nothing chose it.</p>
 
-      <h2><span class="num">06</span>Two honest objections</h2>
+      <h2><span class="num">06</span> Two honest objections</h2>
 
       <p>It does not mean checking less is a strategy. Ignoring a portfolio is not the same as holding one deliberately, and the difference shows up precisely when something needs attention.</p>
 
@@ -777,8 +842,9 @@ window.__INTERVAL__ = {"asOf":"2026-08-03T18:05:30+09:00","symbol":"^KS11","star
   /* ── shared plotting geometry, identical to the generator's so the enhanced figure lands
         exactly where the static one did ─────────────────────────────────────────────────── */
   var W = 660, H = 300, PL = 56, PR = 14, TOP = 22, BOT = 46;
-  var INK = '#1E2833', LINE = '#D8D3C6', ACCENT = '#2C5878', POS = '#2F6F5B', NEG = '#9B4439',
-      MUTED = '#6B6E6A', SHEET = '#F7F5F0';
+  var INK = '#1E2833', LINE = '#D8D3C6', ACCENT = '#2C5878', MUTED = '#6B6E6A', SHEET = '#F7F5F0';
+  // Two weights of one ink, matching the generator. See the comment there.
+  var UP = 1.0, DOWN = 0.42;
   var MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   var NS = 'http://www.w3.org/2000/svg';
   function el(name, attrs, text) {
@@ -906,8 +972,8 @@ window.__INTERVAL__ = {"asOf":"2026-08-03T18:05:30+09:00","symbol":"^KS11","star
       var cx = PL + slot * (n + 0.5), active = n === missed;
       var y = v >= 0 ? zero - v * lSpan : zero;
       ladFig.appendChild(el('rect', { 'data-bar': n, x: (cx - bw / 2).toFixed(1), y: y.toFixed(1),
-        width: bw.toFixed(1), height: (Math.abs(v) * lSpan).toFixed(1),
-        fill: v >= 0 ? POS : NEG, 'fill-opacity': active ? 1 : 0.3 }));
+        width: bw.toFixed(1), height: (Math.abs(v) * lSpan).toFixed(1), fill: INK,
+        'fill-opacity': ((v >= 0 ? UP : DOWN) * (active ? 1 : 0.34)).toFixed(3) }));
       ladFig.appendChild(el('text', { x: cx.toFixed(1), y: (H - 46 + 17).toFixed(1),
         'text-anchor': 'middle', 'font-size': 9.5, fill: active ? INK : MUTED,
         'font-weight': active ? 700 : 400 }, String(n)));
@@ -942,6 +1008,27 @@ window.__INTERVAL__ = {"asOf":"2026-08-03T18:05:30+09:00","symbol":"^KS11","star
       var td = document.createElement('td'); td.textContent = t; tr.appendChild(td);
     });
     ltb.appendChild(tr);
+  });
+
+  /* ── the chart / table switch ─────────────────────────────────────────────────────────────
+     The table is not a fallback hidden behind a disclosure link. It is the same instrument drawn
+     a second way, and for a reader on a screen reader it is the only way, so it sits on the same
+     control row as everything else. */
+  Array.prototype.forEach.call(document.querySelectorAll('.viewswitch'), function (group) {
+    var scope = document.getElementById(group.dataset.for);
+    if (!scope) return;
+    Array.prototype.forEach.call(group.querySelectorAll('[data-view]'), function (b) {
+      b.addEventListener('click', function () {
+        var view = b.dataset.view;
+        Array.prototype.forEach.call(group.querySelectorAll('[data-view]'), function (o) {
+          o.setAttribute('aria-pressed', String(o === b));
+        });
+        Array.prototype.forEach.call(scope.querySelectorAll('[data-view-target]'), function (el) {
+          el.hidden = el.dataset.viewTarget !== view;
+        });
+        if (window.plausible) window.plausible('Interval view', { props: { view: view } });
+      });
+    });
   });
 
   /* ── opening state, from the URL ──────────────────────────────────────────────────────── */

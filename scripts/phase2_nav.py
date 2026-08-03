@@ -443,8 +443,7 @@ STUB_TMPL = """<!DOCTYPE html>
     <div class="foot">
       Educational, not investment, tax, or legal advice. Driftwood Wealth is the private-wealth practice of
       Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS),
-      member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS and a
-      Financial Representative of Guardian. All figures illustrative, not a recommendation.
+      member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS. All figures illustrative, not a recommendation.
       <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a>.
     </div>
 </div></div>

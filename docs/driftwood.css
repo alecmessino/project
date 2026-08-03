@@ -616,16 +616,29 @@ table.exhibit-table{ width:100%; border-collapse:collapse; font-family:var(--san
 /* ── Firm-anchor — the coordinates band (Launch Standard, item D): a restrained institution +
    provenance strip for page footers. One definition; the content is rendered from
    drift.site.firm_anchor_html() so the firm facts have a single source. */
-.firm-anchor{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px 24px; align-items:baseline;
-  margin:0 0 16px; padding:11px 18px; background:var(--soft); border:1px solid var(--line);
-  border-radius:var(--surface-radius); font-family:var(--sans); font-weight:600; font-size:10px;
-  letter-spacing:.14em; text-transform:uppercase; color:var(--dim); font-variant-numeric:tabular-nums; }
-/* The firm NAME is the wordmark — title-case everywhere else on the site — so it overrides the meta
-   strip's tracked caps here too. 2026 wordmark unification: one logo, one case, one type. */
+/* 2026-08-03. The band used to run the wordmark inline with six coordinates, all at 10px tracked
+   caps, which left the firm's own name as the least prominent thing in its own footer. It is now
+   two rows: the wordmark on its own line at a size that lets it read as a wordmark, and a hairline
+   meta strip beneath it carrying the coordinates and the provenance. The rule between them does
+   the separating, so the name needs no box and no extra weight. */
+.firm-anchor{ display:block; margin:0 0 16px; padding:14px 18px 12px; background:var(--soft);
+  border:1px solid var(--line); border-radius:var(--surface-radius); font-family:var(--sans);
+  font-variant-numeric:tabular-nums; }
 .firm-anchor a{ color:inherit; text-decoration:none; border-bottom:1px solid rgba(0,0,0,.18); }
 .firm-anchor a:hover{ border-bottom-color:currentColor; }
-.firm-anchor-brand{ text-transform:none; letter-spacing:-.01em; font-weight:700; color:var(--ink,#1d242d); }
-@media(max-width:620px){ .firm-anchor{ font-size:9px; letter-spacing:.1em; padding:10px 14px; gap:4px 16px; } }
+/* The firm NAME is the wordmark — title-case everywhere else on the site — so it keeps its own case
+   here too. 2026 wordmark unification: one logo, one case, one type. */
+.firm-anchor-brand{ display:block; font-size:15px; font-weight:700; letter-spacing:-.012em;
+  text-transform:none; color:var(--ink,#1d242d); line-height:1.2; }
+.firm-anchor-meta{ display:block; margin-top:9px; padding-top:9px; border-top:1px solid var(--line);
+  font-weight:600; font-size:10px; line-height:1.9; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--dim); }
+.firm-anchor-meta .fa-i{ white-space:nowrap; }
+@media(max-width:620px){
+  .firm-anchor{ padding:12px 14px 11px; }
+  .firm-anchor-brand{ font-size:14px; }
+  .firm-anchor-meta{ font-size:9px; letter-spacing:.1em; gap:4px 16px; }
+}
 
 /* ── Onward strip — one shared "return to the diagnostic" component ────────────────────────────
    Content hubs (research · insights · library) and any editorial page can drop <div class="onward">

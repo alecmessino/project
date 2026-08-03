@@ -74,20 +74,57 @@ def test_no_shipped_page_contains_a_raw_token():
     assert not bad, f"raw build tokens shipped in docs/: {bad}"
 
 
+def _paired_regions(text: str) -> set[str]:
+    """Names written as a REGION rather than as a substitution: <!--X--> … <!--/X-->.
+
+    A different mechanism with a different failure mode, and the distinction matters. A
+    substitution token is empty in the template and must be replaced by a build path, so an
+    unhandled one ships as nothing. A paired region already contains its rendered content in the
+    committed template (scripts/kospi_interval.py writes the figures and the derived prose of
+    the-interval-problem.html this way, so the page is complete before any build runs), and a
+    regenerator overwrites between the markers. It cannot ship raw; it can only ship EMPTY, which
+    is what the guard below checks instead.
+    """
+    return set(re.findall(r"<!--/([A-Z][A-Z0-9_-]{2,})-->", text))
+
+
 def test_every_template_token_is_one_the_build_knows_how_to_resolve():
     """A new <!--SOMETHING--> token in a template that no build path handles would ship raw. This
     fails at authoring time instead of in production."""
     known = {t.strip("<!->") for t in TOKENS}
     unknown = set()
     for tpl in sorted(WEB.glob("*.html")):
-        for m in re.findall(r"<!--([A-Z][A-Z0-9_]{3,})-->", tpl.read_text(encoding="utf-8")):
-            if m in known or tpl.name in DEFERRED.get(m, ()):
+        text = tpl.read_text(encoding="utf-8")
+        paired = _paired_regions(text)
+        for m in re.findall(r"<!--([A-Z][A-Z0-9_]{3,})-->", text):
+            if m in known or m in paired or tpl.name in DEFERRED.get(m, ()):
                 continue
             unknown.add(f"{tpl.name}: <!--{m}-->")
     assert not unknown, (
         f"template tokens no build path resolves: {sorted(unknown)}. Add handling in "
         "drift/exhibit.py::_embed and scripts/sync_docs.py::_inject_tokens, then list it in TOKENS."
     )
+
+
+def test_no_generated_region_ships_empty():
+    """The exemption above is only safe while the regions actually carry their content.
+
+    An empty <!--FIG-JULY--><!--/FIG-JULY--> pair renders as a blank space with a caption under
+    it, and nothing else on the page looks wrong, which is precisely the silent failure this file
+    exists for. Checked in docs/, the deploy artifact, so it covers a template that was edited
+    without re-running its generator.
+    """
+    empty = []
+    for page in sorted(DOCS.glob("*.html")):
+        text = page.read_text(encoding="utf-8")
+        for name in _paired_regions(text):
+            m = re.search(r"<!--%s-->([\s\S]*?)<!--/%s-->" % (re.escape(name), re.escape(name)),
+                          text)
+            if not m:
+                empty.append(f"{page.name}: <!--/{name}--> has no opening marker")
+            elif not m.group(1).strip():
+                empty.append(f"{page.name}: <!--{name}--> is empty")
+    assert not empty, f"generated regions shipped with nothing in them: {empty}"
 
 
 def test_deferred_tokens_stay_on_their_draft_pages_and_show_a_human_fallback():

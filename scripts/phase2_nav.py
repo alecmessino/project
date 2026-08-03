@@ -136,6 +136,8 @@ CURRENT = {
     "commentary.html": ("Insights", "commentary.html"),
     # A deep essay: lights the family, no menu row of its own.
     "count-the-pairs.html": ("Insights", "count-the-pairs.html"),
+    # Same rule. It is filed under Research, so the Research row is what lights up.
+    "the-interval-problem.html": ("Insights", "research.html"),
     "articles.html": ("Insights", "articles.html"),
     "driftwood-review.html": ("Insights", "driftwood-review.html"),
     "decision-memo-domicile.html": ("Insights", "insights.html"),

@@ -10,7 +10,9 @@ Run from the repo root.
 | `sync_docs.py` | Re-render `docs/*.html` from the `src/drift/web/*.html` templates, preserving injected `window.__STATE__`; also copies `driftwood.css`. The no-network way to ship template/CSS edits. |
 | `stamp_provenance.py` | Refresh `docs/_provenance.json` (build commit, data fingerprint, claim→source map). |
 | `tax_alpha.py` | Tax-alpha / after-tax modeling used by the site's figures. |
+| `kospi_interval.py` | Rebuild the series, the four exhibits and the derived prose inside `src/drift/web/the-interval-problem.html` from live ^KS11 closes (`--offline` uses the committed `tests/data/ks11_2026.json`; `--check` writes nothing). Run it, then `sync_docs.py`. Every number in that essay comes from here, so it is the only place to change one. |
 | `og_cards.mjs`, `og_states.mjs` | Regenerate Open Graph social cards for the site / state pages (Playwright). |
+| `og_essay.mjs` | Open Graph cards for the long-form essays: title beside the piece's own signature figure. Separate from `og_cards.mjs`, which draws the product cards and still points at font files that are no longer in the tree. |
 | `shots.py` | Visual-QA screenshot harness for the site (Playwright). |
 | `set_domain.py` | Set/refresh the Pages custom domain (writes `docs/CNAME`); see `OPERATIONS.md`. |
 | `slow_sweep.py` | Slow-sleeve validation sweep (fast vs 40/60 vs 35/65), after-tax. |

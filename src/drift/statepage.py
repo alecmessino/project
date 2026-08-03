@@ -920,6 +920,8 @@ _CORE_SITEMAP = [
     ("ic-memo.html", "0.7", "monthly"), ("transition-plan.html", "0.7", "monthly"),
     ("enough-is-a-number.html", "0.7", "monthly"),
     ("count-the-pairs.html", "0.7", "monthly"),
+    # Timely, and the one page on the site whose figures move: weekly, not monthly.
+    ("the-interval-problem.html", "0.8", "weekly"),
     ("the-worlds-largest-investors.html", "0.7", "monthly"),
     ("case-business-sale.html", "0.6", "monthly"), ("case-charitable-giving.html", "0.6", "monthly"),
     ("case-inheritance.html", "0.6", "monthly"), ("case-moving-states.html", "0.6", "monthly"),

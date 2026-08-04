@@ -18,6 +18,7 @@ The URL-parameter paths (?cadence=, ?missed=) are covered in tests/web/test_inte
 rather than here: they are browser code, and per CLAUDE.md they get exercised through the query
 string rather than through the controls.
 """
+import datetime as dt
 import importlib.util
 import json
 import re
@@ -308,3 +309,50 @@ def test_the_cache_is_committed_and_reproducible():
     assert blob["symbol"] == "^KS11"
     assert len(blob["rows"]) > 200
     assert all(len(r) == 2 and isinstance(r[1], (int, float)) for r in blob["rows"])
+
+
+# ── the two failures this page had on 2026-08-04 ──────────────────────────────────────────────
+
+def test_the_series_reaches_the_most_recent_settled_session(data):
+    """No stale tail.
+
+    Yahoo's multi-day arrays lag. Hours after the Seoul close on 2026-08-04 the two-year array
+    still ended at August 3 (6,257.45) while the quote already read 6,358.95, so a generator that
+    trusted only the array published a page a full session behind while printing its own as-of
+    date. fetch() now fills the tail from the single-day endpoint; this fails if that stops
+    working, or if a cache is committed with a settled session missing from it.
+    """
+    stamp = dt.datetime.fromisoformat(data["asOf"])
+    if stamp.time() < dt.time(15, 0):
+        pytest.skip("the session in the cache had not settled when it was taken")
+    assert data["series"][-1][0] == stamp.strftime("%Y-%m-%d"), (
+        f"the series ends at {data['series'][-1][0]} but the quote is stamped "
+        f"{stamp.strftime('%Y-%m-%d')} after the close: a settled session is missing")
+
+
+def test_the_dated_reporting_stays_welded_to_its_own_session(built, data):
+    """Reporting is dated; a quote is live; the two cannot share a sentence.
+
+    The update box carries press about ONE session: a sidecar, and the two chipmakers. It used to
+    be attached to "the latest session" instead, which held for exactly one day. When August 4
+    closed UP 1.62 percent the generator produced "opened sharply lower and triggered a five-minute
+    program trading suspension" over that session's figures, and would have published it.
+    """
+    prose = _quoted(built)
+    by_day = {d: c for d, c in data["series"]}
+    i = [d for d, _ in data["series"]].index(K.SIDECAR_SESSION)
+    level = by_day[K.SIDECAR_SESSION]
+    move = abs(K.pct(data["series"][i - 1][1], level))
+    assert "On Monday, August 3" in prose, "the sidecar report no longer names its own date"
+    assert f"It closed at {level:,.2f}" in prose, "the sidecar report is not on its own close"
+    assert f"down {move:.2f} percent" in prose, "the sidecar report is not on its own move"
+    # And the live line is a separate sentence carrying the separate session.
+    latest = data["latest"]
+    assert f"{latest['level']:,.2f}" in prose and f"{abs(latest['change']):.2f} percent" in prose
+    if latest["date"] != K.SIDECAR_SESSION:
+        assert f"on the {_day(latest['date'])} session" in prose, \
+            "the live close does not name the session it belongs to"
+
+
+def _day(iso: str) -> str:
+    return dt.date.fromisoformat(iso).strftime("%B %-d")

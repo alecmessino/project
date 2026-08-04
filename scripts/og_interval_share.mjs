@@ -29,12 +29,20 @@ async function panel(cadence) {
   await p.goto(`${PAGE}?cadence=${cadence}`, { waitUntil: 'load' });
   await p.evaluate(() => document.fonts.ready);
   await p.waitForTimeout(250);
-  const out = await p.evaluate(() => ({
-    svg: document.querySelector('[data-cadence-figure]').outerHTML,
-    count: document.getElementById('c-count').textContent,
-    dd: document.getElementById('c-dd').textContent,
-    total: document.getElementById('c-total').textContent,
-  }));
+  const out = await p.evaluate(() => {
+    var s = window.__INTERVAL__.series;
+    return {
+      svg: document.querySelector('[data-cadence-figure]').outerHTML,
+      count: document.getElementById('c-count').textContent,
+      dd: document.getElementById('c-dd').textContent,
+      total: document.getElementById('c-total').textContent,
+      // The period, read off the series rather than typed into this file. It was hardcoded to
+      // "January 2 to August 3, 2026" and went stale the next time the market closed.
+      span: [s[0][0], s[s.length - 1][0]].map(function (d) {
+        return new Date(d + 'T00:00:00').toLocaleDateString('en-US',
+          { month: 'long', day: 'numeric' }); }).join(' to ') + ', ' + s[0][0].slice(0, 4),
+    };
+  });
   await p.close();
   return out;
 }
@@ -81,7 +89,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
     justify-content:space-between;align-items:baseline;font-size:16px;color:#5c6470}
   .wm{font-weight:700;font-size:14px;letter-spacing:.19em;text-transform:uppercase;color:#1e2833}
 </style></head><body>
-  <div class="kicker">Kospi Composite · January 2 to August 3, 2026</div>
+  <div class="kicker">Kospi Composite · ${daily.span}</div>
   <h1>The same index. The same money. Two different years.</h1>
   <div class="stand">The faint line is every closing level. The marked line is what an investor on that
     checking habit would ever have seen.</div>

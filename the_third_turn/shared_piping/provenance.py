@@ -51,7 +51,8 @@ _EPOCH_S = (1577836800, 2051222400)
 _EPOCH_MS = (_EPOCH_S[0] * 1000, _EPOCH_S[1] * 1000)
 _ISO_RE = re.compile(r"^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}")
 
-MAX_HITS = 40          # cap the report; a schema does not need exhaustive enumeration
+MAX_HITS = 8           # per-fetch scan is now only a schema sample: the per-market
+                       # panel below carries the detail, so keep this log small
 MAX_DEPTH = 12
 
 
@@ -173,3 +174,138 @@ def record(path: Path, rec: dict) -> None:
             fh.write(json.dumps(rec) + "\n")
     except Exception:  # noqa: BLE001
         pass
+
+
+# ---------------------------------------------------------------- per-market panel
+# A per-fetch record is a network log. A per-market record is a panel, and only a panel
+# answers the questions that decide whether a publication clock is usable:
+#   does lastModified change iff the price changes; does price ever move while it does not;
+#   does it lead or lag the HTTP Date; is the cache delay constant within a game.
+#
+# Two design choices worth stating. First, we do not hardcode `lastModified`: any time-ish
+# field found on the event or market node is carried, so a differently-named clock on another
+# book is picked up for free. Second, rows are written on CHANGE rather than on every fetch.
+# Logging every market every 31s would add roughly a million rows a week and answer nothing
+# extra: the questions above are all about transitions, and a change log records exactly the
+# transitions plus a baseline.
+
+CACHE_HEADERS = ("Date", "Age", "ETag", "X-Cache", "Cache-Control", "Last-Modified")
+
+
+def response_meta(headers: Any) -> dict:
+    """Cache/provenance headers. `Age` is the decisive one: a CDN reports cache age directly."""
+    out: dict = {}
+    try:
+        for h in CACHE_HEADERS:
+            v = headers.get(h) or headers.get(h.lower())
+            if v is not None:
+                out[h.replace("-", "_").lower()] = str(v)[:64]
+    except Exception:  # noqa: BLE001
+        pass
+    return out
+
+
+def _node_times(node: Any) -> dict:
+    """Time-ish scalar fields directly on this node (not recursing into children)."""
+    out: dict = {}
+    if not isinstance(node, dict):
+        return out
+    for k, v in node.items():
+        if isinstance(v, (dict, list)):
+            continue
+        if key_is_timeish(k) or _value_is_timeish(v):
+            out[str(k)[:32]] = v if isinstance(v, (int, float)) else str(v)[:32]
+    return out
+
+
+def _rows_bovada(payload: Any) -> list[dict]:
+    rows: list[dict] = []
+    groups = payload if isinstance(payload, list) else [payload]
+    for g in groups or []:
+        for ev in (g or {}).get("events", []) or []:
+            et = _node_times(ev)
+            eid = str(ev.get("id") or ev.get("link") or "")[:48]
+            for dg in ev.get("displayGroups", []) or []:
+                for m in dg.get("markets", []) or []:
+                    if "total" not in str(m.get("description", "")).lower():
+                        continue
+                    o = m.get("outcomes", []) or []
+                    prices = {}
+                    for oc in o:
+                        pr = oc.get("price", {}) or {}
+                        side = str(oc.get("type") or oc.get("description") or "")[:4]
+                        prices[f"px_{side}"] = pr.get("american")
+                        if pr.get("handicap") is not None:
+                            prices["line"] = pr.get("handicap")
+                    rows.append({"event_id": eid, "market_id": str(m.get("id", ""))[:48],
+                                 "live": bool(ev.get("live")), **prices,
+                                 "event_times": et, "market_times": _node_times(m)})
+    return rows
+
+
+def _rows_fanduel(payload: Any) -> list[dict]:
+    rows: list[dict] = []
+    ats = (payload or {}).get("attachments", {}) or {}
+    events = ats.get("events", {}) or {}
+    for mid, m in (ats.get("markets", {}) or {}).items():
+        if str(m.get("marketType", "")) != "TOTAL_POINTS_(OVER/UNDER)":
+            if "TOTAL" not in str(m.get("marketType", "")).upper():
+                continue
+        ev = events.get(str(m.get("eventId")), {}) or {}
+        prices = {}
+        for r in m.get("runners", []) or []:
+            side = str(r.get("runnerName") or r.get("result", {}).get("type") or "")[:4]
+            prices[f"px_{side}"] = ((r.get("winRunnerOdds", {}) or {})
+                                    .get("americanDisplayOdds", {}) or {}).get("americanOdds")
+            if r.get("handicap") is not None:
+                prices["line"] = r.get("handicap")
+        rows.append({"event_id": str(m.get("eventId", ""))[:48], "market_id": str(mid)[:48],
+                     "live": bool(m.get("inPlay")), **prices,
+                     "event_times": _node_times(ev), "market_times": _node_times(m)})
+    return rows
+
+
+def market_rows(book: str, payload: Any) -> list[dict]:
+    try:
+        return _rows_bovada(payload) if book == "bovada" else _rows_fanduel(payload)
+    except Exception:  # noqa: BLE001
+        return []
+
+
+_LAST: dict = {}          # (book, event_id, market_id) -> signature of last written row
+
+
+def _sig(r: dict) -> tuple:
+    return (r.get("line"), tuple(sorted((k, v) for k, v in r.items() if k.startswith("px_"))),
+            tuple(sorted(r.get("event_times", {}).items())),
+            tuple(sorted(r.get("market_times", {}).items())))
+
+
+def record_markets(path: Path, book: str, headers: Any, payload: Any,
+                   fetch_id: str) -> int:
+    """Write one row per market whose price OR any timestamp changed since we last saw it."""
+    try:
+        meta = response_meta(headers)
+        now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        out = []
+        for r in market_rows(book, payload):
+            key = (book, r.get("event_id"), r.get("market_id"))
+            sig = _sig(r)
+            prev = _LAST.get(key)
+            if prev == sig:
+                continue
+            changed = []
+            if prev is not None:
+                names = ("line", "prices", "event_times", "market_times")
+                changed = [n for n, a, b in zip(names, prev, sig) if a != b]
+            _LAST[key] = sig
+            out.append({"ts": now, "fetch_id": fetch_id, "book": book,
+                        "baseline": prev is None, "changed": changed, **r, **meta})
+        if out:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open("a") as fh:
+                for r in out:
+                    fh.write(json.dumps(r) + "\n")
+        return len(out)
+    except Exception:  # noqa: BLE001
+        return 0

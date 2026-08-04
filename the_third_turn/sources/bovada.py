@@ -50,6 +50,7 @@ def _handicap(price: dict) -> Optional[float]:
 
 
 _PROV_LOG = Path(__file__).resolve().parents[1] / "output" / "provenance_probe.jsonl"
+_MKT_LOG = Path(__file__).resolve().parents[1] / "output" / "market_provenance.jsonl"
 
 
 class BovadaSource:
@@ -117,6 +118,8 @@ class BovadaSource:
             quotes = self._parse(data, ts=t0)
             _prov.record(_PROV_LOG,
                          _prov.capture(self.name, _hdrs, data, quotes=quotes))
+            _prov.record_markets(_MKT_LOG, self.name, _hdrs, data,
+                                 fetch_id=f"{self.name}-{int(t0 * 1000)}")
             return SourceResult(self.name, ok=True, http_status=status,
                                 latency_ms=(time.monotonic() - t0) * 1000,
                                 payload_bytes=len(body), quotes=quotes)

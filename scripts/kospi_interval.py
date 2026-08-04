@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import math
 import re
 import sys
 import urllib.request
@@ -150,7 +151,7 @@ def ladder(rets: list[tuple[str, float]], depth: int = 10) -> list[float]:
         for day, r in rets:
             if day not in dropped:
                 growth *= 1 + r / 100
-        rows.append(round((growth - 1) * 100, 2))
+        rows.append(round((growth - 1) * 100, 6))
     return rows
 
 
@@ -214,11 +215,13 @@ def cadence_stats(window: list[list], cadence: str) -> dict:
         "cadence": cadence,
         "readings": readings,
         "count": len(readings),
-        "worstStep": round(worst, 2),
+        # Six places, not two: far beyond anything displayed, so a display format is always a
+        # single rounding step. See _mag().
+        "worstStep": round(worst, 6),
         "worstStepDate": worst_day,
-        "maxDrawdown": round(trough, 2),
+        "maxDrawdown": round(trough, 6),
         "drawdownSpan": list(span),
-        "total": round(pct(levels[0], levels[-1]), 2),
+        "total": round(pct(levels[0], levels[-1]), 6),
     }
 
 
@@ -289,6 +292,29 @@ def compute(rows: list[list], quote: dict) -> dict:
 # also get a static default state here, so the page is complete and truthful with JavaScript
 # turned off and the script only ever enhances what is already on the screen.
 
+def _mag(v: float, dp: int = 1) -> str:
+    """The magnitude of `v`, rounded HALF UP to `dp` places, exactly once.
+
+    The bug this exists to prevent shipped on 2026-08-04. The year-to-date return was 47.5521.
+    The update box formatted the raw value and printed 47.6. The instruments read a value the
+    generator had already rounded to two places, and round(47.5521, 2) is a float that sits just
+    BELOW 47.55 (47.549999999999997), so formatting it again at one place produced 47.5. The page
+    then said 47.6 in one place and 47.5 in another, directly under a colophon promising that its
+    prose, exhibits and instruments cannot disagree.
+
+    Two rules follow, and both matter. Values are STORED at full precision, never pre-rounded to a
+    display precision. And rounding happens exactly once, here, half up, matching Math.round in
+    the page's own script so the static figure and the scripted one never differ.
+    """
+    q = 10 ** dp
+    return f"{math.floor(abs(v) * q + 0.5) / q:.{dp}f}"
+
+
+def _pc(v: float, dp: int = 1) -> str:
+    """A signed percent with a real minus sign, matching what the instruments render."""
+    sign = "+" if v > 0 else ("−" if v < 0 else "")
+    return f"{sign}{_mag(v, dp)}%"
+
 INK, LINE, ACCENT, MUTED = "#1E2833", "#D8D3C6", "#2C5878", "#6B6E6A"
 # Two weights of one ink, not two hues. The green/red diverging pair reads as a retail trading
 # screen, and it was doing no work the geometry was not already doing: a bar's sign is which side
@@ -346,7 +372,7 @@ def fig_july(data: dict) -> str:
     out.append(f'<text x="{min(cx + bw / 2, w - pad_r):.1f}" '
                f'y="{zero - rows[best][1] * span - 9:.1f}" text-anchor="end" '
                f'font-size="10.5" font-weight="700" fill="{INK}">'
-               f'Jul 31, {rows[best][1]:+.1f}%</text>')
+               f'Jul 31, {_pc(rows[best][1])}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
@@ -424,7 +450,7 @@ def fig_cumulative(data: dict) -> str:
         out.append(f'<text x="{gutter:.1f}" y="{y - 2:.1f}" font-size="10" font-weight="700" '
                    f'fill="{INK}">{label}</text>')
         out.append(f'<text x="{gutter:.1f}" y="{y + 11:.1f}" font-size="10" font-weight="700" '
-                   f'fill="{ACCENT}">{pts[i][1]:+.1f}%</text>')
+                   f'fill="{ACCENT}">{_pc(pts[i][1])}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
@@ -519,7 +545,7 @@ def fig_ladder(data: dict, missed: int = 0) -> str:
             label_y = y - 8 if v >= 0 else zero - 7
             out.append(f'<text data-bar-label="1" x="{cx:.1f}" y="{label_y:.1f}" '
                        f'text-anchor="middle" font-size="11" font-weight="700" '
-                       f'fill="{INK}">{v:+.1f}%</text>')
+                       f'fill="{INK}">{_pc(v)}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
@@ -530,10 +556,6 @@ CADENCE_LABEL = {"daily": "every day", "weekly": "every week",
                  "monthly": "every month", "quarterly": "every quarter"}
 
 
-def _pc(v: float, dp: int = 1) -> str:
-    """A signed percent with a real minus sign, matching what the instruments render."""
-    sign = "+" if v > 0 else ("−" if v < 0 else "")
-    return f"{sign}{abs(v):.{dp}f}%"
 
 
 def _day(iso: str) -> str:
@@ -590,8 +612,9 @@ def update_block(data: dict) -> str:
         f'<span class="u-quote" id="u-level">{latest["level"]:,.2f}</span>, '
         f'<span class="u-move" id="u-move">'
         f'{"down" if latest["change"] < 0 else "up"} {abs(latest["points"]):,.2f} points, or '
-        f'{abs(latest["change"]):.2f} percent</span>, on the '
-        f'{day.strftime("%B %-d")} session, and {ytd:.1f} percent higher than it began the year.</p>')
+        f'{_mag(latest["change"], 2)} percent</span>, on the '
+        f'{day.strftime("%B %-d")} session, and {_mag(ytd)} percent higher than it began the '
+        f'year.</p>')
 
     lines.append(
         '      <p><b>The piece below was written on Saturday.</b> Its arithmetic runs through the '

@@ -202,3 +202,21 @@ def test_the_live_event_reaches_the_most_recent_settled_session(data):
     kospi = json.loads(CACHE.read_text())["raw"]["kospi2026"]
     assert subject["path"] and len(subject["path"]) - 1 == data["stopsAt"]
     assert kospi[-1][0] >= "2026-08-04", f"the live series ends at {kospi[-1][0]}"
+
+
+def test_no_stored_path_point_is_pre_rounded_to_a_display_precision(data):
+    """Same contract as the essay. 238 of these points were stored at two decimals and displayed
+    at one, which is the precision that re-rounds wrong at a .x5 boundary."""
+    exact_2dp = [round(v, 2) == v and round(v, 4) == v and abs(v * 100 % 1) < 1e-9
+                 for e in data["events"] for v in e["path"] if v != 0]
+    assert not all(exact_2dp), "every path point lands on two decimals, which cannot be data"
+    assert sum(exact_2dp) < len(exact_2dp) * 0.5, (
+        "most path points are stored at exactly two decimals, one digit beyond the display: "
+        "store full precision and let _mag() round once")
+
+
+def test_the_python_and_javascript_rounding_agree():
+    src = (WEB / PAGE).read_text(encoding="utf-8")
+    assert "Math.round(Math.abs(v) * q) / q" in src
+    assert "math.floor(abs(v) * q + 0.5) / q" in (
+        ROOT / "scripts" / "asia_drawdowns.py").read_text(encoding="utf-8")

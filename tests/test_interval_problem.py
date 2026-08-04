@@ -356,3 +356,59 @@ def test_the_dated_reporting_stays_welded_to_its_own_session(built, data):
 
 def _day(iso: str) -> str:
     return dt.date.fromisoformat(iso).strftime("%B %-d")
+
+
+# ── the rounding contract ─────────────────────────────────────────────────────────────────────
+
+def test_no_stored_figure_is_pre_rounded_to_a_display_precision(data):
+    """Values are stored at full precision and rounded exactly once, at display time.
+
+    The bug this pins shipped on 2026-08-04. The year-to-date return was 47.5521. The update box
+    formatted the raw value and printed 47.6. The instruments read a value the generator had
+    already rounded to two places, and round(47.5521, 2) is a float sitting just BELOW 47.55, so
+    formatting it again at one place gave 47.5. The page said 47.6 in one place and 47.5 in
+    another, from one series, directly under a colophon promising they cannot disagree.
+
+    Two places is the dangerous precision precisely because it is one digit beyond what is shown.
+    Anything stored at four or more is safe, because a second rounding can no longer cross a
+    boundary the first one moved.
+    """
+    suspect = []
+    for cadence, s in data["cadences"].items():
+        for k in ("total", "worstStep", "maxDrawdown"):
+            suspect.append((f"cadences.{cadence}.{k}", s[k]))
+    for n, v in enumerate(data["ladder"]):
+        suspect.append((f"ladder[{n}]", v))
+    pre_rounded = [(name, v) for name, v in suspect
+                   if v != 0 and round(v, 2) == v and round(v, 4) == v and abs(v * 100 % 1) < 1e-9]
+    assert not pre_rounded, (
+        f"stored at exactly two decimals, one digit beyond the display: {pre_rounded[:6]}. "
+        "Store full precision and let _mag() round once.")
+
+
+def test_the_update_box_and_the_instrument_state_the_same_year_to_date(built, data):
+    """The reader's version of the test above, and the one that actually caught it.
+
+    Two places on this page report the return over the whole period: the dated stamp at the top
+    and the instrument's fourth readout. They are the same quantity from the same series and they
+    must render the same string.
+    """
+    ytd = K.pct(data["series"][0][1], data["latest"]["level"])
+    prose = _quoted(built)
+    assert f"{K._mag(ytd)} percent higher than it began the year" in prose, \
+        f"the update box does not state {K._mag(ytd)} percent"
+    for cadence, s in data["cadences"].items():
+        assert K._pc(s["total"]) == f"+{K._mag(ytd)}%", (
+            f"the {cadence} instrument reports {K._pc(s['total'])} while the update box reports "
+            f"+{K._mag(ytd)}%")
+    assert f'id="c-total">{K._pc(data["cadences"]["daily"]["total"])}<' in built
+
+
+def test_the_python_and_javascript_rounding_agree():
+    """The static figure and the scripted one are rounded by two different implementations. They
+    have to be the same rule, or the page changes its numbers the moment the script runs."""
+    src = (WEB / PAGE).read_text(encoding="utf-8")
+    assert "Math.round(Math.abs(v) * q) / q" in src, \
+        "the page's pct() no longer rounds half up the way _mag() does"
+    assert "math.floor(abs(v) * q + 0.5) / q" in (
+        ROOT / "scripts" / "kospi_interval.py").read_text(encoding="utf-8")

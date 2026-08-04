@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import math
 import sys
 import urllib.request
 from pathlib import Path
@@ -89,7 +90,9 @@ def build(raw: dict) -> dict:
         window = [r for r in rows if lo <= r[0] <= hi]
         peak_date, peak = max(window, key=lambda r: r[1])
         forward = [r for r in rows if r[0] >= peak_date]
-        path = [round((c / peak - 1) * 100, 2) for _, c in forward[:HORIZON]]
+        # Four places, not two. Two is one digit beyond what the page displays, which is exactly
+        # the precision that re-rounds wrong at a .x5 boundary: 238 of these points did. See _mag.
+        path = [round((c / peak - 1) * 100, 4) for _, c in forward[:HORIZON]]
 
         trough_i = min(range(len(forward)), key=lambda i: forward[i][1])
         recovered = next((i for i, (_, c) in enumerate(forward) if i > 0 and c >= peak), None)
@@ -98,7 +101,7 @@ def build(raw: dict) -> dict:
             "peakDate": peak_date, "peak": peak,
             "path": path,
             "dates": [forward[0][0], forward[min(len(forward), HORIZON) - 1][0]],
-            "troughPct": round((forward[trough_i][1] / peak - 1) * 100, 1),
+            "troughPct": round((forward[trough_i][1] / peak - 1) * 100, 6),
             "troughDate": forward[trough_i][0],
             "troughDays": trough_i,
             "recoveryDays": recovered,
@@ -216,6 +219,19 @@ def ranking(data: dict, stop: int) -> list[dict]:
     return sorted(rows, key=lambda r: r["value"])
 
 
+def _mag(v: float, dp: int = 1) -> str:
+    """Half up, exactly once. Same contract as scripts/kospi_interval.py::_mag, and the same
+    reason: a value pre-rounded to a display precision arrives at the formatter as a float just
+    below the .x5 boundary and loses a digit."""
+    q = 10 ** dp
+    return f"{math.floor(abs(v) * q + 0.5) / q:.{dp}f}"
+
+
+def _pc(v: float, dp: int = 1) -> str:
+    sign = "" if v >= 0 else "\u2212"
+    return f"{sign}{_mag(v, dp)}%"
+
+
 def _yrs(sessions: int) -> str:
     years = sessions / SESSIONS_PER_YEAR
     return f"{years:.0f} years" if years >= 2 else f"{years * 12:.0f} months"
@@ -234,8 +250,8 @@ def table_block(data: dict) -> str:
         rows.append(
             f'<tr{cls}>'
             f'<td>{e["label"]}</td>'
-            f'<td>{at_stop:.1f}%</td>'
-            f'<td>{e["troughPct"]:.1f}%</td>'
+            f'<td>{_pc(at_stop)}</td>'
+            f'<td>{_pc(e["troughPct"])}</td>'
             f'<td>{_yrs(e["troughDays"]) if e["troughDays"] else "0"}</td>'
             f'<td>{back}</td></tr>')
     return (f'<thead><tr><th>Event</th><th>At session {stop}</th><th>Eventually</th>'
@@ -247,8 +263,8 @@ def cap_paths(data: dict, stop: int) -> str:
     order = ranking(data, stop)
     worst, second = order[0], order[1]
     return (f'Stopped at session {stop}, the worst of the five is {worst["label"]} at '
-            f'{worst["value"]:.1f} percent, ahead of {second["label"]} at '
-            f'{second["value"]:.1f} percent. Move the window and the order changes, because each '
+            f'{_mag(worst["value"])} percent, ahead of {second["label"]} at '
+            f'{_mag(second["value"])} percent. Move the window and the order changes, because each '
             f'line is still falling somewhere to the right of where it has been cut.')
 
 
@@ -289,11 +305,11 @@ def main() -> int:
     for e in data["events"]:
         back = "not yet" if e["ongoing"] else _yrs(e["recoveryDays"])
         print(f"   {e['label']:16} peak {e['peakDate']} {e['peak']:>10,.2f}  "
-              f"floor {e['troughPct']:>6.1f}% after {e['troughDays']:>4} sessions, "
+              f"floor {_pc(e['troughPct']):>7} after {e['troughDays']:>4} sessions, "
               f"back to peak: {back}")
     for day in (data["stopsAt"], 50, 120, 300, 900):
         order = ranking(data, day)
-        print(f"   worst at session {day:>4}: {order[0]['label']} ({order[0]['value']:.1f}%)")
+        print(f"   worst at session {day:>4}: {order[0]['label']} ({_pc(order[0]['value'])})")
 
     if not args.offline:
         CACHE.parent.mkdir(parents=True, exist_ok=True)

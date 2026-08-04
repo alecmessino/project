@@ -28,13 +28,14 @@ ROOT = Path(__file__).resolve().parent.parent
 PAGE = ROOT / "src" / "drift" / "web" / "the-shortest-line.html"
 CACHE = ROOT / "tests" / "data" / "asia_drawdowns.json"
 
-BLOCKS = ("DATA", "FIG-PATHS", "TABLE", "CAP-PATHS")
+BLOCKS = ("DATA", "FIG-PATHS", "TABLE", "CAP-PATHS", "MARKS")
 
 # How far forward the instrument tracks. Roughly five years of sessions, which covers every change
 # of hands in the ranking. What happens past it (the Nikkei's eventual floor nineteen years out) is
 # in the table, because a slider nobody would drag that far is not how you state a fact.
 HORIZON = 1300
 SESSIONS_PER_YEAR = 246
+KST = dt.timezone(dt.timedelta(hours=9))
 
 # (key, label, index name, symbol, window the pre-event peak sits inside)
 EVENTS = (
@@ -46,14 +47,39 @@ EVENTS = (
 )
 
 
-def fetch(symbol: str) -> list[list]:
-    url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
-           f"?period1=-2208988800&period2=9999999999&interval=1d")
+def _chart(symbol: str, query: str) -> dict:
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?{query}"
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    result = json.load(urllib.request.urlopen(req, timeout=45))["chart"]["result"][0]
+    return json.load(urllib.request.urlopen(req, timeout=45))["chart"]["result"][0]
+
+
+def _rows(result: dict) -> list[list]:
     closes = result["indicators"]["quote"][0]["close"]
     return [[dt.datetime.utcfromtimestamp(t).strftime("%Y-%m-%d"), round(c, 2)]
             for t, c in zip(result["timestamp"], closes) if c is not None]
+
+
+def fetch(symbol: str) -> list[list]:
+    """The full history, with the most recent session filled in if the long array is missing it.
+
+    Yahoo's multi-day arrays lag: hours after the Seoul close on 2026-08-04 the full history still
+    ended at August 3 while the single-day endpoint already had the new bar. Four of the five
+    events here are decades old and unaffected, but the fifth is live, and it is the one the whole
+    piece is about. Only appended once the session has settled, so an intraday print never enters
+    a series of closes.
+    """
+    rows = _rows(_chart(symbol, "period1=-2208988800&period2=9999999999&interval=1d"))
+    try:
+        tail = _chart(symbol, "range=1d&interval=1d")
+    except Exception:                                               # noqa: BLE001
+        return rows
+    tail_rows = _rows(tail)
+    stamp = dt.datetime.fromtimestamp(tail["meta"]["regularMarketTime"], KST)
+    if (tail_rows and tail_rows[-1][0] > rows[-1][0]
+            and tail_rows[-1][0] == stamp.strftime("%Y-%m-%d")
+            and stamp.time() >= dt.time(15, 0)):
+        rows.append(tail_rows[-1])
+    return rows
 
 
 def build(raw: dict) -> dict:
@@ -226,6 +252,17 @@ def cap_paths(data: dict, stop: int) -> str:
             f'line is still falling somewhere to the right of where it has been cut.')
 
 
+def marks_block(data: dict) -> str:
+    """The jump buttons. The first one tracks the live series rather than a number typed once:
+    "where Korea is now" moves every session, and a hardcoded 29 is wrong by the next close."""
+    stop = data["stopsAt"]
+    marks = [(stop, "Where Korea is now"), (50, "50 sessions"),
+             (SESSIONS_PER_YEAR, "One year"), (SESSIONS_PER_YEAR * 3, "Three years"),
+             (data["horizon"] - 1, "Five years")]
+    return "\n          ".join(
+        f'<button type="button" data-stop="{n}">{label}</button>' for n, label in marks)
+
+
 def replace(page: str, name: str, body: str) -> str:
     open_tag, close_tag = f"<!--{name}-->", f"<!--/{name}-->"
     start, end = page.find(open_tag), page.find(close_tag)
@@ -267,6 +304,7 @@ def main() -> int:
     page = replace(page, "FIG-PATHS", fig_paths(data, data["stopsAt"]))
     page = replace(page, "TABLE", "        " + table_block(data))
     page = replace(page, "CAP-PATHS", "          " + cap_paths(data, data["stopsAt"]))
+    page = replace(page, "MARKS", "          " + marks_block(data))
     PAGE.write_text(page)
     print(f"OK: rewrote {PAGE.relative_to(ROOT)}. Now run scripts/sync_docs.py.")
     return 0

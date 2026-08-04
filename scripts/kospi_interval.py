@@ -56,28 +56,56 @@ BLOCKS = ("DATA", "FIG-JULY", "FIG-CUMULATIVE", "FIG-CADENCE", "FIG-LADDER",
 
 # ── the series ────────────────────────────────────────────────────────────────────────────────
 
-def fetch() -> list[list]:
-    """Daily closes for ^KS11, most recent two years, as [["YYYY-MM-DD", close], ...] in KST.
+def _chart(host: str, query: str) -> dict:
+    url = f"{host}/v8/finance/chart/{SYMBOL.replace('^', '%5E')}?{query}"
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    return json.load(urllib.request.urlopen(req, timeout=30))["chart"]["result"][0]
+
+
+def _rows(result: dict) -> list[list]:
+    """Daily closes as [["YYYY-MM-DD", close], ...], dated in KST.
 
     Yahoo stamps each daily bar at the session open in UTC; Korea is UTC+9, so a naive UTC date
     lands the whole series one day early. Converting before taking the date is the difference
     between "July 31 gained 17.9 percent" and attributing that session to July 30.
     """
+    closes = result["indicators"]["quote"][0]["close"]
+    return [[dt.datetime.fromtimestamp(t, KST).strftime("%Y-%m-%d"), round(c, 2)]
+            for t, c in zip(result["timestamp"], closes) if c is not None]
+
+
+def fetch() -> tuple[list[list], dict]:
+    """The two-year daily series, with the most recent session filled in if it is missing.
+
+    The multi-day arrays lag. Hours after the Seoul close, `range=2y&interval=1d` can still end at
+    the PREVIOUS session while `regularMarketPrice` already reports the new one: on 2026-08-04 the
+    long array ended at August 3 (6,257.45) while the quote read 6,358.95. A generator that trusts
+    only the array publishes a page that is a full session stale and says nothing about it, which
+    is the one failure this page cannot have, since it prints its own as-of date.
+
+    So the tail is fetched separately (`range=1d`) and appended when it is newer. It is appended
+    only if that session has SETTLED, judged the same way the update box judges it: a bar dated
+    today, stamped at or after the 15:00 KST close. An intraday print is not a close, and every
+    other number on this page is a close.
+    """
     last = None
     for host in HOSTS:
-        url = f"{host}/v8/finance/chart/{SYMBOL.replace('^', '%5E')}?range=2y&interval=1d"
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
         try:
-            payload = json.load(urllib.request.urlopen(req, timeout=30))
+            long_series = _chart(host, "range=2y&interval=1d")
+            tail = _chart(host, "range=1d&interval=1d")
         except Exception as exc:                                    # noqa: BLE001
             last = exc
             continue
-        result = payload["chart"]["result"][0]
-        closes = result["indicators"]["quote"][0]["close"]
-        rows = [[dt.datetime.fromtimestamp(t, KST).strftime("%Y-%m-%d"), round(c, 2)]
-                for t, c in zip(result["timestamp"], closes) if c is not None]
-        meta = result["meta"]
+        rows = _rows(long_series)
+        meta = long_series["meta"]
         stamp = dt.datetime.fromtimestamp(meta["regularMarketTime"], KST)
+        tail_rows = _rows(tail)
+        if (tail_rows and tail_rows[-1][0] > rows[-1][0]
+                and tail_rows[-1][0] == stamp.strftime("%Y-%m-%d")
+                and stamp.time() >= dt.time(15, 0)):
+            rows.append(tail_rows[-1])
+            print(f"   tail     {tail_rows[-1][0]} at {tail_rows[-1][1]} was missing from the "
+                  f"two-year array and has settled; appended")
         return rows, {"level": round(meta["regularMarketPrice"], 2),
                       "asOf": stamp.isoformat(timespec="seconds"),
                       "exchange": meta.get("exchangeName", "KSC")}
@@ -524,30 +552,53 @@ def _session_is_over(data: dict) -> bool:
             and stamp.time() >= dt.time(15, 0))
 
 
+# The reporting around the August 3 session: a sidecar, and the two chipmakers. It is press about
+# ONE session and it stays welded to that session's date.
+#
+# It used to be welded to "the latest session" instead, which held for exactly one day. When the
+# August 4 close arrived the generator attached "opened sharply lower and triggered a five-minute
+# program trading suspension" to a session that ROSE 1.62 percent, and would have published it.
+# Reporting is dated; a quote is live; the two cannot share a sentence.
+SIDECAR_SESSION = "2026-08-03"
+
+
 def update_block(data: dict) -> str:
-    """The dated stamp above the essay. The market facts come from the series; the reporting
-    around them (the sidecar, the two chipmakers) is the morning's press and is stated as such."""
+    """The dated stamp above the essay: what happened on the day the piece was updated, then
+    where the index actually stands now."""
     latest = data["latest"]
+    series = data["series"]
+    sidecar = next((i for i, r in enumerate(series) if r[0] == SIDECAR_SESSION), None)
     day = dt.date.fromisoformat(latest["date"])
-    down = latest["change"] < 0
-    verb = "closed at" if _session_is_over(data) else "sits at"
-    return (
-        f'<p class="u-h"><span>Update</span><span class="u-when" id="u-when">'
-        f'{day.strftime("%A, %B %-d, %Y")}</span></p>\n'
-        f'      <p>The Kospi opened sharply lower in Seoul and triggered a five-minute program '
-        f'trading suspension after falling more than five percent at the open. The index '
-        f'<span id="u-verb">{verb}</span> '
+    verb = "closed at" if _session_is_over(data) else "stands at"
+    ytd = pct(series[0][1], latest["level"])
+
+    lines = [f'<p class="u-h"><span>Update</span><span class="u-when" id="u-when">'
+             f'{day.strftime("%A, %B %-d, %Y")}</span></p>']
+
+    if sidecar is not None and sidecar > 0:
+        level = series[sidecar][1]
+        move = pct(series[sidecar - 1][1], level)
+        lines.append(
+            f'      <p>On Monday, August 3 the Kospi opened sharply lower in Seoul and triggered a '
+            f'five-minute program trading suspension after falling more than five percent at the '
+            f'open. It closed at {level:,.2f}, down {abs(move):.2f} percent, with Samsung '
+            f'Electronics off 6.86 percent and SK Hynix off 7.16 percent. That was seventy-two '
+            f'hours after the largest single-day gain in the index\'s history.</p>')
+
+    lines.append(
+        f'      <p>The index <span id="u-verb">{verb}</span> '
         f'<span class="u-quote" id="u-level">{latest["level"]:,.2f}</span>, '
         f'<span class="u-move" id="u-move">'
-        f'{"down" if down else "up"} {abs(latest["points"]):,.2f} points, or '
-        f'{abs(latest["change"]):.2f} percent</span>, with Samsung Electronics off 6.86 percent and '
-        f'SK Hynix off 7.16 percent. That is seventy-two hours after the largest single-day gain in '
-        f'the index\'s history.</p>\n'
-        f'      <p><b>The piece below was written on Saturday.</b> Its arithmetic runs through the '
-        f'July 31 close and has not been restated. The instrument in '
-        f'<a href="#interval">the final section</a> does keep running, and it now includes this '
-        f'session.</p>'
-    )
+        f'{"down" if latest["change"] < 0 else "up"} {abs(latest["points"]):,.2f} points, or '
+        f'{abs(latest["change"]):.2f} percent</span>, on the '
+        f'{day.strftime("%B %-d")} session, and {ytd:.1f} percent higher than it began the year.</p>')
+
+    lines.append(
+        '      <p><b>The piece below was written on Saturday.</b> Its arithmetic runs through the '
+        'July 31 close and has not been restated. The instrument in '
+        '<a href="#interval">the final section</a> does keep running, and it includes every '
+        'session since.</p>')
+    return "\n".join(lines)
 
 
 def readout_block(data: dict, cadence: str = "daily") -> str:

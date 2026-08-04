@@ -162,7 +162,7 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
   letter-spacing:-.01em; }
 .dwnav .brand:hover .brand-word{ color:var(--accent-strike,#2c5878); }
 /* Mobile: drop the divider, tighten to the Micro lockup. */
-@media (max-width:1199px){ .dwnav{ align-items:center; } .dwnav .brand{ gap:9px; }
+@media (max-width:1299px){ .dwnav{ align-items:center; } .dwnav .brand{ gap:9px; }
   .dwnav .brand-rule{ display:none; } .dwnav .brand-word{ font-size:14.5px; }
   /* collapsed: pin the nameplate + MENU to one centred line (they can never wrap to a second row);
      the menu opens with flex-wrap restored so the family columns stack below. */
@@ -209,7 +209,7 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
 .dwnav-cta:hover{ filter:brightness(1.08); color:#fff; }
 /* Desktop: a single-line masthead. Brand at left, the four dropdowns after it, Client Access + the
    CTA anchored right. Each family opens a hairline panel positioned under its trigger. */
-@media (min-width:1200px){
+@media (min-width:1300px){
   /* flex-wrap stays on: the full index needs ~1140px of row and most page wraps are 960-1080px
      wide, so a nowrap row overflows the frame and overflow:hidden silently clips the CTA. When
      the row is tight the index wraps to a clean second line instead of losing the chip. */
@@ -225,16 +225,16 @@ select:focus:not(:focus-visible),[tabindex]:focus:not(:focus-visible),
   .dwnav-drop--open > .dwnav-panel{ opacity:1; visibility:visible; transform:translateY(0); }
   .dwnav-panel a{ padding:11px 0; line-height:1.35; align-self:stretch; }
 }
-@media (min-width:1200px) and (prefers-reduced-motion:reduce){
+@media (min-width:1300px) and (prefers-reduced-motion:reduce){
   .dwnav-panel, .dwnav-trigger .caret{ transition:none; }
 }
-@media (max-width:1199px){ .dwnav{ padding:12px 16px; gap:10px 10px; } }
+@media (max-width:1299px){ .dwnav{ padding:12px 16px; gap:10px 10px; } }
 /* Mobile disclosure: the full index would stack many rows on a phone and bury the hero and its CTA.
    Collapse it behind a single control (the toggle is injected by dw-context.js, shared across every
    page). Scoped to .dwnav--menu so with JavaScript off the full index simply stays visible. On a phone
    each family renders as a quiet heading over its stacked links, no dropdown interaction needed. */
 .dwnav-toggle{ display:none; }
-@media (max-width:1199px){
+@media (max-width:1299px){
   .dwnav--menu .dwnav-toggle{ display:inline-flex; align-items:center; gap:9px; margin-left:auto;
     background:none; border:0; cursor:pointer; padding:6px 0; font-family:var(--sans); font-size:11px;
     font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--accent-strike,#2c5878); }
@@ -942,15 +942,24 @@ body > .dwnav--phase2{ max-width:calc(1300px - 40px); margin-inline:auto; }
   font-weight:700; padding:10px 18px; white-space:nowrap; transition:filter .18s; }
 .dwnav--phase2 .dwnav-cta:hover{ filter:brightness(1.08); }
 /* Desktop: brand left, four families, then Client Access + CTA anchored right. */
-@media (min-width:1200px){
+@media (min-width:1300px){
   .dwnav--phase2{ align-items:center; padding:14px 30px; }
-  .dwnav--phase2 .brand{ margin-right:clamp(16px,2vw,28px); }
+  .dwnav--phase2 .brand{ margin-right:clamp(16px,2vw,26px); }
   /* margin-left:0 overrides the generic .dwnav-links rule above, which adds up to 30px on top of
      the brand's own margin-right — double-spacing the same gap. The row needs ~1230px of a 1260px
      frame, so those 30px were the difference between a one-line masthead and the CTA wrapping to a
      second row. Only visible once .dwnav-links actually existed: the Phase-2 generator never
-     emitted the wrapper, so every rule targeting it was dead until 2026-07-31. */
-  .dwnav--phase2 .dwnav-links{ gap:0 clamp(14px,1.6vw,26px); margin-left:0; }
+     emitted the wrapper, so every rule targeting it was dead until 2026-07-31.
+
+     EVERY HORIZONTAL VALUE IN HERE IS CAPPED AT ITS 1300px VALUE, and that is the whole reason the
+     masthead is one line (fixed 2026-08-04). `.wrap` maxes out at 1300px, so from a 1300px viewport
+     upward the nav's available width is frozen at 1260px — but these clamps were still scaling with
+     `vw` above it (brand margin to 28px at 1400, link gap to 26px at 1625). The row therefore kept
+     growing after the frame stopped, and somewhere around 1470px it outgrew the frame and the CTA
+     dropped to a second line: a masthead that was correct at 1440 and 154px tall at 1512, which is
+     the most common laptop width there is. Caps are now 2vw@1300 = 26px and 1.6vw@1300 = 21px.
+     If you raise a cap, raise `.wrap`'s max-width in the same commit or this comes straight back. */
+  .dwnav--phase2 .dwnav-links{ gap:0 clamp(14px,1.6vw,21px); margin-left:0; }
   .dwnav--phase2 .dwnav-access{ margin-left:auto; }
   .dwnav--phase2 .dwnav-panel{ position:absolute; top:100%; left:-14px; margin-top:9px; min-width:236px;
     flex-direction:column; background:var(--soft); border:1px solid var(--frame-line); padding:10px 16px;
@@ -958,7 +967,7 @@ body > .dwnav--phase2{ max-width:calc(1300px - 40px); margin-inline:auto; }
     transition:opacity .15s, transform .15s, visibility .15s; }
   .dwnav--phase2 .dwnav-drop--open > .dwnav-panel{ opacity:1; visibility:visible; transform:translateY(0); }
 }
-@media (max-width:1199px){
+@media (max-width:1299px){
   .dwnav--phase2{ flex-wrap:wrap; padding:12px 16px; gap:10px 10px; }
   /* Collapse the index behind the hamburger — re-asserted here because the generic
      `.dwnav--menu .dwnav-links{display:none}` rule earlier in this file is overridden by

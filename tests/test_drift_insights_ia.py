@@ -594,13 +594,22 @@ def test_the_collapsed_mobile_masthead_hides_the_index():
     css = (WEB / "driftwood.css").read_text(encoding="utf-8")
 
     def in_mobile_media_query(selector: str) -> bool:
-        """The rule must live under max-width:1199px — unconditionally it would break desktop.
-        There are several such blocks, so anchor on the nearest @media above the selector."""
+        """The rule must live under the compact-masthead query — unconditionally it would break
+        desktop. There are several such blocks, so anchor on the nearest @media above the selector.
+
+        The breakpoint value is read out of the stylesheet rather than pinned here. It has already
+        moved once (1199 -> 1299 on 2026-08-04, when the desktop row was found not to fit below a
+        1300px viewport), and this test is about the *cascade*, not about which pixel the masthead
+        collapses at. Pinning the number made a correct breakpoint change look like a regression.
+        """
         i = css.find(selector)
         if i == -1:
             return False
         opened = css.rfind("@media", 0, i)
-        return opened != -1 and "max-width:1199px" in css[opened:css.find("{", opened)]
+        if opened == -1:
+            return False
+        query = css[opened:css.find("{", opened)]
+        return re.search(r"max-width:\s*\d+px", query) is not None
 
     collapse = ".dwnav--phase2.dwnav--menu .dwnav-links{ display:none; }"
     reveal = ".dwnav--phase2.dwnav--menu.dwnav--open .dwnav-links{"

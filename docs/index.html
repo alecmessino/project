@@ -82,7 +82,7 @@
      column had nothing left to fill the reserved height with, so the page opened on air. The
      height is now set by the content, the padding is tighter, and the body copy is sized to hold
      its own against a 70px headline instead of reading as a caption under it. */
-  .hero{display:block;padding:72px 52px 88px}
+  .hero{display:block;padding:60px 52px 44px}
   .hero-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:0 72px;align-items:end}
   .hero h1{grid-column:1;font-family:var(--sans);font-weight:700;
     font-size:clamp(34px,4.4vw,70px);line-height:1.08;letter-spacing:-.024em;color:var(--ink);margin:0;max-width:21ch;text-wrap:balance}
@@ -532,9 +532,12 @@
 
 
   /* ── The survey plates. They bleed off the edge and are never framed, carded, or bordered. ── */
-  /* min-height was 780px, which left ~285px of empty plate below the CTA — the hero reserved a
-     height the content had nothing to fill. Now just enough to give the frontispiece presence. */
-  .hero{position:relative;overflow:hidden;isolation:isolate;min-height:600px}
+  /* Height has been cut twice for the same reason: the hero kept reserving space the content had
+     nothing to fill. 780px left ~285px of empty plate below the CTA; 600px still left 95–111px,
+     and pushed the seven-node lattice — the strongest thing on the page — entirely below the fold
+     on every laptop viewport. The hero now ends where its argument ends, and the lattice breaks
+     the fold instead of the dead zone. */
+  .hero{position:relative;overflow:hidden;isolation:isolate;min-height:470px}
   .hero>.hero-grid,.hero>.ctas{position:relative;z-index:1}
   .plateband{position:relative;height:190px;overflow:hidden;margin-top:56px}
   .plateband>.splate{position:absolute;top:-10%;left:-6%;width:112%;height:130%;object-fit:cover;

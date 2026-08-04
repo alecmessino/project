@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-04T22:47:43+00:00",
+  "generated": "2026-08-04T23:03:34+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 550349,
+    "rows": 551778,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 200683,
-      "live_total": 61403,
-      "live_today": 2347,
-      "last_row_age_min": 0.1
+      "rows_total": 201365,
+      "live_total": 61501,
+      "live_today": 2445,
+      "last_row_age_min": 0.2
     },
     "fanduel": {
-      "rows_total": 349660,
-      "live_total": 68272,
-      "live_today": 1951,
-      "last_row_age_min": 0.1
+      "rows_total": 350407,
+      "live_total": 68367,
+      "live_today": 2046,
+      "last_row_age_min": 0.2
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 42742.7
+      "last_row_age_min": 42758.6
     }
   },
   "books_reporting_live": [
@@ -37,18 +37,19 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 61403,
-    "OPEN": 62764,
-    "SUSPENDED": 5200,
+    "unset": 61501,
+    "OPEN": 62858,
+    "SUSPENDED": 5201,
     "REMOVED": 308
   },
   "overlap": {
-    "simultaneous_pairs_total": 70753,
-    "simultaneous_pairs_today": 2221,
+    "simultaneous_pairs_total": 70848,
+    "simultaneous_pairs_today": 2316,
     "overlap_games": 132,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
-      "0_books": 10,
+      "0_books": 9,
+      "1_books": 1,
       "2_books": 132
     }
   },
@@ -64,7 +65,7 @@
     "verified": true
   },
   "coverage": {
-    "live_games_seen": 133,
+    "live_games_seen": 135,
     "book_panel_games": 142,
     "team_total_rows": 28828,
     "innings_seen": [
@@ -86,7 +87,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 70753,
+        "current": 70848,
         "target": 2000,
         "pass": true,
         "progress": 1.0

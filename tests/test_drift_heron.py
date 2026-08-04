@@ -145,17 +145,20 @@ def test_the_mark_is_decorative_and_unlinked():
 # ── restraint: it never competes with the typography ──────────────────────────────────────────
 
 def test_the_mark_stays_under_the_opacity_ceiling():
-    """Tuned at .19, working band .17–.20.
+    """The level is a judgement call the owner makes, and it has moved twice: .14 (a ghost on
+    limestone), then .19, and now **.75** on request — a deliberate departure from the original
+    atmosphere brief, at which the engraving reads as a foreground element rather than as ground
+    the typography sits on.
 
-    The first cut sat at .14 and was a ghost on limestone — present only if you went looking for
-    it, which is the opposite of what a house mark is for. The ceiling still matters in the other
-    direction: past .20 the mark stops being the ground the words sit on and starts being a
-    picture they sit in front of."""
+    So this test no longer guards a design opinion; it guards the two things that stay true at any
+    level: the mark is still behind the copy (see the next test), and it is still *translucent* —
+    a fully opaque house mark would occlude whatever it crosses, and the hero's whole composition
+    assumes the reader can see through it."""
     t = HUB.read_text(encoding="utf-8")
     levels = [float(v) for v in re.findall(r"--mark-o:\s*(\.\d+|0?\.\d+)", t)]
     assert levels, "the house mark's opacity token is gone"
-    assert max(levels) <= 0.20, f"the house mark is too loud: {levels}"
-    assert max(levels) >= 0.17, f"the house mark is a ghost again: {levels}"
+    assert max(levels) < 1.0, f"the house mark is fully opaque: {levels}"
+    assert min(levels) > 0.0, f"the house mark has been switched off: {levels}"
 
 
 def test_the_mark_sits_behind_the_copy():

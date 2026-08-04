@@ -28,13 +28,24 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
-# Key names that plausibly denote a time. Deliberately broad; precision comes from the
-# value check below, and over-reporting is safe for a discovery probe.
-_KEY_RE = re.compile(
-    r"(time|timestamp|ts|date|updated|modified|created|generated|published|"
-    r"lastchange|last_change|asof|as_of|epoch|millis)",
-    re.I,
-)
+# Short abbreviations must match a WHOLE token: a bare substring test flags "numMarkets"
+# and "hasAttachments" on the "ts" inside them, which is exactly how the first run of this
+# probe polluted its own candidate list. Longer words are distinctive enough to match anywhere.
+_EXACT_TOKENS = {"ts", "time", "times", "date", "dates", "timestamp", "timestamps",
+                 "epoch", "millis", "asof"}
+_SUBSTR_WORDS = ("timestamp", "updated", "modified", "created", "generated", "published",
+                 "lastchange", "refreshed", "revised", "asof")
+_TOKEN_SPLIT = re.compile(r"[^A-Za-z0-9]+|(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
+
+
+def key_is_timeish(key: str) -> bool:
+    """True when a key NAME suggests a time, without firing on incidental substrings."""
+    k = str(key)
+    toks = [x.lower() for x in _TOKEN_SPLIT.split(k) if x]
+    if any(tk in _EXACT_TOKENS for tk in toks):
+        return True
+    kl = k.lower()
+    return any(w in kl for w in _SUBSTR_WORDS)
 # Epoch seconds / milliseconds within a plausible window (2020-01-01 .. 2035-01-01).
 _EPOCH_S = (1577836800, 2051222400)
 _EPOCH_MS = (_EPOCH_S[0] * 1000, _EPOCH_S[1] * 1000)
@@ -82,7 +93,7 @@ def scan_timestamps(payload: Any) -> list[dict]:
         if isinstance(node, dict):
             for k, v in node.items():
                 p = f"{path}.{k}" if path else str(k)
-                by_name = bool(_KEY_RE.search(str(k)))
+                by_name = key_is_timeish(k)
                 by_value = _value_is_timeish(v)
                 if (by_name or by_value) and not isinstance(v, (dict, list)):
                     if p not in seen:

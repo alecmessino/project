@@ -24,9 +24,12 @@ from __future__ import annotations
 import json
 import statistics as st
 from collections import Counter, defaultdict
+import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from shared_piping.provenance import key_is_timeish  # noqa: E402
 LOG = HERE / "output" / "provenance_probe.jsonl"
 
 # Fields that are about the CONTRACT (when the game starts, when the market closes) rather
@@ -34,7 +37,15 @@ LOG = HERE / "output" / "provenance_probe.jsonl"
 _CONTRACT_HINTS = ("start", "open", "close", "kickoff", "commence", "cutoff", "expiry", "settle")
 
 
-def classify(path: str, key: str) -> str:
+def classify(path: str, key: str, value_kind=None) -> str:
+    """candidate | contract | not-a-time.
+
+    Records written before the token fix carry name matches on incidental substrings
+    ("numMarkets", "hasAttachments"). Re-apply the corrected name test at read time so
+    historical records are graded by the same rule as new ones.
+    """
+    if value_kind is None and not key_is_timeish(key):
+        return "not-a-time"
     k = f"{path} {key}".lower()
     if any(h in k for h in _CONTRACT_HINTS):
         return "contract"          # scheduling metadata, not a publication clock
@@ -83,7 +94,9 @@ def main() -> int:
         for r in rs:
             hit = False
             for h in r.get("payload_time_fields", []):
-                kind = classify(h.get("path", ""), h.get("key", ""))
+                kind = classify(h.get("path", ""), h.get("key", ""), h.get("value_kind"))
+                if kind == "not-a-time":
+                    continue
                 (cand if kind == "candidate" else contract)[h["path"]] += 1
                 if kind == "candidate":
                     hit = True

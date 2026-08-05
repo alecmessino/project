@@ -18,6 +18,7 @@ The URL-parameter paths (?cadence=, ?missed=) are covered in tests/web/test_inte
 rather than here: they are browser code, and per CLAUDE.md they get exercised through the query
 string rather than through the controls.
 """
+import datetime as dt
 import importlib.util
 import json
 import re
@@ -308,3 +309,106 @@ def test_the_cache_is_committed_and_reproducible():
     assert blob["symbol"] == "^KS11"
     assert len(blob["rows"]) > 200
     assert all(len(r) == 2 and isinstance(r[1], (int, float)) for r in blob["rows"])
+
+
+# ── the two failures this page had on 2026-08-04 ──────────────────────────────────────────────
+
+def test_the_series_reaches_the_most_recent_settled_session(data):
+    """No stale tail.
+
+    Yahoo's multi-day arrays lag. Hours after the Seoul close on 2026-08-04 the two-year array
+    still ended at August 3 (6,257.45) while the quote already read 6,358.95, so a generator that
+    trusted only the array published a page a full session behind while printing its own as-of
+    date. fetch() now fills the tail from the single-day endpoint; this fails if that stops
+    working, or if a cache is committed with a settled session missing from it.
+    """
+    stamp = dt.datetime.fromisoformat(data["asOf"])
+    if stamp.time() < dt.time(15, 0):
+        pytest.skip("the session in the cache had not settled when it was taken")
+    assert data["series"][-1][0] == stamp.strftime("%Y-%m-%d"), (
+        f"the series ends at {data['series'][-1][0]} but the quote is stamped "
+        f"{stamp.strftime('%Y-%m-%d')} after the close: a settled session is missing")
+
+
+def test_the_dated_reporting_stays_welded_to_its_own_session(built, data):
+    """Reporting is dated; a quote is live; the two cannot share a sentence.
+
+    The update box carries press about ONE session: a sidecar, and the two chipmakers. It used to
+    be attached to "the latest session" instead, which held for exactly one day. When August 4
+    closed UP 1.62 percent the generator produced "opened sharply lower and triggered a five-minute
+    program trading suspension" over that session's figures, and would have published it.
+    """
+    prose = _quoted(built)
+    by_day = {d: c for d, c in data["series"]}
+    i = [d for d, _ in data["series"]].index(K.SIDECAR_SESSION)
+    level = by_day[K.SIDECAR_SESSION]
+    move = abs(K.pct(data["series"][i - 1][1], level))
+    assert "On Monday, August 3" in prose, "the sidecar report no longer names its own date"
+    assert f"It closed at {level:,.2f}" in prose, "the sidecar report is not on its own close"
+    assert f"down {move:.2f} percent" in prose, "the sidecar report is not on its own move"
+    # And the live line is a separate sentence carrying the separate session.
+    latest = data["latest"]
+    assert f"{latest['level']:,.2f}" in prose and f"{abs(latest['change']):.2f} percent" in prose
+    if latest["date"] != K.SIDECAR_SESSION:
+        assert f"on the {_day(latest['date'])} session" in prose, \
+            "the live close does not name the session it belongs to"
+
+
+def _day(iso: str) -> str:
+    return dt.date.fromisoformat(iso).strftime("%B %-d")
+
+
+# ── the rounding contract ─────────────────────────────────────────────────────────────────────
+
+def test_no_stored_figure_is_pre_rounded_to_a_display_precision(data):
+    """Values are stored at full precision and rounded exactly once, at display time.
+
+    The bug this pins shipped on 2026-08-04. The year-to-date return was 47.5521. The update box
+    formatted the raw value and printed 47.6. The instruments read a value the generator had
+    already rounded to two places, and round(47.5521, 2) is a float sitting just BELOW 47.55, so
+    formatting it again at one place gave 47.5. The page said 47.6 in one place and 47.5 in
+    another, from one series, directly under a colophon promising they cannot disagree.
+
+    Two places is the dangerous precision precisely because it is one digit beyond what is shown.
+    Anything stored at four or more is safe, because a second rounding can no longer cross a
+    boundary the first one moved.
+    """
+    suspect = []
+    for cadence, s in data["cadences"].items():
+        for k in ("total", "worstStep", "maxDrawdown"):
+            suspect.append((f"cadences.{cadence}.{k}", s[k]))
+    for n, v in enumerate(data["ladder"]):
+        suspect.append((f"ladder[{n}]", v))
+    pre_rounded = [(name, v) for name, v in suspect
+                   if v != 0 and round(v, 2) == v and round(v, 4) == v and abs(v * 100 % 1) < 1e-9]
+    assert not pre_rounded, (
+        f"stored at exactly two decimals, one digit beyond the display: {pre_rounded[:6]}. "
+        "Store full precision and let _mag() round once.")
+
+
+def test_the_update_box_and_the_instrument_state_the_same_year_to_date(built, data):
+    """The reader's version of the test above, and the one that actually caught it.
+
+    Two places on this page report the return over the whole period: the dated stamp at the top
+    and the instrument's fourth readout. They are the same quantity from the same series and they
+    must render the same string.
+    """
+    ytd = K.pct(data["series"][0][1], data["latest"]["level"])
+    prose = _quoted(built)
+    assert f"{K._mag(ytd)} percent higher than it began the year" in prose, \
+        f"the update box does not state {K._mag(ytd)} percent"
+    for cadence, s in data["cadences"].items():
+        assert K._pc(s["total"]) == f"+{K._mag(ytd)}%", (
+            f"the {cadence} instrument reports {K._pc(s['total'])} while the update box reports "
+            f"+{K._mag(ytd)}%")
+    assert f'id="c-total">{K._pc(data["cadences"]["daily"]["total"])}<' in built
+
+
+def test_the_python_and_javascript_rounding_agree():
+    """The static figure and the scripted one are rounded by two different implementations. They
+    have to be the same rule, or the page changes its numbers the moment the script runs."""
+    src = (WEB / PAGE).read_text(encoding="utf-8")
+    assert "Math.round(Math.abs(v) * q) / q" in src, \
+        "the page's pct() no longer rounds half up the way _mag() does"
+    assert "math.floor(abs(v) * q + 0.5) / q" in (
+        ROOT / "scripts" / "kospi_interval.py").read_text(encoding="utf-8")

@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import math
 import re
 import sys
 import urllib.request
@@ -56,28 +57,56 @@ BLOCKS = ("DATA", "FIG-JULY", "FIG-CUMULATIVE", "FIG-CADENCE", "FIG-LADDER",
 
 # ── the series ────────────────────────────────────────────────────────────────────────────────
 
-def fetch() -> list[list]:
-    """Daily closes for ^KS11, most recent two years, as [["YYYY-MM-DD", close], ...] in KST.
+def _chart(host: str, query: str) -> dict:
+    url = f"{host}/v8/finance/chart/{SYMBOL.replace('^', '%5E')}?{query}"
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    return json.load(urllib.request.urlopen(req, timeout=30))["chart"]["result"][0]
+
+
+def _rows(result: dict) -> list[list]:
+    """Daily closes as [["YYYY-MM-DD", close], ...], dated in KST.
 
     Yahoo stamps each daily bar at the session open in UTC; Korea is UTC+9, so a naive UTC date
     lands the whole series one day early. Converting before taking the date is the difference
     between "July 31 gained 17.9 percent" and attributing that session to July 30.
     """
+    closes = result["indicators"]["quote"][0]["close"]
+    return [[dt.datetime.fromtimestamp(t, KST).strftime("%Y-%m-%d"), round(c, 2)]
+            for t, c in zip(result["timestamp"], closes) if c is not None]
+
+
+def fetch() -> tuple[list[list], dict]:
+    """The two-year daily series, with the most recent session filled in if it is missing.
+
+    The multi-day arrays lag. Hours after the Seoul close, `range=2y&interval=1d` can still end at
+    the PREVIOUS session while `regularMarketPrice` already reports the new one: on 2026-08-04 the
+    long array ended at August 3 (6,257.45) while the quote read 6,358.95. A generator that trusts
+    only the array publishes a page that is a full session stale and says nothing about it, which
+    is the one failure this page cannot have, since it prints its own as-of date.
+
+    So the tail is fetched separately (`range=1d`) and appended when it is newer. It is appended
+    only if that session has SETTLED, judged the same way the update box judges it: a bar dated
+    today, stamped at or after the 15:00 KST close. An intraday print is not a close, and every
+    other number on this page is a close.
+    """
     last = None
     for host in HOSTS:
-        url = f"{host}/v8/finance/chart/{SYMBOL.replace('^', '%5E')}?range=2y&interval=1d"
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
         try:
-            payload = json.load(urllib.request.urlopen(req, timeout=30))
+            long_series = _chart(host, "range=2y&interval=1d")
+            tail = _chart(host, "range=1d&interval=1d")
         except Exception as exc:                                    # noqa: BLE001
             last = exc
             continue
-        result = payload["chart"]["result"][0]
-        closes = result["indicators"]["quote"][0]["close"]
-        rows = [[dt.datetime.fromtimestamp(t, KST).strftime("%Y-%m-%d"), round(c, 2)]
-                for t, c in zip(result["timestamp"], closes) if c is not None]
-        meta = result["meta"]
+        rows = _rows(long_series)
+        meta = long_series["meta"]
         stamp = dt.datetime.fromtimestamp(meta["regularMarketTime"], KST)
+        tail_rows = _rows(tail)
+        if (tail_rows and tail_rows[-1][0] > rows[-1][0]
+                and tail_rows[-1][0] == stamp.strftime("%Y-%m-%d")
+                and stamp.time() >= dt.time(15, 0)):
+            rows.append(tail_rows[-1])
+            print(f"   tail     {tail_rows[-1][0]} at {tail_rows[-1][1]} was missing from the "
+                  f"two-year array and has settled; appended")
         return rows, {"level": round(meta["regularMarketPrice"], 2),
                       "asOf": stamp.isoformat(timespec="seconds"),
                       "exchange": meta.get("exchangeName", "KSC")}
@@ -122,7 +151,7 @@ def ladder(rets: list[tuple[str, float]], depth: int = 10) -> list[float]:
         for day, r in rets:
             if day not in dropped:
                 growth *= 1 + r / 100
-        rows.append(round((growth - 1) * 100, 2))
+        rows.append(round((growth - 1) * 100, 6))
     return rows
 
 
@@ -186,11 +215,13 @@ def cadence_stats(window: list[list], cadence: str) -> dict:
         "cadence": cadence,
         "readings": readings,
         "count": len(readings),
-        "worstStep": round(worst, 2),
+        # Six places, not two: far beyond anything displayed, so a display format is always a
+        # single rounding step. See _mag().
+        "worstStep": round(worst, 6),
         "worstStepDate": worst_day,
-        "maxDrawdown": round(trough, 2),
+        "maxDrawdown": round(trough, 6),
         "drawdownSpan": list(span),
-        "total": round(pct(levels[0], levels[-1]), 2),
+        "total": round(pct(levels[0], levels[-1]), 6),
     }
 
 
@@ -261,6 +292,29 @@ def compute(rows: list[list], quote: dict) -> dict:
 # also get a static default state here, so the page is complete and truthful with JavaScript
 # turned off and the script only ever enhances what is already on the screen.
 
+def _mag(v: float, dp: int = 1) -> str:
+    """The magnitude of `v`, rounded HALF UP to `dp` places, exactly once.
+
+    The bug this exists to prevent shipped on 2026-08-04. The year-to-date return was 47.5521.
+    The update box formatted the raw value and printed 47.6. The instruments read a value the
+    generator had already rounded to two places, and round(47.5521, 2) is a float that sits just
+    BELOW 47.55 (47.549999999999997), so formatting it again at one place produced 47.5. The page
+    then said 47.6 in one place and 47.5 in another, directly under a colophon promising that its
+    prose, exhibits and instruments cannot disagree.
+
+    Two rules follow, and both matter. Values are STORED at full precision, never pre-rounded to a
+    display precision. And rounding happens exactly once, here, half up, matching Math.round in
+    the page's own script so the static figure and the scripted one never differ.
+    """
+    q = 10 ** dp
+    return f"{math.floor(abs(v) * q + 0.5) / q:.{dp}f}"
+
+
+def _pc(v: float, dp: int = 1) -> str:
+    """A signed percent with a real minus sign, matching what the instruments render."""
+    sign = "+" if v > 0 else ("−" if v < 0 else "")
+    return f"{sign}{_mag(v, dp)}%"
+
 INK, LINE, ACCENT, MUTED = "#1E2833", "#D8D3C6", "#2C5878", "#6B6E6A"
 # Two weights of one ink, not two hues. The green/red diverging pair reads as a retail trading
 # screen, and it was doing no work the geometry was not already doing: a bar's sign is which side
@@ -318,7 +372,7 @@ def fig_july(data: dict) -> str:
     out.append(f'<text x="{min(cx + bw / 2, w - pad_r):.1f}" '
                f'y="{zero - rows[best][1] * span - 9:.1f}" text-anchor="end" '
                f'font-size="10.5" font-weight="700" fill="{INK}">'
-               f'Jul 31, {rows[best][1]:+.1f}%</text>')
+               f'Jul 31, {_pc(rows[best][1])}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
@@ -396,7 +450,7 @@ def fig_cumulative(data: dict) -> str:
         out.append(f'<text x="{gutter:.1f}" y="{y - 2:.1f}" font-size="10" font-weight="700" '
                    f'fill="{INK}">{label}</text>')
         out.append(f'<text x="{gutter:.1f}" y="{y + 11:.1f}" font-size="10" font-weight="700" '
-                   f'fill="{ACCENT}">{pts[i][1]:+.1f}%</text>')
+                   f'fill="{ACCENT}">{_pc(pts[i][1])}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
@@ -491,7 +545,7 @@ def fig_ladder(data: dict, missed: int = 0) -> str:
             label_y = y - 8 if v >= 0 else zero - 7
             out.append(f'<text data-bar-label="1" x="{cx:.1f}" y="{label_y:.1f}" '
                        f'text-anchor="middle" font-size="11" font-weight="700" '
-                       f'fill="{INK}">{v:+.1f}%</text>')
+                       f'fill="{INK}">{_pc(v)}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
@@ -502,10 +556,6 @@ CADENCE_LABEL = {"daily": "every day", "weekly": "every week",
                  "monthly": "every month", "quarterly": "every quarter"}
 
 
-def _pc(v: float, dp: int = 1) -> str:
-    """A signed percent with a real minus sign, matching what the instruments render."""
-    sign = "+" if v > 0 else ("−" if v < 0 else "")
-    return f"{sign}{abs(v):.{dp}f}%"
 
 
 def _day(iso: str) -> str:
@@ -524,30 +574,54 @@ def _session_is_over(data: dict) -> bool:
             and stamp.time() >= dt.time(15, 0))
 
 
+# The reporting around the August 3 session: a sidecar, and the two chipmakers. It is press about
+# ONE session and it stays welded to that session's date.
+#
+# It used to be welded to "the latest session" instead, which held for exactly one day. When the
+# August 4 close arrived the generator attached "opened sharply lower and triggered a five-minute
+# program trading suspension" to a session that ROSE 1.62 percent, and would have published it.
+# Reporting is dated; a quote is live; the two cannot share a sentence.
+SIDECAR_SESSION = "2026-08-03"
+
+
 def update_block(data: dict) -> str:
-    """The dated stamp above the essay. The market facts come from the series; the reporting
-    around them (the sidecar, the two chipmakers) is the morning's press and is stated as such."""
+    """The dated stamp above the essay: what happened on the day the piece was updated, then
+    where the index actually stands now."""
     latest = data["latest"]
+    series = data["series"]
+    sidecar = next((i for i, r in enumerate(series) if r[0] == SIDECAR_SESSION), None)
     day = dt.date.fromisoformat(latest["date"])
-    down = latest["change"] < 0
-    verb = "closed at" if _session_is_over(data) else "sits at"
-    return (
-        f'<p class="u-h"><span>Update</span><span class="u-when" id="u-when">'
-        f'{day.strftime("%A, %B %-d, %Y")}</span></p>\n'
-        f'      <p>The Kospi opened sharply lower in Seoul and triggered a five-minute program '
-        f'trading suspension after falling more than five percent at the open. The index '
-        f'<span id="u-verb">{verb}</span> '
+    verb = "closed at" if _session_is_over(data) else "stands at"
+    ytd = pct(series[0][1], latest["level"])
+
+    lines = [f'<p class="u-h"><span>Update</span><span class="u-when" id="u-when">'
+             f'{day.strftime("%A, %B %-d, %Y")}</span></p>']
+
+    if sidecar is not None and sidecar > 0:
+        level = series[sidecar][1]
+        move = pct(series[sidecar - 1][1], level)
+        lines.append(
+            f'      <p>On Monday, August 3 the Kospi opened sharply lower in Seoul and triggered a '
+            f'five-minute program trading suspension after falling more than five percent at the '
+            f'open. It closed at {level:,.2f}, down {abs(move):.2f} percent, with Samsung '
+            f'Electronics off 6.86 percent and SK Hynix off 7.16 percent. That was seventy-two '
+            f'hours after the largest single-day gain in the index\'s history.</p>')
+
+    lines.append(
+        f'      <p>The index <span id="u-verb">{verb}</span> '
         f'<span class="u-quote" id="u-level">{latest["level"]:,.2f}</span>, '
         f'<span class="u-move" id="u-move">'
-        f'{"down" if down else "up"} {abs(latest["points"]):,.2f} points, or '
-        f'{abs(latest["change"]):.2f} percent</span>, with Samsung Electronics off 6.86 percent and '
-        f'SK Hynix off 7.16 percent. That is seventy-two hours after the largest single-day gain in '
-        f'the index\'s history.</p>\n'
-        f'      <p><b>The piece below was written on Saturday.</b> Its arithmetic runs through the '
-        f'July 31 close and has not been restated. The instrument in '
-        f'<a href="#interval">the final section</a> does keep running, and it now includes this '
-        f'session.</p>'
-    )
+        f'{"down" if latest["change"] < 0 else "up"} {abs(latest["points"]):,.2f} points, or '
+        f'{_mag(latest["change"], 2)} percent</span>, on the '
+        f'{day.strftime("%B %-d")} session, and {_mag(ytd)} percent higher than it began the '
+        f'year.</p>')
+
+    lines.append(
+        '      <p><b>The piece below was written on Saturday.</b> Its arithmetic runs through the '
+        'July 31 close and has not been restated. The instrument in '
+        '<a href="#interval">the final section</a> does keep running, and it includes every '
+        'session since.</p>')
+    return "\n".join(lines)
 
 
 def readout_block(data: dict, cadence: str = "daily") -> str:

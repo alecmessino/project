@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import math
 import sys
 import urllib.request
 from pathlib import Path
@@ -28,13 +29,14 @@ ROOT = Path(__file__).resolve().parent.parent
 PAGE = ROOT / "src" / "drift" / "web" / "the-shortest-line.html"
 CACHE = ROOT / "tests" / "data" / "asia_drawdowns.json"
 
-BLOCKS = ("DATA", "FIG-PATHS", "TABLE", "CAP-PATHS")
+BLOCKS = ("DATA", "FIG-PATHS", "TABLE", "CAP-PATHS", "MARKS")
 
 # How far forward the instrument tracks. Roughly five years of sessions, which covers every change
 # of hands in the ranking. What happens past it (the Nikkei's eventual floor nineteen years out) is
 # in the table, because a slider nobody would drag that far is not how you state a fact.
 HORIZON = 1300
 SESSIONS_PER_YEAR = 246
+KST = dt.timezone(dt.timedelta(hours=9))
 
 # (key, label, index name, symbol, window the pre-event peak sits inside)
 EVENTS = (
@@ -46,14 +48,39 @@ EVENTS = (
 )
 
 
-def fetch(symbol: str) -> list[list]:
-    url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
-           f"?period1=-2208988800&period2=9999999999&interval=1d")
+def _chart(symbol: str, query: str) -> dict:
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?{query}"
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    result = json.load(urllib.request.urlopen(req, timeout=45))["chart"]["result"][0]
+    return json.load(urllib.request.urlopen(req, timeout=45))["chart"]["result"][0]
+
+
+def _rows(result: dict) -> list[list]:
     closes = result["indicators"]["quote"][0]["close"]
     return [[dt.datetime.utcfromtimestamp(t).strftime("%Y-%m-%d"), round(c, 2)]
             for t, c in zip(result["timestamp"], closes) if c is not None]
+
+
+def fetch(symbol: str) -> list[list]:
+    """The full history, with the most recent session filled in if the long array is missing it.
+
+    Yahoo's multi-day arrays lag: hours after the Seoul close on 2026-08-04 the full history still
+    ended at August 3 while the single-day endpoint already had the new bar. Four of the five
+    events here are decades old and unaffected, but the fifth is live, and it is the one the whole
+    piece is about. Only appended once the session has settled, so an intraday print never enters
+    a series of closes.
+    """
+    rows = _rows(_chart(symbol, "period1=-2208988800&period2=9999999999&interval=1d"))
+    try:
+        tail = _chart(symbol, "range=1d&interval=1d")
+    except Exception:                                               # noqa: BLE001
+        return rows
+    tail_rows = _rows(tail)
+    stamp = dt.datetime.fromtimestamp(tail["meta"]["regularMarketTime"], KST)
+    if (tail_rows and tail_rows[-1][0] > rows[-1][0]
+            and tail_rows[-1][0] == stamp.strftime("%Y-%m-%d")
+            and stamp.time() >= dt.time(15, 0)):
+        rows.append(tail_rows[-1])
+    return rows
 
 
 def build(raw: dict) -> dict:
@@ -63,7 +90,9 @@ def build(raw: dict) -> dict:
         window = [r for r in rows if lo <= r[0] <= hi]
         peak_date, peak = max(window, key=lambda r: r[1])
         forward = [r for r in rows if r[0] >= peak_date]
-        path = [round((c / peak - 1) * 100, 2) for _, c in forward[:HORIZON]]
+        # Four places, not two. Two is one digit beyond what the page displays, which is exactly
+        # the precision that re-rounds wrong at a .x5 boundary: 238 of these points did. See _mag.
+        path = [round((c / peak - 1) * 100, 4) for _, c in forward[:HORIZON]]
 
         trough_i = min(range(len(forward)), key=lambda i: forward[i][1])
         recovered = next((i for i, (_, c) in enumerate(forward) if i > 0 and c >= peak), None)
@@ -72,7 +101,7 @@ def build(raw: dict) -> dict:
             "peakDate": peak_date, "peak": peak,
             "path": path,
             "dates": [forward[0][0], forward[min(len(forward), HORIZON) - 1][0]],
-            "troughPct": round((forward[trough_i][1] / peak - 1) * 100, 1),
+            "troughPct": round((forward[trough_i][1] / peak - 1) * 100, 6),
             "troughDate": forward[trough_i][0],
             "troughDays": trough_i,
             "recoveryDays": recovered,
@@ -190,6 +219,19 @@ def ranking(data: dict, stop: int) -> list[dict]:
     return sorted(rows, key=lambda r: r["value"])
 
 
+def _mag(v: float, dp: int = 1) -> str:
+    """Half up, exactly once. Same contract as scripts/kospi_interval.py::_mag, and the same
+    reason: a value pre-rounded to a display precision arrives at the formatter as a float just
+    below the .x5 boundary and loses a digit."""
+    q = 10 ** dp
+    return f"{math.floor(abs(v) * q + 0.5) / q:.{dp}f}"
+
+
+def _pc(v: float, dp: int = 1) -> str:
+    sign = "" if v >= 0 else "\u2212"
+    return f"{sign}{_mag(v, dp)}%"
+
+
 def _yrs(sessions: int) -> str:
     years = sessions / SESSIONS_PER_YEAR
     return f"{years:.0f} years" if years >= 2 else f"{years * 12:.0f} months"
@@ -208,8 +250,8 @@ def table_block(data: dict) -> str:
         rows.append(
             f'<tr{cls}>'
             f'<td>{e["label"]}</td>'
-            f'<td>{at_stop:.1f}%</td>'
-            f'<td>{e["troughPct"]:.1f}%</td>'
+            f'<td>{_pc(at_stop)}</td>'
+            f'<td>{_pc(e["troughPct"])}</td>'
             f'<td>{_yrs(e["troughDays"]) if e["troughDays"] else "0"}</td>'
             f'<td>{back}</td></tr>')
     return (f'<thead><tr><th>Event</th><th>At session {stop}</th><th>Eventually</th>'
@@ -221,9 +263,20 @@ def cap_paths(data: dict, stop: int) -> str:
     order = ranking(data, stop)
     worst, second = order[0], order[1]
     return (f'Stopped at session {stop}, the worst of the five is {worst["label"]} at '
-            f'{worst["value"]:.1f} percent, ahead of {second["label"]} at '
-            f'{second["value"]:.1f} percent. Move the window and the order changes, because each '
+            f'{_mag(worst["value"])} percent, ahead of {second["label"]} at '
+            f'{_mag(second["value"])} percent. Move the window and the order changes, because each '
             f'line is still falling somewhere to the right of where it has been cut.')
+
+
+def marks_block(data: dict) -> str:
+    """The jump buttons. The first one tracks the live series rather than a number typed once:
+    "where Korea is now" moves every session, and a hardcoded 29 is wrong by the next close."""
+    stop = data["stopsAt"]
+    marks = [(stop, "Where Korea is now"), (50, "50 sessions"),
+             (SESSIONS_PER_YEAR, "One year"), (SESSIONS_PER_YEAR * 3, "Three years"),
+             (data["horizon"] - 1, "Five years")]
+    return "\n          ".join(
+        f'<button type="button" data-stop="{n}">{label}</button>' for n, label in marks)
 
 
 def replace(page: str, name: str, body: str) -> str:
@@ -252,11 +305,11 @@ def main() -> int:
     for e in data["events"]:
         back = "not yet" if e["ongoing"] else _yrs(e["recoveryDays"])
         print(f"   {e['label']:16} peak {e['peakDate']} {e['peak']:>10,.2f}  "
-              f"floor {e['troughPct']:>6.1f}% after {e['troughDays']:>4} sessions, "
+              f"floor {_pc(e['troughPct']):>7} after {e['troughDays']:>4} sessions, "
               f"back to peak: {back}")
     for day in (data["stopsAt"], 50, 120, 300, 900):
         order = ranking(data, day)
-        print(f"   worst at session {day:>4}: {order[0]['label']} ({order[0]['value']:.1f}%)")
+        print(f"   worst at session {day:>4}: {order[0]['label']} ({_pc(order[0]['value'])})")
 
     if not args.offline:
         CACHE.parent.mkdir(parents=True, exist_ok=True)
@@ -267,6 +320,7 @@ def main() -> int:
     page = replace(page, "FIG-PATHS", fig_paths(data, data["stopsAt"]))
     page = replace(page, "TABLE", "        " + table_block(data))
     page = replace(page, "CAP-PATHS", "          " + cap_paths(data, data["stopsAt"]))
+    page = replace(page, "MARKS", "          " + marks_block(data))
     PAGE.write_text(page)
     print(f"OK: rewrote {PAGE.relative_to(ROOT)}. Now run scripts/sync_docs.py.")
     return 0

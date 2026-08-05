@@ -178,3 +178,45 @@ def test_the_disclosure_survives(built):
     for phrase in ("Park Avenue Securities", "Past performance does not indicate future results",
                    "price returns in local currency", "does not adjust for inflation"):
         assert phrase in prose, f"the disclosure lost: {phrase!r}"
+
+
+def test_the_where_korea_is_now_preset_tracks_the_live_series(data):
+    """The jump buttons are generated, not typed.
+
+    "Where Korea is now" was hardcoded to session 29 and was wrong by the next close. It is
+    written from data["stopsAt"] now, so it moves with the series it names.
+    """
+    src = (WEB / PAGE).read_text(encoding="utf-8")
+    m = re.search(r'<button type="button" data-stop="(\d+)">Where Korea is now</button>', src)
+    assert m, "the live preset button is missing"
+    assert int(m.group(1)) == data["stopsAt"], (
+        f"the preset points at session {m.group(1)} but the 2026 series now ends at "
+        f"{data['stopsAt']}")
+    assert f'value="{data["stopsAt"]}"' in src or 'id="stop"' in src
+
+
+def test_the_live_event_reaches_the_most_recent_settled_session(data):
+    """Same stale-tail guard as the essay. Four of these five events are decades old; the fifth is
+    the one the piece is about, and it is the one that can silently fall a session behind."""
+    subject = next(e for e in data["events"] if e["key"] == data["subject"])
+    kospi = json.loads(CACHE.read_text())["raw"]["kospi2026"]
+    assert subject["path"] and len(subject["path"]) - 1 == data["stopsAt"]
+    assert kospi[-1][0] >= "2026-08-04", f"the live series ends at {kospi[-1][0]}"
+
+
+def test_no_stored_path_point_is_pre_rounded_to_a_display_precision(data):
+    """Same contract as the essay. 238 of these points were stored at two decimals and displayed
+    at one, which is the precision that re-rounds wrong at a .x5 boundary."""
+    exact_2dp = [round(v, 2) == v and round(v, 4) == v and abs(v * 100 % 1) < 1e-9
+                 for e in data["events"] for v in e["path"] if v != 0]
+    assert not all(exact_2dp), "every path point lands on two decimals, which cannot be data"
+    assert sum(exact_2dp) < len(exact_2dp) * 0.5, (
+        "most path points are stored at exactly two decimals, one digit beyond the display: "
+        "store full precision and let _mag() round once")
+
+
+def test_the_python_and_javascript_rounding_agree():
+    src = (WEB / PAGE).read_text(encoding="utf-8")
+    assert "Math.round(Math.abs(v) * q) / q" in src
+    assert "math.floor(abs(v) * q + 0.5) / q" in (
+        ROOT / "scripts" / "asia_drawdowns.py").read_text(encoding="utf-8")

@@ -135,15 +135,36 @@ def build_dashboard_state(ledger_path: str | Path, settings: Settings, tax=None)
     return dashboard_projection(build_portfolio_state(ledger, settings, tax))
 
 
+def _embed(template: str, state: dict) -> str:
+    """Embed the state blob AND resolve every build-time token.
+
+    Why this exists: for a long time only `render_hub` resolved <!--FIRM_ANCHOR-->, so the nightly
+    `drift statemap|taxlab|leakage` runs shipped docs/ pages containing the raw HTML comment where
+    the firm identity strip belongs — the band naming the practice and its custodian. Running
+    scripts/sync_docs.py repaired it, then the next nightly regressed it, so the live site lost that
+    strip on those pages between builds. Every render path now goes through one function; adding a
+    new token means editing one place, and test_no_build_token_ever_ships catches the rest.
+
+    It happened again on 2026-08-05, the same way. `_embed` was introduced but four render paths
+    were left hand-rolling the state replace and never picked up the token substitution:
+    render_html (equities), render_report (case studies), render_tearsheet and render_ledger. The
+    nightly exhibits job regenerated all four straight onto master, shipping the raw comment to the
+    live site where the firm identity band belongs, and because that job commits directly it never
+    faced PR CI. All four now go through here. If you add a fifth exhibit, route it through _embed
+    rather than calling .replace yourself; that is the entire lesson of this function existing.
+    """
+    from .site import firm_anchor_html
+    html = template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+    return html.replace("<!--FIRM_ANCHOR-->", firm_anchor_html())
+
+
 def render_html(state: dict) -> str:
     """Static, self-contained HTML: the template with the state embedded inline.
 
     The template fetches /api/state when served live; for export we replace the
     placeholder with a literal so the page renders with no server.
     """
-    template = TEMPLATE.read_text()
-    payload = json.dumps(state)
-    return template.replace("/*__STATE__*/null/*__END__*/", payload)
+    return _embed(TEMPLATE.read_text(), state)
 
 
 def export_html(ledger_path: str | Path, settings: Settings, out: str | Path, tax=None) -> Path:
@@ -159,8 +180,7 @@ def export_html(ledger_path: str | Path, settings: Settings, out: str | Path, ta
 
 def render_report(report: dict) -> str:
     """Static, self-contained case-studies HTML with the report embedded inline."""
-    template = REPORT_TEMPLATE.read_text()
-    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(report))
+    return _embed(REPORT_TEMPLATE.read_text(), report)
 
 
 def export_report(report: dict, out: str | Path) -> Path:
@@ -173,8 +193,7 @@ def export_report(report: dict, out: str | Path) -> Path:
 
 def render_tearsheet(report: dict) -> str:
     """Static, self-contained long-history tearsheet HTML with state embedded."""
-    template = TEARSHEET_TEMPLATE.read_text()
-    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(report))
+    return _embed(TEARSHEET_TEMPLATE.read_text(), report)
 
 
 def export_tearsheet(report: dict, out: str | Path) -> Path:
@@ -186,8 +205,7 @@ def export_tearsheet(report: dict, out: str | Path) -> Path:
 
 def render_ledger(state: dict) -> str:
     """Static, self-contained forward-ledger HTML with state embedded."""
-    template = LEDGER_TEMPLATE.read_text()
-    return template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
+    return _embed(LEDGER_TEMPLATE.read_text(), state)
 
 
 def export_ledger(state: dict, out: str | Path) -> Path:
@@ -195,21 +213,6 @@ def export_ledger(state: dict, out: str | Path) -> Path:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render_ledger(state))
     return out
-
-
-def _embed(template: str, state: dict) -> str:
-    """Embed the state blob AND resolve every build-time token.
-
-    Why this exists: for a long time only `render_hub` resolved <!--FIRM_ANCHOR-->, so the nightly
-    `drift statemap|taxlab|leakage` runs shipped docs/ pages containing the raw HTML comment where
-    the firm identity strip belongs — the band naming the practice and its custodian. Running
-    scripts/sync_docs.py repaired it, then the next nightly regressed it, so the live site lost that
-    strip on those pages between builds. Every render path now goes through one function; adding a
-    new token means editing one place, and test_no_build_token_ever_ships catches the rest.
-    """
-    from .site import firm_anchor_html
-    html = template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
-    return html.replace("<!--FIRM_ANCHOR-->", firm_anchor_html())
 
 
 def render_hub(state: dict) -> str:

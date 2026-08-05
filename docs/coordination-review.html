@@ -114,13 +114,23 @@
   @media(max-width:560px){.ask{grid-template-columns:1fr}}
 
   /* duration: three plain facts, no ornament */
-  .dur{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink);border-left:1px solid var(--line2)}
-  .du{padding:18px 20px;border-bottom:1px solid var(--line2);border-right:1px solid var(--line2)}
-  .du .duk{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-  .du .duv{font-family:var(--sans);font-weight:700;font-size:16px;color:var(--ink)}
-  .du .dud{font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--body);margin-top:5px}
-  @media(max-width:720px){.dur{grid-template-columns:1fr}}
 
+  /* The duration now rides on its own step rather than in a second table further down. */
+  .step .sh2 .stime{font-weight:500;font-size:12px;letter-spacing:.02em;color:var(--muted);
+    white-space:nowrap;margin-left:10px}
+  /* The shape of the commitment. A ruled register, not a feature box: no card, no shadow, no icons. */
+  .shape{padding:30px 44px 34px}
+  .shape .sk{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .shape dl{margin:0;border-top:1px solid var(--ink);max-width:820px}
+  .shape dl > div{display:grid;grid-template-columns:170px 1fr;gap:0 24px;
+    padding:11px 0;border-bottom:1px solid var(--line2)}
+  .shape dt{font-family:var(--sans);font-weight:700;font-size:12.5px;color:var(--ink)}
+  .shape dd{margin:0;font-family:var(--sans);font-size:13.5px;line-height:1.55;color:var(--body);max-width:62ch}
+  @media(max-width:720px){
+    .shape{padding-left:22px;padding-right:22px}
+    .shape dl > div{grid-template-columns:1fr;gap:2px}
+  }
   .feenote{padding:26px 44px 6px}
   .feenote p{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--muted);margin:0;max-width:64ch}
   .feenote b{color:var(--ink);font-weight:600}
@@ -177,6 +187,21 @@
     <div class="thesis">
       <p>Most financial mistakes are not investment mistakes or tax mistakes. They are <b>coordination
         mistakes.</b></p>
+    </div>
+
+    <!-- The page argues for a substantial engagement, but the ask is a fifteen-minute call that needs
+         nothing. Every practical answer a reader wants before booking was on the page already, in
+         sections six and seven and a trailing paragraph, behind seven named documents. This states the
+         shape of the commitment before any of it, and each line is a summary of a section below rather
+         than a new claim. -->
+    <div class="shape">
+      <div class="sk">Before you read further</div>
+      <dl>
+        <div><dt>To begin</dt><dd>Fifteen minutes, by phone. Nothing to prepare and no documents.</dd></div>
+        <div><dt>If it proceeds</dt><dd>Two to three weeks, then one sitting to walk the report through.</dd></div>
+        <div><dt>What we ask for</dt><dd>Statements, estate and entity documents, and last year's return. The whole list is below.</dd></div>
+        <div><dt>What it costs</dt><dd>A defined engagement fee, agreed in writing before any work begins.</dd></div>
+      </dl>
     </div>
 
     <div class="sec">
@@ -240,25 +265,31 @@
     </div>
 
     <div class="sec">
-      <div class="k">How it proceeds</div>
+      <!-- Merged 2026-08-04. "How it proceeds" and "How long it takes" described the same three
+           stages eighty lines apart, in near-identical words: fifteen-minute introduction with
+           nothing to prepare, the review read privately on the household's own holdings, the report
+           walked through with the CPA and counsel. Neither instance was complete on its own, so a
+           reader had to hold two passes in their head to answer one question. One section now
+           carries the sequence and its clock together. -->
+      <div class="k">How it proceeds, and how long it takes</div>
       <div class="steps">
         <div class="step">
           <div class="sn">01</div>
-          <div><div class="sh2">A fifteen-minute introduction</div><div class="sd">You see how we think, we
-            understand your situation, and together we decide whether a review is warranted. Nothing to prepare.
-            If it isn't warranted, we will say so.</div></div>
+          <div><div class="sh2">The introduction <span class="stime">Fifteen minutes</span></div>
+            <div class="sd">You see how we think, we understand your situation, and together we decide whether a
+            review is warranted. Nothing to prepare, and no documents. If it isn't warranted, we will say so.</div></div>
         </div>
         <div class="step">
           <div class="sn">02</div>
-          <div><div class="sh2">The review, privately</div><div class="sd">Your systems are read one at a time, on
-            your actual holdings, documents, and state. The instruments that compute the tax line run here, on
-            your numbers, not on a public page.</div></div>
+          <div><div class="sh2">The review, privately <span class="stime">Two to three weeks</span></div>
+            <div class="sd">Your systems are read one at a time, on your actual holdings, documents, and state.
+            The instruments that compute the tax line run here, on your numbers, not on a public page.</div></div>
         </div>
         <div class="step">
           <div class="sn">03</div>
-          <div><div class="sh2">The report, walked through together</div><div class="sd">The Coordination Report and
-            the opening Register, reviewed with you, and with your CPA and estate attorney where the findings
-            touch their work.</div></div>
+          <div><div class="sh2">The report, walked through together <span class="stime">One sitting</span></div>
+            <div class="sd">The Coordination Report and the opening Register, reviewed with you, and with your CPA
+            and estate attorney where the findings touch their work.</div></div>
         </div>
       </div>
     </div>
@@ -320,27 +351,6 @@
       <p class="qual-note"><b>How they are handled:</b> [one sentence, supplied by the principal, matching
         privacy.html exactly]</p>
       -->
-    </div>
-
-    <div class="sec">
-      <div class="k">How long it takes</div>
-      <div class="dur">
-        <div class="du">
-          <div class="duk">The introduction</div>
-          <div class="duv">Fifteen minutes</div>
-          <div class="dud">Nothing to prepare, and no documents.</div>
-        </div>
-        <div class="du">
-          <div class="duk">The review itself</div>
-          <div class="duv">Two to three weeks</div>
-          <div class="dud">Your systems are read one at a time, on your own holdings.</div>
-        </div>
-        <div class="du">
-          <div class="duk">The report, walked through</div>
-          <div class="duv">One sitting</div>
-          <div class="dud">With your CPA and counsel where the findings touch them.</div>
-        </div>
-      </div>
     </div>
 
     <div class="feenote">

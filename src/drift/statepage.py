@@ -297,7 +297,7 @@ def _process_bar(active: str, edition: str = CURRENT_EDITION) -> str:
 
 PLAUSIBLE = (
     '<!-- Privacy-first analytics (Plausible) -->\n'
-    '<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>\n'
+    '<script async src="https://plausible.io/js/pa-h6JBp-7giRA83TjPL4uHQ.js"></script>\n'
     '<script>\n'
     '  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},'
     'plausible.init=plausible.init||function(i){plausible.o=i||{}};\n'

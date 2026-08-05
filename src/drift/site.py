@@ -31,7 +31,7 @@ BASE_URL = "https://driftwoodwealth.com"
 # alec@driftwoodwealth.com, not hello@driftwoodplanning.com: twelve pages already hardcode the
 # former, and the latter is a different domain from the one the site ships on.
 CONTACT_EMAIL = "alec@driftwoodwealth.com"
-BOOKING_URL = "https://calendly.com/alec-messino/15-minute-introductory-meeting"
+BOOKING_URL = "https://calendly.com/alec-messino/introductory-call-driftwood-wealth"
 
 # Booking attribution. A booking completes on calendly.com, so nothing on this site can observe it:
 # once the visitor leaves, our analytics are blind. Calendly does read UTM parameters off the

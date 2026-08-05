@@ -70,7 +70,9 @@ re-derives the table from the engine and fails if a figure drifts — it is the 
 - **Web3Forms**: the lead form posts here (key/endpoint in `taxlab.html` CONFIG). To send the prospect
   an instant copy of their analysis, enable the **autoresponder** in the Web3Forms dashboard (the form
   already submits their email). The on-page success card already delivers the figures + Calendly link.
-- **Plausible**: loaded on every real page (50 of 68 templates; the other 18 are redirect stubs).
+- **Plausible**: loaded on every real page (55 of 68 templates; the other 13 are redirect
+  stubs). `brand`, `commentary`, `driftwood-review`, `fiduciary` and `insights` were entirely
+  unmeasured until 2026-08-05 — including the flagship publication and the Insights directory.
 
   **Corrected 2026-08-05 after a measured audit.** This entry previously listed `state_selected`,
   `portfolio_adjusted`, `lead_submitted`, `lead_error`, `booking_opened` and `booking_scheduled`,
@@ -93,15 +95,17 @@ re-derives the table from the engine and fails if a figure drifts — it is the 
   and it drops them when `navigator.webdriver` is set, so a Playwright check sees nothing until it
   serves under a real hostname and sets `window.__plausible = true` first.
 
-- **The Plausible site identifier does not match the live domain.** The hosted script has
-  `domain:"alecmessino.github.io/project"` baked in, while `docs/CNAME`, `BASE_URL` and every
-  canonical are `driftwoodwealth.com`. It cannot be fixed in this repo: the script applies
+- **The Plausible site identifier now matches the live domain (fixed 2026-08-05).** The script is
+  `pa-h6JBp-7giRA83TjPL4uHQ.js`, which carries `domain:"driftwoodwealth.com"`. It replaced
+  `pa-K0dJ5ljpih0ZZ-zv5pSeB.js`, whose baked domain was still the old GitHub Pages path
+  `alecmessino.github.io/project`; anything it sent after the domain move went to a site that no
+  longer matched, so **treat analytics history before this date as unreliable and baseline from
+  here.** The domain cannot be corrected in this repo — the script applies
   `Object.assign(defaults, options, {domain: baked})`, re-asserting its own value last, so
-  `plausible.init({domain: ...})` is deliberately ignored. **If the Plausible dashboard site is
-  still named `alecmessino.github.io/project`, data is arriving under the old name and is fine; if
-  it was renamed, every event since the domain move has been dropped.** Verify in the dashboard.
-  Remediation is a new snippet from Plausible, whose `pa-<hash>.js` URL then has to replace the old
-  one in all 50 templates plus `statepage.py` (the tag is duplicated per page; there is no include).
+  `plausible.init({domain: ...})` is ignored by design. Changing it always means a new snippet from
+  the Plausible dashboard and a site-wide swap of the `pa-<hash>.js` URL: the tag is duplicated on
+  every page (55 templates plus the `PLAUSIBLE` constant in `statepage.py`), because these are
+  static files with no include mechanism.
 
 - **Calendly**: booking completes off-site, so nothing here can observe it. Every booking link is
   UTM-tagged through `site.booking_link()` so Calendly attributes the booked event back to its

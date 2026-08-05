@@ -70,11 +70,47 @@ re-derives the table from the engine and fails if a figure drifts — it is the 
 - **Web3Forms**: the lead form posts here (key/endpoint in `taxlab.html` CONFIG). To send the prospect
   an instant copy of their analysis, enable the **autoresponder** in the Web3Forms dashboard (the form
   already submits their email). The on-page success card already delivers the figures + Calendly link.
-- **Plausible**: loaded on every page. Custom funnel events fired via `track()` /
-  `window.plausible(...)`: `state_selected`, `portfolio_adjusted`, `lead_submitted`, `lead_error`,
-  `booking_opened`, `booking_scheduled` (taxlab); `map_state_clicked` (statemap);
-  `diagnostic_to_taxlab` (leakage). `booking_scheduled` is the true conversion.
-- **Calendly**: the success-card iframe; `booking_*` events come from its postMessage API.
+- **Plausible**: loaded on every real page (50 of 68 templates; the other 18 are redirect stubs).
+
+  **Corrected 2026-08-05 after a measured audit.** This entry previously listed `state_selected`,
+  `portfolio_adjusted`, `lead_submitted`, `lead_error`, `booking_opened` and `booking_scheduled`,
+  and described a Calendly success-card iframe whose postMessage API fired the `booking_*` pair.
+  **None of those six events exist in the codebase, and there is no Calendly iframe anywhere on the
+  site.** Anyone reading this and reporting on `booking_scheduled` was reporting on nothing.
+
+  What actually fires, verified by capturing the beacons in a browser against the built pages:
+
+  | Event | Where | How |
+  |---|---|---|
+  | `pageview` | every real page | automatic |
+  | `Outbound Link: Click` (props: `url`) | every off-site link, including all booking links | automatic |
+  | `File Download`, form submissions | site-wide | automatic |
+  | `diagnostic_to_taxlab` (props: `state`, `target`) | `leakage.html`, both buttons | hand-coded |
+  | `taxlab_to_book` | `taxlab.html` | hand-coded |
+  | `map_state_clicked`, `trace_decision`, `next_decision_click`, `conc_sort`, `conc_detail` | statemap, hub, dw-context, concentration | hand-coded |
+
+  Two things will silently defeat a test of this: Plausible drops events from `localhost`/`127.*`,
+  and it drops them when `navigator.webdriver` is set, so a Playwright check sees nothing until it
+  serves under a real hostname and sets `window.__plausible = true` first.
+
+- **The Plausible site identifier does not match the live domain.** The hosted script has
+  `domain:"alecmessino.github.io/project"` baked in, while `docs/CNAME`, `BASE_URL` and every
+  canonical are `driftwoodwealth.com`. It cannot be fixed in this repo: the script applies
+  `Object.assign(defaults, options, {domain: baked})`, re-asserting its own value last, so
+  `plausible.init({domain: ...})` is deliberately ignored. **If the Plausible dashboard site is
+  still named `alecmessino.github.io/project`, data is arriving under the old name and is fine; if
+  it was renamed, every event since the domain move has been dropped.** Verify in the dashboard.
+  Remediation is a new snippet from Plausible, whose `pa-<hash>.js` URL then has to replace the old
+  one in all 50 templates plus `statepage.py` (the tag is duplicated per page; there is no include).
+
+- **Calendly**: booking completes off-site, so nothing here can observe it. Every booking link is
+  UTM-tagged through `site.booking_link()` so Calendly attributes the booked event back to its
+  placement: `utm_source=driftwoodwealth`, `utm_medium=website`,
+  `utm_campaign=coordination_review`, and `utm_content=` the placement
+  (`coordination-review`, `state-<code>`, `atlas-crossing`, `atlas-household`,
+  `atlas-process-bar`). Read completed bookings in Calendly, not in Plausible; `Outbound Link:
+  Click` is the on-site intent proxy and is the closest thing to a funnel baseline available today.
+  Keep `BOOKING_URL` itself untagged: it is published as structured data about the firm.
 - **State landing pages** (`<slug>-tax.html`, e.g. `california-tax.html`): 51 server-rendered SEO
   pages built by `drift states` from `statepage.py`. Each carries an inline Web3Forms email capture
   (`source:"state_page"`, tagged with the state + a lead-quality flag) so organic traffic converts in

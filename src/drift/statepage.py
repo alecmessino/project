@@ -32,10 +32,13 @@ from . import reasoning
 
 # Single source of truth for the public base URL lives in drift.site (re-exported here for callers
 # and tests); flip it with scripts/set_domain.py when the custom domain goes live.
-from .site import BASE_URL, BOOKING_URL, firm_anchor_html
+from .site import BASE_URL, BOOKING_URL, booking_link, firm_anchor_html
 
 # One-click booking from any flagship (Launch Standard: deep-page CTAs go straight to the scheduler,
 # not back through the homepage contact section).
+# Untagged, and now unused for links: every booking link on a generated page goes through
+# site.booking_link() so it carries its placement. Kept as the bare URL for anything that needs
+# the address rather than a tracked link.
 MEETING_URL = BOOKING_URL
 
 # The 50 states + DC get a landing page (territories are edge cases; "—"/"NYC" are pseudo-keys).
@@ -273,7 +276,10 @@ _PROCESS_STAGES = [
     ("compare", "Compare", lambda ed: f"{edition_url(ed)}compare/"),      # the Comparison
     ("plan", "Plan", lambda ed: f"{edition_url(ed)}crossing/"),           # the Crossing Brief
     ("coordinate", "Coordinate", lambda ed: f"{edition_url(ed)}household/"),  # the Household Record
-    ("review", "Review", lambda ed: MEETING_URL),                         # a conversation
+    # The process bar is rendered on four page types and does not know the state, so its booking
+    # link carries the bar as its placement rather than a state. Per-state attribution comes
+    # from the CTA on the state page itself.
+    ("review", "Review", lambda ed: booking_link("atlas-process-bar")),  # a conversation
 ]
 
 
@@ -291,7 +297,7 @@ def _process_bar(active: str, edition: str = CURRENT_EDITION) -> str:
 
 PLAUSIBLE = (
     '<!-- Privacy-first analytics (Plausible) -->\n'
-    '<script async src="https://plausible.io/js/pa-K0dJ5ljpih0ZZ-zv5pSeB.js"></script>\n'
+    '<script async src="https://plausible.io/js/pa-h6JBp-7giRA83TjPL4uHQ.js"></script>\n'
     '<script>\n'
     '  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},'
     'plausible.init=plausible.init||function(i){plausible.o=i||{}};\n'
@@ -730,7 +736,7 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
         <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture, by bracket and holdings.</div>
       </div>
       <a class="primary" href="{_ABS}leakage.html?state={code}">Run my {_esc(name)} diagnostic →</a>
-      <a class="ghost" href="{MEETING_URL}">Schedule a Coordination Review</a>
+      <a class="ghost" href="{booking_link(f'state-{code.lower()}')}">Schedule a Coordination Review</a>
     </div>
 {capture}
     <div class="rel">Onward: <a href="{edition_url(edition)}compare/">weigh {_esc(name)} against another state →</a> · <a href="{edition_url(edition)}crossing/">plan a move →</a> · <a href="{edition_url(edition)}household/">build a coordination record →</a><br><span style="color:var(--muted)">Nearby regimes: {related} · <a href="{edition_url(edition)}">all 50 states + DC →</a></span></div>
@@ -821,7 +827,7 @@ def render_states_index(pages: dict, edition: str = CURRENT_EDITION) -> str:
         <div class="cd">Weigh two environments, plan a move between them, and see how it all becomes one household's standing record.</div>
       </div>
       <a class="primary" href="{edition_url(edition)}compare/">Compare how coordination changes across states →</a>
-      <a class="ghost" href="{MEETING_URL}">Schedule a Coordination Review</a>
+      <a class="ghost" href="{booking_link(f'state-{code.lower()}')}">Schedule a Coordination Review</a>
     </div>
     <div class="rel">Onward: <a href="{edition_url(edition)}crossing/">plan a move between states →</a> · <a href="{edition_url(edition)}household/">build a coordination record →</a></div>
     {_provenance_block()}

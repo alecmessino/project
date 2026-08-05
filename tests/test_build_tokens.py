@@ -34,9 +34,27 @@ TOKENS = ("<!--FIRM_ANCHOR-->", "<!--PLATE_LIBRARY-->")
 # guard below pins it to those two draft pages so it cannot spread onto a live one.
 DEFERRED = {"LEGAL_DATE": {"privacy.html", "terms.html"}}
 
-# every render_* that turns a template into a shipped page
-RENDERERS = ("render_hub", "render_thesis", "render_taxlab", "render_leakage",
-             "render_statemap", "render_concentration")
+# Every render_* that turns a template into a shipped page, and the template each one reads.
+#
+# This list was the hole. It named only the six renderers that already went through `_embed`, so
+# the render-layer guard confirmed the fixed paths stayed fixed and said nothing about the four
+# that never were: equities, the case studies, the tearsheet and the ledger each hand-rolled the
+# state replace and dropped the token substitution. The nightly exhibits job regenerated all four
+# onto master on 2026-08-05 and shipped the raw comment live; only the shipped-output backstop
+# caught it, and only once a PR happened to run CI over master's own output. Derive the list
+# rather than curate it, so a new exhibit is covered the day it is written.
+RENDERERS = {
+    "render_html": "TEMPLATE",
+    "render_report": "REPORT_TEMPLATE",
+    "render_tearsheet": "TEARSHEET_TEMPLATE",
+    "render_ledger": "LEDGER_TEMPLATE",
+    "render_hub": "HUB_TEMPLATE",
+    "render_thesis": "THESIS_TEMPLATE",
+    "render_taxlab": "TAXLAB_TEMPLATE",
+    "render_leakage": "LEAKAGE_TEMPLATE",
+    "render_statemap": "STATEMAP_TEMPLATE",
+    "render_concentration": "CONCENTRATION_TEMPLATE",
+}
 
 
 @pytest.mark.parametrize("name", RENDERERS)
@@ -51,16 +69,23 @@ def test_no_render_path_emits_a_raw_token(name):
 def test_every_render_path_carrying_the_anchor_actually_renders_it(name):
     """Stronger than 'no token': if the template asks for the identity strip, the output has it.
     A renderer that stripped the token without substituting anything would pass the test above."""
-    template_attr = {"render_hub": "HUB_TEMPLATE", "render_thesis": "THESIS_TEMPLATE",
-                     "render_taxlab": "TAXLAB_TEMPLATE", "render_leakage": "LEAKAGE_TEMPLATE",
-                     "render_statemap": "STATEMAP_TEMPLATE",
-                     "render_concentration": "CONCENTRATION_TEMPLATE"}[name]
+    template_attr = RENDERERS[name]
     template = getattr(exhibit, template_attr).read_text(encoding="utf-8")
     if "<!--FIRM_ANCHOR-->" not in template:
         pytest.skip(f"{template_attr} does not use the firm anchor")
     html = getattr(exhibit, name)({})
     assert 'class="firm-anchor"' in html, f"{name}() dropped the identity strip instead of rendering it"
     assert "Park Avenue Securities" in html
+
+
+def test_every_exhibit_renderer_is_covered():
+    """A renderer absent from RENDERERS is a renderer nobody is checking, which is exactly how the
+    four exhibit paths went unguarded. Fail on the omission itself, not on its consequence."""
+    declared = set(RENDERERS)
+    actual = {n for n in dir(exhibit) if n.startswith("render_") and callable(getattr(exhibit, n))}
+    assert not (actual - declared), (
+        f"render path(s) not covered by the token guards: {sorted(actual - declared)} — "
+        "add them to RENDERERS with the template they read")
 
 
 def test_no_shipped_page_contains_a_raw_token():

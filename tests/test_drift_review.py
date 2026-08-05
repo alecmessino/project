@@ -144,10 +144,21 @@ def test_the_issue_exercises_the_whole_library():
 
 
 def test_no_image_tags_or_external_art():
-    """The plates are the art. A stock photograph or an uploaded illustration breaks the record."""
+    """The plates are the art. A stock photograph or an uploaded illustration breaks the record.
+
+    Scoped to art, not to every external `src`. The blanket rule caught the shared Plausible tag
+    when the Review finally got one on 2026-08-05 (it was one of five real pages that had never
+    been measured at all), and "the Review may not be in the analytics" was never the rule this
+    test existed to enforce. Any *asset* — image, video, font, iframe — is still barred; a script
+    from the one analytics host every other page already loads is not an asset.
+    """
     t = _src()
     assert "<img" not in t, "the Review carries no raster art"
-    assert not re.search(r'src="https?://', t), "no externally hosted asset"
+    external = [u for u in re.findall(r'src="(https?://[^"]+)"', t)
+                if not u.startswith("https://plausible.io/js/")]
+    assert not external, f"externally hosted asset on the Review: {external}"
+    for tag in ("<video", "<iframe", "<picture", "<source"):
+        assert tag not in t, f"the Review carries no {tag}> media"
 
 
 # ── 4. the prohibitions ───────────────────────────────────────────────────────────────────────

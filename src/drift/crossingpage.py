@@ -23,7 +23,7 @@ from .statepage import (
     _esc, _ABS, NAV_ABS, PLAUSIBLE, DISCLOSURE, _HEAD_CSS, _provenance_block, atlas_url,
     _process_bar, MEETING_URL,
 )
-from .site import BASE_URL, firm_anchor_html
+from .site import BASE_URL, booking_link, firm_anchor_html
 from . import crossing as _xing
 
 _XING_CSS = _HEAD_CSS + """
@@ -251,7 +251,7 @@ def render_crossing_html(brief: dict, edition: str = CURRENT_EDITION) -> str:
         <div class="cd">The Household Record binds the move to the family's standing decisions, coordination priorities, and advisors, the place this brief is coordinated, not filed.</div>
       </div>
       <a class="primary" href="{BASE_URL}/atlas/{edition}/household/">Prepare this as your Household Record →</a>
-      <a class="ghost" href="{MEETING_URL}">Start a conversation</a>
+      <a class="ghost" href="{booking_link('atlas-crossing')}">Start a conversation</a>
     </div>
     <div class="rel">Read either environment in full: <a href="{atlas_url(o["code"], edition)}">{_esc(o_name)} Atlas →</a> · <a href="{atlas_url(d["code"], edition)}">{_esc(d_name)} Atlas →</a> · <a href="{BASE_URL}/atlas/{edition}/compare/{_compare_slug(o["code"], d["code"])}/">weigh the two →</a> · <a href="{_xing.crossing_index_url(edition)}">other crossings →</a></div>
     {_provenance_block()}
@@ -330,7 +330,7 @@ def render_crossing_index_html(edition: str = CURRENT_EDITION) -> str:
         <div class="ch">Considering a move that isn't here?</div>
         <div class="cd">Every state pair has a brief in the graph, start a conversation and we'll prepare the one for your household's crossing.</div>
       </div>
-      <a class="primary" href="{MEETING_URL}">Start a conversation →</a>
+      <a class="primary" href="{booking_link('atlas-crossing')}">Start a conversation →</a>
       <a class="ghost" href="{BASE_URL}/atlas/{edition}/compare/">Weigh two states →</a>
     </div>
     {_provenance_block()}

@@ -31,7 +31,34 @@ BASE_URL = "https://driftwoodwealth.com"
 # alec@driftwoodwealth.com, not hello@driftwoodplanning.com: twelve pages already hardcode the
 # former, and the latter is a different domain from the one the site ships on.
 CONTACT_EMAIL = "alec@driftwoodwealth.com"
-BOOKING_URL = "https://calendly.com/alec-messino/15-minute-introductory-meeting"
+BOOKING_URL = "https://calendly.com/alec-messino/introductory-call-driftwood-wealth"
+
+# Booking attribution. A booking completes on calendly.com, so nothing on this site can observe it:
+# once the visitor leaves, our analytics are blind. Calendly does read UTM parameters off the
+# scheduling link and records them against the booked event, which makes the tagged link the only
+# place a completed booking can be attributed back to the page that produced it.
+#
+# The scheme is fixed so the Calendly export stays readable:
+#   utm_source    driftwoodwealth   always; the visitor came from this site
+#   utm_medium    website           always; distinguishes these from any future email or print link
+#   utm_campaign  coordination_review   always; every booking rolls up to one campaign
+#   utm_content   <placement>       the only variable, e.g. coordination-review, state-ca
+#
+# Keep BOOKING_URL itself untagged: it is also published as structured data about the firm
+# (firm_facts below), where a tracking parameter would be wrong. scripts/set_contact.py rewrites
+# the bare URL by literal prefix match, so tagged links follow it correctly.
+_UTM = "utm_source=driftwoodwealth&utm_medium=website&utm_campaign=coordination_review"
+
+
+def booking_link(placement: str) -> str:
+    """The booking URL tagged for `placement`, ready to drop into an href attribute.
+
+    Returns `&amp;` separators because every use is inside HTML; if a caller ever needs the raw
+    URL (an HTTP redirect, a QR code), unescape it rather than adding a second scheme here.
+    """
+    if not placement or " " in placement:
+        raise ValueError(f"placement must be a non-empty slug, got {placement!r}")
+    return f"{BOOKING_URL}?{_UTM}&utm_content={placement}".replace("&", "&amp;")
 
 # Confirmed firm facts (principal-directed, July 2026):
 FIRM_LEGAL_NAME = "Driftwood Wealth"

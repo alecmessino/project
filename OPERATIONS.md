@@ -70,11 +70,51 @@ re-derives the table from the engine and fails if a figure drifts — it is the 
 - **Web3Forms**: the lead form posts here (key/endpoint in `taxlab.html` CONFIG). To send the prospect
   an instant copy of their analysis, enable the **autoresponder** in the Web3Forms dashboard (the form
   already submits their email). The on-page success card already delivers the figures + Calendly link.
-- **Plausible**: loaded on every page. Custom funnel events fired via `track()` /
-  `window.plausible(...)`: `state_selected`, `portfolio_adjusted`, `lead_submitted`, `lead_error`,
-  `booking_opened`, `booking_scheduled` (taxlab); `map_state_clicked` (statemap);
-  `diagnostic_to_taxlab` (leakage). `booking_scheduled` is the true conversion.
-- **Calendly**: the success-card iframe; `booking_*` events come from its postMessage API.
+- **Plausible**: loaded on every real page (55 of 68 templates; the other 13 are redirect
+  stubs). `brand`, `commentary`, `driftwood-review`, `fiduciary` and `insights` were entirely
+  unmeasured until 2026-08-05 — including the flagship publication and the Insights directory.
+
+  **Corrected 2026-08-05 after a measured audit.** This entry previously listed `state_selected`,
+  `portfolio_adjusted`, `lead_submitted`, `lead_error`, `booking_opened` and `booking_scheduled`,
+  and described a Calendly success-card iframe whose postMessage API fired the `booking_*` pair.
+  **None of those six events exist in the codebase, and there is no Calendly iframe anywhere on the
+  site.** Anyone reading this and reporting on `booking_scheduled` was reporting on nothing.
+
+  What actually fires, verified by capturing the beacons in a browser against the built pages:
+
+  | Event | Where | How |
+  |---|---|---|
+  | `pageview` | every real page | automatic |
+  | `Outbound Link: Click` (props: `url`) | every off-site link, including all booking links | automatic |
+  | `File Download`, form submissions | site-wide | automatic |
+  | `diagnostic_to_taxlab` (props: `state`, `target`) | `leakage.html`, both buttons | hand-coded |
+  | `taxlab_to_book` | `taxlab.html` | hand-coded |
+  | `map_state_clicked`, `trace_decision`, `next_decision_click`, `conc_sort`, `conc_detail` | statemap, hub, dw-context, concentration | hand-coded |
+
+  Two things will silently defeat a test of this: Plausible drops events from `localhost`/`127.*`,
+  and it drops them when `navigator.webdriver` is set, so a Playwright check sees nothing until it
+  serves under a real hostname and sets `window.__plausible = true` first.
+
+- **The Plausible site identifier now matches the live domain (fixed 2026-08-05).** The script is
+  `pa-h6JBp-7giRA83TjPL4uHQ.js`, which carries `domain:"driftwoodwealth.com"`. It replaced
+  `pa-K0dJ5ljpih0ZZ-zv5pSeB.js`, whose baked domain was still the old GitHub Pages path
+  `alecmessino.github.io/project`; anything it sent after the domain move went to a site that no
+  longer matched, so **treat analytics history before this date as unreliable and baseline from
+  here.** The domain cannot be corrected in this repo — the script applies
+  `Object.assign(defaults, options, {domain: baked})`, re-asserting its own value last, so
+  `plausible.init({domain: ...})` is ignored by design. Changing it always means a new snippet from
+  the Plausible dashboard and a site-wide swap of the `pa-<hash>.js` URL: the tag is duplicated on
+  every page (55 templates plus the `PLAUSIBLE` constant in `statepage.py`), because these are
+  static files with no include mechanism.
+
+- **Calendly**: booking completes off-site, so nothing here can observe it. Every booking link is
+  UTM-tagged through `site.booking_link()` so Calendly attributes the booked event back to its
+  placement: `utm_source=driftwoodwealth`, `utm_medium=website`,
+  `utm_campaign=coordination_review`, and `utm_content=` the placement
+  (`coordination-review`, `state-<code>`, `atlas-crossing`, `atlas-household`,
+  `atlas-process-bar`). Read completed bookings in Calendly, not in Plausible; `Outbound Link:
+  Click` is the on-site intent proxy and is the closest thing to a funnel baseline available today.
+  Keep `BOOKING_URL` itself untagged: it is published as structured data about the firm.
 - **State landing pages** (`<slug>-tax.html`, e.g. `california-tax.html`): 51 server-rendered SEO
   pages built by `drift states` from `statepage.py`. Each carries an inline Web3Forms email capture
   (`source:"state_page"`, tagged with the state + a lead-quality flag) so organic traffic converts in
@@ -471,13 +511,88 @@ texture had been masking. The 907 KB source asset was deleted with it.
 | Allowed | Not allowed |
 |---|---|
 | publications & articles — the Review's card fragments | diagrams that carry a claim (the lattice, the coordination surface) |
-| page furniture — hero and footer plates | wayfinding & directory pages (Insights) |
+| page furniture — the footer plate band | wayfinding & directory pages (Insights) |
 | | anything where the plate is texture rather than content |
 
 The Insights landing page had grown a plate band under every section head and an art panel beside
 the Review; both were removed the same day. A directory is a page someone uses to *find* something,
 and the plates slowed that down while spending the vocabulary on a page that makes no argument. It
 is carried by type, rule, and space. Guarded by `tests/test_survey_plate_scope.py`.
+
+## The house mark — a great blue heron, Standing Alert (introduced 2026-08-03)
+
+**It is not a logo, and treating it as one is the only way to lose it.** The wordmark remains the
+firm's identity and appears everywhere identity is needed. The heron is a *house mark*: a visual
+signature meant to become synonymous with Driftwood over years, the way Cartier's panther or
+Hermès' carriage did — and both of those work because they are rare, identical every time, and
+never used as furniture. Its meaning accumulates through consistency, craftsmanship and scarcity,
+never repetition, so **the rule about where it may appear matters more than the drawing.**
+
+| Allowed | Never |
+|---|---|
+| the homepage hero (its first appearance) | navigation · footer · favicon / mask icon · section dividers · social avatars |
+| enduring statements — an AWOR cover, a flagship essay, a client folder, an embossed die | any repeating decorative slot, any page that just wants texture |
+
+**One master, reused forever.** `src/drift/web/img/heron-engraving.svg`, generated by
+`src/drift/heron.py` (pure module, local LCG, byte-identical on every machine) and written by
+`python3 scripts/build_heron.py`. There is no second heron and no variant; every later application
+— print, digital, physical — takes this file. Regenerating: edit `heron.py` → run the build script
+→ commit the SVG. `sync_docs.py` copies it into `docs/`.
+
+**The drawing.** Approved pose only: standing at the water's edge, neck extended naturally, head
+composed and watchful, weight settled, facing left into the page. Not striking, not in flight, not
+resting with the neck folded — the pose is the argument (observation, composure, readiness,
+judgment, deliberate action). Native canvas `1100 × 1500`, art bounding box 726 × 1146; the right
+margin is deliberately 80px wider than the left and the bird is **not** centred.
+
+**The technique (final pass, 2026-08-03).** One ink (`#1E2833`), line hatch and stipple only, and
+**no outlines anywhere** — the bird's edge is simply where the tone stops, which is what lets it
+survive being embossed, where a contour would not.
+
+The hatch is **streamlines through a flow field** built from the bird's own armatures — the bill's
+axis, the neck's S, the body's sweep to the tail, the wing's feather direction — spaced evenly by
+the Jobard–Lefebvre rule and inked as *runs*: long unbroken burin passes in shadow, breaking into
+nicks and then nothing in the light. Cross-hatching is a shadow technique only; laid over the whole
+form it turns an engraving into a basket. Stroke weight is bucketed by tone. Tone falls off into
+the perimeter so the edge dissolves rather than reading as a cut-out.
+
+A constant-angle version was built to a supplied plate specification and rejected on the live page:
+it hit every acceptance number and still read as a faint, unfinished hatch field. **The pose study
+is the visual authority, not the theory.** Two things followed from that:
+
+- **Density.** The plate is cut for the opacity it actually lives at. At `.14` it was a ghost on
+  limestone — visible only if you went looking for it, which is the opposite of a house mark. The
+  core now carries real ink, the legs are continuous and structural rather than beaded, and the
+  hero sits at **`.19`** (band `.16–.20`, ceiling `.20`). Judge it on the page, never in isolation.
+- **Placement.** It is a counterweight to the text block, not something parked in the margin: right
+  half of the hero, ~9% of the hero's width as air to its right so it is anchored against the frame
+  rather than pressed into it, at 96% of the hero's height so the legs reach the floor of the plate.
+
+**The hero placement (`hub.html`).** It replaced the generic hydrographic plate that had been in
+that slot — page furniture with nothing to say. Anchored right as the counterweight to the text
+block, whole (no crop in this first implementation), behind the headline and CTAs on `z-index:0`,
+grayscale with softened contrast, `--mark-o:.14` (ceiling `.18`), masked back — not cropped — where
+it approaches the copy. The fixed `.grain` tile passes across it, which is what makes it read as
+printed *into* the limestone rather than laid on it. Decorative: `alt=""`, `aria-hidden="true"`,
+never a link. Mobile drops it to `.12` and anchors it bottom-right as ground texture under the
+stacked content, with the fade turned vertical because the copy is then above it rather than beside.
+
+**Motion — two versions are live for evaluation.** *Option B* (default) is a one-time engraving
+reveal: the ink arrives everywhere at once and gains definition — blur clears, contrast comes up,
+tone settles — over 1040ms, once, then permanent. Nothing draws itself, sweeps, loops, replays on
+scroll, parallaxes, breathes or drifts; the feeling to hit is *permanent, not animated*. *Option A*
+is the static control, at **`?mark=static`**. Reduced motion always lands on A. The inline switch
+runs before first paint so the control never shows a frame of the reveal.
+
+Open, deliberately deferred: a second iteration may let part of the engraving bleed off the page if
+that reads as the stronger editorial composition. Judge it on the live page, not in the abstract.
+Guarded by `tests/test_drift_heron.py` — scarcity, the opacity ceiling, no-outline, single ink, the
+pose, one-pass motion, and the `?mark=` control arm.
+
+**Left standing: `img/survey-plate-hero.svg` is now referenced by no page.** It is kept because it
+is the documented source of the surveyor's hand (`src/drift/plates.py`, and the ink/radii the
+canonical library was generated to match), not because anything renders it. If that provenance is
+ever recorded elsewhere, the 392 KB asset can go.
 
 **One correction taken from the review: the hub reads COORDINATION, not GOVERNANCE.** Governance is
 the operating principle the practice runs *by*, not one of the things being coordinated; putting it

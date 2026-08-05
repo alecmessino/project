@@ -70,11 +70,20 @@ def test_the_review_keeps_its_plate_fragments():
     assert "<!--PLATE_LIBRARY-->" in t
 
 
-def test_the_homepage_keeps_its_hero_and_footer_plates():
-    """Page furniture is explicitly in scope — the argument is about diagrams and directories."""
+def test_the_homepage_keeps_its_footer_plate():
+    """Page furniture is explicitly in scope — the argument is about diagrams and directories, and
+    the footer band is furniture.
+
+    The *hero* plate is the one exception, and it was not removed on the "decoration vs content"
+    argument this file makes: on 2026-08-03 it was replaced by the house mark (a great blue heron,
+    Standing Alert — see tests/test_drift_heron.py). The slot still holds page furniture; it now
+    holds furniture that says something. The rule this file guards is unchanged, so the survey
+    vocabulary still may not creep into diagrams or directories, and the heron is governed by its
+    own much stricter scarcity rule rather than by this one.
+    """
     t = (WEB / "hub.html").read_text(encoding="utf-8")
-    assert "survey-plate-hero.svg" in t, "the hero plate is page furniture and should remain"
     assert "survey-plate-footer.svg" in t, "the footer plate is page furniture and should remain"
+    assert 'src="img/heron-engraving.svg"' in t, "the hero lost the house mark"
 
 
 def test_every_plate_reference_that_remains_resolves_to_a_real_asset():

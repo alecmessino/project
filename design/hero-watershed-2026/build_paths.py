@@ -600,12 +600,17 @@ MARK_OPEN, MARK_CLOSE = "<!--GEOM:BEGIN-->", "<!--GEOM:END-->"
 
 def inject():
     import re as _re
-    bodies = {"variant-1-basin.html": emit_v1()[0],
+    v1 = emit_v1()[0]
+    bodies = {"variant-1-basin.html": v1,
               "variant-2-bdote.html": emit_v2(),
-              "variant-3-panch-prayag.html": emit_v3()[0]}
+              "variant-3-panch-prayag.html": emit_v3()[0],
+              "hero-watershed.html": v1}
     here = __import__("pathlib").Path(__file__).resolve().parent
+    # The live homepage takes the same emitted geometry as the prototype it came from, from the
+    # same run — so the two can never quietly drift apart.
+    bodies[str(here.parents[1] / "src" / "drift" / "web" / "hub.html")] = bodies["hero-watershed.html"]
     for name, body in bodies.items():
-        p = here / name
+        p = __import__("pathlib").Path(name) if "/" in name else here / name
         html = p.read_text(encoding="utf-8")
         pat = _re.compile(_re.escape(MARK_OPEN) + r".*?" + _re.escape(MARK_CLOSE), _re.DOTALL)
         if not pat.search(html):

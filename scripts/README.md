@@ -8,7 +8,7 @@ Run from the repo root.
 | Script | What it does |
 |---|---|
 | `sync_docs.py` | Re-render `docs/*.html` from the `src/drift/web/*.html` templates, preserving injected `window.__STATE__`; also copies `driftwood.css`. The no-network way to ship template/CSS edits. |
-| `build_heron.py` | Cut the house mark — `src/drift/web/img/heron-engraving.svg` — from `src/drift/heron.py`. A committed static asset, not part of the site build: run it only when `heron.py` changes, then commit the SVG and run `sync_docs.py`. One master, reused everywhere the mark is ever allowed to appear; see `OPERATIONS.md` for where that is. |
+| `build_heron.py` | Cut the house mark — `design/house-mark/heron-engraving.svg` — from `src/drift/heron.py`. A committed static asset and **not a deployed one**: it moved out of `src/drift/web/img/` on 2026-08-06 when the hero watershed replaced the heron on the homepage, and it must not go back while the mark is off the site. Run it only when `heron.py` changes, then commit the SVG; `sync_docs.py` no longer touches it. One master, reused everywhere the mark is ever allowed to appear — see `OPERATIONS.md` for where that is, which is currently nowhere on the web. |
 | `stamp_provenance.py` | Refresh `docs/_provenance.json` (build commit, data fingerprint, claim→source map). |
 | `tax_alpha.py` | Tax-alpha / after-tax modeling used by the site's figures. |
 | `kospi_interval.py` | Rebuild the series, the four exhibits and the derived prose inside `src/drift/web/the-interval-problem.html` from live ^KS11 closes (`--offline` uses the committed `tests/data/ks11_2026.json`; `--check` writes nothing). Run it, then `sync_docs.py`. Every number in that essay comes from here, so it is the only place to change one. |

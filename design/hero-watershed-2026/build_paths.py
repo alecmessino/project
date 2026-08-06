@@ -411,7 +411,52 @@ FEEDER_SCALE = 0.5   # each of Variant III's five carries one feeder, the same c
 # at the loop point. Each confluence therefore knows, arithmetically, when the water gets to it;
 # every node below carries its own --d, measured, not guessed.
 CYCLE = 12.0
-TRACE_DASH = 0.16      # the lit segment, as a fraction of any vector's length
+
+# ── THE CASCADE ───────────────────────────────────────────────────────────────────────────────
+# The motion is one body of water moving inward, not 29 lines that each happen to pulse. What makes
+# that read is a single rule applied to every vector: A TRIBUTARY'S FRONT REACHES ITS JUNCTION AT
+# THE EXACT MOMENT ITS PARENT'S FRONT IS PASSING THROUGH THAT JUNCTION. Nothing arrives early and
+# waits; nothing arrives into an empty channel. Solved here rather than eyeballed, because with 29
+# vectors and four levels of nesting there is no hand-tuning your way to it.
+#
+# A vector's front is at fraction f of its own length at
+#     t(f) = D · (f − dash) + phase            (mod CYCLE)
+# so for child c joining parent p at fraction f_j of p, the phase satisfying the rule is
+#     phase_c = D_p · (f_j − dash_p) + phase_p − D_c · (1 − dash_c)
+# applied stem → majors → capillaries, so every parent is solved before its children.
+
+# Traverse time per tier. The stem crosses in half the time everything else takes — and it is
+# already the longest vector, so at 6s its front moves several times faster in absolute terms than
+# a capillary's. That is the acceleration: energy visibly gathers pace as the streams converge.
+# 6 divides 12, so the system realigns every cycle and the cascade never drifts out of phase.
+DUR = {"outer": 12.0, "mid": 12.0, "stem": 6.0}
+
+# The lit run lengthens inward: a capillary carries a short head, the stem a long one. That is what
+# turns a travelling dash into something reading as volume rather than a pulse down a wire.
+DASH = {"outer": 0.20, "mid": 0.30, "stem": 0.42}
+
+
+def phase_for(dur_c, dash_c, f_j, dur_p, dash_p, phase_p):
+    """The child phase that lands its front on the junction as the parent's front passes."""
+    d = dur_p * (f_j - dash_p) + phase_p - dur_c * (1.0 - dash_c)
+    return -((-d) % CYCLE)          # normalise into (-CYCLE, 0]: a negative delay advances
+
+
+def fraction_along(parent_d, point):
+    """Where `point` falls along `parent_d`, as a fraction of its drawn length."""
+    poly, cum = _flatten(parent_d)
+    j = min(range(len(poly)),
+            key=lambda k: (poly[k][0] - point[0]) ** 2 + (poly[k][1] - point[1]) ** 2)
+    return cum[j] / cum[-1]
+
+
+# Which vector each capillary runs into. OUACHITA joins the Red, which is itself a capillary — so
+# the solve is ordered, not tiered, and no child is phased before its parent exists.
+# Variants II and III are lab files and keep the simpler tiered phasing they were judged with —
+# the solved cascade above is what the live hero runs.
+PHASE  = {"outer": -2.4, "mid": -1.2, "stem": 0.0}
+PHASE3 = {"outer": -5.2, "mid": -4.0, "stem": 0.0}
+TRACE_DASH = 0.16
 
 
 def trace_time(f, phase=0.0):
@@ -419,10 +464,17 @@ def trace_time(f, phase=0.0):
     return (CYCLE * (f - TRACE_DASH) + phase) % CYCLE
 
 
-# Phase leads. Negative delays ADVANCE a vector in the cycle rather than postponing it, so nothing
-# waits for its first turn and the wave is already in motion at t=0.
-PHASE = {"outer": -2.4, "mid": -1.2, "stem": 0.0}          # variants I and II
-MID_STAGGER = [-1.8, -1.5, -1.2, -0.9]                     # variant I: the four majors, in order
+PARENT = {
+    "YELLOWSTONE": "MISSOURI", "PLATTE": "MISSOURI", "KANSAS": "MISSOURI", "MILK": "MISSOURI",
+    "NIOBRARA": "MISSOURI", "JAMES": "MISSOURI", "OSAGE": "MISSOURI",
+    "TENNESSEE": "OHIO", "CUMBERLAND": "OHIO", "WABASH": "OHIO", "KANAWHA": "OHIO", "GREEN": "OHIO",
+    "CANADIAN": "ARKANSAS", "CIMARRON": "ARKANSAS",
+    "WISCONSIN": "MISSISSIPPI", "DES_MOINES": "MISSISSIPPI", "ST_CROIX": "MISSISSIPPI",
+    "ROCK": "MISSISSIPPI", "IOWA_CEDAR": "MISSISSIPPI", "WHITE": "MISSISSIPPI",
+    "YAZOO": "MISSISSIPPI", "RED": "MISSISSIPPI", "MINNESOTA": "MISSISSIPPI",
+    "OUACHITA": "RED",
+}
+
 IND = " " * 6
 
 
@@ -461,43 +513,82 @@ def _node_delay(stem_d, point, phase):
 
 
 def emit_v1():
+    """The full system, phased as one cascade. Returns the SVG body."""
     stem_d = spline(MISSISSIPPI)
+    mids = [("t-illinois", ILLINOIS, CONF_ILLINOIS, "ILLINOIS — the Chicago portage to Grafton"),
+            ("t-missouri", MISSOURI, CONF_MISSOURI, "MISSOURI — Three Forks to St Louis, the long north-west arm"),
+            ("t-ohio", OHIO, CONF_OHIO, "OHIO — Pittsburgh to Cairo, the largest addition of volume"),
+            ("t-arkansas", ARKANSAS, CONF_ARKANSAS, "ARKANSAS — the Sawatch headwaters to Napoleon")]
+
+    # Solve the cascade. Stem first at phase 0, then each major off the stem, then each capillary
+    # off whatever it runs into — Red before Ouachita, since Ouachita joins the Red.
+    d_of = {"MISSISSIPPI": stem_d}
+    tier = {"MISSISSIPPI": "stem"}
+    phase = {"MISSISSIPPI": 0.0}
+    junction = {}                                   # name -> (x, y) where it meets its parent
+
+    named_mids = {"ILLINOIS": (ILLINOIS, CONF_ILLINOIS), "MISSOURI": (MISSOURI, CONF_MISSOURI),
+                  "OHIO": (OHIO, CONF_OHIO), "ARKANSAS": (ARKANSAS, CONF_ARKANSAS)}
+    for name, (pts, conf) in named_mids.items():
+        d_of[name], tier[name] = spline(pts), "mid"
+        junction[name] = project(conf)
+        f_j = fraction_along(stem_d, junction[name])
+        phase[name] = phase_for(DUR["mid"], DASH["mid"], f_j,
+                                DUR["stem"], DASH["stem"], phase["MISSISSIPPI"])
+
+    outer_all = dict(OUTER); outer_all["MINNESOTA"] = MINNESOTA
+    order = [n for n in outer_all if PARENT[n] != "RED"] + [n for n in outer_all if PARENT[n] == "RED"]
+    for name in order:
+        pts = outer_all[name]
+        d_of[name], tier[name] = spline(pts), "outer"
+        junction[name] = project(pts[-1])
+        par = PARENT[name]
+        f_j = fraction_along(d_of[par], junction[name])
+        phase[name] = phase_for(DUR["outer"], DASH["outer"], f_j,
+                                DUR[tier[par]], DASH[tier[par]], phase[par])
+
     out = [_basin(), "",
-           f'{IND}<!-- THE OUTER TIER — the capillaries. Line only: no proximity zone and no glow,',
-           f'{IND}     because a hairline this fine is not something anyone aims at, and the hover',
-           f'{IND}     hierarchy resolves it away rather than toward. -->',
+           f'{IND}<!-- THE OUTER TIER — the capillaries. Line plus travelling front only: no',
+           f'{IND}     proximity zone and no glow, because a hairline this fine is not something',
+           f'{IND}     anyone aims at, and the hover hierarchy resolves it away rather than toward.',
+           f'{IND}     Each --t is solved, not chosen: it lands this capillary\'s front on its',
+           f'{IND}     junction at the moment its parent\'s front passes through. -->',
            f'{IND}<g class="outer">']
-    for name, pts in list(OUTER.items()) + [("MINNESOTA", MINNESOTA)]:
-        d = spline(pts)
-        out.append(f'{IND}  <path class="flow" pathLength="1" d="{d}"/>'
-                   f'  <!-- {name.replace("_", " ").title()} -->')
-        out.append(f'{IND}  <path class="trace" pathLength="1" '
-                   f'style="--t:{PHASE["outer"]:.2f}s" d="{d}"/>')
+    for name in order:
+        d = d_of[name]
+        label = name.replace("_", " ").title()
+        out.append(f'{IND}  <path class="flow" pathLength="1" d="{d}"/>  <!-- {label} -->')
+        out.append(f'{IND}  <path class="trace" pathLength="1" style="--t:{phase[name]:.2f}s" d="{d}"/>')
     out.append(f'{IND}</g>')
+
     out.append("")
     out.append(f'{IND}<!-- THE FOUR MAJORS, north to south. Each ends on a landmark the stem itself')
     out.append(f'{IND}     owns, so every junction is exact rather than nearly. -->')
-    mids = [("t-illinois", ILLINOIS, CONF_ILLINOIS, 15, "ILLINOIS — the Chicago portage to Grafton"),
-            ("t-missouri", MISSOURI, CONF_MISSOURI, 18, "MISSOURI — Three Forks to St Louis, the long north-west arm"),
-            ("t-ohio", OHIO, CONF_OHIO, 18, "OHIO — Pittsburgh to Cairo, the largest addition of volume"),
-            ("t-arkansas", ARKANSAS, CONF_ARKANSAS, 17, "ARKANSAS — the Sawatch headwaters to Napoleon")]
-    for (cls, pts, conf, r, note), ph in zip(mids, MID_STAGGER):
-        out.append(_grp(cls, spline(pts), ph, project(conf), r, note))
+    for cls, pts, conf, note in mids:
+        key = cls.split("-")[1].upper()
+        out.append(_grp(cls, d_of[key], phase[key], None, 0, note))
+
     out.append("")
-    out.append(f'{IND}<!-- THE STEM — Itasca to the delta, through all four junctions. The only')
-    out.append(f'{IND}     vector illuminated at rest, and the only one that breathes. -->')
+    out.append(f'{IND}<!-- THE STEM — Itasca to the delta, through all four junctions. It crosses in')
+    out.append(f'{IND}     half the time everything else takes, which is the acceleration: the')
+    out.append(f'{IND}     channel visibly gathers pace as the system converges into it. -->')
     out.append(f'{IND}<g class="stemwrap">\n{IND}  <path class="hit" d="{stem_d}"/>\n'
                f'{IND}  <path class="stem" pathLength="1" d="'
                + wrap(stem_d, 96, IND + "      ") + f'"/>\n'
                f'{IND}  <path class="trace trace--stem" pathLength="1" style="--t:0s" d="{stem_d}"/>'
                f'\n{IND}</g>')
+
     out.append("")
-    out.append(f'{IND}<!-- The confluences. Each fires as its own tributary lands; --d is measured')
-    out.append(f'{IND}     off the drawn geometry, not chosen. -->')
-    for (cls, _pts, conf, r, _n), ph in zip(mids, MID_STAGGER):
-        pt = project(conf)
-        out.append(f'{IND}<circle class="node node--load" style="--d:{trace_time(1.0, ph):.2f}s" '
-                   f'cx="{_f(pt[0])}" cy="{_f(pt[1])}" r="{r}"/>  <!-- {cls[2:]} -->')
+    out.append(f'{IND}<!-- THE JUNCTIONS. Steady, not pulsing: a soft brightening held permanently at')
+    out.append(f'{IND}     every point where something joins something larger. They used to fire a')
+    out.append(f'{IND}     radial pulse as each front landed, which read as 29 local events rather')
+    out.append(f'{IND}     than one system moving — the opposite of the thing the drawing is for. -->')
+    out.append(f'{IND}<g class="joins">')
+    for name in list(named_mids) + order:
+        x, y = junction[name]
+        r = 9 if tier[name] == "mid" else 6
+        out.append(f'{IND}  <circle class="join" cx="{_f(x)}" cy="{_f(y)}" r="{r}"/>')
+    out.append(f'{IND}</g>')
     return "\n".join(out), None
 
 

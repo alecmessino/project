@@ -425,11 +425,21 @@ CYCLE = 12.0
 #     phase_c = D_p · (f_j − dash_p) + phase_p − D_c · (1 − dash_c)
 # applied stem → majors → capillaries, so every parent is solved before its children.
 
-# Traverse time per tier. The stem crosses in half the time everything else takes — and it is
-# already the longest vector, so at 6s its front moves several times faster in absolute terms than
-# a capillary's. That is the acceleration: energy visibly gathers pace as the streams converge.
-# 6 divides 12, so the system realigns every cycle and the cascade never drifts out of phase.
-DUR = {"outer": 12.0, "mid": 12.0, "stem": 6.0}
+# Traverse time per tier — one cycle each, so the whole system realigns every 12s and the cascade
+# never drifts out of phase.
+#
+# THE ACCELERATION IS GEOMETRIC, NOT SCHEDULED, and that is the correction made on 2026-08-06.
+# pathLength normalisation means every vector is crossed in its own duration regardless of length,
+# so the stem — roughly 3.2x longer than a capillary — already carries a front moving 3.2x faster
+# in absolute terms. Energy still gathers pace as the streams converge; it is a property of the
+# drawing rather than a number chosen to force it.
+#
+# The stem ran at 6s first, which doubled that again to ~6x. On the page it read as hurried: the
+# capillaries are still deliberately filling while the main channel is already sprinting, so the
+# system looked like it was racing its own build-up instead of gathering into it. At 12s the stem
+# flows with weight and the load sequence unfolds rather than rushes. Raise or lower this one
+# number to retune; keep it a divisor of CYCLE so the cascade stays locked.
+DUR = {"outer": 12.0, "mid": 12.0, "stem": 12.0}
 
 # The lit run lengthens inward: a capillary carries a short head, the stem a long one. That is what
 # turns a travelling dash into something reading as volume rather than a pulse down a wire.

@@ -18,7 +18,7 @@ import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 FONTS = HERE.parents[1] / "src" / "drift" / "web" / "fonts"
-VARIANTS = sorted(HERE.glob("variant-*.html"))
+VARIANTS = sorted(HERE.glob("*.html"))
 FACES = {"Satoshi": "Satoshi-Variable.woff2", "Erode": "Erode-Variable.woff2"}
 
 

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-motion="front">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -54,6 +54,12 @@
   --slate:#6c7f92;   /* watershed fill */
   --flow:#4a86b8;    /* resting river strokes */
   --blue:#2c5878;    /* the stem, and the illuminated flow — used nowhere else */
+
+  /* ── THE ONE DIAL. Every stroke on the plate is a multiple of --w, so the whole drawing gets
+     heavier or lighter in proportion and the hierarchy never shifts: capillary 0.85, major 0.85,
+     stem 1.7 — always exactly 1 : 1 : 2 at rest, whatever --w is set to. Change this number and
+     nothing else. 1 is the original hairline spec (0.85px); 1.6 is the recommendation below. ── */
+  --w:1.6;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--limestone);color:var(--body);
@@ -113,14 +119,14 @@ h1 span{display:block}
    makes the network read as a network; the hierarchy is something hover reveals, not something
    the drawing states up front. 0.85px is a SCREEN measurement, so the stroke is taken out of the
    viewBox scale entirely (non-scaling-stroke): at any hero width the hairline is exactly 0.85px. */
-.flow{fill:none;stroke:var(--flow);stroke-width:.85;opacity:.9;
+.flow{fill:none;stroke:var(--flow);stroke-width:calc(.85px * var(--w));opacity:.9;
   stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;
   transition:stroke .5s cubic-bezier(.2,.6,.25,1),stroke-width .5s cubic-bezier(.2,.6,.25,1),
              opacity .5s cubic-bezier(.2,.6,.25,1)}
 
 /* The stem. Heavier at rest than anything else on the plate, and the only vector in editorial
    blue — the one thing every other vector is on its way to. */
-.stem{fill:none;stroke:var(--blue);stroke-width:1.7;
+.stem{fill:none;stroke:var(--blue);stroke-width:calc(1.7px * var(--w));
   stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;
   transition:stroke-width .45s cubic-bezier(.2,.6,.25,1)}
 
@@ -133,7 +139,7 @@ h1 span{display:block}
 /* The travelling glow — a single soft dash, one path-length long, released along the vector the
    cursor is nearest. dasharray .12/2 keeps the pattern longer than the path, so the comet enters
    at the headwater, runs the whole vector, and leaves at the confluence without wrapping. */
-.glow{fill:none;stroke:var(--blue);stroke-width:2.4;stroke-linecap:round;opacity:0;
+.glow{fill:none;stroke:var(--blue);stroke-width:calc(2.4px * var(--w));stroke-linecap:round;opacity:0;
   filter:url(#soft);stroke-dasharray:.12 2;stroke-dashoffset:2.24}
 
 /* Confluence nodes. Transient by design: zero opacity at rest, one pulse per cycle, nothing left
@@ -165,13 +171,33 @@ h1 span{display:block}
    ADVANCES a vector in the cycle rather than postponing it, so nothing waits for its first turn.
    The outer tier leads, the majors follow, the stem last. ── */
 @keyframes trace{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
-.trace{fill:none;stroke:var(--blue);stroke-width:1.1;
+.trace{fill:none;stroke:var(--blue);stroke-width:calc(1.1px * var(--w));
   stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;opacity:.8;
   stroke-dasharray:.16 .84;stroke-dashoffset:1;
   animation:trace 12s linear infinite;animation-delay:var(--t,0s);
   transition:opacity .5s cubic-bezier(.2,.6,.25,1),stroke-width .5s cubic-bezier(.2,.6,.25,1)}
-.outer .trace{stroke-width:.9;opacity:.55}
-.trace--stem{stroke-width:2.4;opacity:.92}
+.outer .trace{stroke-width:calc(.9px * var(--w));opacity:.55}
+.trace--stem{stroke-width:calc(2.4px * var(--w));opacity:.92}
+
+/* ── MOTION MODES. Set data-motion on <html>. No script — edit the attribute and reload.
+
+   "front"  (default, recommended)  One lit segment per vector, crossing it once per 12s cycle,
+            phased outer → majors → stem. Reads as a single body of water moving through the
+            system. The dash period is exactly the path length, so one segment is on a vector at
+            any instant and it re-enters at the headwater as it leaves at the mouth — seamless.
+
+   "pulse"  Four shorter segments per vector, evenly spaced, circulating continuously. Period is
+            1/4 of the path length, which is what keeps it seamless: the offset travels a whole
+            number of periods per cycle. Much more alive, and much more literally "circuitry" —
+            but it reads as throughput, a system with volume running through it, and on a wealth
+            hero that edges toward a data-centre diagram. Worth seeing before deciding.
+
+   "still"  No draw motion at all. The network is simply there; only hover and the confluence
+            pulses move. This is the control, and it is the one that matches the house doctrine
+            for this slot ("permanent, not animated"). Judge the other two against it, not
+            against a blank page. ── */
+html[data-motion="pulse"] .trace{stroke-dasharray:.05 .2}
+html[data-motion="still"] .trace{display:none}
 
 /* Ambient breath, stem only, on the same 12s clock as the draw so the two never beat against each
    other. Slow enough that it is never caught moving; every other vector holds perfectly still,
@@ -193,11 +219,11 @@ h1 span{display:block}
 /* ── HOVER HIERARCHY. Approaching the system resolves it: the capillaries thin and fall back, the
    four majors come up to 1.2px at full opacity, and the stem swells to 3.0px and pulses a soft
    blue shadow. At rest the plate is a network; under the cursor it is a spine with feeders. ── */
-.ws:hover .outer .flow{stroke-width:.5;opacity:.26}
+.ws:hover .outer .flow{stroke-width:calc(.5px * var(--w));opacity:.26}
 .ws:hover .outer .trace{opacity:.16}
-.ws:hover .trib  .flow{stroke-width:1.2;opacity:1}
-.ws:hover .stem{stroke-width:3}
-.ws:hover .trace--stem{stroke-width:3.4}
+.ws:hover .trib  .flow{stroke-width:calc(1.2px * var(--w));opacity:1}
+.ws:hover .stem{stroke-width:calc(3px * var(--w))}
+.ws:hover .trace--stem{stroke-width:calc(3.4px * var(--w))}
 .ws:hover .stemwrap{animation:shadowpulse 2.6s ease-in-out infinite}
 @keyframes shadowpulse{
   0%,100%{filter:drop-shadow(0 0 1.5px rgba(44,88,120,.16))}
@@ -205,7 +231,7 @@ h1 span{display:block}
 
 /* On top of the hierarchy, the vector actually nearest the cursor takes the editorial blue,
    releases its glow, and re-fires its confluence as the glow arrives. */
-.trib:hover .flow{stroke:var(--blue);stroke-width:1.35;opacity:1}
+.trib:hover .flow{stroke:var(--blue);stroke-width:calc(1.35px * var(--w));opacity:1}
 .trib:hover .glow{opacity:.5;animation:comet 1.5s cubic-bezier(.36,0,.24,1) .04s 1 both}
 .trib:hover .node--hover{animation:pulseonce 1.3s cubic-bezier(.2,.7,.35,1) 1.1s 1 both}
 @keyframes comet{from{stroke-dashoffset:2.24}to{stroke-dashoffset:1.12}}

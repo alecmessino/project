@@ -8,6 +8,24 @@ being rare, identical, and quiet, and there is no way to earn that back once it 
 
 So the drawing is tested lightly (it is generated and deterministic; the eye is the reviewer) and
 the *rules* are tested hard.
+
+── 2026-08-06: THE MARK CAME OFF THE WEBSITE ────────────────────────────────────────────────────
+The hero watershed replaced it on the homepage — see the top of hub.html. That was a slot decision,
+not a demotion: the heron's job in that plate was atmosphere, and the watershed makes the firm's
+actual argument (small waters joining into one channel that is larger below every join). Two
+atmospheric marks in one hero would have made both quieter, so the mark left the site rather than
+sharing the plate.
+
+What did NOT change: the drawing, the pose, the technique, and the scarcity principle. The heron is
+still the house mark, still one master, still reserved for enduring statements — an AWOR cover, a
+flagship essay, a client folder, an embossed die. The master simply lives at design/house-mark/
+now instead of under web/img/, because it is no longer a deployed asset and should not be shipped
+to docs/ as though it were.
+
+So the scarcity tests below inverted rather than disappeared. They used to assert the mark appears
+on exactly one page; they now assert it appears on NONE, which is the same rule — the mark goes
+where Driftwood makes an enduring statement, and today no web page is one. The day it returns to a
+page, that page has to earn it, and this file should be edited deliberately to say so.
 """
 import re
 import sys
@@ -20,11 +38,8 @@ from drift import heron  # noqa: E402
 
 WEB = ROOT / "src" / "drift" / "web"
 DOCS = ROOT / "docs"
-MASTER = WEB / "img" / "heron-engraving.svg"
+MASTER = ROOT / "design" / "house-mark" / "heron-engraving.svg"
 HUB = WEB / "hub.html"
-
-# Where the mark is allowed to appear at all. One page, one slot.
-HOME = ("hub.html", "index.html")
 
 
 # ── the master ────────────────────────────────────────────────────────────────────────────────
@@ -90,139 +105,63 @@ def test_the_pose_is_standing_alert_on_two_legs():
     assert heron._EYE[1] < 0.2 * heron.H, "the head has dropped; the alert pose carries it high"
 
 
-# ── scarcity: where the mark may and may not appear ───────────────────────────────────────────
+# ── scarcity: the mark is not a web asset ─────────────────────────────────────────────────────
 
 def _pages(root: Path):
     return sorted(p for p in root.glob("*.html"))
 
 
-def test_the_house_mark_appears_on_the_homepage_and_nowhere_else():
-    """This is the rule the mark's meaning is made of. It is not a decorative asset that pages may
-    reach for; it appears where Driftwood is making an enduring statement, and the homepage hero is
-    the first of those. Every other page is a deliberate absence, not an oversight."""
+def test_the_house_mark_appears_on_no_page_at_all():
+    """This is the rule the mark's meaning is made of, in its current form. It is not a decorative
+    asset that pages may reach for; it appears where Driftwood makes an enduring statement, and as
+    of 2026-08-06 no web page is one. Every page is a deliberate absence, not an oversight — and a
+    reappearance should be a considered edit to this test, never a quiet import."""
     strays = []
     for root in (WEB, DOCS):
         for page in _pages(root):
-            if page.name in HOME:
-                continue
             if "heron-engraving" in page.read_text(encoding="utf-8"):
                 strays.append(f"{root.name}/{page.name}")
-    assert not strays, f"the house mark has spread to: {strays} — rarity is the whole instrument"
+    assert not strays, f"the house mark has returned to: {strays} — rarity is the whole instrument"
 
 
-def test_the_homepage_uses_the_mark_exactly_once():
-    """One appearance, one slot. A second instance on the same page is repetition, and repetition
-    is what the scarcity rule exists to prevent."""
-    for page in (HUB, DOCS / "index.html"):
-        t = page.read_text(encoding="utf-8")
-        assert t.count('src="img/heron-engraving.svg"') == 1, \
-            f"{page.name} carries the mark more than once"
+def test_the_master_is_not_a_deployed_asset():
+    """It lives in design/, not under web/img/ and not in docs/. Left in the web tree it would be
+    copied into every build by sync_docs.py and would sooner or later be reached for by a page that
+    just wanted texture, which is exactly the failure the scarcity rule exists to prevent."""
+    assert MASTER.exists(), "the house-mark master is missing"
+    assert not (WEB / "img" / "heron-engraving.svg").exists(), \
+        "the master is back in the web tree, where it will be deployed and eventually reused"
+    assert not (DOCS / "img" / "heron-engraving.svg").exists(), \
+        "a stale copy of the mark is still being shipped in docs/"
 
 
-def test_the_mark_is_never_navigation_furniture():
-    """Explicitly forbidden slots: nav, footer, favicon, mask icon, section dividers, avatars. The
-    wordmark is the identity in all of them."""
+def test_the_hero_now_carries_the_watershed():
+    """The slot the mark used to hold is not empty, and what holds it is not another atmosphere
+    plate. The watershed is decorative in the accessibility sense — aria-hidden, never a link —
+    but it is the page's argument, which is why it displaced the mark rather than joining it."""
     t = HUB.read_text(encoding="utf-8")
-    for tag in re.findall(r"<(?:nav|footer)\b[^>]*>.*?</(?:nav|footer)>", t, re.S):
-        assert "heron" not in tag.lower(), "the house mark has turned up in page furniture"
-    for rel in re.findall(r'<link[^>]*rel="[^"]*icon[^"]*"[^>]*>', t):
-        assert "heron" not in rel, "the house mark is being used as an icon"
-    for meta in re.findall(r'<meta[^>]*property="og:image"[^>]*>', t):
-        assert "heron" not in meta, "the house mark is being used as a social image"
-
-
-def test_the_mark_is_decorative_and_unlinked():
-    """The wordmark already provides the brand identity, so the engraving is announced to nobody:
-    empty alt, aria-hidden, and never wrapped in a link."""
-    t = HUB.read_text(encoding="utf-8")
-    tag = re.search(r"<img[^>]*heron-engraving[^>]*>", t)
-    assert tag, "the hero has lost the house mark"
-    assert 'alt=""' in tag.group(0) and 'aria-hidden="true"' in tag.group(0)
+    tag = re.search(r"<svg class=\"ws\"[^>]*>", t)
+    assert tag, "the hero has lost the watershed"
+    assert 'aria-hidden="true"' in tag.group(0), "the watershed is announcing itself to screen readers"
     before = t[: tag.start()]
-    assert before.rfind("<a ") < before.rfind("</a>"), "the house mark is inside a link"
+    assert before.rfind("<a ") < before.rfind("</a>"), "the watershed is inside a link"
 
 
-# ── restraint: it never competes with the typography ──────────────────────────────────────────
-
-def test_the_mark_stays_under_the_opacity_ceiling():
-    """The level is a judgement call the owner makes, and it has moved twice: .14 (a ghost on
-    limestone), then .19, and now **.75** on request — a deliberate departure from the original
-    atmosphere brief, at which the engraving reads as a foreground element rather than as ground
-    the typography sits on.
-
-    So this test no longer guards a design opinion; it guards the two things that stay true at any
-    level: the mark is still behind the copy (see the next test), and it is still *translucent* —
-    a fully opaque house mark would occlude whatever it crosses, and the hero's whole composition
-    assumes the reader can see through it."""
+def test_the_watershed_sits_behind_the_copy():
+    """Typography has priority structurally, not by luck — the same rule the mark was held to."""
     t = HUB.read_text(encoding="utf-8")
-    levels = [float(v) for v in re.findall(r"--mark-o:\s*(\.\d+|0?\.\d+)", t)]
-    assert levels, "the house mark's opacity token is gone"
-    assert max(levels) < 1.0, f"the house mark is fully opaque: {levels}"
-    assert min(levels) > 0.0, f"the house mark has been switched off: {levels}"
-
-
-def test_the_mark_sits_behind_the_copy():
-    """Typography has priority, structurally and not by luck: the mark is on the floor of the
-    hero's stacking context and the headline and CTAs are above it."""
-    t = HUB.read_text(encoding="utf-8")
-    assert re.search(r"\.housemark\{[^}]*z-index:0", t, re.S), "the mark left the back plane"
+    assert re.search(r"\.ws\{[^}]*z-index:0", t, re.S), "the watershed left the back plane"
     assert re.search(r"\.hero>\.hero-grid,\.hero>\.ctas\{[^}]*z-index:1", t), \
-        "the hero copy is no longer lifted above the mark"
-    assert re.search(r"\.housemark\{[^}]*mask-image:", t, re.S) or \
-        re.search(r"mask-image:[^;]*\}\s*$", t), "the mark no longer fades toward the copy"
+        "the hero copy is no longer lifted above the drawing"
+    assert re.search(r"\.ws\{[^}]*mask-image:", t, re.S), \
+        "the watershed no longer fades toward the copy"
 
 
-# ── motion: one pass, then permanent ──────────────────────────────────────────────────────────
-
-def _housemark_animation(t: str) -> str:
-    m = re.search(r"\.housemark\{animation:([^}]*)\}", t)
-    assert m, "the one-time reveal (Option B) is gone"
-    return m.group(1)
-
-
-def test_the_reveal_runs_once_and_then_the_mark_is_permanent():
-    """Option B is a plate coming off a press, not a logo animating. One pass, 800–1200ms, and
-    then nothing: no loop, no alternate, no scroll replay, no parallax, no idle drift."""
-    anim = _housemark_animation(HUB.read_text(encoding="utf-8"))
-    assert "infinite" not in anim and "alternate" not in anim, "the reveal has started looping"
-    ms = int(re.search(r"(\d+)ms", anim).group(1))
-    assert 800 <= ms <= 1200, f"the reveal is {ms}ms; the brief is 800–1200ms"
-    assert "both" in anim or "forwards" in anim, "the reveal does not hold its final state"
-
-
-def test_the_reveal_never_draws_itself():
-    """The forbidden register: paths drawing themselves, handwriting, illustration animation. The
-    reveal resolves tone — opacity, blur, contrast — and moves nothing."""
+def test_the_watershed_carries_no_cartographic_residue():
+    """The whole brief: pure vector structure on limestone. No labels, no city dots, no state
+    borders, no coastline. A <text> element in this plate would be a caption on a hero."""
     t = HUB.read_text(encoding="utf-8")
-    frames = re.search(r"@keyframes housemark-resolve\{(.*?)\n", t, re.S)
-    assert frames, "the reveal keyframes are gone"
-    body = re.search(r"@keyframes housemark-resolve\{(.*?)\}\}", t, re.S).group(1)
-    for banned in ("stroke-dash", "clip-path", "translate", "scale3d", " scale(",
-                   "rotate(", "offset-path"):
-        assert banned not in body, f"the reveal has grown a {banned} — that is logo animation"
-
-
-def test_both_motion_versions_are_live_and_reduced_motion_is_honored():
-    """Two versions in the page so the live implementation can be judged rather than argued about:
-    B by default, A (static control) at ?mark=static. Reduced motion always lands on A."""
-    t = HUB.read_text(encoding="utf-8")
-    assert re.search(r'@media\(prefers-reduced-motion:reduce\)\{\.housemark\{animation:none\}', t)
-    assert re.search(r'html\[data-housemark="static"\] \.housemark\{animation:none\}', t)
-
-
-def test_the_static_control_is_reachable_from_the_url_not_only_from_the_css():
-    """CLAUDE.md's standing rule: when one value has both a URL path and a page path, test the URL
-    path explicitly — the two diverge silently. Here the divergence would cost the experiment its
-    control arm, with nothing visibly broken. So: the attribute the inline script writes must be
-    exactly the attribute the stylesheet selects on, for every accepted spelling of the param."""
-    t = HUB.read_text(encoding="utf-8")
-    script = re.search(r'get\("mark"\).*?dataset\.housemark = "(\w+)"', t, re.S)
-    assert script, "the ?mark= switch is gone; Option A is unreachable from the URL"
-    written = script.group(1)
-    selected = re.search(r'html\[data-housemark="(\w+)"\] \.housemark', t).group(1)
-    assert written == selected, (
-        f'the script writes data-housemark="{written}" but the CSS selects "{selected}" — '
-        "the static control arm silently does nothing"
-    )
-    accepted = set(re.findall(r'm === "(\w+)"', t))
-    assert "static" in accepted, f"?mark=static no longer pins the control: {accepted}"
+    svg = t[t.index('<svg class="ws"'): t.index("</svg>", t.index('<svg class="ws"'))]
+    assert "<text" not in svg, "the hero drawing has grown a label"
+    assert "basin{display:none}" in t.replace(" ", ""), \
+        "the basin silhouette is being drawn; the network alone is the picture"

@@ -77,7 +77,11 @@ body{margin:0;background:var(--limestone);color:var(--body);
 
 /* The watershed sits behind everything and is masked back — not cropped — where the copy runs.
    The drawing is whole; it simply thins under the words. */
-.ws{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;
+.ws{position:absolute;right:0;top:50%;transform:translateY(-50%);
+  width:100%;height:100%;z-index:0;pointer-events:none;
+  /* Capped so the plate cannot grow without limit: the hero's height is set by how the copy
+     wraps, and an uncapped height:100% makes the drawing a function of text reflow. */
+  max-height:min(560px,72vh);
   -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.05) 0,rgba(0,0,0,.40) 30%,#000 60%);
   mask-image:linear-gradient(to right,rgba(0,0,0,.05) 0,rgba(0,0,0,.40) 30%,#000 60%)}
 .ws .hit{pointer-events:stroke}   /* only the invisible proximity zones take the mouse */
@@ -230,13 +234,24 @@ h1 span{display:block}
 
 /* ── Stacked plate. The drawing becomes ground texture beneath the copy rather than a counterweight
    beside it, so the mask turns with it: quietest at the top where the words run. ── */
+/* Stacked: the drawing comes out of the background and becomes a plate of its own. Absolutely
+   positioned at a percentage height it was sized by how the copy wrapped, and with the column
+   collapsed it landed behind the body copy. In flow, with an aspect-ratio matching the viewBox,
+   it has one size that depends only on column width. */
 @media(max-width:900px){
   .stage{padding:0 14px;margin-top:18px}
-  .hero{padding:34px 24px 40px;min-height:520px}
-  .ws{top:auto;bottom:0;height:58%;
-    -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.07) 0,rgba(0,0,0,.46) 32%,#000 66%);
-    mask-image:linear-gradient(to bottom,rgba(0,0,0,.07) 0,rgba(0,0,0,.46) 32%,#000 66%)}
+  .hero{padding:34px 24px 28px;min-height:0;display:flex;flex-direction:column}
+  .hero-copy{order:1}
+  .ws{--w:1.15;order:2;
+    position:relative;right:auto;top:auto;transform:none;
+    width:100%;height:auto;max-width:100%;max-height:none;
+    aspect-ratio:848/626;display:block;margin:22px 0 0;
+    -webkit-mask-image:none;mask-image:none}
   h1{font-size:clamp(34px,8vw,44px)}
+}
+@media(max-width:520px){
+  .ws{--w:1}
+  .ws .outer{opacity:.5}
 }
 
 /* ── Test furniture. Not part of the hero: a caption and enough room below it to exercise the

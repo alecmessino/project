@@ -576,7 +576,12 @@
   /* One dial. Every stroke is a multiple of --w, so the drawing scales in proportion and the
      hierarchy never shifts: capillary, major and stem stay at exactly 1 : 1 : 2 at rest. */
   .ws{--w:1.6;
-    position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;
+    position:absolute;right:0;top:50%;transform:translateY(-50%);
+    width:100%;height:100%;z-index:0;pointer-events:none;
+    /* Capped so the plate cannot grow without limit. The hero's height is set by how the copy
+       wraps, and an uncapped height:100% makes the drawing a function of text reflow — at very
+       large zoom or a narrow desktop column that inflates it past the composition. */
+    max-height:min(560px,72vh);
     -webkit-user-select:none;user-select:none;
     -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.05) 0,rgba(0,0,0,.40) 30%,#000 60%);
     mask-image:linear-gradient(to right,rgba(0,0,0,.05) 0,rgba(0,0,0,.40) 30%,#000 60%)}
@@ -656,14 +661,42 @@
     .ws .outer{animation:wsdrift linear both;animation-timeline:scroll(root block);
       animation-range:0 70vh}
   }
+  /* ── STACKED: the drawing comes out of the background and becomes a plate of its own ────────
+     It used to stay absolutely positioned here at height:58%, which failed two ways at once. Its
+     size was a function of how the copy wrapped — the hero runs 724px tall at 390px wide and
+     474px at 768px, so the same drawing rendered 53% smaller on the larger phone, and resized on
+     every rotation and zoom step. And with the column collapsed there is no right-hand void left
+     to occupy, so the network landed directly behind the second paragraph and fought the words.
+
+     In flow, with an aspect-ratio matching the viewBox, it has one size that depends on nothing
+     but the column width. The hero becomes a flex column so the drawing can be ordered AFTER the
+     copy: it is first in the DOM because it is a background on desktop, and typography still
+     wins when the two have to stack. No mask — nothing is behind anything, so there is nothing
+     to fade back from. ── */
   @media(max-width:900px){
-    /* Ground texture beneath the stacked content rather than a counterweight beside it, so the
-       fade turns with it: quietest at the top where the paragraphs run, settling as it reaches
-       the floor of the hero. The dial comes down with the plate — at this size 1.6 starts to read
-       as heavy, because the same stroke is crossing a much shorter run of limestone. */
-    .ws{--w:1.35;top:auto;bottom:0;height:58%;
-      -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.07) 0,rgba(0,0,0,.46) 32%,#000 66%);
-      mask-image:linear-gradient(to bottom,rgba(0,0,0,.07) 0,rgba(0,0,0,.46) 32%,#000 66%)}
+    .hero{display:flex;flex-direction:column;padding-bottom:28px}
+    /* Ordered between the argument and the ask — headline, lede, drawing, CTA. Placed after the
+       CTA it sits ~1200px down a phone and stops being a hero at all; placed first it pushes the
+       headline below the fold. Between the two it is seen, and it is seen having read what it is
+       about, which is the same sequence the desktop composition reads in. */
+    .hero-grid{order:1}
+    .ws{--w:1.15;order:2;
+      position:relative;right:auto;top:auto;transform:none;
+      width:100%;height:auto;max-width:100%;max-height:none;
+      aspect-ratio:848/626;         /* the viewBox, so the box never letterboxes */
+      display:block;margin:26px 0 4px;
+      -webkit-mask-image:none;mask-image:none}
+    .ctas{order:3}
+  }
+  /* Note on preserveAspectRatio: it stays xMaxYMid and does not need a mobile override, because
+     the box's aspect-ratio now matches the viewBox exactly — `meet` fits edge to edge, so there
+     is no letterbox for the anchor to bias. It only mattered while the box was the wrong shape. */
+  @media(max-width:520px){
+    .ws{--w:1}
+    /* The capillaries are the first thing to go illegible at this size — they are hairlines
+       crossing a very short run of limestone. Dropping them back keeps the majors and the stem,
+       which is the reading that matters, and keeps the plate from turning into texture. */
+    .ws .outer{opacity:.5}
   }
 
   /* Reduced motion keeps the whole drawing — it is the argument, not the animation. Only the

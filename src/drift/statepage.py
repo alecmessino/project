@@ -374,10 +374,19 @@ def _provenance_block() -> str:
 
 
 def _impact_block(name: str, a: dict | None) -> str:
-    """The demoted (secondary-section) illustrative figure, reference, not hero. Public-facing, it
-    now leads with the *coordination opportunity* in dollars-per-$1M rather than a return percentage;
-    the modeled +X.X%/yr and the before/after kept-rate stay as the underlying methodology (and satisfy
-    the source-of-truth numbers the state-page tests require)."""
+    """The illustrative figure, rendered as the page's hook (see render_state_html for why it leads).
+
+    It is labelled as the FLOOR, deliberately. The figure counts one thing: how a portfolio is
+    built and run against the state's rules. It is the number every advisor in the country claims,
+    and leading fifty-one pages with it unqualified would have Driftwood competing on the
+    commodity. The firm's own diagnostic already says this figure "leaves at zero" the estate,
+    gifting, and residency coordination "where the larger opportunities usually sit" — so the label
+    says that here too, which is both the honest reading and the differentiated one: the hook is
+    large, and it is the part of the case that matters least.
+
+    The modelled +X.X%/yr and the before/after kept-rate stay as the underlying methodology (and
+    satisfy the source-of-truth numbers the state-page tests require).
+    """
     if not a:
         return ""
     before, after, alpha = a["before"], a["after"], a["value"]
@@ -386,10 +395,12 @@ def _impact_block(name: str, a: dict | None) -> str:
     return (
         f'<div class="hero">'
         f'<div class="big">~{fmt_usd(usd)}<span class="u">/yr per $1M taxable</span></div>'
-        f'<div class="hlab">Illustrative after-tax coordination opportunity in {_esc(name)}<br>'
-        f'<span class="hsub">what running the portfolio against {_esc(name)}\'s rules can be worth, about '
-        f'+{alpha:.1f}%/yr modeled, as a tax-managed book keeps ~{after:.1f}%/yr after tax vs ~{before:.1f}%/yr '
-        f'for a concentrated, naive one; illustrative, over ~30 years, scales with the portfolio</span></div>'
+        f'<div class="hlab">What tax-aware portfolio management alone is worth in {_esc(name)}<br>'
+        f'<span class="hsub">about +{alpha:.1f}%/yr modeled, as a tax-managed book keeps '
+        f'~{after:.1f}%/yr after tax vs ~{before:.1f}%/yr for a concentrated, naive one, and it scales '
+        f'with the portfolio. Treat it as the floor: it counts the portfolio only, and leaves the '
+        f'estate, gifting, and residency coordination at zero, where the larger opportunities '
+        f'usually sit.</span></div>'
         f'<div class="hbar" aria-hidden="true">'
         f'<span class="kept" style="width:{kept_before}%"></span></div>'
         f'</div>'
@@ -763,9 +774,12 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
         built and run, where each holding sits, how losses are used, how gains are timed, decides how
         much of {_esc(name)}'s tax code you actually pay. The figure at the top of this page is what
         that difference is worth in {_esc(name)}; these are the levers behind it.</p>
-      <p class="mnote" style="margin-top:0">How this is modeled: a single 30-year proxy-spliced path
-        (1996–2026), comparing a concentrated, high-turnover book with a tax-managed one, illustrative
-        and coarse; treat it as directional, not a precise figure.</p>
+      <!-- Short by design. This note used to carry the whole modeling caveat, which now travels
+           with the figure at the top of the page where a reader actually meets it. Saying it twice
+           in full made the third instance on the page. What is left is the one fact the hero does
+           not carry: the window. -->
+      <p class="mnote" style="margin-top:0">Modeled on a single proxy-spliced path, 1996 to 2026.
+        Directional, not a precise figure.</p>
       <div class="levers" style="margin-top:14px">{levers}</div></div>
     {_reasoning_html(data.get("reasoning") or {"framework": [], "considerations": [], "actions": []}, name)}
     <div class="cta">

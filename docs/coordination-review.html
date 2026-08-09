@@ -55,13 +55,16 @@
      convinced (from the masthead CTA on fifty pages, or from a partner's email) had to scroll the
      whole case to find a link. The ask is fifteen minutes and needs nothing, so it does not have to
      be earned first. Same button as the close, same attribution scheme, different utm_content so
-     the two placements stay countable apart. */
-  .leadact{padding:26px 44px 0;display:flex;align-items:center;gap:14px 20px;flex-wrap:wrap}
+     the two placements stay countable apart.
+
+     The button carries no caption. It had one, and the caption said "nothing to prepare, and no
+     documents" a hundred pixels above the row of "before you read further" that already says it,
+     which was the page's third instance of that sentence. The block below is the caption. */
+  .leadact{padding:26px 44px 0}
   .leadact a.book{display:inline-block;text-decoration:none;font-family:var(--sans);font-size:14.5px;
     font-weight:700;padding:13px 26px;border-radius:var(--surface-radius);
     background:var(--accent-strike);color:#f1ede3}
   .leadact a.book:hover{filter:brightness(1.08)}
-  .leadact .lnote{font-family:var(--sans);font-size:12.5px;line-height:1.55;color:var(--muted);max-width:34ch}
 
   .thesis{padding:30px 44px 6px}
   .thesis p{font-family:var(--serif);font-size:22px;line-height:1.4;color:var(--ink);margin:0;max-width:40ch}
@@ -221,8 +224,6 @@
          and the generator-side equivalent live in src/drift/site.py booking_link(). -->
     <div class="leadact">
       <a class="book" href="https://calendly.com/alec-messino/introductory-call-driftwood-wealth?utm_source=driftwoodwealth&amp;utm_medium=website&amp;utm_campaign=coordination_review&amp;utm_content=coordination-review-lede" target="_blank" rel="noopener">Schedule the 15-minute introduction &rarr;</a>
-      <div class="lnote">Nothing to prepare, and no documents. If a review isn't warranted, we will
-        say so on the call.</div>
     </div>
 
     <div class="thesis">
@@ -372,11 +373,6 @@
           next annual meeting.</dd></div>
         <div><dt>Your CPA and attorney are called first</dt><dd>Where a matter is theirs, they are brought
           in while it is still a choice. The filing and the document are never the last to know.</dd></div>
-        <div><dt>The reasoning is kept</dt><dd>Each judgment enters the Decision Register with what was
-          known at the time, so it can be revisited on those facts rather than re-argued from memory.</dd></div>
-        <div><dt>It is read again each year</dt><dd>The whole system is re-examined at the
-          <a href="awor.html">Annual Wealth Operating Review</a>, and the Manual is amended where a
-          decision has changed.</dd></div>
       </dl>
     </div>
 

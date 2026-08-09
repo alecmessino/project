@@ -56,6 +56,12 @@ MASTHEAD = (
         ("Research", "research.html"),
         ("Commentary", "commentary.html"),
         ("The Driftwood Review", "driftwood-review.html"),
+        # The Atlas took a row of its own on 2026-08-09, partially reversing the 2026-08-01 move
+        # that put all four instruments on the shelf. The reasoning is in drift.nav's FAMILIES and
+        # is deliberate: the Atlas is 51 editioned statute-cited pages plus three derived
+        # instruments and is the firm's centre-of-influence surface, which is a different kind of
+        # object from a calculator. The other three instruments stay on the shelf.
+        ("The State Tax Atlas", "statemap.html"),
         # One entry, not three. Decision Memos / Tools / Library were three rows pointing at three
         # scroll positions on one page. This lands on the section that enumerates the instruments.
         ("Tools & References", "insights.html#decision-tools"),

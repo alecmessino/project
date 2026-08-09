@@ -63,10 +63,11 @@
     .atlas-body{grid-template-columns:1fr}
     .atlas-index{position:static;border-right:0;border-bottom:1px solid var(--line);padding:14px 18px 12px}
     .tabs{flex-direction:row;flex-wrap:wrap;gap:2px 18px}
-    .tabs button{padding:6px 0;margin-left:0;border-left:0;border-bottom:2px solid transparent}
+    .tabs button{padding:6px 0;margin-left:0;border-left:0;border-bottom:2px solid transparent;min-height:44px}
     .tabs button[aria-selected="true"]{border-bottom-color:var(--accent-strike)}
   }
-  .split{display:grid;grid-template-columns:1.35fr .85fr;gap:20px;padding:10px 40px 8px;align-items:start}
+  .split{--gut:40px;display:grid;grid-template-columns:1.35fr .85fr;gap:20px;
+    padding:10px var(--gut) 8px;align-items:start}
   /* the author `display:grid` above beats the UA `[hidden]{display:none}`, so hiding the split on the
      Coordination tab needs this explicit guard (the ranked-free "your state" panel takes its place). */
   .split[hidden]{display:none}
@@ -74,18 +75,47 @@
      force the whole column, and the detail card, wider than the frame, clipping their right
      edge. min-width:0 lets the tracks shrink to the frame so the map scrolls inside .tscroll. */
   .split>*{min-width:0}
-  @media(max-width:820px){.split{grid-template-columns:1fr}}
+  @media(max-width:820px){
+    .split{grid-template-columns:1fr}
+    /* Bleed the figure, keep the type. Once the split stacks, the map is the only thing in its
+       column, so it takes the full frame width while .maptitle and .legend stay on the text
+       gutter. This is where the width comes from: 314px to 350px on a 390px phone. It cannot go
+       further, because .frame is overflow:hidden and test_page_frame forbids a page cancelling
+       the .sheet gutter, so 350px is the hard ceiling. */
+    .tscroll{margin-inline:calc(-1 * var(--gut));width:auto;max-width:none}
+  }
   .maptitle{font-family:var(--sans);font-size:19px;color:var(--ink);margin:0 0 10px}
-  svg.cart{width:100%;height:auto;display:block}
-  /* On phones the cartogram would shrink each tappable state to ~27px; keep a floor width and let
-     the wrapper scroll horizontally so tiles stay grabbable. */
+  /* The cartogram scales to fit. Default preserveAspectRatio (xMidYMid meet) is correct and is
+     deliberately NOT overridden: preserveAspectRatio="none" would stretch the tiles into
+     rectangles and still miss 44 CSS px on the horizontal axis, so it buys distortion and no
+     conformance.
+
+     THE FLOOR, rewritten 2026-08-09. It was 470px, which overflowed a 314px column by 156px on a
+     390px phone to deliver a 35.6 CSS px tile, still under the 44 CSS px of WCAG 2.5.5, so the
+     pan bought nothing at all. The viewBox is 554 x 414 user units (12 columns of CELL 46, plus
+     2), so a 44 CSS px tile needs 530px of rendered width at best, and no phone has it. 44px is
+     therefore met by an equivalent control (.cartpick below, per WCAG 2.5.5 "Equivalent"), and
+     the floor's only remaining job is to hold the tile above the WCAG 2.5.8 AA minimum of 24 CSS
+     px on the narrowest supported viewport: 24 * 554 / TILE_NARROW(44) = 302px. 320 is that,
+     rounded, and it sits below the 350px a 390px phone gives the map, so nothing at or above a
+     360px viewport pans and a 320px viewport pans by 40px instead of 226px. */
+  svg.cart{width:100%;height:auto;display:block;min-width:320px}
   @media(max-width:620px){
-    svg.cart{min-width:470px}
-    .hd,.split,.asof,.foot{padding-left:18px;padding-right:18px}
+    .split{--gut:18px}
+    .hd,.asof,.foot{padding-left:18px;padding-right:18px}
     .detail{padding:16px}
+    /* Tile geometry at phone scale, matched to the JS constants in paint(): the gutter closes from
+       4 units to 2 (exactly the width of the paper stroke, so the separator is unchanged and the
+       tile gains 4.8%), the sub-tag is dropped, and the two-letter code takes the whole tile. The
+       tag is not lost: it stays in the detail panel, the legend, and every tile's accessible name. */
+    .tcode{font-size:16px}
+    .striplab{font-size:12px}
   }
   .tile rect{cursor:pointer;transition:filter .12s,stroke .12s}
-  .tile:hover rect{stroke:#fff;stroke-width:2.4;filter:brightness(1.1)}
+  /* :hover on a touch screen latches to the last tile tapped and reads as a second selection. */
+  @media(hover:hover){.tile:hover rect{stroke:#fff;stroke-width:2.4;filter:brightness(1.1)}}
+  .tile:focus{outline:none}
+  .tile:focus-visible rect{stroke:var(--accent-strike);stroke-width:3.5}
   .tile.sel rect{stroke:var(--ink);stroke-width:3}
   .tcode{font-size:11px;font-weight:700;fill:#16130f;pointer-events:none}
   .tcode.lt{fill:#f4f1e8}
@@ -95,18 +125,40 @@
   .legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px}
   .legend span{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--dim)}
   .legend i{width:13px;height:13px;border-radius:var(--surface-radius);display:inline-block;border:1px solid rgba(0,0,0,.08)}
+  /* The 44px equivalent control (WCAG 2.5.5, "Equivalent"). Shown wherever the arithmetic says a
+     tile is under 44 CSS px: the tile clears 44 only when the map column reaches ~580px, which
+     below 620px needs a 594px viewport, and above 820px (where the two-column split narrows the
+     map again) needs 1006px. 1024px is the first conventional breakpoint clear of both. Above it
+     the tiles are their own targets and the household bar's State select is the standing control. */
+  .cartpick{display:none}
+  @media(max-width:1024px){
+    .cartpick{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;
+      border-top:1px solid var(--line2)}
+    .cartpick .cp-l{font-family:var(--sans);font-weight:700;font-size:9.5px;letter-spacing:.16em;
+      text-transform:uppercase;color:var(--muted);flex:none}
+    /* 16px, not 14: iOS Safari zooms the page when a focused form control is under 16px, which
+       throws the reader into a horizontally-panned viewport, the exact defect this removes. */
+    .cartpick .cp-sel{flex:1 1 auto;min-width:0;min-height:44px;
+      font-family:var(--sans);font-size:16px;color:var(--ink);background:#fff;
+      border:1px solid var(--line);border-radius:var(--surface-radius);
+      padding:0 34px 0 12px;cursor:pointer;-webkit-appearance:none;appearance:none;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='6'><path fill='%235c6470' d='M0 0h9L4.5 6z'/></svg>");
+      background-repeat:no-repeat;background-position:right 12px center}
+    .cartpick .cp-sel:focus-visible{outline:2px solid var(--accent-strike);outline-offset:1px}
+    .brow{min-height:44px}
+  }
   .detail{border-left:1px solid var(--line);padding:2px 0 20px 24px;min-height:220px}
   .detail .dn{font-family:var(--sans);font-size:21px;color:var(--ink);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
   .detail .dn .code{font-size:13px;color:var(--dim)}
   .detail .pill{font-size:10.5px;font-weight:500;padding:3px 9px;border-radius:0;color:#16130f;margin-left:auto}
   .detail .dnote{font-size:13px;line-height:1.6;color:var(--body);margin:14px 0 0}
   .detail .src{font-size:10.5px;color:var(--muted);margin-top:14px;border-top:1px solid var(--line2);padding-top:10px;line-height:1.45}
-  .detail a.cta{display:inline-block;margin-top:14px;background:var(--accent-strike);color:#f1ede3;text-decoration:none;
+  .detail a.cta{display:inline-flex;align-items:center;min-height:44px;margin-top:14px;background:var(--accent-strike);color:#f1ede3;text-decoration:none;
     font-weight:500;font-size:13px;padding:10px 16px;border-radius:var(--surface-radius)}
   /* the quiet door to a state's full Atlas card (the deep per-state reference); a text link, not a second
      button, so the solid diagnostic CTA stays the one confident action on the panel. Shown on every
      dimension, so a selected state is never a dead end. */
-  .detail a.atlas-link{display:block;width:max-content;max-width:100%;margin-top:14px;font-family:var(--sans);
+  .detail a.atlas-link{display:flex;align-items:center;min-height:44px;width:max-content;max-width:100%;margin-top:14px;font-family:var(--sans);
     font-weight:500;font-size:12.5px;color:var(--accent-strike);text-decoration:none;
     border-bottom:1px solid var(--accent-strike-soft);transition:border-color .12s,color .12s}
   .detail a.atlas-link:hover{border-bottom-color:var(--accent-strike);color:var(--ink)}
@@ -129,7 +181,7 @@
   .lev-v{font-family:var(--sans);font-weight:600;font-size:14.5px;color:var(--ink);margin:3px 0 5px}
   .lev-n{font-size:12px;line-height:1.5;color:var(--dim)}
   .coord-cta{margin-top:22px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}
-  .coord-cta a.cta{display:inline-block;background:var(--accent-strike);color:#f1ede3;text-decoration:none;font-weight:500;font-size:13px;padding:10px 16px;border-radius:var(--surface-radius)}
+  .coord-cta a.cta{display:inline-flex;align-items:center;min-height:44px;background:var(--accent-strike);color:#f1ede3;text-decoration:none;font-weight:500;font-size:13px;padding:10px 16px;border-radius:var(--surface-radius)}
   .coord-cta a.atlas-link{font-family:var(--sans);font-weight:500;font-size:12.5px;color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
   .coord-cta a.atlas-link:hover{border-bottom-color:var(--accent-strike);color:var(--ink)}
   #coord .src{font-size:10.5px;color:var(--muted);margin-top:14px;border-top:1px solid var(--line2);padding-top:10px;line-height:1.45;max-width:82ch}
@@ -176,7 +228,7 @@
   <div class="frame" id="frame">
     <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools" aria-current="page">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
+      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="statemap.html" aria-current="page">The State Tax Atlas</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
@@ -211,6 +263,7 @@
         <div class="maptitle" id="maptitle"></div>
         <div class="tscroll"><svg class="cart" id="cart" role="img" aria-label="US state tax cartogram"></svg></div>
         <div class="legend" id="legend"></div>
+        <div class="cartpick" id="cartpick"></div>
       </div>
       <div class="detail" id="detail"></div>
     </div>
@@ -229,7 +282,14 @@
 
 <script>
 window.__STATE__ = /*__STATE__*/null/*__END__*/;
-const CELL = 46, TILE = 42;
+// Tile geometry is viewport-aware, and the CSS block at max-width:620px is its other half:
+// move one and you must move the other. On a narrow viewport the gutter closes from 4 user units
+// to 2 (the width of the paper stroke, so the separator is unchanged) and the sub-tag is dropped,
+// which is what lets the two-letter code hold a legible size once the whole 554-unit viewBox is
+// squeezed into ~350 CSS px. CELL never changes: it sets the viewBox, and moving it would change
+// nothing about the rendered tile fraction.
+const CELL = 46, TILE = 42, TILE_NARROW = 44;
+const NARROW = window.matchMedia("(max-width:620px)");
 
 function render(s){
   const dims = s.dimensions||[], tiles = s.tiles||{}, states = s.states||{}, names = s.names||{};
@@ -275,6 +335,24 @@ function render(s){
     if(window.dwTaxContext) dwTaxContext.save({state:sel});
     if(window.plausible) plausible("map_state_clicked",{props:{state:code, via:via||"map"}}); }
 
+  // The equivalent control (see .cartpick in the stylesheet). A third selection SURFACE, not a
+  // third selection path: it calls pick(), the same function the cartogram tiles and the
+  // every-state rows call, so the map, the list and the picker cannot disagree and the household
+  // context is written exactly once. `via` distinguishes them in Plausible without duplicating
+  // any logic. It exists because a 44 CSS px tile needs 530px of rendered width and no phone has
+  // it, so WCAG 2.5.5 is met by an equivalent control rather than by a horizontal pan.
+  (function buildPicker(){
+    const host = document.getElementById("cartpick");
+    if(!host) return;
+    const codes = Object.keys(tiles).sort((a,b)=>(names[a]||a).localeCompare(names[b]||b));
+    host.innerHTML = '<span class="cp-l" id="cp-lab">Choose a state</span>'+
+      '<select class="cp-sel" id="cp-sel" aria-labelledby="cp-lab">'+
+      codes.map(c=>`<option value="${c}">${names[c]||c}</option>`).join("")+'</select>';
+    const sel_ = document.getElementById("cp-sel");
+    sel_.value = sel;
+    sel_.addEventListener("change", ()=>pick(sel_.value, "picker"));
+  })();
+
   function paint(){
     const d = dims[active];
     document.getElementById("frame").className = "frame";
@@ -288,23 +366,28 @@ function render(s){
     if(isCoord){ paintCoord(d); return; }
     const cmap = colorMap(d);
     // cartogram
+    const T = NARROW.matches ? TILE_NARROW : TILE, showTag = !NARROW.matches;
     let maxc=0,maxr=0; for(const k in tiles){ maxc=Math.max(maxc,tiles[k][0]); maxr=Math.max(maxr,tiles[k][1]); }
-    let parts = `<text class="striplab" x="${4}" y="${(maxr)*CELL+TILE/2}">TERRITORIES</text>`;
+    let parts = `<text class="striplab" x="${4}" y="${(maxr)*CELL+T/2}">TERRITORIES</text>`;
     for(const code in tiles){
       const [c,r] = tiles[code], x=c*CELL, y=r*CELL;
       const rec = (states[code]||{})[d.key];
       const fill = rec ? (cmap[rec.regime]||"#e9e5da") : "#e9e5da";
       const lt = DARK.has(fill) ? " lt" : "";
       const tag = rec ? (rec.tag||"") : "—";
+      // The tag leaves the DRAWING on a phone, never the accessible name: a screen-reader user on
+      // a narrow viewport must not get less information than one on a desktop.
+      const vtag = showTag ? tag : "";
       // a11y: carry the tax category (legend label), not just color, into the accessible name and
       // tooltip, so colorblind / screen-reader users get the regime, not only the rate number.
       const regimeLabel = rec ? ((d.legend.find(([r])=>r===rec.regime)||[])[2]||"") : "";
       const a11y = (names[code]||code) + (regimeLabel ? `, ${regimeLabel}` : "") + (tag && tag!=="—" ? `, ${tag}` : "");
+      const cy = vtag ? T/2-2 : T/2 + (showTag ? 4 : 6);   // +6 optically centres the larger code
       parts += `<g class="tile ${code===sel?'sel':''}" data-code="${code}" tabindex="0" role="button" aria-label="${a11y}">`+
         `<title>${a11y}</title>`+
-        `<rect x="${x}" y="${y}" width="${TILE}" height="${TILE}" rx="3" fill="${fill}" stroke="#FBF8F1" stroke-width="2"></rect>`+
-        `<text class="tcode${lt}" x="${x+TILE/2}" y="${y+ (tag? TILE/2-2 : TILE/2+4)}" text-anchor="middle">${code}</text>`+
-        (tag ? `<text class="ttag${lt}" x="${x+TILE/2}" y="${y+TILE/2+11}" text-anchor="middle">${tag}</text>`:"")+
+        `<rect x="${x}" y="${y}" width="${T}" height="${T}" rx="3" fill="${fill}" stroke="#FBF8F1" stroke-width="2"></rect>`+
+        `<text class="tcode${lt}" x="${x+T/2}" y="${y+cy}" text-anchor="middle">${code}</text>`+
+        (vtag ? `<text class="ttag${lt}" x="${x+T/2}" y="${y+T/2+11}" text-anchor="middle">${vtag}</text>`:"")+
         `</g>`;
     }
     const svg = document.getElementById("cart");
@@ -317,6 +400,7 @@ function render(s){
     // legend
     document.getElementById("legend").innerHTML = d.legend.filter(([,,l])=>l!=="").map(([r,c,l])=>
       `<span><i style="background:${c}"></i>${l}</span>`).join("");
+    const cps0 = document.getElementById("cp-sel"); if(cps0 && cps0.value !== sel) cps0.value = sel;
     renderDetail(d);
   }
 

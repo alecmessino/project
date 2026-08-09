@@ -453,6 +453,20 @@
   .review-cta:hover .rc-main::after{transform:translateX(4px)}
   .review-cta .rc-sub{font-family:var(--sans);font-size:13px;color:var(--on-dark)}
   .review-scope{margin:20px 0 0;max-width:60ch;font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--dim)}
+  /* .fit-k had no rule anywhere in the repo, on this page or in driftwood.css, so the label it
+     wraps rendered as running text and Plate IV opened "Who this is for Households whose financial
+     lives have outgrown a single adviser". It is the same eyebrow every other plate uses; it was
+     simply never given the declaration. */
+  .fit-k{display:block;font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--accent-strike);margin-bottom:12px}
+  /* The Atlas door. Set on its own line rather than inline in the sentence: the paragraph is the
+     qualification, and an underlined phrase inside it would read as a gloss on "Illinois" instead
+     of as somewhere to go. Quiet by construction, a text link at the plate's own accent, because
+     the ask on this page is the conversation and this must not compete with it. */
+  .fit-atlas{display:block;margin-top:14px;font-family:var(--sans);font-weight:600;font-size:14px;
+    color:var(--accent-strike);text-decoration:none;width:max-content;
+    border-bottom:1px solid var(--accent-strike-soft);padding-bottom:2px}
+  .fit-atlas:hover{border-bottom-color:var(--accent-strike)}
   /* Founder specimen-tag: a compact museum-label colophon closing the invitation, a face for the
      conversation. Square photo, tracked-caps credentials, one line of philosophy. Not a bio. */
   .founder-tag{display:flex;align-items:center;gap:18px;margin:44px 0 0;padding-top:26px;
@@ -712,7 +726,7 @@
 <div class="wrap">
 <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
+      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="statemap.html">The State Tax Atlas</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
@@ -1141,7 +1155,12 @@
         Households whose financial lives have outgrown a single adviser: several accounts, an
         estate plan, and decisions that touch each other.
         Most often an operating business or concentrated equity, and income or property that
-        crosses a state line &mdash; frequently Illinois, where an estate is exempt only to $4M.</p>
+        crosses a state line &mdash; frequently Illinois, where an estate is exempt only to $4M.
+        <!-- The homepage's one door to the Atlas, put where the claim it evidences is already
+             made. The third condition above is a state line, and the Atlas is what turns that
+             sentence from an assertion into something the reader can check against their own
+             state, so the link belongs on the clause rather than in a tools list further down. -->
+        <a class="fit-atlas" href="statemap.html">Read your own state in the Atlas &rarr;</a></p>
       <figure class="founder-tag" aria-label="Alec Messino, founder of Driftwood Wealth">
         <img class="ft-photo" src="Headshot.jpg" width="120" height="120" loading="lazy" alt="Alec Messino, founder of Driftwood Wealth" onerror="this.closest(&#39;.founder-tag&#39;).classList.add(&#39;no-photo&#39;)">
         <figcaption class="ft-cap">

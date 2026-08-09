@@ -28,7 +28,7 @@ from pathlib import Path
 from .leakage import (STATE_ALPHA, STATE_NAMES, build_leakage,
                       coordination_opportunity_per_m, fmt_usd, fmt_usd_compact)
 from .statemap import DIMENSIONS, _state_record, AS_OF_LAW, LAST_REVIEWED, _CHANGELOG, CURRENT_EDITION
-from . import reasoning
+from . import nav, reasoning
 
 # Single source of truth for the public base URL lives in drift.site (re-exported here for callers
 # and tests); flip it with scripts/set_domain.py when the custom domain goes live.
@@ -218,52 +218,17 @@ def _esc(s: str) -> str:
     return html.escape(str(s), quote=True)
 
 
-NAV = (
-    '<nav class="dwnav" aria-label="Driftwood Wealth">\n'
-    '  <a class="brand" href="index.html" aria-label="Driftwood Wealth, home">'
-    '<svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">'
-    '<polyline points="10,18 24.35,18 62,50" stroke-width="4.6"/>'
-    '<polyline points="10,34 43.18,34 62,50" stroke-width="4.6"/>'
-    '<line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"/>'
-    '<polyline points="10,66 43.18,66 62,50" stroke-width="4.6"/>'
-    '<polyline points="10,82 24.35,82 62,50" stroke-width="4.6"/>'
-    '<line x1="62" y1="50" x2="90" y2="50" stroke-width="7"/></svg>'
-    '<span class="brand-rule" aria-hidden="true"></span>'
-    '<span class="brand-word">Driftwood Wealth</span></a>\n'
-    '  <div class="dwnav-links">\n'
-    '    <div class="dwnav-drop">\n'
-    '      <button class="dwnav-trigger" type="button">The Firm<span class="caret" aria-hidden="true"></span></button>\n'
-    '      <div class="dwnav-panel">\n'
-    '        <a href="principles.html">Our Story &amp; Principles</a>\n'
-    '        <a href="fees.html">Fees</a>\n'
-    '      </div>\n'
-    '    </div>\n'
-    '    <div class="dwnav-drop">\n'
-    '      <button class="dwnav-trigger" type="button">The Method<span class="caret" aria-hidden="true"></span></button>\n'
-    '      <div class="dwnav-panel">\n'
-    '        <a href="howitworks.html">How It Works</a>\n'
-    '        <a href="thesis.html">How We Invest</a>\n'
-    '      </div>\n'
-    '    </div>\n'
-    '    <div class="dwnav-drop dwnav-drop--current">\n'
-    '      <button class="dwnav-trigger" type="button">Research<span class="caret" aria-hidden="true"></span></button>\n'
-    '      <div class="dwnav-panel">\n'
-    '        <a href="research.html">Research&nbsp;&amp;&nbsp;Atlas</a>\n'
-    '        <a href="statemap.html" aria-current="page">State&nbsp;Tax&nbsp;Atlas</a>\n'
-    '        <a href="leakage.html">Tax&nbsp;Diagnostic</a>\n'
-    '        <a href="taxlab.html">After-Tax&nbsp;Review</a>\n'
-    '        <a href="score.html">Coordination&nbsp;Assessment</a>\n'
-    '      </div>\n'
-    '    </div>\n'
-    '    <a class="dwnav-access" href="partners.html">For CPAs &amp; Attorneys</a>\n'
-    '  </div>\n'
-    '  <a class="dwnav-cta" href="coordination-review.html">Request Review</a>\n'
-    '</nav>'
-)
-
-# The same nav with root-relative hrefs rewritten to absolute (BASE_URL), for the nested editioned
-# pages where a root-relative 'about.html' would otherwise resolve under /atlas/2026/{state}/.
-NAV_ABS = re.sub(r'href="(?!https?:|#|/)([^"]*)"', lambda m: f'href="{_ABS}{m.group(1)}"', NAV)
+# The masthead comes from drift.nav, the same specification scripts/phase2_nav.py injects into
+# every hand-written page. It used to be a hand-written copy here, and by 2026-08-09 that copy had
+# frozen at the phase-1 design: a family ("The Method") the site no longer has, a row ("How It
+# Works") pointing at a redirect stub, a renamed product ("After-Tax Review"), and the old .dwnav
+# class instead of .dwnav--phase2. Every nav guard reads src/drift/web/*.html, so nothing could
+# see it, and the 51 Atlas pages quietly shipped a different site's menu.
+#
+# NAV_ABS is the one the editioned pages use: they sit three directories deep, so a root-relative
+# 'about.html' would resolve under /atlas/2026/<state>/.
+NAV = nav.render("statemap.html")
+NAV_ABS = nav.render("statemap.html", abs_base=_ABS)
 
 
 # ── The narrative process spine ─────────────────────────────────────────────────────────────────

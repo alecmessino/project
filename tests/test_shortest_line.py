@@ -147,7 +147,10 @@ def test_the_page_is_registered_everywhere_a_page_has_to_be():
     from drift.statepage import _CORE_SITEMAP
     assert PAGE in [loc for loc, _, _ in _CORE_SITEMAP]
     assert PAGE in (ROOT / "scripts" / "sync_docs.py").read_text()
-    assert PAGE in (ROOT / "scripts" / "phase2_nav.py").read_text()
+    # See the sibling note in test_interval_problem.py: the masthead spec lives in drift.nav now,
+    # and the mapping is a truer assertion than a grep of the injector script.
+    from drift.nav import CURRENT
+    assert PAGE in CURRENT
     assert PAGE in (DOCS / "sitemap.xml").read_text()
     for name in ("commentary.html", "insights.html"):
         for tree in (WEB, DOCS):

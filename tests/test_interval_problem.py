@@ -266,7 +266,11 @@ def test_the_page_is_registered_everywhere_a_page_has_to_be():
     from drift.statepage import _CORE_SITEMAP
     assert PAGE in [loc for loc, _, _ in _CORE_SITEMAP], "not announced in the sitemap"
     assert PAGE in (ROOT / "scripts" / "sync_docs.py").read_text(), "not copied into docs/ by the build"
-    assert PAGE in (ROOT / "scripts" / "phase2_nav.py").read_text(), "no masthead family assigned"
+    # The masthead spec moved to src/drift/nav.py on 2026-08-09 (one source for the injected nav
+    # and the generated Atlas pages). Assert against the mapping itself rather than the file text:
+    # what this line means is "this page has a family", not "this string appears in that script".
+    from drift.nav import CURRENT
+    assert PAGE in CURRENT, "no masthead family assigned"
     assert PAGE in (DOCS / "sitemap.xml").read_text(), "the built sitemap has not been regenerated"
 
 

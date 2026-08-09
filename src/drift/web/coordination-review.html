@@ -50,6 +50,19 @@
   .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:62ch}
   .lede b{color:var(--ink);font-weight:500}
 
+  /* The introduction, in the first screenful. The one action this page exists to produce lived at
+     the very bottom, behind an argument for a substantial engagement — a reader who arrived already
+     convinced (from the masthead CTA on fifty pages, or from a partner's email) had to scroll the
+     whole case to find a link. The ask is fifteen minutes and needs nothing, so it does not have to
+     be earned first. Same button as the close, same attribution scheme, different utm_content so
+     the two placements stay countable apart. */
+  .leadact{padding:26px 44px 0;display:flex;align-items:center;gap:14px 20px;flex-wrap:wrap}
+  .leadact a.book{display:inline-block;text-decoration:none;font-family:var(--sans);font-size:14.5px;
+    font-weight:700;padding:13px 26px;border-radius:var(--surface-radius);
+    background:var(--accent-strike);color:#f1ede3}
+  .leadact a.book:hover{filter:brightness(1.08)}
+  .leadact .lnote{font-family:var(--sans);font-size:12.5px;line-height:1.55;color:var(--muted);max-width:34ch}
+
   .thesis{padding:30px 44px 6px}
   .thesis p{font-family:var(--serif);font-size:22px;line-height:1.4;color:var(--ink);margin:0;max-width:40ch}
   .thesis b{color:var(--accent-strike);font-weight:500}
@@ -69,9 +82,20 @@
   .recv-lead{font-family:var(--sans);font-size:15px;line-height:1.6;color:var(--body);margin:0 0 24px;max-width:60ch}
   .recv-lead b{color:var(--ink);font-weight:600}
   .deliv{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--ink)}
-  @media(max-width:720px){.deliv{grid-template-columns:1fr}}
+  @media(max-width:720px){
+    .deliv{grid-template-columns:1fr}
+    .deliv .dv{border-right:none}
+    .deliv .dv:last-child{border-bottom:none}
+  }
   .dv{padding:24px 24px 22px;border-right:1px solid var(--line2);text-decoration:none;color:inherit;display:block;position:relative}
-  .dv:last-child{border-right:none}
+  /* Five artifacts in a two-column grid leaves the fifth alone in a half-width cell, which reads
+     as an omission rather than a set. It spans the full width instead and closes the block. The
+     row rules and the nth-child reset are the corollary: with four cards the grid had no
+     horizontal dividers at all and the right-hand column drew a border into the container's own,
+     which was invisible at 2×2 and would not have been at 2×2+1. */
+  .deliv .dv{border-bottom:1px solid var(--line2)}
+  .deliv .dv:nth-child(2n){border-right:none}
+  .deliv .dv--span{grid-column:1/-1;border-right:none;border-bottom:none}
   .dv:hover{background:var(--soft)}
   .dv--soon:hover{background:none}
   .dv--soon .dgo{color:var(--muted);font-weight:500}
@@ -127,6 +151,13 @@
     padding:11px 0;border-bottom:1px solid var(--line2)}
   .shape dt{font-family:var(--sans);font-weight:700;font-size:12.5px;color:var(--ink)}
   .shape dd{margin:0;font-family:var(--sans);font-size:13.5px;line-height:1.55;color:var(--body);max-width:62ch}
+  /* "What changes after the review" reuses this block wholesale — deliberately the same
+     instrument, because it makes the same kind of promise (a plain fact per row, no card, no
+     icon), and because the answer to the question is literally that a register like this one stays
+     open. It needs no modifier: .shape's own 30px top padding after a .sec's 6px bottom reproduces
+     exactly the gap the first instance has under .thesis. */
+  .shape dd a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
+  .shape dd a:hover{border-bottom-color:var(--accent-strike)}
   @media(max-width:720px){
     .shape{padding-left:22px;padding-right:22px}
     .shape dl > div{grid-template-columns:1fr;gap:2px}
@@ -158,7 +189,7 @@
   .door .founder.no-photo .fimg{display:none}
 
   @media(max-width:620px){
-    .doc,.thesis,.sec,.recv,.feenote{padding-left:22px;padding-right:22px}
+    .doc,.thesis,.sec,.recv,.feenote,.leadact{padding-left:22px;padding-right:22px}
     .door{margin-left:22px;margin-right:22px;padding:26px 22px}
     .step{grid-template-columns:44px 1fr;gap:12px}
   }
@@ -184,6 +215,16 @@
         gap. You leave with the documents, yours to keep.</p>
     </div>
 
+    <!-- Tagged for attribution: a booking completes on calendly.com, where this site's analytics
+         cannot see it. utm_content distinguishes this placement from the close at the foot of the
+         page, so the export can say whether readers book before the argument or after it. Scheme
+         and the generator-side equivalent live in src/drift/site.py booking_link(). -->
+    <div class="leadact">
+      <a class="book" href="https://calendly.com/alec-messino/introductory-call-driftwood-wealth?utm_source=driftwoodwealth&amp;utm_medium=website&amp;utm_campaign=coordination_review&amp;utm_content=coordination-review-lede" target="_blank" rel="noopener">Schedule the 15-minute introduction &rarr;</a>
+      <div class="lnote">Nothing to prepare, and no documents. If a review isn't warranted, we will
+        say so on the call.</div>
+    </div>
+
     <div class="thesis">
       <p>Most financial mistakes are not investment mistakes or tax mistakes. They are <b>coordination
         mistakes.</b></p>
@@ -204,18 +245,12 @@
       </dl>
     </div>
 
-    <div class="sec">
-      <div class="k">What the review examines</div>
-      <div class="exam">
-        <div class="ex"><div class="exn">Implementation</div><div class="exq">Is each asset in the account where it is taxed least?</div></div>
-        <div class="ex"><div class="exn">Tax character</div><div class="exq">Where is the return quietly leaking, and could you keep more of it?</div></div>
-        <div class="ex"><div class="exn">Ownership</div><div class="exq">Would your family inherit it the way the documents intend?</div></div>
-        <div class="ex"><div class="exn">Liquidity</div><div class="exq">Can you reach your money in the year you actually need it?</div></div>
-        <div class="ex"><div class="exn">Risk &amp; governance</div><div class="exq">Does one decision quietly create the next problem?</div></div>
-        <div class="ex"><div class="exn">The connections</div><div class="exq">Who, today, is actually coordinating all of it?</div></div>
-      </div>
-    </div>
-
+    <!-- Moved above "what the review examines" on 2026-08-09. The order was argument, then
+         evidence, then output: a reader had to work through six diagnostic questions and a
+         three-stage timeline before seeing a single thing the engagement actually hands them.
+         The tangible output now comes first — this is what you get — and the examination that
+         produces it follows as the explanation. Nothing in the section changed but its position
+         and the fifth card. -->
     <div class="recv">
       <div class="k">What you receive</div>
       <p class="recv-lead">The review produces <b>documents, not impressions.</b> Each is yours to keep and to
@@ -256,12 +291,37 @@
             the date each closes. The review's conclusions become a schedule, not a stack of recommendations.</div>
           <div class="dgo">See a specimen transition plan &rarr;</div>
         </a>
+        <!-- The fifth. The page has said "five artifacts" since it was written and then showed four,
+             naming the missing one only in a trailing paragraph — as "the Decision Log", which is
+             what decision-register.html has been publishing as The Decision Register all along. It
+             is a card like the others now, under the site's own name for it, so the count on the
+             page and the specimen behind it finally agree. -->
+        <a class="dv dv--span" href="decision-register.html">
+          <div class="dn">05 · The reasoning of record</div>
+          <div class="dt">The Decision Register</div>
+          <div class="dd">The decision log of the relationship: every judgment recorded as it is made, with the
+            reasoning behind it and the conditions that would reopen it. It is what lets a decision be revisited
+            years later on the facts that produced it, rather than re-argued from memory.</div>
+          <div class="dgo">Read a specimen decision register &rarr;</div>
+        </a>
       </div>
-      <p class="recv-more">Two artifacts run beneath the four above and sustain them: the <b>Decision Log</b> records
-        every judgment as it is made and why — the institutional memory of the relationship — and the
-        <b>Coordination Register</b> keeps each open matter against an owner until it closes. Households that
-        proceed to a standing engagement keep all five, maintained year over year through the
-        <a href="awor.html">Annual Wealth Operating Review</a>. <b>The Report diagnoses; the Register sustains.</b></p>
+      <p class="recv-more">Beneath the five, the <b>Coordination Register</b> keeps each open matter against an
+        owner until it closes — the working face of the Opportunity Register, and the reason coordination does
+        not stop when the report is delivered. Households that proceed to a standing engagement keep all five,
+        maintained year over year through the <a href="awor.html">Annual Wealth Operating Review</a>.
+        <b>The Report diagnoses; the Register sustains.</b></p>
+    </div>
+
+    <div class="sec">
+      <div class="k">What the review examines</div>
+      <div class="exam">
+        <div class="ex"><div class="exn">Implementation</div><div class="exq">Is each asset in the account where it is taxed least?</div></div>
+        <div class="ex"><div class="exn">Tax character</div><div class="exq">Where is the return quietly leaking, and could you keep more of it?</div></div>
+        <div class="ex"><div class="exn">Ownership</div><div class="exq">Would your family inherit it the way the documents intend?</div></div>
+        <div class="ex"><div class="exn">Liquidity</div><div class="exq">Can you reach your money in the year you actually need it?</div></div>
+        <div class="ex"><div class="exn">Risk &amp; governance</div><div class="exq">Does one decision quietly create the next problem?</div></div>
+        <div class="ex"><div class="exn">The connections</div><div class="exq">Who, today, is actually coordinating all of it?</div></div>
+      </div>
     </div>
 
     <div class="sec">
@@ -292,6 +352,32 @@
             and estate attorney where the findings touch their work.</div></div>
         </div>
       </div>
+    </div>
+
+    <!-- Added 2026-08-09. The page sold a diagnosis and then stopped: three stages ending at "the
+         report, walked through together", with the standing Register named as the product of the
+         relationship in a card and never shown doing anything. A reader weighing a defined
+         engagement fee wants to know what the week after the sitting looks like, and the honest
+         answer is the most distinctive thing here — the register stays open, and the household
+         stops being the party that notices. Each row is a mechanism already described elsewhere on
+         the page or in the specimen register, restated as what happens rather than what exists.
+         Same ruled dl as "the shape of the commitment": same kind of promise, same instrument. -->
+    <div class="shape">
+      <div class="sk">What changes after the review</div>
+      <dl>
+        <div><dt>The register stays open</dt><dd>Every matter the review surfaced keeps its owner and its
+          next date until it closes. Nothing is finished because a meeting ended.</dd></div>
+        <div><dt>Decisions arrive early</dt><dd>An account opened, a beneficiary form signed, a move
+          considered: each is read against the documents and the plan before it settles, not at the
+          next annual meeting.</dd></div>
+        <div><dt>Your CPA and attorney are called first</dt><dd>Where a matter is theirs, they are brought
+          in while it is still a choice. The filing and the document are never the last to know.</dd></div>
+        <div><dt>The reasoning is kept</dt><dd>Each judgment enters the Decision Register with what was
+          known at the time, so it can be revisited on those facts rather than re-argued from memory.</dd></div>
+        <div><dt>It is read again each year</dt><dd>The whole system is re-examined at the
+          <a href="awor.html">Annual Wealth Operating Review</a>, and the Manual is amended where a
+          decision has changed.</dd></div>
+      </dl>
     </div>
 
     <div class="sec">

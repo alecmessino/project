@@ -72,6 +72,9 @@
 
   /* section shell */
   .pt-sec{padding:36px 44px 6px}
+  /* partners.html's section rhythm: a hairline at each section boundary, and a tighter gap than
+     blank space alone needed. */
+  .pt-sec + .pt-sec{border-top:1px solid var(--line2);margin-top:20px;padding-top:30px}
   .pt-k{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 12px}
   .pt-h{font-family:var(--sans);font-weight:700;font-size:23px;line-height:1.18;letter-spacing:-.018em;color:var(--ink);margin:0 0 10px;max-width:26ch}
   /* estate-attorneys.html's modifier, same meaning: the 22px gap a section uses when it has no
@@ -111,6 +114,29 @@
   .pt-table .t-step .s-n{display:block;font-size:10px;letter-spacing:.13em;color:var(--muted);font-weight:700;margin-bottom:4px}
   .pt-table .t-get{width:25%}
 
+  /* the tools band — partners.html's, verbatim, in the same slot */
+  .pt-band{margin:22px 44px 8px;padding:26px 30px;background:var(--soft);
+    border:1px solid var(--frame-line);border-radius:var(--surface-radius)}
+  .pt-band .bk{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--accent-strike);margin:0 0 10px}
+  .pt-band .bh{font-family:var(--sans);font-weight:700;font-size:20px;line-height:1.2;
+    letter-spacing:-.018em;color:var(--ink);margin:0 0 16px;max-width:34ch}
+  .pt-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--ink);max-width:900px;margin:0 0 12px}
+  /* Inside the band the 900px measure is inherited furniture from when this was a plain section on
+     the page's own gutters; it left a dead strip down the right of the band. The band already sets
+     the measure. */
+  .pt-band .pt-tools{max-width:none}
+  .pt-tool{padding:16px 18px;border-right:1px solid var(--line2);text-decoration:none;color:inherit;display:block}
+  .pt-tool:last-child{border-right:none}
+  .pt-tool:hover{background:var(--bg)}
+  .pt-tool .tl-t{font-family:var(--sans);font-weight:700;font-size:14px;color:var(--ink);margin-bottom:4px}
+  .pt-tool .tl-d{font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--body)}
+  .pt-tool .tl-go{font-family:var(--sans);font-weight:600;font-size:11.5px;color:var(--accent-strike);margin-top:8px;display:block}
+  .pt-free{font-family:var(--sans);font-size:12.5px;line-height:1.55;color:var(--dim);margin:0}
+  .pt-free b{color:var(--ink);font-weight:600}
+  .pt-free a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
+  .pt-free a:hover{border-bottom-color:var(--accent-strike)}
+
   /* the next step */
   .pt-cta{margin:16px 44px 8px;padding:28px 30px;background:var(--navy);color:var(--on-dark);border-radius:var(--surface-radius)}
   .pt-cta .ch{font-family:var(--sans);font-weight:700;font-size:22px;letter-spacing:-.02em;color:#f1ede3;margin:0 0 8px}
@@ -118,6 +144,14 @@
   .pt-cta .cs b{color:#f1ede3;font-weight:600}
   .pt-cta .cs a{color:#f1ede3;text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
   .pt-cta .cs a:hover{border-bottom-color:#f1ede3}
+  /* partners.html's professional-introduction button: the call is the thing to click, the address
+     is the fallback under it. Tagged utm_campaign=cpa_referral (src/drift/site.py booking_link). */
+  .pt-cta .book{display:inline-block;text-decoration:none;font-family:var(--sans);font-size:14.5px;
+    font-weight:700;padding:14px 28px;border-radius:var(--surface-radius);
+    background:var(--accent-strike);color:#f1ede3}
+  .pt-cta .book:hover{filter:brightness(1.08)}
+  .pt-cta .calt{font-family:var(--sans);font-size:12.5px;line-height:1.6;color:var(--accent-strike-soft);
+    margin:18px 0 12px}
   .pt-contact{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 22px;font-family:var(--sans)}
   .pt-contact .nm{font-weight:700;font-size:15px;color:#f1ede3}
   .pt-contact .rl{font-size:12.5px;color:var(--accent-strike-soft)}
@@ -125,14 +159,31 @@
   .pt-contact a:hover{border-bottom-color:#f1ede3}
   .pt-contact .c{font-size:13.5px;color:var(--accent-strike-soft)}
 
+  /* Hidden by default and shown only on a phone: see the block's own comment in the body.
+     estate-attorneys.html's block, extended with the booking link and copied here. */
+  .pt-hail{display:none}
+  @media(max-width:720px){
+    .pt-hail{display:block;margin:20px 22px 0;padding:18px 20px;background:var(--navy);
+      border-radius:var(--surface-radius);font-family:var(--sans)}
+    .pt-hail .nm{display:block;font-weight:700;font-size:15px;color:#f1ede3;margin-bottom:10px}
+    .pt-hail a{display:block;font-size:14.5px;color:var(--accent-strike-soft);text-decoration:none;
+      padding:5px 0;border-bottom:1px solid rgba(169,194,214,.3);width:fit-content}
+    .pt-hail a:last-child{border-bottom:none}
+    .pt-hail a.book{color:#f1ede3;font-weight:700}
+  }
+
   @media(max-width:720px){
     .doc{padding-left:22px;padding-right:22px}
     .pt-sec{padding-left:22px;padding-right:22px}
+    .pt-tools{grid-template-columns:1fr}
+    .pt-tool{border-right:none;border-bottom:1px solid var(--line2)}
+    .pt-tool:last-child{border-bottom:none}
     .pt-risks{display:block}
     .pt-risk{border-right:none;border-bottom:1px solid var(--line2);padding:18px 0}
     .pt-risk:not(:first-child){padding-left:0}
     .pt-risk:last-child{border-bottom:none}
     .pt-cta{margin-left:22px;margin-right:22px}
+    .pt-band{margin-left:22px;margin-right:22px;padding:22px 20px}
   }
 
   /* 390px: a five-row, three-column table does not survive a phone. .tscroll made it scroll
@@ -156,7 +207,8 @@
     .pt-table .t-step .s-n{margin-bottom:2px}
   }
   @media print{
-    .dwnav,.pt-cta{break-inside:avoid}
+    .dwnav,.pt-cta,.pt-band{break-inside:avoid}
+    .pt-tool:hover{background:none}
   }
 </style>
 </head>
@@ -176,6 +228,18 @@
       <h1>What happens after you make the introduction.</h1>
       <p class="lede">Four steps. You are told where it stands at each one, and your client is never routed
         away from you. If coordination is not the problem, the referral closes and we tell you why.</p>
+    </div>
+
+    <!-- Phone only. A referrer at 390px arrived from an emailed link and wants a way in, not an
+         argument: the introduction and the two ways to reach a person sit directly under the lede,
+         and the full sequence follows for whoever keeps reading. On a desktop the close does this
+         job, so this block is not rendered there rather than being duplicated into the layout
+         twice. estate-attorneys.html's block. -->
+    <div class="pt-hail" aria-label="Contact Driftwood">
+      <span class="nm">Alec Messino</span>
+      <a class="book" href="https://calendly.com/alec-messino/introductory-call-driftwood-wealth?utm_source=driftwoodwealth&amp;utm_medium=website&amp;utm_campaign=cpa_referral&amp;utm_content=referral-hail" target="_blank" rel="noopener">Book a 15-minute introduction &rarr;</a>
+      <a href="tel:+17085487600">(708)&nbsp;548-7600</a>
+      <a href="mailto:alec@driftwoodwealth.com">alec@driftwoodwealth.com</a>
     </div>
 
     <div class="pt-sec">
@@ -235,10 +299,44 @@
         specifies.</p>
     </div>
 
+    <!-- partners.html's tools band, in the same slot, so a partner who has found it on one For
+         Professionals page knows where it is on the others. It earns its place on the referral
+         page specifically: a professional who is not yet ready to send a name can still put
+         something useful in front of a client, and the instruments are the thing this page can
+         offer that costs the referrer nothing. Preset to Illinois, the practice's home state;
+         every one of these reads ?state= off the URL, so the preset is a link, not a second code
+         path, and a partner in another state changes it in one click. -->
+    <div class="pt-band">
+      <div class="bk">Use these with clients today</div>
+      <div class="bh">Not ready to send a name? Three free instruments, each preset to Illinois.</div>
+      <div class="pt-tools">
+        <a class="pt-tool" href="leakage.html?state=IL">
+          <div class="tl-t">Tax Diagnostic</div>
+          <div class="tl-d">Where a return quietly leaks to tax, by bracket, state, and portfolio.</div>
+          <span class="tl-go">Open, set to Illinois &rarr;</span>
+        </a>
+        <a class="pt-tool" href="taxlab.html?state=IL">
+          <div class="tl-t">After-Tax Lab</div>
+          <div class="tl-d">What coordination keeps over a lifetime, on a household's own numbers.</div>
+          <span class="tl-go">Open, set to Illinois &rarr;</span>
+        </a>
+        <a class="pt-tool" href="statemap.html?state=IL">
+          <div class="tl-t">State Tax Atlas</div>
+          <div class="tl-d">How income, gains, and estate rules differ across all 50 states and DC.</div>
+          <span class="tl-go">Open, set to Illinois &rarr;</span>
+        </a>
+      </div>
+      <p class="pt-free">All three are illustrative models for discussion, free, and require no sign-up.
+        None of them asks for a client's name, and each shows its figure before it asks you for
+        anything at all.</p>
+    </div>
+
     <div class="pt-cta">
       <div class="ch">Make an introduction.</div>
       <div class="cs">An email is enough. If you would rather test the fit first, send the situation and not
         the name, and we will tell you whether it is worth a conversation.</div>
+      <a class="book" href="https://calendly.com/alec-messino/introductory-call-driftwood-wealth?utm_source=driftwoodwealth&amp;utm_medium=website&amp;utm_campaign=cpa_referral&amp;utm_content=referral" target="_blank" rel="noopener">Book a 15-minute professional introduction &rarr;</a>
+      <div class="calt">Or write, and we will answer the same day.</div>
       <div class="pt-contact">
         <span class="nm">Alec Messino</span>
         <span class="rl">Founder &amp; Financial Advisor</span>

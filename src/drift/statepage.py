@@ -460,6 +460,20 @@ _HEAD_CSS = """
   .hero .hsub{font-weight:400;color:#9aa3ae;font-size:12px}
   .hero .hbar{width:100%;height:8px;border-radius:0;background:var(--neg);overflow:hidden}
   .hero .hbar .kept{display:block;height:100%;background:var(--teal2)}
+  /* The hook under the hero: the one path from "here is what this state costs" to "here is what it
+     costs YOU". The hero moved above the fold (see render_state_html), which separates it from the
+     modeling note that used to sit beside it, so the qualifier travels with the figure — a
+     hypothetical dollar amount at the top of a page must carry its own caveat, not rely on a
+     reader reaching the disclosure eleven sections down. */
+  .hookcta{margin:10px 40px 0;display:flex;align-items:baseline;gap:8px 18px;flex-wrap:wrap}
+  .hookcta a{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--accent-strike);
+    text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:1px}
+  .hookcta a:hover{border-bottom-color:var(--accent-strike)}
+  .hookcta span{font-size:12.5px;color:var(--dim)}
+  .heronote{margin:9px 40px 0;font-size:11px;line-height:1.55;color:var(--muted);max-width:76ch}
+  /* The header's second half: the profile summary and hand-authored context, which follow the hero
+     rather than delaying it. Same gutters as .hd, no second block of top padding. */
+  .hdc{padding:16px 40px 0}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px 40px 6px}
   @media(max-width:760px){.grid{grid-template-columns:1fr}}
   .dcard{border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:0;padding:14px 16px;background:#fff}
@@ -532,8 +546,8 @@ _HEAD_CSS = """
   /* Phones: pull the generous 40px editorial gutters in to a comfortable 18px so the prose column
      isn't pinched, consistent with the other exhibits. */
   @media(max-width:600px){
-    .bcrumb,.hd,.grid,.sec,.rel{padding-left:18px;padding-right:18px}
-    .hero,.cta,.capture,.disc,.colophon,.asofline,.chlog{margin-left:18px;margin-right:18px}
+    .bcrumb,.hd,.hdc,.grid,.sec,.rel{padding-left:18px;padding-right:18px}
+    .hero,.cta,.capture,.disc,.colophon,.asofline,.chlog,.hookcta,.heronote{margin-left:18px;margin-right:18px}
   }
   @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}
 """
@@ -674,6 +688,27 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
     summary_p = f'<p class="lede" style="margin-top:10px">{_esc(summary)}</p>' if summary else ""
     context = data.get("context", "")
     context_p = (f'<p class="context">{_esc(context)}</p>') if context else ""
+    # The hook. The illustrative coordination figure used to sit eleven screens down, below seven
+    # dense statute cards, a seven-item FAQ and a section preamble — the one number on the page a
+    # household came for, filed behind the reference material they did not. It now leads, directly
+    # under the headline, with the single path from "what this state costs" to "what it costs YOU"
+    # attached to it, and its own qualifier underneath rather than eleven sections away. States with
+    # no modeled alpha render neither the hero nor the hook; the diagnostic link is not
+    # state-specific enough to stand alone without the figure it explains.
+    hook = ""
+    if a:
+        hook = (
+            f'{_impact_block(name, a)}\n'
+            f'    <div class="hookcta">'
+            f'<a href="{_ABS}leakage.html?state={code}">Run this on your numbers, the {_esc(name)} '
+            f'Tax Diagnostic &rarr;</a>'
+            f'<span>Set your bracket and portfolio; the figure recomputes. Free, no sign-up.</span>'
+            f'</div>\n'
+            f'    <p class="heronote">Illustrative and hypothetical, not a track record: a '
+            f'tax-management model applied retroactively to ~30 years of proxy-spliced market data on '
+            f'one path, with no client capital invested. Your own figure depends on your holdings, '
+            f'basis, and bracket. How it is modeled, and its limits, are set out below.</p>'
+        )
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -713,6 +748,9 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
       <div class="eyebrow">The State Atlas · {_esc(name)}</div>
       <h1>How {_esc(name)} taxes investors.</h1>
       <p class="lede">{_esc(lede)}</p>
+    </div>
+{hook}
+    <div class="hdc">
       {summary_p}
       {context_p}
     </div>
@@ -723,12 +761,12 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
     <div class="sec"><div class="sh">What careful tax management can change</div>
       <p class="lede" style="margin:2px 0 14px">Tax law is only half the picture. How a portfolio is
         built and run, where each holding sits, how losses are used, how gains are timed, decides how
-        much of {_esc(name)}'s tax code you actually pay. An illustrative estimate for a portfolio here:</p>
-      {_impact_block(name, a)}
-      <p class="mnote">How this is modeled: a single 30-year proxy-spliced path (1996–2026), comparing a
-        concentrated, high-turnover book with a tax-managed one, illustrative and coarse; treat it as
-        directional, not a precise figure.</p>
-      <div class="levers">{levers}</div></div>
+        much of {_esc(name)}'s tax code you actually pay. The figure at the top of this page is what
+        that difference is worth in {_esc(name)}; these are the levers behind it.</p>
+      <p class="mnote" style="margin-top:0">How this is modeled: a single 30-year proxy-spliced path
+        (1996–2026), comparing a concentrated, high-turnover book with a tax-managed one, illustrative
+        and coarse; treat it as directional, not a precise figure.</p>
+      <div class="levers" style="margin-top:14px">{levers}</div></div>
     {_reasoning_html(data.get("reasoning") or {"framework": [], "considerations": [], "actions": []}, name)}
     <div class="cta">
       <div class="ctxt">

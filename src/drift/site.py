@@ -41,24 +41,45 @@ BOOKING_URL = "https://calendly.com/alec-messino/introductory-call-driftwood-wea
 # The scheme is fixed so the Calendly export stays readable:
 #   utm_source    driftwoodwealth   always; the visitor came from this site
 #   utm_medium    website           always; distinguishes these from any future email or print link
-#   utm_campaign  coordination_review   always; every booking rolls up to one campaign
-#   utm_content   <placement>       the only variable, e.g. coordination-review, state-ca
+#   utm_campaign  <campaign>        which audience asked for the meeting, see CAMPAIGNS below
+#   utm_content   <placement>       the page that produced it, e.g. coordination-review, state-ca
+#
+# CAMPAIGNS is deliberately a closed set of two, not a free string. Until 2026-08-09 the campaign
+# was a constant (coordination_review) and every booking rolled up to one line in the Calendly
+# export. That was right while the site spoke to one audience, and wrong the moment the For
+# Professionals pages started asking a CPA or an estate attorney to book: a referral partner
+# booking a professional introduction and a household booking a review of their own affairs are
+# different meetings, prepared differently, and worth different things. utm_content could not
+# separate them, because it already carries the placement and a partner can book from a state page
+# too. A second campaign is the smallest change that makes the two countable apart, and keeping it
+# an enumeration is what stops the export fragmenting into a dozen near-synonyms the first time
+# someone needs a new link.
 #
 # Keep BOOKING_URL itself untagged: it is also published as structured data about the firm
 # (firm_facts below), where a tracking parameter would be wrong. scripts/set_contact.py rewrites
 # the bare URL by literal prefix match, so tagged links follow it correctly.
-_UTM = "utm_source=driftwoodwealth&utm_medium=website&utm_campaign=coordination_review"
+CAMPAIGN_REVIEW = "coordination_review"   # a household asking about its own affairs
+CAMPAIGN_REFERRAL = "cpa_referral"        # a CPA, attorney, or advisor asking to work together
+CAMPAIGNS = (CAMPAIGN_REVIEW, CAMPAIGN_REFERRAL)
+
+_UTM = "utm_source=driftwoodwealth&utm_medium=website"
 
 
-def booking_link(placement: str) -> str:
+def booking_link(placement: str, campaign: str = CAMPAIGN_REVIEW) -> str:
     """The booking URL tagged for `placement`, ready to drop into an href attribute.
+
+    `campaign` must be one of CAMPAIGNS; it defaults to the household review, so every existing
+    caller keeps the link it had. Pass CAMPAIGN_REFERRAL from the For Professionals surfaces.
 
     Returns `&amp;` separators because every use is inside HTML; if a caller ever needs the raw
     URL (an HTTP redirect, a QR code), unescape it rather than adding a second scheme here.
     """
     if not placement or " " in placement:
         raise ValueError(f"placement must be a non-empty slug, got {placement!r}")
-    return f"{BOOKING_URL}?{_UTM}&utm_content={placement}".replace("&", "&amp;")
+    if campaign not in CAMPAIGNS:
+        raise ValueError(f"campaign must be one of {CAMPAIGNS}, got {campaign!r}")
+    return (f"{BOOKING_URL}?{_UTM}&utm_campaign={campaign}"
+            f"&utm_content={placement}").replace("&", "&amp;")
 
 # Confirmed firm facts (principal-directed, July 2026):
 FIRM_LEGAL_NAME = "Driftwood Wealth"

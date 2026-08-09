@@ -73,6 +73,20 @@
   .hero .hsub{font-weight:400;color:#9aa3ae;font-size:12px}
   .hero .hbar{width:100%;height:8px;border-radius:0;background:var(--neg);overflow:hidden}
   .hero .hbar .kept{display:block;height:100%;background:var(--teal2)}
+  /* The hook under the hero: the one path from "here is what this state costs" to "here is what it
+     costs YOU". The hero moved above the fold (see render_state_html), which separates it from the
+     modeling note that used to sit beside it, so the qualifier travels with the figure — a
+     hypothetical dollar amount at the top of a page must carry its own caveat, not rely on a
+     reader reaching the disclosure eleven sections down. */
+  .hookcta{margin:10px 40px 0;display:flex;align-items:baseline;gap:8px 18px;flex-wrap:wrap}
+  .hookcta a{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--accent-strike);
+    text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:1px}
+  .hookcta a:hover{border-bottom-color:var(--accent-strike)}
+  .hookcta span{font-size:12.5px;color:var(--dim)}
+  .heronote{margin:9px 40px 0;font-size:11px;line-height:1.55;color:var(--muted);max-width:76ch}
+  /* The header's second half: the profile summary and hand-authored context, which follow the hero
+     rather than delaying it. Same gutters as .hd, no second block of top padding. */
+  .hdc{padding:16px 40px 0}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px 40px 6px}
   @media(max-width:760px){.grid{grid-template-columns:1fr}}
   .dcard{border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:0;padding:14px 16px;background:#fff}
@@ -145,8 +159,8 @@
   /* Phones: pull the generous 40px editorial gutters in to a comfortable 18px so the prose column
      isn't pinched, consistent with the other exhibits. */
   @media(max-width:600px){
-    .bcrumb,.hd,.grid,.sec,.rel{padding-left:18px;padding-right:18px}
-    .hero,.cta,.capture,.disc,.colophon,.asofline,.chlog{margin-left:18px;margin-right:18px}
+    .bcrumb,.hd,.hdc,.grid,.sec,.rel{padding-left:18px;padding-right:18px}
+    .hero,.cta,.capture,.disc,.colophon,.asofline,.chlog,.hookcta,.heronote{margin-left:18px;margin-right:18px}
   }
   @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}
 </style>
@@ -190,6 +204,11 @@
       <div class="eyebrow">The State Atlas · Wisconsin</div>
       <h1>How Wisconsin taxes investors.</h1>
       <p class="lede">Every state taxes investors differently. Here is how Wisconsin treats capital gains at the top rate, the marriage penalty, estate and inheritance tax at death, municipal-bond interest, the §1202 QSBS exclusion, and a harvested loss, a plain reference to the state&#x27;s tax code.</p>
+    </div>
+<div class="hero"><div class="big">~$43,000<span class="u">/yr per $1M taxable</span></div><div class="hlab">Illustrative after-tax coordination opportunity in Wisconsin<br><span class="hsub">what running the portfolio against Wisconsin's rules can be worth, about +4.3%/yr modeled, as a tax-managed book keeps ~5.7%/yr after tax vs ~1.4%/yr for a concentrated, naive one; illustrative, over ~30 years, scales with the portfolio</span></div><div class="hbar" aria-hidden="true"><span class="kept" style="width:25%"></span></div></div>
+    <div class="hookcta"><a href="https://driftwoodwealth.com/leakage.html?state=WI">Run this on your numbers, the Wisconsin Tax Diagnostic &rarr;</a><span>Set your bracket and portfolio; the figure recomputes. Free, no sign-up.</span></div>
+    <p class="heronote">Illustrative and hypothetical, not a track record: a tax-management model applied retroactively to ~30 years of proxy-spliced market data on one path, with no client capital invested. Your own figure depends on your holdings, basis, and bracket. How it is modeled, and its limits, are set out below.</p>
+    <div class="hdc">
       <p class="lede" style="margin-top:10px">Wisconsin taxes long-term gains at a top effective 5.36%; no state death tax; community-property step-up (a full basis step-up at the first death).</p>
       
     </div>
@@ -212,12 +231,12 @@
     <div class="sec"><div class="sh">What careful tax management can change</div>
       <p class="lede" style="margin:2px 0 14px">Tax law is only half the picture. How a portfolio is
         built and run, where each holding sits, how losses are used, how gains are timed, decides how
-        much of Wisconsin's tax code you actually pay. An illustrative estimate for a portfolio here:</p>
-      <div class="hero"><div class="big">~$43,000<span class="u">/yr per $1M taxable</span></div><div class="hlab">Illustrative after-tax coordination opportunity in Wisconsin<br><span class="hsub">what running the portfolio against Wisconsin's rules can be worth, about +4.3%/yr modeled, as a tax-managed book keeps ~5.7%/yr after tax vs ~1.4%/yr for a concentrated, naive one; illustrative, over ~30 years, scales with the portfolio</span></div><div class="hbar" aria-hidden="true"><span class="kept" style="width:25%"></span></div></div>
-      <p class="mnote">How this is modeled: a single 30-year proxy-spliced path (1996–2026), comparing a
-        concentrated, high-turnover book with a tax-managed one, illustrative and coarse; treat it as
-        directional, not a precise figure.</p>
-      <div class="levers"><div class="lv"><div class="n">Asset location</div><div class="d">The bridge between how you invest and how the household is structured, placing the higher-turnover strategy in Roth and Traditional accounts, where its short-term gains escape tax entirely. Coordination itself; quantified for each household in the After-Tax Lab.</div></div>
+        much of Wisconsin's tax code you actually pay. The figure at the top of this page is what
+        that difference is worth in Wisconsin; these are the levers behind it.</p>
+      <p class="mnote" style="margin-top:0">How this is modeled: a single 30-year proxy-spliced path
+        (1996–2026), comparing a concentrated, high-turnover book with a tax-managed one, illustrative
+        and coarse; treat it as directional, not a precise figure.</p>
+      <div class="levers" style="margin-top:14px"><div class="lv"><div class="n">Asset location</div><div class="d">The bridge between how you invest and how the household is structured, placing the higher-turnover strategy in Roth and Traditional accounts, where its short-term gains escape tax entirely. Coordination itself; quantified for each household in the After-Tax Lab.</div></div>
 <div class="lv"><div class="n">Patient trading and lot selection</div><div class="d">Holds positions through short-term noise and chooses which lots to sell, turning gains that would be taxed as ordinary income into long-term gains taxed roughly 17 points lower.</div></div>
 <div class="lv"><div class="n">Loss harvesting</div><div class="d">Realizes losses and applies them against the highest-taxed gains first, capturing a spread a simple buy-and-hold fund never reaches.</div></div></div></div>
     <div class="sec"><div class="sh">How to think about Wisconsin</div><p class="lede" style="margin-bottom:14px">Five lenses turn Wisconsin's tax environment into a household decision, the same lenses every state is read through, so any two states weigh on identical terms.</p><div class="fw"><div class="fsig"><div class="fh"><span class="fl">Rate pressure</span><span class="fm" role="img" aria-label="moderate, How much does the state erode each realized gain?"><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span></div><p>The state takes 5.36% of every long-term gain at the top, moderate drag on what a realized return keeps.</p></div>

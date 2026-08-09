@@ -109,12 +109,24 @@ re-derives the table from the engine and fails if a figure drifts — it is the 
 
 - **Calendly**: booking completes off-site, so nothing here can observe it. Every booking link is
   UTM-tagged through `site.booking_link()` so Calendly attributes the booked event back to its
-  placement: `utm_source=driftwoodwealth`, `utm_medium=website`,
-  `utm_campaign=coordination_review`, and `utm_content=` the placement
-  (`coordination-review`, `state-<code>`, `atlas-crossing`, `atlas-household`,
-  `atlas-process-bar`). Read completed bookings in Calendly, not in Plausible; `Outbound Link:
-  Click` is the on-site intent proxy and is the closest thing to a funnel baseline available today.
-  Keep `BOOKING_URL` itself untagged: it is published as structured data about the firm.
+  placement: `utm_source=driftwoodwealth` and `utm_medium=website` (always), `utm_campaign=` one of
+  a **closed set of two**, and `utm_content=` the placement.
+  - `utm_campaign=coordination_review` — a household asking about its own affairs. The default;
+    placements `coordination-review`, `coordination-review-lede`, `state-<code>`,
+    `atlas-crossing`, `atlas-household`, `atlas-process-bar`.
+  - `utm_campaign=cpa_referral` — a CPA, attorney, or advisor asking to work together, from the
+    three For Professionals pages. Placements `partners`, `estate-attorneys`, `referral`, each
+    with a `-hail` variant for the phone-only contact block at the top of those pages. Added
+    2026-08-09: a partner introduction and a household review are different meetings, prepared
+    differently, and `utm_content` could not separate them because a partner can book from a state
+    page too.
+
+  Keep the set closed — `booking_link()` rejects anything else, which is what stops the Calendly
+  export fragmenting into a dozen near-synonyms. `tests/test_booking_attribution.py` enforces both
+  the scheme and the rule that the For Professionals pages book under the referral campaign. Read
+  completed bookings in Calendly, not in Plausible; `Outbound Link: Click` is the on-site intent
+  proxy and is the closest thing to a funnel baseline available today. Keep `BOOKING_URL` itself
+  untagged: it is published as structured data about the firm.
 - **State landing pages** (`<slug>-tax.html`, e.g. `california-tax.html`): 51 server-rendered SEO
   pages built by `drift states` from `statepage.py`. Each carries an inline Web3Forms email capture
   (`source:"state_page"`, tagged with the state + a lead-quality flag) so organic traffic converts in

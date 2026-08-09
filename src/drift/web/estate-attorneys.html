@@ -63,6 +63,9 @@
 
   /* section shell */
   .pt-sec{padding:36px 44px 6px}
+  /* partners.html's section rhythm: a hairline at each section boundary, and a tighter gap than
+     blank space alone needed. */
+  .pt-sec + .pt-sec{border-top:1px solid var(--line2);margin-top:20px;padding-top:30px}
   .pt-k{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 12px}
   .pt-h{font-family:var(--sans);font-weight:700;font-size:23px;line-height:1.18;letter-spacing:-.018em;color:var(--ink);margin:0 0 10px;max-width:26ch}
   /* A measure, not a new style: two of the three headlines here run past 26ch and would break to a
@@ -100,16 +103,28 @@
   .pt-table tr:last-child td{border-bottom:none}
   .pt-table .t-when{font-weight:600;color:var(--ink);white-space:nowrap}
 
-  /* references */
-  .pt-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);max-width:900px;margin:0 0 12px}
+  /* references — partners.html's tools band, verbatim */
+  .pt-band{margin:22px 44px 8px;padding:26px 30px;background:var(--soft);
+    border:1px solid var(--frame-line);border-radius:var(--surface-radius)}
+  .pt-band .bk{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--accent-strike);margin:0 0 10px}
+  .pt-band .bh{font-family:var(--sans);font-weight:700;font-size:20px;line-height:1.2;
+    letter-spacing:-.018em;color:var(--ink);margin:0 0 16px;max-width:34ch}
+  .pt-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--ink);max-width:900px;margin:0 0 12px}
+  /* Inside the band the 900px measure is inherited furniture from when this was a plain section on
+     the page's own gutters; it left a dead strip down the right of the band. The band already sets
+     the measure. */
+  .pt-band .pt-tools{max-width:none}
   .pt-tool{padding:16px 18px;border-right:1px solid var(--line2);text-decoration:none;color:inherit;display:block}
   .pt-tool:last-child{border-right:none}
-  .pt-tool:hover{background:var(--soft)}
+  .pt-tool:hover{background:var(--bg)}
   .pt-tool .tl-t{font-family:var(--sans);font-weight:700;font-size:14px;color:var(--ink);margin-bottom:4px}
   .pt-tool .tl-d{font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--body)}
   .pt-tool .tl-go{font-family:var(--sans);font-weight:600;font-size:11.5px;color:var(--accent-strike);margin-top:8px;display:block}
-  .pt-free{font-family:var(--sans);font-size:12.5px;color:var(--dim);margin:0}
+  .pt-free{font-family:var(--sans);font-size:12.5px;line-height:1.55;color:var(--dim);margin:0}
   .pt-free b{color:var(--ink);font-weight:600}
+  .pt-free a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
+  .pt-free a:hover{border-bottom-color:var(--accent-strike)}
 
   /* the next step */
   .pt-cta{margin:16px 44px 8px;padding:28px 30px;background:var(--navy);color:var(--on-dark);border-radius:var(--surface-radius)}
@@ -118,6 +133,14 @@
   .pt-cta .cs b{color:#f1ede3;font-weight:600}
   .pt-cta .cs a{color:#f1ede3;text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
   .pt-cta .cs a:hover{border-bottom-color:#f1ede3}
+  /* partners.html's professional-introduction button: the call is the thing to click, the address
+     is the fallback under it. Tagged utm_campaign=cpa_referral (src/drift/site.py booking_link). */
+  .pt-cta .book{display:inline-block;text-decoration:none;font-family:var(--sans);font-size:14.5px;
+    font-weight:700;padding:14px 28px;border-radius:var(--surface-radius);
+    background:var(--accent-strike);color:#f1ede3}
+  .pt-cta .book:hover{filter:brightness(1.08)}
+  .pt-cta .calt{font-family:var(--sans);font-size:12.5px;line-height:1.6;color:var(--accent-strike-soft);
+    margin:18px 0 12px}
   .pt-contact{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 22px;font-family:var(--sans)}
   .pt-contact .nm{font-weight:700;font-size:15px;color:#f1ede3}
   .pt-contact .rl{font-size:12.5px;color:var(--accent-strike-soft)}
@@ -134,6 +157,7 @@
     .pt-hail a{display:block;font-size:14.5px;color:var(--accent-strike-soft);text-decoration:none;
       padding:5px 0;border-bottom:1px solid rgba(169,194,214,.3);width:fit-content}
     .pt-hail a:last-child{border-bottom:none}
+    .pt-hail a.book{color:#f1ede3;font-weight:700}
   }
   @media(max-width:720px){
     .doc{padding-left:22px;padding-right:22px}
@@ -146,6 +170,7 @@
     .pt-risk:not(:first-child){padding-left:0}
     .pt-risk:last-child{border-bottom:none}
     .pt-cta{margin-left:22px;margin-right:22px}
+    .pt-band{margin-left:22px;margin-right:22px;padding:22px 20px}
   }
 
   /* 390px: a five-row, three-column table does not survive a phone. .tscroll made it scroll
@@ -169,7 +194,7 @@
     .pt-table .t-step .s-n{margin-bottom:2px}
   }
   @media print{
-    .dwnav,.pt-cta{break-inside:avoid}
+    .dwnav,.pt-cta,.pt-band{break-inside:avoid}
     .pt-tool:hover{background:none}
   }
 </style>
@@ -199,6 +224,7 @@
          is not rendered there rather than being duplicated into the layout twice. -->
     <div class="pt-hail" aria-label="Contact Driftwood">
       <span class="nm">Alec Messino</span>
+      <a class="book" href="https://calendly.com/alec-messino/introductory-call-driftwood-wealth?utm_source=driftwoodwealth&amp;utm_medium=website&amp;utm_campaign=cpa_referral&amp;utm_content=estate-attorneys-hail" target="_blank" rel="noopener">Book a 15-minute introduction &rarr;</a>
       <a href="tel:+17085487600">(708)&nbsp;548-7600</a>
       <a href="mailto:alec@driftwoodwealth.com">alec@driftwoodwealth.com</a>
     </div>
@@ -272,16 +298,19 @@
       </div>
     </div>
 
-    <div class="pt-sec">
-      <!-- The heading element wraps whichever line is actually this section's title. The three
-           sections above put it on .pt-h and keep .pt-k as an eyebrow; here the approved mockup
-           has no second line, so the kicker IS the heading. Class unchanged, so is the rendering. -->
-      <h2 class="pt-k">References you can use in your own files</h2>
+    <!-- partners.html's tools band, in the same slot, so a partner who has found it on one For
+         Professionals page knows where it is on the others. The Atlas link is preset to Illinois,
+         the practice's home state and the jurisdiction behind the $4M cliff these files keep
+         running into; the memo and the example are documents, not instruments, so there is
+         nothing to preset on them. -->
+    <div class="pt-band">
+      <div class="bk">Use these with clients today</div>
+      <h2 class="bh">Three references you can use in your own files.</h2>
       <div class="pt-tools">
-        <a class="pt-tool" href="statemap.html">
+        <a class="pt-tool" href="statemap.html?state=IL">
           <div class="tl-t">State Tax Atlas</div>
           <div class="tl-d">Estate thresholds, situs, and income sourcing across all fifty states and DC.</div>
-          <span class="tl-go">Open the Atlas &rarr;</span>
+          <span class="tl-go">Open, set to Illinois &rarr;</span>
         </a>
         <a class="pt-tool" href="decision-memo-domicile.html">
           <div class="tl-t">Domicile decision memo</div>
@@ -294,7 +323,9 @@
           <span class="tl-go">See the example &rarr;</span>
         </a>
       </div>
-      <p class="pt-free">All three are <b>illustrative models</b>, free, and require no sign up.</p>
+      <p class="pt-free">All three are <b>illustrative models</b>, free, and require no sign up. Change
+        the state inside the Atlas in one click, or open the
+        <a href="leakage.html?state=IL">Tax Diagnostic</a> to price a specific household's exposure.</p>
     </div>
 
     <div class="pt-cta">
@@ -302,6 +333,8 @@
       <div class="cs">A first conversation is fifteen minutes and produces no proposal. If coordination is
         not the problem, <b>we will say so and close the referral.</b> How a referral works, step by step,
         is on the <a href="referral.html">referral page</a>.</div>
+      <a class="book" href="https://calendly.com/alec-messino/introductory-call-driftwood-wealth?utm_source=driftwoodwealth&amp;utm_medium=website&amp;utm_campaign=cpa_referral&amp;utm_content=estate-attorneys" target="_blank" rel="noopener">Book a 15-minute professional introduction &rarr;</a>
+      <div class="calt">Or write, and we will answer the same day.</div>
       <div class="pt-contact">
         <span class="nm">Alec Messino</span>
         <span class="rl">Founder &amp; Financial Advisor</span>

@@ -1,0 +1,100 @@
+watershed-hero — locked production assets
+=========================================
+
+Geometry, color and weight are baked. Neither file reads a CSS variable or a
+prop, so both render identically wherever they are dropped.
+
+The two files are one drawing: the static file is the animated file's final
+frame. That is enforced, not asserted — tests/test_watershed_assets.py compares
+the geometry of all 26 elements across both files, pins the palette and weights
+below, and fails if either file drifts. Change one and the other has to move
+with it.
+
+Locked values
+  viewBox            370 52 680 626   (preserveAspectRatio="xMaxYMid meet")
+  intrinsic size     none — the root carries NO width/height attributes. The viewBox
+                     is the only intrinsic thing in the file, so it scales to
+                     whatever box it is given and the 680:626 ratio is preserved
+                     by the renderer rather than by a baked pixel pair.
+                     NOTE: the Claude Design exporter writes width="680" height="626"
+                     onto the root every time. Strip both after any re-export.
+  presence           1.0  — full solid opacity, no fade, no mask
+  boldness           0.75 — baked stroke widths: 9.75 / 15 / 18 / 21.75
+  structure          12 feeders (4 clusters of 3) -> 4 junctions -> 2 -> 1 outflow
+  feeder entry       straight horizontal x=390 to x=520, then curve
+  feeder length      shortened; left caps land at x=390, clear of the text column
+  outflow            x=902 to x=1052, butt cap, runs 2px past the right edge
+  palette            #5d7e96 / #486e8a / #386280 / #2c5878 (tiers 1-4)
+
+Files
+  watershed-hero.svg          animated draw-on, sequential by tier; honors
+                              prefers-reduced-motion (renders the final state).
+                              HAND-AUTHORED IN THIS REPO, not an export — see
+                              "The animated file is not an export" below.
+  watershed-hero-static.svg   no animation, no <style> block — for screen, print,
+                              PDF, email, and any renderer that drops CSS
+
+Animation timeline (watershed-hero.svg)
+  0.15-1.49s  the 12 feeders draw, staggered within each cluster of 3
+  1.22-1.80s  the 4 junction nodes pop
+  1.42-2.20s  the 4 tier-2 runs draw
+  2.00-2.46s  the 2 confluence nodes pop
+  2.18-2.73s  the 2 tier-3 runs draw
+  2.66-3.10s  the outflow node pops
+  2.76-3.31s  the outflow draws
+  Total 3.31s. The order is the argument: water arrives from the edges, gathers,
+  and leaves as one channel. Each delay is a per-element inline style attribute.
+
+Placement in the hero
+  position:absolute; right:0; left:716px; top:50%; translateY(-50%);
+  width:100%; max-width:max(0px, calc(100% - 716px));
+  height:auto; aspect-ratio:680/626
+  The 716px left edge keeps a 24px gutter from the 692px text column. That edge is
+  now expressed as a width rather than only as an offset: width:100% asks for the
+  whole box and the max-width clamp gives back exactly the 716px the text column
+  owns, so the plate is fluid between the gutter and the right edge instead of
+  being sized by a fixed pair. max() floors it at 0 — a container narrower than
+  716px yields no width rather than a negative one.
+
+  Below 1040px the plate drops into flow beneath the copy and bleeds right, and
+  that rule MUST also send max-width:none. The clamp is measured off a left edge
+  that no longer exists in flow; left unreset it starves the in-flow plate and
+  collapses it to zero on any viewport under 716px.
+
+The animated file is not an export — DO NOT RE-EXPORT OVER IT
+  watershed-hero.svg is hand-authored in this repo. Exporting it from Claude
+  Design will silently destroy it.
+
+  Every export of it arrived without its <style> block: the class hooks (t1-t4,
+  n2-n4) were in the markup but nothing defined them, so every path fell back to
+  the SVG default of fill:black; stroke:none and the file rendered as solid black
+  shapes — no palette, no tiered widths, no draw-on, no reduced-motion branch. Two
+  separate exports were byte-for-byte identical, so it is not a one-off dropout.
+
+  The cause is visible in what survived: the 26 per-element animation-delay values
+  came through intact because they are inline style ATTRIBUTES, while everything in
+  the document-level <style> ELEMENT was discarded. The exporter carries attributes
+  and drops the style block. That is also why the static file exports cleanly — all
+  of its styling is presentation attributes.
+
+  So the <style> block was written here instead, from the values recorded above.
+  The Design project remains the source for GEOMETRY; this repo is the source for
+  the animated file's STYLING. If the geometry ever changes there, re-export to the
+  static file and port the path data by hand into the animated one — never the
+  whole file.
+
+  Two things in the animated file are load-bearing and easy to break:
+    pathLength="1" on every path. It normalises each path to one unit so a single
+      dasharray works for a 130-unit feeder and a 150-unit outflow alike. It has no
+      CSS form and must stay an attribute.
+    animation longhands, never the `animation` shorthand. The shorthand resets
+      animation-delay to 0, and every delay here is a per-element inline style, so
+      the shorthand would flatten all 19 paths onto one start and collapse the tier
+      sequence into a single flash.
+
+Playback
+  An animated SVG only plays when inlined or loaded via <object>/<iframe>.
+  Referenced from <img src> or background-image, SVG-internal CSS animation is
+  suppressed by most browsers and it renders as the static state — which, since the
+  two files share a final frame, is exactly watershed-hero-static.svg. Degrading
+  that way is intended: there is no broken middle state.

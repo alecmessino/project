@@ -21,10 +21,12 @@ these paths have no generator; the values are locked by `assets/watershed-hero.R
 
 ## Files
 
-- `assets/watershed-hero-static.svg` — the single production asset. No animation, no
-  `<style>`; renders anywhere, including in renderers that drop CSS
-- `assets/watershed-hero-static.README.txt` — the locked values and the hero placement CSS
-- `Driftwood Hero - Watershed.dc.html` — the Claude Design canvas file the asset was cut from
+- `assets/watershed-hero.svg` — animated draw-on, sequential by tier, honors
+  `prefers-reduced-motion`. **Hand-authored here, not an export** — see below
+- `assets/watershed-hero-static.svg` — no animation, no `<style>`; renders anywhere,
+  including in renderers that drop CSS. It is the animated file's final frame
+- `assets/watershed-hero.README.txt` — the locked values, the timeline, the placement CSS
+- `Driftwood Hero - Watershed.dc.html` — the Claude Design canvas file the assets were cut from
 
 `Driftwood Hero - Watershed.dc.html` expects the Design app's `support.js` runtime, which is
 deliberately not vendored here. Standalone it renders nothing: the runtime sets `x-dc` to
@@ -32,16 +34,25 @@ deliberately not vendored here. Standalone it renders nothing: the runtime sets 
 strip the `<script src="./support.js">`, `<x-dc>` and `<helmet>` wrappers — the rest is plain HTML
 and the layout is carried entirely by the inline styles plus the `<helmet>` style block.
 
-## There is deliberately no animated file
+## Ownership is split, and it matters
 
-`watershed-hero.svg` was dropped. Every export of it arrived without its `<style>` block, so it
-rendered as solid black shapes rather than a stroked blue network. Two exports were byte-for-byte
-identical, ruling out a one-off. The full diagnosis — including why the exporter drops the block
-and what reviving it would cost — is in `assets/watershed-hero-static.README.txt`.
+**Claude Design owns the geometry. This repo owns the animated file's styling.**
 
-## Any re-export needs one edit
+Every export of `watershed-hero.svg` arrived without its `<style>` block and rendered as solid
+black shapes. Two exports were byte-for-byte identical, ruling out a one-off: the exporter keeps
+inline attributes and drops the `<style>` element. So the style block is authored here instead.
 
-The exporter writes `width="680" height="626"` onto the SVG root every time; it did so on both
-exports so far. Strip both attributes before committing a re-exported file. `viewBox` and
-`preserveAspectRatio` stay exactly as they are. That single line is the whole responsive contract
-for this asset — the rest of the sizing lives in the placement CSS, not in the SVG.
+That makes two operations destructive, and neither announces itself:
+
+- **Re-exporting `watershed-hero.svg` deletes the animation.** It is not an export any more.
+  If the geometry changes upstream, re-export to the *static* file and port the path data by
+  hand into the animated one.
+- **Any re-export needs `width="680" height="626"` stripped from the root.** The exporter writes
+  the pair every time; it did so on both exports so far. `viewBox` and `preserveAspectRatio` stay
+  exactly as they are. That one line is the whole responsive contract — the rest of the sizing
+  lives in the placement CSS, not in the SVG.
+
+Both hazards are guarded by `tests/test_watershed_assets.py`, which also pins the two files to
+each other — all 26 elements, same geometry, same order. Re-export over the animated file, put
+the pixel dimensions back, drift the geometry in one file, or swap the animation longhands for
+the shorthand, and a test fails by name rather than the drawing quietly going wrong.

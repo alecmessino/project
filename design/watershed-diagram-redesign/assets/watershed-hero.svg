@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="370 52 680 626" preserveAspectRatio="xMaxYMid meet" role="img" aria-labelledby="wsTitle">
+  <title id="wsTitle">Driftwood watershed: twelve feeders converging through four junctions and two confluences into a single outflow</title>
+
+  <!-- Hand-authored in this repo, NOT a Claude Design export. The exporter drops the <style>
+       element and keeps only inline attributes, which is what left the previous export with no
+       stroke, no fill and no keyframes. Re-exporting this file over the top will delete
+       everything below and return it to solid black shapes. See watershed-hero-static.README.txt.
+
+       Weights, palette and caps are copied verbatim from watershed-hero-static.svg so the two
+       files land on the same drawing: the static one is exactly this file's final frame.
+
+       The draw depends on pathLength="1" on every path. It normalises each path to one unit so a
+       single dasharray works for a 130-unit feeder and a 150-unit outflow alike. It has no CSS
+       form and must stay an attribute. -->
+  <style>
+    /* One dash, one gap, one unit of path: at dashoffset 1 the gap covers the whole path and it
+       is invisible; at 0 the dash covers it and it is fully drawn. Animating between the two
+       walks the stroke on from its headwater. */
+    @keyframes wsdraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+    @keyframes wsnode{from{opacity:0;transform:scale(.35)}to{opacity:1;transform:scale(1)}}
+
+    .ws path{fill:none;stroke-linecap:round;stroke-linejoin:round;
+      stroke-dasharray:1;stroke-dashoffset:1;
+      /* Longhands, never the `animation` shorthand: the shorthand resets animation-delay to 0
+         and every delay in this file is a per-element inline style. The shorthand would flatten
+         all 19 paths onto the same start and the tier sequence would collapse. */
+      animation-name:wsdraw;animation-timing-function:cubic-bezier(.45,0,.2,1);
+      animation-fill-mode:both;animation-duration:.9s}
+    .ws circle{transform-box:fill-box;transform-origin:center;opacity:0;
+      animation-name:wsnode;animation-timing-function:cubic-bezier(.2,.8,.25,1);
+      animation-fill-mode:both;animation-duration:.4s}
+
+    /* Tiers accumulate: each is wider and darker than the one feeding it. */
+    .t1 path{stroke:#5d7e96;stroke-width:9.75}
+    .t2 path{stroke:#486e8a;stroke-width:15;animation-duration:.6s}
+    .t3 path{stroke:#386280;stroke-width:18;animation-duration:.55s}
+    /* Butt cap, so the outflow ends on a flat edge at the viewBox boundary rather than a round
+       one that would read as a terminus. It runs 2 units past the edge and is clipped there. */
+    path.t4{stroke:#2c5878;stroke-width:21.75;stroke-linecap:butt;animation-duration:.55s}
+
+    .n2 circle{fill:#486e8a}
+    .n3 circle{fill:#386280}
+    circle.n4{fill:#2c5878;animation-duration:.44s}
+
+    /* The drawing is the argument; only the arrival of it is motion. Reduced motion keeps every
+       stroke and node exactly as the final frame, which is watershed-hero-static.svg. */
+    @media (prefers-reduced-motion:reduce){
+      .ws path{animation:none;stroke-dashoffset:0}
+      .ws circle{animation:none;opacity:1;transform:none}
+    }
+  </style>
+
+  <g class="ws">
+    <g class="t1">
+      <path pathLength="1" d="M 390 94 L 520 94 C 578 94 632 140 690 140" style="animation-delay:.20s"></path>
+      <path pathLength="1" d="M 390 140 L 520 140 C 578 140 632 140 690 140" style="animation-delay:.15s"></path>
+      <path pathLength="1" d="M 390 186 L 520 186 C 578 186 632 140 690 140" style="animation-delay:.20s"></path>
+      <path pathLength="1" d="M 390 244 L 520 244 C 578 244 632 290 690 290" style="animation-delay:.33s"></path>
+      <path pathLength="1" d="M 390 290 L 520 290 C 578 290 632 290 690 290" style="animation-delay:.28s"></path>
+      <path pathLength="1" d="M 390 336 L 520 336 C 578 336 632 290 690 290" style="animation-delay:.33s"></path>
+      <path pathLength="1" d="M 390 394 L 520 394 C 578 394 632 440 690 440" style="animation-delay:.46s"></path>
+      <path pathLength="1" d="M 390 440 L 520 440 C 578 440 632 440 690 440" style="animation-delay:.41s"></path>
+      <path pathLength="1" d="M 390 486 L 520 486 C 578 486 632 440 690 440" style="animation-delay:.46s"></path>
+      <path pathLength="1" d="M 390 544 L 520 544 C 578 544 632 590 690 590" style="animation-delay:.59s"></path>
+      <path pathLength="1" d="M 390 590 L 520 590 C 578 590 632 590 690 590" style="animation-delay:.54s"></path>
+      <path pathLength="1" d="M 390 636 L 520 636 C 578 636 632 590 690 590" style="animation-delay:.59s"></path>
+    </g>
+    <g class="t2">
+      <path pathLength="1" d="M 690 140 C 760 140 760 215 830 215" style="animation-delay:1.42s"></path>
+      <path pathLength="1" d="M 690 290 C 760 290 760 215 830 215" style="animation-delay:1.48s"></path>
+      <path pathLength="1" d="M 690 440 C 760 440 760 515 830 515" style="animation-delay:1.54s"></path>
+      <path pathLength="1" d="M 690 590 C 760 590 760 515 830 515" style="animation-delay:1.60s"></path>
+    </g>
+    <g class="t3">
+      <path pathLength="1" d="M 830 215 C 880 215 880 365 930 365" style="animation-delay:2.18s"></path>
+      <path pathLength="1" d="M 830 515 C 880 515 880 365 930 365" style="animation-delay:2.18s"></path>
+    </g>
+    <path class="t4" pathLength="1" d="M 902 365 L 1052 365" style="animation-delay:2.76s"></path>
+    <g class="n2">
+      <circle cx="690" cy="140" r="20" style="animation-delay:1.22s"></circle>
+      <circle cx="690" cy="290" r="20" style="animation-delay:1.28s"></circle>
+      <circle cx="690" cy="440" r="20" style="animation-delay:1.34s"></circle>
+      <circle cx="690" cy="590" r="20" style="animation-delay:1.40s"></circle>
+    </g>
+    <g class="n3">
+      <circle cx="830" cy="215" r="25" style="animation-delay:2.00s"></circle>
+      <circle cx="830" cy="515" r="25" style="animation-delay:2.06s"></circle>
+    </g>
+    <circle class="n4" cx="930" cy="365" r="31" style="animation-delay:2.66s"></circle>
+  </g>
+</svg>

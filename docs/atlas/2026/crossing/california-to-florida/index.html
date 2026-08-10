@@ -73,18 +73,53 @@
     text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:1px}
   .hookcta a:hover{border-bottom-color:var(--accent-strike)}
   .hookcta span{font-size:12.5px;color:var(--dim)}
-  .heronote{margin:9px 40px 0;font-size:11px;line-height:1.55;color:var(--muted);max-width:76ch}
+  .heronote{margin:10px 40px 0;font-size:11.5px;line-height:1.6;color:var(--muted);max-width:80ch}
+  .heronote b{color:var(--dim);font-weight:700}
   /* The header's second half: the profile summary and hand-authored context, which follow the hero
      rather than delaying it. Same gutters as .hd, no second block of top padding. */
   .hdc{padding:16px 40px 0}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px 40px 6px}
   @media(max-width:760px){.grid{grid-template-columns:1fr}}
   .dcard{border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:0;padding:14px 16px;background:#fff}
+  /* The category, not a heading: the FAQ question below it IS the heading. With both set as
+     headings every card said the same thing twice, "Income & gains" over "How are capital gains
+     taxed in Illinois?". */
+  .dcard .dk{font-family:var(--sans);font-weight:700;font-size:9.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:flex;align-items:center;gap:8px}
   .dcard .dh{font-family:var(--sans);font-weight:500;font-size:14.5px;color:var(--ink);margin-bottom:5px;display:flex;align-items:center;gap:8px}
   .dcard .dtag{font-size:10.5px;font-weight:700;color:var(--brass);border:1px solid var(--gold);border-radius:0;padding:2px 8px}
   .dcard p{margin:0;font-size:12.5px;color:var(--body);line-height:1.5}
   .dcard .dsrc{font-size:10px;color:var(--muted);margin-top:8px}
   .dcard .dsrc a{color:var(--teal2)}
+
+  /* Collisions. The one block on the page that is not a single rule restated, so it gets an edge
+     weight of its own: a 2px top rule in the accent rather than the 3px left rule the dimension
+     cards and framework signals share. Existing tokens only. */
+  .coll{border-top:2px solid var(--brass);background:#fff;padding:16px 18px 14px;margin-bottom:12px}
+  .coll .ch{font-family:var(--sans);font-weight:500;font-size:15px;color:var(--ink);margin-bottom:7px}
+  .coll p{margin:0;font-size:13px;line-height:1.6;color:var(--body)}
+  .coll .croom{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--brass);margin-top:11px}
+  /* The most assertive statements of law on the page must not be the only ones with no source
+     line. Same treatment as .dcard .dsrc, so the evidence hierarchy reads the same way. */
+  .coll .csrc{font-size:10px;color:var(--muted);margin-top:8px}
+  .coll .csrc a{color:var(--teal2)}
+  /* The one labelled boundary on the page. Above it the page argues; below it the page is a
+     reference. Without the label the reader meets the statute cards as more argument, which is
+     what made the old order feel like a wall. */
+  .briefnote{margin:10px 40px 0;font-size:12px;line-height:1.55;color:var(--muted);max-width:76ch}
+  .briefnote a{color:var(--brass);text-decoration:none;font-weight:600;border-bottom:1px solid var(--gold)}
+  .briefnote b{color:var(--dim);font-weight:700}
+  .refrule{display:flex;align-items:center;gap:14px;margin:26px 40px 4px;
+    font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted)}
+  .refrule::after{content:"";flex:1;height:1px;background:var(--line)}
+  /* The severity headline: the one sentence a reader who reads nothing else should leave with. */
+  .sevline{font-family:var(--sans);font-weight:500;font-size:16px;line-height:1.45;color:var(--ink);
+    margin:0 0 10px;max-width:64ch}
+  /* The FAQ question, now the statute card's own heading rather than a duplicate of its body. */
+  .dcard .dq{font-family:var(--sans);font-weight:500;font-size:14px;line-height:1.35;
+    color:var(--ink);margin:0 0 7px}
   .asofline{font-size:11.5px;color:var(--muted);margin:16px 40px 0;line-height:1.55}
   .asofline b{color:var(--dim)}
   .mnote{font-size:11.5px;color:var(--muted);margin:10px 0 0;line-height:1.55;max-width:70ch}
@@ -119,6 +154,10 @@
   .actreg li{display:flex;gap:12px;align-items:baseline;font-size:12.5px;color:var(--body);line-height:1.5}
   .actreg li::before{counter-increment:act;content:counter(act);font-family:var(--sans);font-weight:700;
     font-size:11px;color:var(--brass);min-width:15px}
+  /* The artifact the request needs to be answerable, on its own line. It is the difference
+     between "ask your attorney about titling" and a conversation that reaches an answer first pass. */
+  .actreg .abring{display:block;margin-top:4px;font-family:var(--sans);font-size:11.5px;
+    color:var(--muted)}
   .actreg .ao{font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
     color:var(--muted);white-space:nowrap;min-width:96px;display:inline-block}
   @media(max-width:600px){.actreg .ao{min-width:0;display:block;margin-bottom:1px}}
@@ -150,6 +189,7 @@
      isn't pinched, consistent with the other exhibits. */
   @media(max-width:600px){
     .bcrumb,.hd,.hdc,.grid,.sec,.rel{padding-left:18px;padding-right:18px}
+    .refrule,.briefnote{margin-left:18px;margin-right:18px}
     .hero,.cta,.capture,.disc,.colophon,.asofline,.chlog,.hookcta,.heronote{margin-left:18px;margin-right:18px}
   }
   @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}
@@ -221,37 +261,13 @@
 <body>
 <div class="sheet">
   <div class="frame">
-    <nav class="dwnav" aria-label="Driftwood Wealth">
-  <a class="brand" href="https://driftwoodwealth.com/index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"/><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"/><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"/><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"/><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"/><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"/></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-  <div class="dwnav-links">
-    <div class="dwnav-drop">
-      <button class="dwnav-trigger" type="button">The Firm<span class="caret" aria-hidden="true"></span></button>
-      <div class="dwnav-panel">
-        <a href="https://driftwoodwealth.com/principles.html">Our Story &amp; Principles</a>
-        <a href="https://driftwoodwealth.com/fees.html">Fees</a>
-      </div>
-    </div>
-    <div class="dwnav-drop">
-      <button class="dwnav-trigger" type="button">The Method<span class="caret" aria-hidden="true"></span></button>
-      <div class="dwnav-panel">
-        <a href="https://driftwoodwealth.com/howitworks.html">How It Works</a>
-        <a href="https://driftwoodwealth.com/thesis.html">How We Invest</a>
-      </div>
-    </div>
-    <div class="dwnav-drop dwnav-drop--current">
-      <button class="dwnav-trigger" type="button">Research<span class="caret" aria-hidden="true"></span></button>
-      <div class="dwnav-panel">
-        <a href="https://driftwoodwealth.com/research.html">Research&nbsp;&amp;&nbsp;Atlas</a>
-        <a href="https://driftwoodwealth.com/statemap.html" aria-current="page">State&nbsp;Tax&nbsp;Atlas</a>
-        <a href="https://driftwoodwealth.com/leakage.html">Tax&nbsp;Diagnostic</a>
-        <a href="https://driftwoodwealth.com/taxlab.html">After-Tax&nbsp;Review</a>
-        <a href="https://driftwoodwealth.com/score.html">Coordination&nbsp;Assessment</a>
-      </div>
-    </div>
-    <a class="dwnav-access" href="https://driftwoodwealth.com/partners.html">For CPAs &amp; Attorneys</a>
-  </div>
-  <a class="dwnav-cta" href="https://driftwoodwealth.com/coordination-review.html">Request Review</a>
-</nav>
+    <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+      <a class="brand" href="https://driftwoodwealth.com/index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="https://driftwoodwealth.com/principles.html">Our Story</a><a href="https://driftwoodwealth.com/leadership.html">Leadership</a><a href="https://driftwoodwealth.com/fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="https://driftwoodwealth.com/coordination.html">How Coordination Works</a><a href="https://driftwoodwealth.com/household-example.html">A Household, Coordinated</a><a href="https://driftwoodwealth.com/coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="https://driftwoodwealth.com/research.html">Research</a><a href="https://driftwoodwealth.com/commentary.html">Commentary</a><a href="https://driftwoodwealth.com/driftwood-review.html">The Driftwood Review</a><a href="https://driftwoodwealth.com/statemap.html" aria-current="page">The State Tax Atlas</a><a href="https://driftwoodwealth.com/insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="https://driftwoodwealth.com/partners.html">For CPAs</a><a href="https://driftwoodwealth.com/estate-attorneys.html">For Estate Attorneys</a><a href="https://driftwoodwealth.com/referral.html">Making a Referral</a></div></div></div>
+      <span class="dwnav-sep" aria-hidden="true"></span>
+      <a class="dwnav-access" href="https://driftwoodwealth.com/private.html">Client Access</a>
+      <a class="dwnav-cta" href="https://driftwoodwealth.com/coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
+    </nav>
     <nav class="procbar" aria-label="Where you are in the coordination process"><a class="" href="https://driftwoodwealth.com/atlas/2026/">Environment</a><i aria-hidden="true">→</i><a class="" href="https://driftwoodwealth.com/atlas/2026/compare/">Compare</a><i aria-hidden="true">→</i><a class="on" href="https://driftwoodwealth.com/atlas/2026/crossing/" aria-current="step">Plan</a><i aria-hidden="true">→</i><a class="" href="https://driftwoodwealth.com/atlas/2026/household/">Coordinate</a><i aria-hidden="true">→</i><a class="" href="https://calendly.com/alec-messino/introductory-call-driftwood-wealth?utm_source=driftwoodwealth&amp;utm_medium=website&amp;utm_campaign=coordination_review&amp;utm_content=atlas-process-bar">Review</a></nav>
     <div class="hd">
       <div class="eyebrow">The State Atlas · Crossing Brief</div>
@@ -296,9 +312,9 @@
     <div class="sec"><div class="sh">The action register</div>
       <p class="lede" style="margin-bottom:8px">Sequenced by the move, what to do before, during, and after the crossing.</p>
       <div class="phases">
-        <div class="phase"><h4>Before the move</h4><ol><li><span class="at">Model domicile alternatives</span><span class="ao">advisor</span><br>Model the after-tax and estate outcome of the current vs a lower-tax domicile, and list the domicile facts to establish before any move.</li></ol></div>
+        <div class="phase"><h4>Before the move</h4><ol><li><span class="at">Price the domicile question</span><span class="ao">advisor</span><br>Ask for this year&#x27;s after-tax result on the current holdings in California, set beside the same holdings in a no-income-tax state, and for the list of facts a state examines when it tests domicile. Both are inputs to a decision rather than the decision.</li></ol></div>
         <div class="phase"><h4>During the move</h4><ol><li><span class="at">Establish the new domicile</span><span class="ao">household</span><br>Take up residence at the destination and begin severing origin-state ties, days present, the primary home, registrations, and affiliations, so the change of domicile is a fact pattern, not a mailing address.</li></ol></div>
-        <div class="phase"><h4>After the move</h4><ol><li><span class="at">Set basis titling</span><span class="ao">estate attorney</span><br>Title (or elect the trust) to capture the fullest first-death basis step-up the regime allows.</li></ol></div>
+        <div class="phase"><h4>After the move</h4><ol><li><span class="at">Check how each account is titled</span><span class="ao">estate attorney</span><br>Ask how each taxable account is titled today, and what Florida law does to basis at a first death for that form of ownership. Titling is recorded on custodial paperwork, so this is a document check rather than an opinion.</li></ol></div>
       </div>
     </div>
     <div class="sec"><div class="sh">Questions worth asking</div>

@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-10T23:13:34+00:00",
+  "generated": "2026-08-10T23:29:33+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 599513,
+    "rows": 600557,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 220988,
-      "live_total": 67773,
-      "live_today": 171,
-      "last_row_age_min": 0.1
+      "rows_total": 221480,
+      "live_total": 67866,
+      "live_today": 264,
+      "last_row_age_min": 0.4
     },
     "fanduel": {
-      "rows_total": 378519,
-      "live_total": 75565,
-      "live_today": 12,
-      "last_row_age_min": 0.1
+      "rows_total": 379071,
+      "live_total": 75593,
+      "live_today": 40,
+      "last_row_age_min": 0.4
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 51408.6
+      "last_row_age_min": 51424.6
     }
   },
   "books_reporting_live": [
@@ -37,14 +37,14 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 67773,
-    "OPEN": 69571,
-    "SUSPENDED": 5652,
+    "unset": 67866,
+    "OPEN": 69589,
+    "SUSPENDED": 5662,
     "REMOVED": 342
   },
   "overlap": {
-    "simultaneous_pairs_total": 78116,
-    "simultaneous_pairs_today": 12,
+    "simultaneous_pairs_total": 78131,
+    "simultaneous_pairs_today": 27,
     "overlap_games": 137,
     "median_sync_lag_s": 0.0,
     "games_by_books_live": {
@@ -65,9 +65,9 @@
     "verified": true
   },
   "coverage": {
-    "live_games_seen": 139,
+    "live_games_seen": 140,
     "book_panel_games": 157,
-    "team_total_rows": 30883,
+    "team_total_rows": 31003,
     "innings_seen": [
       1,
       2,
@@ -87,7 +87,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 78116,
+        "current": 78131,
         "target": 2000,
         "pass": true,
         "progress": 1.0

@@ -10,7 +10,7 @@
   plausible.init()
 </script>
 <title>Maryland coordination brief | Driftwood Wealth</title>
-<meta name="description" content="A one-page Maryland coordination brief for a CPA, attorney, or advisor to share with a client. Illustrative, not advice." />
+<meta name="description" content="A printable Maryland coordination brief for a CPA, attorney, or advisor to share with a client. Illustrative, not advice." />
 <!-- noindex: this restates the state page's substance for a different reader, and two URLs
      competing on the same facts is the duplicate-content problem the editioned canonical exists to
      avoid. It is a document a partner is handed, not a search destination. -->
@@ -74,14 +74,34 @@
   .strip button{font:inherit;font-family:var(--sans);font-size:12.5px;font-weight:700;
     background:var(--brass);color:#f1ede3;border:0;padding:11px 18px;cursor:pointer;min-height:44px}
   .strip .ok{font-family:var(--sans);font-size:11.5px;color:var(--gold);align-self:center}
+  /* IT IS TWO PAGES, AND IT IS NOT CALLED ONE. Measured in Chromium at the @page margins below:
+     the content runs 1200px against roughly 950px of usable Letter, and the two tables are 421px
+     of that. Squeezing to one page means either dropping the agenda or setting the body at 8px,
+     and states with five actions overflow even then, so the honest fix was to stop claiming one
+     page rather than to mangle the type. What print DOES do is tighten the leading, drop the
+     sender strip, and drop the firm anchor whose coordinates the disclosure above already carries,
+     so it comes out as two clean pages instead of two loose ones. */
   @media print{
-    body{background:#fff}
+    @page{size:Letter;margin:0.55in}
+    body{background:#fff;font-size:10.5px}
     .sheet{margin:0;max-width:none;padding:0}
     .frame{border:0;padding:0}
     .strip{display:none}
-    h2{margin-top:14px}
+    .firm-anchor{display:none}
+    h1{font-size:21px;margin-bottom:8px}
+    .sev{font-size:12.5px;margin-bottom:10px}
+    .fig{padding:8px 0;margin-bottom:4px}
+    .fig .n{font-size:23px}
+    .fig .u{font-size:10.5px}
+    .fine{font-size:8.5px;margin-bottom:12px}
+    h2{margin:12px 0 6px;font-size:9px}
+    td{font-size:10px;padding:6px 10px 6px 0;line-height:1.4}
+    td .bring{font-size:9px}
+    .seat{padding:9px 11px;margin-top:12px;break-inside:avoid}
+    .seat p{font-size:10px;line-height:1.45}
+    .close{margin-top:12px;padding-top:9px}
+    .disc{font-size:7.5px;line-height:1.4;margin-top:10px;padding-top:7px}
     tr{break-inside:avoid}
-    .seat{break-inside:avoid}
   }
   @media(max-width:620px){.frame{padding:24px 18px}}
 </style>
@@ -139,8 +159,8 @@ The firm behind it, Driftwood, coordinates across the CPA, the attorney and the 
     </div>
 
     <div class="disc"><b>Illustrative / hypothetical, not a real track record and not advice.</b> The tax-management impact figure is a hypothetical, after-tax result from the <b>retroactive application</b> of a tax-management model to ~30 years of proxy-spliced market data on a single illustrative path; <b>no client capital was invested</b>, and hypothetical performance <b>does not guarantee future results</b>. Intended for sophisticated investors; it may not be relevant to your situation, and your actual figure depends on your own holdings, basis, and bracket. State tax facts reflect tax year 2025 and can change, confirm with a tax advisor. Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS. Driftwood Wealth is not an affiliate or subsidiary of PAS. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation.</div>
-    <div class="disc">State law reflects 2025 tax-year law; last reviewed 2026-07-07.
-      Nothing here is a statement about any particular household.</div>
+    <div class="disc" style="border:0;padding-top:4px">State law reflects 2025 tax-year law; last
+      reviewed 2026-07-07. Nothing here is a statement about any particular household.</div>
     <div class="firm-anchor" role="contentinfo"><span class="firm-anchor-brand">Driftwood Wealth</span><span class="firm-anchor-meta"><span class="fa-i">CHICAGO, ILLINOIS</span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i">AUSTIN, TEXAS</span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i"><a href="mailto:alec@driftwoodwealth.com">ALEC@DRIFTWOODWEALTH.COM</a></span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i">CUSTODY AT BNY PERSHING</span></span></div>
   </div>
 </div>

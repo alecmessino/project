@@ -125,3 +125,16 @@ def test_the_brief_asserts_nothing_the_atlas_page_does_not():
     for a in r["actions"]:
         assert _in_page(a["step"], h), f"action step missing: {a['id']}"
         assert _in_page(a["bring"], h), f"action artifact missing: {a['id']}"
+
+
+def test_nothing_calls_the_brief_a_one_pager():
+    """It is two Letter pages, measured. It was briefly advertised as one, which is the kind of
+    small lie a reader checks in ten seconds by hitting print."""
+    import re as _re
+    from drift.statepage import build_state_pages as _b, render_state_html as _r
+    # The CLAIM, not the words: "One page is enough to know..." is legitimate action copy, and the
+    # brief's own CSS comment explains why one page was not achievable.
+    claim = _re.compile(r"one[- ]page[^.<]{0,40}brief|brief[^.<]{0,40}one[- ]page", _re.I)
+    for name, h in {"brief": _html("IL"), "state page": _r(_b()["IL"])}.items():
+        m = claim.search(h)
+        assert not m, f"{name} still calls the brief a one-pager: {m.group(0)!r}"

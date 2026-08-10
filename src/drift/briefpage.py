@@ -1,4 +1,4 @@
-"""The COI-ready state brief: one printable page a CPA or an estate attorney can send a client.
+"""The COI-ready state brief: a printable document a CPA or estate attorney can send a client.
 
 WHAT IT IS. `/atlas/{edition}/{state}/brief/`, one per state, generated from the same reasoning
 graph the Atlas page renders. It carries the state's severity reading, the coordination agenda with
@@ -108,14 +108,34 @@ _CSS = """
   .strip button{font:inherit;font-family:var(--sans);font-size:12.5px;font-weight:700;
     background:var(--brass);color:#f1ede3;border:0;padding:11px 18px;cursor:pointer;min-height:44px}
   .strip .ok{font-family:var(--sans);font-size:11.5px;color:var(--gold);align-self:center}
+  /* IT IS TWO PAGES, AND IT IS NOT CALLED ONE. Measured in Chromium at the @page margins below:
+     the content runs 1200px against roughly 950px of usable Letter, and the two tables are 421px
+     of that. Squeezing to one page means either dropping the agenda or setting the body at 8px,
+     and states with five actions overflow even then, so the honest fix was to stop claiming one
+     page rather than to mangle the type. What print DOES do is tighten the leading, drop the
+     sender strip, and drop the firm anchor whose coordinates the disclosure above already carries,
+     so it comes out as two clean pages instead of two loose ones. */
   @media print{
-    body{background:#fff}
+    @page{size:Letter;margin:0.55in}
+    body{background:#fff;font-size:10.5px}
     .sheet{margin:0;max-width:none;padding:0}
     .frame{border:0;padding:0}
     .strip{display:none}
-    h2{margin-top:14px}
+    .firm-anchor{display:none}
+    h1{font-size:21px;margin-bottom:8px}
+    .sev{font-size:12.5px;margin-bottom:10px}
+    .fig{padding:8px 0;margin-bottom:4px}
+    .fig .n{font-size:23px}
+    .fig .u{font-size:10.5px}
+    .fine{font-size:8.5px;margin-bottom:12px}
+    h2{margin:12px 0 6px;font-size:9px}
+    td{font-size:10px;padding:6px 10px 6px 0;line-height:1.4}
+    td .bring{font-size:9px}
+    .seat{padding:9px 11px;margin-top:12px;break-inside:avoid}
+    .seat p{font-size:10px;line-height:1.45}
+    .close{margin-top:12px;padding-top:9px}
+    .disc{font-size:7.5px;line-height:1.4;margin-top:10px;padding-top:7px}
     tr{break-inside:avoid}
-    .seat{break-inside:avoid}
   }
   @media(max-width:620px){.frame{padding:24px 18px}}
 """
@@ -166,7 +186,7 @@ def render_brief(data: dict, edition: str = CURRENT_EDITION) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 {PLAUSIBLE}
 <title>{_esc(name)} coordination brief | Driftwood Wealth</title>
-<meta name="description" content="A one-page {_esc(name)} coordination brief for a CPA, attorney, or advisor to share with a client. Illustrative, not advice." />
+<meta name="description" content="A printable {_esc(name)} coordination brief for a CPA, attorney, or advisor to share with a client. Illustrative, not advice." />
 <!-- noindex: this restates the state page's substance for a different reader, and two URLs
      competing on the same facts is the duplicate-content problem the editioned canonical exists to
      avoid. It is a document a partner is handed, not a search destination. -->
@@ -225,9 +245,9 @@ def render_brief(data: dict, edition: str = CURRENT_EDITION) -> str:
       &nbsp;&nbsp;<a href="{atlas_url(code, edition)}">The full {_esc(name)} Atlas entry &rarr;</a>
     </div>
 
-    {DISCLOSURE.replace('<div class="disc">', '<div class="disc">')}
-    <div class="disc">State law reflects {_esc(AS_OF_LAW)}; last reviewed {_esc(LAST_REVIEWED)}.
-      Nothing here is a statement about any particular household.</div>
+    {DISCLOSURE}
+    <div class="disc" style="border:0;padding-top:4px">State law reflects {_esc(AS_OF_LAW)}; last
+      reviewed {_esc(LAST_REVIEWED)}. Nothing here is a statement about any particular household.</div>
     {firm_anchor_html()}
   </div>
 </div>

@@ -328,7 +328,7 @@ def _dim_cards(rec: dict, questions: dict | None = None) -> str:
         q = (questions or {}).get(key)
         qline = f'<h3 class="dq">{_esc(q)}</h3>' if q else ""
         cards.append(
-            f'<div class="dcard"><div class="dh">{_esc(_DIM_LABEL[key])}{tag}</div>'
+            f'<div class="dcard"><div class="dk">{_esc(_DIM_LABEL[key])}{tag}</div>'
             f'{qline}<p>{_esc(d["note"])}</p>'
             f'{_src_line(d)}</div>'
         )
@@ -370,11 +370,8 @@ def _impact_block(name: str, a: dict | None) -> str:
         f'<div class="hero">'
         f'<div class="big">~{fmt_usd(usd)}<span class="u">/yr per $1M taxable</span></div>'
         f'<div class="hlab">What tax-aware portfolio management alone is worth in {_esc(name)}<br>'
-        f'<span class="hsub">about +{alpha:.1f}%/yr modeled, as a tax-managed book keeps '
-        f'~{after:.1f}%/yr after tax vs ~{before:.1f}%/yr for a concentrated, naive one, and it scales '
-        f'with the portfolio. Treat it as the floor: it counts the portfolio only, and leaves the '
-        f'estate, gifting, and residency coordination at zero, where the larger opportunities '
-        f'usually sit.</span></div>'
+        f'<span class="hsub">about +{alpha:.1f}%/yr modeled: ~{after:.1f}%/yr kept after tax '
+        f'against ~{before:.1f}%/yr on a concentrated book. Scales with the portfolio.</span></div>'
         f'<div class="hbar" aria-hidden="true">'
         f'<span class="kept" style="width:{kept_before}%"></span></div>'
         f'</div>'
@@ -472,13 +469,19 @@ _HEAD_CSS = """
     text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:1px}
   .hookcta a:hover{border-bottom-color:var(--accent-strike)}
   .hookcta span{font-size:12.5px;color:var(--dim)}
-  .heronote{margin:9px 40px 0;font-size:11px;line-height:1.55;color:var(--muted);max-width:76ch}
+  .heronote{margin:10px 40px 0;font-size:11.5px;line-height:1.6;color:var(--muted);max-width:80ch}
+  .heronote b{color:var(--dim);font-weight:700}
   /* The header's second half: the profile summary and hand-authored context, which follow the hero
      rather than delaying it. Same gutters as .hd, no second block of top padding. */
   .hdc{padding:16px 40px 0}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px 40px 6px}
   @media(max-width:760px){.grid{grid-template-columns:1fr}}
   .dcard{border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:0;padding:14px 16px;background:#fff}
+  /* The category, not a heading: the FAQ question below it IS the heading. With both set as
+     headings every card said the same thing twice, "Income & gains" over "How are capital gains
+     taxed in Illinois?". */
+  .dcard .dk{font-family:var(--sans);font-weight:700;font-size:9.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:flex;align-items:center;gap:8px}
   .dcard .dh{font-family:var(--sans);font-weight:500;font-size:14.5px;color:var(--ink);margin-bottom:5px;display:flex;align-items:center;gap:8px}
   .dcard .dtag{font-size:10.5px;font-weight:700;color:var(--brass);border:1px solid var(--gold);border-radius:0;padding:2px 8px}
   .dcard p{margin:0;font-size:12.5px;color:var(--body);line-height:1.5}
@@ -501,7 +504,8 @@ _HEAD_CSS = """
      reference. Without the label the reader meets the statute cards as more argument, which is
      what made the old order feel like a wall. */
   .briefnote{margin:10px 40px 0;font-size:12px;line-height:1.55;color:var(--muted);max-width:76ch}
-  .briefnote a{color:var(--brass);text-decoration:none;font-weight:500}
+  .briefnote a{color:var(--brass);text-decoration:none;font-weight:600;border-bottom:1px solid var(--gold)}
+  .briefnote b{color:var(--dim);font-weight:700}
   .refrule{display:flex;align-items:center;gap:14px;margin:26px 40px 4px;
     font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.18em;
     text-transform:uppercase;color:var(--muted)}
@@ -510,8 +514,8 @@ _HEAD_CSS = """
   .sevline{font-family:var(--sans);font-weight:500;font-size:16px;line-height:1.45;color:var(--ink);
     margin:0 0 10px;max-width:64ch}
   /* The FAQ question, now the statute card's own heading rather than a duplicate of its body. */
-  .dcard .dq{font-family:var(--sans);font-weight:500;font-size:12px;line-height:1.4;
-    color:var(--dim);margin:0 0 6px}
+  .dcard .dq{font-family:var(--sans);font-weight:500;font-size:14px;line-height:1.35;
+    color:var(--ink);margin:0 0 7px}
   .asofline{font-size:11.5px;color:var(--muted);margin:16px 40px 0;line-height:1.55}
   .asofline b{color:var(--dim)}
   .mnote{font-size:11.5px;color:var(--muted);margin:10px 0 0;line-height:1.55;max-width:70ch}
@@ -611,7 +615,7 @@ def _capture(code: str, name: str, alpha, rate: str) -> str:
         <label class="vh" for="capemail">Your email address</label>
         <input type="email" id="capemail" placeholder="you@email.com" required autocomplete="email" aria-label="Your email address" />
         <input type="text" id="caphp" name="{_FORM_HP}" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <button type="submit" id="capsend">Email me {nm}'s brief →</button>
+        <button type="submit" id="capsend">Email me the {nm} Tax Diagnostic →</button>
       </form>
       <div class="capnote" id="capnote">We will email you the Tax Diagnostic set to {nm}, straight away, and follow up personally within a business day. One message, no list, and we never share your address.</div>
     </div>
@@ -633,7 +637,7 @@ def _capture(code: str, name: str, alpha, rate: str) -> str:
           .then(function(r){{ if(!r.ok) throw 0;
             document.getElementById("capture").innerHTML='<div class="capok" role="status" aria-live="polite">Sent. Check your inbox for your {nm} tax picture, and we will follow up personally.</div>';
             if(window.plausible) plausible("lead_submitted",{{props:{{source:"state_page",state:"{code}"}}}}); }})
-          .catch(function(){{ btn.disabled=false; btn.textContent="Email me {nm}'s brief →";
+          .catch(function(){{ btn.disabled=false; btn.textContent="Email me the {nm} Tax Diagnostic →";
             document.getElementById("capnote").innerHTML='Sorry, that didn\\'t send. Email us at <a href="mailto:{_CONTACT}">{_CONTACT}</a>.'; }});
       }});
     }})();
@@ -786,10 +790,10 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
             f'Tax Diagnostic &rarr;</a>'
             f'<span>Set your bracket and portfolio; the figure recomputes. Free, no sign-up.</span>'
             f'</div>\n'
-            f'    <p class="heronote">Illustrative and hypothetical, not a track record: a '
-            f'tax-management model applied retroactively to ~30 years of proxy-spliced market data on '
-            f'one path, with no client capital invested. Your own figure depends on your holdings, '
-            f'basis, and bracket. How it is modeled, and its limits, are set out below.</p>'
+            f'    <p class="heronote"><b>This is the floor.</b> It counts the portfolio only and '
+            f'leaves the estate, gifting, and residency coordination at zero, where the larger '
+            f'opportunities usually sit. Illustrative and hypothetical, not a track record: a model '
+            f'applied retroactively to ~30 years of proxy-spliced data, no client capital invested.</p>'
         )
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -851,11 +855,12 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
         <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture, by bracket and holdings.</div>
       </div>
       <a class="primary" href="{_ABS}leakage.html?state={code}">Run my {_esc(name)} diagnostic &rarr;</a>
-      <a class="ghost" href="{_ABS}{brief_href}">Share the one-page brief</a>
+      <a class="ghost" href="{booking_link(f'state-{code.lower()}')}">Schedule a Coordination Review</a>
     </div>
-    <p class="briefnote">The brief is written for a CPA, an attorney, or an advisor to send a client
-      as it stands. It asks the reader for nothing, and it names no household.
-      <a href="{booking_link(f'state-{code.lower()}')}">Or schedule a Coordination Review &rarr;</a></p>
+    <p class="briefnote"><b>For a CPA, attorney, or advisor:</b> the
+      <a href="{_ABS}{brief_href}">{_esc(name)} coordination brief</a> is a printable summary of this
+      page, written to be sent to a client as it stands. It asks the reader for nothing and names no
+      household.</p>
     <div class="refrule"><span>The rules themselves</span></div>
     <div class="grid">
       {_dim_cards(rec, questions)}

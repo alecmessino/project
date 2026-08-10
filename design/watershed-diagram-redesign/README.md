@@ -44,3 +44,10 @@ presentation attributes.
 Every value needed to restore it is recorded in `assets/watershed-hero.README.txt` and
 recoverable from the static file and the `.dc.html`, but reconstructing it is a deliberate act,
 not a cleanup — so it is left as-is and flagged here.
+
+**A re-export from Claude Design is the intended fix, and it will regress the responsive change.**
+The exporter is what wrote `width="680" height="626"` onto the root in the first place, so a fresh
+export will almost certainly carry the pair again. When the re-exported file lands, strip both
+attributes from the root before committing it — `viewBox` and `preserveAspectRatio` stay exactly
+as they are. That single line is the whole responsive contract for these files; the rest of the
+sizing lives in the placement CSS, not in the asset.

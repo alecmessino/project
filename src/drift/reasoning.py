@@ -172,23 +172,77 @@ COORDINATION_PRIORITIES = [
 # ── Layer 5 · ACTION REGISTER, sequenced next steps, each edged to a coordination priority ────────
 # `crossing_phase` sequences an action relative to a relocation (before · during · after the move),
 # structured timing the Crossing Brief reads; state pages and the Comparison ignore it.
+# ── Layer 5 · ACTIONS ─────────────────────────────────────────────────────────────────────────────
+#
+# Each of these used to be one static sentence of ownership ("Review titling and the credit-shelter
+# / gifting options against the state estate threshold"), identical in all 51 states. True, and not
+# something a reader could start. They are now a concrete first move, and every one is phrased as
+# OBTAINING INFORMATION rather than taking a position, for two reasons: it is what a household can
+# actually do inside a week, and Driftwood does not give tax or legal advice, so an action register
+# that told a reader what to do would be the page contradicting its own disclosure.
+#
+# `step` is a callable so a state's own published figures can appear in it. It interpolates only
+# facts the page already prints higher up (the rate, the estate threshold, the state's name). No
+# action asserts a rule, and none introduces a fact the record does not carry.
+#
+# `bring` is the artifact the request needs to be answerable. It is the difference between "ask your
+# attorney about titling" and a conversation that reaches an answer on the first pass.
+
+def _a_domicile(ctx: _Ctx) -> str:
+    return (f"Ask for this year's after-tax result on the current holdings in {_nm(ctx)}, set beside "
+            f"the same holdings in a no-income-tax state, and for the list of facts a state examines "
+            f"when it tests domicile. Both are inputs to a decision rather than the decision.")
+
+
+def _a_estate_titling(ctx: _Ctx) -> str:
+    thr = (ctx.estate or {}).get("exemption_display")
+    against = f" against {_nm(ctx)}'s {thr} threshold" if thr else f" against {_nm(ctx)}'s threshold"
+    return (f"Ask your attorney what the estate is currently worth for state purposes{against}, and "
+            f"which assets are counted toward it. One page is enough to know whether anything further "
+            f"is warranted this year.")
+
+
+def _a_basis_titling(ctx: _Ctx) -> str:
+    return (f"Ask how each taxable account is titled today, and what {_nm(ctx)} law does to basis at "
+            f"a first death for that form of ownership. Titling is recorded on custodial paperwork, "
+            f"so this is a document check rather than an opinion.")
+
+
+def _a_harvest_cadence(ctx: _Ctx) -> str:
+    return (f"Ask when losses were last harvested in the taxable book, and what loss carryforward is "
+            f"on file. {_nm(ctx)} taxes long-term gains at a top effective {ctx.rate_display}, which "
+            f"is the figure that answer has to be read against.")
+
+
+def _a_place_sleeves(ctx: _Ctx) -> str:
+    return ("Ask which holdings sit in taxable accounts and which sit in tax-deferred ones today, "
+            "and what turnover each produces. Placement cannot be assessed until both lists are on "
+            "one page, including the accounts nobody currently manages.")
+
+
 ACTIONS = [
-    {"id": "confirm_domicile", "title": "Model domicile alternatives", "owner": "advisor", "priority_ref": "residency_planning",
-     "related_signals": ["mobility_value"], "crossing_phase": "before",
-     "step": "Model the after-tax and estate outcome of the current vs a lower-tax domicile, and list the domicile facts to establish before any move."},
-    {"id": "review_estate_titling", "title": "Review estate titling", "owner": "estate attorney", "priority_ref": "estate_structure",
-     "related_signals": ["estate_exposure"], "crossing_phase": "after",
-     "step": "Review titling and the credit-shelter / gifting options against the state estate threshold; quantify the exposure at the household's net worth."},
-    {"id": "set_basis_titling", "title": "Set basis titling", "owner": "estate attorney", "priority_ref": "basis_titling",
-     "related_signals": ["basis_coordination"], "crossing_phase": "after",
-     "step": "Title (or elect the trust) to capture the fullest first-death basis step-up the regime allows."},
-    {"id": "set_harvest_cadence", "title": "Set harvesting cadence", "owner": "advisor", "priority_ref": "harvest_coordination",
-     "related_signals": ["harvest_leverage"], "crossing_phase": "after",
-     "step": "Set the annual loss-harvesting cadence and confirm it clears the state's carryforward rules."},
-    {"id": "place_sleeves", "title": "Place the sleeves", "owner": "advisor", "priority_ref": "asset_location",
-     "related_signals": ["rate_pressure"], "crossing_phase": "after",
-     "step": "Locate the high-turnover sleeve into tax-advantaged accounts and confirm the taxable book is the low-turnover core."},
+    {"id": "confirm_domicile", "title": "Price the domicile question", "owner": "advisor",
+     "priority_ref": "residency_planning", "related_signals": ["mobility_value"],
+     "crossing_phase": "before", "step": _a_domicile,
+     "bring": "Last year's full return, and a current statement for each account."},
+    {"id": "review_estate_titling", "title": "Size the estate against the state threshold",
+     "owner": "estate attorney", "priority_ref": "estate_structure",
+     "related_signals": ["estate_exposure"], "crossing_phase": "after", "step": _a_estate_titling,
+     "bring": "The estate documents as executed, and a current net-worth figure."},
+    {"id": "set_basis_titling", "title": "Check how each account is titled",
+     "owner": "estate attorney", "priority_ref": "basis_titling",
+     "related_signals": ["basis_coordination"], "crossing_phase": "after", "step": _a_basis_titling,
+     "bring": "The registration page of each taxable account."},
+    {"id": "set_harvest_cadence", "title": "Establish the harvesting record", "owner": "advisor",
+     "priority_ref": "harvest_coordination", "related_signals": ["harvest_leverage"],
+     "crossing_phase": "after", "step": _a_harvest_cadence,
+     "bring": "This year's realized gain and loss report, and last year's Schedule D."},
+    {"id": "place_sleeves", "title": "Put every account on one page", "owner": "advisor",
+     "priority_ref": "asset_location", "related_signals": ["rate_pressure"],
+     "crossing_phase": "after", "step": _a_place_sleeves,
+     "bring": "A position list for every account, including the ones held elsewhere."},
 ]
+
 
 # Registries, every primitive is addressable by id (the canonical definition consumers reference).
 SIGNAL_BY_ID = {s["id"]: s for s in FRAMEWORK_SIGNALS}
@@ -250,7 +304,7 @@ def build_actions(ctx: _Ctx, active_priority_ids: set[str]) -> list[dict]:
     priority and the signals that drove them, in registry order."""
     return [{"node_id": ctx.node_id("action", a["id"]), "id": a["id"], "kind": "action", "title": a["title"],
              "owner": a["owner"], "references": a["priority_ref"], "related_signals": a["related_signals"],
-             "crossing_phase": a["crossing_phase"], "step": a["step"]}
+             "crossing_phase": a["crossing_phase"], "step": a["step"](ctx), "bring": a["bring"]}
             for a in ACTIONS if a["priority_ref"] in active_priority_ids]
 
 

@@ -111,6 +111,8 @@
   /* The one labelled boundary on the page. Above it the page argues; below it the page is a
      reference. Without the label the reader meets the statute cards as more argument, which is
      what made the old order feel like a wall. */
+  .briefnote{margin:10px 40px 0;font-size:12px;line-height:1.55;color:var(--muted);max-width:76ch}
+  .briefnote a{color:var(--brass);text-decoration:none;font-weight:500}
   .refrule{display:flex;align-items:center;gap:14px;margin:26px 40px 4px;
     font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.18em;
     text-transform:uppercase;color:var(--muted)}
@@ -155,6 +157,10 @@
   .actreg li{display:flex;gap:12px;align-items:baseline;font-size:12.5px;color:var(--body);line-height:1.5}
   .actreg li::before{counter-increment:act;content:counter(act);font-family:var(--sans);font-weight:700;
     font-size:11px;color:var(--brass);min-width:15px}
+  /* The artifact the request needs to be answerable, on its own line. It is the difference
+     between "ask your attorney about titling" and a conversation that reaches an answer first pass. */
+  .actreg .abring{display:block;margin-top:4px;font-family:var(--sans);font-size:11.5px;
+    color:var(--muted)}
   .actreg .ao{font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
     color:var(--muted);white-space:nowrap;min-width:96px;display:inline-block}
   @media(max-width:600px){.actreg .ao{min-width:0;display:block;margin-bottom:1px}}
@@ -186,7 +192,7 @@
      isn't pinched, consistent with the other exhibits. */
   @media(max-width:600px){
     .bcrumb,.hd,.hdc,.grid,.sec,.rel{padding-left:18px;padding-right:18px}
-    .refrule{margin-left:18px;margin-right:18px}
+    .refrule,.briefnote{margin-left:18px;margin-right:18px}
     .hero,.cta,.capture,.disc,.colophon,.asofline,.chlog,.hookcta,.heronote{margin-left:18px;margin-right:18px}
   }
   @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}
@@ -228,16 +234,19 @@
     
     <div class="sec"><h2 class="sh">Coordination priorities for Colorado households</h2><ul class="considx"><li><span class="ca">Loss harvesting</span> <span class="cw">· with your advisor + CPA</span><p>Setting a harvesting cadence that captures the state rate a banked loss offsets, sequenced against the state&#x27;s loss-carryforward rules.</p></li>
 <li><span class="ca">Asset location</span> <span class="cw">· with your advisor</span><p>Placing the high-turnover sleeve in tax-advantaged accounts so the state&#x27;s rate falls on the least of the household&#x27;s realized gains.</p></li></ul></div>
-    <div class="sec"><h2 class="sh">What should happen next</h2><ol class="actreg"><li><span class="ao">advisor</span><span>Set the annual loss-harvesting cadence and confirm it clears the state&#x27;s carryforward rules.</span></li>
-<li><span class="ao">advisor</span><span>Locate the high-turnover sleeve into tax-advantaged accounts and confirm the taxable book is the low-turnover core.</span></li></ol></div>
+    <div class="sec"><h2 class="sh">What should happen next</h2><ol class="actreg"><li><span class="ao">advisor</span><span>Ask when losses were last harvested in the taxable book, and what loss carryforward is on file. Colorado taxes long-term gains at a top effective 4.4%, which is the figure that answer has to be read against.<span class="abring">Bring: This year&#x27;s realized gain and loss report, and last year&#x27;s Schedule D.</span></span></li>
+<li><span class="ao">advisor</span><span>Ask which holdings sit in taxable accounts and which sit in tax-deferred ones today, and what turnover each produces. Placement cannot be assessed until both lists are on one page, including the accounts nobody currently manages.<span class="abring">Bring: A position list for every account, including the ones held elsewhere.</span></span></li></ol></div>
     <div class="cta">
       <div class="ctxt">
         <div class="ch">See the figure on your own Colorado portfolio.</div>
         <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture, by bracket and holdings.</div>
       </div>
       <a class="primary" href="https://driftwoodwealth.com/leakage.html?state=CO">Run my Colorado diagnostic &rarr;</a>
-      <a class="ghost" href="https://calendly.com/alec-messino/introductory-call-driftwood-wealth?utm_source=driftwoodwealth&amp;utm_medium=website&amp;utm_campaign=coordination_review&amp;utm_content=state-co">Schedule a Coordination Review</a>
+      <a class="ghost" href="https://driftwoodwealth.com/atlas/2026/colorado/brief/">Share the one-page brief</a>
     </div>
+    <p class="briefnote">The brief is written for a CPA, an attorney, or an advisor to send a client
+      as it stands. It asks the reader for nothing, and it names no household.
+      <a href="https://calendly.com/alec-messino/introductory-call-driftwood-wealth?utm_source=driftwoodwealth&amp;utm_medium=website&amp;utm_campaign=coordination_review&amp;utm_content=state-co">Or schedule a Coordination Review &rarr;</a></p>
     <div class="refrule"><span>The rules themselves</span></div>
     <div class="grid">
       <div class="dcard"><div class="dh">Income &amp; gains<span class="dtag">4.4%</span></div><h3 class="dq">How are capital gains taxed in Colorado?</h3><p>Loss treatment conforms to federal: capital losses net against gains and carry forward. Top effective long-term rate 4.4%. Quirk: a TABOR surplus can cut the rate in a given year.</p><div class="dsrc"><b>Summary of state law</b>, primary-source citation in progress. State revenue departments, tax year 2025, verify with a tax advisor.</div></div>

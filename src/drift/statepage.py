@@ -500,6 +500,8 @@ _HEAD_CSS = """
   /* The one labelled boundary on the page. Above it the page argues; below it the page is a
      reference. Without the label the reader meets the statute cards as more argument, which is
      what made the old order feel like a wall. */
+  .briefnote{margin:10px 40px 0;font-size:12px;line-height:1.55;color:var(--muted);max-width:76ch}
+  .briefnote a{color:var(--brass);text-decoration:none;font-weight:500}
   .refrule{display:flex;align-items:center;gap:14px;margin:26px 40px 4px;
     font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.18em;
     text-transform:uppercase;color:var(--muted)}
@@ -544,6 +546,10 @@ _HEAD_CSS = """
   .actreg li{display:flex;gap:12px;align-items:baseline;font-size:12.5px;color:var(--body);line-height:1.5}
   .actreg li::before{counter-increment:act;content:counter(act);font-family:var(--sans);font-weight:700;
     font-size:11px;color:var(--brass);min-width:15px}
+  /* The artifact the request needs to be answerable, on its own line. It is the difference
+     between "ask your attorney about titling" and a conversation that reaches an answer first pass. */
+  .actreg .abring{display:block;margin-top:4px;font-family:var(--sans);font-size:11.5px;
+    color:var(--muted)}
   .actreg .ao{font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
     color:var(--muted);white-space:nowrap;min-width:96px;display:inline-block}
   @media(max-width:600px){.actreg .ao{min-width:0;display:block;margin-bottom:1px}}
@@ -575,7 +581,7 @@ _HEAD_CSS = """
      isn't pinched, consistent with the other exhibits. */
   @media(max-width:600px){
     .bcrumb,.hd,.hdc,.grid,.sec,.rel{padding-left:18px;padding-right:18px}
-    .refrule{margin-left:18px;margin-right:18px}
+    .refrule,.briefnote{margin-left:18px;margin-right:18px}
     .hero,.cta,.capture,.disc,.colophon,.asofline,.chlog,.hookcta,.heronote{margin-left:18px;margin-right:18px}
   }
   @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}
@@ -727,7 +733,9 @@ def _reasoning_html(r: dict, name: str) -> dict:
     actions = ""
     if r["actions"]:
         items = "\n".join(
-            f'<li><span class="ao">{_esc(a["owner"])}</span><span>{_esc(a["step"])}</span></li>' for a in r["actions"])
+            f'<li><span class="ao">{_esc(a["owner"])}</span>'
+            f'<span>{_esc(a["step"])}'
+            f'<span class="abring">Bring: {_esc(a["bring"])}</span></span></li>' for a in r["actions"])
         actions = (f'<div class="sec"><h2 class="sh">What should happen next</h2>'
                    f'<ol class="actreg">{items}</ol></div>')
     return {"framework": framework, "coordination": coordination, "actions": actions}
@@ -743,6 +751,8 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
     levers = "\n".join(
         f'<div class="lv"><div class="n">{_esc(l["name"])}</div><div class="d">{_esc(l["desc"])}</div></div>'
         for l in data["levers"])
+    from .briefpage import brief_path
+    brief_href = brief_path(code, edition) + "/"
     reasoning_r = data.get("reasoning") or {"framework": [], "coordination": [], "actions": [],
                                             "collisions": []}
     rz = _reasoning_html(reasoning_r, name)
@@ -841,8 +851,11 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
         <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture, by bracket and holdings.</div>
       </div>
       <a class="primary" href="{_ABS}leakage.html?state={code}">Run my {_esc(name)} diagnostic &rarr;</a>
-      <a class="ghost" href="{booking_link(f'state-{code.lower()}')}">Schedule a Coordination Review</a>
+      <a class="ghost" href="{_ABS}{brief_href}">Share the one-page brief</a>
     </div>
+    <p class="briefnote">The brief is written for a CPA, an attorney, or an advisor to send a client
+      as it stands. It asks the reader for nothing, and it names no household.
+      <a href="{booking_link(f'state-{code.lower()}')}">Or schedule a Coordination Review &rarr;</a></p>
     <div class="refrule"><span>The rules themselves</span></div>
     <div class="grid">
       {_dim_cards(rec, questions)}
@@ -1005,6 +1018,10 @@ def export_state_pages(out_dir: str | Path = "docs", edition: str = CURRENT_EDIT
     (out_dir / "atlas" / "index.html").write_text(
         render_redirect(edition_url(edition), "The State Tax Atlas"))
     written.append("atlas/index.html")
+    # The partner-facing brief for each state, published in the same pass so a state page can never
+    # link a brief that the build did not write.
+    from .briefpage import export_briefs
+    written.extend(export_briefs(out_dir, edition))
     return written
 
 

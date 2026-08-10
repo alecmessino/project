@@ -177,8 +177,10 @@ def test_new_dimensions_surface_on_state_pages():
 
 def test_export_writes_editioned_pages_and_redirect_aliases(tmp_path):
     written = SP.export_state_pages(tmp_path)
-    # 51 editioned pages + 51 flat redirect aliases + edition index + states.html alias + /atlas/ redirect.
-    assert len(written) == 51 * 2 + 3
+    # 51 editioned pages + 51 flat redirect aliases + edition index + states.html alias +
+    # /atlas/ redirect + the 51 partner briefs, which are published in the same pass so a state
+    # page can never link a brief the build did not write.
+    assert len(written) == 51 * 3 + 3
     assert (tmp_path / "atlas" / "2026" / "california" / "index.html").exists()   # editioned canonical
     assert (tmp_path / "california-tax.html").exists()                            # flat redirect alias
     assert (tmp_path / "atlas" / "2026" / "index.html").exists()                  # edition index

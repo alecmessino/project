@@ -81,13 +81,17 @@ signals. Driftwood mirrors this for prices (`feed/base.py`, `signal.py`, `sizing
   one `<img src>` away from a page that just wants texture. Never nav, footer, favicon, dividers,
   avatars, or any repeating slot; its rarity is the entire instrument. Putting it back on a page
   means editing `tests/test_drift_heron.py` on purpose. Rules in `OPERATIONS.md`.
-- **The homepage hero is the watershed, and its geometry is generated.** The 29 vectors in
-  `hub.html` and every animation delay come from `design/hero-watershed-2026/build_paths.py`,
-  which also writes the prototypes in that directory from the same run. Change a landmark and
-  re-run `python3 design/hero-watershed-2026/build_paths.py --inject`; never hand-edit a `d`
-  attribute or anything between the `GEOM` markers. Unlike the house mark, this slot *loops* —
-  a 12s travelling front, outer capillaries → majors → stem. That is a deliberate departure from
-  the mark's "permanent, not animated" rule, recorded in `OPERATIONS.md`.
+- **The homepage hero is the watershed, and its geometry is locked, not generated (2026-08-10).**
+  Twelve feeders → four junctions → two confluences → one outflow, inline in `hub.html`, baked at
+  boldness 0.75 with the weights and palette recorded in `OPERATIONS.md`.
+  `design/hero-watershed-2026/build_paths.py` **no longer drives this plate** — it generated the
+  traced-Mississippi version that this replaced, and running it with `--inject` would put that
+  version back. There are no `GEOM` markers left in `hub.html`. The same drawing exists twice more,
+  in `design/watershed-diagram-redesign/assets/` (animated + static); those two are pinned against
+  each other by `tests/test_watershed_assets.py`, the copy in `hub.html` is pinned by nothing, so
+  carry a geometry change to all three by hand. The slot draws once on load and then never moves —
+  the 12s travelling front and the hover hierarchy are gone, and with them the "this slot loops"
+  exception to the house mark's one-pass rule.
 - **mrbet:** The Odds API has no game clock; the live clock/score comes from ESPN. `β`, `σ`,
   and trigger thresholds are unvalidated defaults — tune against logged data before trusting
   live output.

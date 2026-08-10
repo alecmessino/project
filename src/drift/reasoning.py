@@ -269,3 +269,259 @@ def build_reasoning(code: str, environment: dict) -> dict:
         "coordination": coordination,
         "actions": build_actions(ctx, active),
     }
+
+
+# ── Layer 3b · COLLISIONS ── STAGED, NOT PUBLISHED. Read this before wiring it up. ────────────────
+#
+# WHY IT IS NOT RENDERED. Two full adversarial reviews, three independent lenses each, both refused
+# it. Round two was not a near miss: it found defects the first round had not, and two of those were
+# introduced by the round-one fixes (Maryland's inheritance tax described as stacking on the estate
+# tax when 7-309 credits it, and Pennsylvania's 0% spousal rate omitted from a card whose whole
+# thesis is that the beneficiary form sets the rate). A generator that produces a NEW false tax
+# claim each time it is corrected is not one bad paragraph away from shipping.
+#
+# THE ROOT CAUSE IS THE DATA LAYER, NOT THE PROSE. Each archetype below wants a fact the per-state
+# record does not carry, so the copy reaches for it and gets it wrong:
+#   * estate_and_realization implies the state estate tax bites at the FIRST death. All twelve of
+#     those states allow an unlimited marital deduction, so for a married couple it does not. The
+#     record has no marital-deduction field.
+#   * heir_class_form needs per-class exemptions (PA spouse 0%, NJ's $25k Class C, NE's $100k
+#     Class 1), not just rate ranges.
+#   * qsbs_state_only_sale asserts prior-year losses reach the state bill; that is false in AL, NJ
+#     and PA, which the SAME PAGE says two cards below. It also needs the 1202 cap, and MS and DC
+#     conformity both need re-verification against statute.
+#   * no_muni_shelter says "no matter who issued it"; all three states exempt specific in-state
+#     issues, and Treasuries stay state-exempt, which the closing sentence steers away from.
+#   * loss_meets_gain rests, for Hawaii, on an uncited five-year expiry that looks like the
+#     1212(a) CORPORATE carryover applied to an individual.
+#   * community_basis states the elective community-property trust step-up as settled; the federal
+#     1014(b)(6) consequence has never been ruled on.
+#   * The statute lines are worse than none on two cards: citations_for pulls any citation attached
+#     to any dimension the card reads, so a QSBS card cited California's rate section.
+#
+# WHAT HAS TO HAPPEN FIRST. Close the data gaps above as structured fields with citations, narrow
+# the set to archetypes whose every claim resolves to one, and route the copy through PAS/OSJ as
+# the compliance headers on every professional-education page in this repo already require. Then
+# re-run the verification and wire build_collisions back into build_reasoning.
+#
+# tests/test_statepages.py::test_no_collision_block_is_published enforces the withholding.
+#
+# Every other node on an Atlas page restates one rule. A collision states the CONTRADICTION between
+# two of a state's own rules: a step that reduces one tax and increases another. It is the only
+# place the coordination argument stops being a claim about the firm and becomes a checkable fact
+# about the reader's state, which is why it is worth the care below.
+#
+# THREE RULES, learned from an adversarial review that refused the first draft outright:
+#
+#   1. COVERAGE IS NOT THE PRODUCT. The first draft required every one of the 51 states to render
+#      two cards, and to reach that it invented two archetypes that were false or vacuous outside
+#      their showcase state. A collision block cannot be forced to fire where nothing collides.
+#      The minimum is zero and _collisions_html renders nothing for an empty list.
+#   2. ONE CLOSER PER DIMENSION. Each archetype declares the dimension it closes; a page never
+#      states the same basis or loss fact twice in two different voices.
+#   3. THE WEAKER TRUE CLAIM WINS. Where a sharper sentence needed a fact the record does not
+#      carry, the sentence was cut rather than reconstructed. Specific casualties, recorded so they
+#      are not "improved" back in:
+#        - "no state return follows a death here" was FALSE in 24 of the 33 states it would have
+#          shipped on: no death tax does not mean no final individual or fiduciary return.
+#        - a which-spouse-holds-the-lot archetype denied its own headline, because on a joint
+#          return the holder does not change the income answer. Deleted, not softened.
+#        - the muni card quoted the long-term capital-gains rate for an ordinary-income decision,
+#          and read as "municipal bonds buy nothing here" while omitting that the FEDERAL exemption
+#          is untouched. It now quotes the ordinary rate and says so.
+#
+# Nothing here is advice. Each card states a mechanism and names the desks it sits across.
+
+MAX_COLLISIONS = 2
+
+_ROOM_ORDER = ("advisor", "CPA", "estate attorney")
+
+
+def _room(*who: str) -> str:
+    """The desks a collision sits across, in one fixed order so the same set always reads the same."""
+    seen = [w for w in _ROOM_ORDER if w in who]
+    return " + ".join(seen)
+
+
+def _reg(env: dict, dim: str) -> str:
+    return (env.get(dim) or {}).get("regime") or ""
+
+
+def _nm(ctx: _Ctx) -> str:
+    from .leakage import STATE_NAMES
+    return STATE_NAMES.get(ctx.code, ctx.code)
+
+
+def _fires(arch: dict, ctx: _Ctx) -> bool:
+    for dim, allowed in arch.get("requires", {}).items():
+        if _reg(ctx.env, dim) not in allowed:
+            return False
+    for dim, banned in arch.get("excludes", {}).items():
+        if _reg(ctx.env, dim) in banned:
+            return False
+    guard = arch.get("guard")
+    return guard(ctx) if guard else True
+
+
+# How the first death treats basis, per marital-property regime. Phrased so each is true on its own
+# and none overstates: the UDCPRDA line keeps its precondition, which the first draft dropped.
+_RESET = {
+    "community": "community property takes a full reset at the first death, both halves",
+    "optin": "a full reset at the first death is available, but only for property the couple has "
+             "placed in the state's elective community-property trust",
+    "common": "only the decedent's half of jointly held property resets, and the survivor carries "
+              "their original basis on the other half",
+    "udcprda": "only the decedent's half resets, unless the property was brought from a "
+               "community-property state and keeps that character under the state's UDCPRDA adoption",
+}
+
+
+def _x_estate_and_realization(ctx: _Ctx) -> str:
+    nm, e = _nm(ctx), (ctx.estate or {})
+    lead = "A long-term gain" if _reg(ctx.env, "cg") == "lt_only" else "A gain"
+    how = " as a state excise" if _reg(ctx.env, "cg") == "lt_only" else ""
+    cliff = {
+        "hard": ", and once an estate clears that figure the tax reaches essentially the whole "
+                "estate rather than only the excess",
+        "phaseout": ", and an estate more than 5% over that figure loses the exclusion altogether, "
+                    "so the tax then reaches the whole estate rather than only the excess",
+    }.get(e.get("cliff_kind"), "")
+    return (f"{lead} realized in {nm} is taxed at a top effective {ctx.rate_display}{how}. The same "
+            f"dollar meets a second {nm} tax if it is still in the estate at death, because the state "
+            f"taxes estates above {e.get('exemption_display')}, well below the federal exclusion{cliff}. "
+            f"Realizing reduces the second exposure and pays the first; holding does the reverse, and "
+            f"{_RESET[_reg(ctx.env, 'stepup')]}.")
+
+
+def _x_heir_class_form(ctx: _Ctx) -> str:
+    nm, e = _nm(ctx), (ctx.estate or {})
+    return (f"{nm} taxes what people RECEIVE at death, by their relationship to the deceased, rather "
+            f"than only the estate by its size: {e.get('heir_detail')}. Which class a given account "
+            f"falls into therefore follows whoever is named on it, and beneficiary designations sit "
+            f"on custodial paperwork that is updated on a different schedule from the will. The "
+            f"instrument that records the intention and the form that controls the account are held "
+            f"by two different people.")
+
+
+def _x_no_muni_shelter(ctx: _Ctx) -> str:
+    nm = _nm(ctx)
+    ordinary = RATES.get(ctx.code, (0.0, 0.0))[1] * 100
+    return (f"Municipal-bond interest is ordinary income, and {nm} taxes it at up to {ordinary:g}% no "
+            f"matter who issued it, in state or out. The federal exemption is unaffected, so municipal "
+            f"bonds still do their usual federal work; what {nm} removes is the in-state preference a "
+            f"home-state ladder is normally built to capture. The remaining question is where a holding "
+            f"sits rather than what it is, which is an account-structure question rather than a "
+            f"bond-selection one.")
+
+
+def _x_qsbs_state_only_sale(ctx: _Ctx) -> str:
+    nm = _nm(ctx)
+    return (f"{nm} does not follow the federal §1202 exclusion, so a qualifying small-business sale "
+            f"can be fully exempt on the federal return and taxed at up to {ctx.rate_display} on the "
+            f"state one. It is one of the few transactions where the two answers diverge this far, "
+            f"and the federal exemption is what usually removes the reason to plan for it at all. "
+            f"Losses banked in earlier years carry forward under the federal rules, so the harvesting "
+            f"record of the years BEFORE a sale is one of the few things still able to reach the "
+            f"state bill by the time it lands.")
+
+
+def _x_loss_meets_gain(ctx: _Ctx) -> str:
+    nm = _nm(ctx)
+    if _reg(ctx.env, "loss") == "expires":
+        window = (f"{nm} lets a capital loss carry forward, but not indefinitely, so a loss banked "
+                  f"today has a date after which it is worth nothing")
+    else:
+        window = (f"{nm} provides no carryforward for a capital loss, so a loss and the gain it is "
+                  f"meant to offset have to land in the same tax year")
+    return (f"{window}. The basis rule runs the other way: the positions carrying the largest "
+            f"embedded gains are the ones with the lowest basis, and {_RESET[_reg(ctx.env, 'stepup')]}, "
+            f"so the gain best placed to use the loss is also the one with the most waiting for it. "
+            f"The harvesting calendar and the holding decision are set on different desks.")
+
+
+def _x_community_basis(ctx: _Ctx) -> str:
+    nm = _nm(ctx)
+    return (f"{nm} imposes no estate or inheritance tax, so nothing at death sets a state "
+            f"transfer-tax deadline and nothing forces the basis question onto a calendar. State law "
+            f"still decides its answer: {_RESET[_reg(ctx.env, 'stepup')]}. Whether a given account "
+            f"qualifies is a titling question settled long before the death it matters at, and the "
+            f"absence of a state death tax is exactly what keeps anyone from checking it.")
+
+
+def _x_harvest_into_basis(ctx: _Ctx) -> str:
+    nm = _nm(ctx)
+    return (f"A harvested loss in {nm} recovers the {ctx.rate_display} state rate it offsets, on top "
+            f"of its federal value, and it is bought by carrying a lower basis on whatever replaces "
+            f"the position. That deferred gain meets the state rate again on a later sale, or it "
+            f"reaches the first death, where {_RESET[_reg(ctx.env, 'stepup')]}. The desk that decides "
+            f"the harvest and the desk that decides what is held until death are rarely the same one.")
+
+
+# rank orders the ladder: largest dollar consequence first, structural and correctable last.
+# closes_on is the dimension a card spends, so no page states the same fact twice (see rule 2).
+COLLISION_ARCHETYPES = [
+    {"id": "estate_and_realization", "rank": 1, "closes_on": "stepup",
+     "title": "The gain decision and the estate decision are the same decision.",
+     "requires": {"estate": ("estate", "both")}, "excludes": {"cg": ("notax",)},
+     # Connecticut's exemption IS the federal exclusion, so the "second, lower threshold" this card
+     # is entirely about does not exist there. Gating on the number rather than the regime.
+     "guard": lambda c: 0 < ((c.estate or {}).get("exemption_usd") or 0) < _FED_ESTATE_EXEMPTION,
+     "reads": ("cg", "estate", "stepup"), "room": _room("advisor", "CPA", "estate attorney"),
+     "body": _x_estate_and_realization},
+    {"id": "qsbs_state_only_sale", "rank": 3, "closes_on": "qsbs",
+     "title": "The sale that is exempt federally is a full-rate state event.",
+     "requires": {"qsbs": ("decoupled",)}, "excludes": {"cg": ("notax",)},
+     "reads": ("qsbs", "cg", "loss"), "room": _room("advisor", "CPA"),
+     "body": _x_qsbs_state_only_sale},
+    {"id": "loss_meets_gain", "rank": 4, "closes_on": "loss",
+     "title": "The loss and the gain it offsets have to meet, and basis keeps them apart.",
+     "requires": {"loss": ("none", "expires")},
+     "reads": ("loss", "cg", "stepup"), "room": _room("advisor", "CPA"),
+     "body": _x_loss_meets_gain},
+    {"id": "no_muni_shelter", "rank": 5, "closes_on": "muni",
+     "title": "The usual shelter for ordinary income is the one the state withholds.",
+     "requires": {"muni": ("taxall",)}, "excludes": {"cg": ("notax",)},
+     "reads": ("muni", "cg"), "room": _room("advisor", "CPA"),
+     "body": _x_no_muni_shelter},
+    # Second, not fifth. On dollar magnitude alone this ranks lower: for a spouse-and-children
+    # estate the tax is zero in KY, NE, NJ and MD and 4.5% in PA, which is why the copy leads with
+    # the close-heir exemption. It is ranked here on coordination value instead. In New Jersey and
+    # Pennsylvania a fifth-place rank let the QSBS and loss cards take both slots, so the two
+    # states whose death tax is decided on a custodial beneficiary form rather than in the will
+    # were the two states that never said so.
+    {"id": "heir_class_form", "rank": 2, "closes_on": "estate",
+     "title": "The rate at death is set on a beneficiary form.",
+     "requires": {"estate": ("inheritance", "both")},
+     "guard": lambda c: bool((c.estate or {}).get("heir_detail")),
+     "reads": ("estate", "stepup"), "room": _room("advisor", "estate attorney"),
+     "body": _x_heir_class_form},
+    # Only where the state's own marital-property law creates a real choice. The common-law and
+    # UDCPRDA states are deliberately excluded: there the "choice" is largely federal, and the
+    # first draft's version of this card shipped a false claim about state returns to reach them.
+    {"id": "community_basis", "rank": 6, "closes_on": "stepup",
+     "title": "No death tax is not the same as no decision at death.",
+     "requires": {"estate": ("none",), "stepup": ("community", "optin")},
+     "reads": ("estate", "stepup"), "room": _room("advisor", "estate attorney"),
+     "body": _x_community_basis},
+    {"id": "harvest_into_basis", "rank": 7, "closes_on": "stepup",
+     "title": "Harvesting spends basis, and the step-up is where the deferral lands.",
+     "requires": {"loss": ("fed",)}, "excludes": {"cg": ("notax", "lt_only")},
+     "reads": ("loss", "cg", "stepup"), "room": _room("advisor", "estate attorney"),
+     "body": _x_harvest_into_basis},
+]
+
+
+def build_collisions(ctx: _Ctx, limit: int = MAX_COLLISIONS) -> list[dict]:
+    """The collisions that actually fire for this state, at most `limit`, possibly none."""
+    out, closed = [], set()
+    for arch in sorted(COLLISION_ARCHETYPES, key=lambda a: (a["rank"], a["id"])):
+        if arch["closes_on"] in closed or not _fires(arch, ctx):
+            continue
+        closed.add(arch["closes_on"])
+        out.append({"node_id": ctx.node_id("collision", arch["id"]), "id": arch["id"],
+                    "kind": "collision", "title": arch["title"], "body": arch["body"](ctx),
+                    "room": arch["room"], "closes_on": arch["closes_on"],
+                    "reads": list(arch["reads"]), "citations": ctx.citations_for(arch["reads"])})
+        if len(out) >= limit:
+            break
+    return out

@@ -86,6 +86,32 @@
   .dcard p{margin:0;font-size:12.5px;color:var(--body);line-height:1.5}
   .dcard .dsrc{font-size:10px;color:var(--muted);margin-top:8px}
   .dcard .dsrc a{color:var(--teal2)}
+
+  /* Collisions. The one block on the page that is not a single rule restated, so it gets an edge
+     weight of its own: a 2px top rule in the accent rather than the 3px left rule the dimension
+     cards and framework signals share. Existing tokens only. */
+  .coll{border-top:2px solid var(--brass);background:#fff;padding:16px 18px 14px;margin-bottom:12px}
+  .coll .ch{font-family:var(--sans);font-weight:500;font-size:15px;color:var(--ink);margin-bottom:7px}
+  .coll p{margin:0;font-size:13px;line-height:1.6;color:var(--body)}
+  .coll .croom{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--brass);margin-top:11px}
+  /* The most assertive statements of law on the page must not be the only ones with no source
+     line. Same treatment as .dcard .dsrc, so the evidence hierarchy reads the same way. */
+  .coll .csrc{font-size:10px;color:var(--muted);margin-top:8px}
+  .coll .csrc a{color:var(--teal2)}
+  /* The one labelled boundary on the page. Above it the page argues; below it the page is a
+     reference. Without the label the reader meets the statute cards as more argument, which is
+     what made the old order feel like a wall. */
+  .refrule{display:flex;align-items:center;gap:14px;margin:26px 40px 4px;
+    font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted)}
+  .refrule::after{content:"";flex:1;height:1px;background:var(--line)}
+  /* The severity headline: the one sentence a reader who reads nothing else should leave with. */
+  .sevline{font-family:var(--sans);font-weight:500;font-size:16px;line-height:1.45;color:var(--ink);
+    margin:0 0 10px;max-width:64ch}
+  /* The FAQ question, now the statute card's own heading rather than a duplicate of its body. */
+  .dcard .dq{font-family:var(--sans);font-weight:500;font-size:12px;line-height:1.4;
+    color:var(--dim);margin:0 0 6px}
   .asofline{font-size:11.5px;color:var(--muted);margin:16px 40px 0;line-height:1.55}
   .asofline b{color:var(--dim)}
   .mnote{font-size:11.5px;color:var(--muted);margin:10px 0 0;line-height:1.55;max-width:70ch}
@@ -151,6 +177,7 @@
      isn't pinched, consistent with the other exhibits. */
   @media(max-width:600px){
     .bcrumb,.hd,.hdc,.grid,.sec,.rel{padding-left:18px;padding-right:18px}
+    .refrule{margin-left:18px;margin-right:18px}
     .hero,.cta,.capture,.disc,.colophon,.asofline,.chlog,.hookcta,.heronote{margin-left:18px;margin-right:18px}
   }
   @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}

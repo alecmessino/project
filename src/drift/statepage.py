@@ -171,26 +171,25 @@ def _faq(code: str, name: str, rec: dict) -> list[dict]:
     faq = []
     cg = rec.get("cg")
     if cg:
-        faq.append({"q": f"How are capital gains taxed in {name}?", "a": cg["note"]})
+        faq.append({"q": f"How are capital gains taxed in {name}?", "a": cg["note"], "dim": "cg"})
     est = rec.get("estate")
     if est:
-        faq.append({"q": f"Does {name} have a state estate or inheritance tax?", "a": est["note"]})
+        faq.append({"q": f"Does {name} have a state estate or inheritance tax?", "a": est["note"], "dim": "estate"})
     mar = rec.get("marriage")
     if mar:
-        faq.append({"q": f"Is there a marriage penalty in {name}?", "a": mar["note"]})
+        faq.append({"q": f"Is there a marriage penalty in {name}?", "a": mar["note"], "dim": "marriage"})
     muni = rec.get("muni")
     if muni:
-        faq.append({"q": f"How does {name} tax municipal-bond interest?", "a": muni["note"]})
+        faq.append({"q": f"How does {name} tax municipal-bond interest?", "a": muni["note"], "dim": "muni"})
     qsbs = rec.get("qsbs")
     if qsbs:
-        faq.append({"q": f"Does {name} follow the federal QSBS (§1202) exclusion?", "a": qsbs["note"]})
+        faq.append({"q": f"Does {name} follow the federal QSBS (§1202) exclusion?", "a": qsbs["note"], "dim": "qsbs"})
     loss = rec.get("loss")
     if loss:
-        faq.append({"q": f"What happens to a capital loss you carry forward in {name}?", "a": loss["note"]})
-    a = rec.get("alpha")
-    if a:
-        faq.append({"q": f"How much is careful tax coordination worth in {name}?",
-                    "a": a["note"]})
+        faq.append({"q": f"What happens to a capital loss you carry forward in {name}?", "a": loss["note"], "dim": "loss"})
+    # The alpha question is deliberately NOT here. It has no dimension card to sit on, the hero
+    # states the same figure two screens above, and leaving it in would put one FAQPage entry
+    # behind no visible prose, which is the defect merging the others into the cards just removed.
     return faq
 
 
@@ -311,16 +310,26 @@ def _src_line(d: dict) -> str:
             f'{_esc(d.get("source", ""))}</div>')
 
 
-def _dim_cards(rec: dict) -> str:
+def _dim_cards(rec: dict, questions: dict | None = None) -> str:
+    """The seven statute cards, each carrying its FAQ question as an <h3>.
+
+    That merge removed the page's largest duplication: `_faq` and `_dim_cards` both read
+    `rec[dim]["note"]`, so all seven answers printed twice, once in a card and once verbatim
+    inside a collapsed <details> a few sections down. Merging rather than deleting also fixes the
+    mirror defect, because the FAQPage structured data now points at visible prose rather than at
+    content hidden behind a summary.
+    """
     cards = []
     for key in _DIM_ORDER:
         d = rec.get(key)
         if not d:
             continue
         tag = f'<span class="dtag">{_esc(d["tag"])}</span>' if d.get("tag") else ""
+        q = (questions or {}).get(key)
+        qline = f'<h3 class="dq">{_esc(q)}</h3>' if q else ""
         cards.append(
             f'<div class="dcard"><div class="dh">{_esc(_DIM_LABEL[key])}{tag}</div>'
-            f'<p>{_esc(d["note"])}</p>'
+            f'{qline}<p>{_esc(d["note"])}</p>'
             f'{_src_line(d)}</div>'
         )
     return "\n".join(cards)
@@ -372,14 +381,31 @@ def _impact_block(name: str, a: dict | None) -> str:
     )
 
 
-def _faq_html(faq: list[dict]) -> str:
-    if not faq:
+
+def _collisions_html(cols: list[dict], name: str) -> str:
+    """The collision block. Renders nothing when nothing collides, which is a real outcome for
+    three states and is the whole reason the minimum is zero rather than two."""
+    if not cols:
         return ""
-    items = "\n".join(
-        f'<details class="faq"><summary>{_esc(f["q"])}</summary><p>{_esc(f["a"])}</p></details>'
-        for f in faq
-    )
-    return f'<div class="sec"><div class="sh">Frequently asked, {len(faq)} on {{}}</div>{items}</div>'
+    cards = []
+    for c in cols:
+        cites = c.get("citations") or []
+        src = ('<div class="csrc"><b>Statute:</b> ' + " · ".join(
+            f'<a href="{_esc(x["url"])}" target="_blank" rel="noopener">{_esc(x["label"])}</a>'
+            for x in cites) + "</div>") if cites else (
+            '<div class="csrc"><b>Summary of state law</b>, primary-source citation in progress.</div>')
+        cards.append(f'<div class="coll"><div class="ch">{_esc(c["title"])}</div>'
+                     f'<p>{_esc(c["body"])}</p>{src}'
+                     f'<div class="croom">In the room: {_esc(c["room"])}</div></div>')
+    return (f'<div class="sec"><div class="sh">Where two {_esc(name)} rules meet</div>'
+            f'<p class="lede" style="margin:2px 0 14px">The cards above state {_esc(name)}\'s rules '
+            f'one at a time. These are the places where two of them bear on the same decision from '
+            f'opposite directions, so a step that reduces one {_esc(name)} tax can increase another.</p>'
+            + "\n".join(cards) +
+            f'<p class="mnote">Mechanism only, derived from the rules each card names and reflecting '
+            f'{_esc(AS_OF_LAW)}. Not investment, tax, or legal advice, not a recommendation, and not a '
+            f'statement about any particular household. Confirm any of it with your own tax advisor '
+            f'and attorney before acting.</p></div>')
 
 
 def _jsonld(name: str, code: str, rec: dict, faq: list[dict], edition: str = CURRENT_EDITION) -> str:
@@ -458,6 +484,32 @@ _HEAD_CSS = """
   .dcard p{margin:0;font-size:12.5px;color:var(--body);line-height:1.5}
   .dcard .dsrc{font-size:10px;color:var(--muted);margin-top:8px}
   .dcard .dsrc a{color:var(--teal2)}
+
+  /* Collisions. The one block on the page that is not a single rule restated, so it gets an edge
+     weight of its own: a 2px top rule in the accent rather than the 3px left rule the dimension
+     cards and framework signals share. Existing tokens only. */
+  .coll{border-top:2px solid var(--brass);background:#fff;padding:16px 18px 14px;margin-bottom:12px}
+  .coll .ch{font-family:var(--sans);font-weight:500;font-size:15px;color:var(--ink);margin-bottom:7px}
+  .coll p{margin:0;font-size:13px;line-height:1.6;color:var(--body)}
+  .coll .croom{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--brass);margin-top:11px}
+  /* The most assertive statements of law on the page must not be the only ones with no source
+     line. Same treatment as .dcard .dsrc, so the evidence hierarchy reads the same way. */
+  .coll .csrc{font-size:10px;color:var(--muted);margin-top:8px}
+  .coll .csrc a{color:var(--teal2)}
+  /* The one labelled boundary on the page. Above it the page argues; below it the page is a
+     reference. Without the label the reader meets the statute cards as more argument, which is
+     what made the old order feel like a wall. */
+  .refrule{display:flex;align-items:center;gap:14px;margin:26px 40px 4px;
+    font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted)}
+  .refrule::after{content:"";flex:1;height:1px;background:var(--line)}
+  /* The severity headline: the one sentence a reader who reads nothing else should leave with. */
+  .sevline{font-family:var(--sans);font-weight:500;font-size:16px;line-height:1.45;color:var(--ink);
+    margin:0 0 10px;max-width:64ch}
+  /* The FAQ question, now the statute card's own heading rather than a duplicate of its body. */
+  .dcard .dq{font-family:var(--sans);font-weight:500;font-size:12px;line-height:1.4;
+    color:var(--dim);margin:0 0 6px}
   .asofline{font-size:11.5px;color:var(--muted);margin:16px 40px 0;line-height:1.55}
   .asofline b{color:var(--dim)}
   .mnote{font-size:11.5px;color:var(--muted);margin:10px 0 0;line-height:1.55;max-width:70ch}
@@ -523,6 +575,7 @@ _HEAD_CSS = """
      isn't pinched, consistent with the other exhibits. */
   @media(max-width:600px){
     .bcrumb,.hd,.hdc,.grid,.sec,.rel{padding-left:18px;padding-right:18px}
+    .refrule{margin-left:18px;margin-right:18px}
     .hero,.cta,.capture,.disc,.colophon,.asofline,.chlog,.hookcta,.heronote{margin-left:18px;margin-right:18px}
   }
   @media print{body{background:#fff}.sheet{margin:0;max-width:none}.frame{border:0;box-shadow:none}.cta,.capture,.dwnav{display:none}}
@@ -605,10 +658,47 @@ def _summary(name: str, rec: dict) -> str:
     return ("; ".join(bits) + ".") if bits else ""
 
 
+_SEV_WORD = {1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five"}
+
+
+def _lower_first(s: str) -> str:
+    return (s[:1].lower() + s[1:]) if s else s
+
+
+def _severity_line(framework: list[dict], name: str) -> str:
+    """How many of the five lenses read high or severe, and which.
+
+    Pure derivation: it authors no threshold of its own, it counts the levels drift.reasoning
+    already assigned, so it can never disagree with the meters beside it. It leads the decision
+    half because severity is the trigger, and this is the one sentence a reader who reads nothing
+    else should leave with. Ties resolve to framework order, so a state's line is deterministic.
+    """
+    if not framework:
+        return ""
+    hot = [s for s in framework if s["level"] in ("high", "severe")]
+    if not hot:
+        top = max(framework, key=lambda s: s["score"])
+        if top["score"] == 0:
+            return (f"No lens reads above none in {name}: nothing in this environment forces a "
+                    f"decision, and the work is maintenance.")
+        return (f"No lens reads high or severe in {name}. The strongest reading is "
+                f"{_lower_first(top['title'])}, at {top['level']}, so the work here is maintenance "
+                f"rather than repair.")
+    titles = [_lower_first(s["title"]) for s in hot]
+    if len(titles) == 1:
+        listed = titles[0]
+    elif len(titles) == 2:
+        listed = " and ".join(titles)
+    else:
+        listed = ", ".join(titles[:-1]) + ", and " + titles[-1]
+    verb = "reads" if len(hot) == 1 else "read"
+    return f"{_SEV_WORD[len(hot)]} of the five lenses {verb} high or severe in {name}: {listed}."
+
+
 _LEVEL_DOTS = {"none": 0, "low": 1, "moderate": 2, "high": 3, "severe": 4}
 
 
-def _reasoning_html(r: dict, name: str) -> str:
+def _reasoning_html(r: dict, name: str) -> dict:
     """Render the reasoning chain (§16) from the composable primitives: the Decision Framework (the
     centrepiece), the planning considerations it opens, and the sequenced action register. The
     objects come from drift.reasoning, this only renders them."""
@@ -622,7 +712,8 @@ def _reasoning_html(r: dict, name: str) -> str:
             f'<span class="fm" role="img" aria-label="{_esc(s["level"])}, {_esc(s["question"])}">{dots}</span></div>'
             f'<p>{_esc(s["reading"])}</p></div>')
     framework = (
-        f'<div class="sec"><div class="sh">How to think about {_esc(name)}</div>'
+        f'<div class="sec"><h2 class="sh">How to think about {_esc(name)}</h2>'
+        f'<p class="sevline">{_esc(_severity_line(r["framework"], name))}</p>'
         f'<p class="lede" style="margin-bottom:14px">Five lenses turn {_esc(name)}\'s tax environment into a '
         f'household decision, the same lenses every state is read through, so any two states weigh on '
         f'identical terms.</p><div class="fw">{chr(10).join(sigs)}</div></div>')
@@ -631,15 +722,15 @@ def _reasoning_html(r: dict, name: str) -> str:
         items = "\n".join(
             f'<li><span class="ca">{_esc(c["title"])}</span> <span class="cw">· with your {_esc(c["coordinate_with"])}</span>'
             f'<p>{_esc(c["rationale"])}</p></li>' for c in r["coordination"])
-        coordination = (f'<div class="sec"><div class="sh">Coordination priorities for {_esc(name)} households</div>'
+        coordination = (f'<div class="sec"><h2 class="sh">Coordination priorities for {_esc(name)} households</h2>'
                         f'<ul class="considx">{items}</ul></div>')
     actions = ""
     if r["actions"]:
         items = "\n".join(
             f'<li><span class="ao">{_esc(a["owner"])}</span><span>{_esc(a["step"])}</span></li>' for a in r["actions"])
-        actions = (f'<div class="sec"><div class="sh">What should happen next</div>'
+        actions = (f'<div class="sec"><h2 class="sh">What should happen next</h2>'
                    f'<ol class="actreg">{items}</ol></div>')
-    return framework + coordination + actions
+    return {"framework": framework, "coordination": coordination, "actions": actions}
 
 
 def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
@@ -652,7 +743,12 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
     levers = "\n".join(
         f'<div class="lv"><div class="n">{_esc(l["name"])}</div><div class="d">{_esc(l["desc"])}</div></div>'
         for l in data["levers"])
-    faq_html = _faq_html(faq).replace("{}", _esc(name)) if faq else ""
+    reasoning_r = data.get("reasoning") or {"framework": [], "coordination": [], "actions": [],
+                                            "collisions": []}
+    rz = _reasoning_html(reasoning_r, name)
+    collisions_html = _collisions_html(reasoning_r.get("collisions") or [], name)
+    # Each statute card gets its own FAQ question as a heading, so the answer is printed once.
+    questions = {f["dim"]: f["q"] for f in faq if f.get("dim")}
     related = " · ".join(   # sibling editioned pages
         f'<a href="{atlas_url(c, edition)}">{_esc(nm)}</a>' for c, nm in data["related"])
     rate = (rec.get("cg") or {}).get("tag", "")
@@ -730,11 +826,28 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
       {summary_p}
       {context_p}
     </div>
-    <div class="grid">
-      {_dim_cards(rec)}
+    <!-- THE DECISION HALF. Severity, the collisions, who owns what, then the ask. This page used
+         to run the other way: the five lenses that ARE the decision trigger sat at position nine,
+         below seven statute cards and a seven-item FAQ, so a reader met the reference material
+         first and the argument last. Inverted pyramid now, and the boundary below is labelled so
+         the reference half reads as reference rather than as more argument. -->
+    {rz["framework"]}
+    {collisions_html}
+    {rz["coordination"]}
+    {rz["actions"]}
+    <div class="cta">
+      <div class="ctxt">
+        <div class="ch">See the figure on your own {_esc(name)} portfolio.</div>
+        <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture, by bracket and holdings.</div>
+      </div>
+      <a class="primary" href="{_ABS}leakage.html?state={code}">Run my {_esc(name)} diagnostic &rarr;</a>
+      <a class="ghost" href="{booking_link(f'state-{code.lower()}')}">Schedule a Coordination Review</a>
     </div>
-    {faq_html}
-    <div class="sec"><div class="sh">What careful tax management can change</div>
+    <div class="refrule"><span>The rules themselves</span></div>
+    <div class="grid">
+      {_dim_cards(rec, questions)}
+    </div>
+    <div class="sec"><h2 class="sh">What careful tax management can change</h2>
       <p class="lede" style="margin:2px 0 14px">Tax law is only half the picture. How a portfolio is
         built and run, where each holding sits, how losses are used, how gains are timed, decides how
         much of {_esc(name)}'s tax code you actually pay. The figure at the top of this page is what
@@ -746,15 +859,6 @@ def render_state_html(data: dict, edition: str = CURRENT_EDITION) -> str:
       <p class="mnote" style="margin-top:0">Modeled on a single proxy-spliced path, 1996 to 2026.
         Directional, not a precise figure.</p>
       <div class="levers" style="margin-top:14px">{levers}</div></div>
-    {_reasoning_html(data.get("reasoning") or {"framework": [], "considerations": [], "actions": []}, name)}
-    <div class="cta">
-      <div class="ctxt">
-        <div class="ch">See the figure on your own {_esc(name)} portfolio.</div>
-        <div class="cd">The personalized diagnostic computes your after-tax, asset-location, and harvesting picture, by bracket and holdings.</div>
-      </div>
-      <a class="primary" href="{_ABS}leakage.html?state={code}">Run my {_esc(name)} diagnostic →</a>
-      <a class="ghost" href="{booking_link(f'state-{code.lower()}')}">Schedule a Coordination Review</a>
-    </div>
 {capture}
     <div class="rel">Onward: <a href="{edition_url(edition)}compare/">weigh {_esc(name)} against another state →</a> · <a href="{edition_url(edition)}crossing/">plan a move →</a> · <a href="{edition_url(edition)}household/">build a coordination record →</a><br><span style="color:var(--muted)">Nearby regimes: {related} · <a href="{edition_url(edition)}">all 50 states + DC →</a></span></div>
     {_provenance_block()}

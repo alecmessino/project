@@ -148,13 +148,28 @@ def test_the_hero_now_carries_the_watershed():
 
 
 def test_the_watershed_sits_behind_the_copy():
-    """Typography has priority structurally, not by luck — the same rule the mark was held to."""
+    """Typography has priority structurally, not by luck — the same rule the mark was held to.
+
+    How it wins changed on 2026-08-10. Both earlier tenants of this slot were hairline drawings
+    faded back under the words with a left mask-image, and this file asserted the mask. At the
+    weights the watershed carries, a fade does not clear the copy — it leaves grey ghosts behind
+    it — so the plate is pinned to start after the text column instead and runs at full colour
+    everywhere it appears. The guarantee is stronger, not weaker: the strokes cannot reach the
+    words because they are not drawn there. What is asserted is therefore the boundary, and it
+    has to stay a CSS-space measurement — expressed in viewBox units it drifted with window
+    height, which is the bug that produced the pinning.
+    """
     t = HUB.read_text(encoding="utf-8")
     assert re.search(r"\.ws\{[^}]*z-index:0", t, re.S), "the watershed left the back plane"
     assert re.search(r"\.hero>\.hero-grid,\.hero>\.ctas\{[^}]*z-index:1", t), \
         "the hero copy is no longer lifted above the drawing"
-    assert re.search(r"\.ws\{[^}]*mask-image:", t, re.S), \
-        "the watershed no longer fades toward the copy"
+    left = re.search(r"\.ws\{[^}]*left:(\d+)px", t, re.S)
+    assert left, "the watershed is no longer pinned clear of the copy column"
+    # 52px hero padding + the 640px measure .hero-aside and .hero .ctas both hold, + a gutter.
+    assert int(left.group(1)) >= 52 + 640, \
+        f"the plate starts at {left.group(1)}px, inside the 692px copy column"
+    assert not re.search(r"\.ws\{[^}]*mask-image:", t, re.S), \
+        "the fade is back; at these weights it ghosts the copy instead of clearing it"
 
 
 def test_the_watershed_carries_no_cartographic_residue():
@@ -163,5 +178,8 @@ def test_the_watershed_carries_no_cartographic_residue():
     t = HUB.read_text(encoding="utf-8")
     svg = t[t.index('<svg class="ws"'): t.index("</svg>", t.index('<svg class="ws"'))]
     assert "<text" not in svg, "the hero drawing has grown a label"
-    assert "basin{display:none}" in t.replace(" ", ""), \
-        "the basin silhouette is being drawn; the network alone is the picture"
+    # The traced Mississippi generated a basin silhouette and hid it with `.ws .basin{display:none}`;
+    # this asserted that rule. The watershed has no geography to hide — no basin is emitted at all,
+    # so the rule would have nothing to switch off. Absence is now the stronger assertion.
+    assert "basin" not in svg, "a basin silhouette is back in the plate; the network is the picture"
+    assert not re.search(r"<(image|use)\b", svg), "the plate has grown a raster or a borrowed symbol"

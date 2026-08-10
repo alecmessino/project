@@ -566,168 +566,103 @@
   @media(prefers-reduced-motion:reduce){.splate,.splate.splot{animation:none}}
 
   /* ══ THE HERO WATERSHED ════════════════════════════════════════════════════════════════════
-     The Mississippi system as pure vector structure on limestone: 24 capillaries, four majors,
-     one stem, and nothing else. No basin fill, no silhouette, no labels, no city dots, no state
-     borders, no coastline, no lakes. The network alone carries the picture.
+     A watershed, not a river. The traced Mississippi that stood in this slot until 2026-08-10 was
+     the right argument in the wrong register: twenty-four capillaries at hairline weight read as
+     atmosphere from three feet away, and the thing the plate is actually claiming — that separate
+     decisions converge, and that the channel is larger below every join than above it — was
+     legible only to a reader who came close enough to study it. This is the same claim drawn at
+     poster scale: twelve feeders, four junctions, two confluences, one outflow. No basin, no
+     geography, no labels. Hierarchy is carried by weight and by depth of colour, which is what
+     keeps it reading as water rather than as a wiring diagram.
 
-     IT IS THE ARGUMENT, NOT ATMOSPHERE, which is why it replaced the house mark in this slot on
-     2026-08-06 rather than sitting behind it. Twenty-four small waters begin apart, join into four
-     majors, and resolve into one channel that is larger below every join than above it — which is
-     the firm's claim about coordination, drawn rather than stated. The heron said composure; this
-     says what the composure is *for*. Two atmospheric marks in one plate would have made both
-     quieter, so the heron came off the website entirely. It is unchanged and still the house mark
-     for print and enduring applications — master now at design/house-mark/, rules in OPERATIONS.md.
+     THE GEOMETRY IS LOCKED, NOT GENERATED. It is composed on a fixed grid and baked at presence
+     1.0 and boldness 0.75 (strokes 9.75 / 15 / 18 / 21.75, palette #5d7e96 → #2c5878).
+     build_paths.py no longer drives this plate and there are no GEOM markers to stay outside of.
+     The same drawing stands alone for print, PDF and email in
+     design/watershed-diagram-redesign/assets/ — watershed-hero.svg (animated) and
+     watershed-hero-static.svg (flat), pinned against each other by tests/test_watershed_assets.py.
+     Those two guard each other; this third copy is guarded by nothing, so a geometry change made
+     here has to be carried there by hand.
 
-     THE GEOMETRY IS GENERATED, NOT TRACED. design/hero-watershed-2026/build_paths.py projects
-     short (lat, lon) landmark lists through one equirectangular projection holding the true 1.31
-     latitude-to-longitude ratio at 40°N, then converts centripetal Catmull-Rom to exact cubic
-     beziers. Every `d` in the markup and every animation delay comes from that script; re-run it
-     with --inject rather than hand-editing, and never edit between the GEOM markers.
+     TYPOGRAPHY STILL WINS, but by geometry now rather than by a mask. The old plate spanned the
+     whole hero and was faded back under the copy with a left gradient; at these weights a fade
+     leaves grey ghosts behind the words instead of clearing them. The plate is pinned to start at
+     716px instead — 24px clear of the copy's 692px right edge (52px of hero padding plus the
+     640px measure the aside and the CTA rule both hold) — so every stroke is full, solid colour
+     everywhere it appears, and simply does not appear where the text is. The boundary is pinned in
+     CSS space, not in viewBox units: expressed in drawing units it drifted with window height. ── */
 
-     Typography always wins: the drawing stays on z-index 0 and is masked back — not cropped —
-     where it approaches the copy, exactly as the house mark was. ── */
+  /* One shot on load and never again: the front runs headwaters-inward — feeders, then junctions,
+     then confluences, then the outflow — so the eye is walked through the argument in the order
+     the argument is made. Nothing loops, breathes, or answers the cursor. A hero that keeps moving
+     asks to be watched; this one only needs to be read. */
+  @keyframes wsdraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+  @keyframes wsnode{from{opacity:0;transform:scale(.35)}to{opacity:1;transform:scale(1)}}
 
-  /* One dial. Every stroke is a multiple of --w, so the drawing scales in proportion and the
-     hierarchy never shifts: capillary, major and stem stay at exactly 1 : 1 : 2 at rest. */
-  .ws{--w:1.6;
-    position:absolute;right:0;top:50%;transform:translateY(-50%);
-    width:100%;height:100%;z-index:0;pointer-events:none;
-    /* Capped so the plate cannot grow without limit. The hero's height is set by how the copy
-       wraps, and an uncapped height:100% makes the drawing a function of text reflow — at very
-       large zoom or a narrow desktop column that inflates it past the composition. */
-    max-height:min(560px,72vh);
-    -webkit-user-select:none;user-select:none;
-    -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.34) 0,rgba(0,0,0,.62) 24%,#000 46%);
-    mask-image:linear-gradient(to right,rgba(0,0,0,.34) 0,rgba(0,0,0,.62) 24%,#000 46%)}
-  .ws .basin{display:none}   /* generated, never drawn — the network is the whole picture */
+  .ws{position:absolute;top:50%;left:716px;right:0;transform:translateY(-50%);
+    height:auto;aspect-ratio:680/626;   /* the viewBox, so the box never letterboxes */
+    z-index:0;pointer-events:none;-webkit-user-select:none;user-select:none}
 
-  /* Resting vectors, one weight for capillary and major alike: the network reads as a network,
-     and the hierarchy is something hover reveals rather than something the plate states up front.
-     non-scaling-stroke keeps the hairline a screen measurement at any hero width. */
-  .ws .flow{fill:none;stroke:#4a86b8;stroke-width:calc(.7px * var(--w));opacity:.82;
-    stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;
-    transition:stroke .5s cubic-bezier(.2,.6,.25,1),stroke-width .5s cubic-bezier(.2,.6,.25,1),
-               opacity .5s cubic-bezier(.2,.6,.25,1)}
-.ws .stem{fill:none;stroke-linecap:round;stroke-linejoin:round;
-    vector-effect:non-scaling-stroke;transition:stroke-width .45s cubic-bezier(.2,.6,.25,1)}
-  /* THE ACCUMULATION. Five runs, split exactly at the confluences, each wider than the one above
-     it — and the colour deepens with the width, because a bigger river is a darker river. This is
-     what makes it read as water rather than as a nerve: uniform branches radiating off a
-     constant-width trunk is how a dendrite is drawn, and that is what it looked like before.
-     Below every join the channel is visibly larger, which is the plate's whole argument. */
-  .ws .stem.s1{stroke:#5f93bd;stroke-width:calc(1.05px * var(--w))}   /* Itasca → Grafton */
-  .ws .stem.s2{stroke:#4a80ad;stroke-width:calc(1.5px  * var(--w))}   /* + the Illinois */
-  .ws .stem.s3{stroke:#3a6d97;stroke-width:calc(2.1px  * var(--w))}   /* + the Missouri */
-  .ws .stem.s4{stroke:#2f5f85;stroke-width:calc(2.8px  * var(--w))}   /* + the Ohio */
-  .ws .stem.s5{stroke:var(--accent-strike);stroke-width:calc(3.6px * var(--w))}  /* + the Arkansas → the delta */
-  /* A hairline cannot be hovered, so each major and the stem carry an invisible companion.
-     The capillaries deliberately have none: the hierarchy resolves them away, not toward. */
-  .ws .hit{fill:none;stroke:transparent;stroke-width:22;stroke-linecap:round;pointer-events:stroke}
-  .ws .glow{fill:none;stroke:var(--accent-strike);stroke-width:calc(2.4px * var(--w));
-    stroke-linecap:round;opacity:0;filter:url(#wsSoft);
-    stroke-dasharray:.12 2;stroke-dashoffset:2.24}
-  
-  /* ── The 12s draw. The network stays drawn; what moves is the front. Each vector carries a
-     second copy of itself with dasharray ".16 .84" over pathLength 1 and dashoffset running
-     1 → 0: the dash period equals the path length, so exactly one lit segment is on a vector at
-     any instant and it re-enters at the headwater as it leaves at the mouth — no seam, no reset.
-     An earlier build animated the visible line itself, which is the textbook continuous draw and
-     leaves each vector absent for half of every cycle; a hero cannot be empty a third of the time.
+  /* Every vector carries a second identity as a dash pattern exactly one path-length long
+     (pathLength="1", dasharray 1), so a single dashoffset 1 → 0 draws it end to end whatever its
+     real length is. Delays sit in the markup, per path, because they encode the order of the
+     merge — they are the drawing's argument, not a decoration on it. */
+  .ws path{fill:none;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:1;stroke-dashoffset:1;
+    /* Longhands, never the `animation` shorthand — the same rule the standalone export carries.
+       The shorthand brings an animation-delay:0 with it, and every delay here is a per-element
+       inline style. Inline wins today, but the shorthand leaves nothing standing between this
+       rule and a flattened sequence the moment one delay moves into the stylesheet. */
+    animation-name:wsdraw;animation-timing-function:cubic-bezier(.45,0,.2,1);
+    animation-fill-mode:both;animation-duration:.9s}
+  /* THE ACCUMULATION. Four weights, four depths of blue. Below every join the channel is both
+     wider and darker, because a bigger river is a darker river — and it is that pairing that stops
+     the plate reading as a dendrite, which is what uniform branches off a constant-width trunk
+     always look like. */
+  .ws .t1 path{stroke:#5d7e96;stroke-width:9.75}
+  .ws .t2 path{stroke:#486e8a;stroke-width:15;animation-duration:.6s}
+  .ws .t3 path{stroke:#386280;stroke-width:18;animation-duration:.55s}
+  /* The outflow is cut square and runs past the right edge of the viewBox rather than stopping
+     inside it: the system leaves the plate, exactly as the house mark's outflow does. */
+  .ws .t4{stroke:#2c5878;stroke-width:21.75;stroke-linecap:butt;animation-duration:.55s}
 
-     Phase is per-path (--t, emitted with the geometry) and always negative, which ADVANCES a
-     vector rather than postponing it, so nothing waits for its first turn. The wave therefore runs
-     outer → majors → stem: the small waters light first, the four majors take it up, and the stem
-     carries it to the delta last. That order is the whole point of the drawing. ── */
-  @keyframes wstrace{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
-  .ws .trace{fill:none;stroke:var(--accent-strike);
-    stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;
-    stroke-dashoffset:1;animation:wstrace linear infinite;animation-delay:var(--t,0s);
-    transition:opacity .5s cubic-bezier(.2,.6,.25,1),stroke-width .5s cubic-bezier(.2,.6,.25,1)}
+  /* Each junction lands just before the runs that leave it, so it reads as the cause of the next
+     channel rather than as a marker dropped on top of one already drawn. */
+  .ws circle{transform-box:fill-box;transform-origin:center;opacity:0;
+    animation-name:wsnode;animation-timing-function:cubic-bezier(.2,.8,.25,1);
+    animation-fill-mode:both;animation-duration:.4s}
+  .ws .n2 circle{fill:#486e8a}
+  .ws .n3 circle{fill:#386280}
+  .ws .n4{fill:#2c5878;animation-duration:.44s}
 
-  /* The lit run lengthens and thickens inward, and the stem crosses in half the time. Every dash
-     pattern sums to exactly 1 — one period per path length — which is what lets the front wrap
-     from mouth back to headwater with no seam. Lengthening it inward is what turns a travelling
-     dash into something that reads as accumulating volume rather than a pulse down a wire. */
-  .ws .trib .flow{stroke-width:calc(1.25px * var(--w));opacity:.92}
-  .ws .outer .trace{stroke-dasharray:.20 .80;animation-duration:12s;
-    stroke-width:calc(.95px * var(--w));opacity:.6}
-  .ws .trib  .trace{stroke-dasharray:.30 .70;animation-duration:12s;
-    stroke-width:calc(1.5px * var(--w));opacity:.85}
-  .ws .trace--stem{stroke-dasharray:.42 .58;animation-duration:12s;
-    stroke-width:calc(2.9px * var(--w));opacity:1}
-
-  /* ── The junctions. Steady, never pulsing: a soft brightening held permanently wherever
-     something joins something larger, so the eye reads the interconnections as structure rather
-     than as events. These used to fire a radial pulse as each front landed, which read as 29
-     local incidents instead of one system in motion — the opposite of what the drawing is for. ── */
-  .ws .join{fill:url(#wsPulse);opacity:.34;pointer-events:none}
-  .ws .joins circle:nth-child(-n+4){opacity:.55}   /* the four majors' mouths carry more */
-
-  /* ── Hover hierarchy. Approaching the system resolves it: the capillaries thin and fall back,
-     the four majors come up, and the stem swells and pulses a soft blue shadow. At rest the plate
-     is a network; under the cursor it is a spine with feeders. ── */
-  .ws:hover .outer .flow{stroke-width:calc(.5px * var(--w));opacity:.26}
-  .ws:hover .outer .trace{opacity:.16}
-  .ws:hover .trib .flow{stroke-width:calc(1.2px * var(--w));opacity:1}
-  .ws:hover .stem{stroke-width:calc(3px * var(--w))}
-  .ws:hover .trace--stem{stroke-width:calc(3.4px * var(--w))}
-  .ws:hover .stemwrap{animation:wsshadow 2.6s ease-in-out infinite}
-  @keyframes wsshadow{
-    0%,100%{filter:drop-shadow(0 0 1.5px rgba(44,88,120,.16))}
-    50%{filter:drop-shadow(0 0 5px rgba(44,88,120,.48))}}
-  .ws .trib:hover .flow{stroke:var(--accent-strike);stroke-width:calc(1.35px * var(--w));opacity:1}
-  .ws .trib:hover .glow{opacity:.5;animation:wscomet 1.5s cubic-bezier(.36,0,.24,1) .04s 1 both}
-  @keyframes wscomet{from{stroke-dashoffset:2.24}to{stroke-dashoffset:1.12}}
-
-  /* Scroll: micro-parallax, ~3px, on the outer tier against the majors and the stem. */
-  @keyframes wsdrift{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,4px,0)}}
-  @supports (animation-timeline:scroll()){
-    .ws .outer{animation:wsdrift linear both;animation-timeline:scroll(root block);
-      animation-range:0 70vh}
-  }
   /* ── STACKED: the drawing comes out of the background and becomes a plate of its own ────────
-     It used to stay absolutely positioned here at height:58%, which failed two ways at once. Its
-     size was a function of how the copy wrapped — the hero runs 724px tall at 390px wide and
-     474px at 768px, so the same drawing rendered 53% smaller on the larger phone, and resized on
-     every rotation and zoom step. And with the column collapsed there is no right-hand void left
-     to occupy, so the network landed directly behind the second paragraph and fought the words.
-
-     In flow, with an aspect-ratio matching the viewBox, it has one size that depends on nothing
-     but the column width. The hero becomes a flex column so the drawing can be ordered AFTER the
-     copy: it is first in the DOM because it is a background on desktop, and typography still
-     wins when the two have to stack. No mask — nothing is behind anything, so there is nothing
-     to fade back from. ── */
-  @media(max-width:900px){
+     It cannot stay pinned once the column collapses — there is no right-hand void left for it to
+     occupy, and the 716px boundary would push it off the page. In flow, with an aspect-ratio
+     matching the viewBox, it has one size that depends on nothing but the column width, and it
+     bleeds off the right frame edge the way every other survey plate does. Ordered between the
+     argument and the ask — headline, lede, drawing, CTA: after the CTA it sits a thousand pixels
+     down a phone and stops being a hero at all, and first it pushes the headline below the fold.
+     The breakpoint is 1040px rather than the old 900px because the wrap has already stepped down
+     to 1060px by then, which leaves the pinned plate about 330px of drawing — too little to carry
+     four tiers of weight. ── */
+  @media(max-width:1040px){
     .hero{display:flex;flex-direction:column;padding-bottom:28px}
-    /* Ordered between the argument and the ask — headline, lede, drawing, CTA. Placed after the
-       CTA it sits ~1200px down a phone and stops being a hero at all; placed first it pushes the
-       headline below the fold. Between the two it is seen, and it is seen having read what it is
-       about, which is the same sequence the desktop composition reads in. */
     .hero-grid{order:1}
-    .ws{--w:1.15;order:2;
-      position:relative;right:auto;top:auto;transform:none;
-      width:100%;height:auto;max-width:100%;max-height:none;
-      aspect-ratio:848/626;         /* the viewBox, so the box never letterboxes */
-      display:block;margin:26px 0 4px;
-      -webkit-mask-image:none;mask-image:none}
+    .ws{order:2;position:relative;top:auto;left:auto;right:auto;transform:none;
+      display:block;width:calc(100% + 52px);margin:26px -52px 4px 0}
     .ctas{order:3}
   }
-  /* Note on preserveAspectRatio: it stays xMaxYMid and does not need a mobile override, because
-     the box's aspect-ratio now matches the viewBox exactly — `meet` fits edge to edge, so there
-     is no letterbox for the anchor to bias. It only mattered while the box was the wrong shape. */
-  @media(max-width:520px){
-    .ws{--w:1}
-    /* The capillaries are the first thing to go illegible at this size — they are hairlines
-       crossing a very short run of limestone. Dropping them back keeps the majors and the stem,
-       which is the reading that matters, and keeps the plate from turning into texture. */
-    .ws .outer{opacity:.5}
+  /* the hero's side padding drops to 22px here, so the bleed has to drop with it or it overshoots
+     the frame and reopens a horizontal scroll on the phone */
+  @media(max-width:620px){
+    .ws{width:calc(100% + 22px);margin-right:-22px}
   }
 
   /* Reduced motion keeps the whole drawing — it is the argument, not the animation. Only the
-     travelling front, the glow and the pulses go; the network stays exactly as drawn. */
+     draw-on goes, and it goes to the finished state rather than to nothing. */
   @media(prefers-reduced-motion:reduce){
-    .ws .stemwrap,.ws .outer{animation:none}
-    .ws .trace,.ws .glow{display:none}
+    .ws path{animation:none;stroke-dashoffset:0}
+    .ws circle{animation:none;opacity:1;transform:none}
   }
 </style>
 </head>
@@ -756,183 +691,58 @@
          the page's actual subject. Length was never the problem; duplicate questions were. ── -->
     <header class="hero">
       <!-- The hero watershed. Decorative: the wordmark in the masthead already carries the
-           identity, so this is aria-hidden and it is never a link. The geometry between the GEOM
-           markers is written by design/hero-watershed-2026/build_paths.py --inject; do not
-           hand-edit a `d` attribute and do not edit inside the markers. -->
-      <svg class="ws" viewBox="180 52 848 626" preserveAspectRatio="xMaxYMid meet"
+           identity, so this is aria-hidden and it is never a link. The geometry is locked — no
+           generator, no GEOM markers — and it is mirrored by the two standalone files in
+           design/watershed-diagram-redesign/assets/. Change one and change all three. The
+           per-path delays are the order of the merge, not decoration. -->
+      <svg class="ws" viewBox="370 52 680 626" preserveAspectRatio="xMaxYMid meet"
            aria-hidden="true" focusable="false">
-        <defs>
-          <radialGradient id="wsPulse">
-            <stop offset="0%"   stop-color="#2c5878" stop-opacity=".55"/>
-            <stop offset="42%"  stop-color="#2c5878" stop-opacity=".26"/>
-            <stop offset="100%" stop-color="#2c5878" stop-opacity="0"/>
-          </radialGradient>
-          <filter id="wsSoft" x="-12%" y="-12%" width="124%" height="124%">
-            <feGaussianBlur stdDeviation="2.4"/>
-          </filter>
-        </defs>
-<!--GEOM:BEGIN-->
-      <!-- THE FIELD — the divide, as 35 landmarks: the Continental Divide down the
-           west, the Great Lakes divide across the north and east, the Appalachian
-           crest down to the Gulf. Fill only; an outline here would be a border. -->
-      <g class="basin">
-        <path class="basin-fill" d="M 200.1 93.7 C 208.8 78.2 250.7 74.4 281.6 70 C 320.8 64.4 374.3 67.7 417.4 70
-          C 456.9 72.1 500.9 70.1 530.6 81.9 C 553.5 91 566.5 119.6 584.9 123.4
-          C 600.5 126.6 615.8 112.2 632.4 111.5 C 650.4 110.7 670.9 113.2 689 120.4
-          C 708.8 128.2 732 142.3 745.6 158.9 C 758.8 175.1 764.4 198.7 770.5 218.2
-          C 776.1 236.2 771.4 258.8 781.8 271.6 C 792.7 284.9 817.4 290.4 836.1 295.3
-          C 854.4 300.2 873.9 301.7 892.7 301.3 C 911.6 300.8 930.9 296.4 949.3 292.4
-          C 967.1 288.4 991.9 271 1001.3 277.5 C 1010.7 284 1010.6 315.7 1005.9 330.9
-          C 1001.4 345 986.9 353.7 976.4 366.5 C 964.4 381.1 949.6 399.2 938 413.9
-          C 928 426.6 921 438 910.8 449.5 C 900 461.8 887.4 475 874.6 485.1
-          C 862.5 494.6 846.7 498.8 836.1 508.8 C 825.7 518.6 820 531.9 811.2 544.4
-          C 801.3 558.4 790.7 574.8 779.5 588.8 C 768.7 602.4 749.6 614.1 745.6 627.4
-          C 742.4 638 754.7 656.8 750.1 660 C 744 664.2 717.3 643.2 700.3 633.3
-          C 681.9 622.6 665.3 609 643.7 597.7 C 617.6 584 581.5 575.5 553.2 559.2
-          C 524.9 542.9 498.8 515.5 474 499.9 C 454.1 487.3 433 482.5 417.4 470.3
-          C 403.5 459.3 392.6 446.9 383.5 431.7 C 373.3 414.8 368.7 391.3 360.8 372.4
-          C 353.5 354.8 348.3 338.9 338.2 322 C 326.5 302.4 308 282.5 292.9 262.7
-          C 277.9 242.9 261.1 223.6 247.7 203.4 C 234.8 184.1 221.8 163.6 213.7 144.1
-          C 206.7 127.1 193.3 105.9 200.1 93.7 Z"/>
-      </g>
-
-      <!-- THE OUTER TIER — the capillaries. Line plus travelling front only: no
-           proximity zone and no glow, because a hairline this fine is not something
-           anyone aims at, and the hover hierarchy resolves it away rather than toward.
-           Each --t is solved, not chosen: it lands this capillary's front on its
-           junction at the moment its parent's front passes through. -->
-      <g class="outer">
-        <path class="flow" pathLength="1" d="M 272.6 203.4 C 286.5 192.5 298.4 179.9 314.4 170.8 C 332.3 160.7 358.5 157.9 375.5 147.1 C 390.6 137.5 404.9 120.4 412.9 111.5 C 417.2 106.7 418.9 103.6 421.9 99.6"/>  <!-- Yellowstone -->
-        <path class="trace" pathLength="1" style="--t:-5.13s" d="M 272.6 203.4 C 286.5 192.5 298.4 179.9 314.4 170.8 C 332.3 160.7 358.5 157.9 375.5 147.1 C 390.6 137.5 404.9 120.4 412.9 111.5 C 417.2 106.7 418.9 103.6 421.9 99.6"/>
-        <path class="flow" pathLength="1" d="M 442.3 304.2 C 471 308.2 503.6 316.6 528.3 316.1 C 547.2 315.7 565 310.6 578.1 307.2 C 587 304.8 592.7 302 600.1 299.5"/>  <!-- Platte -->
-        <path class="trace" pathLength="1" style="--t:-11.97s" d="M 442.3 304.2 C 471 308.2 503.6 316.6 528.3 316.1 C 547.2 315.7 565 310.6 578.1 307.2 C 587 304.8 592.7 302 600.1 299.5"/>
-        <path class="flow" pathLength="1" d="M 561.1 365 C 575.8 364.8 592.6 364.7 605.3 364.4 C 614.7 364.2 621.9 363.8 630.2 363.5"/>  <!-- Kansas -->
-        <path class="trace" pathLength="1" style="--t:-10.71s" d="M 561.1 365 C 575.8 364.8 592.6 364.7 605.3 364.4 C 614.7 364.2 621.9 363.8 630.2 363.5"/>
-        <path class="flow" pathLength="1" d="M 743.3 164.9 C 742.2 179.7 741.2 196.2 739.9 209.3 C 738.9 219.8 741.7 231.3 736.5 237.5 C 731.3 243.8 717.8 243.4 708.5 246.4"/>  <!-- Wisconsin -->
-        <path class="trace" pathLength="1" style="--t:-11.60s" d="M 743.3 164.9 C 742.2 179.7 741.2 196.2 739.9 209.3 C 738.9 219.8 741.7 231.3 736.5 237.5 C 731.3 243.8 717.8 243.4 708.5 246.4"/>
-        <path class="flow" pathLength="1" d="M 617.7 239 C 624.9 250.9 631 264.4 639.2 274.6 C 646.7 283.9 654.5 290.5 664.1 298.3 C 675.3 307.4 690.1 316.1 703 325"/>  <!-- Des Moines -->
-        <path class="trace" pathLength="1" style="--t:-9.95s" d="M 617.7 239 C 624.9 250.9 631 264.4 639.2 274.6 C 646.7 283.9 654.5 290.5 664.1 298.3 C 675.3 307.4 690.1 316.1 703 325"/>
-        <path class="flow" pathLength="1" d="M 870.1 456.9 C 860.3 465.8 852.9 477.6 840.6 483.6 C 826.3 490.5 797.7 499.1 787.5 492.5 C 778.8 486.9 781 467.3 777.3 455.4 C 773.8 444.3 769.7 434.1 766 423.4"/>  <!-- Tennessee -->
-        <path class="trace" pathLength="1" style="--t:-8.37s" d="M 870.1 456.9 C 860.3 465.8 852.9 477.6 840.6 483.6 C 826.3 490.5 797.7 499.1 787.5 492.5 C 778.8 486.9 781 467.3 777.3 455.4 C 773.8 444.3 769.7 434.1 766 423.4"/>
-        <path class="flow" pathLength="1" d="M 865.5 430.2 C 846.1 437 822.2 451.9 807.1 450.7 C 797.1 449.9 790.1 442.5 782.9 437.6 C 776.5 433.3 771.6 428.2 766 423.4"/>  <!-- Cumberland -->
-        <path class="trace" pathLength="1" style="--t:-8.37s" d="M 865.5 430.2 C 846.1 437 822.2 451.9 807.1 450.7 C 797.1 449.9 790.1 442.5 782.9 437.6 C 776.5 433.3 771.6 428.2 766 423.4"/>
-        <path class="flow" pathLength="1" d="M 844 314.6 C 830.8 317.9 814.1 315.8 804.4 324.4 C 793.2 334.4 786.3 362.4 785.2 376 C 784.5 384.4 787.9 390 789.3 397"/>  <!-- Wabash -->
-        <path class="trace" pathLength="1" style="--t:-10.05s" d="M 844 314.6 C 830.8 317.9 814.1 315.8 804.4 324.4 C 793.2 334.4 786.3 362.4 785.2 376 C 784.5 384.4 787.9 390 789.3 397"/>
-        <path class="flow" pathLength="1" d="M 410.6 468.8 C 447.6 469.8 488.8 470.6 521.5 471.7 C 547.6 472.6 571.1 474.5 591.7 474.7 C 607.8 474.8 620.4 473.9 634.7 473.5"/>  <!-- Canadian -->
-        <path class="trace" pathLength="1" style="--t:-8.53s" d="M 410.6 468.8 C 447.6 469.8 488.8 470.6 521.5 471.7 C 547.6 472.6 571.1 474.5 591.7 474.7 C 607.8 474.8 620.4 473.9 634.7 473.5"/>
-        <path class="flow" pathLength="1" d="M 501.2 488 C 529.1 499.4 559 512.8 584.9 522.1 C 606.7 530 630.4 530.7 646 541.4 C 659.4 550.6 665.9 567.9 675.4 578.5 C 683.2 587.1 690.5 593.3 698.1 600.7"/>  <!-- Red -->
-        <path class="trace" pathLength="1" style="--t:-4.17s" d="M 501.2 488 C 529.1 499.4 559 512.8 584.9 522.1 C 606.7 530 630.4 530.7 646 541.4 C 659.4 550.6 665.9 567.9 675.4 578.5 C 683.2 587.1 690.5 593.3 698.1 600.7"/>
-        <path class="flow" pathLength="1" d="M 236.4 73 C 253.7 74.4 272.2 74.7 288.4 77.4 C 302.9 79.9 320.9 82 329.1 87.8 C 334.2 91.4 335.2 96.7 338.2 101.1"/>  <!-- Milk -->
-        <path class="trace" pathLength="1" style="--t:-6.61s" d="M 236.4 73 C 253.7 74.4 272.2 74.7 288.4 77.4 C 302.9 79.9 320.9 82 329.1 87.8 C 334.2 91.4 335.2 96.7 338.2 101.1"/>
-        <path class="flow" pathLength="1" d="M 417.4 253.8 C 443.1 253.3 472.1 251.8 494.4 252.3 C 511.5 252.7 526.3 255.6 539.6 255.3 C 550.2 255.1 558.5 253.3 567.9 252.3"/>  <!-- Niobrara -->
-        <path class="trace" pathLength="1" style="--t:-0.98s" d="M 417.4 253.8 C 443.1 253.3 472.1 251.8 494.4 252.3 C 511.5 252.7 526.3 255.6 539.6 255.3 C 550.2 255.1 558.5 253.3 567.9 252.3"/>
-        <path class="flow" pathLength="1" d="M 540.8 132.3 C 541.5 147.1 541.2 162 543 176.7 C 544.9 191.6 547.5 208 552.1 221.2 C 556.1 232.8 562.6 242 567.9 252.3"/>  <!-- James -->
-        <path class="trace" pathLength="1" style="--t:-0.98s" d="M 540.8 132.3 C 541.5 147.1 541.2 162 543 176.7 C 544.9 191.6 547.5 208 552.1 221.2 C 556.1 232.8 562.6 242 567.9 252.3"/>
-        <path class="flow" pathLength="1" d="M 634.7 400.6 C 643 398.6 652.4 397.5 659.6 394.6 C 665.6 392.3 670.8 388.6 675.4 385.8 C 679.1 383.4 681.9 381.2 685.2 378.9"/>  <!-- Osage -->
-        <path class="trace" pathLength="1" style="--t:-9.68s" d="M 634.7 400.6 C 643 398.6 652.4 397.5 659.6 394.6 C 665.6 392.3 670.8 388.6 675.4 385.8 C 679.1 383.4 681.9 381.2 685.2 378.9"/>
-        <path class="flow" pathLength="1" d="M 678.8 150.1 C 676.9 157.5 674.3 165.6 673.2 172.3 C 672.3 177.7 672.5 182.8 672 187.1 C 671.7 190.5 671.3 193 670.9 196"/>  <!-- St Croix -->
-        <path class="trace" pathLength="1" style="--t:-0.87s" d="M 678.8 150.1 C 676.9 157.5 674.3 165.6 673.2 172.3 C 672.3 177.7 672.5 182.8 672 187.1 C 671.7 190.5 671.3 193 670.9 196"/>
-        <path class="flow" pathLength="1" d="M 756.9 231.6 C 754.3 241.5 753.5 252.5 749 261.2 C 744.7 269.7 736.1 277.9 730.9 283.5 C 727.3 287.2 724.5 289.4 721.4 292.4"/>  <!-- Rock -->
-        <path class="trace" pathLength="1" style="--t:-10.66s" d="M 756.9 231.6 C 754.3 241.5 753.5 252.5 749 261.2 C 744.7 269.7 736.1 277.9 730.9 283.5 C 727.3 287.2 724.5 289.4 721.4 292.4"/>
-        <path class="flow" pathLength="1" d="M 657.3 242 C 665.6 250.9 674.7 260.4 682.2 268.6 C 688.6 275.6 692.8 284 699.6 287.9 C 706 291.5 714.1 290.9 721.4 292.4"/>  <!-- Iowa Cedar -->
-        <path class="trace" pathLength="1" style="--t:-10.66s" d="M 657.3 242 C 665.6 250.9 674.7 260.4 682.2 268.6 C 688.6 275.6 692.8 284 699.6 287.9 C 706 291.5 714.1 290.9 721.4 292.4"/>
-        <path class="flow" pathLength="1" d="M 934.6 403.5 C 934.9 400.6 936.8 397.3 935.7 394.6 C 934.2 391.2 927.4 389.4 923.7 385.8 C 919.6 381.7 916.2 375.9 912.4 370.9"/>  <!-- Kanawha -->
-        <path class="trace" pathLength="1" style="--t:-4.49s" d="M 934.6 403.5 C 934.9 400.6 936.8 397.3 935.7 394.6 C 934.2 391.2 927.4 389.4 923.7 385.8 C 919.6 381.7 916.2 375.9 912.4 370.9"/>
-        <path class="flow" pathLength="1" d="M 839.5 421.3 C 831.2 420.8 822.1 422.4 814.6 419.8 C 807.4 417.4 799.7 411 795.4 406.5 C 792.3 403.4 791.3 400.2 789.3 397"/>  <!-- Green -->
-        <path class="trace" pathLength="1" style="--t:-10.05s" d="M 839.5 421.3 C 831.2 420.8 822.1 422.4 814.6 419.8 C 807.4 417.4 799.7 411 795.4 406.5 C 792.3 403.4 791.3 400.2 789.3 397"/>
-        <path class="flow" pathLength="1" d="M 667.5 446.5 C 675.4 453.9 685.1 460.5 691.3 468.8 C 697 476.4 700.5 485.7 703.7 494 C 706.6 501.5 707.9 508.8 710.1 516.2"/>  <!-- White -->
-        <path class="trace" pathLength="1" style="--t:-5.83s" d="M 667.5 446.5 C 675.4 453.9 685.1 460.5 691.3 468.8 C 697 476.4 700.5 485.7 703.7 494 C 706.6 501.5 707.9 508.8 710.1 516.2"/>
-        <path class="flow" pathLength="1" d="M 726.3 514.7 C 725.6 522.6 725.5 531.5 724.1 538.4 C 723 544 721.3 548.8 719.6 553.3 C 718 557.1 716.1 560.2 714.4 563.6"/>  <!-- Yazoo -->
-        <path class="trace" pathLength="1" style="--t:-4.94s" d="M 726.3 514.7 C 725.6 522.6 725.5 531.5 724.1 538.4 C 723 544 721.3 548.8 719.6 553.3 C 718 557.1 716.1 560.2 714.4 563.6"/>
-        <path class="flow" pathLength="1" d="M 449.1 428.7 C 473.2 429.2 500.1 427.4 521.5 430.2 C 539.2 432.6 555.1 438.3 569.1 442.1 C 580.1 445.1 588.8 448 598.7 451"/>  <!-- Cimarron -->
-        <path class="trace" pathLength="1" style="--t:-9.84s" d="M 449.1 428.7 C 473.2 429.2 500.1 427.4 521.5 430.2 C 539.2 432.6 555.1 438.3 569.1 442.1 C 580.1 445.1 588.8 448 598.7 451"/>
-        <path class="flow" pathLength="1" d="M 588.3 179.7 C 594.7 187.1 599.1 196.4 607.5 201.9 C 617.1 208.2 636.8 216.1 643.7 213.5 C 647.8 211.9 648.6 205.3 650.5 201.9 C 652.1 199.3 652.6 196.5 654.6 194.8 C 656.6 193.1 659.7 192.8 662.3 191.9"/>  <!-- Minnesota -->
-        <path class="trace" pathLength="1" style="--t:-1.05s" d="M 588.3 179.7 C 594.7 187.1 599.1 196.4 607.5 201.9 C 617.1 208.2 636.8 216.1 643.7 213.5 C 647.8 211.9 648.6 205.3 650.5 201.9 C 652.1 199.3 652.6 196.5 654.6 194.8 C 656.6 193.1 659.7 192.8 662.3 191.9"/>
-        <path class="flow" pathLength="1" d="M 653.9 498.4 C 664.9 507.8 681.7 515.5 686.7 526.6 C 691.2 536.2 689.2 550 686.7 559.2 C 684.7 566.8 679.2 572 675.4 578.5"/>  <!-- Ouachita -->
-        <path class="trace" pathLength="1" style="--t:-5.80s" d="M 653.9 498.4 C 664.9 507.8 681.7 515.5 686.7 526.6 C 691.2 536.2 689.2 550 686.7 559.2 C 684.7 566.8 679.2 572 675.4 578.5"/>
-      </g>
-
-      <!-- THE FOUR MAJORS, north to south. Each ends on a landmark the stem itself
-           owns, so every junction is exact rather than nearly. -->
-      <!-- ILLINOIS — the Chicago portage to Grafton -->
-      <g class="trib t-illinois">
-        <path class="hit" d="M 777.3 286.4 C 771.7 289.9 765.8 292.3 760.5 296.8 C 754.5 302 749.4 309.8 743.5 316.4 C 737.5 323.2 728.6 328.6 724.8 336.8 C 720.7 345.5 722 357.2 720.7 367.4"/>
-        <path class="flow" pathLength="1" d="M 777.3 286.4 C 771.7 289.9 765.8 292.3 760.5 296.8 C 754.5 302 749.4 309.8 743.5 316.4 C 737.5 323.2 728.6 328.6 724.8 336.8 C 720.7 345.5 722 357.2 720.7 367.4"/>
-        <path class="trace" pathLength="1" style="--t:-7.87s" d="M 777.3 286.4 C 771.7 289.9 765.8 292.3 760.5 296.8 C 754.5 302 749.4 309.8 743.5 316.4 C 737.5 323.2 728.6 328.6 724.8 336.8 C 720.7 345.5 722 357.2 720.7 367.4"/>
-        <path class="glow" pathLength="1" d="M 777.3 286.4 C 771.7 289.9 765.8 292.3 760.5 296.8 C 754.5 302 749.4 309.8 743.5 316.4 C 737.5 323.2 728.6 328.6 724.8 336.8 C 720.7 345.5 722 357.2 720.7 367.4"/>
-      </g>
-      <!-- MISSOURI — Three Forks to St Louis, the long north-west arm -->
-      <g class="trib t-missouri">
-        <path class="hit" d="M 246.5 160.4 C 249.2 148.1 245.5 132.8 254.5 123.4 C 268 109.2 310 105.1 338.2 101.1 C 365.9 97.3 396.3 93.7 421.9 99.6 C 446.2 105.3 475.7 115.7 488.7 133.7 C 501.7 151.7 487.5 187.7 500 207.3 C 513.1 227.7 550.6 235.3 567.9 252.3 C 582.4 266.6 590.2 282.1 600.1 299.5 C 611.1 318.8 614.7 350.4 630.2 363.5 C 644.1 375.3 667.5 377.9 685.2 378.9 C 701.2 379.9 716.1 374.2 731.6 371.8"/>
-        <path class="flow" pathLength="1" d="M 246.5 160.4 C 249.2 148.1 245.5 132.8 254.5 123.4 C 268 109.2 310 105.1 338.2 101.1 C 365.9 97.3 396.3 93.7 421.9 99.6 C 446.2 105.3 475.7 115.7 488.7 133.7 C 501.7 151.7 487.5 187.7 500 207.3 C 513.1 227.7 550.6 235.3 567.9 252.3 C 582.4 266.6 590.2 282.1 600.1 299.5 C 611.1 318.8 614.7 350.4 630.2 363.5 C 644.1 375.3 667.5 377.9 685.2 378.9 C 701.2 379.9 716.1 374.2 731.6 371.8"/>
-        <path class="trace" pathLength="1" style="--t:-7.65s" d="M 246.5 160.4 C 249.2 148.1 245.5 132.8 254.5 123.4 C 268 109.2 310 105.1 338.2 101.1 C 365.9 97.3 396.3 93.7 421.9 99.6 C 446.2 105.3 475.7 115.7 488.7 133.7 C 501.7 151.7 487.5 187.7 500 207.3 C 513.1 227.7 550.6 235.3 567.9 252.3 C 582.4 266.6 590.2 282.1 600.1 299.5 C 611.1 318.8 614.7 350.4 630.2 363.5 C 644.1 375.3 667.5 377.9 685.2 378.9 C 701.2 379.9 716.1 374.2 731.6 371.8"/>
-        <path class="glow" pathLength="1" d="M 246.5 160.4 C 249.2 148.1 245.5 132.8 254.5 123.4 C 268 109.2 310 105.1 338.2 101.1 C 365.9 97.3 396.3 93.7 421.9 99.6 C 446.2 105.3 475.7 115.7 488.7 133.7 C 501.7 151.7 487.5 187.7 500 207.3 C 513.1 227.7 550.6 235.3 567.9 252.3 C 582.4 266.6 590.2 282.1 600.1 299.5 C 611.1 318.8 614.7 350.4 630.2 363.5 C 644.1 375.3 667.5 377.9 685.2 378.9 C 701.2 379.9 716.1 374.2 731.6 371.8"/>
-      </g>
-      <!-- OHIO — Pittsburgh to Cairo, the largest addition of volume -->
-      <g class="trib t-ohio">
-        <path class="hit" d="M 960.6 323.8 C 955.2 327.5 950.3 329.8 944.3 335.1 C 935 343.3 926 365.9 912.4 370.9 C 897.9 376.3 873.1 359.2 858.7 363.5 C 846.7 367.1 841.5 383.1 830.2 388.7 C 818.5 394.6 800.2 390.7 789.3 397 C 779.2 402.8 773.3 419.3 766 423.4 C 761.5 425.9 757.4 425 753.1 425.8"/>
-        <path class="flow" pathLength="1" d="M 960.6 323.8 C 955.2 327.5 950.3 329.8 944.3 335.1 C 935 343.3 926 365.9 912.4 370.9 C 897.9 376.3 873.1 359.2 858.7 363.5 C 846.7 367.1 841.5 383.1 830.2 388.7 C 818.5 394.6 800.2 390.7 789.3 397 C 779.2 402.8 773.3 419.3 766 423.4 C 761.5 425.9 757.4 425 753.1 425.8"/>
-        <path class="trace" pathLength="1" style="--t:-6.54s" d="M 960.6 323.8 C 955.2 327.5 950.3 329.8 944.3 335.1 C 935 343.3 926 365.9 912.4 370.9 C 897.9 376.3 873.1 359.2 858.7 363.5 C 846.7 367.1 841.5 383.1 830.2 388.7 C 818.5 394.6 800.2 390.7 789.3 397 C 779.2 402.8 773.3 419.3 766 423.4 C 761.5 425.9 757.4 425 753.1 425.8"/>
-        <path class="glow" pathLength="1" d="M 960.6 323.8 C 955.2 327.5 950.3 329.8 944.3 335.1 C 935 343.3 926 365.9 912.4 370.9 C 897.9 376.3 873.1 359.2 858.7 363.5 C 846.7 367.1 841.5 383.1 830.2 388.7 C 818.5 394.6 800.2 390.7 789.3 397 C 779.2 402.8 773.3 419.3 766 423.4 C 761.5 425.9 757.4 425 753.1 425.8"/>
-      </g>
-      <!-- ARKANSAS — the Sawatch headwaters to Napoleon -->
-      <g class="trib t-arkansas">
-        <path class="hit" d="M 365.4 383.1 C 378.2 384.8 387.9 385.9 403.8 388.1 C 430 391.8 477.5 400.9 507.5 403.5 C 530.3 405.6 552.8 396.8 568.1 405.3 C 582.7 413.4 586.7 439.3 598.7 451 C 609.3 461.2 621.5 466.8 634.7 473.5 C 649.2 480.9 669.2 484.5 682.4 492.5 C 693.6 499.2 700.8 508.3 710.1 516.2"/>
-        <path class="flow" pathLength="1" d="M 365.4 383.1 C 378.2 384.8 387.9 385.9 403.8 388.1 C 430 391.8 477.5 400.9 507.5 403.5 C 530.3 405.6 552.8 396.8 568.1 405.3 C 582.7 413.4 586.7 439.3 598.7 451 C 609.3 461.2 621.5 466.8 634.7 473.5 C 649.2 480.9 669.2 484.5 682.4 492.5 C 693.6 499.2 700.8 508.3 710.1 516.2"/>
-        <path class="trace" pathLength="1" style="--t:-4.63s" d="M 365.4 383.1 C 378.2 384.8 387.9 385.9 403.8 388.1 C 430 391.8 477.5 400.9 507.5 403.5 C 530.3 405.6 552.8 396.8 568.1 405.3 C 582.7 413.4 586.7 439.3 598.7 451 C 609.3 461.2 621.5 466.8 634.7 473.5 C 649.2 480.9 669.2 484.5 682.4 492.5 C 693.6 499.2 700.8 508.3 710.1 516.2"/>
-        <path class="glow" pathLength="1" d="M 365.4 383.1 C 378.2 384.8 387.9 385.9 403.8 388.1 C 430 391.8 477.5 400.9 507.5 403.5 C 530.3 405.6 552.8 396.8 568.1 405.3 C 582.7 413.4 586.7 439.3 598.7 451 C 609.3 461.2 621.5 466.8 634.7 473.5 C 649.2 480.9 669.2 484.5 682.4 492.5 C 693.6 499.2 700.8 508.3 710.1 516.2"/>
-      </g>
-
-      <!-- THE STEM — Itasca to the delta, through all four junctions. It crosses in
-           half the time everything else takes, which is the acceleration: the
-           channel visibly gathers pace as the system converges into it. -->
-      <g class="stemwrap">
-        <path class="hit" d="M 616.6 123.4 C 623.4 139.2 628.1 158.9 636.9 170.8 C 644.1 180.3 655.9 187.7 662.3 191.9 C 665.8 194.1 667.2 193.7 670.9 196 C 678.8 201 700.5 214.1 706 224.2 C 709.9 231.3 706.1 239.8 708.5 246.4 C 710.7 252.6 717.1 256.1 719.3 262.7 C 722.1 270.8 723.6 282.6 721.4 292.4 C 718.9 303.3 703.7 313.2 703 325 C 702.3 338 714 360.7 720.7 367.4 C 724.1 370.8 728.8 368.6 731.6 371.8 C 735.6 376.6 734.4 389 737.7 397.6 C 741.3 407 752.2 414.6 753.1 425.8 C 754.2 440.8 741.1 464.7 733.1 480.6 C 726.4 494.2 713.4 502.9 710.1 516.2 C 706.6 530.3 716.7 549.1 714.4 563.6 C 712.2 577.1 697.9 590.4 698.1 600.7 C 698.2 608.2 702.3 614.6 707.3 620 C 713.2 626.3 725.4 628.4 732.7 634.8 C 740.1 641.2 745.1 650.6 751.2 658.5"/>
-        <path class="stem s1" d="M 616.6 123.4 C 623.4 139.2 628.1 158.9 636.9 170.8 C 644.1 180.3 655.9 187.7 662.3 191.9 C 665.8 194.1 667.2 193.7 670.9 196 C 678.8 201 700.5 214.1 706 224.2 C 709.9 231.3 706.1 239.8 708.5 246.4 C 710.7 252.6 717.1 256.1 719.3 262.7 C 722.1 270.8 723.6 282.6 721.4 292.4 C 718.9 303.3 703.7 313.2 703 325 C 702.3 338 714 360.7 720.7 367.4"/>
-        <path class="stem s2" d="M 720.7 367.4 C 724.1 370.8 728.8 368.6 731.6 371.8"/>
-        <path class="stem s3" d="M 731.6 371.8 C 735.6 376.6 734.4 389 737.7 397.6 C 741.3 407 752.2 414.6 753.1 425.8"/>
-        <path class="stem s4" d="M 753.1 425.8 C 754.2 440.8 741.1 464.7 733.1 480.6 C 726.4 494.2 713.4 502.9 710.1 516.2"/>
-        <path class="stem s5" d="M 710.1 516.2 C 706.6 530.3 716.7 549.1 714.4 563.6 C 712.2 577.1 697.9 590.4 698.1 600.7 C 698.2 608.2 702.3 614.6 707.3 620 C 713.2 626.3 725.4 628.4 732.7 634.8 C 740.1 641.2 745.1 650.6 751.2 658.5"/>
-        <!-- One continuous front over the tapering channel: a bright core running
-             inside the water, rather than a highlight the width of the river. -->
-        <path class="trace trace--stem" pathLength="1" style="--t:0s" d="M 616.6 123.4 C 623.4 139.2 628.1 158.9 636.9 170.8 C 644.1 180.3 655.9 187.7 662.3 191.9 C 665.8 194.1 667.2 193.7 670.9 196 C 678.8 201 700.5 214.1 706 224.2 C 709.9 231.3 706.1 239.8 708.5 246.4 C 710.7 252.6 717.1 256.1 719.3 262.7 C 722.1 270.8 723.6 282.6 721.4 292.4 C 718.9 303.3 703.7 313.2 703 325 C 702.3 338 714 360.7 720.7 367.4 C 724.1 370.8 728.8 368.6 731.6 371.8 C 735.6 376.6 734.4 389 737.7 397.6 C 741.3 407 752.2 414.6 753.1 425.8 C 754.2 440.8 741.1 464.7 733.1 480.6 C 726.4 494.2 713.4 502.9 710.1 516.2 C 706.6 530.3 716.7 549.1 714.4 563.6 C 712.2 577.1 697.9 590.4 698.1 600.7 C 698.2 608.2 702.3 614.6 707.3 620 C 713.2 626.3 725.4 628.4 732.7 634.8 C 740.1 641.2 745.1 650.6 751.2 658.5"/>
-      </g>
-
-      <!-- THE JUNCTIONS. Steady, not pulsing: a soft brightening held permanently at
-           every point where something joins something larger. They used to fire a
-           radial pulse as each front landed, which read as 29 local events rather
-           than one system moving — the opposite of the thing the drawing is for. -->
-      <g class="joins">
-        <circle class="join" cx="720.7" cy="367.4" r="9"/>
-        <circle class="join" cx="731.6" cy="371.8" r="9"/>
-        <circle class="join" cx="753.1" cy="425.8" r="9"/>
-        <circle class="join" cx="710.1" cy="516.2" r="9"/>
-        <circle class="join" cx="421.9" cy="99.6" r="6"/>
-        <circle class="join" cx="600.1" cy="299.5" r="6"/>
-        <circle class="join" cx="630.2" cy="363.5" r="6"/>
-        <circle class="join" cx="708.5" cy="246.4" r="6"/>
-        <circle class="join" cx="703" cy="325" r="6"/>
-        <circle class="join" cx="766" cy="423.4" r="6"/>
-        <circle class="join" cx="766" cy="423.4" r="6"/>
-        <circle class="join" cx="789.3" cy="397" r="6"/>
-        <circle class="join" cx="634.7" cy="473.5" r="6"/>
-        <circle class="join" cx="698.1" cy="600.7" r="6"/>
-        <circle class="join" cx="338.2" cy="101.1" r="6"/>
-        <circle class="join" cx="567.9" cy="252.3" r="6"/>
-        <circle class="join" cx="567.9" cy="252.3" r="6"/>
-        <circle class="join" cx="685.2" cy="378.9" r="6"/>
-        <circle class="join" cx="670.9" cy="196" r="6"/>
-        <circle class="join" cx="721.4" cy="292.4" r="6"/>
-        <circle class="join" cx="721.4" cy="292.4" r="6"/>
-        <circle class="join" cx="912.4" cy="370.9" r="6"/>
-        <circle class="join" cx="789.3" cy="397" r="6"/>
-        <circle class="join" cx="710.1" cy="516.2" r="6"/>
-        <circle class="join" cx="714.4" cy="563.6" r="6"/>
-        <circle class="join" cx="598.7" cy="451" r="6"/>
-        <circle class="join" cx="662.3" cy="191.9" r="6"/>
-        <circle class="join" cx="675.4" cy="578.5" r="6"/>
-      </g>
-      <!--GEOM:END-->
+        <!-- TIER 1 · the twelve feeders, as four clusters of three. Each leaves the left edge dead
+             straight and horizontal before it turns, so the entry reads as a level plane of
+             separate starting points rather than a spray. They stop at x=390, short of the plate's
+             own left edge, so no round cap bleeds toward the copy column. -->
+        <g class="t1">
+          <path pathLength="1" d="M 390 94 L 520 94 C 578 94 632 140 690 140" style="animation-delay:.20s"></path>
+          <path pathLength="1" d="M 390 140 L 520 140 C 578 140 632 140 690 140" style="animation-delay:.15s"></path>
+          <path pathLength="1" d="M 390 186 L 520 186 C 578 186 632 140 690 140" style="animation-delay:.20s"></path>
+          <path pathLength="1" d="M 390 244 L 520 244 C 578 244 632 290 690 290" style="animation-delay:.33s"></path>
+          <path pathLength="1" d="M 390 290 L 520 290 C 578 290 632 290 690 290" style="animation-delay:.28s"></path>
+          <path pathLength="1" d="M 390 336 L 520 336 C 578 336 632 290 690 290" style="animation-delay:.33s"></path>
+          <path pathLength="1" d="M 390 394 L 520 394 C 578 394 632 440 690 440" style="animation-delay:.46s"></path>
+          <path pathLength="1" d="M 390 440 L 520 440 C 578 440 632 440 690 440" style="animation-delay:.41s"></path>
+          <path pathLength="1" d="M 390 486 L 520 486 C 578 486 632 440 690 440" style="animation-delay:.46s"></path>
+          <path pathLength="1" d="M 390 544 L 520 544 C 578 544 632 590 690 590" style="animation-delay:.59s"></path>
+          <path pathLength="1" d="M 390 590 L 520 590 C 578 590 632 590 690 590" style="animation-delay:.54s"></path>
+          <path pathLength="1" d="M 390 636 L 520 636 C 578 636 632 590 690 590" style="animation-delay:.59s"></path>
+        </g>
+        <!-- TIER 2 · the four cluster channels, pairing off toward two confluences -->
+        <g class="t2">
+          <path pathLength="1" d="M 690 140 C 760 140 760 215 830 215" style="animation-delay:1.42s"></path>
+          <path pathLength="1" d="M 690 290 C 760 290 760 215 830 215" style="animation-delay:1.48s"></path>
+          <path pathLength="1" d="M 690 440 C 760 440 760 515 830 515" style="animation-delay:1.54s"></path>
+          <path pathLength="1" d="M 690 590 C 760 590 760 515 830 515" style="animation-delay:1.60s"></path>
+        </g>
+        <!-- TIER 3 · the two confluences, closing on the trunk from above and below -->
+        <g class="t3">
+          <path pathLength="1" d="M 830 215 C 880 215 880 365 930 365" style="animation-delay:2.18s"></path>
+          <path pathLength="1" d="M 830 515 C 880 515 880 365 930 365" style="animation-delay:2.18s"></path>
+        </g>
+        <!-- TIER 4 · the outflow. Starts inside the terminal node so no seam shows, and runs
+             squarely off the right edge of the viewBox: the system leaves the plate. -->
+        <path class="t4" pathLength="1" d="M 902 365 L 1052 365" style="animation-delay:2.76s"></path>
+        <!-- The junctions, drawn last so they sit over the channels they resolve. Each one lands
+             just before the run that leaves it. -->
+        <g class="n2">
+          <circle cx="690" cy="140" r="20" style="animation-delay:1.22s"></circle>
+          <circle cx="690" cy="290" r="20" style="animation-delay:1.28s"></circle>
+          <circle cx="690" cy="440" r="20" style="animation-delay:1.34s"></circle>
+          <circle cx="690" cy="590" r="20" style="animation-delay:1.40s"></circle>
+        </g>
+        <g class="n3">
+          <circle cx="830" cy="215" r="25" style="animation-delay:2.00s"></circle>
+          <circle cx="830" cy="515" r="25" style="animation-delay:2.06s"></circle>
+        </g>
+        <circle class="n4" cx="930" cy="365" r="31" style="animation-delay:2.66s"></circle>
       </svg>
       <div class="hero-grid">
         <h1><span>Uncoordinated decisions</span> <span>leak what you keep.</span></h1>

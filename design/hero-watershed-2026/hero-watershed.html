@@ -82,8 +82,8 @@ body{margin:0;background:var(--limestone);color:var(--body);
   /* Capped so the plate cannot grow without limit: the hero's height is set by how the copy
      wraps, and an uncapped height:100% makes the drawing a function of text reflow. */
   max-height:min(560px,72vh);
-  -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.05) 0,rgba(0,0,0,.40) 30%,#000 60%);
-  mask-image:linear-gradient(to right,rgba(0,0,0,.05) 0,rgba(0,0,0,.40) 30%,#000 60%)}
+  -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.34) 0,rgba(0,0,0,.62) 24%,#000 46%);
+  mask-image:linear-gradient(to right,rgba(0,0,0,.34) 0,rgba(0,0,0,.62) 24%,#000 46%)}
 .ws .hit{pointer-events:stroke}   /* only the invisible proximity zones take the mouse */
 
 .hero-copy{position:relative;z-index:1;max-width:660px}
@@ -123,16 +123,25 @@ h1 span{display:block}
    makes the network read as a network; the hierarchy is something hover reveals, not something
    the drawing states up front. 0.85px is a SCREEN measurement, so the stroke is taken out of the
    viewBox scale entirely (non-scaling-stroke): at any hero width the hairline is exactly 0.85px. */
-.flow{fill:none;stroke:var(--flow);stroke-width:calc(.85px * var(--w));opacity:.9;
+.flow{fill:none;stroke:var(--flow);stroke-width:calc(.7px * var(--w));opacity:.82;
   stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;
   transition:stroke .5s cubic-bezier(.2,.6,.25,1),stroke-width .5s cubic-bezier(.2,.6,.25,1),
              opacity .5s cubic-bezier(.2,.6,.25,1)}
 
 /* The stem. Heavier at rest than anything else on the plate, and the only vector in editorial
    blue — the one thing every other vector is on its way to. */
-.stem{fill:none;stroke:var(--blue);stroke-width:calc(2px * var(--w));
-  stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;
-  transition:stroke-width .45s cubic-bezier(.2,.6,.25,1)}
+.stem{fill:none;stroke-linecap:round;stroke-linejoin:round;
+    vector-effect:non-scaling-stroke;transition:stroke-width .45s cubic-bezier(.2,.6,.25,1)}
+  /* THE ACCUMULATION. Five runs, split exactly at the confluences, each wider than the one above
+     it — and the colour deepens with the width, because a bigger river is a darker river. This is
+     what makes it read as water rather than as a nerve: uniform branches radiating off a
+     constant-width trunk is how a dendrite is drawn, and that is what it looked like before.
+     Below every join the channel is visibly larger, which is the plate's whole argument. */
+  .stem.s1{stroke:#5f93bd;stroke-width:calc(1.05px * var(--w))}   /* Itasca → Grafton */
+  .stem.s2{stroke:#4a80ad;stroke-width:calc(1.5px  * var(--w))}   /* + the Illinois */
+  .stem.s3{stroke:#3a6d97;stroke-width:calc(2.1px  * var(--w))}   /* + the Missouri */
+  .stem.s4{stroke:#2f5f85;stroke-width:calc(2.8px  * var(--w))}   /* + the Ohio */
+  .stem.s5{stroke:var(--blue);stroke-width:calc(3.6px * var(--w))}  /* + the Arkansas → the delta */
 
 /* Proximity zones. A 0.85px line cannot be hovered, so each major and the stem carry an invisible
    22-unit companion. The zones tile the plate, so the vector that lights is the one nearest the
@@ -182,10 +191,11 @@ h1 span{display:block}
 /* The lit run lengthens and thickens inward, and the stem crosses in half the time. Every dash
    pattern sums to exactly 1 — one period per path length — which is what lets the front wrap from
    mouth back to headwater with no seam. */
+.trib .flow{stroke-width:calc(1.25px * var(--w));opacity:.92}
 .outer .trace{stroke-dasharray:.20 .80;animation-duration:12s;
   stroke-width:calc(.95px * var(--w));opacity:.6}
 .trib  .trace{stroke-dasharray:.30 .70;animation-duration:12s;
-  stroke-width:calc(1.35px * var(--w));opacity:.82}
+  stroke-width:calc(1.5px * var(--w));opacity:.85}
 .trace--stem{stroke-dasharray:.42 .58;animation-duration:12s;
   stroke-width:calc(2.9px * var(--w));opacity:1}
 
@@ -401,16 +411,13 @@ h1 span{display:block}
            channel visibly gathers pace as the system converges into it. -->
       <g class="stemwrap">
         <path class="hit" d="M 616.6 123.4 C 623.4 139.2 628.1 158.9 636.9 170.8 C 644.1 180.3 655.9 187.7 662.3 191.9 C 665.8 194.1 667.2 193.7 670.9 196 C 678.8 201 700.5 214.1 706 224.2 C 709.9 231.3 706.1 239.8 708.5 246.4 C 710.7 252.6 717.1 256.1 719.3 262.7 C 722.1 270.8 723.6 282.6 721.4 292.4 C 718.9 303.3 703.7 313.2 703 325 C 702.3 338 714 360.7 720.7 367.4 C 724.1 370.8 728.8 368.6 731.6 371.8 C 735.6 376.6 734.4 389 737.7 397.6 C 741.3 407 752.2 414.6 753.1 425.8 C 754.2 440.8 741.1 464.7 733.1 480.6 C 726.4 494.2 713.4 502.9 710.1 516.2 C 706.6 530.3 716.7 549.1 714.4 563.6 C 712.2 577.1 697.9 590.4 698.1 600.7 C 698.2 608.2 702.3 614.6 707.3 620 C 713.2 626.3 725.4 628.4 732.7 634.8 C 740.1 641.2 745.1 650.6 751.2 658.5"/>
-        <path class="stem" pathLength="1" d="M 616.6 123.4 C 623.4 139.2 628.1 158.9 636.9 170.8 C 644.1 180.3 655.9 187.7 662.3 191.9
-            C 665.8 194.1 667.2 193.7 670.9 196 C 678.8 201 700.5 214.1 706 224.2
-            C 709.9 231.3 706.1 239.8 708.5 246.4 C 710.7 252.6 717.1 256.1 719.3 262.7
-            C 722.1 270.8 723.6 282.6 721.4 292.4 C 718.9 303.3 703.7 313.2 703 325
-            C 702.3 338 714 360.7 720.7 367.4 C 724.1 370.8 728.8 368.6 731.6 371.8
-            C 735.6 376.6 734.4 389 737.7 397.6 C 741.3 407 752.2 414.6 753.1 425.8
-            C 754.2 440.8 741.1 464.7 733.1 480.6 C 726.4 494.2 713.4 502.9 710.1 516.2
-            C 706.6 530.3 716.7 549.1 714.4 563.6 C 712.2 577.1 697.9 590.4 698.1 600.7
-            C 698.2 608.2 702.3 614.6 707.3 620 C 713.2 626.3 725.4 628.4 732.7 634.8
-            C 740.1 641.2 745.1 650.6 751.2 658.5"/>
+        <path class="stem s1" d="M 616.6 123.4 C 623.4 139.2 628.1 158.9 636.9 170.8 C 644.1 180.3 655.9 187.7 662.3 191.9 C 665.8 194.1 667.2 193.7 670.9 196 C 678.8 201 700.5 214.1 706 224.2 C 709.9 231.3 706.1 239.8 708.5 246.4 C 710.7 252.6 717.1 256.1 719.3 262.7 C 722.1 270.8 723.6 282.6 721.4 292.4 C 718.9 303.3 703.7 313.2 703 325 C 702.3 338 714 360.7 720.7 367.4"/>
+        <path class="stem s2" d="M 720.7 367.4 C 724.1 370.8 728.8 368.6 731.6 371.8"/>
+        <path class="stem s3" d="M 731.6 371.8 C 735.6 376.6 734.4 389 737.7 397.6 C 741.3 407 752.2 414.6 753.1 425.8"/>
+        <path class="stem s4" d="M 753.1 425.8 C 754.2 440.8 741.1 464.7 733.1 480.6 C 726.4 494.2 713.4 502.9 710.1 516.2"/>
+        <path class="stem s5" d="M 710.1 516.2 C 706.6 530.3 716.7 549.1 714.4 563.6 C 712.2 577.1 697.9 590.4 698.1 600.7 C 698.2 608.2 702.3 614.6 707.3 620 C 713.2 626.3 725.4 628.4 732.7 634.8 C 740.1 641.2 745.1 650.6 751.2 658.5"/>
+        <!-- One continuous front over the tapering channel: a bright core running
+             inside the water, rather than a highlight the width of the river. -->
         <path class="trace trace--stem" pathLength="1" style="--t:0s" d="M 616.6 123.4 C 623.4 139.2 628.1 158.9 636.9 170.8 C 644.1 180.3 655.9 187.7 662.3 191.9 C 665.8 194.1 667.2 193.7 670.9 196 C 678.8 201 700.5 214.1 706 224.2 C 709.9 231.3 706.1 239.8 708.5 246.4 C 710.7 252.6 717.1 256.1 719.3 262.7 C 722.1 270.8 723.6 282.6 721.4 292.4 C 718.9 303.3 703.7 313.2 703 325 C 702.3 338 714 360.7 720.7 367.4 C 724.1 370.8 728.8 368.6 731.6 371.8 C 735.6 376.6 734.4 389 737.7 397.6 C 741.3 407 752.2 414.6 753.1 425.8 C 754.2 440.8 741.1 464.7 733.1 480.6 C 726.4 494.2 713.4 502.9 710.1 516.2 C 706.6 530.3 716.7 549.1 714.4 563.6 C 712.2 577.1 697.9 590.4 698.1 600.7 C 698.2 608.2 702.3 614.6 707.3 620 C 713.2 626.3 725.4 628.4 732.7 634.8 C 740.1 641.2 745.1 650.6 751.2 658.5"/>
       </g>
 

@@ -522,6 +522,30 @@ def _node_delay(stem_d, point, phase):
     return f, 6.0 + 6.0 * f + phase
 
 
+def stem_segments(points, splits):
+    """Split the stem into runs at the confluence landmarks, WITHOUT re-splining each run.
+
+    The whole stem is splined once, so the tangents are the tangents of the single continuous
+    curve; the run boundaries just partition its cubic segments. Re-splining each run separately
+    would give each one its own end conditions and put a visible kink at every confluence.
+
+    This exists because the drawing was claiming something it did not show. A river reads as a
+    river because width ACCUMULATES — creek, stream, river, trunk. A constant-width trunk with
+    uniform branches radiating off it is how you draw a nerve, and that is what it looked like.
+    Each run below is wider than the one above it, and each step lands exactly on a confluence:
+    the channel is visibly larger below every join, which is the whole argument of the plate.
+    """
+    d = spline(points)
+    head, *segs = d.split(" C ")
+    pts = [project(q) for q in points]
+    out, start = [], 0
+    for end in splits[1:]:
+        run = " C ".join(segs[start:end])
+        out.append(f"M {_f(pts[start][0])} {_f(pts[start][1])} C " + run)
+        start = end
+    return out
+
+
 def emit_v1():
     """The full system, phased as one cascade. Returns the SVG body."""
     stem_d = spline(MISSISSIPPI)
@@ -582,11 +606,18 @@ def emit_v1():
     out.append(f'{IND}<!-- THE STEM — Itasca to the delta, through all four junctions. It crosses in')
     out.append(f'{IND}     half the time everything else takes, which is the acceleration: the')
     out.append(f'{IND}     channel visibly gathers pace as the system converges into it. -->')
-    out.append(f'{IND}<g class="stemwrap">\n{IND}  <path class="hit" d="{stem_d}"/>\n'
-               f'{IND}  <path class="stem" pathLength="1" d="'
-               + wrap(stem_d, 96, IND + "      ") + f'"/>\n'
-               f'{IND}  <path class="trace trace--stem" pathLength="1" style="--t:0s" d="{stem_d}"/>'
-               f'\n{IND}</g>')
+    # Run boundaries: headwaters, then each confluence, then the delta.
+    idx = [0, MISSISSIPPI.index(CONF_ILLINOIS), MISSISSIPPI.index(CONF_MISSOURI),
+           MISSISSIPPI.index(CONF_OHIO), MISSISSIPPI.index(CONF_ARKANSAS), len(MISSISSIPPI) - 1]
+    runs = stem_segments(MISSISSIPPI, idx)
+    out.append(f'{IND}<g class="stemwrap">')
+    out.append(f'{IND}  <path class="hit" d="{stem_d}"/>')
+    for i, run in enumerate(runs, start=1):
+        out.append(f'{IND}  <path class="stem s{i}" d="{run}"/>')
+    out.append(f'{IND}  <!-- One continuous front over the tapering channel: a bright core running')
+    out.append(f'{IND}       inside the water, rather than a highlight the width of the river. -->')
+    out.append(f'{IND}  <path class="trace trace--stem" pathLength="1" style="--t:0s" d="{stem_d}"/>')
+    out.append(f'{IND}</g>')
 
     out.append("")
     out.append(f'{IND}<!-- THE JUNCTIONS. Steady, not pulsing: a soft brightening held permanently at')

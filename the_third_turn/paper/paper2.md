@@ -330,11 +330,25 @@ datasets are numerically identical; the markets are not. Any statistic computed 
 alone assigns the same value to all three, so distinguishing them requires evidence from outside the
 timing series.
 
-Observation latency is plausibly common-mode by construction: a single collector polls both books on
-the same schedule, so the sampling penalty is drawn from the same distribution for each. Feed latency
-is not. Two commercial sportsbooks run different infrastructure, and there is no reason in principle
-for their publishing delays to match. Whether the difference is material relative to the pricing
-differences we hope to detect is precisely what Section 4 must establish.
+It is tempting to argue that observation latency is common-mode by construction: a single collector
+polls both books on the same schedule, so the *sampling* penalty is drawn from the same distribution
+for each. That argument is true about polling and false about observation, and our own instrument
+is what shows it. Observation latency is the sampling penalty plus the staleness of what the
+endpoint returns, and the second term is book-specific and large. Response headers captured
+alongside every quote show that one book's responses are served from a content-delivery cache that
+reports its own age: on cache hits the gap between our receive time and the response's stated
+generation time is accounted for exactly by that age, to the second, for every one of 3,500 fetches
+— and on the 116 responses that missed the cache the gap disappears entirely. The other book
+rewrites the same header at the edge, so its responses appear instantaneous while separately
+reporting payload ages of up to nine minutes. The two books do not merely have different delays;
+they describe their freshness under incompatible conventions.
+
+Feed latency, then, is not the only non-common-mode term, and the distinction the previous
+paragraph draws is sharper than the data permit. Two commercial sportsbooks run different
+infrastructure, and neither their publishing delays nor their delivery paths match. Whether these
+differences are material relative to the pricing differences we hope to detect is precisely what
+Section 4 must establish — and the fact that a book-specific transport component is *measurable*
+here, rather than merely assumed away, is what keeps that question empirical.
 
 ### 3.3 Why the estimand is anchored to the event
 

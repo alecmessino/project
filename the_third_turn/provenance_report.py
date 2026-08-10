@@ -141,9 +141,15 @@ def main() -> int:
 
     print("\n" + "-" * 76)
     if overall_candidates:
-        print(" VERDICT: candidates FOUND. Condition 3 is not yet satisfied: a field only")
-        print(" qualifies once it is shown to MOVE when the posted price moves. Run that test")
-        print(" next. If it tracks revisions, Outcome A or B is reachable.")
+        print(" VERDICT: candidates FOUND. Condition 3 is not satisfied by presence alone: a field")
+        print(" only qualifies once it is shown to MOVE when the posted price moves.")
+        print("")
+        print(" That test HAS NOW BEEN RUN — see market_panel_report.py and E-021. Result: bovada's")
+        print(" `lastModified` moves on 100% of price changes but also on 98.6% of transitions with")
+        print(" no price change, so it is an event-level heartbeat rather than a per-market")
+        print(" publication stamp, and 28.4% of its transitions arrive out of order because the CDN")
+        print(" serves objects of differing age. It can EXCLUDE revisions; it cannot date them.")
+        print(" Do not read the candidate count below as progress toward Outcome A.")
     elif not coverage_ok:
         print(" VERDICT: WITHHELD. No candidate found so far, but the required market states")
         print(" are not yet covered. Declaring Outcome C now would rest on payload shapes we")

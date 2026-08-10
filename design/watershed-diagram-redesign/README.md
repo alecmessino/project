@@ -21,10 +21,10 @@ these paths have no generator; the values are locked by `assets/watershed-hero.R
 
 ## Files
 
-- `assets/watershed-hero.svg` — animated draw-on, sequential by tier
-- `assets/watershed-hero-static.svg` — no animation, no `<style>`; for print, PDF, email
-- `assets/watershed-hero.README.txt` — the locked values and the hero placement CSS
-- `Driftwood Hero - Watershed.dc.html` — the Claude Design canvas file the assets were cut from
+- `assets/watershed-hero-static.svg` — the single production asset. No animation, no
+  `<style>`; renders anywhere, including in renderers that drop CSS
+- `assets/watershed-hero-static.README.txt` — the locked values and the hero placement CSS
+- `Driftwood Hero - Watershed.dc.html` — the Claude Design canvas file the asset was cut from
 
 `Driftwood Hero - Watershed.dc.html` expects the Design app's `support.js` runtime, which is
 deliberately not vendored here. Standalone it renders nothing: the runtime sets `x-dc` to
@@ -32,22 +32,16 @@ deliberately not vendored here. Standalone it renders nothing: the runtime sets 
 strip the `<script src="./support.js">`, `<x-dc>` and `<helmet>` wrappers — the rest is plain HTML
 and the layout is carried entirely by the inline styles plus the `<helmet>` style block.
 
-## Known defect: `watershed-hero.svg` renders as black shapes
+## There is deliberately no animated file
 
-The animated export is **missing its entire `<style>` block**. The markup keeps the class hooks
-(`t1`–`t4`, `n2`–`n4`) but nothing defines them, so every path falls back to the SVG default of
-`fill:black; stroke:none` and renders as solid black blobs instead of a stroked blue network.
-The draw-on animation, the tiered stroke widths, the palette and the `prefers-reduced-motion`
-branch are all absent. `watershed-hero-static.svg` is unaffected — its styling is baked into
-presentation attributes.
+`watershed-hero.svg` was dropped. Every export of it arrived without its `<style>` block, so it
+rendered as solid black shapes rather than a stroked blue network. Two exports were byte-for-byte
+identical, ruling out a one-off. The full diagnosis — including why the exporter drops the block
+and what reviving it would cost — is in `assets/watershed-hero-static.README.txt`.
 
-Every value needed to restore it is recorded in `assets/watershed-hero.README.txt` and
-recoverable from the static file and the `.dc.html`, but reconstructing it is a deliberate act,
-not a cleanup — so it is left as-is and flagged here.
+## Any re-export needs one edit
 
-**A re-export from Claude Design is the intended fix, and it will regress the responsive change.**
-The exporter is what wrote `width="680" height="626"` onto the root in the first place, so a fresh
-export will almost certainly carry the pair again. When the re-exported file lands, strip both
-attributes from the root before committing it — `viewBox` and `preserveAspectRatio` stay exactly
-as they are. That single line is the whole responsive contract for these files; the rest of the
-sizing lives in the placement CSS, not in the asset.
+The exporter writes `width="680" height="626"` onto the SVG root every time; it did so on both
+exports so far. Strip both attributes before committing a re-exported file. `viewBox` and
+`preserveAspectRatio` stay exactly as they are. That single line is the whole responsive contract
+for this asset — the rest of the sizing lives in the placement CSS, not in the SVG.

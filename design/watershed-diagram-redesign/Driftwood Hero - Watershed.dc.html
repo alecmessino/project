@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Satoshi';font-style:normal;font-weight:300 900;font-display:swap;src:url("src/drift/web/fonts/Satoshi-Variable.woff2") format("woff2")}
+@font-face{font-family:'Erode';font-style:normal;font-weight:300 700;font-display:swap;src:url("src/drift/web/fonts/Erode-Variable.woff2") format("woff2")}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#f1efe9;color:#3d4650;font:16.5px/1.62 'Satoshi',system-ui,sans-serif;letter-spacing:-.004em;-webkit-font-smoothing:antialiased}
+a{color:#2c5878}
+a:hover{color:#1e2833}
+@keyframes wsdraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes wsnode{from{opacity:0;transform:scale(.35)}to{opacity:1;transform:scale(1)}}
+[data-drop] [data-panel]{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .15s,transform .15s,visibility .15s}
+[data-drop]:hover [data-panel],[data-drop]:focus-within [data-panel]{opacity:1;visibility:visible;transform:translateY(0)}
+@media (prefers-reduced-motion:reduce){[data-ws]{--wsK:0}}
+@media (max-width:1040px){
+  [data-hero]{display:flex!important;flex-direction:column;padding-bottom:28px}
+  /* max-width is reset because the desktop clamp is measured off the 716px left edge, which does
+     not exist once the plate is in flow: calc(100% - 716px) would starve it here and resolve to
+     zero on any viewport under 716px. The bleed keeps its own width. */
+  [data-hero]>[data-ws]{position:relative!important;left:auto!important;right:auto!important;top:auto!important;transform:none!important;width:calc(100% + 52px)!important;max-width:none!important;order:2;margin:26px -52px 4px 0}
+  [data-hero]>[data-copy]{order:1}
+  [data-hero]>[data-ctas]{order:3}
+}
+</style>
+</helmet>
+
+<nav style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;padding:14px 30px;border-bottom:1px solid #1e2833;background:#f7f5f0;max-width:1260px;margin:0 auto;font-family:'Satoshi',system-ui,sans-serif" aria-label="Driftwood Wealth">
+  <a href="#" style="display:inline-flex;align-items:center;gap:14px;text-decoration:none;white-space:nowrap;height:60px;flex:none;margin-right:26px">
+    <svg viewBox="6 13 90 74" fill="none" stroke="#2c5878" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" style="height:24px;width:auto;flex:none;overflow:visible">
+      <polyline points="10,18 24.35,18 62,50" stroke-width="7"></polyline>
+      <polyline points="10,34 43.18,34 62,50" stroke-width="7"></polyline>
+      <line x1="10" y1="50" x2="62" y2="50" stroke-width="7"></line>
+      <polyline points="10,66 43.18,66 62,50" stroke-width="7"></polyline>
+      <polyline points="10,82 24.35,82 62,50" stroke-width="7"></polyline>
+      <line x1="62" y1="50" x2="90" y2="50" stroke-width="9.5"></line>
+    </svg>
+    <span style="width:1px;height:23px;flex:none;background:#d8d3c6"></span>
+    <span style="font-size:15.5px;font-weight:700;color:#1e2833;letter-spacing:-.01em">Driftwood Wealth</span>
+  </a>
+  <div style="display:flex;gap:0 21px;align-items:center;flex-wrap:nowrap">
+    <div data-drop="1" style="position:relative">
+      <button type="button" style="font-family:'Satoshi',system-ui,sans-serif;font-size:13px;font-weight:700;letter-spacing:.02em;color:#3d4650;background:none;border:0;cursor:pointer;padding:8px 2px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;border-bottom:2px solid transparent" style-hover="color:#1e2833">Our Firm<span style="width:5px;height:5px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-1px);opacity:.55"></span></button>
+      <div data-panel="1" style="position:absolute;top:100%;left:-14px;margin-top:9px;min-width:236px;display:flex;flex-direction:column;background:#f7f5f0;border:1px solid #c3bcab;padding:10px 16px;z-index:60">
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block;border-bottom:1px solid #e9e5db">Our Story</a>
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block;border-bottom:1px solid #e9e5db">Leadership</a>
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block">Fees</a>
+      </div>
+    </div>
+    <div data-drop="1" style="position:relative">
+      <button type="button" style="font-family:'Satoshi',system-ui,sans-serif;font-size:13px;font-weight:700;letter-spacing:.02em;color:#3d4650;background:none;border:0;cursor:pointer;padding:8px 2px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;border-bottom:2px solid transparent" style-hover="color:#1e2833">Coordination<span style="width:5px;height:5px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-1px);opacity:.55"></span></button>
+      <div data-panel="1" style="position:absolute;top:100%;left:-14px;margin-top:9px;min-width:236px;display:flex;flex-direction:column;background:#f7f5f0;border:1px solid #c3bcab;padding:10px 16px;z-index:60">
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block;border-bottom:1px solid #e9e5db">How Coordination Works</a>
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block;border-bottom:1px solid #e9e5db">A Household, Coordinated</a>
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block">The Coordination Review</a>
+      </div>
+    </div>
+    <div data-drop="1" style="position:relative">
+      <button type="button" style="font-family:'Satoshi',system-ui,sans-serif;font-size:13px;font-weight:700;letter-spacing:.02em;color:#3d4650;background:none;border:0;cursor:pointer;padding:8px 2px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;border-bottom:2px solid transparent" style-hover="color:#1e2833">Insights<span style="width:5px;height:5px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-1px);opacity:.55"></span></button>
+      <div data-panel="1" style="position:absolute;top:100%;left:-14px;margin-top:9px;min-width:236px;display:flex;flex-direction:column;background:#f7f5f0;border:1px solid #c3bcab;padding:10px 16px;z-index:60">
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block;border-bottom:1px solid #e9e5db">Research</a>
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block;border-bottom:1px solid #e9e5db">Commentary</a>
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block;border-bottom:1px solid #e9e5db">The Driftwood Review</a>
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block;border-bottom:1px solid #e9e5db">The State Tax Atlas</a>
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block">Tools &amp; References</a>
+      </div>
+    </div>
+    <div data-drop="1" style="position:relative">
+      <button type="button" style="font-family:'Satoshi',system-ui,sans-serif;font-size:13px;font-weight:700;letter-spacing:.02em;color:#3d4650;background:none;border:0;cursor:pointer;padding:8px 2px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;border-bottom:2px solid transparent" style-hover="color:#1e2833">For Professionals<span style="width:5px;height:5px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-1px);opacity:.55"></span></button>
+      <div data-panel="1" style="position:absolute;top:100%;left:-14px;margin-top:9px;min-width:236px;display:flex;flex-direction:column;background:#f7f5f0;border:1px solid #c3bcab;padding:10px 16px;z-index:60">
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block;border-bottom:1px solid #e9e5db">For CPAs</a>
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block;border-bottom:1px solid #e9e5db">For Estate Attorneys</a>
+        <a href="#" style="font-size:13px;font-weight:500;color:#3d4650;text-decoration:none;padding:8px 0;display:block">Making a Referral</a>
+      </div>
+    </div>
+  </div>
+  <span style="width:1px;height:22px;background:#d8d3c6;flex:none"></span>
+  <a href="#" style="text-decoration:none;color:#3d4650;font-size:12.5px;font-weight:600;letter-spacing:.02em;white-space:nowrap;padding:7px 13px;border:1px solid #c3bcab;margin-left:auto" style-hover="color:#1e2833;border-color:#1e2833">Client Access</a>
+  <a href="#" style="text-decoration:none;background:#2c5878;color:#f4f1ea;font-size:13px;font-weight:700;padding:10px 18px;white-space:nowrap">Request a Coordination Review <span aria-hidden="true" style="margin-left:7px">&rarr;</span></a>
+</nav>
+
+<div style="max-width:1300px;margin:36px auto;padding:0 20px 60px">
+  <div style="background:#f1efe9;overflow:hidden">
+    <div style="margin:0 7px 7px">
+      <main>
+        <header data-hero="1" style="display:block;position:relative;overflow:hidden;isolation:isolate;min-height:470px;padding:60px 52px 44px;border-left:1px solid #c3bcab">
+
+          <!-- Sizing lives on this box, never on the SVG: no width/height attributes, so the only
+               intrinsic thing it carries is the viewBox ratio. width:100% + max-width:calc(100% - 716px)
+               is the 716px placement rule expressed as a width — the plate fills the space left of
+               the right edge and stops exactly at the text column's 24px gutter, at any viewport.
+               max() floors the clamp at 0 so a narrow container can never produce a negative width. -->
+          <svg data-ws="1" viewBox="370 52 680 626" preserveAspectRatio="xMaxYMid meet" aria-hidden="true" focusable="false"
+               style="position:absolute;right:0;left:716px;top:50%;transform:translateY(-50%);width:100%;max-width:max(0px,calc(100% - 716px));height:auto;aspect-ratio:680/626;z-index:0;pointer-events:none;user-select:none">
+            <g>
+
+            <g fill="none" stroke="var(--ws1,#4a86b8)" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" style="stroke-width:calc(13px * var(--wsW,1))">
+              <path pathLength="1" d="M 390 94 L 520 94 C 578 94 632 140 690 140" style="stroke-dashoffset:1;animation:wsdraw calc(.9s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(.20s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 390 140 L 520 140 C 578 140 632 140 690 140" style="stroke-dashoffset:1;animation:wsdraw calc(.9s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(.15s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 390 186 L 520 186 C 578 186 632 140 690 140" style="stroke-dashoffset:1;animation:wsdraw calc(.9s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(.20s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 390 244 L 520 244 C 578 244 632 290 690 290" style="stroke-dashoffset:1;animation:wsdraw calc(.9s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(.33s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 390 290 L 520 290 C 578 290 632 290 690 290" style="stroke-dashoffset:1;animation:wsdraw calc(.9s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(.28s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 390 336 L 520 336 C 578 336 632 290 690 290" style="stroke-dashoffset:1;animation:wsdraw calc(.9s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(.33s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 390 394 L 520 394 C 578 394 632 440 690 440" style="stroke-dashoffset:1;animation:wsdraw calc(.9s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(.46s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 390 440 L 520 440 C 578 440 632 440 690 440" style="stroke-dashoffset:1;animation:wsdraw calc(.9s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(.41s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 390 486 L 520 486 C 578 486 632 440 690 440" style="stroke-dashoffset:1;animation:wsdraw calc(.9s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(.46s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 390 544 L 520 544 C 578 544 632 590 690 590" style="stroke-dashoffset:1;animation:wsdraw calc(.9s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(.59s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 390 590 L 520 590 C 578 590 632 590 690 590" style="stroke-dashoffset:1;animation:wsdraw calc(.9s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(.54s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 390 636 L 520 636 C 578 636 632 590 690 590" style="stroke-dashoffset:1;animation:wsdraw calc(.9s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(.59s * var(--wsK,1)) both"></path>
+            </g>
+
+            <g fill="none" stroke="var(--ws2,#3a6d97)" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" style="stroke-width:calc(20px * var(--wsW,1))">
+              <path pathLength="1" d="M 690 140 C 760 140 760 215 830 215" style="stroke-dashoffset:1;animation:wsdraw calc(.6s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(1.42s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 690 290 C 760 290 760 215 830 215" style="stroke-dashoffset:1;animation:wsdraw calc(.6s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(1.48s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 690 440 C 760 440 760 515 830 515" style="stroke-dashoffset:1;animation:wsdraw calc(.6s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(1.54s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 690 590 C 760 590 760 515 830 515" style="stroke-dashoffset:1;animation:wsdraw calc(.6s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(1.60s * var(--wsK,1)) both"></path>
+            </g>
+
+            <g fill="none" stroke="var(--ws3,#33628a)" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" style="stroke-width:calc(24px * var(--wsW,1))">
+              <path pathLength="1" d="M 830 215 C 880 215 880 365 930 365" style="stroke-dashoffset:1;animation:wsdraw calc(.55s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(2.18s * var(--wsK,1)) both"></path>
+              <path pathLength="1" d="M 830 515 C 880 515 880 365 930 365" style="stroke-dashoffset:1;animation:wsdraw calc(.55s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(2.18s * var(--wsK,1)) both"></path>
+            </g>
+
+            <path pathLength="1" d="M 902 365 L 1052 365" fill="none" stroke="var(--ws4,#2c5878)" stroke-linecap="butt" stroke-dasharray="1" style="stroke-width:calc(29px * var(--wsW,1));stroke-dashoffset:1;animation:wsdraw calc(.55s * var(--wsK,1)) cubic-bezier(.45,0,.2,1) calc(2.76s * var(--wsK,1)) both"></path>
+
+            <g fill="var(--ws2,#3a6d97)">
+              <circle cx="690" cy="140" r="20" style="transform-box:fill-box;transform-origin:center;animation:wsnode calc(.4s * var(--wsK,1)) cubic-bezier(.2,.8,.25,1) calc(1.22s * var(--wsK,1)) both"></circle>
+              <circle cx="690" cy="290" r="20" style="transform-box:fill-box;transform-origin:center;animation:wsnode calc(.4s * var(--wsK,1)) cubic-bezier(.2,.8,.25,1) calc(1.28s * var(--wsK,1)) both"></circle>
+              <circle cx="690" cy="440" r="20" style="transform-box:fill-box;transform-origin:center;animation:wsnode calc(.4s * var(--wsK,1)) cubic-bezier(.2,.8,.25,1) calc(1.34s * var(--wsK,1)) both"></circle>
+              <circle cx="690" cy="590" r="20" style="transform-box:fill-box;transform-origin:center;animation:wsnode calc(.4s * var(--wsK,1)) cubic-bezier(.2,.8,.25,1) calc(1.40s * var(--wsK,1)) both"></circle>
+            </g>
+            <g fill="var(--ws3,#33628a)">
+              <circle cx="830" cy="215" r="25" style="transform-box:fill-box;transform-origin:center;animation:wsnode calc(.4s * var(--wsK,1)) cubic-bezier(.2,.8,.25,1) calc(2.00s * var(--wsK,1)) both"></circle>
+              <circle cx="830" cy="515" r="25" style="transform-box:fill-box;transform-origin:center;animation:wsnode calc(.4s * var(--wsK,1)) cubic-bezier(.2,.8,.25,1) calc(2.06s * var(--wsK,1)) both"></circle>
+            </g>
+            <circle cx="930" cy="365" r="31" fill="var(--ws4,#2c5878)" style="transform-box:fill-box;transform-origin:center;animation:wsnode calc(.44s * var(--wsK,1)) cubic-bezier(.2,.8,.25,1) calc(2.66s * var(--wsK,1)) both"></circle>
+            </g>
+          </svg>
+
+          <div data-copy="1" style="display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:0 44px;align-items:end;position:relative;z-index:1">
+            <h1 style="grid-column:1;font-family:'Erode',Georgia,serif;font-weight:400;font-size:clamp(34px,3vw + 14px,58px);line-height:1.08;letter-spacing:-.024em;color:#1e2833;margin:0;max-width:21ch;text-wrap:balance"><span style="display:block">Uncoordinated decisions</span> <span style="display:block">leak what you keep.</span></h1>
+            <div style="grid-column:1;margin-top:26px;max-width:640px">
+              <p style="font-family:'Erode',Georgia,serif;font-size:19px;line-height:1.58;color:#3d4650;margin:0;text-wrap:pretty">Affluent households rarely lack investment options. They lack a single party responsible for the seams: the tax consequence of a rebalance, the estate consequence of a title, the entity consequence of a move.</p>
+              <p style="font-family:'Satoshi',system-ui,sans-serif;font-size:15.5px;line-height:1.56;color:#3d4650;margin:16px 0 0;max-width:58ch;text-wrap:pretty">Driftwood is that party. We do not replace your CPA or your counsel. We convene them, hold the register of open decisions, and read the whole <b style="color:#1e2833;font-weight:500">after-tax system</b> as one, so the second-order effects are chosen rather than inherited.</p>
+            </div>
+          </div>
+          <div data-ctas="1" style="position:relative;z-index:1;margin-top:26px;padding-top:24px;border-top:1px solid #d8d3c6;max-width:640px;display:flex;gap:12px 20px;flex-wrap:wrap;align-items:center">
+            <a href="#" style="background:#2c5878;color:#fff;padding:15px 26px;text-decoration:none;font-family:'Satoshi',system-ui,sans-serif;font-size:14.5px;font-weight:600;white-space:nowrap">Request a Coordination Review &rarr;</a>
+            <span style="font-family:'Satoshi',system-ui,sans-serif;font-size:12.5px;letter-spacing:.01em;color:#6b6e6a">No products at the first meeting.</span>
+          </div>
+        </header>
+      </main>
+    </div>
+  </div>
+</div>
+
+<div aria-hidden="true" style="position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.055;mix-blend-mode:multiply;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>&quot;);background-size:160px 160px"></div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#2c5878&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#2c5878&quot;,&quot;#1d3461&quot;,&quot;#2563d6&quot;,&quot;#15463a&quot;],&quot;section&quot;:&quot;Watershed&quot;},&quot;presence&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0.4,&quot;max&quot;:1,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Watershed&quot;},&quot;boldness&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.75,&quot;min&quot;:0.7,&quot;max&quot;:1.5,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Watershed&quot;},&quot;animate&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Watershed&quot;}}">
+class Component extends DCLogic {
+  componentDidMount(){ this.apply(); }
+  componentDidUpdate(){ this.apply(); }
+  apply(){
+    const svg = document.querySelector('[data-ws]');
+    if (!svg) return;
+    const hex = (this.props.accent || '#2c5878').trim();
+    const [r,g,b] = [1,3,5].map(i => parseInt(hex.slice(i, i+2), 16));
+    const mix = (t) => '#' + [r,g,b].map(c => Math.round(c + (247 - c) * t).toString(16).padStart(2,'0')).join('');
+    svg.style.setProperty('--ws1', mix(0.24));
+    svg.style.setProperty('--ws2', mix(0.14));
+    svg.style.setProperty('--ws3', mix(0.06));
+    svg.style.setProperty('--ws4', hex);
+    svg.style.opacity = String(this.props.presence ?? 1);
+    svg.style.setProperty('--wsW', String(this.props.boldness ?? 0.75));
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    svg.style.setProperty('--wsK', (this.props.animate === false || reduce) ? '0' : '1');
+  }
+  renderVals(){ return {}; }
+}
+</script>
+</body>
+</html>

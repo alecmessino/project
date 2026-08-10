@@ -1,0 +1,67 @@
+name: The Third Turn — collector watchdog
+
+# WHY THIS EXISTS (2026-08-10 postmortem)
+#
+# The live collector re-arms itself: each ~5.5 h run dispatches its own successor from an
+# always() step, so a platform cancellation still hands off. That design has one failure
+# mode it cannot survive — the dispatch call itself failing. On 2026-08-06 the GitHub API
+# returned HTTP 500 to that call exactly once. The chain had no retry and no verification,
+# so collection stopped for 101.8 h with every run reporting success.
+#
+# Self-re-arming is a chain: it has no state outside itself, so one dropped link ends it.
+# This watchdog is the external observer that closes the loop. It runs on cron, asks
+# whether a live run is actually in flight, and relaunches one if not. It deliberately
+# does NOT share the `ttt-live` concurrency group — a watchdog that can cancel the thing
+# it is guarding is not a watchdog.
+#
+# The live workflow keeps its own re-arm as the primary path. This is the backstop, and it
+# bounds any future outage to roughly one hour instead of indefinitely.
+
+on:
+  schedule:
+    - cron: "23 * * * *"     # hourly, off the hour to avoid the platform's :00 congestion
+  workflow_dispatch:
+
+permissions:
+  actions: write             # read run state, dispatch the live workflow
+
+concurrency:
+  group: ttt-watchdog        # NOT ttt-live — must never cancel the collector it guards
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Relaunch the collector if nothing is running
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: claude/third-turn-service-x7m4vr
+        run: |
+          set -uo pipefail
+          API="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/the_third_turn_live.yml"
+          AUTH=(-H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github+json")
+
+          live=0
+          for state in in_progress queued; do
+            n=$(curl -s "${AUTH[@]}" "${API}/runs?status=${state}&per_page=1" | jq -r '.total_count // 0')
+            echo "runs ${state}: ${n}"
+            live=$(( live + n ))
+          done
+
+          if [ "$live" -gt 0 ]; then
+            echo "collector is alive (${live} run(s) active) — nothing to do"; exit 0
+          fi
+
+          echo "::warning::no live collector run found — relaunching"
+          for attempt in 1 2 3 4 5; do
+            CODE=$(curl -s -o /tmp/wd.json -w '%{http_code}' -X POST "${AUTH[@]}" \
+              "${API}/dispatches" -d "{\"ref\":\"${BRANCH}\",\"inputs\":{\"max_minutes\":\"330\"}}") || CODE=000
+            if [ "$CODE" = "204" ]; then
+              echo "collector relaunched (attempt ${attempt})"; exit 0
+            fi
+            echo "::warning::relaunch attempt ${attempt} failed with HTTP ${CODE}: $(cat /tmp/wd.json 2>/dev/null)"
+            sleep $(( attempt * 15 ))
+          done
+          echo "::error::watchdog could not relaunch the collector after 5 attempts"
+          exit 1

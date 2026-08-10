@@ -136,13 +136,29 @@ jobs:
           ST="${START:-0}"
           if [ "$ST" -eq 0 ]; then echo "no START recorded — skipping re-arm"; exit 0; fi
           ELAPSED=$(( ($(date +%s) - ST) / 60 ))
-          if [ "$ELAPSED" -ge 60 ]; then
-            curl -sX POST \
+          if [ "$ELAPSED" -lt 60 ]; then
+            echo "ran only ${ELAPSED} min — NOT re-arming (crash-loop guard)"; exit 0
+          fi
+
+          # OUTAGE POSTMORTEM (2026-08-10): the dispatch below returned HTTP 500 once, on
+          # 08-06. The old code was `curl -s ... || true` with no status check, so the step
+          # printed "re-armed", reported SUCCESS, and the chain died silently. Collection
+          # stopped for 101.8 h and nothing noticed. A re-arm that cannot fail is a re-arm
+          # that cannot be monitored: verify the status code, retry the transient, and exit
+          # non-zero if every attempt fails so the run is visibly RED.
+          for attempt in 1 2 3 4 5; do
+            CODE=$(curl -s -o /tmp/rearm.json -w '%{http_code}' -X POST \
               -H "Authorization: Bearer $GITHUB_TOKEN" \
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/the_third_turn_live.yml/dispatches" \
-              -d "{\"ref\":\"${GITHUB_REF_NAME}\",\"inputs\":{\"max_minutes\":\"${MAX_MINUTES}\"}}" || true
-            echo "re-armed after ${ELAPSED} min (job.status=${{ job.status }})"
-          else
-            echo "ran only ${ELAPSED} min — NOT re-arming (crash-loop guard)"
-          fi
+              -d "{\"ref\":\"${GITHUB_REF_NAME}\",\"inputs\":{\"max_minutes\":\"${MAX_MINUTES}\"}}") || CODE=000
+            if [ "$CODE" = "204" ]; then
+              echo "re-armed after ${ELAPSED} min (attempt ${attempt}, job.status=${{ job.status }})"
+              exit 0
+            fi
+            echo "::warning::re-arm attempt ${attempt} failed with HTTP ${CODE}: $(cat /tmp/rearm.json 2>/dev/null)"
+            sleep $(( attempt * 15 ))
+          done
+          echo "::error::RE-ARM FAILED after 5 attempts — collection has STOPPED. The watchdog"
+          echo "::error::(the_third_turn_watchdog.yml) should relaunch within the hour."
+          exit 1

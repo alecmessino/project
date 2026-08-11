@@ -22,9 +22,11 @@ of prices are distinct questions, and the second does not follow from the first 
 
 We take up the transmission question directly, and find that it is largely an identification problem.
 The delay between a game event and an observed price change decomposes into a bookmaker's pricing
-latency, its feed's transport latency, and the observation latency imposed by our own sampling. That
-decomposition is arithmetic. The substantive difficulty is that only their sum is observed, and this
-paper is about what can and cannot be learned under that constraint. We show that three materially
+latency, its feed's publication latency, the staleness of the copy its distribution path delivers to
+us, and the sampling delay imposed by our own cadence. That decomposition is arithmetic. Only the
+last of the four is common-mode across books, and we measure the third rather than assume it away.
+The substantive difficulty is that only their sum is observed, and this paper is about what can and
+cannot be learned under that constraint. We show that three materially
 different markets, one in which a bookmaker genuinely prices faster, one in which pricing speeds are
 identical and only publishing infrastructure differs, and one in which both differ and partially
 offset, generate numerically identical timestamp data. No statistic computed from timestamps alone
@@ -279,10 +281,24 @@ across books are differences in how the market processes information.
 revision becomes visible on the public endpoint we query. It is a property of publishing
 infrastructure, caching, and content delivery, not of judgment about baseball.
 
-**Observation latency** is the interval between publication and our sampling of it. It is a property
-of our own collector. With a polling interval of roughly thirty-one seconds, a revision published
-immediately after a poll waits, on average, about fifteen seconds to be seen, and up to
-thirty-one seconds in the worst case.
+The interval between publication and our record is where an earlier version of this paper was
+imprecise, and the imprecision mattered. It is tempting to call the remainder "observation latency"
+and treat it as a single delay belonging to our collector. It is two delays belonging to two
+different parties, and only one of them is ours.
+
+**Delivery staleness** is the interval between a revision becoming available at the bookmaker's
+origin and the copy of it that our request actually receives. Public sportsbook endpoints sit behind
+content-delivery networks, so a response can be assembled from an object generated some time ago.
+This is a property of the book's distribution path, not of our cadence, and Section 5 reports it as
+measured rather than assumed: it is large, book-specific, and the two books do not even describe it
+under the same convention.
+
+**Collector sampling delay** is the interval between the moment a revision is retrievable by us and
+the moment we retrieve it. This one genuinely is a property of our own instrument. With a polling
+interval of roughly thirty-one seconds, a revision that becomes retrievable immediately after a poll
+waits, on average, about fifteen seconds to be seen, and up to thirty-one seconds in the worst case.
+Because a single collector polls both books on one schedule, this term — and only this term — is
+common-mode by construction.
 
 ![](figures/p2_race.png)
 
@@ -299,15 +315,30 @@ required was observable. This paper's question is the machinery itself, and two 
 stages are hidden from any outside observer.
 
 
-The data contain only the sum. For book `b` and event `E`, the observable is
+The data contain only the sum. For book `b` and event `E`, the observed arrival delay is
 
-> `Δt_b(E) = λ_price_b(E) + λ_feed_b(E) + λ_obs_b(E)`
+> `Δt_b(E) = λ_price_b(E) + λ_feed_b(E) + λ_deliv_b(E) + λ_samp(E)`
 
-As an accounting identity this is unremarkable, and we do not present it as a contribution. Writing
-a delay as a sum of its parts is bookkeeping. What matters is the consequence: **no manipulation of a
-single book's series recovers the individual terms, because only the left-hand side is ever
-observed.** Everything difficult about this paper follows from that sentence, which is why the
-identification section is longer than the estimation section.
+with the terms carrying deliberately unequal status:
+
+| Term | What it is | Status in this study |
+|---|---|---|
+| `λ_price_b` | the bookmaker's internal decision to revise | **unobserved** — the economically meaningful quantity |
+| `λ_feed_b` | origin publication of that decision | **unobserved** |
+| `λ_deliv_b` | delivery of the published state to our request | **measured**, book-specific (Section 5) |
+| `λ_samp` | our polling cadence | **controlled**, common-mode by construction (no `b` subscript) |
+
+As an accounting identity the sum is unremarkable, and we do not present it as a contribution.
+Writing a delay as a sum of its parts is bookkeeping. What matters is the consequence: **no
+manipulation of a single book's series recovers the individual terms, because only the left-hand
+side is ever observed.** Everything difficult about this paper follows from that sentence, which is
+why the identification section is longer than the estimation section.
+
+The four-way split is not pedantry. Collapsing `λ_deliv` and `λ_samp` into one "observation latency"
+invites the inference that the whole remainder is common-mode because the polling schedule is shared
+— an inference this paper made in an earlier draft and its own instrument later refuted. Separating
+them moves one term from *assumed away* to *measured*, and confines the common-mode claim to the one
+term that can support it.
 
 ### 3.2 Why two books might help
 
@@ -330,25 +361,24 @@ datasets are numerically identical; the markets are not. Any statistic computed 
 alone assigns the same value to all three, so distinguishing them requires evidence from outside the
 timing series.
 
-It is tempting to argue that observation latency is common-mode by construction: a single collector
-polls both books on the same schedule, so the *sampling* penalty is drawn from the same distribution
-for each. That argument is true about polling and false about observation, and our own instrument
-is what shows it. Observation latency is the sampling penalty plus the staleness of what the
-endpoint returns, and the second term is book-specific and large. Response headers captured
-alongside every quote show that one book's responses are served from a content-delivery cache that
-reports its own age: on cache hits the gap between our receive time and the response's stated
-generation time is accounted for exactly by that age, to the second, for every one of 3,500 fetches
-— and on the 116 responses that missed the cache the gap disappears entirely. The other book
-rewrites the same header at the edge, so its responses appear instantaneous while separately
-reporting payload ages of up to nine minutes. The two books do not merely have different delays;
-they describe their freshness under incompatible conventions.
+Only `λ_samp` survives differencing for free. Our collector polls both books on one schedule, so the
+sampling delay is drawn from the same distribution for each and largely cancels in a cross-book
+contrast. The temptation is to extend that argument to the whole interval between publication and
+observation — and an earlier draft of this paper did exactly that. Our own instrument refuted it.
+`λ_deliv` is book-specific and large: Section 5 reports one book whose delivered staleness is
+accounted for exactly, to the second, by a cache-age header on every one of 3,500 cached responses
+and vanishes entirely on the 116 that missed the cache, and a second book that rewrites the
+corresponding header at the edge so its responses appear instantaneous while separately reporting
+payload ages of up to nine minutes. The two books do not merely differ in how stale their data are;
+they differ in what staleness they claim to be reporting.
 
-Feed latency, then, is not the only non-common-mode term, and the distinction the previous
-paragraph draws is sharper than the data permit. Two commercial sportsbooks run different
-infrastructure, and neither their publishing delays nor their delivery paths match. Whether these
-differences are material relative to the pricing differences we hope to detect is precisely what
-Section 4 must establish — and the fact that a book-specific transport component is *measurable*
-here, rather than merely assumed away, is what keeps that question empirical.
+So `λ_feed` is not the only non-common-mode term, and two of the four now resist the differencing
+argument rather than one. This cuts both ways, which is why it belongs here rather than in a
+robustness appendix. It makes identification harder: a cross-book contrast no longer isolates
+pricing merely because the polling schedule is shared. It also makes the problem tractable in a way
+an assumption never could, because `λ_deliv` is *measured* — a quantity we can subtract and bound
+rather than one we must hope is small. Whether what remains is material relative to the pricing
+differences we hope to detect is precisely what Section 4 must establish.
 
 ### 3.3 Why the estimand is anchored to the event
 
@@ -495,18 +525,45 @@ research often concerns latencies measured in microseconds. Nothing in this desi
 regime. What it can speak to is the slower, human-and-model-mediated process by which a sportsbook
 absorbs a publicly visible event, and whether two such processes can be distinguished from outside.
 
----
+### 4.5 The identification ledger
 
-## 5. Data and institutional setting
+Identification arguments are usually presented as the assumptions that survived. That presentation
+hides the work. Below is the full set this study has put to an observable test, including — and
+especially — the ones that failed. A route that has been closed by measurement is more informative
+than one that was never opened, because it tells a later researcher not to spend the instrument on
+it.
+
+**Table 1.** Every identification assumption this study has tested, and what became of it.
+"Rejected" means an observable test was run and the assumption did not survive it.
+
+| Assumption | Observable test | Result | Status |
+|---|---|---|---|
+| Collector sampling delay is common-mode | shared polling schedule, both books | holds by construction | **Supported** |
+| Payload timestamp dates a price revision | does it move on price changes, and only then | moves on all price changes and on 98.6% of others | **Rejected** |
+| Delivered ordering is publication ordering | successive polls of the same market | 28.4% arrive out of order | **Rejected** |
+| Cache-age headers are comparable across books | same header, both books | one exact to the second, one rewritten at the edge | **Rejected** |
+| Scheduled-start field dates publication | does it move with price | constant within a market | **Rejected** |
+| Delivery staleness is negligible | measured directly | median 115 s, 90th percentile 549 s on one book | **Rejected** |
+| Delivery staleness is *measurable* | cache-age header versus receive time | exact on one book, bounded on the other | **Supported** |
+| Feed publication latency is separable from pricing | none available | no test exists on this instrument | **Open** |
+| Cross-book contrast isolates pricing | requires the row above | not identified | **Open** |
+| A third book resolves the remaining ambiguity | pre-registered gate (Section 6.6) | gate not satisfied | **Open** |
+
+The shape of this table is the paper's argument in miniature. Six routes from a timestamp to a
+publication time are closed, and closed by measurement rather than by assertion. One term that a
+previous draft assumed away turns out to be measurable, which is the single piece of good news. The
+two rows that matter most for the estimand remain open, and the last of them is gated on data that
+does not yet exist. A reader who wants to know why this paper is about identification rather than
+about a leadership estimate can read the right-hand column.
 
 ### 5.1 The instrument
 
 The data are generated by a continuously running collector that polls two sportsbooks and a
 game-state provider on a fixed schedule and appends every observation to an append-only panel.
-Table 1 states its specifications. These are verifiable facts about the apparatus rather than
+Table 2 states its specifications. These are verifiable facts about the apparatus rather than
 findings, and we state them as such.
 
-**Table 1.** Instrument specifications. These are properties of the measurement apparatus,
+**Table 2.** Instrument specifications. These are properties of the measurement apparatus,
 verifiable by inspection of the panels, not estimates.
 
 | Property | Value |
@@ -545,7 +602,52 @@ the other publishes nothing. Any analysis that filters on tradeability can there
 to one book, and applying it to one and not the other introduces selection that favors the filtered
 book.
 
-### 5.3 Why no comparison with the companion study is possible
+### 5.3 What the delivery path adds, measured
+
+`λ_deliv` is the one hidden term this instrument can see, because the transport that produces it
+describes itself. Alongside every quote the collector records the response's HTTP metadata and any
+timestamp fields carried in the payload, and it writes a row whenever a market's line, prices, or
+timestamps change. Table 3 reports what one slate of that panel establishes. These are properties of
+the books' distribution paths, measured, not estimated.
+
+**Table 3.** Delivery and publication metadata, 8,463 market transitions over one slate.
+Verifiable by inspection of the provenance panel.
+
+| Property | Book A | Book B |
+|---|---|---|
+| Delivered staleness explained by the cache-age header | exactly, on 3,500/3,500 cached responses | header rewritten at the edge; unexplained |
+| Staleness on responses that missed the cache | none (116 responses) | not separately identifiable |
+| Payload age reported by the transport | ~30 s, tightly concentrated | median 115 s, 90th percentile 549 s |
+| Publication timestamp in the payload | none | event-level field present |
+| That field moves when the price moves | — | on 1,094/1,094 price changes |
+| That field moves when the price does *not* move | — | on 98.6% of other transitions |
+| Ordering of that field across successive polls | — | 28.4% arrive earlier than the previous poll |
+| Scheduled-start field behaves as a publication clock | no (equals first pitch) | no |
+
+Three consequences follow, and they are the reason this subsection sits in the data section rather
+than in an appendix.
+
+First, **`λ_deliv` is real, book-specific, and of a magnitude that matters.** One book's delivered
+staleness is a clean, near-constant offset that its own headers account for to the second; the
+other's is an order of magnitude larger and variable. Any cross-book timing contrast that ignores
+this is contaminated by it.
+
+Second, **neither book publishes a usable publication clock.** One exposes nothing. The other
+exposes a field that does move on every price change — but also on nearly every transition without
+one, which makes it an event-level heartbeat rather than a per-market stamp. It licenses the
+negative inference (a price cannot have moved while it stood still, an exclusion that held on all
+1,094 price changes, with a 95% upper bound of 0.27% on violations) and not the positive one. It
+cannot date a revision.
+
+Third, and most damaging to any timestamp-based approach, **the delivered ordering is not the
+publication ordering.** More than a quarter of that field's transitions arrive *earlier* than the
+value in the preceding poll, and those reversals overwhelmingly accompany a higher reported payload
+age. A distribution network serving objects of differing age does not merely delay a market state,
+it can reorder it. This is not noise that averages out over more data: it is a property of the
+channel, and it places a floor on the timing resolution of any study drawing on public endpoints of
+this class, including this one.
+
+### 5.4 Why no comparison with the companion study is possible
 
 It is tempting to treat this dataset as a second sample of the companion study's population. It is
 not. The two differ in the benchmark book, in the available covariates, and in the sampling cadence.
@@ -627,6 +729,33 @@ verified and recorded:
 Stating these in advance is the point. A paper that fixes its design before seeing its evidence
 cannot be reshaped by the evidence, and a null that arrives under those conditions carries the same
 weight as a finding.
+
+**Status of the four conditions.** The wording above is reproduced unchanged from the version fixed
+before the provenance measurements of Section 5.3 were taken. What follows records progress against
+it; it does not revise it. Conditions 1, 2, and 4 are unmet. Condition 3 has moved, and precisely how
+far is worth being careful about, because the temptation to overstate it is exactly what a
+pre-registration exists to resist.
+
+Condition 3 offers three routes. The **second** — a defended argument that transport is common-mode
+— is now closed: it was the argument this paper's earlier draft made, and Section 5.3 measures it
+false. The **third** — a documented demonstration that separation is unachievable with this class of
+instrument — is materially advanced but not complete: no usable publication clock exists on either
+book, one exposing none and the other an out-of-order event-level heartbeat, and that absence is now
+quantified rather than asserted.
+
+The **first** route requires care. Section 5.3 reports an independent measurement of a book-specific
+transport component, which sounds like the condition as written. It is not the same quantity. What
+is measured is `λ_deliv`, the staleness of the copy delivered to us; what Condition 3 names is
+`λ_feed`, the delay between a bookmaker's internal revision and its publication at origin. The
+first is visible because the distribution network describes itself. The second remains as hidden as
+it was, and no instrument in this study addresses it. Measuring a term adjacent to the one required
+does not satisfy the condition, and we do not record it as satisfied.
+
+Whether this paper reports Outcome B or Outcome C is therefore still undetermined, and deliberately
+so. The evidence now bears on that question in both directions — a measurable `λ_deliv` argues for
+bounds, an unmeasurable `λ_feed` and a reordered delivery channel argue for non-identification — and
+we decline to resolve it in advance of the remaining conditions. Selecting the branch after seeing
+which one the evidence flatters is the specific failure this section was written to prevent.
 
 ---
 

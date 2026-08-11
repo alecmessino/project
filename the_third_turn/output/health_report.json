@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-11T23:03:21+00:00",
+  "generated": "2026-08-11T23:19:19+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 635009,
+    "rows": 636170,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 238520,
-      "live_total": 71208,
-      "live_today": 3114,
-      "last_row_age_min": 0.4
+      "rows_total": 239161,
+      "live_total": 71320,
+      "live_today": 3226,
+      "last_row_age_min": 0.2
     },
     "fanduel": {
-      "rows_total": 396483,
-      "live_total": 78685,
-      "live_today": 2928,
-      "last_row_age_min": 0.4
+      "rows_total": 397003,
+      "live_total": 78768,
+      "live_today": 3011,
+      "last_row_age_min": 0.2
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 52838.4
+      "last_row_age_min": 52854.3
     }
   },
   "books_reporting_live": [
@@ -37,25 +37,25 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 71208,
-    "OPEN": 72448,
-    "SUSPENDED": 5882,
+    "unset": 71320,
+    "OPEN": 72530,
+    "SUSPENDED": 5883,
     "REMOVED": 355
   },
   "overlap": {
-    "simultaneous_pairs_total": 81359,
-    "simultaneous_pairs_today": 3064,
-    "overlap_games": 148,
+    "simultaneous_pairs_total": 81443,
+    "simultaneous_pairs_today": 3148,
+    "overlap_games": 149,
     "median_cocapture_lag_s": 0.0,
     "median_sync_lag_s": 0.0,
     "delivery_staleness_s": {
       "bovada": {
-        "n": 7590,
+        "n": 7611,
         "median": 31.0,
         "p90": 538.0
       },
       "fanduel": {
-        "n": 5833,
+        "n": 5932,
         "median": 30.0,
         "p90": 31.0
       }
@@ -63,8 +63,7 @@
     "contemporaneity_bound_s": 569.0,
     "games_by_books_live": {
       "0_books": 8,
-      "1_books": 1,
-      "2_books": 148
+      "2_books": 149
     }
   },
   "fix_verification": {
@@ -81,7 +80,7 @@
   "coverage": {
     "live_games_seen": 150,
     "book_panel_games": 157,
-    "team_total_rows": 31724,
+    "team_total_rows": 31727,
     "innings_seen": [
       1,
       2,
@@ -101,14 +100,14 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 81359,
+        "current": 81443,
         "target": 2000,
         "pass": true,
         "progress": 1.0
       },
       {
         "criterion": "games with live overlap",
-        "current": 148,
+        "current": 149,
         "target": 100,
         "pass": true,
         "progress": 1.0

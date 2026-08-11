@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-08-11T16:42:14+00:00
+ THE THIRD TURN — collection health   2026-08-11T16:58:10+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,18 +12,18 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ████████████████··  live=71117 (today 3023)  last 39.6m ago ⚠STALE
-  fanduel   ██████████████████  live=78632 (today 2875)  last 39.1m ago ⚠STALE
-  pinnacle  ··················  live=    0 (today    0)  last 52457.2m ago ⚠STALE
+  bovada    ████████████████··  live=71117 (today 3023)  last 55.5m ago ⚠STALE
+  fanduel   ██████████████████  live=78632 (today 2875)  last 55.0m ago ⚠STALE
+  pinnacle  ··················  live=    0 (today    0)  last 52473.2m ago ⚠STALE
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
   simultaneous live pairs :  81306  (today 3011)
   overlap games           : 145
   collector co-capture lag: 0.0 s   (when WE read them — not market contemporaneity)
-    delivered staleness bovada   : median 31.0s  p90 537.0s  (n=6645)
+    delivered staleness bovada   : median 31.0s  p90 533.0s  (n=6656)
     delivered staleness fanduel  : median 30.0s  p90 31.0s  (n=5721)
-  contemporaneity bound   : 568.0 s   ← the SR-1 criterion
+  contemporaneity bound   : 564.0 s   ← the SR-1 criterion
   games by #books live     : {'0_books': 12, '2_books': 145}
 
 QUOTE LIFECYCLE (live rows)
@@ -40,7 +40,7 @@ INTEGRITY
 SR-1 GATE (leadership analysis — blocked until all pass)
   ✅ ██████████████████ simultaneous live quote pairs    81306 / 2000
   ✅ ██████████████████ games with live overlap          145 / 100
-     ·················· contemporaneity bound < 15s      568.0 / 15
+     ·················· contemporaneity bound < 15s      564.0 / 15
      ████████████······ books quoting live               2 / 3
   overall: 67%  →  BLOCKED — keep collecting
 ══════════════════════════════════════════════════════════════════

@@ -48,6 +48,42 @@ def _read(name):
     return rows
 
 
+def delivery_staleness():
+    """Per-book delivered staleness, in seconds, from the provenance panel's `Age` header.
+
+    SR-1 REPAIR (2026-08-10, E-006 / E-014 / E-021). The gate used to certify synchronisation
+    with `median sync lag < 15s`, computed as the spread between the two books' quote
+    timestamps at a common instant. That statistic measures WHEN OUR COLLECTOR CAPTURED the
+    quotes, not whether the quotes describe the same market moment. Because both books are
+    read in one poll it is pinned at 0.0 s, so the criterion passed unconditionally while
+    certifying nothing about contemporaneity.
+
+    E-021 showed why that is not a pedantic distinction: what an endpoint returns can be an
+    object generated much earlier, and the staleness is book-specific (one book's responses
+    carry ~30 s of cache age; the other's reach a 90th percentile of ~549 s). Two quotes
+    captured in the same poll can therefore describe market states minutes apart.
+
+    Returning the measured staleness lets the gate report a BOUND on market-time separation
+    instead of a co-capture artifact. Absent the provenance panel we return nothing and the
+    repaired criterion reports UNKNOWN rather than silently reverting to the old pass.
+    """
+    rows = _read("market_provenance.jsonl")
+    per = defaultdict(list)
+    for r in rows:
+        a = r.get("age")
+        if a is None:
+            continue
+        try:
+            per[r.get("book", "?")].append(float(a))
+        except (TypeError, ValueError):
+            continue
+    out = {}
+    for b, v in per.items():
+        v.sort()
+        out[b] = {"n": len(v), "median": v[len(v) // 2], "p90": v[int(0.9 * len(v))]}
+    return out
+
+
 def _T(s):
     try:
         return datetime.fromisoformat(str(s).replace("Z", "+00:00"))
@@ -148,10 +184,27 @@ def analyse():
             (sum(1 for b in bysrc if ff(bysrc[b], t)[0]) for t in times), default=0)
     med_lag = sorted(lags)[len(lags) // 2] if lags else None
     dist = Counter(per_game_books_live.values())
+
+    # ── contemporaneity bound (the repaired synchronisation statistic) ───────
+    # Co-capture lag says when WE read the two books. What the gate needs is a bound on how
+    # far apart in MARKET time the two quotes can be. Each book's delivered copy may already
+    # be stale by its own amount, so in the worst case the two staleness values point in
+    # opposite directions and the separation is the co-capture lag plus their sum.
+    stale = delivery_staleness()
+    bound = None
+    if med_lag is not None and len(stale) >= 2:
+        tops = sorted((s["p90"] for s in stale.values()), reverse=True)[:2]
+        bound = med_lag + sum(tops)
+
     R["overlap"] = {
         "simultaneous_pairs_total": pairs, "simultaneous_pairs_today": pairs_today,
         "overlap_games": len(overlap_games),
-        "median_sync_lag_s": round(med_lag, 1) if med_lag is not None else None,
+        # renamed: this never measured market contemporaneity, only collector co-capture
+        "median_cocapture_lag_s": round(med_lag, 1) if med_lag is not None else None,
+        "median_sync_lag_s": round(med_lag, 1) if med_lag is not None else None,  # back-compat
+        "delivery_staleness_s": {b: {k: round(v, 1) for k, v in s.items()}
+                                 for b, s in stale.items()},
+        "contemporaneity_bound_s": round(bound, 1) if bound is not None else None,
         "games_by_books_live": {f"{k}_books": v for k, v in sorted(dist.items())},
     }
 
@@ -185,11 +238,15 @@ def analyse():
     gate = [
         ("simultaneous live quote pairs", pairs, 2000),
         ("games with live overlap", len(overlap_games), 100),
-        ("median sync lag < 15s", med_lag if med_lag is not None else 1e9, 15),
+        # REPAIRED (E-021): was "median sync lag < 15s", which measured collector co-capture
+        # and was pinned at 0.0 s by the shared poll. The bound below is what the criterion
+        # always intended to assert. It does not currently pass, and that is the repair
+        # working: the old statistic was certifying synchronisation the data never showed.
+        ("contemporaneity bound < 15s", bound if bound is not None else 1e9, 15),
         ("books quoting live", len(live_books), 3),
     ]
     def prog(name, cur, tgt):
-        if "lag" in name:
+        if "lag" in name or "bound" in name:
             ok = cur < tgt
             pct = 1.0 if ok else min(1.0, tgt / cur) if cur else 0.0
         else:
@@ -233,7 +290,13 @@ def render(R):
     L.append("\nOVERLAP (the scarce resource)")
     L.append(f"  simultaneous live pairs : {o['simultaneous_pairs_total']:6d}  (today {o['simultaneous_pairs_today']})")
     L.append(f"  overlap games           : {o['overlap_games']}")
-    L.append(f"  median sync lag         : {o['median_sync_lag_s'] if o['median_sync_lag_s'] is not None else '—'} s")
+    L.append(f"  collector co-capture lag: {o['median_cocapture_lag_s'] if o['median_cocapture_lag_s'] is not None else '—'} s"
+             f"   (when WE read them — not market contemporaneity)")
+    for b, s in sorted(o.get("delivery_staleness_s", {}).items()):
+        L.append(f"    delivered staleness {b:9s}: median {s['median']}s  p90 {s['p90']}s  (n={s['n']})")
+    cb = o.get("contemporaneity_bound_s")
+    L.append(f"  contemporaneity bound   : {cb if cb is not None else '— (needs provenance panel)'}"
+             f"{' s' if cb is not None else ''}   ← the SR-1 criterion")
     L.append(f"  games by #books live     : {o['games_by_books_live'] or '—'}")
 
     L.append("\nQUOTE LIFECYCLE (live rows)")

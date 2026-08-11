@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-11T13:46:41+00:00",
+  "generated": "2026-08-11T14:02:35+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
@@ -17,19 +17,19 @@
       "rows_total": 230553,
       "live_total": 71117,
       "live_today": 3023,
-      "last_row_age_min": 14.0
+      "last_row_age_min": 29.9
     },
     "fanduel": {
       "rows_total": 388448,
       "live_total": 78632,
       "live_today": 2875,
-      "last_row_age_min": 30.6
+      "last_row_age_min": 46.5
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 52281.7
+      "last_row_age_min": 52297.6
     }
   },
   "books_reporting_live": [
@@ -50,9 +50,9 @@
     "median_sync_lag_s": 0.0,
     "delivery_staleness_s": {
       "bovada": {
-        "n": 6309,
+        "n": 6344,
         "median": 31.0,
-        "p90": 532.0
+        "p90": 537.0
       },
       "fanduel": {
         "n": 5710,
@@ -60,7 +60,7 @@
         "p90": 31.0
       }
     },
-    "contemporaneity_bound_s": 563.0,
+    "contemporaneity_bound_s": 568.0,
     "games_by_books_live": {
       "0_books": 12,
       "2_books": 145
@@ -80,7 +80,7 @@
   "coverage": {
     "live_games_seen": 146,
     "book_panel_games": 157,
-    "team_total_rows": 31645,
+    "team_total_rows": 31646,
     "innings_seen": [
       1,
       2,
@@ -114,10 +114,10 @@
       },
       {
         "criterion": "contemporaneity bound < 15s",
-        "current": 563.0,
+        "current": 568.0,
         "target": 15,
         "pass": false,
-        "progress": 0.027
+        "progress": 0.026
       },
       {
         "criterion": "books quoting live",

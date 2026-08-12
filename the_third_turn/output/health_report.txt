@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-08-12T19:26:42+00:00
+ THE THIRD TURN — collection health   2026-08-12T19:42:41+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,33 +12,33 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ████████████████··  live=74596 (today 2791)  last 0.2m ago
-  fanduel   ██████████████████  live=81773 (today 2656)  last 0.2m ago
-  pinnacle  ··················  live=    0 (today    0)  last 54061.7m ago ⚠STALE
+  bovada    ████████████████··  live=74607 (today 2802)  last -0.0m ago
+  fanduel   ██████████████████  live=81783 (today 2666)  last -0.0m ago
+  pinnacle  ··················  live=    0 (today    0)  last 54077.7m ago ⚠STALE
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
-  simultaneous live pairs :  84805  (today 2942)
+  simultaneous live pairs :  84826  (today 2963)
   overlap games           : 150
   collector co-capture lag: 0.0 s   (when WE read them — not market contemporaneity)
-    delivered staleness bovada   : median 31.0s  p90 537.0s  (n=10749)
-    delivered staleness fanduel  : median 30.0s  p90 31.0s  (n=9118)
+    delivered staleness bovada   : median 31.0s  p90 537.0s  (n=10832)
+    delivered staleness fanduel  : median 30.0s  p90 31.0s  (n=9183)
   contemporaneity bound   : 568.0 s   ← the SR-1 criterion
   games by #books live     : {'0_books': 8, '2_books': 150}
 
 QUOTE LIFECYCLE (live rows)
-  market status: {'unset': 74596, 'OPEN': 75350, 'SUSPENDED': 6049, 'REMOVED': 374}
+  market status: {'unset': 74607, 'OPEN': 75359, 'SUSPENDED': 6050, 'REMOVED': 374}
 
 COVERAGE
   live games seen: 151   book-panel games: 158   team-total rows: 32090
   innings seen: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 INTEGRITY
-  rows=653619  malformed=0  missing-fields=0  duplicates=0  future-ts=0
+  rows=654280  malformed=0  missing-fields=0  duplicates=0  future-ts=0
   status: ✅ clean
 
 SR-1 GATE (leadership analysis — blocked until all pass)
-  ✅ ██████████████████ simultaneous live quote pairs    84805 / 2000
+  ✅ ██████████████████ simultaneous live quote pairs    84826 / 2000
   ✅ ██████████████████ games with live overlap          150 / 100
      ·················· contemporaneity bound < 15s      568.0 / 15
      ████████████······ books quoting live               2 / 3

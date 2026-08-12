@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-12T22:22:35+00:00",
+  "generated": "2026-08-12T22:38:33+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 660694,
+    "rows": 661255,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 251540,
+      "rows_total": 251788,
       "live_total": 74706,
       "live_today": 2901,
-      "last_row_age_min": 0.2
+      "last_row_age_min": 0.5
     },
     "fanduel": {
-      "rows_total": 409148,
-      "live_total": 81938,
-      "live_today": 2821,
-      "last_row_age_min": 0.2
+      "rows_total": 409461,
+      "live_total": 81941,
+      "live_today": 2824,
+      "last_row_age_min": 0.5
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 54237.6
+      "last_row_age_min": 54253.6
     }
   },
   "books_reporting_live": [
@@ -38,24 +38,24 @@
   ],
   "market_status": {
     "unset": 74706,
-    "OPEN": 75492,
+    "OPEN": 75495,
     "SUSPENDED": 6072,
     "REMOVED": 374
   },
   "overlap": {
-    "simultaneous_pairs_total": 85059,
-    "simultaneous_pairs_today": 3196,
+    "simultaneous_pairs_total": 85062,
+    "simultaneous_pairs_today": 3199,
     "overlap_games": 150,
     "median_cocapture_lag_s": 0.0,
     "median_sync_lag_s": 0.0,
     "delivery_staleness_s": {
       "bovada": {
-        "n": 11321,
-        "median": 39.0,
+        "n": 11394,
+        "median": 43.0,
         "p90": 538.0
       },
       "fanduel": {
-        "n": 10068,
+        "n": 10106,
         "median": 30.0,
         "p90": 31.0
       }
@@ -80,7 +80,7 @@
   "coverage": {
     "live_games_seen": 151,
     "book_panel_games": 158,
-    "team_total_rows": 32244,
+    "team_total_rows": 32381,
     "innings_seen": [
       1,
       2,
@@ -100,7 +100,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 85059,
+        "current": 85062,
         "target": 2000,
         "pass": true,
         "progress": 1.0

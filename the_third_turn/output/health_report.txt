@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-08-12T07:03:14+00:00
+ THE THIRD TURN — collection health   2026-08-12T07:12:29+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,16 +12,16 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ████████████████··  live=74544 (today 2739)  last 21.8m ago
-  fanduel   ██████████████████  live=81723 (today 2606)  last 101.0m ago ⚠STALE
-  pinnacle  ··················  live=    0 (today    0)  last 53318.2m ago ⚠STALE
+  bovada    ████████████████··  live=74544 (today 2739)  last 1.2m ago
+  fanduel   ██████████████████  live=81723 (today 2606)  last 110.3m ago ⚠STALE
+  pinnacle  ··················  live=    0 (today    0)  last 53327.5m ago ⚠STALE
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
   simultaneous live pairs :  84720  (today 2857)
   overlap games           : 150
   collector co-capture lag: 0.0 s   (when WE read them — not market contemporaneity)
-    delivered staleness bovada   : median 31.0s  p90 538.0s  (n=8715)
+    delivered staleness bovada   : median 31.0s  p90 538.0s  (n=8728)
     delivered staleness fanduel  : median 30.0s  p90 31.0s  (n=8811)
   contemporaneity bound   : 569.0 s   ← the SR-1 criterion
   games by #books live     : {'0_books': 7, '2_books': 150}
@@ -30,11 +30,11 @@ QUOTE LIFECYCLE (live rows)
   market status: {'unset': 74544, 'OPEN': 75302, 'SUSPENDED': 6047, 'REMOVED': 374}
 
 COVERAGE
-  live games seen: 151   book-panel games: 157   team-total rows: 31988
+  live games seen: 151   book-panel games: 157   team-total rows: 31990
   innings seen: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 INTEGRITY
-  rows=651645  malformed=0  missing-fields=0  duplicates=0  future-ts=0
+  rows=651646  malformed=0  missing-fields=0  duplicates=0  future-ts=0
   status: ✅ clean
 
 SR-1 GATE (leadership analysis — blocked until all pass)

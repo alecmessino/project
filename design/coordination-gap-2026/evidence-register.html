@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coordination Gap Register</title>
+<style>
+@font-face{font-family:'Satoshi';font-style:normal;font-weight:300 900;font-display:swap;
+  src:url(data:font/woff2;base64,__SATOSHI__) format('woff2')}
+@font-face{font-family:'Erode';font-style:normal;font-weight:300 700;font-display:swap;
+  src:url(data:font/woff2;base64,__ERODE__) format('woff2')}
+
+:root{
+  --bg:#F4F1EA; --paper:#FBFAF6; --ink:#1E2833; --blue:#2C5878;
+  --rule:rgba(30,40,51,.18); --rule-strong:rgba(30,40,51,.42); --mute:rgba(30,40,51,.62);
+  --red:#8B3A2E; --green:#2F5D45;
+  --sans:'Satoshi',Helvetica,Arial,sans-serif; --serif:'Erode',Georgia,serif;
+}
+:root[data-theme="dark"]{
+  --bg:#161C23; --paper:#1C242D; --ink:#E8E4DA; --blue:#8FB8D8;
+  --rule:rgba(232,228,218,.16); --rule-strong:rgba(232,228,218,.34); --mute:rgba(232,228,218,.60);
+  --red:#D89078; --green:#8FC0A4;
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#161C23; --paper:#1C242D; --ink:#E8E4DA; --blue:#8FB8D8;
+    --rule:rgba(232,228,218,.16); --rule-strong:rgba(232,228,218,.34); --mute:rgba(232,228,218,.60);
+    --red:#D89078; --green:#8FC0A4;
+  }
+}
+
+*{box-sizing:border-box;margin:0;padding:0;border-radius:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:56px 28px 120px}
+
+h1,h2,h3,h4{font-family:var(--sans);font-weight:900;letter-spacing:-.02em;line-height:1.06}
+h1{font-size:clamp(31px,5vw,52px);margin-bottom:14px}
+h2{font-size:clamp(22px,3vw,29px);margin-bottom:10px}
+h3{font-size:17px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
+.kicker{font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
+.lede{font-family:var(--serif);font-size:19px;line-height:1.5;max-width:64ch}
+.sec-num{font-weight:700;font-size:11px;letter-spacing:.18em;color:var(--blue);text-transform:uppercase;margin-bottom:6px}
+p{margin-bottom:14px;max-width:74ch}
+.small{font-size:13.5px;color:var(--mute);line-height:1.55}
+b,strong{font-weight:700}
+hr.rule{border:0;border-top:1px solid var(--rule-strong);margin:52px 0 30px}
+a{color:var(--blue)}
+
+/* verdict rows */
+.verdict{border:1px solid var(--rule-strong);padding:4px 26px 22px;margin:26px 0;background:var(--paper)}
+.vrow{display:grid;grid-template-columns:104px 1fr;gap:18px;padding:18px 0;border-top:1px solid var(--rule)}
+.vrow:first-of-type{border-top:0}
+.tag{font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding-top:3px;color:var(--blue)}
+.tag.cut{color:var(--red)}
+.tag.new{color:var(--green)}
+.vrow p:last-child{margin-bottom:0}
+
+/* register table */
+.tscroll{overflow-x:auto;margin-top:10px}
+table{width:100%;border-collapse:collapse;min-width:860px}
+th{font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;text-align:left;
+  padding:0 10px 10px 0;border-bottom:1px solid var(--rule-strong);color:var(--blue);vertical-align:bottom}
+td{padding:15px 10px 15px 0;border-bottom:1px solid var(--rule);vertical-align:top;font-size:14px;line-height:1.45}
+td.rank{font-weight:900;font-size:22px;width:40px;color:var(--blue);line-height:1}
+td.stat{width:38%}
+td.stat b{font-size:14.5px;display:block;margin-bottom:4px}
+td.src{width:20%;font-size:12.5px;color:var(--mute)}
+td.use{width:19%;font-size:12.5px}
+td.sc{width:78px;font-size:11.5px;color:var(--mute);white-space:nowrap;font-variant-numeric:tabular-nums}
+td.sc b{font-size:15px;color:var(--blue);display:block;margin-bottom:2px}
+.use-flag{font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:4px}
+.use-flag.hold{color:var(--mute)}
+.use-flag.cut{color:var(--red)}
+tr.tierhead td{background:var(--paper);border-bottom:1px solid var(--rule-strong);
+  font-weight:700;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);padding:11px 10px}
+
+/* axes */
+.axes{display:grid;grid-template-columns:1fr;gap:0;margin:22px 0 8px;border-top:1px solid var(--rule-strong)}
+@media(min-width:860px){.axes{grid-template-columns:repeat(4,1fr)}}
+.axis{padding:16px 18px 18px 0;border-bottom:1px solid var(--rule)}
+@media(min-width:860px){.axis + .axis{padding-left:18px;border-left:1px solid var(--rule);border-bottom:0}}
+.axis .an{font-weight:900;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.axis p{font-size:13.5px;margin-bottom:0}
+
+/* pull + callout */
+.pull{border-left:2px solid var(--blue);padding-left:20px;margin:26px 0;font-family:var(--serif);
+  font-size:17px;line-height:1.5;max-width:64ch}
+.flag{border:1px solid var(--red);padding:18px 20px;margin:24px 0;background:var(--paper)}
+.flag .fh{font-weight:700;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
+.flag p:last-child{margin-bottom:0}
+
+/* web implementation */
+.webitem{border-top:1px solid var(--rule);padding:24px 0;display:grid;grid-template-columns:1fr;gap:6px}
+@media(min-width:820px){.webitem{grid-template-columns:186px 1fr;gap:24px}}
+.webitem:first-of-type{border-top:1px solid var(--rule-strong)}
+.webloc{font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);line-height:1.45}
+.webloc .cost{display:block;color:var(--mute);letter-spacing:.08em;margin-top:6px;font-weight:500}
+.webitem p{margin-bottom:9px}
+.webitem p:last-child{margin-bottom:0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;
+  background:var(--paper);border:1px solid var(--rule);padding:1px 5px}
+
+/* sheet previews */
+.sheets{display:grid;grid-template-columns:1fr;gap:26px;margin-top:24px}
+@media(min-width:860px){.sheets{grid-template-columns:1fr 1fr}}
+.sheetcard{border:1px solid var(--rule-strong);background:var(--paper);padding:24px 26px}
+.sheetcard .st{font-weight:900;font-size:19px;margin-bottom:4px;letter-spacing:-.015em}
+.sheetcard .sm{font-size:12px;color:var(--mute);margin-bottom:14px}
+.sheetcard ul{margin:0 0 0 18px;font-size:13.5px;line-height:1.55}
+.sheetcard li{margin-bottom:7px}
+.sheetcard .status{font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kicker">Driftwood Wealth · Internal Working Document · 12 August 2026</div>
+  <h1>The Coordination Gap Register</h1>
+  <p class="lede">Third pass. Every claim carries a named source and a date, ranked by what it does for you rather
+    than by how impressive it looks. The headline finding: the strongest number you own was already in your
+    material, stated in its weakest form.</p>
+
+  <div class="pull">The best evidence in this set is not research. It is statute, and a worked example published by
+    the office that collects the tax. Nobody can accuse you of selecting it.</div>
+
+  <hr class="rule">
+
+  <div class="sec-num">Section 01</div>
+  <h2>What this pass changed</h2>
+  <p class="small">Your four calls from the last review were checked and all four hold. Five further corrections and
+    seven new items follow.</p>
+
+  <div class="verdict">
+
+    <div class="vrow">
+      <div class="tag new">Upheld</div>
+      <div>
+        <h3>The four calls from your notes are correct as written</h3>
+        <p class="small">"4 to 7 separate financial relationships" has no traceable source and Bank of America's
+          67 percent and 71 percent are the defensible replacement. The asset location correction is right: J.P.
+          Morgan's October 2025 piece puts tax-aware asset location at 0.2 to 0.5 percent annually at portfolio
+          level, and 1.07 percent is the after-tax differential on an individual holding at the 37 percent bracket.
+          The 9-to-41 objects math is arithmetic and must be labeled as such. The McKinsey human-advice finding is
+          real and is in fact stronger than you stated: affluent households will pay roughly <b>five times</b> more
+          for human advice than a comparable digital service, and among investors above $1 million the share willing
+          to pay a 100 basis point premium or more grew by half between 2021 and 2023.</p>
+      </div>
+    </div>
+
+    <div class="vrow">
+      <div class="tag">Replace</div>
+      <div>
+        <h3>"16% top Illinois rate" is the weakest true version of your best number</h3>
+        <p class="small">A percentage nobody can convert into dollars is doing almost none of the work available
+          here. The Illinois Attorney General publishes computation examples in its own fact sheet: an estate of
+          <b>$4,000,000 owes $0</b>; an estate of <b>$5,000,000 owes $285,714</b>, both on all-Illinois property,
+          both with zero federal tax. That is 28.6 percent of the first million above the line, it is
+          dollar-denominated, and it comes from the office that collects the tax. Lead with it and retire the 16
+          percent as a footnote.</p>
+      </div>
+    </div>
+
+    <div class="vrow">
+      <div class="tag">Fix</div>
+      <div>
+        <h3>The ten-year clock, as printed, is broader than the regulation</h3>
+        <p class="small">The current sheet says IRS enforcement of annual distributions began in 2025 without
+          qualification. Annual distributions in years one through nine are required only where the account owner
+          had <b>already begun</b> required minimum distributions before death. Where the owner died before their
+          required beginning date, the heir has the ten-year deadline with no annual requirement. The 25 percent
+          excise tax is also reducible to 10 percent if the shortfall is corrected within a two-year window. This is
+          exactly the kind of over-broad statement Louis Wierenga's CPA counterpart catches, and the corrected
+          version is on the rebuilt sheet.</p>
+      </div>
+    </div>
+
+    <div class="vrow">
+      <div class="tag">Supersede</div>
+      <div>
+        <h3>Bank of America published a 2026 study, and it solves your exit-planning sourcing problem</h3>
+        <p class="small">The 2026 Study of Wealthy Americans (17 June 2026, 1,431 respondents holding $3 million or
+          more, fielded January to February 2026 by Escalent) gives you two numbers you did not have. First,
+          <b>46 percent</b> of those households hold all three of a will, a living will or advance directive, and a
+          durable power of attorney. Second, among the business owners in that group, <b>78 percent call succession
+          planning important and 20 percent have a fully documented plan.</b> That second pair replaces the Exit
+          Planning Institute item you correctly held back as too soft to print. Keep the 2024 study for the 67 and
+          71 percent multiple-advisor figures, which the 2026 study does not restate.</p>
+      </div>
+    </div>
+
+    <div class="vrow">
+      <div class="tag cut">Correct</div>
+      <div>
+        <h3>"Only 6% of those who leave cite poor money management" does not match the source</h3>
+        <p class="small">The reporting on Cerulli's September 2025 study gives a different and better breakdown of
+          why heirs leave: 50 percent already had their own advisor, <b>28 percent never had a relationship with
+          the benefactor's advisor</b>, 14 percent did not want an advisor at all, and 10 percent said their needs
+          were not met. Either locate the 6 percent in the primary report or use the 28 percent, which makes your
+          argument more directly than the number it replaces.</p>
+      </div>
+    </div>
+
+    <div class="vrow">
+      <div class="tag cut">Correct</div>
+      <div>
+        <h3>The Morningstar gap is 12 percent of return in the 2026 study, not 15</h3>
+        <p class="small">Mind the Gap 2026 (Jeffrey Ptak, published 6 August 2026, roughly 23,000 funds and ETFs
+          alive since 1 January 2016) reports the average dollar earning 8.7 percent against a 9.9 percent aggregate
+          fund return, a 1.2 point gap worth about 12 percent of total return and roughly $3.8 trillion. The 15
+          percent figure belongs to the earlier study, and it is the one Fulkerson, Jordan, Riley and Yan attacked.
+          If you publish the counter-argument, pair it correctly: their paper finds poor timing costs 0.10 percent
+          per year against Morningstar's 1.2 percent, on the same sample.</p>
+      </div>
+    </div>
+
+    <div class="vrow">
+      <div class="tag new">New</div>
+      <div>
+        <h3>Seven items this pass added</h3>
+        <p class="small">The Attorney General's computation examples including the QTIP example and the Florida
+          apportionment example; the Illinois state-only QTIP election and its nine-month filing clock; BlackRock's
+          92 and 17 percent finding; the two Bank of America 2026 figures; the structural widening of the
+          federal-to-Illinois gap now that the federal exemption is permanent and indexed from 2027; the widow's
+          penalty mechanics for 2026; and Cerulli's four trillion dollars of assets held by advisors with no named
+          successor.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="rule">
+
+  <div class="sec-num">Section 02</div>
+  <h2>How the ranking works</h2>
+  <p>Each item is scored one to five on four axes and totalled out of twenty. The axes are deliberately weighted
+    toward a stranger's living room, not a conference agenda.</p>
+
+  <div class="axes">
+    <div class="axis"><div class="an">Felt</div><p>Does a person with no financial literacy feel it in the first
+      reading? Dollars beat percentages. Local beats national.</p></div>
+    <div class="axis"><div class="an">Decision</div><p>Is it attached to something the household or the professional
+      must actually do, ideally with a deadline on it?</p></div>
+    <div class="axis"><div class="an">Defensible</div><p>Does it survive a hostile CPA? Statute and regulator
+      publications score five. Asset-manager marketing scores two.</p></div>
+    <div class="axis"><div class="an">Only you</div><p>Does it argue for <em>Driftwood</em>, or does it argue for
+      hiring any advisor at all? The second kind is worth very little.</p></div>
+  </div>
+
+  <p class="small" style="margin-top:18px">The pattern the scoring exposes: every item in the top tier is a fact
+    about the tax code or the state statute. Not one of them is a study about the value of advice. The industry
+    numbers that look most flattering, Russell's 4.92 percent and Vanguard's Advisor's Alpha, score at the bottom,
+    because every competitor in the corridor can cite them and none of them are attached to a decision.</p>
+
+  <hr class="rule">
+
+  <div class="sec-num">Section 03</div>
+  <h2>The ranked register</h2>
+
+  <div class="tscroll">
+  <table>
+    <thead>
+      <tr><th>#</th><th class="stat">Statistic</th><th class="sc">Score<br>F/D/Df/O</th><th class="src">Source &amp; date</th><th class="use">Where it goes</th></tr>
+    </thead>
+    <tbody>
+
+      <tr class="tierhead"><td colspan="5">Tier 1 · Lead with these. Statute and regulator, dollar-denominated, deadline-attached.</td></tr>
+
+      <tr>
+        <td class="rank">1</td>
+        <td class="stat"><b>The Illinois cliff, in the collector's own arithmetic</b>An estate of $4,000,000 owes
+          $0 Illinois estate tax. An estate of $5,000,000 owes $285,714. Both on all-Illinois property, both with
+          zero federal tax due. The first million above the line costs 28.6 percent; the same million below the
+          federal exemption costs nothing.</td>
+        <td class="sc"><b>19</b>5/5/5/4</td>
+        <td class="src">Illinois Attorney General, Important Notice Regarding Illinois Estate Tax and Fact Sheet,
+          computation examples · 35 ILCS 405</td>
+        <td class="use"><span class="use-flag">Sheet A · Atlas · Attorney page</span>Local, in dollars, and
+          published by the office that collects it. Your single strongest asset.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">2</td>
+        <td class="stat"><b>The fix is in the same document, on a nine-month clock</b>The same fact sheet works an
+          estate of $13,610,000 with a surviving spouse and an Illinois QTIP election of $9,610,000 down to $0
+          Illinois estate tax. Illinois has allowed a state-only QTIP election, separate and independent from the
+          federal one, for deaths on or after 1 January 2009. It must be elected on a timely filed Form 700, due
+          nine months after death.</td>
+        <td class="sc"><b>19</b>4/5/5/5</td>
+        <td class="src">Same fact sheet · 35 ILCS 405/2(b-1) · Ill. Admin. Code tit. 86, §2000.200</td>
+        <td class="use"><span class="use-flag">Sheet A · Attorney page</span>This is what converts the sheet from an
+          advertisement into a tool. Pair it with #1 always; alone, #1 is just bad news.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">3</td>
+        <td class="stat"><b>The ten-year clock on inherited retirement accounts</b>The stretch IRA is gone. Most
+          non-spouse heirs must empty an inherited retirement account within ten years. Where the owner had already
+          begun required distributions, annual distributions are also required in years one through nine, and the
+          2021 to 2024 waivers have expired. A shortfall carries a 25 percent excise tax, reduced to 10 percent if
+          corrected within two years.</td>
+        <td class="sc"><b>18</b>4/5/5/4</td>
+        <td class="src">SECURE Act 2019 · IRS final regulations 18 July 2024, effective 2025</td>
+        <td class="use"><span class="use-flag">Sheet A · COI conversation</span>Simultaneously a portfolio, tax and
+          estate question, which is the thesis stated by the tax code rather than by you.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">4</td>
+        <td class="stat"><b>Illinois has no portability, and the gap now widens by statute</b>"The portability and
+          carry-over of the unused federal exemption to the surviving spouse is inapplicable to the computation and
+          assessment of the Illinois Estate Tax." The federal exemption is $15,000,000 for 2026, permanent and
+          indexed from 2027. Illinois is $4,000,000 and has never been indexed. HB2601 would have raised it to
+          $8,000,000; it was re-referred to House Rules in March 2025 and has not passed.</td>
+        <td class="sc"><b>17</b>4/5/5/3</td>
+        <td class="src">Illinois AG fact sheet (quoted) · OBBBA, signed 4 July 2025 · IL HB2601 bill status, 104th
+          General Assembly</td>
+        <td class="use"><span class="use-flag">Sheet A · Atlas</span>The widening is the part nobody says out loud.
+          Every year the federal number rises, the trap deepens.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">5</td>
+        <td class="stat"><b>Asked about tax, not acting on it</b>92 percent of advisors serving high-net-worth
+          clients report being asked for tax guidance. 17 percent treat after-tax return as a primary driver of
+          portfolio decisions.</td>
+        <td class="sc"><b>17</b>4/3/5/5</td>
+        <td class="src">BlackRock Advisor Trends Survey, 1,023 U.S. advisors, fielded 22 Aug to 7 Sep 2025 by
+          Escalent, published 14 January 2026</td>
+        <td class="use"><span class="use-flag">Sheet A · CPA page</span>The best new item in the set. Your entire
+          thesis, measured and published by the largest asset manager in the world.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">6</td>
+        <td class="stat"><b>The handoff is where the relationship ends</b>27 percent of future beneficiaries plan to
+          keep their benefactor's advisor; 20 percent among those who have already inherited. Of those who leave, 28
+          percent cite never having had a relationship with that advisor and only 10 percent cite unmet investment
+          needs.</td>
+        <td class="sc"><b>17</b>5/3/4/5</td>
+        <td class="src">Cerulli Associates, September 2025 · investors with $250,000+ in financial assets</td>
+        <td class="use"><span class="use-flag">Sheet B · Website</span>Structurally unavailable to a 58-year-old
+          competitor. It is the one argument your age wins outright.</td>
+      </tr>
+
+      <tr class="tierhead"><td colspan="5">Tier 2 · Support. Strong, but they need a Tier 1 item above them to matter.</td></tr>
+
+      <tr>
+        <td class="rank">7</td>
+        <td class="stat"><b>Your advisor's expiration date</b>35.3 percent of advisors, holding 40.1 percent of
+          industry assets and roughly $14.5 trillion, expect to retire within ten years. More than a quarter do not
+          know who takes over, which is about $4 trillion with no named successor. The industry projects a shortfall
+          of 90,000 to 110,000 advisors by 2034, 30 to 37 percent of current headcount.</td>
+        <td class="sc"><b>16</b>4/3/4/5</td>
+        <td class="src">Cerulli U.S. Advisor Edition, 3Q 2026 · McKinsey &amp; Company, February 2025</td>
+        <td class="use"><span class="use-flag">Sheet B</span>One argument with #6, not two. The $4 trillion is the
+          sharper half and was not in the previous draft.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">8</td>
+        <td class="stat"><b>Taxes cost more than fees, and everyone shops fees</b>Over the ten years ended December
+          2024, taxes consumed 1.90 percent of annual return for U.S. large-cap equity mutual funds against 0.70
+          percent for equity ETFs, worth more than $30,000 on $100,000. In 2024, over 80 percent of U.S. equity
+          mutual funds distributed capital gains against 5 percent of ETFs.</td>
+        <td class="sc"><b>15</b>4/4/4/3</td>
+        <td class="src">Morningstar data as reported by American Century Investments, August 2025.
+          <b>American Century is Avantis's parent; disclose before a CPA finds it.</b></td>
+        <td class="use"><span class="use-flag">Sheet A · CPA page</span>Best number in the set for a CPA, and the
+          cleanest defense of the vehicles you use without naming them.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">9</td>
+        <td class="stat"><b>The documents themselves are not finished</b>Among households with $3 million or more,
+          46 percent hold all three of a will, a living will or advance directive, and a durable power of attorney.
+          55 percent have a trust and a third say they understand trusts well. Among business owners in that group,
+          78 percent call succession planning important and 20 percent have a fully documented plan.</td>
+        <td class="sc"><b>15</b>4/4/5/2</td>
+        <td class="src">Bank of America Private Bank, 2026 Study of Wealthy Americans, 1,431 respondents with $3M+,
+          fielded Jan to Feb 2026, published 17 June 2026</td>
+        <td class="use"><span class="use-flag">Sheet A · Attorney page</span>Replaces the Exit Planning Institute
+          item you held back. Same argument, brand-name primary source.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">10</td>
+        <td class="stat"><b>The coordination geometry</b>Nine financial objects produce 36 relationships to keep
+          consistent. Forty-one objects produce 820. The objects grow 4.6 times; the coordination burden grows 22.8
+          times.</td>
+        <td class="sc"><b>15</b>5/2/3/5</td>
+        <td class="src">Arithmetic, n(n&minus;1)/2. Not a research finding. <b>Label as illustration, always.</b></td>
+        <td class="use"><span class="use-flag">Sheet A · Approach page</span>The clearest statement of what you
+          sell. It must never sit inside a list of cited statistics.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">11</td>
+        <td class="stat"><b>The widow's penalty compounds the Illinois trap</b>A surviving spouse files single. In
+          2026 the 22 percent bracket begins at $50,401 rather than $100,801, the standard deduction roughly halves,
+          and the IRMAA surcharge threshold falls from about $218,000 of joint MAGI to about $109,000. Illinois has
+          separately taken the first $4,000,000 exclusion off the table at the first death.</td>
+        <td class="sc"><b>14</b>4/4/3/3</td>
+        <td class="src">IRS 2026 inflation adjustments and Medicare IRMAA tiers, as compiled in practitioner
+          commentary. <b>Verify each figure against the primary release before printing.</b></td>
+        <td class="use"><span class="use-flag hold">Conversation · verify to print</span>The natural second act to
+          #1 and #4. Do not print the specific thresholds until each is primary-sourced.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">12</td>
+        <td class="stat"><b>People will pay for a human</b>Affluent households will pay roughly five times more for
+          human advice than a comparable digital service, even when the digital option is cheaper. Among investors
+          above $1 million, the share willing to pay a premium of 100 basis points or more grew by half from 2021 to
+          2023.</td>
+        <td class="sc"><b>13</b>3/2/4/4</td>
+        <td class="src">McKinsey &amp; Company, February 2025, citing PriceMetrix</td>
+        <td class="use"><span class="use-flag">Sheet B · Conversation</span>Closes the AI objection completely.
+          Defensive on a website, decisive in a room.</td>
+      </tr>
+
+      <tr class="tierhead"><td colspan="5">Tier 3 · Conversation and supporting cast. True, sourced, and not differentiating.</td></tr>
+
+      <tr>
+        <td class="rank">13</td>
+        <td class="stat"><b>100 hours a year</b>Advised clients are roughly half as likely to report high financial
+          stress, 14 percent against 27. 86 percent report greater peace of mind, 76 percent report time savings, a
+          median of two hours a week.</td>
+        <td class="sc"><b>12</b>5/2/4/1</td>
+        <td class="src">Vanguard, The emotional and time value of advice, 12,443 investors, June 2025</td>
+        <td class="use"><span class="use-flag">Website</span>The most human number you have and the least
+          differentiating. Cut from Sheet B for exactly that reason.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">14</td>
+        <td class="stat"><b>Asset location</b>Tax-aware asset location adds 0.2 to 0.5 percent annually at portfolio
+          level. On an individual holding the differential reaches 1.07 percent at the 37 percent bracket, 0.92 at
+          32, 0.65 at 24.</td>
+        <td class="sc"><b>12</b>2/3/4/3</td>
+        <td class="src">J.P. Morgan Private Bank, October 2025. The 0.2 to 0.5 range is JPM citing third-party work.</td>
+        <td class="use"><span class="use-flag">CPA conversation</span>Never state 1.07 percent as a portfolio-level
+          figure. That is the error a CPA remembers.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">15</td>
+        <td class="stat"><b>Wealthy households are already fragmented</b>67 percent of wealthy Americans work with
+          multiple advisors, 71 percent among those 44 and older. 61 percent have an advisor, 55 percent an
+          attorney, 44 percent an accountant.</td>
+        <td class="sc"><b>11</b>3/2/5/1</td>
+        <td class="src">Bank of America Private Bank, 2024 Study of Wealthy Americans</td>
+        <td class="use"><span class="use-flag">Setup only</span>The premise that makes #10 land. Weak on its own.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">16</td>
+        <td class="stat"><b>Active management does not persist</b>79 percent of active large-cap U.S. equity funds
+          underperformed the S&amp;P 500 in 2025 against 65 percent in 2024, the fourth-worst year in the
+          scorecard's 25 years. Top-half 2021 large-cap funds did worse than random over the next four years.</td>
+        <td class="sc"><b>11</b>3/2/5/1</td>
+        <td class="src">SPIVA U.S. Scorecard and U.S. Persistence Scorecard, year-end 2025</td>
+        <td class="use"><span class="use-flag">Philosophy page</span>Carries the Dimensional years without saying
+          "Dimensional."</td>
+      </tr>
+
+      <tr>
+        <td class="rank">17</td>
+        <td class="stat"><b>The behaviour gap, and the paper that shrinks it</b>The average dollar earned 8.7 percent
+          annually over the decade to 2025 against a 9.9 percent aggregate fund return, a 1.2 point gap worth about
+          12 percent of return and roughly $3.8 trillion. A Financial Analysts Journal paper puts the timing penalty
+          at 0.10 percent per year on the same data.</td>
+        <td class="sc"><b>11</b>3/1/3/4</td>
+        <td class="src">Morningstar, Mind the Gap 2026, 6 Aug 2026 · Fulkerson, Jordan, Riley &amp; Yan,
+          <em>Financial Analysts Journal</em>, 2026</td>
+        <td class="use"><span class="use-flag">Evidence page, with the counter</span>Worth almost nothing alone.
+          Worth a great deal published beside its own refutation.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">18</td>
+        <td class="stat"><b>Domicile changes the bill</b>The same $5,000,000 estate, half in Illinois and half in
+          Florida, owes $142,857 rather than $285,714. Illinois apportions by the ratio of Illinois assets to total
+          assets.</td>
+        <td class="sc"><b>11</b>3/3/5/2</td>
+        <td class="src">Illinois AG fact sheet, computation examples · Form 700 Addendum</td>
+        <td class="use"><span class="use-flag">Atlas · Domicile memo</span>Small, but it is the Atlas's entire
+          premise stated by the state in one line.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">19</td>
+        <td class="stat"><b>Millennials start at 29, and want the family in the room</b>The typical millennial
+          working with an advisor began at 29, nine years earlier than Gen X. 60 percent would welcome that advisor
+          facilitating planning conversations across family members, against 32 percent of Gen X and 16 percent of
+          boomers.</td>
+        <td class="sc"><b>11</b>3/1/3/4</td>
+        <td class="src">Northwestern Mutual · Nationwide Advisor Authority / Harris Poll, fielded Jan to Feb 2026</td>
+        <td class="use"><span class="use-flag">Conversation only</span>Your own age, cited. Too on-the-nose in
+          print; strong spoken to an attorney watching families fracture.</td>
+      </tr>
+
+      <tr class="tierhead"><td colspan="5">Bench · Do not print. Retained so the decision is not re-argued.</td></tr>
+
+      <tr>
+        <td class="rank">20</td>
+        <td class="stat"><b>Components of advice value</b>4.92 percent annually: behavioural coaching 2.30, tax-smart
+          planning 1.23, family wealth planning 1.13, asset allocation 0.26.</td>
+        <td class="sc"><b>6</b>2/1/2/1</td>
+        <td class="src">Russell Investments, 2026 Value of an Advisor, April 2026</td>
+        <td class="use"><span class="use-flag hold">Fee conversation only</span>Produced by an asset manager selling
+          to advisors. Use the breakdown if pressed, never the headline.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">21</td>
+        <td class="stat"><b>Trusts that were never funded</b>A figure of roughly half of trusts going unfunded
+          circulates widely and is the perfect coordination proof if it is real.</td>
+        <td class="sc"><b>n/a</b>unsourced</td>
+        <td class="src"><b>No primary source located.</b> Every instance traces to law-firm and estate-planning blog
+          copy without attribution.</td>
+        <td class="use"><span class="use-flag cut">Do not print</span>Exactly the shape of the "4 to 7
+          relationships" error. Do not repeat it in the other direction.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">22</td>
+        <td class="stat"><b>$124 trillion wealth transfer</b>Also Vanguard's Advisor's Alpha at about 3 percent.</td>
+        <td class="sc"><b>7</b>2/1/3/1</td>
+        <td class="src">Cerulli, December 2024 · Visa's competing estimate is $36T over 20 years</td>
+        <td class="use"><span class="use-flag hold">Bench</span>Every firm in the corridor uses it and the range is
+          contested. Using it makes you sound like everyone else.</td>
+      </tr>
+
+      <tr>
+        <td class="rank">23</td>
+        <td class="stat"><b>Birthday paradox</b>23 people, 253 pairs, 50.7 percent.</td>
+        <td class="sc"><b>n/a</b>spoken</td>
+        <td class="src">Verifiable arithmetic</td>
+        <td class="use"><span class="use-flag hold">Never print</span>Excellent in a fifteen-minute call. On a page
+          it reads as a party trick and undercuts everything above it.</td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+
+  <hr class="rule">
+
+  <div class="sec-num">Section 04</div>
+  <h2>The two sheets, built</h2>
+  <p>Both are US Letter at a 40pt margin, Satoshi and Erode embedded as data URIs so they render identically on a
+    stranger's printer, hairline rules, zero radius, no shadow, and no em dashes anywhere. The build refuses to
+    produce a PDF if an em dash or en dash survives in the copy, because a stray one arrives by paste rather than by
+    decision.</p>
+
+  <div class="sheets">
+
+    <div class="sheetcard">
+      <div class="status">Built · 2 pages · dist/onepager-a-coordination-gap.pdf</div>
+      <div class="st">A · The Coordination Gap</div>
+      <div class="sm">Estate attorneys and CPAs in the Burlington Avenue corridor. Forwardable by an attorney to
+        their own client.</div>
+      <ul>
+        <li><b>Page one is now one idea:</b> Illinois reaches you first. The $0 and $285,714 plates lead, the
+          no-portability quote and the widening gap follow, and the QTIP fix closes it. Your name appears once, at
+          the bottom.</li>
+        <li><b>The fix block is the change that matters.</b> The previous draft delivered only bad news. This one
+          shows an estate of $13,610,000 going to zero, and a nine-month clock, which is what an attorney actually
+          uses with a client.</li>
+        <li><b>Page two is four seams:</b> the ten-year clock, corrected; BlackRock's 92 and 17; the mutual fund and
+          ETF tax cost with the American Century affiliation disclosed; and the Bank of America 2026 document gap.</li>
+        <li><b>Dropped from the previous version:</b> the 16 percent rate, now redundant, and the Russell
+          breakdown, which weakened a page otherwise built entirely on statute and regulator publications.</li>
+      </ul>
+    </div>
+
+    <div class="sheetcard">
+      <div class="status">Built · 1 page · dist/onepager-b-outlast-the-handoff.pdf</div>
+      <div class="st">B · Built to Outlast the Handoff</div>
+      <div class="sm">Prospects actively evaluating advisors, and the adult children of existing relationships.</div>
+      <ul>
+        <li><b>Converts your age from an objection into the reason to hire you</b>, and does it with the industry's
+          own numbers rather than an assertion.</li>
+        <li><b>The $4 trillion with no named successor</b> is the sharpest figure on the page and was not in the
+          previous concept.</li>
+        <li><b>The AI objection is answered in the middle, not the footer.</b> Five times more for human advice is a
+          fact about buyers, not a claim about software, which is why it survives the conversation.</li>
+        <li><b>Vanguard's 100 hours was cut.</b> It is the least differentiating item in the whole register and it
+          gave the page a second thesis. One page, one idea.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="flag">
+    <div class="fh">Resolve before either sheet leaves the building</div>
+    <p class="small">The site's own pages carry a Park Avenue Securities disclosure naming Alec Messino as a
+      registered representative. The approved print sheet carries "Driftwood Wealth is not currently a registered
+      investment adviser, and this document is not a solicitation for advisory services." Both cannot be current.
+      The rebuilt sheets carry the print disclosure verbatim because that is the version that was approved, but the
+      two need reconciling before anything is handed to Wierenga, and <code>tests/test_drift_disclosures.py</code>
+      is the guard that already has an opinion about it.</p>
+  </div>
+
+  <hr class="rule">
+
+  <div class="sec-num">Section 05</div>
+  <h2>Website implementation</h2>
+  <p>Six placements, ordered by build cost. The first four are afternoons. Note that the highest-value placement is
+    not the homepage, and the reason is your own rule.</p>
+
+  <div class="webitem">
+    <div class="webloc">Estate attorney page<span class="cost">One afternoon · highest fit</span></div>
+    <div>
+      <p><b><code>src/drift/web/estate-attorneys.html</code> already opens with "Your documents only work if the
+        assets agree with them."</b> That sentence and the Attorney General's computation examples are the same
+        argument, and the page currently makes it without the evidence. Put the three-plate row directly beneath the
+        H1: $4,000,000 to $0, $5,000,000 to $285,714, and the QTIP example returning $13,610,000 to zero.</p>
+      <p>Then add a fourth tile to the existing "Three free references" block. The three that are there are all
+        illustrative models; a note reproducing the AG's worked examples with a link to the source is the first
+        <b>Level 1</b> item in that block, and it is the one an attorney will actually forward.</p>
+    </div>
+  </div>
+
+  <div class="webitem">
+    <div class="webloc">State Tax Atlas<span class="cost">One afternoon</span></div>
+    <div>
+      <p><b><code>docs/illinois-tax.html</code> and <code>statemap.html?state=IL</code>.</b> Your Evidence Register
+        already requires every Atlas fact to be Level 1 and to carry a locating citation rather than "state revenue
+        departments." The AG fact sheet is exactly that citation, and it supplies something no other state page can
+        have: the state's own worked examples, including the 50 percent Florida apportionment at $142,857.</p>
+      <p>That last example is the Atlas's entire premise stated by the state in one line, and it belongs on the
+        domicile memo as well.</p>
+    </div>
+  </div>
+
+  <div class="webitem">
+    <div class="webloc">CPA page<span class="cost">Half an afternoon</span></div>
+    <div>
+      <p><b><code>src/drift/web/partners.html</code>.</b> Two numbers, nothing else. BlackRock's 92 and 17, which
+        says a CPA's frustration is structural rather than personal to the advisor they are dealing with, and the
+        1.90 against 0.70 tax cost differential.</p>
+      <p>Disclose the American Century relationship to Avantis in the same sentence as the citation, not in a
+        footnote. A CPA who finds it after you have used the number learns something about you that no amount of
+        correct arithmetic will fix.</p>
+    </div>
+  </div>
+
+  <div class="webitem">
+    <div class="webloc">Evidence page<span class="cost">One afternoon · the position</span></div>
+    <div>
+      <p><b>Publish the register, including what weakens it.</b> Every claim on the site with source, date and link,
+        and then the counter-arguments directly beneath their targets: Fulkerson, Jordan, Riley and Yan under the
+        Morningstar gap; the published methodology critique under the SPIVA scorecard; Visa's $36 trillion under
+        Cerulli's $124 trillion; and the American Century note under the tax-cost figure.</p>
+      <p>No competitor in Hinsdale or La Grange publishes what would weaken their own numbers. A CPA reading that
+        page learns more about your judgment in thirty seconds than a case study teaches in ten minutes, and it
+        costs you a text page.</p>
+    </div>
+  </div>
+
+  <div class="webitem">
+    <div class="webloc">Homepage<span class="cost">Do not · see your own rule</span></div>
+    <div>
+      <p><b>Leave <code>hub.html</code> alone.</b> The temptation is to put $285,714 above the fold. Your own
+        standing rule in <code>docs/Evidence_Register.md</code> assigns the homepage exactly one number, the
+        recovery band, and adding a second is how a homepage becomes a statistics wall arguing for its own
+        existence. The Illinois number is a corridor-professional and Atlas number, and it is stronger one click
+        deeper where the reader arrived looking for it.</p>
+      <p>If the recovery band is eventually to be replaced as the homepage number, that is a separate decision and
+        it belongs in the register, not in this document.</p>
+    </div>
+  </div>
+
+  <div class="webitem">
+    <div class="webloc">Illinois exposure check<span class="cost">Real build · gate it first</span></div>
+    <div>
+      <p><b>An interactive that returns the distance to the $4,000,000 line and what a first death without planning
+        costs.</b> The arithmetic is now trivially defensible because the AG publishes both the calculator and the
+        worked examples, which removes the usual objection that a tool like this is inventing its own numbers.</p>
+      <p>Route it through the <b>Product Architect</b> gate before building. The question is whether an attorney
+        would use it in front of their own client, or whether it is only interesting to build. If it is built, the
+        rule in <code>CLAUDE.md</code> applies without exception: it will read state and portfolio values from URL
+        parameters as well as from the household bar, and the URL path must be tested explicitly. The 26 July 2026
+        <code>leakage.html</code> incident, where <code>?port=2M</code> parsed as the literal number 2 and rendered
+        "$0/yr" recovered, is the precedent.</p>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <div class="sec-num">Section 06</div>
+  <h2>Before anything is distributed</h2>
+  <p class="small">Re-verify the Illinois figures against 35 ILCS 405 and the Attorney General's current fact sheet;
+    they are the load-bearing claims on Sheet A and the fact sheet is revised without announcement. Confirm HB2601
+    has still not moved. Resolve the Park Avenue Securities disclosure conflict described in Section 04. Source or
+    drop the widow's penalty thresholds at #11 before they appear in print. Locate the Cerulli 6 percent figure or
+    retire it. Morningstar's 2026 study and Cerulli's 3Q 2026 edition were both under three weeks old at
+    compilation, so treat both as provisional until a second pass confirms the figures have not been restated.</p>
+  <p class="small">Compiled 11 August 2026. Second pass 12 August 2026. This third pass adds the Illinois Attorney
+    General computation examples and the state-only QTIP election, the BlackRock tax-advice gap, the 2026 Bank of
+    America study, the widow's penalty mechanics, and the structural widening of the federal-to-Illinois exemption
+    gap; it corrects the ten-year rule, the Cerulli attrition breakdown, and the Morningstar gap percentage.</p>
+
+</div>
+</body>
+</html>

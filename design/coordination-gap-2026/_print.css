@@ -1,0 +1,141 @@
+/* Driftwood print collateral, shared sheet spec.
+   US Letter, 40pt margin, limestone field, hairline rules, zero radius, no shadow.
+   Satoshi carries display and UI; Erode is editorial callouts only (Design Constitution).
+   Fonts are inlined as data URIs by build.py so a sheet renders identically with no network. */
+
+@font-face{font-family:'Satoshi';font-style:normal;font-weight:300 900;font-display:block;
+  src:url(data:font/woff2;base64,__SATOSHI__) format('woff2')}
+@font-face{font-family:'Erode';font-style:normal;font-weight:300 700;font-display:block;
+  src:url(data:font/woff2;base64,__ERODE__) format('woff2')}
+
+:root{
+  --lime:#F4F1EA;
+  --paper:#FBFAF6;
+  --ink:#1E2833;
+  --blue:#2C5878;
+  --rule:rgba(30,40,51,.20);
+  --rule-strong:rgba(30,40,51,.45);
+  --mute:rgba(30,40,51,.62);
+  --sans:'Satoshi',Helvetica,Arial,sans-serif;
+  --serif:'Erode',Georgia,serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;border-radius:0;box-shadow:none}
+
+@page{size:8.5in 11in;margin:0}
+
+html,body{background:var(--lime)}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  font-size:10pt;
+  line-height:1.4;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision;
+}
+
+/* ── the sheet ─────────────────────────────────────────────────────────────── */
+.sheet{
+  width:8.5in;height:11in;
+  padding:40pt;
+  background:var(--lime);
+  display:flex;flex-direction:column;
+  position:relative;
+  overflow:hidden;
+  page-break-after:always;break-after:page;
+}
+.sheet:last-of-type{page-break-after:auto;break-after:auto}
+
+/* ── masthead ──────────────────────────────────────────────────────────────── */
+.brandline{
+  display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1.2pt solid var(--ink);
+  padding-bottom:6pt;margin-bottom:15pt;
+}
+.brand{font-weight:900;font-size:11pt;letter-spacing:-.01em}
+.brandmeta{font-weight:600;font-size:7pt;letter-spacing:.16em;text-transform:uppercase;color:var(--blue)}
+
+/* ── display type ──────────────────────────────────────────────────────────── */
+h1.ptitle{
+  font-weight:900;font-size:22pt;line-height:1.05;letter-spacing:-.022em;
+  margin-bottom:9pt;max-width:30ch;
+}
+h1.ptitle.tight{font-size:19pt;margin-bottom:8pt}
+.psub{
+  font-family:var(--serif);font-size:10.5pt;line-height:1.4;
+  max-width:60ch;margin-bottom:14pt;color:var(--ink);
+}
+h2.shead{
+  font-weight:900;font-size:14pt;letter-spacing:-.015em;line-height:1.12;
+  margin-bottom:9pt;
+}
+
+/* ── the numeric plates ────────────────────────────────────────────────────── */
+.trio{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;
+  border-top:1.2pt solid var(--ink);
+  margin-bottom:9pt;
+}
+.trio > div{padding:11pt 14pt 12pt 0}
+.trio > div + div{padding-left:14pt;border-left:1px solid var(--rule)}
+.plabel{font-weight:700;font-size:6.8pt;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);margin-bottom:7pt}
+.pnum{font-weight:900;font-size:27pt;line-height:.94;letter-spacing:-.035em;color:var(--blue);margin-bottom:7pt}
+.pnum.sm{font-size:22pt}
+.pbody{font-size:8.4pt;line-height:1.4}
+
+.cite{
+  font-weight:600;font-size:6.4pt;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--mute);line-height:1.5;display:block;
+}
+
+/* ── prose bands ───────────────────────────────────────────────────────────── */
+.band{border-top:1px solid var(--rule-strong);padding-top:9pt;margin-top:11pt}
+.band h3{font-weight:700;font-size:10pt;margin-bottom:5pt;letter-spacing:-.005em}
+.band p{font-size:8.7pt;line-height:1.45;max-width:76ch;margin-bottom:5pt}
+.band p:last-child{margin-bottom:0}
+.quote{
+  font-family:var(--serif);font-size:9pt;line-height:1.45;
+  border-left:1.6pt solid var(--blue);padding-left:11pt;margin:7pt 0;max-width:68ch;
+}
+
+/* the payoff plate: the fix, set apart */
+.fix{
+  border:1.2pt solid var(--ink);padding:12pt 14pt;margin-top:12pt;
+  background:var(--paper);
+}
+.fix .fixnum{font-weight:900;font-size:20pt;line-height:1;letter-spacing:-.03em;color:var(--blue);margin-bottom:7pt}
+.fix h3{font-weight:700;font-size:10pt;margin-bottom:5pt}
+.fix p{font-size:8.7pt;line-height:1.45;max-width:74ch;margin-bottom:5pt}
+.fix p:last-of-type{margin-bottom:8pt}
+
+/* ── the 2x2 seam grid on page two ─────────────────────────────────────────── */
+.seams{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1.2pt solid var(--ink)}
+.seam{padding:10pt 14pt 9pt 0;border-bottom:1px solid var(--rule)}
+.seam:nth-child(even){padding-left:14pt;border-left:1px solid var(--rule)}
+.seam:nth-last-child(-n+2){border-bottom:0}
+.seam .plabel{margin-bottom:6pt}
+.seam .snum{font-weight:900;font-size:18pt;line-height:1;letter-spacing:-.03em;color:var(--blue);margin-bottom:6pt}
+.seam p{font-size:8pt;line-height:1.4;margin-bottom:6pt}
+
+/* ── premise strip ─────────────────────────────────────────────────────────── */
+.premise{display:grid;grid-template-columns:1.55fr 1fr;gap:18pt;margin-bottom:8pt}
+.premise p{font-size:8.5pt;line-height:1.45}
+.premise .arith{border-left:1px solid var(--rule);padding-left:18pt}
+.premise .arith .an{font-weight:900;font-size:17pt;letter-spacing:-.03em;color:var(--blue);line-height:1;margin-bottom:6pt}
+
+/* ── closer + footer ───────────────────────────────────────────────────────── */
+.closer{margin-top:auto;border-top:1.2pt solid var(--ink);padding-top:10pt}
+.closer .cl-h{font-weight:900;font-size:11pt;line-height:1.16;margin-bottom:6pt;letter-spacing:-.01em;max-width:62ch}
+.closer .cl-b{font-size:8.4pt;line-height:1.45;max-width:78ch;margin-bottom:5pt}
+.sig{font-weight:600;font-size:7pt;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-top:7pt}
+.disc{font-size:6.4pt;line-height:1.45;color:var(--mute);margin-top:7pt;border-top:1px solid var(--rule);padding-top:6pt}
+.foot{
+  position:absolute;left:40pt;right:40pt;bottom:20pt;
+  display:flex;justify-content:space-between;
+  font-weight:600;font-size:6.4pt;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);
+}
+
+@media screen{
+  body{padding:26px 0;display:flex;flex-direction:column;align-items:center;gap:26px;background:#e6e2d8}
+  .sheet{border:1px solid rgba(30,40,51,.28)}
+}

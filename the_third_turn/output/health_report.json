@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-13T16:25:07+00:00",
+  "generated": "2026-08-13T16:34:56+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 671505,
+    "rows": 671507,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 256497,
+      "rows_total": 256498,
       "live_total": 76911,
       "live_today": 1646,
-      "last_row_age_min": 49.2
+      "last_row_age_min": 7.8
     },
     "fanduel": {
-      "rows_total": 415002,
+      "rows_total": 415003,
       "live_total": 84189,
       "live_today": 1727,
-      "last_row_age_min": 153.9
+      "last_row_age_min": 3.8
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 55320.1
+      "last_row_age_min": 55329.9
     }
   },
   "books_reporting_live": [
@@ -50,12 +50,12 @@
     "median_sync_lag_s": 0.0,
     "delivery_staleness_s": {
       "bovada": {
-        "n": 12999,
+        "n": 13007,
         "median": 46.0,
         "p90": 538.0
       },
       "fanduel": {
-        "n": 11965,
+        "n": 11969,
         "median": 30.0,
         "p90": 31.0
       }

@@ -679,6 +679,49 @@ that reads as the stronger editorial composition. Judge it on the live page, not
 Guarded by `tests/test_drift_heron.py` — scarcity, the opacity ceiling, no-outline, single ink, the
 pose, one-pass motion, and the `?mark=` control arm.
 
+### 2026-08-13 · The hero flock, as a control arm only (`?hero=flock`)
+
+**What was asked.** Bird footage — a heron wading, and a flock of gulls over flat sky — proposed as
+a homepage hero video, fading in on load.
+
+**What was found, and why the first clip is not a web asset.** The wading bird is a grey heron: the
+house mark, live, in almost exactly the approved pose. Shipping it to a page would spend the
+scarcity instrument on atmosphere and close the door on the engraving ever returning to that slot.
+Its highest value is as **pose reference** for `src/drift/heron.py` and as source for the surfaces
+the mark is already allowed on — an AWOR cover, a client folder, an embossed die. It stays off the
+site.
+
+**Why the second clip was generated rather than shipped.** Measured, the flock occupies 0.57% of
+frame at a 14px median wingspan, which lands at 5–10px in this slot: ~400 KB of video, an autoplay
+policy, a poster frame and a reduced-motion branch, spent on something the reader cannot see. And
+the hue that made the footage attractive is the one that breaks the hero — over the blue-grey sky
+of the reference stills (`~#7d8d9a`) `--body` falls to **2.81:1** and even full `--ink` reaches only
+4.37:1, against the 8.34:1 the lede holds today. The hue decision and the slot decision are the
+same decision: anything that colour can only go where no type sits over it.
+
+So the birds were traced out of the footage (threshold → connected components → Moore boundary walk
+→ Douglas-Peucker) into eight normalised silhouettes, and the plate is generated from them —
+`src/drift/flock.py`, built by `python3 scripts/build_flock.py` to `web/img/hero-flock.svg`, 11.7 KB.
+Composition, depth, heading and timing are generated; the shapes are observed, which is the only
+reason they read as birds at eight pixels. Four tiers borrow the watershed's palette and its
+pairing — nearer is larger *and* darker — so the two plates look like the same weather.
+
+**It is a control arm, and the live page is unchanged.** `?hero=flock` swaps the plate; it does not
+add one, because two atmospheric plates in one hero is what took the mark off the site on
+2026-08-06. Default-off means default-*silent*: the `<img>` carries `data-src`, not `src`, so a
+visitor to the homepage fetches nothing. Motion obeys the doctrine above — the flock composes
+itself once, far tier inward, ~2s, then stops; reduced motion seats every bird immediately.
+
+**The honest expectation is that this arm loses.** The flock is atmosphere; the watershed is the
+argument. That is the exact ground the heron lost this slot on, and nothing about a different bird
+changes it. The arm exists so the question is settled by looking rather than by asserting.
+
+Guarded by `tests/test_drift_flock.py`, which tests the distinction rather than the drawing:
+plural, no bird above 5.5% of the plate, no protagonist, not the mark's ink, no raster, one pass,
+longhand animation properties, and default-off. The failure mode is not a bad bird — it is one bird
+slowly getting bigger until the homepage has grown a second house mark that never had to argue for
+the slot.
+
 **Left standing: `img/survey-plate-hero.svg` is now referenced by no page.** It is kept because it
 is the documented source of the surveyor's hand (`src/drift/plates.py`, and the ink/radii the
 canonical library was generated to match), not because anything renders it. If that provenance is

@@ -1053,6 +1053,7 @@ _CORE_SITEMAP = [
     ("concentration.html", "0.8", "monthly"),
     ("thesis.html", "0.7", "monthly"),
     ("score.html", "0.8", "monthly"), ("coordination.html", "0.8", "monthly"),
+    ("coordination-atlas.html", "0.9", "monthly"),
     ("review.html", "0.8", "monthly"),
     # masthead destinations — if a page is in the primary navigation it gets announced
     # NOT listed, deliberately: fiduciary.html and first-90-days.html are still unwritten stubs.

@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Privacy-first analytics (Plausible) -->
+<script async src="https://plausible.io/js/pa-h6JBp-7giRA83TjPL4uHQ.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<title>The Coordination Atlas, Driftwood Wealth</title>
+<meta name="description" content="One workspace: how your state taxes you lever by lever, an inventory of what has to be kept consistent, and what a Coordination Review would examine for your household. Printable briefs for your CPA. Illustrative modeling, not advice." />
+<link rel="canonical" href="https://driftwoodwealth.com/coordination-atlas.html" />
+<link rel="icon" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
+<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftwood Wealth" />
+<meta property="og:title" content="The Coordination Atlas, Driftwood Wealth" />
+<meta property="og:description" content="Seven regimes read as one page, an inventory of what has to be kept consistent, and the scope of a Coordination Review — carried across all three on one household context." />
+<meta property="og:url" content="https://driftwoodwealth.com/coordination-atlas.html" />
+<meta property="og:image" content="https://driftwoodwealth.com/og/statemap.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="The Coordination Atlas, Driftwood Wealth" />
+<meta name="twitter:description" content="Seven regimes read as one page, an inventory of what has to be kept consistent, and the scope of a Coordination Review." />
+<meta name="twitter:image" content="https://driftwoodwealth.com/og/statemap.png" />
+<link rel="stylesheet" href="driftwood.css">
+<script src="dw-context.js"></script>
+<style>
+  :root{
+    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4;
+    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
+    --accent-strike:#2c5878; --accent-strike-soft:#a9c2d6; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font:15px/1.6 var(--sans);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .sheet{margin:0 auto;padding-block:0 0}
+  .frame{background:var(--bg)}
+  a{color:var(--accent-strike)}
+  a:hover{color:var(--ink)}
+  ::selection{background:rgba(44,88,120,.15)}
+
+  /* ── the workspace chrome ──────────────────────────────────────────────────────────────────
+     Two rows under the site masthead: the route bar (Atlas / Assessment / Review) and the
+     household bar. The household bar is the whole point of the workspace being one surface —
+     set the state once and every route, and every other Driftwood tool, follows it. */
+  .cw{--cw-gut:40px}
+  .cw-chrome{position:sticky;top:0;z-index:60;background:var(--bg);border-bottom:1px solid var(--ink)}
+  .cw-routes{display:flex;align-items:center;gap:14px 26px;padding:10px var(--cw-gut);
+    border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .cw-routes .rlab{font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent-strike);flex:none}
+  .cw-routes a{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    text-decoration:none;padding:9px 0;border-bottom:2px solid transparent;color:var(--body)}
+  .cw-routes a:hover{color:var(--ink)}
+  .cw-routes a[aria-current="true"]{color:var(--ink);border-bottom-color:var(--accent-strike)}
+  .cw-routes .cw-cta{margin-left:auto;font-size:12px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:#f1ede3;background:var(--accent-strike);padding:11px 18px;
+    border-bottom:0;white-space:nowrap}
+  .cw-routes .cw-cta:hover{color:#fff}
+
+  .cw-house{display:flex;align-items:center;gap:8px 16px;padding:8px var(--cw-gut);background:var(--soft);
+    border-bottom:1px solid var(--line);flex-wrap:wrap;font-size:12.5px;color:var(--dim)}
+  .cw-house .hlab{font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent-strike);flex:none;white-space:nowrap}
+  .cw-house label{display:inline-flex;align-items:center;gap:7px}
+  /* A class rule beats the UA's [hidden] rule, so the progressive-disclosure elements need this
+     said explicitly — without it the "+ Taxable portfolio" prompt and the portfolio select were
+     both on screen at once. */
+  .cw [hidden]{display:none !important}
+  .cw-house .flab{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);flex:none;white-space:nowrap}
+  .cw-house select{font-family:var(--sans);font-size:12.5px;font-weight:600;color:var(--ink);background:#fff;
+    border:1px solid var(--frame-line);border-radius:0;padding:5px 10px;cursor:pointer;min-height:30px}
+  .cw-house select.port{font-variant-numeric:tabular-nums}
+  .cw-house .dot{color:var(--ghost-line)}
+  .cw-house .fsum{font-size:12.5px;color:var(--body);text-decoration:none;border-bottom:1px solid var(--line);
+    flex:none;white-space:nowrap}
+  .cw-house .addport{font:inherit;font-size:12.5px;color:var(--accent-strike);background:none;border:0;
+    border-bottom:1px dashed var(--accent-strike-soft);padding:0 0 1px;cursor:pointer;flex:none;white-space:nowrap}
+  .cw-house .cw-tools{margin-left:auto;display:inline-flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .cw-house .cw-tools a,.cw-house .cw-tools button.link{font:inherit;font-size:12px;font-weight:600;
+    color:var(--accent-strike);background:none;border:0;border-bottom:1px solid var(--accent-strike-soft);
+    text-decoration:none;padding:2px 0;cursor:pointer;white-space:nowrap}
+  .cw-house .cw-tools button.reset{font:inherit;font-size:11.5px;color:var(--muted);background:none;border:0;
+    cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .cw-house .cw-note{flex:0 0 100%;font-size:10.5px;color:var(--muted);margin-top:1px}
+
+  /* ── shared atoms ─────────────────────────────────────────────────────────────────────────── */
+  .cw h1,.cw h2,.cw h3{font-family:var(--sans)}
+  .cw .kick{font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike)}
+  .cw .cap{font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .cw .serif{font-family:var(--serif)}
+  .cw .rule-ink{border-top:2px solid var(--ink)}
+  .cw .rule-hair{border-top:1px solid var(--line)}
+  .cw .nums{font-variant-numeric:tabular-nums}
+  .cw .live-row{background:linear-gradient(90deg,rgba(44,88,120,.05),rgba(44,88,120,0) 60%)}
+  .cw .live-flat{background:rgba(44,88,120,.05)}
+  .cw .livemark{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-strike)}
+  .cw .btn{font:inherit;font-size:12px;font-weight:600;color:var(--accent-strike);background:none;
+    border:1px solid var(--frame-line);padding:9px 14px;cursor:pointer;min-height:38px;white-space:nowrap;
+    display:inline-flex;align-items:center;text-decoration:none}
+  .cw .btn.ink{color:var(--ink)}
+  .cw .solid{display:inline-flex;align-items:center;min-height:44px;background:var(--accent-strike);
+    color:#f1ede3;text-decoration:none;font-weight:500;font-size:14px;padding:12px 20px;border:0;cursor:pointer}
+  .cw .seg{display:inline-flex;border:1px solid var(--frame-line);flex:none}
+  .cw .seg button{font:inherit;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    background:none;border:0;padding:6px 11px;cursor:pointer;min-height:32px;white-space:nowrap;color:var(--body)}
+  .cw .seg button + button{border-left:1px solid var(--frame-line)}
+  .cw .seg button[aria-pressed="true"]{background:var(--ink);color:#f1efe9}
+
+  /* ── route: Atlas ─────────────────────────────────────────────────────────────────────────── */
+  .cw-atlas{max-width:1180px;margin:0 auto;padding:26px var(--cw-gut) 60px}
+  .cw-reading{display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap;padding-bottom:14px;
+    border-bottom:1px solid var(--line)}
+  .cw-reading button.chip{font:inherit;font-size:12px;font-weight:600;border:1px solid var(--frame-line);
+    padding:6px 11px;cursor:pointer;min-height:32px;white-space:nowrap;background:none;color:var(--body)}
+  .cw-reading button.chip[aria-pressed="true"]{background:var(--ink);color:#f1efe9;border-color:var(--ink)}
+  .cw-reading select.any{font-family:var(--sans);font-size:12px;color:var(--accent-strike);background:none;
+    border:0;border-bottom:1px dashed var(--accent-strike-soft);padding:5px 2px;cursor:pointer;min-height:32px}
+  .cw-reading button.maptoggle{font:inherit;margin-left:auto;font-size:12px;font-weight:600;
+    color:var(--accent-strike);background:none;border:0;border-bottom:1px solid var(--accent-strike-soft);
+    padding:5px 0;cursor:pointer;min-height:32px;white-space:nowrap}
+  .cw-map{border-bottom:1px solid var(--line);padding:20px 0 22px}
+  .cw-map .head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .cw-cart{display:grid;gap:22px 32px;align-items:start;grid-template-columns:minmax(0,1fr)}
+  @media (min-width:1000px){.cw-cart{grid-template-columns:minmax(0,1fr) 232px}}
+  .cw-cart svg{width:100%;max-width:620px;height:auto;display:block}
+  .cw-legend{display:flex;flex-wrap:wrap;gap:5px 16px;margin-top:10px}
+  .cw-legend span{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--dim)}
+  .cw-legend i{width:11px;height:11px;display:inline-block;border:1px solid rgba(0,0,0,.1)}
+  .cw-lenses{min-width:0;border-top:1px solid var(--line);padding-top:16px}
+  @media (min-width:1000px){.cw-lenses{border-top:0;border-left:1px solid var(--line);padding-top:0;padding-left:22px}}
+  .cw-lenses button{display:block;width:100%;font:inherit;font-size:12.5px;text-align:left;background:none;
+    border:0;border-bottom:1px solid var(--line2);padding:7px 8px 7px 9px;cursor:pointer;min-height:36px;
+    border-left:2px solid transparent;color:var(--body)}
+  .cw-lenses button[aria-pressed="true"]{color:var(--ink);font-weight:600;border-left-color:var(--accent-strike);
+    background:var(--soft)}
+  .cw-ladder{display:grid;gap:0 34px;grid-template-columns:minmax(0,1fr)}
+  @media (min-width:720px){.cw-ladder{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (min-width:1040px){.cw-ladder{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  .cw-ladder button{display:grid;grid-template-columns:1fr 5.4em;align-items:center;gap:8px;width:100%;
+    text-align:left;background:none;border:0;border-bottom:1px solid var(--line2);padding:6px 0;cursor:pointer;
+    font:inherit;color:var(--body);min-height:34px}
+  .cw-ladder .lname{position:relative;height:20px;display:flex;align-items:center}
+  .cw-ladder .lbar{position:absolute;left:0;top:2px;bottom:2px;background:var(--accent-strike);pointer-events:none}
+  .cw-ladder .ltxt{position:relative;z-index:1;padding-left:7px;font-size:12.5px;color:var(--ink)}
+  .cw-ladder .lamt{justify-self:end;font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;
+    color:var(--ink);white-space:nowrap}
+  .cw-tabs{display:flex;align-items:center;gap:0 24px;border-bottom:1px solid var(--line);
+    margin:22px 0 26px;flex-wrap:wrap}
+  .cw-tabs button{font:inherit;font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    background:none;border:0;border-bottom:2px solid transparent;padding:8px 0 9px;margin-bottom:-1px;
+    cursor:pointer;color:var(--muted)}
+  .cw-tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent-strike)}
+  .cw-tabs .asof{margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap}
+
+  .cw-briefhead{display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap;border-top:2px solid var(--ink);
+    padding-top:20px}
+  .cw-briefhead h1{font-size:clamp(30px,2.4vw + 20px,40px);font-weight:700;letter-spacing:-.022em;
+    line-height:1.04;color:var(--ink);margin:0 0 12px}
+  .cw-briefhead .lede{font-family:var(--serif);font-size:16.5px;line-height:1.55;color:var(--dim);
+    margin:0;max-width:60ch}
+  .cw-impact{display:grid;gap:26px 40px;margin-top:34px;align-items:start;grid-template-columns:minmax(0,1fr)}
+  @media (min-width:900px){.cw-impact{grid-template-columns:1.15fr .85fr}}
+  .cw-impact .fig{font-weight:700;font-size:clamp(28px,2vw + 18px,40px);letter-spacing:-.024em;color:var(--ink);
+    line-height:1.05;font-variant-numeric:tabular-nums}
+  .cw-impact .basis{font-size:13px;color:var(--dim);margin-top:6px;font-variant-numeric:tabular-nums}
+  .cw-impact .scaleup{font:inherit;font-size:12.5px;font-weight:600;color:var(--accent-strike);background:none;
+    border:0;border-bottom:1px dashed var(--accent-strike-soft);padding:0 0 2px;margin-top:14px;cursor:pointer}
+  .cw-impact .pull{font-size:13.5px;line-height:1.6;color:var(--body);margin:0;padding-left:14px;
+    border-left:2px solid var(--accent-strike-soft)}
+  .cw-lever{display:grid;gap:10px 24px;padding:18px 0;border-top:1px solid var(--line);
+    grid-template-columns:minmax(0,1fr)}
+  @media (min-width:760px){.cw-lever{grid-template-columns:172px minmax(0,1fr)}}
+  .cw-lever .dimbtn{font:inherit;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);background:none;border:0;padding:0;cursor:pointer;text-align:left;
+    border-bottom:1px dotted var(--ghost-line)}
+  .cw-lever .regime{font-weight:600;font-size:15px;color:var(--ink);margin-top:6px;line-height:1.3}
+  .cw-lever .pill{display:inline-block;margin-top:8px;font-size:11px;font-weight:600;padding:3px 8px;
+    font-variant-numeric:tabular-nums}
+  .cw-lever .cw-note{font-size:14.5px;line-height:1.6;color:var(--body);margin:0;max-width:66ch}
+  .cw-lever .liveband{margin-top:10px;padding:9px 12px;background:var(--soft);
+    border-left:2px solid var(--accent-strike);font-size:12.5px;line-height:1.5;color:var(--body)}
+  .cw-lever .ask{margin-top:10px;padding-left:14px;border-left:1px solid var(--ghost-line)}
+  .cw-lever .ask .h{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:3px}
+  .cw-lever .ask .d{font-size:13px;line-height:1.55;color:var(--body);max-width:64ch}
+  .cw-lever .cite{display:inline-block;margin-top:10px;margin-right:14px;font-size:11px;color:var(--muted);
+    text-decoration:none;border-bottom:1px solid var(--line)}
+  .cw-next{margin-top:44px;border-top:1px solid var(--ink);padding-top:18px}
+  .cw-next h2{font-family:var(--serif);font-weight:400;font-size:25px;line-height:1.24;color:var(--ink);margin:0 0 8px}
+  .cw-next p{font-size:15px;color:var(--body);margin:0 0 18px;max-width:62ch}
+
+  .cw-cmp{overflow-x:auto;border-top:2px solid var(--ink)}
+  .cw-cmp table{width:100%;border-collapse:collapse;font-size:13px}
+  .cw-cmp th.dimh{text-align:left;vertical-align:bottom;padding:12px 16px 12px 0;font-size:9.5px;font-weight:700;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--ink);width:150px}
+  .cw-cmp thead th.col{text-align:left;vertical-align:bottom;padding:12px 16px;border-bottom:1px solid var(--ink);
+    border-left:1px solid var(--line2);min-width:180px}
+  .cw-cmp thead .cname{font-size:17px;font-weight:700;letter-spacing:-.015em;color:var(--ink);line-height:1.2}
+  .cw-cmp thead .cimp{font-size:12px;color:var(--dim);margin-top:3px;font-variant-numeric:tabular-nums}
+  .cw-cmp thead button{font:inherit;font-size:10.5px;color:var(--muted);background:none;border:0;padding:6px 0 0;
+    cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+  .cw-cmp tbody th{text-align:left;vertical-align:top;padding:14px 16px 14px 0;border-bottom:1px solid var(--line);
+    font-size:12px;font-weight:600;color:var(--ink);line-height:1.35}
+  .cw-cmp tbody td{vertical-align:top;padding:14px 16px;border-bottom:1px solid var(--line);
+    border-left:1px solid var(--line2)}
+  .cw-cmp tbody td .rg{display:flex;align-items:center;gap:8px}
+  .cw-cmp tbody td i{width:10px;height:10px;flex:none;display:inline-block;border:1px solid rgba(0,0,0,.1)}
+  .cw-cmp tbody td .rgn{font-weight:600;font-size:13px;color:var(--ink)}
+  .cw-cmp tbody td .tag{font-size:12px;color:var(--dim);margin-top:4px;font-variant-numeric:tabular-nums}
+  .cw-empty{border:1px solid var(--line);background:var(--soft);padding:28px 30px;text-align:center}
+
+  .cw-moverow{display:grid;gap:8px 22px;padding:14px 0;border-top:1px solid var(--line);
+    grid-template-columns:minmax(0,1fr)}
+  @media (min-width:860px){.cw-moverow{grid-template-columns:128px minmax(0,1fr) minmax(0,1fr)}}
+  .cw-moverow .arrow{min-width:0;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .cw-moverow .from{font-size:13.5px;color:var(--dim)}
+  .cw-moverow .to{font-size:14px;font-weight:600;color:var(--ink)}
+  .cw-event{display:grid;gap:8px 26px;padding:15px 0;border-top:1px solid var(--line);
+    grid-template-columns:minmax(0,1fr)}
+  @media (min-width:760px){.cw-event{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+
+  /* ── route: Assessment — a ruled two-column ledger. No score, no radar, no surface diagram. ── */
+  .cw-assess{max-width:1300px;margin:0 auto;padding:40px var(--cw-gut) 70px}
+  .cw-assess .intro{max-width:64ch}
+  .cw-assess h1{font-size:clamp(30px,2.6vw + 16px,42px);font-weight:700;letter-spacing:-.022em;line-height:1.06;
+    color:var(--ink);margin:0 0 16px}
+  .cw-assess .lede{font-family:var(--serif);font-size:18px;line-height:1.55;color:var(--dim);margin:0}
+  .cw-assess .cols{display:grid;gap:30px 44px;margin-top:38px;align-items:start;grid-template-columns:minmax(0,1fr)}
+  @media (min-width:1080px){.cw-assess .cols{grid-template-columns:minmax(0,1fr) 300px}}
+  .cw-ledger-h{display:grid;gap:0 22px;padding-bottom:8px;border-bottom:1px solid var(--ink);
+    grid-template-columns:22px minmax(0,1fr)}
+  .cw-ledger-h span{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .cw-ledger-h span.state{color:var(--accent-strike)}
+  .cw-row{display:grid;gap:8px 22px;width:100%;text-align:left;background:none;border:0;
+    border-bottom:1px solid var(--line);padding:14px 0;cursor:pointer;font:inherit;min-height:44px;
+    grid-template-columns:22px minmax(0,1fr)}
+  @media (min-width:860px){
+    .cw-ledger-h,.cw-row{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr)}
+  }
+  .cw-row[aria-pressed="true"]{background:rgba(44,88,120,.035)}
+  .cw-row .box{width:19px;height:19px;border:1.5px solid var(--ghost-line);background:#fff;margin-top:2px;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700}
+  .cw-row[aria-pressed="true"] .box{background:var(--accent-strike);border-color:var(--accent-strike)}
+  .cw-row .lab{display:block;font-size:15px;line-height:1.35;color:var(--ink);font-weight:500}
+  .cw-row .matter{display:block;font-size:13.5px;line-height:1.45;color:var(--body);margin-top:4px}
+  .cw-row .systems{display:block;font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:.02em}
+  .cw-row .scell{min-width:0;color:var(--dim);grid-column:2;padding-top:2px;border-top:1px solid var(--line2)}
+  @media (min-width:860px){.cw-row .scell{grid-column:auto;padding-top:0;border-top:0}}
+  .cw-row[aria-pressed="true"] .scell{color:var(--ink)}
+  .cw-row .shead{display:block;font-size:13.5px;font-weight:600;line-height:1.35}
+  .cw-row .snote{display:block;font-size:12.5px;line-height:1.5;margin-top:4px}
+  .cw-row .sask{display:block;font-size:12px;line-height:1.5;margin-top:7px;padding-top:7px;
+    border-top:1px solid var(--line2);color:var(--dim)}
+  .cw-aside{position:sticky;top:150px;min-width:0}
+  .cw-aside .card{border:1px solid var(--frame-line);border-top:2px solid var(--ink);background:#fff;
+    padding:18px 20px 20px}
+  .cw-aside .carried{font-size:13.5px;line-height:1.5;color:var(--body);padding:7px 0;
+    border-bottom:1px solid var(--line2)}
+  .cw-aside .carried b{font-weight:600;color:var(--ink)}
+
+  /* ── route: Review ───────────────────────────────────────────────────────────────────────── */
+  .cw-review{max-width:1120px;margin:0 auto;padding:40px var(--cw-gut) 70px}
+  .cw-review .intro{max-width:64ch}
+  .cw-review h1{font-size:clamp(30px,2.6vw + 16px,42px);font-weight:700;letter-spacing:-.022em;line-height:1.06;
+    color:var(--ink);margin:0 0 16px}
+  .cw-review h2{font-size:24px;font-weight:700;letter-spacing:-.018em;color:var(--ink);margin:0}
+  .cw-review .lede{font-family:var(--serif);font-size:18px;line-height:1.55;color:var(--dim);margin:0 0 24px}
+  .cw-review .lede b,.cw-review .sub b{color:var(--ink);font-weight:500}
+  .cw-review .sub{font-family:var(--serif);font-size:16px;line-height:1.55;color:var(--dim);max-width:70ch}
+  .cw-review .band{margin-top:48px;border-top:2px solid var(--ink);padding-top:20px}
+  .cw-scope-row{display:grid;gap:12px 26px;padding:18px 0;border-top:1px solid var(--line);
+    grid-template-columns:34px minmax(0,1fr)}
+  @media (min-width:860px){.cw-scope-row{grid-template-columns:34px minmax(0,1fr) minmax(0,1fr)}}
+  .cw-scope-row .n{font-size:12px;font-weight:700;color:var(--ghost-line);font-variant-numeric:tabular-nums;padding-top:3px}
+  .cw-scope-row .matter{font-weight:600;font-size:16px;color:var(--ink);margin-bottom:5px}
+  .cw-scope-row .exam{font-size:14px;line-height:1.55;color:var(--body);margin:0;max-width:52ch}
+  .cw-scope-row .why{min-width:0;grid-column:2;padding-top:2px}
+  @media (min-width:860px){.cw-scope-row .why{grid-column:auto;padding-top:0;border-left:1px solid var(--line2);padding-left:22px}}
+  .cw-deliv{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+  @media (min-width:820px){.cw-deliv{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+  .cw-deliv a{display:block;text-decoration:none;background:#fff;border:1px solid var(--line);padding:20px 22px 18px}
+  .cw-deliv a.span{grid-column:1 / -1}
+  .cw-deliv .t{font-weight:700;font-size:18px;letter-spacing:-.015em;color:var(--ink);margin-bottom:8px}
+  .cw-deliv .d{font-size:13.5px;line-height:1.55;color:var(--body)}
+  .cw-deliv .go{margin-top:12px;font-size:12.5px;font-weight:600;color:var(--accent-strike)}
+  .cw-step{display:grid;grid-template-columns:56px 1fr;gap:20px;padding:18px 0;border-top:1px solid var(--line)}
+  .cw-step .n{font-weight:700;font-size:22px;color:var(--ghost-line);font-variant-numeric:tabular-nums}
+  .cw-def{display:grid;gap:0 26px;grid-template-columns:minmax(0,1fr);padding:12px 0;border-top:1px solid var(--line)}
+  @media (min-width:760px){.cw-def{grid-template-columns:260px minmax(0,1fr)}}
+  .cw-two{display:grid;gap:30px 44px;margin-top:48px;align-items:start;grid-template-columns:minmax(0,1fr)}
+  @media (min-width:820px){.cw-two{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+  .cw-fees{margin-top:36px;padding:18px 22px;background:var(--soft);border:1px solid var(--line)}
+
+  /* ── route: Brief — the printable CPA documents ──────────────────────────────────────────── */
+  .cw-briefwrap{background:#e6e3da;padding:26px 20px 60px}
+  .cw-briefbar{max-width:816px;margin:0 auto 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .cw-doc{max-width:816px;margin:0 auto;background:#fff;border:1px solid var(--line);padding:52px 56px 44px}
+  .cw-doc .dochead{display:flex;align-items:flex-start;gap:16px 24px;border-bottom:1px solid var(--ink);
+    padding-bottom:12px;flex-wrap:wrap}
+  /* The masthead block sets the measure; the stamp takes what is left and no more. Without the
+     explicit basis the as-of sentence in the stamp squeezed the org lines to one word per row. */
+  .cw-doc .dochead .who{flex:1 1 220px;min-width:0}
+  .cw-doc .dochead .cw-stamp{flex:0 1 300px;margin-left:auto;text-align:right;font-size:9.5px;font-weight:700;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .cw-doc .dochead .cw-stamp div{margin-top:3px;font-weight:500;letter-spacing:.02em;text-transform:none;font-size:11px}
+  .cw-doc .dochead .cw-stamp .gen{color:var(--dim)}
+  .cw-doc .org{font-size:9.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .cw-doc h1{font-size:34px;font-weight:700;letter-spacing:-.022em;line-height:1.05;color:var(--ink);margin:22px 0 8px}
+  .cw-doc h1.narrow{font-size:30px;line-height:1.08}
+  .cw-doc .lede{font-family:var(--serif);font-size:15px;line-height:1.5;color:var(--dim);margin:0 0 22px;max-width:64ch}
+  .cw-doc .kpis{display:grid;gap:14px 32px;border-top:2px solid var(--ink);border-bottom:1px solid var(--line);
+    padding:14px 0 16px;grid-template-columns:minmax(0,1fr)}
+  @media (min-width:640px){.cw-doc .kpis{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+  .cw-doc .kpis .cw-k{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+    margin-bottom:5px}
+  .cw-doc .kpis .cw-v{font-weight:700;font-size:26px;letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums}
+  .cw-doc .kpis .cw-s{font-size:11.5px;color:var(--dim);margin-top:3px;font-variant-numeric:tabular-nums}
+  .cw-doc .sech{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+    margin:20px 0 0}
+  .cw-doc table{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:6px}
+  .cw-doc table.fixed{table-layout:fixed}
+  .cw-doc td{vertical-align:top;padding:9px 12px 9px 0;border-top:1px solid var(--line);line-height:1.5;color:var(--body)}
+  .cw-doc td.dim{width:112px;font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .cw-doc td.reg{width:150px}
+  .cw-doc td.reg .r{font-weight:600;font-size:12.5px;color:var(--ink)}
+  .cw-doc td.reg .t{font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums;margin-top:2px}
+  .cw-doc .fine{margin-top:24px;border-top:1px solid var(--line);padding-top:10px;font-size:9.5px;line-height:1.55;
+    color:var(--muted)}
+  .cw-doc .fine b{color:var(--dim)}
+
+  .foot{padding:26px 40px 40px;font-size:11px;line-height:1.6;color:var(--muted);border-top:1px solid var(--ink);
+    background:var(--soft)}
+  .foot .anchor-strip{margin-bottom:12px}
+
+  @media print{
+    [data-noprint]{display:none !important}
+    .cw-briefwrap{background:#fff;padding:0}
+    .cw-doc{border:0;padding:0;max-width:none}
+    body{background:#fff}
+  }
+  @media (max-width:700px){
+    .cw{--cw-gut:20px}
+    .cw-doc{padding:28px 24px 24px}
+    /* The standing CTA is 356px of nowrap text; on a phone it takes its own row rather than
+       pushing the page 6px wider than the viewport. */
+    .cw-routes .cw-cta{flex:1 0 100%;margin-left:0;white-space:normal;text-align:center;justify-content:center}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="frame" id="frame">
+    <nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+      <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
+      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-atlas.html" aria-current="page">The Coordination Atlas</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="statemap.html">The State Tax Atlas</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
+      <span class="dwnav-sep" aria-hidden="true"></span>
+      <a class="dwnav-access" href="private.html">Client Access</a>
+      <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
+    </nav>
+
+    <div class="cw" id="cw">
+      <div class="cw-chrome" data-noprint>
+        <div class="cw-routes">
+          <span class="rlab">The Coordination Atlas</span>
+          <a href="#/atlas" data-route-link="atlas">Atlas</a>
+          <a href="#/assessment" data-route-link="assessment">Assessment</a>
+          <a href="#/review" data-route-link="review">Review</a>
+          <a class="cw-cta" href="#/review">Schedule the 15-minute introduction &rarr;</a>
+        </div>
+        <div class="cw-house">
+          <span class="hlab">Household</span>
+          <label>
+            <span class="flab">State</span>
+            <select id="cw-state" aria-label="Your state"></select>
+          </label>
+          <span class="dot">·</span>
+          <a class="fsum" href="#/assessment" id="cw-factor-summary">No factors checked</a>
+          <span class="dot">·</span>
+          <button type="button" class="addport" id="cw-addport">+ Taxable portfolio</button>
+          <label id="cw-portwrap" hidden>
+            <span class="flab">Taxable</span>
+            <select class="port" id="cw-port" aria-label="Taxable portfolio"></select>
+          </label>
+          <span class="cw-tools">
+            <a href="#/brief" id="cw-printlink">Print the brief &rarr;</a>
+            <button type="button" class="link" id="cw-copy">Copy a link for your CPA</button>
+            <button type="button" class="reset" id="cw-reset">Reset</button>
+          </span>
+          <span class="cw-note">Set once, carried across the Atlas, the Assessment, and the Review. Held in this
+            browser only, never transmitted — the link you copy carries it, nothing else does.</span>
+        </div>
+      </div>
+
+      <main id="cw-main">
+        <noscript>
+          <div class="cw-review">
+            <div class="intro">
+              <div class="kick">The Coordination Atlas</div>
+              <h1>One workspace: the state, the inventory, and the review.</h1>
+              <p class="lede">The Atlas reads how a state taxes a household lever by lever, the Assessment is an
+                inventory of what has to be kept consistent, and the Review names what an engagement would examine.
+                All three need JavaScript to read your household context. The underlying state-by-state reference is
+                published as static pages: <a href="statemap.html">the State Tax Atlas</a> and the
+                <a href="atlas/2026/">2026 edition state briefs</a>.</p>
+            </div>
+          </div>
+        </noscript>
+      </main>
+    </div>
+
+    <div class="foot" id="foot">
+      <!--FIRM_ANCHOR-->
+      <b>Educational, not tax, legal, or investment advice.</b> State tax treatment is summarized at a high
+      level for tax year 2025 and changes with legislation; confirm any figure with your CPA or attorney. The
+      coordination-impact dimension is <b>illustrative / hypothetical</b> modeling (no client capital was
+      invested; past performance does not guarantee future results) and is <b>not a forecast</b> that any fund
+      out-performs. The Assessment is an educational self-assessment, not a fee quote; it is not saved or
+      transmitted. Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and
+      advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a
+      Registered Representative and Financial Advisor of PAS. Driftwood Wealth is not an affiliate or subsidiary
+      of PAS. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
+    </div>
+  </div>
+</div>
+
+<script>
+window.__STATE__ = /*__STATE__*/null/*__END__*/;
+</script>
+<script>
+/* ── The Coordination Atlas workspace ─────────────────────────────────────────────────────────
+ *
+ * One surface, four routes (#/atlas, #/assessment, #/review, #/brief), one household.
+ *
+ * The household (state · inventory · taxable portfolio) is NOT stored here. It lives in
+ * window.dwTaxContext (dw-context.js, Layer 1), which every other Driftwood tool already reads —
+ * so setting a state here sets it on the Diagnostic and the Labs too, and a personalized link
+ * from any of them arrives with the household already filled in. Only workspace-local UI state
+ * (pinned states, the reading list, which tab, which lens) is kept in this page's own key.
+ *
+ * Two entry paths carry the same household values and MUST agree (CLAUDE.md, the 2026-07-26
+ * leakage.html incident): dw-context.js merges `location.search` at load, and this page reads its
+ * own hash query for the CPA link. Both go through dwTaxContext.save(), which owns the one
+ * portfolio parser — the workspace never parses a portfolio itself.
+ */
+(function(){
+  "use strict";
+
+  var DARK  = ["#5b6b74","#9b4439","#15806a","#2f8467","#15604a","#15463a"];
+  var CELL  = 46, T = 42;
+  var BOOK  = "https://calendly.com/alec-messino/introductory-call-driftwood-wealth" +
+              "?utm_source=driftwoodwealth&utm_medium=website&utm_campaign=coordination_review" +
+              "&utm_content=workspace";
+  var UI_KEY = "dw.atlas.workspace.v1";           // workspace-local UI state only
+  var ROUTES = ["atlas","assessment","review","brief"];
+  var LEVER_KEYS = ["cg","marriage","estate","muni","qsbs","loss","stepup"];
+
+  /* The inventory. `k` is the driver slug — the contract shared with dw-context.js DRIVER_KEYS,
+     score.html's data-key, and ?drivers=a,b. Never derive a slug from the copy.
+     `dims` are the Atlas dimensions the factor turns live; `ask` names the derived regime note. */
+  var FACTORS = [
+    {k:"business", label:"I own an operating business that pays material state tax", sys:[6,2,1,4,5],
+     dims:["cg","qsbs","estate"], ask:"pte",
+     matter:"Succession, and the tax the entity pays meanwhile",
+     matterNote:"A sale planned rather than forced — and, until then, what the operating company itself pays at the state level.",
+     exam:"How a sale would be structured and funded, what the entity pays in state tax today, and whether an entity-level election changes that.",
+     event:"A sale of the company", decides:"The year of sale, and where the entity itself is taxed."},
+    {k:"qsbs-founder", label:"I hold founder or early-employee stock that may qualify under §1202", sys:[6,1,0],
+     dims:["qsbs","cg","stepup"], ask:"qsbs",
+     matter:"QSBS qualification, and the sale date",
+     matterNote:"Whether the federal exclusion survives at the state line, and which year the sale lands in.",
+     exam:"Whether the stock qualifies, what this state does with gain the federal return excludes, and what the sale date decides.",
+     event:"The §1202 sale", decides:"The sale date, and the state you are a resident of on it."},
+    {k:"equity-comp", label:"I hold ISOs, NQSOs, or RSUs with material unrealized value", sys:[0,1,2],
+     dims:["cg","marriage","loss"], ask:"trailing",
+     matter:"Equity-comp sequencing",
+     matterNote:"AMT and bracket timing across exercise and sale, and a deliberate concentration sell-down rather than an accidental one.",
+     exam:"The exercise and sale sequence read against bracket, AMT, and this state's treatment of the resulting income.",
+     event:"An exercise, or a vest", decides:"Where the work was performed, and when it vested."},
+    {k:"concentration", label:"I hold a concentrated stock position", sys:[0,5,1],
+     dims:["cg","loss","stepup"], ask:"",
+     matter:"De-risking a concentrated position",
+     matterNote:"Across selling, hedging, gifting, and timing — each with a different after-tax cost.",
+     exam:"The sell-down, hedge, and gifting paths, what each costs after tax, and which basis is worth holding to death.",
+     event:"A concentrated sell-down", decides:"The realization date."},
+    {k:"relocation", label:"We are considering a move, or we own a home in another state", sys:[1,4,2],
+     dims:["cg","estate","muni"], ask:"sourcing",
+     matter:"Residency sequencing",
+     matterNote:"So large events land on the right side of a state line, in the right order — and so a change of domicile would actually hold up.",
+     exam:"Which events should land in which state, in what order, and what a change of domicile would require to survive challenge.",
+     event:"The change of domicile itself", decides:"Days, ties, and intent — evidenced, not asserted."},
+    {k:"trusts", label:"I have one or more trusts", sys:[4,1,3], dims:["estate","stepup"], ask:"situs",
+     matter:"Trust funding & titling",
+     matterNote:"Kept consistent with the estate plan, so nothing routes around the documents drafted for it.",
+     exam:"Whether each trust is funded and titled the way its document assumes, and where a beneficiary designation quietly overrides it.",
+     event:"A trust's own residency", decides:"Grantor, trustee, and beneficiary tests — not your address."},
+    {k:"estate-tax", label:"My estate may exceed a federal or state exemption", sys:[4,1,3],
+     dims:["estate","stepup"], ask:"cliff",
+     matter:"Estate-tax planning",
+     matterNote:"An ILIT, gifting, and ownership structure to shrink a taxed estate before it is one.",
+     exam:"The gap between the estate and the exemptions that actually apply to it, and the structures that close it.",
+     event:"Death, and the estate that follows", decides:"Domicile at death, not domicile at the move."},
+    {k:"real-estate", label:"I own investment real estate or land", sys:[0,2,1,5],
+     dims:["estate","stepup","cg"], ask:"",
+     matter:"Real-estate structure",
+     matterNote:"Entity, asset location, and the estate treatment of the property itself.",
+     exam:"Ownership form, where the property sits for estate purposes, and how it would pass.",
+     event:"Property left behind", decides:"Where the property sits, not where you do."},
+    {k:"private", label:"I hold private or alternative investments", sys:[0,2,1], dims:["loss","qsbs"], ask:"",
+     matter:"Capital-call & valuation coordination",
+     matterNote:"Liquidity and cash flow around private holdings, and how they are carried and reported.",
+     exam:"Where capital-call liquidity comes from, how the positions are valued, and what K-1 timing does to every other decision.",
+     event:"", decides:""},
+    {k:"charity", label:"I give meaningfully to charity", sys:[3,1,4], dims:["cg","estate"], ask:"",
+     matter:"Smarter giving",
+     matterNote:"Appreciated stock, donor-advised funds, and QCDs, over writing a check.",
+     exam:"Whether gifts leave as appreciated stock, through a fund, or from an IRA — and in which year.",
+     event:"", decides:""}
+  ];
+
+  /* Slugs the site used before the inventory was upgraded. A personalized link from score.html or
+     an older bookmark still resolves onto the factor that replaced it, rather than silently
+     dropping a checked box. */
+  var LEGACY_DRIVERS = {"multi-state":"relocation", "entities":"business"};
+
+  var SYS_NAMES = ["Investments","Taxes","Cash Flow","Family / Purpose","Estate","Protection","Business Ownership"];
+
+  var DELIVERABLES = [
+    {n:"01 · The findings", t:"The Coordination Report", href:"review.html",
+     d:"The written findings: what we observed in each system, the consequence of each, and who owns its resolution. The tax line is computed privately, on your holdings, and enters as evidence beneath the finding, never as the headline.",
+     go:"Read a specimen memorandum →"},
+    {n:"02 · The standing record", t:"The Opportunity Register", href:"opportunity-register.html",
+     d:"Every open matter the review surfaces, entered in one standing register with a status, an owner, and its dependency, so coordination continues after the meeting ends. Not tasks. Not reminders.",
+     go:"View a specimen register →"},
+    {n:"03 · The system of record", t:"The Wealth Operating Manual", href:"manual.html",
+     d:"The written operating system for your household: every decision, its rationale, and the conditions that would reopen it — so ten years from now it still makes sense, even to a different advisor.",
+     go:"See the Manual →"},
+    {n:"04 · The opening plan", t:"Your 90-Day Plan", href:"transition-plan.html",
+     d:"The first owned decisions, sequenced: which matters move first, who executes them, and the date each closes. The review's conclusions become a schedule, not a stack of recommendations.",
+     go:"See a specimen transition plan →"},
+    {n:"05 · The reasoning of record", t:"The Decision Register", href:"decision-register.html",
+     d:"The decision log of the relationship: every judgment recorded as it is made, with the reasoning behind it and the conditions that would reopen it — so a decision can be revisited on the facts that produced it, rather than re-argued from memory.",
+     go:"Read a specimen decision register →", span:true}
+  ];
+
+  var STEPS = [
+    {n:"01", h:"The introduction", time:"Fifteen minutes", d:"You see how we think, we understand your situation, and together we decide whether a review is warranted. Nothing to prepare, and no documents. If it isn't warranted, we will say so."},
+    {n:"02", h:"The review, privately", time:"Two to three weeks", d:"Your systems are read one at a time, on your actual holdings, documents, and state. The instruments that compute the tax line run here, on your numbers, not on a public page."},
+    {n:"03", h:"The report, walked through together", time:"One sitting", d:"The Coordination Report and the opening Register, reviewed with you, and with your CPA and estate attorney where the findings touch their work."}
+  ];
+
+  var ASKS = [
+    {h:"Statements", d:"One recent statement per account, including the ones we will not manage."},
+    {h:"Documents", d:"The estate documents as executed, and the entity documents if there is a business."},
+    {h:"Last year's return", d:"The whole return, not a summary. The bracket picture comes from it."},
+    {h:"Nothing, at first", d:"The introduction call requires no documents at all."}
+  ];
+
+  var PORTS = [250000, 1000000, 2500000, 5000000, 10000000, 25000000, 50000000];
+
+  var DISCLOSURE =
+    "<b>Educational, not tax, legal, or investment advice.</b> State tax treatment is summarized at a high " +
+    "level for tax year 2025 and changes with legislation; confirm any figure with counsel. The " +
+    "coordination-impact figure is illustrative / hypothetical modeling on a single 30-year proxy-spliced " +
+    "path (1996–2026); no client capital was invested, past performance does not guarantee future results, " +
+    "and it is not a forecast. Driftwood Wealth is the private-wealth practice of Alec Messino. Securities " +
+    "products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC.";
+
+  // ── helpers ────────────────────────────────────────────────────────────────────────────────
+  function esc(s){
+    return String(s == null ? "" : s)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+  function money(n){
+    if(n >= 1000000) return "$" + (n/1000000).toFixed(n >= 10000000 ? 1 : 2).replace(/\.0+$/,"") + "M";
+    return "$" + Math.round(n/1000) + "k";
+  }
+  function portLabel(v){ return money(v); }
+  function hasCliff(note){ return /\ba cliff\b/i.test(note||"") && !/removed the old cliff/i.test(note||""); }
+  function firstSentence(s){
+    if(!s) return "";
+    var m = String(s).match(/^[^.]+\./);
+    return m ? m[0] : String(s);
+  }
+  function ordinal(n){ return n + (n === 1 ? "st" : n === 2 ? "nd" : n === 3 ? "rd" : "th"); }
+  function pad2(i){ return String(i).length < 2 ? "0" + i : String(i); }
+  function el(id){ return document.getElementById(id); }
+
+  // ── state ──────────────────────────────────────────────────────────────────────────────────
+  var D = window.__STATE__ || null;
+  var S = {
+    route:"atlas", sel:"IL", lens:"cg", view:"map", tab:"brief", doc:"state",
+    // mapOpen starts CLOSED. The Atlas's centre of gravity is the state brief; a cartogram opened
+    // above it makes the lookup device the page and the reading an afterthought. The affordance sits
+    // in the reading row where a reader who wants to choose a different state will look for it, and
+    // once opened the choice persists for that browser.
+    pins:[], recents:[], move:null, mapOpen:false, diffOnly:false, copied:false,
+    checked:[], portfolio:null
+  };
+
+  function ctx(){ return (window.dwTaxContext && window.dwTaxContext.get()) || {}; }
+
+  function loadUI(){
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(UI_KEY) || "null"); } catch(e){}
+    if(!saved) return;
+    if(saved.sel) S.sel = saved.sel;
+    if(saved.lens) S.lens = saved.lens;
+    if(saved.view) S.view = saved.view;
+    if(Array.isArray(saved.pins)) S.pins = saved.pins.slice(0,4);
+    if(Array.isArray(saved.recents)) S.recents = saved.recents.filter(Boolean);
+    if(typeof saved.mapOpen === "boolean") S.mapOpen = saved.mapOpen;
+    if(saved.move) S.move = saved.move;
+  }
+  function saveUI(){
+    try {
+      localStorage.setItem(UI_KEY, JSON.stringify({
+        sel:S.sel, lens:S.lens, view:S.view, pins:S.pins, recents:S.recents,
+        mapOpen:S.mapOpen, move:S.move
+      }));
+    } catch(e){}
+  }
+
+  /* Pull the household out of dwTaxContext. Drivers are mapped through LEGACY_DRIVERS and filtered
+     to the factors this inventory actually shows, so an unknown slug can never light a row. */
+  function pullHousehold(){
+    var c = ctx();
+    var known = {}; FACTORS.forEach(function(f){ known[f.k] = true; });
+    var seen = {}, out = [];
+    (Array.isArray(c.drivers) ? c.drivers : []).forEach(function(k){
+      var mapped = LEGACY_DRIVERS[k] || k;
+      if(known[mapped] && !seen[mapped]){ seen[mapped] = 1; out.push(mapped); }
+    });
+    S.checked = FACTORS.filter(function(f){ return seen[f.k]; }).map(function(f){ return f.k; });
+    S.portfolio = (c.portfolio != null && isFinite(c.portfolio) && c.portfolio > 0) ? c.portfolio : null;
+    if(c.state && D && D.names && D.names[c.state]) S.sel = c.state;
+  }
+  /* Every write to the household goes through dwTaxContext.save(), which owns the single portfolio
+     parser and propagates to every other tool. The workspace never writes localStorage for it. */
+  function pushHousehold(patch){
+    if(window.dwTaxContext) window.dwTaxContext.save(patch);
+    pullHousehold();
+  }
+
+  // ── the hash: route + the household, so the CPA link carries everything ─────────────────────
+  function readHash(){
+    var h = String(location.hash || "").replace(/^#\/?/, "");
+    var parts = h.split("?");
+    var route = (parts[0] || "").toLowerCase();
+    S.route = ROUTES.indexOf(route) >= 0 ? route : "atlas";
+    var qs;
+    try { qs = new URLSearchParams(parts[1] || ""); } catch(e){ return; }
+
+    var patch = {}, any = false;
+    var st = (qs.get("state") || "").trim().toUpperCase();
+    if(st){ patch.state = st; any = true; if(D && D.names && D.names[st]) S.sel = st; }
+    var drv = qs.get("drivers");
+    if(drv !== null){ patch.drivers = drv ? drv.split(",").filter(Boolean) : []; any = true; }
+    var port = qs.get("port");
+    // Handed to dwTaxContext verbatim: `port=2M` and `port=2000000` are parsed in ONE place.
+    if(port){ patch.portfolio = port; any = true; }
+    if(any) pushHousehold(patch);
+
+    var lens = qs.get("lens"); if(lens) S.lens = lens;
+    var view = qs.get("view"); if(view === "map" || view === "list") S.view = view;
+    var tab  = qs.get("tab");  if(tab === "brief" || tab === "compare" || tab === "move") S.tab = tab;
+    var doc  = qs.get("doc");  if(doc === "state" || doc === "compare" || doc === "move") S.doc = doc;
+    var mv   = (qs.get("move") || "").trim().toUpperCase(); if(mv) S.move = mv;
+    var pins = qs.get("pins");
+    if(pins !== null) S.pins = pins ? pins.split(",").filter(Boolean).slice(0,4) : [];
+  }
+
+  function hashFor(route){
+    var q = "state=" + S.sel
+      + (S.checked.length ? "&drivers=" + S.checked.join(",") : "")
+      + (S.portfolio ? "&port=" + S.portfolio : "")
+      + (S.pins.length ? "&pins=" + S.pins.join(",") : "")
+      + (S.move ? "&move=" + S.move : "")
+      + (route === "atlas" ? "&lens=" + S.lens + "&view=" + S.view + (S.tab !== "brief" ? "&tab=" + S.tab : "") : "")
+      + (route === "brief" && S.doc !== "state" ? "&doc=" + S.doc : "");
+    return "#/" + route + "?" + q;
+  }
+  var writing = false;
+  function writeHash(){
+    var next = hashFor(S.route);
+    if(location.hash !== next){ writing = true; location.hash = next; }
+  }
+
+  function go(route){ S.route = route; render(); }
+  function pick(code){
+    if(!code || !D || !D.names[code]) return;
+    S.recents = [code].concat(S.recents.filter(function(x){ return x !== code; })).slice(0,4);
+    S.sel = code;
+    pushHousehold({state:code});
+    render();
+  }
+
+  // ── derived reads over the Atlas data ──────────────────────────────────────────────────────
+  function names(){ return (D && D.names) || {}; }
+  function statesOf(){ return (D && D.states) || {}; }
+  function dims(){ return (D && D.dimensions) || []; }
+  function dimBy(){
+    var o = {}; dims().forEach(function(x){ o[x.key] = x; }); return o;
+  }
+  function selName(){ return names()[S.sel] || S.sel; }
+  function on(k){ return S.checked.indexOf(k) >= 0; }
+  function chosen(){ return FACTORS.filter(function(f){ return on(f.k); }); }
+
+  function liveMap(){
+    var live = {}, why = {};
+    FACTORS.forEach(function(f){
+      if(!on(f.k)) return;
+      f.dims.forEach(function(dk){
+        live[dk] = true;
+        (why[dk] = why[dk] || []).push(f.matter.toLowerCase());
+      });
+    });
+    return {live:live, why:why};
+  }
+
+  function legendRow(dd, rec){
+    if(!dd || !rec) return null;
+    var hit = dd.legend.filter(function(L){ return L[0] === rec.regime; })[0];
+    return hit || null;
+  }
+
+  /* The question each matter puts to the CPA. Every branch is derived from a regime already in the
+     Atlas dataset — nothing here models anything new. A dimension the data does not carry returns
+     "" and the note is simply not shown. */
+  function askLine(key, code){
+    var st = statesOf()[code] || {}, nm = names()[code] || code;
+    var cg = st.cg, es = st.estate, qs = st.qsbs;
+    var noTax = !!(cg && cg.regime === "notax");
+    var rate = (cg && cg.tag) ? cg.tag : "the state rate";
+    if(key === "pte") return noTax
+      ? nm + " levies no tax on this income, so there is no entity-level election to weigh."
+      : "An entity-level (PTE) election, where one is available, shelters income otherwise taxed at " + rate +
+        ". Whether it is elected — and whether the owner's credit is claimed correctly — is a filing decision, not a modeling one.";
+    if(key === "qsbs") return !qs ? ""
+      : qs.regime === "conforms" ? nm + " conforms to §1202: gain the federal return excludes is excluded here too."
+      : qs.regime === "decoupled" ? nm + " is decoupled from §1202: gain excluded federally can still be taxed here at " + rate + "."
+      : nm + " does not separately recognize the §1202 exclusion.";
+    if(key === "trailing") return noTax
+      ? "Income vesting after a move meets no tax in " + nm + " — but the state left behind may still claim the portion earned by work performed there."
+      : "Where a grant vests or is exercised after a move, states generally claim the share earned by work performed inside them. In " + nm + " that share meets " + rate + ".";
+    if(key === "situs") return noTax
+      ? nm + " does not tax trust income, so situs is a question about the other states with a claim, not this one."
+      : "A trust treated as a " + nm + " resident pays " + rate + " on income it does not distribute. Residency turns on the grantor, trustee, and beneficiary tests — not on where the document was signed.";
+    if(key === "cliff") return !es ? ""
+      : es.regime === "none" ? "No " + nm + " estate or inheritance tax; the federal exemption is the only threshold that applies."
+      : hasCliff(es.note) ? nm + "'s threshold is a cliff: clearing it exposes materially more than the excess above it. The margin matters more than the rate."
+      : nm + " taxes at the state level above its own exemption, which sits well below the federal one. Only value above the threshold is reached.";
+    if(key === "sourcing") return noTax
+      ? "Arriving in " + nm + " removes the rate, not the record: days, ties, and intent are what a challenged domicile turns on."
+      : nm + " reaches this income at " + rate + ". A domicile is proved by days, ties, and intent — not asserted by an address change.";
+    return "";
+  }
+
+  function primaryRec(f, code){
+    var db = dimBy(), st = statesOf()[code] || {};
+    var key = f.dims.filter(function(dk){ return db[dk] && st[dk] && st[dk].regime !== "na"; })[0]
+           || f.dims.filter(function(dk){ return db[dk] && st[dk]; })[0];
+    if(!key) return null;
+    return {key:key, rec:st[key], dd:db[key], lrow:legendRow(db[key], st[key])};
+  }
+
+  function modeledCodes(){
+    if(!D) return [];
+    var st = statesOf();
+    return Object.keys(st).filter(function(c){ return st[c].alpha && (c in D.tiles); });
+  }
+
+  function impact(code){
+    var a = (statesOf()[code] || {}).alpha;
+    if(!a) return null;
+    return S.portfolio
+      ? {head:"~" + money(a.usd_per_m * S.portfolio / 1000000) + " a year",
+         basis:"on " + money(S.portfolio) + " of taxable assets · ~" + a.value.toFixed(1) + "% a year", a:a}
+      : {head:"~" + a.value.toFixed(1) + "% of taxable assets",
+         basis:"a year, modeled — set a portfolio size to read it in dollars", a:a};
+  }
+  function shortImpact(code){
+    var a = (statesOf()[code] || {}).alpha;
+    if(!a) return "not modeled";
+    return S.portfolio ? "~" + money(a.usd_per_m * S.portfolio / 1000000) + " a year"
+                       : "~" + a.value.toFixed(1) + "% a year";
+  }
+
+  function classify(n){
+    if(n === 0) return ["No factors selected","Check what's true for your household to see the coordination surface it describes, and the matters it implies."];
+    if(n <= 3) return ["A few interacting parts","A handful of moving parts. Each decision still touches the others, but the surface is small."];
+    if(n <= 6) return ["Several interacting parts","Enough interacting parts that they are best decided together, not one at a time."];
+    return ["Many interacting parts","Many decisions that move each other. The interactions are where most of the value is kept or lost."];
+  }
+
+  function liveSummary(){
+    var live = liveMap().live;
+    var n = LEVER_KEYS.filter(function(k){ return live[k]; }).length;
+    return S.checked.length ? n + " of 7 levers live for your household"
+                            : "Check your inventory to mark the live levers";
+  }
+  function generatedLine(){
+    return "Brief generated " + new Date().toLocaleDateString("en-US",
+      {year:"numeric", month:"long", day:"numeric"});
+  }
+
+  // ── the cartogram ──────────────────────────────────────────────────────────────────────────
+  function cartogram(){
+    var db = dimBy(), dim = db[S.lens] || dims()[0];
+    if(!dim || !D) return "";
+    var cmap = {}; dim.legend.forEach(function(L){ cmap[L[0]] = L[1]; });
+    var tiles = D.tiles, st = statesOf(), nm = names();
+    var maxc = 0, maxr = 0, code;
+    for(code in tiles){ maxc = Math.max(maxc, tiles[code][0]); maxr = Math.max(maxr, tiles[code][1]); }
+    var parts = '<text x="4" y="' + (maxr*CELL + T/2) + '" style="font-size:8px;fill:#6b6e6a;letter-spacing:.1em">TERRITORIES</text>';
+    for(code in tiles){
+      var x = tiles[code][0]*CELL, y = tiles[code][1]*CELL;
+      var rec = (st[code] || {})[dim.key];
+      var fill = rec ? (cmap[rec.regime] || "#e9e5da") : "#e9e5da";
+      var lt = DARK.indexOf(fill) >= 0;
+      var tag = rec ? (rec.tag || "") : "";
+      var lrow = legendRow(dim, rec);
+      var a11y = (nm[code] || code) + (lrow ? ", " + lrow[2] : "") + (tag ? ", " + tag : "");
+      var isSel = code === S.sel, isPin = S.pins.indexOf(code) >= 0;
+      var stroke = isSel ? "#1e2833" : (isPin ? "#2c5878" : "#f1efe9");
+      var sw = isSel ? 3 : (isPin ? 2.6 : 2);
+      parts += '<g data-code="' + esc(code) + '" tabindex="0" role="button" aria-label="' + esc(a11y) + '" style="cursor:pointer">'
+        + '<title>' + esc(a11y) + '</title>'
+        + '<rect x="' + x + '" y="' + y + '" width="' + T + '" height="' + T + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="' + sw + '"></rect>'
+        + '<text x="' + (x + T/2) + '" y="' + (y + T/2 - 2) + '" text-anchor="middle" style="font-size:11px;font-weight:700;pointer-events:none;fill:' + (lt ? "#f4f1e8" : "#16130f") + '">' + esc(code) + '</text>'
+        + (tag ? '<text x="' + (x + T/2) + '" y="' + (y + T/2 + 11) + '" text-anchor="middle" style="font-size:8.5px;opacity:.82;pointer-events:none;fill:' + (lt ? "#f4f1e8" : "#16130f") + '">' + esc(tag) + '</text>' : "")
+        + '</g>';
+    }
+    var vb = "-2 -2 " + ((maxc+1)*CELL + 2) + " " + ((maxr+1)*CELL);
+    return '<svg id="cw-cart" role="img" aria-label="United States tax cartogram" viewBox="' + vb + '">' + parts + '</svg>';
+  }
+
+  function stateOptions(sel){
+    var nm = names();
+    return Object.keys(nm).sort(function(a,b){
+      return (nm[a]||a).localeCompare(nm[b]||b);
+    }).map(function(c){
+      return '<option value="' + esc(c) + '"' + (c === sel ? " selected" : "") + ">" + esc(nm[c]) + "</option>";
+    }).join("");
+  }
+
+  // ── route: Atlas ───────────────────────────────────────────────────────────────────────────
+  function renderAtlas(){
+    var nm = names(), db = dimBy(), L = liveMap();
+    var h = ['<div class="cw-atlas">'];
+
+    // reading list
+    var seen = {}, reading = [S.sel].concat(S.recents).filter(function(c){
+      if(!c || !nm[c] || seen[c]) return false; seen[c] = 1; return true;
+    }).slice(0,4);
+    h.push('<div class="cw-reading" data-noprint><span class="cap">Reading</span>');
+    reading.forEach(function(c){
+      h.push('<button type="button" class="chip" data-pick="' + esc(c) + '" aria-pressed="' +
+        (c === S.sel) + '">' + esc(nm[c]) + '</button>');
+    });
+    h.push('<select class="any" id="cw-any" aria-label="Read any state"><option value="">Any state…</option>' +
+      stateOptions(null) + '</select>');
+    h.push('<button type="button" class="maptoggle" data-act="togglemap">' +
+      (S.mapOpen ? "Hide the map" : "Map &amp; ladder ▾") + '</button></div>');
+
+    // the map, available on request — the brief is the centre of gravity
+    if(S.mapOpen){
+      h.push('<div class="cw-map" data-noprint><div class="head"><span class="cap">Choose a state</span>' +
+        '<span class="seg"><button type="button" data-act="mapview" aria-pressed="' + (S.view === "map") + '">Map</button>' +
+        '<button type="button" data-act="listview" aria-pressed="' + (S.view === "list") + '">Ladder</button></span></div>');
+      if(S.view === "map"){
+        var dim = db[S.lens] || dims()[0];
+        h.push('<div class="cw-cart"><div style="min-width:0">' + cartogram() + '<div class="cw-legend">');
+        (dim ? dim.legend : []).filter(function(Lg){ return Lg[2] !== ""; }).forEach(function(Lg){
+          h.push('<span><i style="background:' + esc(Lg[1]) + '"></i>' + esc(Lg[2]) + '</span>');
+        });
+        h.push('</div></div><div class="cw-lenses"><div class="cap" style="margin-bottom:6px">Colour the map by</div>');
+        dims().forEach(function(x){
+          h.push('<button type="button" data-lens="' + esc(x.key) + '" aria-pressed="' +
+            (x.key === S.lens) + '">' + esc(x.label) + '</button>');
+        });
+        h.push('</div></div>');
+      } else {
+        var st = statesOf();
+        var rows = modeledCodes().map(function(c){
+          return {code:c, name:nm[c]||c, val:st[c].alpha.usd_per_m, pc:st[c].alpha.value};
+        }).sort(function(a,b){ return b.val - a.val; });
+        var max = rows.length ? Math.max.apply(null, rows.map(function(r){ return r.val; })) : 1;
+        h.push('<p class="serif" style="font-size:13.5px;line-height:1.5;color:var(--dim);margin:0 0 12px;max-width:70ch">' +
+          'Every state, anchored to a true $0. The floor is high everywhere; what changes is which levers do the work.</p>');
+        h.push('<div class="cw-ladder">');
+        rows.forEach(function(r){
+          var selStyle = r.code === S.sel ? "box-shadow:inset 3px 0 0 var(--accent-strike);background:var(--soft)" : "";
+          h.push('<button type="button" data-pick="' + esc(r.code) + '" style="' + selStyle + '">' +
+            '<span class="lname"><span class="lbar" style="width:' + (r.val/max*100).toFixed(1) + '%;opacity:' +
+            (r.code === S.sel ? ".28" : ".12") + '"></span><span class="ltxt">' + esc(r.name) + '</span></span>' +
+            '<span class="lamt">' + esc(S.portfolio ? "~" + money(r.val * S.portfolio / 1000000) : "~" + r.pc.toFixed(1) + "%") + '</span></button>');
+        });
+        h.push('</div>');
+      }
+      h.push('</div>');
+    }
+
+    // the three Atlas tabs
+    h.push('<div class="cw-tabs" data-noprint>' +
+      '<button type="button" data-tab="brief" aria-selected="' + (S.tab === "brief") + '">The state brief</button>' +
+      '<button type="button" data-tab="compare" aria-selected="' + (S.tab === "compare") + '">Compare' +
+        (S.pins.length ? " · " + S.pins.length : "") + '</button>' +
+      '<button type="button" data-tab="move" aria-selected="' + (S.tab === "move") + '">A move</button>' +
+      '<span class="asof">' + esc(D ? "2025 tax-year law · reviewed " + (D.header.last_reviewed || "") : "") + '</span></div>');
+
+    if(S.tab === "brief")        h.push(atlasBrief(L));
+    else if(S.tab === "compare") h.push(atlasCompare(L));
+    else                         h.push(atlasMove(L));
+
+    h.push('</div>');
+    return h.join("");
+  }
+
+  function atlasBrief(L){
+    var nm = names(), db = dimBy(), st = statesOf(), h = [];
+    var imp = impact(S.sel);
+    var lede = imp
+      ? "What " + selName() + " changes is not whether coordination is worth doing — it is which levers do the work. " +
+        "Seven regimes, one modeled magnitude, and the matters your own household is already carrying."
+      : "This jurisdiction is not modeled in the Atlas.";
+
+    h.push('<div class="cw-briefhead"><div style="min-width:0;flex:1 1 420px">' +
+      '<div class="kick" style="margin-bottom:8px">State Tax Atlas · ' + esc(D ? D.edition : "") + ' edition</div>' +
+      '<h1>' + esc(selName()) + '</h1><p class="lede">' + esc(lede) + '</p></div>' +
+      '<div data-noprint style="display:flex;gap:10px;flex-wrap:wrap;padding-top:26px">' +
+      '<button type="button" class="btn" data-act="pin">' + esc(pinLabel()) + '</button>' +
+      '<a class="btn ink" href="#/brief">Printable brief for the CPA →</a></div></div>');
+
+    // the impact figure — a percentage of taxable assets until a portfolio makes dollars honest
+    h.push('<div class="cw-impact"><div style="min-width:0;border-top:1px solid var(--ink);padding-top:16px">' +
+      '<div class="cap" style="margin-bottom:10px">Illustrative coordination impact</div>');
+    if(imp){
+      h.push('<div class="fig">' + esc(imp.head) + '</div><div class="basis">' + esc(imp.basis) + '</div>');
+      if(!S.portfolio) h.push('<button type="button" class="scaleup" data-act="addport" data-noprint>Scale this to your taxable portfolio →</button>');
+      h.push('<p class="serif" style="font-size:14.5px;line-height:1.6;color:var(--dim);margin:16px 0 0;max-width:56ch">' +
+        esc(imp.a.note || "") + '</p>');
+    } else {
+      h.push('<div class="fig">Not modeled</div><p class="serif" style="font-size:14.5px;line-height:1.6;color:var(--dim);margin:16px 0 0;max-width:56ch">' +
+        esc(selName() + " is not modeled for coordination impact. Choose a state to see how its rules shape the after-tax picture.") + '</p>');
+    }
+    h.push('</div><div style="min-width:0;border-top:1px solid var(--line);padding-top:16px">' +
+      '<div class="cap" style="margin-bottom:10px">Where ' + esc(selName()) + ' sits</div>');
+    if(imp){
+      var vals = modeledCodes().map(function(c){ return st[c].alpha.value; });
+      var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+      var loRow = modeledCodes().filter(function(c){ return st[c].alpha.value === lo; })[0];
+      var rank = vals.filter(function(x){ return x > imp.a.value; }).length + 1;
+      h.push('<p style="font-size:13.5px;line-height:1.6;color:var(--body);margin:0 0 14px">' +
+        esc("Across the 50 states and DC the modeled figure runs from ~" + lo.toFixed(1) + "% (" + (nm[loRow]||loRow) +
+        ") to ~" + hi.toFixed(1) + "% of taxable assets a year. " + selName() + " sits " + ordinal(rank) + " of " + vals.length +
+        " — a narrow band, and not the reason to coordinate.") + '</p>');
+    }
+    h.push('<p class="pull">The Atlas is not a ranking. The floor is high in every state; what a state changes is which levers do the most work.</p></div></div>');
+
+    // seven levers, read as one page
+    h.push('<div style="margin-top:44px;border-top:2px solid var(--ink);padding-top:18px">' +
+      '<div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:4px">' +
+      '<h2 style="font-size:22px;font-weight:700;letter-spacing:-.018em;color:var(--ink);margin:0">How ' +
+      esc(selName()) + ' taxes you, lever by lever</h2>' +
+      '<span style="font-size:11px;color:var(--muted);margin-left:auto">' + esc(liveSummary()) + '</span></div>' +
+      '<p class="serif" style="font-size:14.5px;line-height:1.55;color:var(--dim);margin:0 0 8px;max-width:70ch">' +
+      'Seven regimes, read as one page rather than eight separate lookups. A lever marked ' +
+      '<b style="font-family:var(--sans);font-weight:600;color:var(--accent-strike)">live</b> is one your own inventory already turns on.</p>');
+
+    var NOTE_ON = {pte:"cg", situs:"cg", trailing:"cg", qsbs:"qsbs", cliff:"estate", sourcing:"cg"};
+    var extra = {};
+    FACTORS.forEach(function(f){
+      if(!on(f.k) || !f.ask) return;
+      var k = NOTE_ON[f.ask]; if(!k) return;
+      var d = askLine(f.ask, S.sel); if(!d) return;
+      (extra[k] = extra[k] || []).push({t:f.matter, d:d});
+    });
+
+    LEVER_KEYS.forEach(function(k){
+      var dd = db[k], rec = (st[S.sel] || {})[k];
+      if(!dd || !rec) return;
+      var lrow = legendRow(dd, rec);
+      var lab = lrow ? lrow[2] : "";
+      var col = lrow ? lrow[1] : "#e9e5da";
+      var isLive = !!L.live[k];
+      h.push('<div class="cw-lever' + (isLive ? " live-row" : "") + '"><div style="min-width:0">' +
+        '<button type="button" class="dimbtn" data-lens="' + esc(k) + '" title="Colour the map by this dimension">' + esc(dd.label) + '</button>' +
+        '<div class="regime">' + esc(lab || rec.tag || "—") + '</div>' +
+        (rec.tag && /[\d$%]/.test(rec.tag)
+          ? '<div class="pill" style="background:' + esc(col) + ';color:' + (DARK.indexOf(col) >= 0 ? "#f4f1e8" : "#16130f") + '">' + esc(rec.tag) + '</div>'
+          : "") +
+        '</div><div style="min-width:0"><p class="cw-note">' + esc(rec.note || "") + '</p>');
+      if(isLive){
+        h.push('<div class="liveband"><b style="font-weight:600;color:var(--accent-strike)">Live for your household — </b>' +
+          esc("you are carrying " + (L.why[k] || []).slice(0,2).join(" and ") + ".") + '</div>');
+      }
+      (extra[k] || []).forEach(function(a){
+        h.push('<div class="ask"><div class="h">A question this raises · ' + esc(a.t) + '</div><div class="d">' + esc(a.d) + '</div></div>');
+      });
+      (rec.citation || []).forEach(function(c){
+        h.push('<a class="cite" href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.label) + '</a>');
+      });
+      if(!(rec.citation && rec.citation.length)){
+        h.push('<div style="margin-top:10px;font-size:11px;color:var(--muted)">Summary of state law; primary-source citation in progress.</div>');
+      }
+      h.push('</div></div>');
+    });
+
+    h.push('<div style="border-top:1px solid var(--line);padding-top:14px;font-size:11px;line-height:1.55;color:var(--muted);max-width:82ch">' +
+      '<b style="color:var(--dim)">How the impact figure is modeled:</b> a single 30-year proxy-spliced path (1996–2026), ' +
+      'comparing a concentrated, high-turnover book with a tax-managed one. Illustrative and coarse; treat the figure as ' +
+      'directional, not a precise ranking. ' + esc(imp ? (imp.a.source || "") : "") + '</div></div>');
+
+    // next decision
+    var ch = chosen();
+    var live = LEVER_KEYS.filter(function(k){ return L.live[k]; }).length;
+    h.push('<div class="cw-next" data-noprint><div class="kick" style="margin-bottom:12px">Your next decision</div>');
+    if(!ch.length){
+      h.push('<h2>Start with the inventory.</h2><p>' +
+        esc("The Atlas figure is a magnitude. The inventory is what decides which of " + selName() + "'s levers are yours.") +
+        '</p><a class="solid" href="#/assessment">Open the Assessment →</a>');
+    } else {
+      h.push('<h2>' + esc("Take " + selName() + " into the review.") + '</h2><p>' +
+        esc("Because you are carrying " + ch[0].matter.toLowerCase() + ", and " + live + " of the seven " +
+            selName() + " levers already touch it.") +
+        '</p><a class="solid" href="#/review">See what a review would examine →</a>');
+    }
+    h.push('</div>');
+    return h.join("");
+  }
+
+  function pinLabel(){
+    if(S.pins.indexOf(S.sel) >= 0) return "Unpin " + selName();
+    return S.pins.length >= 4 ? "Compare tray full (4)" : "Pin " + selName() + " to compare";
+  }
+
+  function cellFor(dd, code){
+    var rec = (statesOf()[code] || {})[dd.key];
+    if(!rec) return {regime:"—", tag:"", swatch:"#e9e5da"};
+    var lrow = legendRow(dd, rec);
+    var lab = (lrow && lrow[2]) || "";
+    var tag = rec.tag || "";
+    var isAlpha = dd.key === "alpha";
+    return {
+      regime: isAlpha ? (tag || "—") : (lab || tag || "—"),
+      tag: (!isAlpha && tag && /[\d$%]/.test(tag)) ? tag : "",
+      swatch: lrow ? lrow[1] : "#e9e5da"
+    };
+  }
+
+  function compareParts(){
+    var nm = names(), diffs = [], agree = [];
+    dims().forEach(function(dd){
+      var labs = S.pins.map(function(c){
+        var rec = (statesOf()[c] || {})[dd.key];
+        if(!rec) return "not modeled";
+        var lrow = legendRow(dd, rec);
+        var lab = (lrow && lrow[2]) || rec.tag || "—";
+        var tag = rec.tag || "";
+        return dd.key === "alpha" ? (tag || lab)
+          : lab + (tag && /[\d$%]/.test(tag) && lab.toLowerCase().indexOf(tag.toLowerCase()) < 0 ? " (" + tag + ")" : "");
+      });
+      var distinct = labs.filter(function(x,i){ return labs.indexOf(x) === i; });
+      var live = !!liveMap().live[dd.key];
+      if(distinct.length > 1 && S.pins.length > 1){
+        diffs.push({dim:dd.label, key:dd.key, live:live,
+          line: S.pins.map(function(c,i){ return (nm[c]||c) + ": " + labs[i]; }).join(". ") + "."});
+      } else if(S.pins.length > 1){
+        agree.push(dd.label.toLowerCase() + " (" + labs[0] + ")");
+      }
+    });
+    diffs.sort(function(a,b){ return (b.live?1:0) - (a.live?1:0); });
+    return {diffs:diffs, agree:agree};
+  }
+
+  function compareTitle(){
+    var nm = names(), p = S.pins.map(function(c){ return nm[c] || c; });
+    if(!p.length) return "";
+    if(p.length === 1) return p[0];
+    return p.slice(0,-1).join(", ") + " and " + p[p.length-1];
+  }
+
+  function compareTable(compact){
+    var L = liveMap(), parts = compareParts();
+    var diffKeys = {}; parts.diffs.forEach(function(x){ diffKeys[x.key] = true; });
+    var filtered = S.diffOnly && S.pins.length > 1;
+    var rows = dims().filter(function(dd){ return !filtered || diffKeys[dd.key]; });
+    var h = ['<div class="cw-cmp"><table' + (compact ? ' class="fixed"' : "") + '><thead><tr><th class="dimh">Dimension</th>'];
+    S.pins.forEach(function(c){
+      h.push('<th class="col"><div class="cname">' + esc(names()[c] || c) + '</div>' +
+        '<div class="cimp">' + esc(shortImpact(c)) + '</div>' +
+        (compact ? "" : '<button type="button" data-unpin="' + esc(c) + '" data-noprint>Remove</button>') + '</th>');
+    });
+    h.push('</tr></thead><tbody>');
+    rows.forEach(function(dd){
+      var live = !!L.live[dd.key];
+      h.push('<tr' + (live ? ' class="live-flat"' : "") + '><th>' + esc(dd.label) +
+        (live ? '<div class="livemark" style="margin-top:3px">Live</div>' : "") + '</th>');
+      S.pins.forEach(function(c){
+        var cell = cellFor(dd, c);
+        h.push('<td><div class="rg">' + (compact ? "" : '<i style="background:' + esc(cell.swatch) + '"></i>') +
+          '<span class="rgn">' + esc(cell.regime) + '</span></div>' +
+          (cell.tag ? '<div class="tag">' + esc(cell.tag) + '</div>' : "") + '</td>');
+      });
+      h.push('</tr>');
+    });
+    h.push('</tbody></table></div>');
+    return h.join("");
+  }
+
+  function atlasCompare(){
+    var h = ['<div style="border-top:2px solid var(--ink);padding-top:20px">' +
+      '<h1 style="font-size:clamp(26px,1.8vw + 18px,34px);font-weight:700;letter-spacing:-.022em;line-height:1.06;color:var(--ink);margin:0 0 12px">' +
+      'Four states, eight dimensions, one page.</h1>' +
+      '<p class="serif" style="font-size:16px;line-height:1.55;color:var(--dim);margin:0 0 22px;max-width:66ch">' +
+      'Pin up to four states from the map or the ladder. The comparison is a regime table, not a league table: ' +
+      'what differs is which decisions each state rewards.</p></div>'];
+
+    if(!S.pins.length){
+      h.push('<div class="cw-empty"><p style="margin:0 0 14px;font-size:15px;color:var(--body)">' +
+        'Nothing pinned yet. Start with the state you live in.</p>' +
+        '<button type="button" class="solid" data-act="pin" style="border:0">Pin ' + esc(selName()) + '</button></div>');
+      return h.join("");
+    }
+
+    h.push('<div data-noprint style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px">' +
+      '<span class="cap">Add a state</span>' +
+      '<select id="cw-addpin" aria-label="Add a state to the comparison" style="font-family:var(--sans);font-size:12.5px;font-weight:600;color:var(--ink);background:#fff;border:1px solid var(--frame-line);border-radius:0;padding:7px 10px;cursor:pointer;min-height:36px">' +
+      '<option value="">Choose…</option>' + stateOptions(null) + '</select>' +
+      '<button type="button" class="btn" data-act="pin" style="min-height:36px;padding:8px 13px">' + esc(pinLabel()) + '</button>');
+    // the segmented control only earns its place once there are two states to differ
+    if(S.pins.length > 1){
+      h.push('<span style="display:inline-flex;align-items:center;gap:10px;margin-left:auto">' +
+        '<span class="cap" style="white-space:nowrap">Show</span><span class="seg">' +
+        '<button type="button" data-act="allrows" aria-pressed="' + (!S.diffOnly) + '">All eight</button>' +
+        '<button type="button" data-act="diffrows" aria-pressed="' + (S.diffOnly) + '">Differences only</button>' +
+        '</span></span>');
+    }
+    h.push('</div>');
+
+    h.push(compareTable(false));
+    h.push('<div data-noprint style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:18px 0 0">' +
+      '<a class="btn ink" href="#/brief?doc=compare">Printable comparison for the CPA →</a>' +
+      '<span style="font-size:12px;color:var(--muted)">Adds a difference report: which dimensions actually diverge, and which do not.</span></div>' +
+      '<p style="font-size:12.5px;line-height:1.6;color:var(--muted);margin:16px 0 0;max-width:80ch">' +
+      'Rows marked in blue are the dimensions your own inventory already turns on. A difference on a quiet row is a fact; ' +
+      'a difference on a live row is a decision.</p>');
+    return h.join("");
+  }
+
+  var MOVE_LEDE = "Two regimes, read as a sequence. What follows is what changes at the line — and, for the " +
+    "matters this household is carrying, what decides which side of it each event lands on. Nothing here recommends a move.";
+
+  function moveRows(to){
+    var db = dimBy(), st = statesOf(), L = liveMap(), nm = names();
+    var rows = [], same = [];
+    LEVER_KEYS.forEach(function(k){
+      var dd = db[k], a = (st[S.sel]||{})[k], b = (st[to]||{})[k];
+      if(!dd || !a || !b) return;
+      function lab(rec){ var Lg = legendRow(dd, rec); return (Lg && Lg[2]) || rec.tag || "—"; }
+      function tagOf(rec){ return rec.tag && /[\d$%]/.test(rec.tag) ? rec.tag : ""; }
+      var fl = lab(a), tl = lab(b), ft = tagOf(a), tt = tagOf(b);
+      if(a.regime === b.regime && ft === tt){ same.push(dd.label.toLowerCase()); return; }
+      var note = "";
+      if(k === "cg") note = "Gains realized after the move meet " + (tt || tl) + "; gains realized before it meet " +
+        (ft || fl) + ". The realization date decides, not the moving date.";
+      else if(k === "estate") note = "Domicile at death decides which regime applies, not domicile at the move." +
+        (hasCliff(b.note) ? " " + (nm[to]||to) + "'s threshold is a cliff." : "") +
+        (hasCliff(a.note) ? " " + selName() + "'s threshold is a cliff." : "");
+      else if(k === "qsbs") note = "The sale date, not the grant date, decides whether the federal exclusion survives at the state line.";
+      else if(k === "muni") note = a.regime === "instate" && b.regime !== "instate"
+        ? "A ladder built for the " + selName() + " exemption loses its reason on arrival."
+        : b.regime === "instate" && a.regime !== "instate"
+        ? "An in-state ladder becomes worth building once " + (nm[to]||to) + " taxes the interest." : "";
+      else if(k === "stepup") note = a.regime === "community" && b.regime !== "community"
+        ? "Community-property character is not preserved by the move; it has to be maintained deliberately."
+        : b.regime === "community" && a.regime !== "community"
+        ? "Property acquired after arrival can take community character, with both halves stepping up at the first death." : "";
+      else if(k === "loss") note = "Carryforwards do not necessarily travel. Confirm what the arriving state recognizes before relying on one.";
+      rows.push({dim:dd.label, from: fl + (ft && fl.toLowerCase().indexOf(ft.toLowerCase()) < 0 ? " · " + ft : ""),
+        to: tl + (tt && tl.toLowerCase().indexOf(tt.toLowerCase()) < 0 ? " · " + tt : ""),
+        note:note, live: !!L.live[k]});
+    });
+    rows.sort(function(a,b){ return (b.live?1:0) - (a.live?1:0); });
+    return {rows:rows, same:same};
+  }
+
+  function moveEvents(to){
+    return FACTORS.filter(function(f){ return on(f.k) && f.event; }).map(function(f){
+      var ask = f.ask ? askLine(f.ask, to) : "";
+      return {event:f.event, decides:f.decides, matter:f.matter, ask:ask};
+    });
+  }
+
+  function validMove(){
+    return (S.move && names()[S.move] && S.move !== S.sel) ? S.move : null;
+  }
+
+  function atlasMove(){
+    var nm = names(), mv = validMove(), h = [];
+    h.push('<div style="border-top:2px solid var(--ink);padding-top:20px">' +
+      '<h1 style="font-size:clamp(26px,1.8vw + 18px,34px);font-weight:700;letter-spacing:-.022em;line-height:1.06;color:var(--ink);margin:0 0 12px">' +
+      'A move is a sequence, not a destination.</h1>' +
+      '<p class="serif" style="font-size:16px;line-height:1.55;color:var(--dim);margin:0 0 20px;max-width:68ch">' + esc(MOVE_LEDE) + '</p></div>');
+
+    var opts = Object.keys(nm).filter(function(c){ return c !== S.sel; })
+      .sort(function(a,b){ return (nm[a]||a).localeCompare(nm[b]||b); })
+      .map(function(c){ return '<option value="' + esc(c) + '"' + (c === S.move ? " selected" : "") + ">" + esc(nm[c]) + "</option>"; }).join("");
+
+    h.push('<div data-noprint style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--line)">' +
+      '<label><span class="cap" style="letter-spacing:.16em">From</span>&nbsp;<span style="font-size:15px;font-weight:600;color:var(--ink)">' + esc(selName()) + '</span></label>' +
+      '<span style="color:var(--ghost-line);font-size:16px">→</span>' +
+      '<label><span class="cap" style="letter-spacing:.16em">To</span>&nbsp;' +
+      '<select id="cw-move" aria-label="State you would move to" style="font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);background:#fff;border:1px solid var(--frame-line);border-radius:0;padding:7px 10px;cursor:pointer;min-height:38px">' +
+      '<option value="">Choose a state…</option>' + opts + '</select></label>' +
+      '<span style="font-size:11.5px;color:var(--muted)">From is the state in your household bar. Change it there to reverse the direction.</span></div>');
+
+    if(!mv){
+      h.push('<p style="font-size:14.5px;line-height:1.6;color:var(--body);margin:22px 0 0;max-width:60ch">' +
+        'Choose the state you would arrive in. The reading is directional: what changes on crossing, and which events have to land on which side.</p>');
+      return h.join("");
+    }
+
+    var fa = (statesOf()[S.sel]||{}).alpha, ta = (statesOf()[mv]||{}).alpha;
+    var mImpact = (fa && ta)
+      ? (S.portfolio
+          ? "~" + money(fa.usd_per_m * S.portfolio / 1000000) + " → ~" + money(ta.usd_per_m * S.portfolio / 1000000) + " a year"
+          : "~" + fa.value.toFixed(1) + "% → ~" + ta.value.toFixed(1) + "% of taxable assets a year")
+      : "Not modeled";
+    h.push('<div style="display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap;margin-top:26px">' +
+      '<div style="min-width:0;flex:1 1 340px"><div class="cap" style="margin-bottom:8px">Modeled impact, both sides</div>' +
+      '<div style="font-weight:700;font-size:clamp(22px,1.4vw + 14px,28px);letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.15">' + esc(mImpact) + '</div>' +
+      (fa && ta ? '<p style="font-size:12.5px;line-height:1.55;color:var(--muted);margin:8px 0 0;max-width:56ch">Modeled coordination impact, both sides of the line. The band across all states is narrow; the levers change more than the magnitude does.</p>' : "") +
+      '</div><a class="btn ink" data-noprint href="#/brief?doc=move" style="margin-top:22px">Printable move brief for the CPA →</a></div>');
+
+    var mr = moveRows(mv);
+    h.push('<div style="margin-top:34px;border-top:2px solid var(--ink);padding-top:16px">' +
+      '<h2 style="font-size:20px;font-weight:700;letter-spacing:-.018em;color:var(--ink);margin:0 0 4px">What changes at the line</h2>' +
+      '<p class="serif" style="font-size:14px;line-height:1.55;color:var(--dim);margin:0 0 8px;max-width:66ch">Only the regimes that differ. ' +
+      'Rows marked <b style="font-family:var(--sans);font-weight:600;color:var(--accent-strike)">live</b> are ones your own inventory already turns on.</p>');
+    if(!mr.rows.length){
+      h.push('<p style="font-size:14px;line-height:1.6;color:var(--body);margin:12px 0 0">These two states carry the same regime on every lever in the Atlas. The difference between them is magnitude, not rule.</p>');
+    }
+    mr.rows.forEach(function(r){
+      h.push('<div class="cw-moverow' + (r.live ? " live-flat" : "") + '"><div style="min-width:0">' +
+        '<div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">' + esc(r.dim) + '</div>' +
+        (r.live ? '<div class="livemark" style="margin-top:3px">Live</div>' : "") + '</div>' +
+        '<div class="arrow"><span class="from">' + esc(r.from) + '</span><span style="color:var(--ghost-line)">→</span>' +
+        '<span class="to">' + esc(r.to) + '</span></div>' +
+        '<div style="min-width:0;font-size:13px;line-height:1.55;color:var(--body)">' + esc(r.note) + '</div></div>');
+    });
+    if(mr.same.length){
+      h.push('<div style="border-top:1px solid var(--line);padding-top:12px;font-size:12px;line-height:1.55;color:var(--muted)">' +
+        esc("Unchanged at the line: " + mr.same.join(", ") + ".") + '</div>');
+    }
+    h.push('</div>');
+
+    var evs = moveEvents(mv);
+    if(evs.length){
+      h.push('<div style="margin-top:40px;border-top:2px solid var(--ink);padding-top:16px">' +
+        '<h2 style="font-size:20px;font-weight:700;letter-spacing:-.018em;color:var(--ink);margin:0 0 4px">Which side of the line</h2>' +
+        '<p class="serif" style="font-size:14px;line-height:1.55;color:var(--dim);margin:0 0 8px;max-width:68ch">' +
+        'The events your inventory already names, and what decides which state reaches each one. Sequencing is the whole of it: ' +
+        'the same decision costs differently depending on the order it lands in.</p>');
+      evs.forEach(function(e){
+        h.push('<div class="cw-event"><div style="min-width:0">' +
+          '<div style="font-weight:600;font-size:15.5px;color:var(--ink);line-height:1.3">' + esc(e.event) + '</div>' +
+          '<div style="font-size:11.5px;color:var(--muted);margin-top:4px">' + esc(e.matter) + '</div></div>' +
+          '<div style="min-width:0"><div class="cap" style="letter-spacing:.14em;color:var(--accent-strike);margin-bottom:4px">What decides it</div>' +
+          '<div style="font-size:13.5px;line-height:1.55;color:var(--body)">' + esc(e.decides) + '</div>' +
+          (e.ask ? '<div style="font-size:12.5px;line-height:1.55;color:var(--dim);margin-top:7px;padding-top:7px;border-top:1px solid var(--line2)">' + esc(e.ask) + '</div>' : "") +
+          '</div></div>');
+      });
+      h.push('</div>');
+    }
+
+    h.push('<p style="font-size:12.5px;line-height:1.6;color:var(--muted);margin:20px 0 0;max-width:80ch">' +
+      'The Atlas does not recommend a move. Residency is proved by days, ties, and intent, and a change of domicile is examined ' +
+      'on the record it leaves — which is a matter for the review, your CPA, and counsel.</p>');
+    return h.join("");
+  }
+
+  // ── route: Assessment — a ruled ledger. Every line carries the matter it implies and what the
+  //    state does about it, side by side. No score, no grade, no surface diagram.
+  function renderAssessment(){
+    var h = ['<div class="cw-assess"><div class="intro">' +
+      '<div class="kick" style="margin-bottom:14px">Coordination Assessment</div>' +
+      '<h1>An inventory of what has to be kept consistent.</h1>' +
+      '<p class="lede">Complexity isn\'t a problem to hide. It\'s where coordination creates the most value. ' +
+      'Check what\'s true for your household. Every line carries the matter it implies and what ' + esc(selName()) +
+      ' law does about it, side by side. No score, no grade — a household is not a credit rating.</p></div>'];
+
+    h.push('<div class="cols"><div style="min-width:0">' +
+      '<div style="display:flex;align-items:baseline;gap:12px;border-top:2px solid var(--ink);padding-top:14px;margin-bottom:10px">' +
+      '<h2 class="cap" style="margin:0;flex:none;white-space:nowrap">The register</h2>' +
+      '<span style="margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap">' +
+      esc(S.checked.length ? S.checked.length + " of 10 true for this household" : "Nothing checked yet") + '</span></div>');
+
+    h.push('<div class="cw-ledger-h"><span></span><span>True for us / the matter it implies</span>' +
+      '<span class="state">What ' + esc(selName()) + ' does about it</span></div>');
+
+    FACTORS.forEach(function(f){
+      var isOn = on(f.k);
+      var p = primaryRec(f, S.sel);
+      var head = (p && p.lrow)
+        ? p.dd.label + " · " + p.lrow[2] + (p.rec.tag && /[\d$%]/.test(p.rec.tag) ? " · " + p.rec.tag : "")
+        : "Not modeled";
+      var ask = (isOn && f.ask) ? askLine(f.ask, S.sel) : "";
+      h.push('<button type="button" class="cw-row" data-factor="' + esc(f.k) + '" aria-pressed="' + isOn + '">' +
+        '<span class="box" aria-hidden="true">' + (isOn ? "✓" : "") + '</span>' +
+        '<span style="min-width:0"><span class="lab">' + esc(f.label) + '</span>' +
+        '<span class="matter">' + esc(f.matter) + '</span>' +
+        '<span class="systems">' + esc(f.sys.map(function(i){ return SYS_NAMES[i]; }).join(" · ")) + '</span></span>' +
+        '<span class="scell"><span class="shead">' + esc(head) + '</span>' +
+        '<span class="snote">' + esc(p ? firstSentence(p.rec.note) : "") + '</span>' +
+        (ask ? '<span class="sask">' + esc(ask) + '</span>' : "") + '</span></button>');
+    });
+
+    h.push('<p style="font-size:11.5px;line-height:1.55;color:var(--muted);margin:14px 0 0;max-width:74ch">' +
+      'The right-hand column is the Atlas reading of ' + esc(selName()) + ' for that matter. It greys until the row is true ' +
+      'for you, so the register is legible at rest and prints as it stands. ' +
+      '<a href="#/atlas" style="font-weight:600">Read the ' + esc(selName()) + ' brief →</a></p>');
+
+    h.push('<div class="cw-next" data-noprint><div class="kick" style="margin-bottom:12px">Your next decision</div>' +
+      '<h2>' + esc(S.checked.length ? "Your register is " + S.checked.length + " matters deep." : "Nothing checked yet.") + '</h2>' +
+      '<p>' + esc(S.checked.length
+        ? "The review examines each of them against " + selName() + " law, your documents, and your return, and puts an owner against every gap."
+        : "Check what is true for your household; the review's scope is built from it.") + '</p>' +
+      '<a class="solid" href="#/review">See what a review would examine →</a></div></div>');
+
+    // The aside names the matters back, in words. It is deliberately not a score, a meter, or a shape.
+    var ch = chosen(), cl = classify(S.checked.length);
+    h.push('<aside class="cw-aside" data-noprint><div class="card">' +
+      '<div class="cap" style="letter-spacing:.16em;margin-bottom:12px">What this household is carrying</div>');
+    if(!ch.length){
+      h.push('<p class="serif" style="font-size:14px;line-height:1.45;color:var(--dim);margin:0">' + esc(cl[1]) + '</p>');
+    } else {
+      ch.forEach(function(f){
+        h.push('<div class="carried"><b>' + esc(f.matter) + '</b></div>');
+      });
+      h.push('<div style="font-weight:700;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-strike);margin:14px 0 6px;padding-top:14px;border-top:1px solid var(--line2)">' +
+        esc(cl[0]) + '</div><p class="serif" style="font-size:14px;line-height:1.45;color:var(--dim);margin:0">' + esc(cl[1]) + '</p>');
+    }
+    h.push('</div><p style="font-size:11.5px;line-height:1.55;color:var(--muted);margin:10px 2px 0">' +
+      'An inventory, not a grade. It maps where the pieces of a financial life most need to be kept consistent with one another.</p></aside>');
+
+    h.push('</div></div>');
+    return h.join("");
+  }
+
+  // ── route: Review ──────────────────────────────────────────────────────────────────────────
+  function renderReview(){
+    var ch = chosen();
+    var h = ['<div class="cw-review"><div class="intro">' +
+      '<div class="kick" style="margin-bottom:14px">The flagship engagement</div>' +
+      '<h1>One review. Every system, read together.</h1>' +
+      '<p class="lede">Not a meeting, and not a plan you file away. An engagement: your investments, taxes, estate, ' +
+      'liquidity, and risk <b>read as one system</b>, the findings written down, and an owner put against every gap. ' +
+      'You leave with the documents, yours to keep.</p>' +
+      '<a class="solid" style="font-size:15px;padding:13px 22px" href="' + esc(BOOK) + '" target="_blank" rel="noopener">Schedule the 15-minute introduction →</a>' +
+      '<p style="font-size:12.5px;color:var(--muted);margin:12px 0 0">Fifteen minutes, by phone. Nothing to prepare and no documents.</p></div>'];
+
+    // the scope preview, built from the checked inventory
+    h.push('<div class="band" style="margin-top:44px">' +
+      '<div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">' +
+      '<h2>What this review would examine for your household</h2>' +
+      '<a href="#/assessment" data-noprint style="margin-left:auto;font-size:12px;font-weight:600;border-bottom:1px solid var(--accent-strike-soft);text-decoration:none">Edit the inventory →</a></div>' +
+      '<p class="sub" style="margin:10px 0 20px">' + esc(ch.length
+        ? "Built from the " + ch.length + " factor" + (ch.length === 1 ? "" : "s") + " you checked and what " + selName() +
+          " law does about each. Nothing here is a finding — a finding requires your holdings, your documents, and your return."
+        : "The scope is built from your own inventory.") + '</p>');
+
+    if(!ch.length){
+      h.push('<div style="border:1px solid var(--line);background:var(--soft);padding:24px 26px">' +
+        '<p style="margin:0 0 14px;font-size:15px;color:var(--body);max-width:62ch">Nothing is checked yet, so there is nothing to name back ' +
+        'to you. The inventory takes about a minute and decides what the introduction call is actually about.</p>' +
+        '<a class="solid" href="#/assessment">Open the Assessment →</a></div>');
+    }
+    ch.forEach(function(f,i){
+      var p = primaryRec(f, S.sel);
+      var why = (p && p.lrow)
+        ? p.dd.label + " in " + selName() + ": " + p.lrow[2] +
+          (p.rec.tag && p.rec.tag.toLowerCase() !== p.lrow[2].toLowerCase() ? " (" + p.rec.tag + ")" : "") + ". " + firstSentence(p.rec.note)
+        : "Read against " + selName() + " law during the review.";
+      var ask = f.ask ? askLine(f.ask, S.sel) : "";
+      h.push('<div class="cw-scope-row"><div class="n">' + esc(pad2(i+1)) + '</div>' +
+        '<div style="min-width:0"><div class="matter">' + esc(f.matter) + '</div><p class="exam">' + esc(f.exam) + '</p></div>' +
+        '<div class="why"><div class="cap" style="letter-spacing:.16em;color:var(--accent-strike);margin-bottom:5px">In ' + esc(selName()) + '</div>' +
+        '<p style="font-size:13.5px;line-height:1.55;color:var(--body);margin:0">' + esc(why) + '</p>' +
+        (ask ? '<p style="font-size:12.5px;line-height:1.55;color:var(--dim);margin:8px 0 0;padding-top:8px;border-top:1px solid var(--line2)">' + esc(ask) + '</p>' : "") +
+        '</div></div>');
+    });
+
+    h.push('<div style="border-top:1px solid var(--line);padding-top:16px">' +
+      '<p style="font-size:13.5px;line-height:1.6;color:var(--muted);margin:0;max-width:76ch">Every review also asks the six standing ' +
+      'questions, whatever the inventory says: is each asset in the account where it is taxed least; where is the return quietly leaking; ' +
+      'would your family inherit it the way the documents intend; can you reach your money in the year you need it; does one decision quietly ' +
+      'create the next problem; and who, today, is actually coordinating all of it.</p></div></div>');
+
+    // deliverables
+    h.push('<div class="band"><h2 style="margin-bottom:10px">What you receive</h2>' +
+      '<p class="sub" style="margin:0 0 22px">The review produces <b>documents, not impressions.</b> Each is yours to keep and to share ' +
+      'with your CPA and estate attorney. Magnitudes appear where they belong: after the judgment, as evidence for it.</p><div class="cw-deliv">');
+    DELIVERABLES.forEach(function(d){
+      h.push('<a href="' + esc(d.href) + '"' + (d.span ? ' class="span"' : "") + '>' +
+        '<div class="cap" style="letter-spacing:.16em;color:var(--accent-strike);margin-bottom:8px">' + esc(d.n) + '</div>' +
+        '<div class="t">' + esc(d.t) + '</div><div class="d">' + esc(d.d) + '</div><div class="go">' + esc(d.go) + '</div></a>');
+    });
+    h.push('</div><p style="font-size:14px;line-height:1.6;color:var(--body);margin:18px 0 0;max-width:74ch">Beneath the five, the ' +
+      '<b style="color:var(--ink);font-weight:500">Coordination Register</b> keeps each open matter against an owner until it closes. ' +
+      '<b style="color:var(--ink);font-weight:500">The Report diagnoses; the Register sustains.</b></p></div>');
+
+    // how it proceeds
+    h.push('<div class="band"><h2 style="margin-bottom:18px">How it proceeds, and how long it takes</h2>');
+    STEPS.forEach(function(s){
+      h.push('<div class="cw-step"><div class="n">' + esc(s.n) + '</div><div>' +
+        '<div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px">' +
+        '<span style="font-weight:600;font-size:17px;color:var(--ink)">' + esc(s.h) + '</span>' +
+        '<span style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strike)">' + esc(s.time) + '</span></div>' +
+        '<p style="font-size:14.5px;line-height:1.6;color:var(--body);margin:0;max-width:70ch">' + esc(s.d) + '</p></div></div>');
+    });
+    h.push('</div>');
+
+    // what changes after
+    h.push('<div class="band"><h2 style="margin-bottom:16px">What changes after the review</h2>' +
+      '<div class="cw-def"><div style="font-weight:600;font-size:15px;color:var(--ink)">The register stays open</div>' +
+      '<div style="font-size:14.5px;line-height:1.55;color:var(--body);max-width:70ch">Every matter the review surfaced keeps its owner and its next date until it closes. Nothing is finished because a meeting ended.</div></div>' +
+      '<div class="cw-def"><div style="font-weight:600;font-size:15px;color:var(--ink)">Decisions arrive early</div>' +
+      '<div style="font-size:14.5px;line-height:1.55;color:var(--body);max-width:70ch">An account opened, a beneficiary form signed, a move considered: each is read against the documents and the plan before it settles, not at the next annual meeting.</div></div>' +
+      '<div class="cw-def" style="border-bottom:1px solid var(--line)"><div style="font-weight:600;font-size:15px;color:var(--ink)">Your CPA and attorney are called first</div>' +
+      '<div style="font-size:14.5px;line-height:1.55;color:var(--body);max-width:70ch">Where a matter is theirs, they are brought in while it is still a choice. The filing and the document are never the last to know.</div></div></div>');
+
+    // asks + fit
+    h.push('<div class="cw-two"><div style="border-top:2px solid var(--ink);padding-top:18px">' +
+      '<h2 class="cap" style="margin:0 0 14px">What we will ask you for</h2>');
+    ASKS.forEach(function(a){
+      h.push('<div style="padding:12px 0;border-bottom:1px solid var(--line2)">' +
+        '<div style="font-weight:600;font-size:14.5px;color:var(--ink);margin-bottom:3px">' + esc(a.h) + '</div>' +
+        '<div style="font-size:13px;line-height:1.55;color:var(--body)">' + esc(a.d) + '</div></div>');
+    });
+    h.push('</div><div style="border-top:2px solid var(--ink);padding-top:18px">' +
+      '<h2 class="cap" style="margin:0 0 14px">Who it is for, and who it is not for</h2>' +
+      '<div style="padding:12px 0;border-bottom:1px solid var(--line2)">' +
+      '<div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal2);margin-bottom:7px">Warranted when</div>' +
+      '<ul style="margin:0;padding-left:17px;font-size:14px;line-height:1.6;color:var(--body)">' +
+      '<li>Several accounts, and an estate plan already drafted.</li><li>An operating business, or a concentrated position.</li>' +
+      '<li>Income or property that crosses a state line.</li></ul></div>' +
+      '<div style="padding:12px 0;border-bottom:1px solid var(--line2)">' +
+      '<div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--neg);margin-bottom:7px">Not warranted when</div>' +
+      '<ul style="margin:0;padding-left:17px;font-size:14px;line-height:1.6;color:var(--body)">' +
+      '<li>One account, and no estate documents yet.</li><li>Nothing has changed in years, and nothing is planned.</li>' +
+      '<li>You want someone to run a portfolio, not coordinate a household.</li></ul></div>' +
+      '<p style="font-size:13px;line-height:1.6;color:var(--muted);margin:12px 0 0">In any of those three cases we will say so on the introduction call, and no proposal follows.</p></div></div>');
+
+    h.push('<div class="cw-fees"><p style="margin:0;font-size:14px;line-height:1.6;color:var(--body);max-width:74ch">' +
+      '<b style="color:var(--ink);font-weight:600">On fees:</b> Driftwood charges to coordinate decisions, not to manage a number. ' +
+      'The review\'s fee is a defined engagement fee, agreed in writing before any work begins. <a href="fees.html">How we are paid →</a></p></div>');
+
+    h.push('<div class="band" style="padding-top:26px">' +
+      '<h2 style="font-size:clamp(24px,2vw + 14px,32px);letter-spacing:-.022em;margin:0 0 10px">Request a Coordination Review.</h2>' +
+      '<p class="sub" style="margin:0 0 20px;max-width:62ch">It begins with the fifteen-minute introduction. There is nothing to prepare, ' +
+      'and if a review isn\'t warranted, we\'ll tell you on the call.</p>' +
+      '<a class="solid" style="font-size:15px;padding:13px 22px" href="' + esc(BOOK) + '" target="_blank" rel="noopener">Schedule the introduction →</a>' +
+      '<div style="margin-top:14px;font-size:13.5px;color:var(--dim)">Or call <a href="tel:+17085487600">(708)&nbsp;548-7600</a>, ' +
+      'or write to <a href="mailto:alec@driftwoodwealth.com">alec@driftwoodwealth.com</a>.</div>' +
+      '<div style="margin-top:24px;display:flex;align-items:center;gap:14px;padding-top:18px;border-top:1px solid var(--line)">' +
+      '<div style="width:52px;height:52px;border-radius:50%;background:var(--line2);border:1px solid var(--line);flex:none"></div>' +
+      '<div><div style="font-weight:600;font-size:14.5px;color:var(--ink)">Alec Messino, Founder</div>' +
+      '<div class="serif" style="font-size:14px;color:var(--dim)">Every review is conducted personally. You are not handed to a team.</div></div></div></div>');
+
+    h.push('</div>');
+    return h.join("");
+  }
+
+  // ── route: Brief — the three printable CPA documents ───────────────────────────────────────
+  function docHead(subtitle){
+    return '<div class="dochead"><div class="who"><div class="org">Driftwood Wealth · State Tax Atlas</div>' +
+      '<div class="org" style="margin-top:3px">' + esc(subtitle) + '</div></div>' +
+      '<div class="cw-stamp">Edition ' + esc(D ? D.edition : "") +
+      '<div>' + esc(D ? (D.header.asof || "") : "") + '</div>' +
+      '<div class="gen">' + esc(generatedLine()) + '</div></div></div>';
+  }
+  function mattersBlock(size){
+    var ch = chosen();
+    if(!ch.length) return "";
+    var h = ['<div style="margin-top:22px;border-top:1px solid var(--ink);padding-top:12px">' +
+      '<div class="sech" style="margin:0 0 6px">Matters this household is carrying</div>'];
+    ch.forEach(function(f){
+      h.push('<div style="font-size:' + size + ';line-height:1.5;color:var(--body);padding:4px 0">' +
+        '<b style="font-weight:600;color:var(--ink)">' + esc(f.matter) + '</b> · ' + esc(f.matterNote) + '</div>');
+    });
+    h.push('</div>');
+    return h.join("");
+  }
+  function inventoryKpi(){
+    var cl = classify(S.checked.length);
+    return '<div><div class="cw-k">Household inventory</div><div class="cw-v">' + S.checked.length + ' of 10</div>' +
+      '<div class="cw-s">' + esc(cl[0] + " · " + liveSummary()) + '</div></div>';
+  }
+
+  function briefDocState(){
+    var st = statesOf(), db = dimBy(), L = liveMap(), imp = impact(S.sel);
+    var h = ['<div class="cw-doc">' + docHead("Prepared for the household's CPA")];
+    h.push('<h1>' + esc(selName()) + '</h1><p class="lede">' +
+      esc(imp ? "What " + selName() + " changes is not whether coordination is worth doing — it is which levers do the work. " +
+        "Seven regimes, one modeled magnitude, and the matters your own household is already carrying."
+        : "This jurisdiction is not modeled in the Atlas.") + '</p>');
+    h.push('<div class="kpis"><div><div class="cw-k">Illustrative coordination impact</div>' +
+      '<div class="cw-v">' + esc(imp ? imp.head : "Not modeled") + '</div>' +
+      '<div class="cw-s">' + esc(imp ? imp.basis : "") + '</div></div>' + inventoryKpi() + '</div>');
+
+    h.push('<div class="sech">The seven regimes</div><table>');
+    LEVER_KEYS.forEach(function(k){
+      var dd = db[k], rec = (st[S.sel] || {})[k];
+      if(!dd || !rec) return;
+      var lrow = legendRow(dd, rec);
+      var live = !!L.live[k];
+      h.push('<tr' + (live ? ' class="live-flat"' : "") + '><td class="dim">' + esc(dd.label) + '</td>' +
+        '<td class="reg"><div class="r">' + esc((lrow && lrow[2]) || rec.tag || "—") + '</div>' +
+        (rec.tag && /[\d$%]/.test(rec.tag) ? '<div class="t">' + esc(rec.tag) + '</div>' : "") +
+        (live ? '<div class="livemark" style="margin-top:4px">Live</div>' : "") + '</td>' +
+        '<td>' + esc(rec.note || "") +
+        (rec.citation || []).map(function(c){
+          return '<span style="display:block;font-size:9.5px;color:var(--muted);margin-top:3px">' + esc(c.label) + '</span>';
+        }).join("") + '</td></tr>');
+    });
+    h.push('</table>');
+    h.push(mattersBlock("12px"));
+    h.push('<div class="fine">' + DISCLOSURE + '</div></div>');
+    return h.join("");
+  }
+
+  function briefDocCompare(){
+    var parts = compareParts(), cl = classify(S.checked.length);
+    var h = ['<div class="cw-doc">' + docHead("Prepared for the household's CPA")];
+    h.push('<h1 class="narrow">' + esc(compareTitle()) + '</h1><p class="lede">' +
+      esc("A regime table, not a league table. What follows is where these " +
+        (S.pins.length === 1 ? "rules" : S.pins.length + " states' rules") +
+        " actually diverge, and where they do not — read against the matters this household is already carrying.") + '</p>');
+    h.push('<div style="border-top:2px solid var(--ink);border-bottom:1px solid var(--line);padding:12px 0 14px;font-size:11.5px;line-height:1.55;color:var(--body)">' +
+      '<b style="font-weight:600;color:var(--ink)">This household:</b> ' + S.checked.length + ' of 10 factors apply · ' +
+      esc(cl[0]) + ' · ' + esc(liveSummary()) + '. Rows marked ' +
+      '<b style="font-weight:600;color:var(--accent-strike)">live</b> are the dimensions that inventory turns on.</div>');
+
+    h.push('<div class="sech">Where they differ</div>');
+    if(S.pins.length > 1 && !parts.diffs.length){
+      h.push('<p style="font-size:11.5px;line-height:1.55;color:var(--body);margin:8px 0 0">These states share the same regime on every ' +
+        'dimension in the Atlas. The difference between them is magnitude, not rule.</p>');
+    }
+    parts.diffs.forEach(function(d){
+      h.push('<div style="display:grid;grid-template-columns:112px 1fr;gap:0 12px;padding:9px 0;border-top:1px solid var(--line)"' +
+        (d.live ? ' class="live-flat"' : "") + '>' +
+        '<div style="font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">' + esc(d.dim) +
+        (d.live ? '<div style="font-size:9px;color:var(--accent-strike);margin-top:3px">Live</div>' : "") + '</div>' +
+        '<div style="font-size:11.5px;line-height:1.55;color:var(--body)">' + esc(d.line) + '</div></div>');
+    });
+    if(parts.agree.length){
+      h.push('<div style="border-top:1px solid var(--line);padding:9px 0 0;font-size:11px;line-height:1.55;color:var(--muted)">' +
+        '<b style="color:var(--dim)">They agree on:</b> ' + esc(parts.agree.join("; ") + ".") + '</div>');
+    }
+
+    h.push('<div class="sech">' + esc(S.diffOnly && S.pins.length > 1 ? "Where they diverge, side by side" : "Every dimension, side by side") + '</div>');
+    h.push(compareTable(true));
+    h.push(mattersBlock("11.5px"));
+    h.push('<div class="fine">' + DISCLOSURE + '</div></div>');
+    return h.join("");
+  }
+
+  function briefDocMove(){
+    var mv = validMove(), nm = names();
+    var mr = moveRows(mv), evs = moveEvents(mv);
+    var fa = (statesOf()[S.sel]||{}).alpha, ta = (statesOf()[mv]||{}).alpha;
+    var mImpact = (fa && ta)
+      ? (S.portfolio
+          ? "~" + money(fa.usd_per_m * S.portfolio / 1000000) + " → ~" + money(ta.usd_per_m * S.portfolio / 1000000) + " a year"
+          : "~" + fa.value.toFixed(1) + "% → ~" + ta.value.toFixed(1) + "% of taxable assets a year")
+      : "Not modeled";
+    var h = ['<div class="cw-doc">' + docHead("Residency sequencing · prepared for the household's CPA")];
+    h.push('<h1 class="narrow">' + esc(selName() + " → " + (nm[mv] || mv)) + '</h1>' +
+      '<p class="lede">' + esc(MOVE_LEDE) + '</p>');
+    h.push('<div class="kpis"><div><div class="cw-k">Modeled impact, both sides</div>' +
+      '<div class="cw-v" style="font-size:22px;line-height:1.2">' + esc(mImpact) + '</div>' +
+      (fa && ta ? '<div class="cw-s" style="line-height:1.5">Modeled coordination impact, both sides of the line. The band across all states is narrow; the levers change more than the magnitude does.</div>' : "") +
+      '</div>' + inventoryKpi() + '</div>');
+
+    h.push('<div class="sech">What changes at the line</div>');
+    if(!mr.rows.length){
+      h.push('<p style="font-size:11.5px;line-height:1.55;color:var(--body);margin:8px 0 0">These two states carry the same regime on ' +
+        'every lever in the Atlas. The difference between them is magnitude, not rule.</p>');
+    }
+    h.push('<table class="fixed">');
+    mr.rows.forEach(function(r){
+      h.push('<tr' + (r.live ? ' class="live-flat"' : "") + '><td class="dim" style="width:88px">' + esc(r.dim) +
+        (r.live ? '<div style="font-size:8.5px;color:var(--accent-strike);margin-top:3px">Live</div>' : "") + '</td>' +
+        '<td style="width:196px;overflow-wrap:break-word">' + esc(r.from) + ' <span style="color:var(--ghost-line)">→</span> ' +
+        '<b style="font-weight:600;color:var(--ink)">' + esc(r.to) + '</b></td>' +
+        '<td>' + esc(r.note) + '</td></tr>');
+    });
+    h.push('</table>');
+    if(mr.same.length){
+      h.push('<div style="border-top:1px solid var(--line);padding-top:9px;font-size:10.5px;line-height:1.5;color:var(--muted)">' +
+        esc("Unchanged at the line: " + mr.same.join(", ") + ".") + '</div>');
+    }
+
+    if(evs.length){
+      h.push('<div class="sech">Which side of the line</div><table class="fixed">');
+      evs.forEach(function(e){
+        h.push('<tr><td style="width:190px"><div style="font-weight:600;font-size:12px;color:var(--ink);line-height:1.35">' + esc(e.event) + '</div>' +
+          '<div style="font-size:9.5px;color:var(--muted);margin-top:3px">' + esc(e.matter) + '</div></td>' +
+          '<td><b style="font-weight:600;color:var(--ink)">' + esc(e.decides) + '</b>' +
+          (e.ask ? '<div style="color:var(--dim);margin-top:3px">' + esc(e.ask) + '</div>' : "") + '</td></tr>');
+      });
+      h.push('</table>');
+    }
+
+    h.push('<div style="margin-top:22px;border-top:1px solid var(--ink);padding-top:12px;font-size:11px;line-height:1.55;color:var(--body)">' +
+      'The Atlas does not recommend a move. Residency is proved by days, ties, and intent, and a change of domicile is examined on the ' +
+      'record it leaves. Sequencing the events above is a matter for the household, its CPA, and counsel together.</div>');
+    h.push('<div class="fine">' + DISCLOSURE + '</div></div>');
+    return h.join("");
+  }
+
+  function renderBrief(){
+    var okCompare = S.pins.length > 0, okMove = !!validMove();
+    var doc = S.doc;
+    if(doc === "compare" && !okCompare) doc = "state";
+    if(doc === "move" && !okMove) doc = "state";
+
+    var h = ['<div class="cw-briefwrap"><div class="cw-briefbar" data-noprint>' +
+      '<a href="#/atlas" style="font-size:12px;font-weight:600;border-bottom:1px solid var(--accent-strike-soft);text-decoration:none">← Back to the Atlas</a>'];
+    if(okCompare || okMove){
+      h.push('<span class="seg" style="background:#fff">' +
+        '<button type="button" data-doc="state" aria-pressed="' + (doc === "state") + '">' + esc(selName()) + '</button>' +
+        (okCompare ? '<button type="button" data-doc="compare" aria-pressed="' + (doc === "compare") + '">Comparison · ' + S.pins.length + '</button>' : "") +
+        (okMove ? '<button type="button" data-doc="move" aria-pressed="' + (doc === "move") + '">The move</button>' : "") +
+        '</span>');
+    }
+    h.push('<button type="button" class="solid" data-act="print" style="margin-left:auto;min-height:40px;padding:11px 18px;font-size:12.5px;font-weight:600">Print / save as PDF</button></div>');
+
+    h.push(doc === "compare" ? briefDocCompare() : doc === "move" ? briefDocMove() : briefDocState());
+    h.push('</div>');
+    return h.join("");
+  }
+
+  // ── chrome ─────────────────────────────────────────────────────────────────────────────────
+  function renderChrome(){
+    var links = document.querySelectorAll("[data-route-link]");
+    for(var i = 0; i < links.length; i++){
+      var r = links[i].getAttribute("data-route-link");
+      links[i].setAttribute("href", hashFor(r));
+      if(r === S.route) links[i].setAttribute("aria-current","true");
+      else links[i].removeAttribute("aria-current");
+    }
+    var sel = el("cw-state");
+    if(sel && sel.getAttribute("data-filled") !== "1"){
+      sel.innerHTML = stateOptions(S.sel);
+      sel.setAttribute("data-filled","1");
+    }
+    if(sel && sel.value !== S.sel) sel.value = S.sel;
+
+    var port = el("cw-port");
+    if(port && port.getAttribute("data-filled") !== "1"){
+      port.innerHTML = PORTS.map(function(v){ return '<option value="' + v + '">' + esc(portLabel(v)) + '</option>'; }).join("");
+      port.setAttribute("data-filled","1");
+    }
+    el("cw-portwrap").hidden = !S.portfolio;
+    el("cw-addport").hidden = !!S.portfolio;
+    if(S.portfolio && port){
+      // A portfolio arriving by URL need not be one of the seven presets — `?port=1750000` from a
+      // CPA link, or `?port=2M` typed by hand — so it gets an option of its own rather than being
+      // snapped to the nearest preset, which would show the visitor a number they did not give.
+      if(PORTS.indexOf(S.portfolio) < 0){
+        if(!port.__custom){
+          port.__custom = document.createElement("option");
+          port.__custom.setAttribute("data-custom","1");
+          port.insertBefore(port.__custom, port.firstChild);
+        }
+        port.__custom.value = String(S.portfolio);
+        port.__custom.textContent = portLabel(S.portfolio);
+      }
+      if(port.value !== String(S.portfolio)) port.value = String(S.portfolio);
+    }
+
+    el("cw-factor-summary").textContent = S.checked.length ? S.checked.length + " of 10 factors" : "No factors checked";
+    el("cw-factor-summary").setAttribute("href", hashFor("assessment"));
+    el("cw-printlink").textContent = "Print the " + selName() + " brief →";
+    el("cw-printlink").setAttribute("href", hashFor("brief"));
+    el("cw-copy").textContent = S.copied ? "Link copied" : "Copy a link for your CPA";
+  }
+
+  var rendering = false;
+  function render(){
+    if(rendering) return;
+    rendering = true;
+    try {
+      if(!D){
+        el("cw-main").innerHTML = '<div class="cw-review"><p class="lede">The Atlas dataset is unavailable on this page.</p></div>';
+        return;
+      }
+      renderChrome();
+      var main = el("cw-main");
+      main.innerHTML = S.route === "assessment" ? renderAssessment()
+                     : S.route === "review"     ? renderReview()
+                     : S.route === "brief"      ? renderBrief()
+                     : renderAtlas();
+      saveUI();
+      writeHash();
+    } finally { rendering = false; }
+  }
+
+  // ── events ─────────────────────────────────────────────────────────────────────────────────
+  /* Bound ONCE, to the container that survives every render, and delegated from there.
+     Re-binding after each innerHTML rewrite is the obvious thing to do and it is wrong: the
+     listeners accumulate on the same element, so by the fourth render a single click ran the
+     handler four times and a checkbox toggled itself back off. */
+  function wireMain(root){
+    root.addEventListener("click", function(e){
+      if(!e.target.closest) return;
+      // The cartogram's tiles are <g> elements, so they are matched before the attribute selectors.
+      var tile = e.target.closest("g[data-code]");
+      if(tile){ pick(tile.getAttribute("data-code")); return; }
+      var t = e.target.closest("[data-pick],[data-act],[data-lens],[data-tab],[data-factor],[data-unpin],[data-doc]");
+      if(!t) return;
+      var v;
+      if((v = t.getAttribute("data-pick"))){ e.preventDefault(); pick(v); return; }
+      if((v = t.getAttribute("data-lens"))){ e.preventDefault(); S.lens = v; render(); return; }
+      if((v = t.getAttribute("data-tab"))){ e.preventDefault(); S.tab = v; render(); return; }
+      if((v = t.getAttribute("data-doc"))){ e.preventDefault(); S.doc = v; render(); return; }
+      if((v = t.getAttribute("data-unpin"))){
+        e.preventDefault();
+        S.pins = S.pins.filter(function(x){ return x !== v; });
+        render(); return;
+      }
+      if((v = t.getAttribute("data-factor"))){
+        e.preventDefault();
+        var next = on(v) ? S.checked.filter(function(x){ return x !== v; }) : S.checked.concat([v]);
+        pushHousehold({drivers: next});
+        render(); return;
+      }
+      var act = t.getAttribute("data-act");
+      if(!act) return;
+      e.preventDefault();
+      if(act === "togglemap")      { S.mapOpen = !S.mapOpen; render(); }
+      else if(act === "mapview")   { S.view = "map";  render(); }
+      else if(act === "listview")  { S.view = "list"; render(); }
+      else if(act === "allrows")   { S.diffOnly = false; render(); }
+      else if(act === "diffrows")  { S.diffOnly = true;  render(); }
+      else if(act === "addport")   { pushHousehold({portfolio: 1000000}); render(); }
+      else if(act === "print")     { window.print(); }
+      else if(act === "pin"){
+        if(S.pins.indexOf(S.sel) >= 0) S.pins = S.pins.filter(function(x){ return x !== S.sel; });
+        else if(S.pins.length < 4) S.pins = S.pins.concat([S.sel]);
+        render();
+      }
+    });
+    root.addEventListener("change", function(e){
+      var id = e.target.id;
+      if(id === "cw-any"){ var c = e.target.value; e.target.value = ""; if(c) pick(c); }
+      else if(id === "cw-addpin"){
+        var p = e.target.value; e.target.value = "";
+        if(p && S.pins.indexOf(p) < 0 && S.pins.length < 4){ S.pins = S.pins.concat([p]); render(); }
+      }
+      else if(id === "cw-move"){ S.move = e.target.value || null; render(); }
+    });
+    // The cartogram tiles carry role="button" and a tabindex, so they answer the keyboard too.
+    root.addEventListener("keydown", function(e){
+      if(e.key !== "Enter" && e.key !== " ") return;
+      var g = e.target.closest ? e.target.closest("g[data-code]") : null;
+      if(!g) return;
+      e.preventDefault();
+      pick(g.getAttribute("data-code"));
+    });
+  }
+
+  function wireChrome(){
+    el("cw-state").addEventListener("change", function(e){ pick(e.target.value); });
+    el("cw-port").addEventListener("change", function(e){ pushHousehold({portfolio: e.target.value}); render(); });
+    el("cw-addport").addEventListener("click", function(){ pushHousehold({portfolio: 1000000}); render(); });
+    el("cw-reset").addEventListener("click", function(){
+      pushHousehold({drivers: [], portfolio: ""});
+      S.pins = []; S.recents = []; S.move = null;
+      render();
+    });
+    el("cw-copy").addEventListener("click", function(){
+      var url = location.href;
+      var done = function(){
+        S.copied = true; renderChrome();
+        clearTimeout(window.__cwCopyT);
+        window.__cwCopyT = setTimeout(function(){ S.copied = false; renderChrome(); }, 2200);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done, done); }
+      else {
+        var ta = document.createElement("textarea");
+        ta.value = url; document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); } catch(e){}
+        document.body.removeChild(ta); done();
+      }
+    });
+  }
+
+  // ── boot ───────────────────────────────────────────────────────────────────────────────────
+  loadUI();
+  pullHousehold();
+  readHash();
+  wireChrome();
+  wireMain(el("cw-main"));
+  render();
+
+  window.addEventListener("hashchange", function(){
+    if(writing){ writing = false; return; }
+    readHash();
+    render();
+  });
+  // The household bar on any other Driftwood surface writes the same context; follow it live.
+  if(window.dwTaxContext && window.dwTaxContext.subscribe){
+    window.dwTaxContext.subscribe(function(){
+      if(rendering) return;
+      pullHousehold();
+      render();
+    });
+  }
+  if(window.dwTaxContext && window.dwTaxContext.markDone) window.dwTaxContext.markDone("statemap");
+})();
+</script>
+</body>
+</html>

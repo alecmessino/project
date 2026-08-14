@@ -27,6 +27,7 @@ THESIS_TEMPLATE = Path(__file__).with_name("web") / "thesis.html"
 TAXLAB_TEMPLATE = Path(__file__).with_name("web") / "taxlab.html"
 LEAKAGE_TEMPLATE = Path(__file__).with_name("web") / "leakage.html"
 STATEMAP_TEMPLATE = Path(__file__).with_name("web") / "statemap.html"
+WORKSPACE_TEMPLATE = Path(__file__).with_name("web") / "coordination-atlas.html"
 CONCENTRATION_TEMPLATE = Path(__file__).with_name("web") / "concentration.html"
 
 
@@ -279,6 +280,23 @@ def export_statemap(state: dict, out: str | Path) -> Path:
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(render_statemap(state))
+    return out
+
+
+def render_workspace(state: dict) -> str:
+    """The Coordination Atlas workspace — the Atlas, the Assessment, and the Review scope over one
+    household context, with the same `build_statemap()` payload the State Tax Atlas embeds.
+
+    It reads the identical dict rather than a second extract on purpose: the workspace's state brief
+    and statemap.html's dimension tabs must never be able to disagree about what a state's law is.
+    """
+    return _embed(WORKSPACE_TEMPLATE.read_text(), state)
+
+
+def export_workspace(state: dict, out: str | Path) -> Path:
+    out = Path(out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(render_workspace(state))
     return out
 
 

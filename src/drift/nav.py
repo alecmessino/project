@@ -80,10 +80,20 @@ FAMILIES = [
     # about.html uses into principles.html. One page, one name: the nav label and the <title> both
     # read "How Coordination Works" while the h1 stays as written, because a headline is not a page
     # name.
+    # ── 2026-08-14: the Coordination Atlas joins this family, not Insights ────────────────────
+    # It is one workspace over three routes — the state brief, the household inventory, and the
+    # scope a review would examine — sharing a single household context across all three. That
+    # makes it a Coordination artifact by function: an Insights row would file it beside the
+    # reference material it happens to read from, which is the smaller half of what it does.
+    #
+    # It does NOT displace "The State Tax Atlas" (statemap.html), which remains the published
+    # 8-dimension reference and keeps its own Insights row. Two different objects: one is the
+    # reference, the other is the surface a household reads it through.
     ("Coordination", [
         ("How Coordination Works", "coordination.html", "coordination.html"),
         # Your First 90 Days belongs here and is deliberately withheld: first-90-days.html is a stub.
         ("A Household, Coordinated", "household-example.html", "household-example.html"),
+        ("The Coordination Atlas", "coordination-atlas.html", "coordination-atlas.html"),
         ("The Coordination Review", "coordination-review.html", "coordination-review.html"),
     ]),
     # "Insights", not "Insights & Research" (2026-07-31). The family is named for what it will hold
@@ -145,6 +155,7 @@ CURRENT = {
     "fiduciary.html": ("Our Firm", "fiduciary.html"),
     "coordination.html": ("Coordination", "coordination.html"),
     "household-example.html": ("Coordination", "household-example.html"),
+    "coordination-atlas.html": ("Coordination", "coordination-atlas.html"),
     "coordination-review.html": ("Coordination", "coordination-review.html"),
     # Merged out of the menu (see FAMILIES) but still very much a Coordination page.
     "coordination.html": ("Coordination", "coordination.html"),

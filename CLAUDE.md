@@ -32,6 +32,9 @@ pytest -q                        # full suite; drift-only: pytest -q tests/test_
   `window.__STATE__` data) — or run the `drift` CLI (`drift hub/export/taxlab/thesis/leakage/statemap`)
   to rebuild from live data. Never hand-edit `docs/*.html`; they are generated.
 - **🪵 Driftwood engine:** `drift rank | xbacktest | tearsheet | ledger --config config/drift.yaml`
+- **🪵 Coordination Atlas** (`coordination-atlas.html`, the Atlas/Assessment/Review workspace):
+  `drift statemap` builds it alongside `statemap.html` from one payload; behaviour is covered by
+  `tests/web/test_coordination_atlas.js` (`node tests/web/run.js`). Rules in `OPERATIONS.md`.
 - **🏀 mrbet:** `mrbet simulate --game config/games/okc_sas_2026-05-28.yaml --replay tests/data/replay_okc_sas.json`
 - **⚾ the_third_turn:** runs from its own folder with its own `requirements.txt`.
 

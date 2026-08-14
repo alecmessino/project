@@ -49,12 +49,20 @@
   var PORTS = [["", "Select…"], ["250000","$250k"], ["500000","$500k"], ["1000000","$1.0M"],
     ["2000000","$2.0M"], ["3000000","$3.0M"], ["5000000","$5.0M"], ["10000000","$10M"]];
 
-  // Canonical situation drivers, in the Coordination Assessment's checklist order. The SLUG is the
-  // contract: score.html's buttons carry it as data-key, a personalized link carries it as
-  // ?drivers=a,b, and Layer 2's rules table keys off it. Adding a driver means adding it in all
-  // three places — never derive a slug from display copy, which is edited freely.
+  // Canonical situation drivers. The SLUG is the contract: score.html's buttons carry it as
+  // data-key, coordination-atlas.html's register rows carry it as data-factor, a personalized link
+  // carries it as ?drivers=a,b, and Layer 2's rules table keys off it. Adding a driver means adding
+  // it in all of those places — never derive a slug from display copy, which is edited freely.
+  //
+  // Twelve slugs for two ten-row inventories, deliberately. The Coordination Atlas upgraded the
+  // Assessment's factors toward higher-intent triggers: `qsbs-founder` and `relocation` are new, and
+  // they read the same matters the older `entities` / `multi-state` rows pointed at less precisely.
+  // Both vocabularies stay valid here so a personalized link minted by either surface — or a
+  // bookmark from before the upgrade — still restores the visitor's boxes instead of silently
+  // dropping them; coordination-atlas.html maps the two legacy slugs forward on read (LEGACY_DRIVERS).
   var DRIVER_KEYS = ["business", "entities", "trusts", "equity-comp", "concentration",
-    "multi-state", "private", "real-estate", "charity", "estate-tax"];
+    "multi-state", "private", "real-estate", "charity", "estate-tax",
+    "qsbs-founder", "relocation"];
 
   // Modules that can be recorded as completed. Kept separate from DRIVER_KEYS so a stray value
   // from an older build can never masquerade as a finished module.
@@ -148,7 +156,12 @@
     // so the visitor is not asked twice, and carries drivers so a shared link restores the boxes.
     // (concentration.html reads nothing from the context, so it is deliberately NOT decorated —
     // appending params a page ignores is noise in a URL a visitor may well share.)
-    { prefix: "score.html", params: ["state", "bracket", "port", "drivers"] }
+    { prefix: "score.html", params: ["state", "bracket", "port", "drivers"] },
+    // The Coordination Atlas reads all three, on every one of its routes. It carries its own copy
+    // of the household in the URL FRAGMENT (that is what "Copy a link for your CPA" mints), but a
+    // link arriving from elsewhere on the site has no fragment — so the search params are how the
+    // household reaches it, and its boot reads both through this same module's parser.
+    { prefix: "coordination-atlas.html", params: ["state", "port", "drivers"] }
   ];
   function paramVal(k, c) {
     if (k === "port") return c.portfolio;

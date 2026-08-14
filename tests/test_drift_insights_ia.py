@@ -50,6 +50,11 @@ MASTHEAD = (
     ("Coordination", (
         ("How Coordination Works", "coordination.html"),
         ("A Household, Coordinated", "household-example.html"),
+        # The Coordination Atlas (2026-08-14) — one workspace over three routes (the state brief,
+        # the household inventory, the scope a review would examine) sharing a single household
+        # context. It sits here rather than in Insights because what it does is coordination; the
+        # State Tax Atlas it reads from keeps its own Insights row as the published reference.
+        ("The Coordination Atlas", "coordination-atlas.html"),
         ("The Coordination Review", "coordination-review.html"),
     )),
     ("Insights", (

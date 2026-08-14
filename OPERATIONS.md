@@ -21,6 +21,8 @@ drift taxlab   --docs docs --out docs/taxlab.html
 drift thesis   --docs docs --out docs/thesis.html
 drift leakage  --out docs/leakage.html             # fixed figures, no network
 drift statemap --out docs/statemap.html            # static dataset, no network
+                                                   # ALSO writes docs/coordination-atlas.html (the
+                                                   # workspace) from the same payload — see below
 drift states   --out-dir docs                      # 51 per-state SEO pages + states.html + sitemap.xml
 drift hub      --docs docs --out docs/index.html   # reads the other exhibits; run last
 python scripts/stamp_provenance.py                 # refresh docs/_provenance.json
@@ -290,6 +292,51 @@ worth keeping:
 Regenerating: edit `src/drift/plates.py` → `python3 scripts/build_plates.py` → commit the SVGs →
 `python3 scripts/sync_docs.py`. The generator is deterministic (local LCG, no `random`, no clock), so
 a run with no source change leaves an empty diff; a surprise diff means the geometry moved.
+
+## The Coordination Atlas — one workspace over three routes (2026-08-14)
+
+`coordination-atlas.html` is a single surface with four hash routes: `#/atlas`, `#/assessment`,
+`#/review`, and a printable `#/brief`. It is built from the Claude Design prototype of the same name
+and it sits in the **Coordination** family of the masthead, not Insights: what it does is
+coordination, and an Insights row would file it beside the reference material it happens to read.
+
+It does **not** replace `statemap.html` (the published 8-dimension State Tax Atlas), `score.html`
+(the Coordination Assessment) or `coordination-review.html` (the engagement page). Those three keep
+their URLs, their inbound links, their sitemap entries and their menu rows. Consolidating them into
+this workspace is a separate editorial decision with about 120 inbound links behind it, and it has
+not been taken. **If it is taken, the pattern is canonical + refresh redirect stubs onto the matching
+route** (`#/atlas`, `#/assessment`, `#/review`) — the same pattern `tax-atlas.html` already uses.
+
+Rules that govern the surface, all pinned by `tests/test_drift_workspace.py` and
+`tests/web/test_coordination_atlas.js`:
+
+* **One dataset.** The workspace embeds the same `build_statemap()` payload `statemap.html` does, and
+  `drift statemap` emits both in one command. Two commands would let the reference and the workspace
+  drift a law-review apart, which is the one inconsistency a CPA reading both would notice.
+* **One household.** State · inventory · taxable portfolio live in `dw-context.js` (Layer 1), not in
+  the page. Setting a state here sets it on the Diagnostic and the Labs too. The workspace's own
+  localStorage key holds UI state only (pins, reading list, tab, lens) — never a household field.
+* **One portfolio parser.** The household reaches this page by two independent routes: `?search`
+  params from a sibling tool (merged by `dw-context.js` at load) and the `#hash` query that "Copy a
+  link for your CPA" mints. The workspace parses neither — it hands the raw value to
+  `dwTaxContext.save()`, which owns `parsePortfolioLike()`. This is the standing rule from the
+  2026-07-26 `leakage.html` incident; the JS test drives both paths and asserts they agree.
+* **The figure is softened by default.** `~X% of taxable assets` until the reader supplies a
+  portfolio, and only then denominated in dollars. Dollars are a claim about a household we have not
+  met.
+* **No ranking devices, ever.** No 0–5 dots, friction score, complexity index, or ordering of states.
+  No archetype labels as navigation. No "if you were moving here" blocks — the Atlas does not
+  recommend a move. The Assessment names the matters back in words; it has no meter and no diagram.
+* **Prefix your class names.** `driftwood.css` owns short generic classes site-wide (`.stamp`,
+  `.cta`, `.note`, `.tools`). A page-scoped rule wins on specificity for the properties it sets and
+  silently inherits every property it does not — which is how the printable brief's header grew a
+  border and the CTA grew a rounded corner. Workspace classes are `cw-…`; a test enforces it.
+
+The upgraded inventory is still ten factors but aimed higher-intent (QSBS founder stock, material
+equity comp, relocation / second home, an operating business paying material state tax). Two slugs
+from the older Assessment (`multi-state`, `entities`) are mapped forward on read so a personalized
+link minted before the upgrade still restores a visitor's boxes. Both vocabularies stay registered in
+`DRIVER_KEYS`; removing either silently drops checked boxes off in-flight links.
 
 ## Information architecture — settled 2026-07-31
 

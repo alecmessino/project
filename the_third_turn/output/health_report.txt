@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-08-14T15:15:01+00:00
+ THE THIRD TURN — collection health   2026-08-14T15:31:07+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,18 +12,18 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ████████████████··  live=76963 (today    0)  last 15.0m ago
-  fanduel   ██████████████████  live=84326 (today    0)  last 15.0m ago
-  pinnacle  ··················  live=    0 (today    0)  last 56690.0m ago ⚠STALE
+  bovada    ████████████████··  live=76963 (today    0)  last 6.7m ago
+  fanduel   ██████████████████  live=84326 (today    0)  last 31.1m ago ⚠STALE
+  pinnacle  ··················  live=    0 (today    0)  last 56706.1m ago ⚠STALE
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
   simultaneous live pairs :  87607  (today 0)
   overlap games           : 150
   collector co-capture lag: 0.0 s   (when WE read them — not market contemporaneity)
-    delivered staleness bovada   : median 67.0s  p90 538.0s  (n=14212)
-    delivered staleness fanduel  : median 30.0s  p90 31.0s  (n=12875)
-  contemporaneity bound   : 569.0 s   ← the SR-1 criterion
+    delivered staleness bovada   : median 71.0s  p90 537.0s  (n=14266)
+    delivered staleness fanduel  : median 30.0s  p90 31.0s  (n=12878)
+  contemporaneity bound   : 568.0 s   ← the SR-1 criterion
   games by #books live     : {'0_books': 20, '2_books': 150}
 
 QUOTE LIFECYCLE (live rows)
@@ -34,13 +34,13 @@ COVERAGE
   innings seen: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 INTEGRITY
-  rows=672032  malformed=0  missing-fields=0  duplicates=0  future-ts=0
+  rows=672035  malformed=0  missing-fields=0  duplicates=0  future-ts=0
   status: ✅ clean
 
 SR-1 GATE (leadership analysis — blocked until all pass)
   ✅ ██████████████████ simultaneous live quote pairs    87607 / 2000
   ✅ ██████████████████ games with live overlap          150 / 100
-     ·················· contemporaneity bound < 15s      569.0 / 15
+     ·················· contemporaneity bound < 15s      568.0 / 15
      ████████████······ books quoting live               2 / 3
   overall: 67%  →  BLOCKED — keep collecting
 ══════════════════════════════════════════════════════════════════

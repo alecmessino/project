@@ -62,6 +62,19 @@ async function main() {
     }
   })()]);
 
+  // coordination-atlas.html — the Coordination Atlas workspace. Drives the real dw-context.js
+  // beside the page's own script, because the household reaches this surface by two independent
+  // paths (?search from a sibling tool, #hash from the CPA link) that must not diverge.
+  flows.push(['coordination-atlas', await (async () => {
+    try {
+      const { execFileSync } = require('child_process');
+      execFileSync(process.execPath, [path.join(__dirname, 'test_coordination_atlas.js')], { stdio: 'inherit' });
+      return {};
+    } catch (e) {
+      return { [`ERROR: ${e.message}`]: false };
+    }
+  })()]);
+
   // the-shortest-line.html's window instrument, driven through ?stop=.
   flows.push(['shortest-line', await (async () => {
     try {

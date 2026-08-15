@@ -294,13 +294,22 @@ def leakage(
 @app.command()
 def statemap(
     out: str = typer.Option("docs/statemap.html", "--out", help="State Tax Map exhibit"),
+    workspace: str = typer.Option("docs/coordination-atlas.html", "--workspace",
+                                  help="Coordination Atlas workspace (Atlas / Assessment / Review)"),
 ):
-    """Build the multi-dimension State Tax Map (cap-gains / marriage / estate / step-up / Structural Alpha)."""
+    """Build the multi-dimension State Tax Map (cap-gains / marriage / estate / step-up / Structural Alpha).
+
+    Emits the Coordination Atlas workspace from the SAME payload in the same command. Two commands
+    would let the reference and the workspace drift a law-review apart from each other, which is the
+    one inconsistency a CPA reading both would actually notice.
+    """
     from .statemap import build_statemap
-    from .exhibit import export_statemap
+    from .exhibit import export_statemap, export_workspace
     state = build_statemap()
     path = export_statemap(state, out)
+    ws = export_workspace(state, workspace)
     console.print(f"[green]wrote[/] {path}  ({len(state['states'])} states · {len(state['dimensions'])} dimensions)")
+    console.print(f"[green]wrote[/] {ws}  (Coordination Atlas workspace)")
 
 
 @app.command()

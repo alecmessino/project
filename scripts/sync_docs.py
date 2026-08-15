@@ -57,6 +57,9 @@ PAIRS = {
     "report.html": "equities_case_studies.html",
     "leakage.html": "leakage.html",
     "statemap.html": "statemap.html",
+    # The Coordination Atlas workspace embeds the same build_statemap() payload as statemap.html,
+    # so it is templated (data preserved on resync) rather than copied through as a static asset.
+    "coordination-atlas.html": "coordination-atlas.html",
     "concentration.html": "concentration.html",
     "ledger.html": "ledger.html",
     "tearsheet.html": "tearsheet.html",

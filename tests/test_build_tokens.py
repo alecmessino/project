@@ -53,6 +53,7 @@ RENDERERS = {
     "render_taxlab": "TAXLAB_TEMPLATE",
     "render_leakage": "LEAKAGE_TEMPLATE",
     "render_statemap": "STATEMAP_TEMPLATE",
+    "render_workspace": "WORKSPACE_TEMPLATE",
     "render_concentration": "CONCENTRATION_TEMPLATE",
 }
 

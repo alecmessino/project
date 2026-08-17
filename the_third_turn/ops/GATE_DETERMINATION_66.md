@@ -196,22 +196,44 @@ timestamp data from public sportsbook endpoints cannot separate market behaviour
 infrastructure, together with a specification of the additional instrumentation that would be
 required." The evidence for that demonstration is complete and in the repository.
 
-**Blocked by the gate.** §6.6 states that the Results section "remains unwritten until all four of
-the following hold." Three do not hold. **Paper 2's Results and Discussion remain unwritten.**
+**Blocked by the gate, as first issued.** §6.6 stated that the Results section "remains unwritten
+until all four of the following hold." Three do not hold, so on the original wording Paper 2's
+Results and Discussion remained unwritten.
 
-### A structural tension in the pre-registration — flagged, not resolved
+**Under Amendment 1 (GD-21, recorded below):** the Outcome C demonstration may be written, because
+Conditions 1, 2 and 4 are scoped to estimate-reporting and Condition 3 — the only condition bearing
+on identification — is satisfied. **No numerical estimate of the pricing contrast may be reported**,
+and the three failing conditions bind again the moment one is attempted.
+
+### A structural tension in the pre-registration — RESOLVED by Amendment 1 (2026-08-11)
 
 Conditions 1, 2 and 4 exist to support a **reported estimate**. Under Outcome C no estimate will be
 reported: the reportable object is a demonstration of non-identification, which does not depend on
 extraction-rule invariance, on a third book, or on an outlier procedure. Applying §6.6 literally
-therefore leaves the Results section gated on conditions that guard a deliverable the outcome has
+therefore left the Results section gated on conditions that guard a deliverable the outcome has
 already excluded.
 
 The pre-registration did not anticipate that Condition 3's third route could be satisfied while 1, 2
-and 4 fail. This memorandum does **not** resolve that tension, because resolving it means amending
-the gate after seeing the evidence — the precise failure §6.6 exists to prevent. It is recorded as a
-question for the principal investigator, and it requires a governance decision, not an analytical
-one.
+and 4 fail. This memorandum, as first issued, declined to resolve that tension and referred it to the
+principal investigator as a governance decision.
+
+**That decision was taken on 2026-08-11 (GD-21): Conditions 1, 2 and 4 are scoped to
+estimate-reporting only.** The amendment is recorded in Paper 2 §6.6 as "Amendment 1", below the
+four original conditions, which are preserved byte-for-byte. Its material terms:
+
+- The amendment **postdates the evidence** and says so in the manuscript. A reader may evaluate the
+  paper against the original four conditions, under which Results would remain unwritten.
+- Conditions 1, 2 and 4 are **not waived, not weakened, and not deemed satisfied.** Their
+  determinations above stand unchanged and are reported as failing throughout.
+- Condition 3 is untouched in wording and scope. No threshold, decision rule, or analysis plan is
+  altered.
+- **Tripwire:** if any estimate of the pricing contrast is reported — in this paper, a successor, a
+  talk, or a repository artifact — Conditions 1, 2 and 4 bind again in their original form and must
+  be satisfied first. Their failure is deferred, not spent.
+
+**Effect on this determination:** none of the condition statuses change. What changes is what the
+gate permits: the Outcome C demonstration may now be written, while no numerical estimate of the
+pricing contrast may be.
 
 ---
 

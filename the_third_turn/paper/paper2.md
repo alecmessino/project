@@ -2,14 +2,18 @@
 <h1>What Prices Cannot Tell You: Identifying Information Transmission in Live Markets</h1>
 <p class="epigraph">A companion study asked whether prices contain public information. This paper asks whether prices reveal how that information entered the market.</p>
 <p class="author">Alec Messino<br/><span class="affil">The Third Turn Research Initiative &middot; alec.messino@gmail.com</span></p>
-<p class="wp">Working Paper &middot; DRAFT, Sections 1-6 &middot; Results not yet written</p>
+<p class="wp">Working Paper &middot; DRAFT, Sections 1-6 &middot; Gate applied: Outcome C &middot; Results not yet written</p>
 </div>
 
-> **Draft status.** This manuscript is complete through the Methods section. The Results and
-> Discussion sections are deliberately unwritten: they are gated on four objective measurement
-> conditions stated in Section 6.6, and the analysis plan in Section 6.5 is pre-registered so that
-> the design cannot be shaped by the evidence. Nothing in the sections below reports an empirical
-> finding from the dataset described in Section 5.
+> **Draft status.** This manuscript is complete through the Methods section. The analysis plan in
+> Section 6.5 is pre-registered, and Section 6.6 fixes four conditions that gate what may be
+> reported. Those conditions have now been applied to the evidence. **The outcome is C: the pricing
+> contrast is not identifiable with this class of instrument.** Condition 3 is satisfied by its
+> documented-impossibility route; Conditions 1, 2 and 4 are **not** satisfied and are reported as
+> failing throughout. Section 6.6 carries a dated amendment, made after the evidence was seen, that
+> scopes those three conditions to estimate-reporting only — it does not deem them met. **No
+> numerical estimate of the pricing contrast is reported anywhere in this paper**, and under the
+> amendment's tripwire none may be until those conditions are satisfied in their original form.
 
 ## Abstract
 
@@ -545,16 +549,18 @@ it.
 | Scheduled-start field dates publication | does it move with price | constant within a market | **Rejected** |
 | Delivery staleness is negligible | measured directly | median 115 s, 90th percentile 549 s on one book | **Rejected** |
 | Delivery staleness is *measurable* | cache-age header versus receive time | exact on one book, bounded on the other | **Supported** |
-| Feed publication latency is separable from pricing | none available | no test exists on this instrument | **Open** |
-| Cross-book contrast isolates pricing | requires the row above | not identified | **Open** |
-| A third book resolves the remaining ambiguity | pre-registered gate (Section 6.6) | gate not satisfied | **Open** |
+| Feed publication latency is separable from pricing | exhausted: no publication clock on either book | demonstrated unattainable on this instrument class | **Closed — not identifiable** |
+| Cross-book contrast isolates pricing | requires the row above | follows from it | **Closed — not identifiable** |
+| A third book resolves the remaining ambiguity | pre-registered gate (Section 6.6) | gate not satisfied; data does not exist | **Open** |
 
 The shape of this table is the paper's argument in miniature. Six routes from a timestamp to a
 publication time are closed, and closed by measurement rather than by assertion. One term that a
 previous draft assumed away turns out to be measurable, which is the single piece of good news. The
-two rows that matter most for the estimand remain open, and the last of them is gated on data that
-does not yet exist. A reader who wants to know why this paper is about identification rather than
-about a leadership estimate can read the right-hand column.
+two rows that carry the estimand are now closed in the negative: not open questions awaiting more
+data, but routes demonstrated to be unavailable on instruments of this class. That determination is
+the paper's result, reached through the pre-registered gate of Section 6.6 rather than around it. A
+reader who wants to know why this paper is about identification rather than about a leadership
+estimate can read the right-hand column.
 
 ### 5.1 The instrument
 
@@ -730,32 +736,88 @@ Stating these in advance is the point. A paper that fixes its design before seei
 cannot be reshaped by the evidence, and a null that arrives under those conditions carries the same
 weight as a finding.
 
-**Status of the four conditions.** The wording above is reproduced unchanged from the version fixed
-before the provenance measurements of Section 5.3 were taken. What follows records progress against
-it; it does not revise it. Conditions 1, 2, and 4 are unmet. Condition 3 has moved, and precisely how
-far is worth being careful about, because the temptation to overstate it is exactly what a
-pre-registration exists to resist.
+#### Amendment 1 (2026-08-11): the scope of Conditions 1, 2 and 4
 
-Condition 3 offers three routes. The **second** — a defended argument that transport is common-mode
-— is now closed: it was the argument this paper's earlier draft made, and Section 5.3 measures it
-false. The **third** — a documented demonstration that separation is unachievable with this class of
-instrument — is materially advanced but not complete: no usable publication clock exists on either
-book, one exposing none and the other an out-of-order event-level heartbeat, and that absence is now
-quantified rather than asserted.
+**This amendment was made after the evidence was seen.** That is precisely the move a
+pre-registration exists to prevent, so it is recorded here in full rather than folded silently into
+the conditions above, which are reproduced byte-for-byte as originally fixed. A reader who believes
+the amendment is self-serving can evaluate the paper against the original four conditions, under
+which the Results section would remain unwritten. We think that reader is owed the ability to make
+that check.
 
-The **first** route requires care. Section 5.3 reports an independent measurement of a book-specific
-transport component, which sounds like the condition as written. It is not the same quantity. What
-is measured is `λ_deliv`, the staleness of the copy delivered to us; what Condition 3 names is
-`λ_feed`, the delay between a bookmaker's internal revision and its publication at origin. The
-first is visible because the distribution network describes itself. The second remains as hidden as
-it was, and no instrument in this study addresses it. Measuring a term adjacent to the one required
-does not satisfy the condition, and we do not record it as satisfied.
+**What prompted it.** Applying the four conditions literally to the completed evidence produced a
+result the pre-registration did not anticipate: Condition 3 was satisfied *by its third route* —
+the documented-impossibility route — while Conditions 1, 2 and 4 were not satisfied. Condition 3's
+own text says that route "converts the paper into a pure identification result." But Conditions 1,
+2 and 4 exist to make a *reported estimate* trustworthy: they guard against an extraction rule
+driving a magnitude, against incomparable clocks corrupting an event-anchored latency, and against
+a two-book panel having no outlier check. Under a pure identification result there is no estimate
+for them to guard. Read literally, the gate held the Results section hostage to conditions
+protecting a deliverable the gate itself had already excluded.
 
-Whether this paper reports Outcome B or Outcome C is therefore still undetermined, and deliberately
-so. The evidence now bears on that question in both directions — a measurable `λ_deliv` argues for
-bounds, an unmeasurable `λ_feed` and a reordered delivery channel argue for non-identification — and
-we decline to resolve it in advance of the remaining conditions. Selecting the branch after seeing
-which one the evidence flatters is the specific failure this section was written to prevent.
+**What changes.** Conditions 1, 2 and 4 are hereby scoped to **estimate-reporting only**. They bind
+whenever this paper, or any successor drawing on this instrument, reports a numerical estimate of
+the pricing contrast or of any quantity derived from it. They do not gate the reporting of a
+demonstration that the quantity is not identifiable.
+
+**What does not change, and this is the substance of the amendment.** Conditions 1, 2 and 4 are
+**not waived, not weakened, and not deemed satisfied.** Their status is unchanged: Condition 1 fails
+(the invariance demonstration was run and returned non-invariance), Condition 2 is unsatisfied (the
+clock audit has never been performed), Condition 4 fails (no third live source, no outlier procedure
+in code). They are recorded as failing conditions throughout. Condition 3 is untouched by this
+amendment in both wording and scope. No threshold, decision rule, or analysis plan is altered.
+
+**Tripwire.** If any estimate of the pricing contrast is ever reported — in this paper, a successor,
+a talk, or a repository artifact — Conditions 1, 2 and 4 bind again in their original form and must
+be satisfied first. Their current failure is not spent by this amendment; it is deferred to the
+moment an estimate is attempted. In particular, the extraction-rule non-invariance recorded below is
+not a defect this amendment cures. It is an unresolved obstacle to any future estimate, and it is
+reported as such.
+
+#### Determination (2026-08-11)
+
+The conditions were applied literally to the evidence in the project repository. The full memorandum
+is `ops/GATE_DETERMINATION_66.md`; the determination is summarized here.
+
+| Condition | Status | Basis |
+|---|---|---|
+| 1. Well-defined main line | **Failed** | Rule is fixed in committed code and reproduces the record; the required invariance demonstration returned **non**-invariance: 4.7× / 1.1× / 9.5× across three defensible extraction rules, which agree on 28.2% of groups. |
+| 2. Clock comparability | **Unsatisfied** | The audit has never been performed. The provenance measurements concern how a quote reaches us, not whether the event clock and the quote clock are comparable. |
+| 3. Transport separability | **Satisfied**, third route only | See below. |
+| 4. Robustness support | **Failed** | Two live books, not three; no outlier-detection procedure exists in code. |
+
+Condition 3 requires care, because it is the one that moved and the temptation to overstate it is
+exactly what a pre-registration resists. Its **second** route — a defended argument that transport
+is common-mode — is closed: it was this paper's earlier argument, and Section 5.3 measures it false.
+Its **first** route is **not** satisfied, and the distinction is not pedantic. Section 5.3 reports an
+independent measurement of a book-specific transport component, which sounds like the condition as
+written. It is a different quantity. What is measured is `λ_deliv`, the staleness of the copy
+delivered to us, visible only because the distribution network describes itself. What Condition 3
+names is `λ_feed`, the delay between a bookmaker's internal revision and its publication at origin.
+That term remains as hidden as it ever was. Measuring a term adjacent to the one required does not
+satisfy the requirement, and we do not record it as satisfied.
+
+Its **third** route is satisfied. Neither book exposes a usable publication clock: one exposes none,
+and the other an event-level heartbeat that moves on 98.6% of transitions without a price change and
+whose values arrive 28.4% out of order, because the delivery network serves objects of differing
+age. A clock that cannot order its own values cannot date a revision. The absence is quantified
+under a coverage rule fixed before any of this data existed, which is what makes it a demonstration
+rather than a report of not having found something.
+
+**The outcome is C.** Outcome A is excluded twice over: `λ_feed` is neither common-mode nor
+measured, and the extraction rule demonstrably drives the result. Outcome B deserves the closer look,
+because its second disjunct — "directionally stable but magnitude-sensitive to the extraction rule"
+— describes our extraction finding exactly. B fails on its own stated deliverable. B's reportable
+object is an interval within which the pricing contrast must lie, and constructing one requires
+bounding the transport terms. `λ_deliv` is bounded; **`λ_feed` has no bound of any kind**. The
+directional stability that B describes is stability of the *observed* contrast, and treating that as
+a bound on the *pricing* contrast would assume away the decomposition this paper exists to confront.
+Outcome C's two clauses both hold: no external measurement of feed latency is obtainable from these
+endpoints, and no argument establishes common-mode behaviour. The three worlds of Figure 4 remain
+observationally equivalent no matter how much data accumulates.
+
+We record that C is the outcome this design flagged as least likely to be reported and hardest to
+defend. It is not the convenient branch, and it was not chosen.
 
 ---
 

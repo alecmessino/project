@@ -84,10 +84,29 @@ jobs:
                        "the_third_turn/output/market_provenance.jsonl" 2>/dev/null || true
             git diff --cached --quiet && return 0
             git commit -q -m "ledger + odds/state panels + health checkpoint [skip ci]" || return 0
+
+            # CHECKPOINT POSTMORTEM (2026-08-17): this loop used `git pull --rebase -q` with no
+            # --autostash and no error surface. The daemon appends to the very files being
+            # committed, so it almost always wrote again between `git commit` and the pull,
+            # leaving the tree dirty -- and `git pull --rebase` REFUSES to run on a dirty tree.
+            # The pull failed, the && short-circuited the push, and -q swallowed the reason.
+            # Collection never stopped; it just never reached the branch. Each 5.5 h run
+            # gathered ~85k rows and discarded them on exit. Intermittent while the panel was
+            # small, permanent once it grew: 3 days of data lost with every signal green.
+            # --autostash makes the dirty tree a non-event; the rest makes failure LOUD.
             for a in 1 2 3; do
-              git pull --rebase -q origin "$BR" && git push -q origin "HEAD:$BR" && return 0
+              if OUT=$(git pull --rebase --autostash origin "$BR" 2>&1) \
+                 && PUSH=$(git push origin "HEAD:$BR" 2>&1); then
+                echo "checkpoint pushed (attempt ${a})"
+                return 0
+              fi
+              echo "::warning::checkpoint attempt ${a} failed :: ${OUT} ${PUSH:-}"
+              git rebase --abort 2>/dev/null || true
               sleep 5
             done
+            echo "::error::CHECKPOINT FAILED after 3 attempts — data is NOT reaching the branch."
+            echo "::error::The daemon is still collecting; this run's rows will be lost on exit."
+            return 1
           }
 
           # periodic checkpoint every 15 min so fires survive a cancelled run

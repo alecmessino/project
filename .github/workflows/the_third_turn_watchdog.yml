@@ -59,6 +59,29 @@ jobs:
             live=$(( live + n ))
           done
 
+          # DATA-FRESHNESS CHECK (added 2026-08-17). Run liveness is not collection.
+          # On 08-14 the collector kept running and kept collecting while its checkpoint
+          # push silently failed for three days. This watchdog saw a live run every hour
+          # and stood down every hour, exactly as designed -- and the design was wrong.
+          # A watchdog that asks "is something running?" cannot see a process that is
+          # running and accomplishing nothing. Ask instead whether DATA ARRIVED.
+          LAST=$(curl -s "${AUTH[@]}" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits?sha=${BRANCH}&per_page=1" \
+            | jq -r '.[0].commit.committer.date // empty')
+          if [ -n "$LAST" ]; then
+            AGE=$(( ($(date -u +%s) - $(date -u -d "$LAST" +%s)) / 60 ))
+            echo "last commit on ${BRANCH}: ${LAST} (${AGE} min ago)"
+            if [ "$AGE" -gt 180 ]; then
+              echo "::error::NO CHECKPOINT IN ${AGE} MINUTES. The collector may be running and"
+              echo "::error::collecting while failing to persist. Check the live run log for"
+              echo "::error::'CHECKPOINT FAILED'. Not relaunching: a restart would discard"
+              echo "::error::whatever the current run holds but has not pushed."
+              exit 1
+            fi
+          else
+            echo "::warning::could not read last commit date for ${BRANCH}"
+          fi
+
           if [ "$live" -gt 0 ]; then
             echo "collector is alive (${live} run(s) active) — nothing to do"; exit 0
           fi

@@ -17,15 +17,11 @@ name: The Third Turn — collector watchdog
 # The live workflow keeps its own re-arm as the primary path. This is the backstop, and it
 # bounds any future outage to roughly one hour instead of indefinitely.
 #
-# ⚠ NOT YET ACTIVE. GitHub runs `on: schedule` ONLY from the repository's default branch.
-# This file currently lives on `claude/third-turn-service-x7m4vr`, so its cron will never
-# fire and the watchdog is reachable only by manual dispatch. It becomes a real backstop
-# the moment this file is merged to `master` — no other change is needed, and the BRANCH
-# env below already points the relaunch at the collector's working branch.
-#
-# Until that merge, collector continuity rests entirely on the hardened re-arm in
-# the_third_turn_live.yml (verified status code + 5 retries), which does address the
-# 2026-08-06 failure but cannot cover a runner that dies before its always() step.
+# THIS FILE MUST LIVE ON THE DEFAULT BRANCH. GitHub runs `on: schedule` only from the
+# repository's default branch, so a copy on the collector's working branch is inert and
+# reachable only by manual dispatch. The collector itself runs from
+# `claude/third-turn-service-x7m4vr` (the BRANCH env below), which is why the relaunch
+# dispatch names that ref explicitly rather than inheriting this workflow's own ref.
 
 on:
   schedule:

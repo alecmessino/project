@@ -52,17 +52,30 @@ This one is a different species from Gaps 1 and 2, and the distinction is the wh
 | **Duration** | ~79 hours |
 | **Was the collector running?** | **Yes, throughout.** Runs cycled normally and the hardened re-arm worked perfectly (`re-armed after 334 min (attempt 1)`). |
 | **Was it collecting?** | **Yes.** The run log at 21:17 on 08-17 shows `book_panel.jsonl: 679,911 rows, last 2026-08-17T21:13:15`, both books quoting `3.3m ago`, `HEALTH_OK: yes`, integrity clean. The branch held **672,035** rows, so that run had accumulated ~7.9k unpushed rows at the time of the reading. |
-| **Mechanism** | The checkpoint ran `git pull --rebase -q origin "$BR" && git push -q ...`. The daemon appends continuously to the very files being committed, so it almost always wrote again between `git commit` and the pull, leaving the tree dirty — and **`git pull --rebase` refuses to run on a dirty tree**. The pull failed, `&&` short-circuited the push, and `-q` swallowed the reason. |
+| **Mechanism** | **GitHub hard-rejects any file over 100 MiB (104,857,600 bytes).** `book_panel.jsonl` grew into that ceiling: the last checkpoint that landed, 08-14T15:32, left it at **104,857,591 bytes — nine bytes under the limit**. Every checkpoint after that pushed it over, and the push was rejected. `-q` and the `&&` chain swallowed the rejection. Verified by tracing the blob size across the final checkpoints: 104,793,631 → 104,849,925 → 104,850,548 → 104,857,591, then nothing. |
 | **Why monitoring failed** | Twice over. The checkpoint could not fail: its exit status was independent of whether data reached the branch. And the watchdog — added after Gap 2 — asked *"is a run in progress?"*, which stayed **yes** the entire time. It stood down hourly, exactly as designed. A watchdog that asks whether something is running cannot see a process that is running and accomplishing nothing. |
 | **Remediation** | Checkpoint now uses `git pull --rebase --autostash`, captures both command outputs, and emits `::warning` per attempt and `::error` on exhaustion. Watchdog now reads the last commit on the collector branch and goes **red past 180 minutes** without one; it deliberately does **not** relaunch on staleness, because a restart discards whatever the live run holds unpushed. |
 | **Live data truncated?** | **All of it, repeatedly.** Each ~5.5 h run started from the 08-14 branch state, gathered its own window of roughly 8k rows, and discarded them on exit. Successive runs covered *different* windows, so the aggregate loss is the whole 79 h, not one run's worth. Nothing is recoverable: no unpushed copy survives a runner. |
 
-**Why this was intermittent before becoming permanent.** The failure needed the daemon to write
-during the window between `git commit` and `git pull`. While the panel was small that window was
-short and checkpoints usually won the race. As the panel grew past ~670k rows, staging and
-committing ~100 MB of JSONL took long enough that the daemon essentially always wrote first, and an
-occasional failure became a certain one. (The health report itself is not the bottleneck: measured
-at **45 s** on a 672k-row panel.)
+**Why it happened exactly when it did.** Nothing changed in the code or the platform on 08-14. The
+panel simply crossed a hard limit that had always been there. That is why the failure looks abrupt
+and total rather than intermittent: below the ceiling every push succeeds, above it every push
+fails, and the file crossed over between one checkpoint and the next.
+
+**Correction, 2026-08-18 (cause).** This entry first attributed the failure to a dirty worktree
+defeating `git pull --rebase`, and a fix was shipped on that basis. **That diagnosis was wrong** —
+plausible, reproducible in a sandbox, and not the cause. The pull was never the failing step; the
+push was. The `--autostash` change is retained because it is correct hygiene for a tree the daemon
+is actively writing, but it fixed nothing. Recorded rather than overwritten because a wrong
+diagnosis that briefly looked right is exactly the thing this file exists to preserve.
+
+**Remediation (actual).** git no longer stores the monolithic panels at all. `panel_shards.py`
+splits them into fixed-size shards (≤32 MiB, cut on whichever of a line or byte cap is reached
+first) which is what git tracks; the runner reassembles the single file after checkout, so every
+analysis script still reads `output/book_panel.jsonl` unchanged. Round-tripping is byte-identical by
+construction — sharding is by position, not by date, so it assumes nothing about row order. A useful
+side effect: appends touch only the final shard, so each checkpoint commits a small delta instead of
+restating 100 MiB.
 
 **Correction, 2026-08-18.** This entry first recorded the branch as holding 594,643 rows and each
 run as losing ~85k. Both were wrong: 594,643 was a stale local count taken before fetching the

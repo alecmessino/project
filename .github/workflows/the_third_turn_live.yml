@@ -52,6 +52,12 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Reassemble sharded panels
+        # git stores the big panels as shards (see the_third_turn/panel_shards.py); every
+        # analysis script still reads the single reassembled file, so this must run before
+        # the daemon appends to it.
+        run: python3 the_third_turn/panel_shards.py reassemble
+
       - name: Run daemon + checkpoint ledger
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
@@ -78,22 +84,27 @@ jobs:
             # operational health report (integrity of the collection pipeline) every checkpoint
             python3 the_third_turn/collection_health.py >/dev/null 2>&1 || true
             git add "$LEDGER" 2>/dev/null || true
-            git add -f "$PANEL" "$TTPANEL" "$GSPANEL" "$HEALTH_TXT" "$HEALTH_JSON" \
+
+            # CHECKPOINT POSTMORTEM (2026-08-14 -> 08-18). GitHub hard-rejects any file over
+            # 100 MiB. book_panel.jsonl grew into that wall: the last checkpoint that landed
+            # left it at 104,857,591 bytes, NINE BYTES under the limit. Every checkpoint after
+            # that pushed it over, the push was rejected, and `-q` plus `&&` hid the rejection
+            # for 79 h while the daemon kept collecting and reporting healthy.
+            #
+            # (An earlier fix in this file blamed a dirty worktree defeating `git pull
+            # --rebase`. That was wrong -- the failure is in the PUSH, not the pull. The
+            # --autostash below is kept because it is correct hygiene for a tree the daemon
+            # is writing to, but it was never the cause.)
+            #
+            # git now stores fixed-size shards and never the monolith; see panel_shards.py.
+            python3 the_third_turn/panel_shards.py split >/dev/null 2>&1 || true
+            git add -f the_third_turn/output/*.part*.jsonl 2>/dev/null || true
+            git add -f "$TTPANEL" "$HEALTH_TXT" "$HEALTH_JSON" \
                        "the_third_turn/output/metrics_history.jsonl" \
-                       "the_third_turn/output/provenance_probe.jsonl" \
                        "the_third_turn/output/market_provenance.jsonl" 2>/dev/null || true
             git diff --cached --quiet && return 0
             git commit -q -m "ledger + odds/state panels + health checkpoint [skip ci]" || return 0
 
-            # CHECKPOINT POSTMORTEM (2026-08-17): this loop used `git pull --rebase -q` with no
-            # --autostash and no error surface. The daemon appends to the very files being
-            # committed, so it almost always wrote again between `git commit` and the pull,
-            # leaving the tree dirty -- and `git pull --rebase` REFUSES to run on a dirty tree.
-            # The pull failed, the && short-circuited the push, and -q swallowed the reason.
-            # Collection never stopped; it just never reached the branch. Each 5.5 h run
-            # gathered ~85k rows and discarded them on exit. Intermittent while the panel was
-            # small, permanent once it grew: 3 days of data lost with every signal green.
-            # --autostash makes the dirty tree a non-event; the rest makes failure LOUD.
             for a in 1 2 3; do
               if OUT=$(git pull --rebase --autostash origin "$BR" 2>&1) \
                  && PUSH=$(git push origin "HEAD:$BR" 2>&1); then

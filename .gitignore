@@ -32,5 +32,9 @@ the_third_turn/output/book_panel.jsonl
 the_third_turn/output/team_total_panel.jsonl
 the_third_turn/output/bullpen_cache.json
 the_third_turn/output/game_state_panel.jsonl
+the_third_turn/output/provenance_probe.jsonl
 the_third_turn/output/tail_calibration.json
 the_third_turn/output/context_study.json
+
+# The three panels above are reassembled from shards by the_third_turn/panel_shards.py;
+# git tracks output/*.part*.jsonl instead, because GitHub rejects files over 100 MiB.

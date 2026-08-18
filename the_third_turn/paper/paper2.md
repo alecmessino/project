@@ -2,10 +2,10 @@
 <h1>What Prices Cannot Tell You: Identifying Information Transmission in Live Markets</h1>
 <p class="epigraph">A companion study asked whether prices contain public information. This paper asks whether prices reveal how that information entered the market.</p>
 <p class="author">Alec Messino<br/><span class="affil">The Third Turn Research Initiative &middot; alec.messino@gmail.com</span></p>
-<p class="wp">Working Paper &middot; DRAFT, Sections 1-6 &middot; Gate applied: Outcome C &middot; Results not yet written</p>
+<p class="wp">Working Paper &middot; DRAFT, complete &middot; Gate applied: Outcome C &mdash; non-identification</p>
 </div>
 
-> **Draft status.** This manuscript is complete through the Methods section. The analysis plan in
+> **Draft status.** This manuscript is complete through the Discussion. The analysis plan in
 > Section 6.5 is pre-registered, and Section 6.6 fixes four conditions that gate what may be
 > reported. Those conditions have now been applied to the evidence. **The outcome is C: the pricing
 > contrast is not identifiable with this class of instrument.** Condition 3 is satisfied by its
@@ -156,7 +156,9 @@ assumptions. Section 5 describes the data and explains why this instrument diffe
 from the one used in the companion study, a difference that precludes any direct comparison of
 results. Section 6 states the estimation procedure and the pre-registered analysis plan, and closes
 by listing the objective conditions that must be satisfied before results may be reported.
-Section 7 states the scope of the contribution.
+Section 7 applies those conditions to the completed evidence and reports what the instrument
+establishes; Section 8 discusses what that does and does not license, and what instrumentation would
+restore identification. Section 9 states the scope of the contribution.
 
 ---
 
@@ -382,7 +384,8 @@ robustness appendix. It makes identification harder: a cross-book contrast no lo
 pricing merely because the polling schedule is shared. It also makes the problem tractable in a way
 an assumption never could, because `λ_deliv` is *measured* — a quantity we can subtract and bound
 rather than one we must hope is small. Whether what remains is material relative to the pricing
-differences we hope to detect is precisely what Section 4 must establish.
+differences we hope to detect is precisely what Section 4 sets up and Section 7 answers — in the
+negative, as it turns out, because the term that resists differencing is not `λ_deliv` but `λ_feed`.
 
 ### 3.3 Why the estimand is anchored to the event
 
@@ -561,6 +564,10 @@ data, but routes demonstrated to be unavailable on instruments of this class. Th
 the paper's result, reached through the pre-registered gate of Section 6.6 rather than around it. A
 reader who wants to know why this paper is about identification rather than about a leadership
 estimate can read the right-hand column.
+
+---
+
+## 5. Data and institutional setting
 
 ### 5.1 The instrument
 
@@ -821,7 +828,281 @@ defend. It is not the convenient branch, and it was not chosen.
 
 ---
 
-## 7. Scope of the contribution
+## 7. Results
+
+This section reports what the instrument establishes. It does not report a pricing contrast, a
+publication-latency estimate, or an interval containing either, because the gate of Section 6.6
+returned Outcome C and those objects are not identified. What follows is the evidence that produced
+that determination, presented in the order the conditions are stated.
+
+Throughout, the four components of the observed arrival delay are held apart. `λ_price` is the
+bookmaker's internal decision to revise; `λ_feed` is the delay until that decision is published at
+origin; `λ_deliv` is the staleness of the copy the distribution path hands us; `λ_samp` is our own
+polling delay. Only `λ_deliv` and `λ_samp` are measured below. Nothing here measures `λ_feed`, and
+no statistic below should be read as bearing on `λ_price`.
+
+### 7.1 The gate returned Outcome C
+
+Applying the four pre-registered conditions to the completed evidence yields one satisfied condition
+and three unsatisfied ones.
+
+**Table 4.** The pre-registered gate, applied. Conditions 1, 2 and 4 are **not** satisfied; the
+amendment of Section 6.6 scopes them to estimate-reporting and does not deem them met.
+
+| Condition | Status | What the evidence shows |
+|---|---|---|
+| 1. Well-defined main line | **Failed** | Rule fixed in committed code and reproduces the historical record; the required invariance demonstration returned non-invariance (§7.2). |
+| 2. Clock comparability | **Unsatisfied** | The audit was never performed (§7.3). |
+| 3. Transport separability | **Satisfied**, third route only | Common-mode refuted; `λ_feed` unmeasurable on this instrument (§7.4). |
+| 4. Robustness support | **Failed** | Two live books, not three; no outlier procedure in code (§7.5). |
+
+Outcome A requires that feed latency be common-mode or independently measured, and that the
+extraction rule be shown not to drive the result. Neither holds. Outcome B requires a reportable
+interval within which the pricing contrast must lie; constructing one requires bounding the
+transport terms, and `λ_feed` carries no bound of any kind. Outcome C's two clauses both hold: no
+external measurement of feed latency is obtainable from these endpoints, and no argument establishes
+common-mode behaviour.
+
+### 7.2 The extraction rule materially changes the timing statistic
+
+The first condition asks for an extraction rule fixed in code, tested, and shown not to drive the
+primary statistic. The first two hold. The third fails, and it fails on evidence rather than on
+absence of evidence.
+
+Three defensible rules select a market's main line from the quotes posted at one instant: the most
+balanced quote by implied probability, the modal line for that market over the contest, and the
+median posted line. Regenerated from committed code at the as-of date of the historical record,
+they disagree far more often than they agree, and the headline magnitude moves with the choice.
+
+**Table 5.** Main-line extraction, three rules, same data, as of 2026-07-19. The unit is a
+**matchup group**: the `game` key in this panel is a matchup string rather than a unique game
+identifier, so a series between the same two clubs pools across dates.
+
+| Rule | Direction | Matchup groups | Ratio of re-pricing frequency |
+|---|---|---|---|
+| balanced-odds | FanDuel ≥ Bovada | 53 of 60 | **4.7×** |
+| modal anchor | FanDuel ≥ Bovada | 39 of 54 | **1.1×** |
+| median line | FanDuel ≥ Bovada | 53 of 58 | **9.5×** |
+
+The three rules agree on which quote is the main line in **28.2%** of instants. The magnitude spans
+a factor of **8.6**: under the modal anchor the two books revise at almost the same rate, and under
+the median rule one revises nearly ten times as often. These are not the same empirical claim.
+
+Two clarifications matter more than the numbers.
+
+First, **this is a re-pricing frequency, not a pricing lead.** It counts how often a posted quote
+changes. It says nothing about which book incorporates information first, and it is reported here
+only as the statistic on which extraction sensitivity was tested.
+
+Second, **directional stability is not magnitude identification.** The sign survives all three rules;
+the magnitude does not. A result that is robust in sign and unstable by a factor of nearly nine
+across analyst choices no one would call unreasonable has not identified a magnitude. The condition
+asks for the primary statistic to be materially invariant, and it is not.
+
+We also record a reproducibility fact, because the condition asks for a rule *fixed in code* and the
+historical record was not. The three analyses underlying this table were originally run outside
+version control. They have been recovered and committed, and the committed implementation reproduces
+six of seven recorded figures exactly at the record's as-of date; the residual is an agreement rate
+of 28.2% against 28.6% recorded, and the neighbouring cutoff brackets the recorded value. Regenerating
+the same code against the full accumulated panel returns materially different numbers, which is not a
+discrepancy but a property of an append-only dataset: a historical figure is only reproducible at its
+own as-of date.
+
+### 7.3 Event-clock comparability was never established
+
+The second condition asks for an audit establishing that event and quote timestamps are comparable,
+with residual skew quantified. **No such audit exists.** This is an absence rather than an adverse
+finding, and the distinction matters: nothing was tried and failed.
+
+What the instrument does contain is adjacent and does not substitute. The provenance measurements of
+Section 5.3 quantify how a *quote* reaches us — response age, cache behaviour, delivered staleness.
+Game events are timestamped by a third source, and no measurement in this study compares that clock
+against the books' quote timestamps. An event-anchored latency is a difference between two clocks;
+this study has characterized one of them.
+
+### 7.4 Delivery is measured; publication is not
+
+The third condition is the only one satisfied, and the route by which it is satisfied determines the
+outcome, so the three routes are separated precisely.
+
+**The common-mode route is refuted, by measurement.** One book's responses are served from a
+content-delivery cache that reports its own age, and on cache hits the gap between our receive time
+and the response's stated generation time is accounted for by that age exactly, to the second, on
+every one of 3,500 responses; on the 116 responses that missed the cache the gap disappears
+entirely. The other book rewrites the corresponding header at the edge, so its responses appear
+instantaneous while separately reporting payload ages with a 90th percentile in the high hundreds of
+seconds. The two books differ not merely in how stale their data are but in what staleness they
+report. `λ_deliv` is therefore book-specific, large, and asymmetric.
+
+**The independent-measurement route is not satisfied**, and this is the determination most easily
+overstated. What the headers expose is `λ_deliv`. What the condition names is `λ_feed`. The first is
+visible only because the distribution network describes itself; the second is a property of the
+bookmaker's own publishing stage and remains as hidden as it was before any of this instrumentation
+existed. Measuring a term adjacent to the one required does not satisfy the requirement, and it is
+not recorded as satisfying it.
+
+**The documented-impossibility route is satisfied.** Under a coverage rule fixed before any probe
+data existed, four questions were answered. One book exposes no publication timestamp at all
+(0 of 5,991 fetches; 95% upper bound on the presence rate 0.050%). The other exposes an event-level
+field that does move on every price change — 1,094 of 1,094 — but also moves on **98.6%** of
+transitions in which no price changed, which makes it a heartbeat rather than a per-market stamp. Its
+one informative property is negative: no price change occurred while it stood still (0 of 1,094; 95%
+upper bound 0.27%), so it can exclude revisions but cannot date them. A third candidate field proved
+to be the scheduled first pitch, equal to the contest's start time on 3,615 of 3,616 rows and
+unchanged across 3,494 of 3,495 price revisions.
+
+Most consequentially, **the delivered ordering is not the publication ordering.** More than a
+quarter of that field's transitions — 28.4% — arrive carrying a value *earlier* than the one in the
+preceding poll, and those reversals overwhelmingly accompany a higher reported payload age. A
+distribution network serving objects of differing age does not merely delay a market state; it can
+reorder it. Newly published values reach us with a median age in the low hundreds of seconds. A clock
+that cannot order its own values cannot date a revision, and no amount of additional collection
+changes that, because it is a property of the channel rather than of the sample.
+
+### 7.5 Estimation safeguards were not satisfied
+
+The fourth condition asks for a third live source or an explicit outlier-detection procedure that
+does not require one. Neither exists. Two books quote live; the third source enrolled for this
+purpose never produced a single live quote. No outlier-detection procedure exists in committed code;
+the term appears in design prose and never in an implementation.
+
+### 7.6 Synchronization: co-capture is not contemporaneity
+
+The collector reads both books in one poll, so the spread between their quote timestamps at a common
+instant is **0.0 seconds**. That statistic certifies co-capture and nothing more: it records when we
+read the two books, not whether the two quotes describe the same market moment.
+
+Once `λ_deliv` is measured, the distinction is quantitative. Two quotes captured in the same poll can
+describe market states separated by the sum of the two books' delivered staleness. The resulting
+bound on market-time separation stands at **568 seconds as of 2026-08-18**, against a criterion of
+15 seconds.
+
+That figure requires one caution, and we state it rather than quoting a number as if it were a
+constant. The bound is a **cumulative statistic that moves as the panel grows**: recomputations over
+the last week returned 579, 572, 565 and 568 seconds. No single value is canonical, and the paper
+does not treat one as such. What is stable is the order of magnitude — roughly forty times the
+criterion — and that is the reportable fact.
+
+### 7.7 Data continuity
+
+Collection has three documented interruptions, recorded in full in the project's continuity register
+and summarized here only where they bear on interpretation. Two were collection outages; the third
+was a persistence failure in which the instrument continued collecting but did not retain what it
+gathered. Together they leave the panel discontinuous at three known intervals.
+
+Their bearing on the results above is bounded and was tested rather than assumed. The one gap falling
+inside the window used for the extraction analysis truncated three matchups. Excluding exactly the
+truncated portions leaves every figure in Table 5 unchanged; excluding the affected matchups
+entirely, a deliberately over-aggressive exclusion that also discards complete observations, moves
+magnitudes slightly and preserves every direction. The continuity record is a qualification on the
+sample, not a finding, and not a reason to revisit the design.
+
+### 7.8 What is not reported
+
+Under the pre-registered gate and the tripwire attached to its amendment, this paper reports **no
+estimate of the pricing contrast**: no interval, no bound, no descriptive statistic framed as
+pricing leadership, and no statement that either book incorporates information first. The internal
+record contains statistics of that shape, computed during methodological work on whether such a
+quantity is even identifiable from two books. They are withheld here, and their withholding is part
+of the result rather than an omission from it: the gate determined that they cannot be interpreted
+as statements about pricing, and reporting them descriptively would smuggle in the interpretation
+the determination forbids.
+
+---
+
+## 8. Discussion
+
+### 8.1 What the study establishes
+
+The study establishes a separation that the literature it draws on has rarely had to confront,
+because the settings it studies usually supply what this one cannot. **Public sportsbook endpoints
+permit measurement of the observation and delivery stages of price transmission while withholding
+the publication stage, and the withheld stage is exactly the one that stands between an observed
+timestamp and an economic interpretation of it.**
+
+Three specific things are now established rather than assumed. Delivered staleness is measurable,
+book-specific, large, and asymmetric — a term an earlier draft of this paper assumed away as
+common-mode. No publication clock usable for dating a revision exists on either observed endpoint,
+and that absence is quantified under a rule fixed in advance rather than asserted after a search.
+And the delivered ordering of market states is not their publication ordering, which places a floor
+on timing resolution that no additional collection can lower.
+
+Set against those, one thing is established in the negative and it is the paper's result: with
+`λ_feed` unmeasured and `λ_deliv` book-specific, the observed cross-book timing contrast cannot be
+attributed to the bookmakers' pricing behaviour.
+
+### 8.2 Why the observed quantity is not `λ_price`
+
+The observable is a sum: `Δt_b(E) = λ_price_b(E) + λ_feed_b(E) + λ_deliv_b(E) + λ_samp(E)`. A
+cross-book contrast differences this sum between two books, and what survives differencing decides
+what the contrast means.
+
+`λ_samp` differences away: one collector polls both books on one schedule, so the sampling penalty
+is drawn from the same distribution for each. That is the only term for which the argument works.
+`λ_deliv` does not difference away — it is measured, and measured to be unequal across books by an
+order of magnitude at the tail. `λ_feed` does not difference away either, and worse, it cannot be
+subtracted, because it has never been observed: it carries no estimate, no bound, and no argument
+for common-mode behaviour that the data have not refuted.
+
+So a difference in observed arrival times between two books is the sum of a difference in pricing
+speed, a difference in publishing speed, and a difference in delivery staleness. The last is
+measurable and could in principle be removed. The middle term is not, and it is unbounded. A residual
+containing an unbounded unknown is not an estimate of the quantity of interest, and it is not a bound
+on it either. This is why the three worlds of the conceptual framework remain observationally
+equivalent: they differ precisely in how the observed delay divides between `λ_price` and `λ_feed`,
+and no statistic computed from these timestamps distinguishes that division.
+
+The extraction result compounds this rather than adding an independent problem. Even the observed
+quantity — before any attribution to a stage — moves by a factor of nearly nine with a defensible
+change in how the main line is defined. A quantity that is unstable under analyst choice, and whose
+stable component cannot be attributed to a stage, is not a measurement of market behaviour.
+
+### 8.3 What would restore identification
+
+The framework already states what is required, and the answer is instrumentation rather than more of
+the same data. Nothing below is a new requirement; each is a rung of the ladder already set out.
+
+**A publication timestamp that dates a revision.** Not a heartbeat that moves on almost every
+response, and not a scheduling field, but a per-market stamp that changes when and only when the
+posted price changes, and that arrives in publication order. This is what would make `λ_feed`
+separable from `λ_price` and is the single binding requirement.
+
+**Delivery that preserves order, or a channel whose staleness is fully self-describing on both
+sides.** One observed endpoint already reports its own age exactly; if the same were true of every
+endpoint, `λ_deliv` could be subtracted rather than merely characterized, and reordering would be
+detectable per observation rather than only in aggregate.
+
+**An audited event clock.** An event-anchored latency is a difference between two clocks, and the
+event clock in this study has not been placed on a common footing with the quote clocks.
+
+**A sampling interval below the phenomenon.** The resolution floor stands regardless of the above: a
+polling instrument cannot report structure below its own interval, and nothing here speaks to the
+sub-interval regime.
+
+**Sources beyond two, and a stated outlier rule.** Two quotes make a discrepancy detectable but not
+attributable, and no procedure currently exists for identifying anomalous observations without a
+third source.
+
+Absent the first of these, the remaining four improve precision without restoring identification.
+That ordering is the practical content of the result: a researcher who obtains richer delivery
+metadata but no publication stamp has bought a tighter measurement of the wrong thing.
+
+### 8.4 The status of the gate, stated plainly
+
+The conditions of Section 6.6 were fixed before the evidence and applied to it literally. One is
+satisfied. The other three are not, and the amendment recorded in that section scopes them to
+estimate-reporting rather than declaring them met — they remain failing conditions, they are
+reported as such here, and they bind again in their original form the moment any estimate of the
+pricing contrast is attempted. That amendment was made after the evidence was seen, which is
+disclosed in the section itself so a reader may evaluate this paper against the unamended gate.
+
+We note without complaint that this is the outcome the design flagged as least likely and hardest to
+defend. It was reached by applying the conditions as written, and the discipline that makes it worth
+reporting is the same discipline that would have made a positive result worth believing.
+
+---
+
+## 9. Scope of the contribution
 
 Here the paper stops being about sportsbooks.
 

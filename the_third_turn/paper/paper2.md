@@ -788,7 +788,7 @@ is `ops/GATE_DETERMINATION_66.md`; the determination is summarized here.
 
 | Condition | Status | Basis |
 |---|---|---|
-| 1. Well-defined main line | **Failed** | Rule is fixed in committed code and reproduces the record; the required invariance demonstration returned **non**-invariance: 4.7× / 1.1× / 9.5× across three defensible extraction rules, which agree on 28.2% of groups. |
+| 1. Well-defined main line | **Failed** | Rule is fixed in committed code and reproduces the record; the required invariance demonstration returned **non**-invariance: 4.7× / 1.1× / 9.5× across three defensible extraction rules, which agree on 28.6% of groups. |
 | 2. Clock comparability | **Unsatisfied** | The audit has never been performed. The provenance measurements concern how a quote reaches us, not whether the event clock and the quote clock are comparable. |
 | 3. Transport separability | **Satisfied**, third route only | See below. |
 | 4. Robustness support | **Failed** | Two live books, not three; no outlier-detection procedure exists in code. |
@@ -874,17 +874,18 @@ balanced quote by implied probability, the modal line for that market over the c
 median posted line. Regenerated from committed code at the as-of date of the historical record,
 they disagree far more often than they agree, and the headline magnitude moves with the choice.
 
-**Table 5.** Main-line extraction, three rules, same data, as of 2026-07-19. The unit is a
-**matchup group**: the `game` key in this panel is a matchup string rather than a unique game
-identifier, so a series between the same two clubs pools across dates.
+**Table 5.** Main-line extraction, three rules, same data, regenerated at the historical record's
+as-of instant (2026-07-19T17:29:50Z). The unit is a **matchup group**: the `game` key in this panel
+is a matchup string rather than a unique game identifier, so a series between the same two clubs
+pools across dates.
 
 | Rule | Direction | Matchup groups | Ratio of re-pricing frequency |
 |---|---|---|---|
 | balanced-odds | FanDuel ≥ Bovada | 53 of 60 | **4.7×** |
-| modal anchor | FanDuel ≥ Bovada | 39 of 54 | **1.1×** |
+| modal anchor | FanDuel ≥ Bovada | 42 of 57 | **1.1×** |
 | median line | FanDuel ≥ Bovada | 53 of 58 | **9.5×** |
 
-The three rules agree on which quote is the main line in **28.2%** of instants. The magnitude spans
+The three rules agree on which quote is the main line in **28.6%** of instants. The magnitude spans
 a factor of **8.6**: under the modal anchor the two books revise at almost the same rate, and under
 the median rule one revises nearly ten times as often. These are not the same empirical claim.
 
@@ -902,11 +903,17 @@ asks for the primary statistic to be materially invariant, and it is not.
 We also record a reproducibility fact, because the condition asks for a rule *fixed in code* and the
 historical record was not. The three analyses underlying this table were originally run outside
 version control. They have been recovered and committed, and the committed implementation reproduces
-six of seven recorded figures exactly at the record's as-of date; the residual is an agreement rate
-of 28.2% against 28.6% recorded, and the neighbouring cutoff brackets the recorded value. Regenerating
-the same code against the full accumulated panel returns materially different numbers, which is not a
-discrepancy but a property of an append-only dataset: a historical figure is only reproducible at its
-own as-of date.
+**all seven** recorded figures exactly.
+
+Getting there required one refinement worth stating, because it generalizes. A date-level as-of
+cutoff does not reproduce the record: excluding the whole of 2026-07-19 returns an agreement rate of
+28.2% and including the whole of it returns 28.8%, values that bracket the recorded 28.6% without
+matching it. The original analyses ran partway through that day. Cutting the panel at the recorded
+run instant rather than the run date returns 28.6% exactly, along with every other figure. On an
+append-only panel a historical result is reproducible only against the sample that existed **at the
+moment it was computed**, and a day is not a fine enough unit to name that moment. Regenerating the
+same code against the full accumulated panel returns materially different numbers, which is a
+property of the dataset rather than a discrepancy in the code.
 
 ### 7.3 Event-clock comparability was never established
 
@@ -942,8 +949,11 @@ existed. Measuring a term adjacent to the one required does not satisfy the requ
 not recorded as satisfying it.
 
 **The documented-impossibility route is satisfied.** Under a coverage rule fixed before any probe
-data existed, four questions were answered. One book exposes no publication timestamp at all
-(0 of 5,991 fetches; 95% upper bound on the presence rate 0.050%). The other exposes an event-level
+data existed, four questions were answered. Two instruments contribute, and their denominators
+differ: a fetch-level probe records one row per successful request, and the per-market panel of
+Section 5.3 records one row per market whose line, prices or timestamps changed. One book exposes no
+publication timestamp at all in any payload (0 of 5,991 fetches; 95% upper bound on the presence
+rate 0.050%). The other exposes an event-level
 field that does move on every price change — 1,094 of 1,094 — but also moves on **98.6%** of
 transitions in which no price changed, which makes it a heartbeat rather than a per-market stamp. Its
 one informative property is negative: no price change occurred while it stood still (0 of 1,094; 95%
@@ -975,7 +985,9 @@ read the two books, not whether the two quotes describe the same market moment.
 Once `λ_deliv` is measured, the distinction is quantitative. Two quotes captured in the same poll can
 describe market states separated by the sum of the two books' delivered staleness. The resulting
 bound on market-time separation stands at **568 seconds as of 2026-08-18**, against a criterion of
-15 seconds.
+15 seconds. This bound is computed on the **cumulative** provenance panel rather than on the single
+frozen slate of Table 3, so its inputs are not the figures reported there; the two samples are
+different by construction and neither supersedes the other.
 
 That figure requires one caution, and we state it rather than quoting a number as if it were a
 constant. The bound is a **cumulative statistic that moves as the panel grows**: recomputations over

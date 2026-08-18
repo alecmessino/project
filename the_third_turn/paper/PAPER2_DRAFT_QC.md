@@ -88,24 +88,94 @@ records route 1 as **not satisfied** on precisely this ground.
 6. **Three documented continuity gaps.** §7.7 summarizes them and reports the DROP-SLICE sensitivity
    as leaving Table 5 unchanged; operational detail stays in the continuity register.
 7. **Historical figures are reproducible only at their own as-of date.** The committed
-   implementation reproduces six of seven at 2026-07-19; the same code on the full panel returns
+   implementation reproduces all seven at the record's as-of **instant**, 2026-07-19T17:29:50Z (see
+   §7.1); a date-level cutoff does not suffice. The same code on the full panel returns
    different numbers, which is a property of an append-only dataset rather than a discrepancy.
 8. **Delivery-staleness figures in §5.3/§7.4 come from the frozen one-slate provenance experiment**,
    not from the cumulative panel, which now reports different medians as it grows.
 
-## 7. Unresolved inconsistencies
+## 7. The four unresolved inconsistencies — bounded QC pass, 2026-08-18
 
-1. **`E-017` agreement rate: 28.2% (regenerated) vs 28.6% (recorded).** The neighbouring cutoff
-   returns 28.8%, bracketing the recorded value, so the original evidently ran mid-day on a partial
-   2026-07-19. The draft uses **28.2%**, the figure the committed code produces. Not resolvable
-   without the original run's exact timestamp; recorded rather than reconciled.
-2. **Gap 1 (2026-07-12 → 07-15) has no established mechanism.** It predates the run-log review. The
-   draft does not speculate.
-3. **Truncated-matchup effect on per-matchup interval statistics is unquantified.** DROP-SLICE leaves
-   the reported figures unchanged, which bounds the concern in practice but does not measure it.
-4. **§5.3 and §7.4 both describe the provenance measurements**, at different depths. Intentional —
-   one is data description, the other is the gate determination — but a future editing pass should
-   confirm they have not drifted apart.
+Each of the four items listed in the first draft was tested against the authoritative committed code,
+the recorded as-of dates, and existing evidence. No new research, probe, estimation, data collection,
+or methodological change was performed. Two are resolved, one is upgraded, one stands unresolved.
+
+### 7.1 Agreement rate 28.2% / 28.6% / 28.8% — **RESOLVED. Authoritative value: 28.6%.**
+
+The three figures were not competing measurements. They were the same computation under three
+different cutoffs, and only one of them corresponds to the moment the record was made.
+
+| Cutoff | Agreement | What it is |
+|---|---|---|
+| `ts < 2026-07-19` (date) | 28.2% | excludes all of the run day |
+| `ts < 2026-07-19T17:29:50Z` (**instant**) | **28.6%** | **the sample that existed when E-017 ran** |
+| `ts < 2026-07-20` (date) | 28.8% | includes all of the run day |
+
+**Basis.** The session transcript timestamps the original E-017 execution at
+`2026-07-19T17:29:50.544Z`. Cutting the panel at that instant reproduces the recorded 28.6% exactly,
+together with 53/60, 4.7×, 1.1× and 9.5×. The bracketing values were artifacts of a date-level
+cutoff, not evidence of an irreproducible record.
+
+**Consequence.** `july_analyses.py::RECORD_ASOF` is now an instant rather than a date, and the
+reproduction check reports **7 of 7** figures matching, up from 6 of 7. The manuscript is corrected
+in three places: Table 5 (28.2% → **28.6%**, modal row 39/54 → **42 of 57**), the §7.2 reproducibility
+paragraph (six of seven → **all seven**, with the date-versus-instant lesson stated), and the §6.6
+determination table (28.2% → **28.6%**). The competing values are preserved in §7.2 with their
+provenance, because the generalizable point is that on an append-only panel a day is not a fine
+enough unit to name an as-of.
+
+### 7.2 Gap 1 mechanism — **UPGRADED: species established; specific cause not recoverable.**
+
+Previously recorded as "not established". Existing evidence settles what kind of failure it was.
+
+**Established.** Runs **#40 through #56** cycled continuously on the normal ~5.5 h cadence across
+07-12, 07-13, 07-14 and 07-15 with no break in the chain, while **zero checkpoint commits** landed
+between 07-12 and 07-16. Gap 1 was therefore a **persistence failure, not a collection outage** —
+the same species as Gap 3. The 100 MiB ceiling that caused Gap 3 is ruled out: the panel was roughly
+35 MB at the time.
+
+**Not recoverable.** The specific reason the pushes failed cannot be determined. The July checkpoint
+ran every git command under `-q` inside an `&&` chain with no error surface, so the run logs — still
+retrievable, and checked — record nothing about it. The blindness that caused the gap is the same
+blindness that prevents diagnosing it, and no amount of re-reading the logs changes that.
+
+Recorded in `ops/DATA_CONTINUITY.md`, which now states that **two of three gaps are persistence
+failures rather than outages**, and that in both the collector reported healthy throughout.
+
+### 7.3 Truncated-matchup effect on per-matchup interval statistics — **UNRESOLVED.**
+
+Quantifying the distortion would require computing per-matchup interval statistics with and without
+the partial observations and characterizing the difference — a new analysis, which this pass is
+barred from running and which the mandate excludes.
+
+What is established stands: the committed DROP-SLICE exclusion leaves every figure in Table 5
+unchanged, and the deliberately over-aggressive DROP-MATCHUP exclusion preserves every direction
+while moving magnitudes slightly. That bounds the concern in practice without measuring it. The
+manuscript claims no more than that, and §7.7 states the sensitivity result rather than a null
+effect.
+
+### 7.4 §5.3 versus §7.4 — **RESOLVED. No substantive divergence; two precision gaps closed.**
+
+Compared line by line for terminology, dates, definitions and values.
+
+**Agree on every shared quantity:** 3,500 cache hits, 116 misses, 1,094 of 1,094 price changes,
+98.6% of non-price transitions, 0.27% upper bound, 28.4% out-of-order, 3,615 of 3,616 scheduled-start
+rows. The Book A / Book B assignments are consistent between the table and the prose: the cache-age
+book is the one with no publication timestamp, and the edge-rewriting book is the one carrying the
+event-level field.
+
+**Two precision gaps closed**, both cases of a section leaving its denominator or sample implicit
+rather than stating something different:
+
+1. §7.4 cited "0 of 5,991 fetches" alongside per-market transition counts without noting that these
+   come from two instruments with different row definitions. It now names both.
+2. §7.6's 568 s bound is computed on the **cumulative** panel, while Table 3 reports a single frozen
+   slate, so the bound's inputs are deliberately not the table's figures. §7.6 now says so, to
+   prevent a reader from checking 30 + 549 against 568 and finding a contradiction that does not
+   exist.
+
+Remaining difference is depth only and is intentional: §5.3 describes the instrument, §7.4 applies
+it to the gate.
 
 ## 8. Not done, deliberately
 

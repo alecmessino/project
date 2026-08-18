@@ -4,8 +4,10 @@ The reproducibility record for **gaps in the collected panels**. A gap is not a 
 defect in any estimate by itself, but a dataset described as continuously collected must state where
 it is not continuous, and must demonstrate — not assume — which analyses that touches.
 
-Two gaps are known. Both are recorded here with the same six fields, so a later reader can decide
-for themselves whether a gap matters to a result they care about.
+Three gaps are known. Each is recorded here with the same fields, so a later reader can decide for
+themselves whether a gap matters to a result they care about. Two of the three are **persistence
+failures rather than collection outages**: the collector ran and collected, and what it gathered did
+not reach the repository.
 
 ---
 
@@ -15,13 +17,19 @@ for themselves whether a gap matters to a result they care about.
 |---|---|
 | **Window** | last row `2026-07-12T22:56:30Z`; first row after `2026-07-15T07:34:10Z` |
 | **Duration** | ~56.6 hours (2.36 days); calendar days 07-13 and 07-14 absent entirely |
-| **Mechanism** | **Not established.** This gap predates the run-log review that identified Gap 2 and was not detected at the time. |
+| **Mechanism** | **Species established 2026-08-18; specific cause not recoverable.** This was a **persistence failure, not a collection outage** — the same species as Gap 3. Runs **#40 through #56** cycled continuously on the normal ~5.5 h cadence across 07-12, 07-13, 07-14 and 07-15 with no break in the chain, while **zero checkpoint commits** landed between 07-12 and 07-16. The collector was running; nothing reached the branch. The 100 MiB ceiling that caused Gap 3 is **ruled out** — the panel was roughly 35 MB at the time. The specific reason the pushes failed is **not recoverable**: the July checkpoint ran every git command under `-q` inside an `&&` chain with no error surface, so the run logs, which are still retrievable, record nothing about it. The blindness that caused the gap is the same blindness that prevents diagnosing it. |
 | **Why monitoring failed** | Same structural cause as Gap 2 — collector health was self-reported by the collector, so a stopped collector reported nothing rather than reporting a stop. No external observer existed. |
 | **Remediation** | Covered by the Gap 2 remediation below; no gap-specific fix, because the mechanism is unknown. |
-| **Live data truncated?** | **Yes.** Collection stopped at 22:56 UTC, mid-slate. Three games had live quotes inside the final hour: `TOR@SD`, `COL@SF`, `ARI@LAD`. These games are partially observed. |
+| **Live data truncated?** | **Yes.** Persistence stopped at 22:56 UTC, mid-slate, so the last rows banked are partial. Three matchups had live quotes inside the final persisted hour: `TOR@SD`, `COL@SF`, `ARI@LAD`. For any analysis the effect is identical to truncation, whatever the collector was doing at the time. |
 
 **Discovered** 2026-08-10, while verifying Gap 2. It was found by enumerating distinct calendar days
 present in `book_panel.jsonl` rather than by any alarm, which is itself the point.
+
+**Reclassified 2026-08-18.** Recorded here in full because it changes what this gap means. Two of the
+three known gaps are now persistence failures rather than collection outages, and in both the
+collector reported healthy throughout. The record previously implied a collector that stopped; the
+evidence says a collector that ran and was not believed by the repository. Gap 1 also predates the
+watchdog entirely, so nothing external was watching either the process or the data.
 
 ---
 

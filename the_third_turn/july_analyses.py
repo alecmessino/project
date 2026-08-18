@@ -58,7 +58,12 @@ def imp(o):
 # has grown since, so reproducing the RECORD requires reproducing its sample, not just its
 # code. Without this the same code returns 609 s where the ledger says 916 s — not a bug,
 # just a bigger sample. Every historical figure must be regenerated at its own as-of date.
-RECORD_ASOF = "2026-07-19"
+# Resolved 2026-08-18: a DATE-only cutoff cannot reproduce the record, because the original
+# analyses ran partway through 2026-07-19. Excluding all of that day returns a 28.2% agreement
+# rate and including all of it returns 28.8%, bracketing but not matching the recorded 28.6%.
+# The session transcript timestamps the original E-017 run at 2026-07-19T17:29:50Z; cutting
+# there reproduces 28.6% exactly. The as-of is therefore an INSTANT, not a date.
+RECORD_ASOF = "2026-07-19T17:29:50"
 
 
 def load(exclude=None, asof=None):
@@ -69,7 +74,9 @@ def load(exclude=None, asof=None):
     # when they ran; it no longer is. Restrict here so the recorded numbers reproduce.
     rows = [r for r in rows if r["ts"][:7] == "2026-07"]
     if asof:
-        rows = [r for r in rows if r["ts"][:10] < asof]
+        # compare on as many characters as the cutoff supplies, so a bare date still works
+        k = len(asof)
+        rows = [r for r in rows if r["ts"][:k] < asof]
     if exclude == "slice":
         rows = [r for r in rows
                 if not (r["game"] in TRUNCATED and r["ts"][:10] == TRUNC_DATE)]

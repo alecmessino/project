@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-18T23:02:44+00:00",
+  "generated": "2026-08-18T23:13:06+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 687466,
+    "rows": 688046,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 263797,
-      "live_total": 78636,
-      "live_today": 1673,
-      "last_row_age_min": 0.2
+      "rows_total": 264077,
+      "live_total": 78736,
+      "live_today": 1773,
+      "last_row_age_min": 0.5
     },
     "fanduel": {
-      "rows_total": 423663,
-      "live_total": 85808,
-      "live_today": 1482,
-      "last_row_age_min": 0.2
+      "rows_total": 423963,
+      "live_total": 85881,
+      "live_today": 1555,
+      "last_row_age_min": 0.5
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 62917.7
+      "last_row_age_min": 62928.1
     }
   },
   "books_reporting_live": [
@@ -37,14 +37,14 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 78636,
-    "OPEN": 79136,
+    "unset": 78736,
+    "OPEN": 79209,
     "SUSPENDED": 6277,
     "REMOVED": 395
   },
   "overlap": {
-    "simultaneous_pairs_total": 89185,
-    "simultaneous_pairs_today": 1578,
+    "simultaneous_pairs_total": 89266,
+    "simultaneous_pairs_today": 1659,
     "overlap_games": 163,
     "median_cocapture_lag_s": 0.0,
     "median_sync_lag_s": 0.0,
@@ -55,7 +55,7 @@
         "p90": 537.0
       },
       "fanduel": {
-        "n": 14171,
+        "n": 14237,
         "median": 30.0,
         "p90": 31.0
       }
@@ -78,7 +78,7 @@
     "verified": true
   },
   "coverage": {
-    "live_games_seen": 164,
+    "live_games_seen": 165,
     "book_panel_games": 185,
     "team_total_rows": 33080,
     "innings_seen": [
@@ -100,7 +100,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 89185,
+        "current": 89266,
         "target": 2000,
         "pass": true,
         "progress": 1.0

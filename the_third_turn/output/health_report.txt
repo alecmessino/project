@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-08-19T12:14:52+00:00
+ THE THIRD TURN — collection health   2026-08-19T12:30:54+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,18 +12,18 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ████████████████··  live=80214 (today 1041)  last 61.7m ago ⚠STALE
-  fanduel   ██████████████████  live=89029 (today 2565)  last 111.2m ago ⚠STALE
-  pinnacle  ··················  live=    0 (today    0)  last 63709.9m ago ⚠STALE
+  bovada    ████████████████··  live=80214 (today 1041)  last 77.8m ago ⚠STALE
+  fanduel   ██████████████████  live=89029 (today 2565)  last 127.3m ago ⚠STALE
+  pinnacle  ··················  live=    0 (today    0)  last 63725.9m ago ⚠STALE
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
   simultaneous live pairs :  92248  (today 2403)
   overlap games           : 166
   collector co-capture lag: 0.0 s   (when WE read them — not market contemporaneity)
-    delivered staleness bovada   : median 71.0s  p90 532.0s  (n=18740)
+    delivered staleness bovada   : median 71.0s  p90 530.0s  (n=18754)
     delivered staleness fanduel  : median 30.0s  p90 31.0s  (n=16756)
-  contemporaneity bound   : 563.0 s   ← the SR-1 criterion
+  contemporaneity bound   : 561.0 s   ← the SR-1 criterion
   games by #books live     : {'0_books': 19, '2_books': 166}
 
 QUOTE LIFECYCLE (live rows)
@@ -40,7 +40,7 @@ INTEGRITY
 SR-1 GATE (leadership analysis — blocked until all pass)
   ✅ ██████████████████ simultaneous live quote pairs    92248 / 2000
   ✅ ██████████████████ games with live overlap          166 / 100
-     ·················· contemporaneity bound < 15s      563.0 / 15
+     ·················· contemporaneity bound < 15s      561.0 / 15
      ████████████······ books quoting live               2 / 3
   overall: 67%  →  BLOCKED — keep collecting
 ══════════════════════════════════════════════════════════════════

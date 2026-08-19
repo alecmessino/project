@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-19T19:23:48+00:00",
+  "generated": "2026-08-19T19:39:44+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 699877,
+    "rows": 700240,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 267950,
+      "rows_total": 268106,
       "live_total": 80235,
       "live_today": 1062,
-      "last_row_age_min": 0.5
+      "last_row_age_min": 0.2
     },
     "fanduel": {
-      "rows_total": 431921,
-      "live_total": 89128,
-      "live_today": 2664,
-      "last_row_age_min": 0.5
+      "rows_total": 432128,
+      "live_total": 89143,
+      "live_today": 2679,
+      "last_row_age_min": 0.2
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 64138.8
+      "last_row_age_min": 64154.7
     }
   },
   "books_reporting_live": [
@@ -38,24 +38,24 @@
   ],
   "market_status": {
     "unset": 80235,
-    "OPEN": 82239,
-    "SUSPENDED": 6476,
-    "REMOVED": 413
+    "OPEN": 82252,
+    "SUSPENDED": 6477,
+    "REMOVED": 414
   },
   "overlap": {
-    "simultaneous_pairs_total": 92348,
-    "simultaneous_pairs_today": 2503,
+    "simultaneous_pairs_total": 92363,
+    "simultaneous_pairs_today": 2518,
     "overlap_games": 166,
     "median_cocapture_lag_s": 0.0,
     "median_sync_lag_s": 0.0,
     "delivery_staleness_s": {
       "bovada": {
-        "n": 19246,
+        "n": 19261,
         "median": 47.0,
         "p90": 526.0
       },
       "fanduel": {
-        "n": 17395,
+        "n": 17465,
         "median": 30.0,
         "p90": 31.0
       }
@@ -80,7 +80,7 @@
   "coverage": {
     "live_games_seen": 167,
     "book_panel_games": 185,
-    "team_total_rows": 33213,
+    "team_total_rows": 33214,
     "innings_seen": [
       1,
       2,
@@ -100,7 +100,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 92348,
+        "current": 92363,
         "target": 2000,
         "pass": true,
         "progress": 1.0

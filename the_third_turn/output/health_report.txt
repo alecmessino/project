@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-08-19T14:39:17+00:00
+ THE THIRD TURN — collection health   2026-08-19T14:55:20+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,17 +12,17 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ████████████████··  live=80214 (today 1041)  last 104.8m ago ⚠STALE
-  fanduel   ██████████████████  live=89029 (today 2565)  last 125.6m ago ⚠STALE
-  pinnacle  ··················  live=    0 (today    0)  last 63854.3m ago ⚠STALE
+  bovada    ████████████████··  live=80214 (today 1041)  last 120.9m ago ⚠STALE
+  fanduel   ██████████████████  live=89029 (today 2565)  last 141.7m ago ⚠STALE
+  pinnacle  ··················  live=    0 (today    0)  last 63870.3m ago ⚠STALE
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
   simultaneous live pairs :  92248  (today 2403)
   overlap games           : 166
   collector co-capture lag: 0.0 s   (when WE read them — not market contemporaneity)
-    delivered staleness bovada   : median 59.0s  p90 529.0s  (n=18945)
-    delivered staleness fanduel  : median 30.0s  p90 31.0s  (n=16760)
+    delivered staleness bovada   : median 57.0s  p90 529.0s  (n=18974)
+    delivered staleness fanduel  : median 30.0s  p90 31.0s  (n=16764)
   contemporaneity bound   : 560.0 s   ← the SR-1 criterion
   games by #books live     : {'0_books': 19, '2_books': 166}
 
@@ -30,7 +30,7 @@ QUOTE LIFECYCLE (live rows)
   market status: {'unset': 80214, 'OPEN': 82145, 'SUSPENDED': 6471, 'REMOVED': 413}
 
 COVERAGE
-  live games seen: 167   book-panel games: 185   team-total rows: 33174
+  live games seen: 167   book-panel games: 185   team-total rows: 33176
   innings seen: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 INTEGRITY

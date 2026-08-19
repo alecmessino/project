@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-19T16:44:31+00:00",
+  "generated": "2026-08-19T17:00:26+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 698344,
+    "rows": 698351,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 267560,
-      "live_total": 80215,
-      "live_today": 1042,
-      "last_row_age_min": 13.5
+      "rows_total": 267561,
+      "live_total": 80216,
+      "live_today": 1043,
+      "last_row_age_min": 10.2
     },
     "fanduel": {
-      "rows_total": 430778,
-      "live_total": 89032,
-      "live_today": 2568,
-      "last_row_age_min": 0.3
+      "rows_total": 430784,
+      "live_total": 89038,
+      "live_today": 2574,
+      "last_row_age_min": 3.6
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 63979.5
+      "last_row_age_min": 63995.4
     }
   },
   "books_reporting_live": [
@@ -37,25 +37,25 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 80215,
-    "OPEN": 82148,
+    "unset": 80216,
+    "OPEN": 82154,
     "SUSPENDED": 6471,
     "REMOVED": 413
   },
   "overlap": {
-    "simultaneous_pairs_total": 92251,
-    "simultaneous_pairs_today": 2406,
+    "simultaneous_pairs_total": 92258,
+    "simultaneous_pairs_today": 2413,
     "overlap_games": 166,
     "median_cocapture_lag_s": 0.0,
     "median_sync_lag_s": 0.0,
     "delivery_staleness_s": {
       "bovada": {
-        "n": 19105,
+        "n": 19120,
         "median": 54.0,
         "p90": 526.0
       },
       "fanduel": {
-        "n": 16785,
+        "n": 16806,
         "median": 30.0,
         "p90": 31.0
       }
@@ -100,7 +100,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 92251,
+        "current": 92258,
         "target": 2000,
         "pass": true,
         "progress": 1.0

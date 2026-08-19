@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-19T19:39:44+00:00",
+  "generated": "2026-08-19T19:55:39+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 700240,
+    "rows": 700617,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 268106,
-      "live_total": 80235,
-      "live_today": 1062,
-      "last_row_age_min": 0.2
+      "rows_total": 268271,
+      "live_total": 80238,
+      "live_today": 1065,
+      "last_row_age_min": 0.4
     },
     "fanduel": {
-      "rows_total": 432128,
-      "live_total": 89143,
-      "live_today": 2679,
-      "last_row_age_min": 0.2
+      "rows_total": 432340,
+      "live_total": 89154,
+      "live_today": 2690,
+      "last_row_age_min": 0.4
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 64154.7
+      "last_row_age_min": 64170.7
     }
   },
   "books_reporting_live": [
@@ -37,14 +37,14 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 80235,
-    "OPEN": 82252,
+    "unset": 80238,
+    "OPEN": 82263,
     "SUSPENDED": 6477,
     "REMOVED": 414
   },
   "overlap": {
-    "simultaneous_pairs_total": 92363,
-    "simultaneous_pairs_today": 2518,
+    "simultaneous_pairs_total": 92377,
+    "simultaneous_pairs_today": 2532,
     "overlap_games": 166,
     "median_cocapture_lag_s": 0.0,
     "median_sync_lag_s": 0.0,
@@ -55,7 +55,7 @@
         "p90": 526.0
       },
       "fanduel": {
-        "n": 17465,
+        "n": 17529,
         "median": 30.0,
         "p90": 31.0
       }
@@ -80,7 +80,7 @@
   "coverage": {
     "live_games_seen": 167,
     "book_panel_games": 185,
-    "team_total_rows": 33214,
+    "team_total_rows": 33217,
     "innings_seen": [
       1,
       2,
@@ -100,7 +100,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 92363,
+        "current": 92377,
         "target": 2000,
         "pass": true,
         "progress": 1.0

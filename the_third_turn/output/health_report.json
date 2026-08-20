@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-20T03:20:46+00:00",
+  "generated": "2026-08-20T03:36:21+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 715651,
+    "rows": 715702,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 275680,
-      "live_total": 82775,
-      "live_today": 1806,
-      "last_row_age_min": 0.3
+      "rows_total": 275729,
+      "live_total": 82800,
+      "live_today": 1831,
+      "last_row_age_min": 3.1
     },
     "fanduel": {
-      "rows_total": 439965,
-      "live_total": 91619,
-      "live_today": 1751,
-      "last_row_age_min": 12.9
+      "rows_total": 439967,
+      "live_total": 91621,
+      "live_today": 1753,
+      "last_row_age_min": 3.1
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 64615.8
+      "last_row_age_min": 64631.4
     }
   },
   "books_reporting_live": [
@@ -37,25 +37,25 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 82775,
-    "OPEN": 84540,
+    "unset": 82800,
+    "OPEN": 84542,
     "SUSPENDED": 6647,
     "REMOVED": 432
   },
   "overlap": {
-    "simultaneous_pairs_total": 95079,
-    "simultaneous_pairs_today": 1950,
+    "simultaneous_pairs_total": 95105,
+    "simultaneous_pairs_today": 1976,
     "overlap_games": 166,
     "median_cocapture_lag_s": 0.0,
     "median_sync_lag_s": 0.0,
     "delivery_staleness_s": {
       "bovada": {
-        "n": 22256,
-        "median": 109.0,
+        "n": 22264,
+        "median": 104.0,
         "p90": 548.0
       },
       "fanduel": {
-        "n": 20027,
+        "n": 20044,
         "median": 30.0,
         "p90": 31.0
       }
@@ -100,7 +100,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 95079,
+        "current": 95105,
         "target": 2000,
         "pass": true,
         "progress": 1.0

@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-20T02:35:25+00:00",
+  "generated": "2026-08-20T02:51:29+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 715128,
+    "rows": 715455,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 275357,
-      "live_total": 82613,
-      "live_today": 1644,
-      "last_row_age_min": 0.2
+      "rows_total": 275538,
+      "live_total": 82705,
+      "live_today": 1736,
+      "last_row_age_min": 0.1
     },
     "fanduel": {
-      "rows_total": 439765,
-      "live_total": 91521,
-      "live_today": 1653,
-      "last_row_age_min": 0.2
+      "rows_total": 439911,
+      "live_total": 91594,
+      "live_today": 1726,
+      "last_row_age_min": 0.1
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 64570.4
+      "last_row_age_min": 64586.5
     }
   },
   "books_reporting_live": [
@@ -37,25 +37,25 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 82613,
-    "OPEN": 84453,
-    "SUSPENDED": 6642,
-    "REMOVED": 426
+    "unset": 82705,
+    "OPEN": 84520,
+    "SUSPENDED": 6644,
+    "REMOVED": 430
   },
   "overlap": {
-    "simultaneous_pairs_total": 94923,
-    "simultaneous_pairs_today": 1794,
+    "simultaneous_pairs_total": 95007,
+    "simultaneous_pairs_today": 1878,
     "overlap_games": 166,
     "median_cocapture_lag_s": 0.0,
     "median_sync_lag_s": 0.0,
     "delivery_staleness_s": {
       "bovada": {
-        "n": 22126,
+        "n": 22192,
         "median": 102.0,
         "p90": 548.0
       },
       "fanduel": {
-        "n": 19931,
+        "n": 19996,
         "median": 30.0,
         "p90": 31.0
       }
@@ -100,7 +100,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 94923,
+        "current": 95007,
         "target": 2000,
         "pass": true,
         "progress": 1.0

@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-21T04:31:04+00:00",
+  "generated": "2026-08-21T04:47:02+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 716304,
+    "rows": 716305,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 275959,
+      "rows_total": 275960,
       "live_total": 82931,
       "live_today": 67,
-      "last_row_age_min": 9.1
+      "last_row_age_min": 3.8
     },
     "fanduel": {
       "rows_total": 440339,
       "live_total": 91927,
       "live_today": 86,
-      "last_row_age_min": 90.3
+      "last_row_age_min": 106.3
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 66126.1
+      "last_row_age_min": 66142.0
     }
   },
   "books_reporting_live": [
@@ -50,7 +50,7 @@
     "median_sync_lag_s": 0.0,
     "delivery_staleness_s": {
       "bovada": {
-        "n": 24198,
+        "n": 24274,
         "median": 97.0,
         "p90": 541.0
       },
@@ -80,7 +80,7 @@
   "coverage": {
     "live_games_seen": 168,
     "book_panel_games": 198,
-    "team_total_rows": 33500,
+    "team_total_rows": 33502,
     "innings_seen": [
       1,
       2,

@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-08-21T12:24:06+00:00
+ THE THIRD TURN — collection health   2026-08-21T12:43:09+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,17 +12,17 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ████████████████··  live=82931 (today   67)  last 3.9m ago
-  fanduel   ██████████████████  live=91927 (today   86)  last 85.7m ago ⚠STALE
-  pinnacle  ··················  live=    0 (today    0)  last 66599.1m ago ⚠STALE
+  bovada    ████████████████··  live=82931 (today   67)  last 15.0m ago
+  fanduel   ██████████████████  live=91927 (today   86)  last 6.4m ago
+  pinnacle  ··················  live=    0 (today    0)  last 66618.2m ago ⚠STALE
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
   simultaneous live pairs :  95501  (today 142)
   overlap games           : 167
   collector co-capture lag: 0.0 s   (when WE read them — not market contemporaneity)
-    delivered staleness bovada   : median 113.0s  p90 544.0s  (n=25741)
-    delivered staleness fanduel  : median 30.0s  p90 31.0s  (n=22081)
+    delivered staleness bovada   : median 111.0s  p90 544.0s  (n=25769)
+    delivered staleness fanduel  : median 30.0s  p90 31.0s  (n=22085)
   contemporaneity bound   : 575.0 s   ← the SR-1 criterion
   games by #books live     : {'0_books': 33, '2_books': 167}
 
@@ -30,11 +30,11 @@ QUOTE LIFECYCLE (live rows)
   market status: {'unset': 82931, 'OPEN': 84819, 'SUSPENDED': 6676, 'REMOVED': 432}
 
 COVERAGE
-  live games seen: 168   book-panel games: 200   team-total rows: 33531
+  live games seen: 168   book-panel games: 200   team-total rows: 33554
   innings seen: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 INTEGRITY
-  rows=716374  malformed=0  missing-fields=0  duplicates=0  future-ts=0
+  rows=716407  malformed=0  missing-fields=0  duplicates=0  future-ts=0
   status: ✅ clean
 
 SR-1 GATE (leadership analysis — blocked until all pass)

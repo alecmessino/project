@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-21T06:06:43+00:00",
+  "generated": "2026-08-21T06:22:40+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
@@ -17,19 +17,19 @@
       "rows_total": 275965,
       "live_total": 82931,
       "live_today": 67,
-      "last_row_age_min": 3.7
+      "last_row_age_min": 19.6
     },
     "fanduel": {
       "rows_total": 440339,
       "live_total": 91927,
       "live_today": 86,
-      "last_row_age_min": 185.9
+      "last_row_age_min": 201.9
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 66221.7
+      "last_row_age_min": 66237.7
     }
   },
   "books_reporting_live": [
@@ -50,9 +50,9 @@
     "median_sync_lag_s": 0.0,
     "delivery_staleness_s": {
       "bovada": {
-        "n": 24497,
+        "n": 24557,
         "median": 98.0,
-        "p90": 541.0
+        "p90": 544.0
       },
       "fanduel": {
         "n": 22070,
@@ -60,7 +60,7 @@
         "p90": 31.0
       }
     },
-    "contemporaneity_bound_s": 572.0,
+    "contemporaneity_bound_s": 575.0,
     "games_by_books_live": {
       "0_books": 31,
       "2_books": 167
@@ -114,7 +114,7 @@
       },
       {
         "criterion": "contemporaneity bound < 15s",
-        "current": 572.0,
+        "current": 575.0,
         "target": 15,
         "pass": false,
         "progress": 0.026

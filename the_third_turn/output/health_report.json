@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-21T23:32:25+00:00",
+  "generated": "2026-08-21T23:50:22+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 726733,
+    "rows": 727729,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 277115,
-      "live_total": 83173,
-      "live_today": 309,
-      "last_row_age_min": 0.3
+      "rows_total": 277392,
+      "live_total": 83271,
+      "live_today": 407,
+      "last_row_age_min": 0.2
     },
     "fanduel": {
-      "rows_total": 449612,
-      "live_total": 92404,
-      "live_today": 563,
-      "last_row_age_min": 0.3
+      "rows_total": 450331,
+      "live_total": 92552,
+      "live_today": 711,
+      "last_row_age_min": 0.2
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 67267.4
+      "last_row_age_min": 67285.4
     }
   },
   "books_reporting_live": [
@@ -37,25 +37,25 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 83173,
-    "OPEN": 85269,
-    "SUSPENDED": 6700,
+    "unset": 83271,
+    "OPEN": 85404,
+    "SUSPENDED": 6713,
     "REMOVED": 435
   },
   "overlap": {
-    "simultaneous_pairs_total": 95989,
-    "simultaneous_pairs_today": 630,
+    "simultaneous_pairs_total": 96137,
+    "simultaneous_pairs_today": 778,
     "overlap_games": 173,
     "median_cocapture_lag_s": 0.0,
     "median_sync_lag_s": 0.0,
     "delivery_staleness_s": {
       "bovada": {
-        "n": 27878,
+        "n": 27989,
         "median": 118.0,
         "p90": 538.0
       },
       "fanduel": {
-        "n": 22491,
+        "n": 22585,
         "median": 30.0,
         "p90": 31.0
       }
@@ -78,9 +78,9 @@
     "verified": true
   },
   "coverage": {
-    "live_games_seen": 174,
+    "live_games_seen": 177,
     "book_panel_games": 200,
-    "team_total_rows": 34528,
+    "team_total_rows": 34608,
     "innings_seen": [
       1,
       2,
@@ -100,7 +100,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 95989,
+        "current": 96137,
         "target": 2000,
         "pass": true,
         "progress": 1.0

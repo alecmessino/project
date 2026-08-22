@@ -1,5 +1,5 @@
 ══════════════════════════════════════════════════════════════════
- THE THIRD TURN — collection health   2026-08-22T06:12:32+00:00
+ THE THIRD TURN — collection health   2026-08-22T06:28:38+00:00
  protocol v1.0 · collector v1.1 · dataset 2026.06
 ══════════════════════════════════════════════════════════════════
 
@@ -12,16 +12,16 @@ FIX VERIFICATION — collector v1.1 · live-overlap fix
     [✅] median_sync_lag computed
 
 BOOKS (live quotes)
-  bovada    ████████████████··  live=86916 (today 3582)  last 32.9m ago ⚠STALE
-  fanduel   ██████████████████  live=96447 (today 3811)  last 41.0m ago ⚠STALE
-  pinnacle  ··················  live=    0 (today    0)  last 67667.5m ago ⚠STALE
+  bovada    ████████████████··  live=86916 (today 3582)  last 8.0m ago
+  fanduel   ██████████████████  live=96447 (today 3811)  last 57.1m ago ⚠STALE
+  pinnacle  ··················  live=    0 (today    0)  last 67683.6m ago ⚠STALE
   books reporting live: bovada, fanduel
 
 OVERLAP (the scarce resource)
   simultaneous live pairs : 100172  (today 3943)
   overlap games           : 181
   collector co-capture lag: 0.0 s   (when WE read them — not market contemporaneity)
-    delivered staleness bovada   : median 122.0s  p90 537.0s  (n=30416)
+    delivered staleness bovada   : median 122.0s  p90 537.0s  (n=30427)
     delivered staleness fanduel  : median 30.0s  p90 31.0s  (n=25229)
   contemporaneity bound   : 568.0 s   ← the SR-1 criterion
   games by #books live     : {'0_books': 19, '2_books': 181}
@@ -30,11 +30,11 @@ QUOTE LIFECYCLE (live rows)
   market status: {'unset': 86916, 'OPEN': 89043, 'SUSPENDED': 6949, 'REMOVED': 455}
 
 COVERAGE
-  live games seen: 182   book-panel games: 200   team-total rows: 34902
+  live games seen: 182   book-panel games: 200   team-total rows: 34903
   innings seen: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 INTEGRITY
-  rows=745754  malformed=0  missing-fields=0  duplicates=0  future-ts=0
+  rows=745756  malformed=0  missing-fields=0  duplicates=0  future-ts=0
   status: ✅ clean
 
 SR-1 GATE (leadership analysis — blocked until all pass)

@@ -22,13 +22,36 @@ rm -rf "$OUT/release"
 find "$OUT" -type f -name '*.log' -delete
 
 # Raw live-collection panels are EXCLUDED by default (v1 release decision, 2026-07-28):
-# they are ~85 MB, are Paper 2's substrate rather than Paper 1's, and are still growing.
-# Paper 1 reproduces from output/*.json alone. Pass --with-panels to include them.
+# they are Paper 2's substrate rather than Paper 1's, they are still growing, and their
+# REDISTRIBUTION RIGHTS ARE UNRESOLVED (ops/DATA_RIGHTS_REVIEW.md). Paper 1 reproduces
+# from output/*.json alone.
+#
+# BUG FIXED 2026-08-22. The old pattern was `rm -f "$OUT"/output/*_panel.jsonl`. It was
+# written before the panels were sharded (E-026, 2026-08-18) and silently stopped
+# matching: of the 12 tracked panel files it excluded exactly ONE (team_total_panel.jsonl)
+# and let 11 through -- book_panel.part0*.jsonl, game_state_panel.part0*.jsonl,
+# provenance_probe.part0*.jsonl and market_provenance.jsonl, ~260 MB of raw third-party
+# quote and HTTP-header data. Any release built between the sharding change and this fix
+# would have published all of it. Exclusion is now by PREFIX, so new shards are covered
+# automatically, and the result is VERIFIED below rather than assumed.
+RAW_PANEL_PREFIXES="book_panel game_state_panel provenance_probe market_provenance team_total_panel"
+
 if [ "${WITH_PANELS:-0}" = "1" ]; then
-  echo "==> including raw live panels (--with-panels)"
+  echo "==> WARNING: including raw live panels (WITH_PANELS=1)."
+  echo "==> Redistribution rights for these files are UNRESOLVED -- see ops/DATA_RIGHTS_REVIEW.md."
+  echo "==> Do not publish this build until that review is complete."
 else
-  rm -f "$OUT"/output/*_panel.jsonl
-  echo "==> excluded raw live panels (set WITH_PANELS=1 to include)"
+  for pfx in $RAW_PANEL_PREFIXES; do
+    rm -f "$OUT"/output/"$pfx".jsonl "$OUT"/output/"$pfx".part*.jsonl
+  done
+  # Fail closed: never ship a release that still contains a raw panel file.
+  leftover=$(find "$OUT/output" -maxdepth 1 -type f \( -name '*panel*.jsonl' -o -name 'provenance_probe*.jsonl' -o -name 'market_provenance*.jsonl' \) 2>/dev/null || true)
+  if [ -n "$leftover" ]; then
+    echo "==> ERROR: raw panel files survived exclusion:" >&2
+    echo "$leftover" >&2
+    exit 1
+  fi
+  echo "==> excluded raw live panels (verified none remain; set WITH_PANELS=1 to include)"
 fi
 rm -f "$OUT/output/daemon.log" "$OUT/output/streamlit.log" 2>/dev/null || true
 find "$OUT" -type d -name '__pycache__' -prune -exec rm -rf {} + 2>/dev/null || true
@@ -71,10 +94,16 @@ Next steps (you run these — creating/pushing a public repo is your action):
        git remote add origin https://github.com/<your-username>/third-turn.git
        git push -u origin main
 
-Before pushing, review two things:
-  - data: output/*_panel.jsonl are raw live-collection panels. The paper reproduces from
-    output/*.json alone, so you may 'git rm --cached output/*_panel.jsonl' if you prefer to
-    keep the raw scraped panels private.
+Before pushing, review three things:
+  - data: raw live-collection panels are now excluded automatically (and the build fails if
+    any survive). Nothing further is needed unless you set WITH_PANELS=1 -- in which case do
+    NOT push until the review in ops/DATA_RIGHTS_REVIEW.md is complete.
   - ops/: the governance registers are internal-flavored; remove that folder if you would
-    rather not publish it.
+    rather not publish it. NOTE ops/THIRD_TURN_PROGRAM_REVIEW_2026_08.md in particular --
+    it is an internal strategy memorandum containing commercial and monetization analysis
+    and venue plans. It is almost certainly NOT intended for public release. Delete it, or
+    delete ops/ entirely, before pushing.
+  - licensing: README.md currently offers 'Data' under CC BY 4.0. That claim has not been
+    reconciled with the third-party terms governing the collected quotes. See
+    ops/DATA_RIGHTS_REVIEW.md before publishing or minting a DOI.
 EOF

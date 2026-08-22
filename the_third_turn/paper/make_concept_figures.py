@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
-"""Conceptual (schematic) figures for the paper — illustrative, not data plots.
+"""SUPERSEDED — DO NOT RUN AS PART OF ANY REPLICATION PATH.
+
+    This script writes three files that `make_figures.py` ALSO writes:
+        concept_laboratory.png, concept_encompassing.png, appendix_vig.png
+    The committed figures — the ones the manuscripts display — come from
+    `make_figures.py`. Running this script AFTER it replaces those three with
+    different images, so the paper and the repository stop agreeing.
+
+    Verified 2026-08-22: after `make_figures.py` alone all three are byte-identical
+    to the committed PNGs; after this script alone all three differ.
+
+    Retained for history only. The replication path is `paper/REPRODUCE.md`.
+
+Conceptual (schematic) figures for the paper — illustrative, not data plots.
 
 Rendered in the same visual system as the data figures (figstyle: Okabe-Ito
 palette, white-edged boxes, recessive arrows, axis off):

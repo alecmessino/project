@@ -26,8 +26,8 @@ distinct questions, answered with different instruments and different assumption
 
 | Path | Contents |
 |---|---|
-| `paper/` | The paper (`paper1.pdf`, `paper1.md`) and all nine figures. |
-| `paper/build_pdf.py`, `make_figures.py`, `make_concept_figures.py`, `figstyle.py` | Regenerate the figures and the PDF. |
+| `paper/` | The paper (`paper1.pdf`, `paper1.md`), its figures, and `REPRODUCE.md`. |
+| `paper/build_pdf.py`, `make_figures.py`, `figstyle.py` | Regenerate the figures and the PDF. See `paper/REPRODUCE.md`. |
 | `*.py` (top level) | The analysis that produces `output/*.json` (encompassing, calibration, transfer function, remaining-runs model, debiasing). |
 | `output/` | The **frozen Paper-1 result caches** (`*.json`) that reproduce the paper, plus the **live collection panels** (see Data). |
 | `protocol/` | The Third Turn Protocol: the validation ladder, the safeguard registry, and the objective stopping rules. |
@@ -36,16 +36,29 @@ distinct questions, answered with different instruments and different assumption
 
 ## Reproduce the paper
 
+Full instructions, with the verification results for each step, are in
+[`paper/REPRODUCE.md`](paper/REPRODUCE.md). The short version:
+
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-python3 paper/make_figures.py          # data figures from output/*.json
-python3 paper/make_concept_figures.py  # the two conceptual figures
-python3 paper/build_pdf.py             # -> paper/paper1.pdf
+pip install -r requirements-lock.txt   # the pinned REPLICATION set
+python3 encompass.py                   # -> output/encompass.json
+python3 calibration.py                 # -> output/calibration.json
+python3 program_a.py                   # -> output/program_a.json
+python3 paper/make_figures.py          # all figures
+python3 paper/build_pdf.py             # -> paper/paper1.pdf   (needs Chromium)
 ```
 
+Install from **`requirements-lock.txt`** (exact pins, verified). `requirements.txt` is the live
+collector's runtime set — floors only, and it pulls packages replication does not need.
+
 Every number in the paper regenerates deterministically from the committed caches in `output/`; no
-live feed access is required.
+live feed access is required. Verified 2026-08-22: the JSON outputs and all figures regenerate
+**byte-identically**, and `pytest tests/` reports **113 passed**. PDFs rebuild to identical content
+but are not byte-identical (the writer embeds a creation timestamp).
+
+> **Do not run `paper/make_concept_figures.py`.** It is superseded: it rewrites three figures that
+> `make_figures.py` already produces, with different images. See `paper/REPRODUCE.md`.
 
 ## Data
 

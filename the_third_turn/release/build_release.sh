@@ -54,6 +54,38 @@ else
   echo "==> excluded raw live panels (verified none remain; set WITH_PANELS=1 to include)"
 fi
 rm -f "$OUT/output/daemon.log" "$OUT/output/streamlit.log" 2>/dev/null || true
+
+# INTERNAL OPERATIONAL MATERIALS — excluded from the public publication build
+# (architecture decision, 2026-08-22). The publication repo carries the manuscripts, the
+# reproducibility code and artifacts, and the governance registers that constitute the
+# papers' audit trail. It does NOT carry strategy memoranda, engineering planning, or
+# runtime logs.
+#
+# ops/GATE_DETERMINATION_66.md is DELIBERATELY RETAINED: Paper 2 cites it by path, so
+# removing it would break a manuscript reference. Same reasoning for the evidence ledger,
+# the governance decision log, the continuity register and the QC record -- they are the
+# scientific record, not operational noise.
+INTERNAL_DOCS="
+ops/THIRD_TURN_PROGRAM_REVIEW_2026_08.md
+ops/SUBMISSION_VS_RELEASE.md
+ops/DATA_RIGHTS_REVIEW.md
+ops/DAILY_REPORT_TEMPLATE.md
+ops/ENGINEERING_DEBT_AND_KNOWN_UNKNOWNS.md
+ops/ENGINEERING_PREDICTION_LOG.md
+ops/RESEARCH_DEBT.md
+output/health_report.txt
+output/health_report.json
+output/metrics_history.jsonl
+output/ledger.jsonl
+"
+for f in $INTERNAL_DOCS; do rm -f "$OUT/$f"; done
+
+# Fail closed: the strategy memorandum must never ship.
+if [ -e "$OUT/ops/THIRD_TURN_PROGRAM_REVIEW_2026_08.md" ]; then
+  echo "==> ERROR: internal program review survived exclusion" >&2
+  exit 1
+fi
+echo "==> excluded internal operational materials (kept the cited governance registers)"
 find "$OUT" -type d -name '__pycache__' -prune -exec rm -rf {} + 2>/dev/null || true
 
 # top-level public files (authored in release/)

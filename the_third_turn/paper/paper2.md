@@ -1164,6 +1164,33 @@ ends in a finding. The second ends, at best, in a set of conditions.
 
 *Sections 8 (Results) and 9 (Discussion) are intentionally not drafted. See Section 6.6.*
 
+## Data and code availability
+
+The analysis code, the figure and manuscript build scripts, and the derived artifacts from which
+every figure in this paper regenerates are available at `https://github.com/alecmessino/third-turn`,
+with citation metadata in `CITATION.cff`. The environment is Python 3.11.15 with dependencies pinned
+in `requirements-lock.txt`; `paper/REPRODUCE.md` documents the exact commands. The figures in this
+paper are schematic and rebuild without any data access.
+
+The observational records underlying Sections 5 and 7 — the two-book quote panel, the game-state
+panel, and the per-market provenance and delivery-probe records — are **not redistributed**. They
+were obtained from commercial and public sportsbook endpoints whose terms govern their reuse, and
+that review is not complete. They are available to researchers on request, subject to those terms.
+Readers should therefore treat the panel statistics reported in Section 7 as verifiable against the
+committed record and the analysis code, but not independently recomputable from this release.
+Field-level documentation for every panel — including the delivery-metadata fields on which the
+Section 5.3 and 7.4 arguments rest — is published as `benchmark/dataset/panels_schema.md`.
+
+Two properties of these data bear directly on replication and are stated here rather than left to
+the reader. First, the panels are **append-only**, so any statistic computed on them is reproducible
+only at its own as-of *instant*; `july_analyses.py --asof` enforces this, and Section 7.2 records why
+a date-level cutoff is not fine enough to name one. Second, collection has **three documented
+continuity gaps**, catalogued with their mechanisms in the repository's continuity register; the
+sensitivity analysis is reported in Section 7.7.
+
+Nothing in this release contains an estimate of the pricing contrast. Under the Section 6.6 tripwire
+none may be published until Conditions 1, 2 and 4 are satisfied in their original form.
+
 ## References
 
 Angelini, G., and L. De Angelis (2026). "When Do Markets Fully Process Public Information?

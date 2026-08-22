@@ -285,3 +285,32 @@ Per the instruction to name gaps rather than invent tests:
    exists.
 4. **`λ_feed`** has no bound of any kind. This is what excludes Outcome B, and no public-endpoint
    measurement in this study can supply it.
+
+---
+
+## Forward pointer — appended 2026-08-22
+
+**The determination above is unchanged and is not amended by this note.** It is retained as the
+dated record of what was determined on 2026-08-11 from the evidence then available.
+
+Two figures in the text above were subsequently refined. Both are recorded here so a reader
+comparing this memorandum against the manuscript does not mistake drift for contradiction:
+
+1. **The three-rule agreement rate, given above as 28.2%.** It was later established (E-025r; QC
+   §7.1, `paper/PAPER2_DRAFT_QC.md`) that the as-of for the E-017 record is an *instant*,
+   `2026-07-19T17:29:50Z`, not a date. Cutting the panel at that instant reproduces the recorded
+   **28.6%** exactly, along with all six other figures; the 28.2% and 28.8% values are the same
+   computation under date-level cutoffs on either side of it. **28.6%** is the authoritative value
+   and is what the manuscript reports.
+
+   **This does not disturb Condition 1.** The condition failed on the non-invariance of the primary
+   statistic across extraction rules — 4.7× / 1.1× / 9.5× — not on the agreement rate, and it fails
+   identically at 28.2%, 28.6% or 28.8%.
+
+2. **The SR-1 contemporaneity bound, given above as 572 s.** It is a cumulative statistic recomputed
+   over a growing panel and drifts: 579 s (08-10), 572 s (08-11), 565 s (08-17), 568 s (08-18),
+   567 s (08-22). No single value is canonical. SR-1's status is unaffected — every observation is
+   roughly forty times the 15 s criterion, and SR-1 remains **BLOCKED**.
+
+Nothing in Outcome C, GD-21, the four conditions, or the disposition of any condition is altered by
+this note.

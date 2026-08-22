@@ -1,9 +1,15 @@
 # The Third Turn
 
-**From Pitcher Fatigue to Market Efficiency** — a forecast-encompassing test of public information
-in live baseball wagering markets.
+Two working papers on live betting markets, with the code, derived artifacts and governance record
+that reproduce them.
 
-This repository accompanies the working paper of the same name. It began as an attempt to trade the
+- **Paper 1 — *From Pitcher Fatigue to Market Efficiency***: a forecast-encompassing test of public
+  information in live baseball wagering markets. (`paper/paper1.md`, `paper/paper1.pdf`)
+- **Paper 2 — *What Prices Cannot Tell You***: an identification study of information transmission.
+  The pre-registered gate returned **Outcome C — the pricing contrast is not identifiable with this
+  class of instrument**, and no estimate of it is reported. (`paper/paper2.md`, `paper/paper2.pdf`)
+
+This repository accompanies the first paper of the same name. It began as an attempt to trade the
 pitcher times-through-order penalty and became a study of a harder question: does *any* publicly
 observable baseball variable improve on a sharp live betting market's own forecast of remaining
 runs? Across 163 Major League Baseball games, none does. The market's forecast error is not
@@ -26,7 +32,7 @@ distinct questions, answered with different instruments and different assumption
 
 | Path | Contents |
 |---|---|
-| `paper/` | The paper (`paper1.pdf`, `paper1.md`), its figures, and `REPRODUCE.md`. |
+| `paper/` | Both papers (`paper1.md`/`.pdf`, `paper2.md`/`.pdf`), all figures, and `REPRODUCE.md`. |
 | `paper/build_pdf.py`, `make_figures.py`, `figstyle.py` | Regenerate the figures and the PDF. See `paper/REPRODUCE.md`. |
 | `*.py` (top level) | The analysis that produces `output/*.json` (encompassing, calibration, transfer function, remaining-runs model, debiasing). |
 | `output/` | The **frozen Paper-1 result caches** (`*.json`) that reproduce the paper, plus the **live collection panels** (see Data). |
@@ -45,8 +51,10 @@ pip install -r requirements-lock.txt   # the pinned REPLICATION set
 python3 encompass.py                   # -> output/encompass.json
 python3 calibration.py                 # -> output/calibration.json
 python3 program_a.py                   # -> output/program_a.json
-python3 paper/make_figures.py          # all figures
+python3 paper/make_figures.py          # Paper 1 figures
+python3 paper/make_paper2_figures.py   # Paper 2 figures
 python3 paper/build_pdf.py             # -> paper/paper1.pdf   (needs Chromium)
+python3 paper/build_pdf.py paper2      # -> paper/paper2.pdf
 ```
 
 Install from **`requirements-lock.txt`** (exact pins, verified). `requirements.txt` is the live
@@ -71,13 +79,22 @@ Two kinds of data ship here, kept separate on purpose:
   follow-on. These are **not** used in Paper 1 (which is frozen on the June-2026 sample); they are
   provided as a growing research asset. See `benchmark/dataset/schema.md` for the field dictionary.
 
-The panels are derived from public sportsbook feeds and are provided for research use. Verify the
-relevant terms before redistribution or commercial use.
+**The raw live-collection panels are NOT included in this repository.** They are third-party
+sportsbook quote and HTTP-header observations whose redistribution terms have not been established,
+and they are excluded from every public build. Field-level documentation is published in
+`benchmark/dataset/panels_schema.md`; the data itself is available to researchers on request,
+subject to the originating endpoints' terms. Neither paper's figures require them: Paper 1
+reproduces from the frozen `output/*.json` caches, and Paper 2's figures are schematic.
 
 ## License
 
 - **Code:** MIT (`LICENSE`).
-- **Data and paper text:** Creative Commons Attribution 4.0 (CC BY 4.0).
+- **Paper text and documentation:** Creative Commons Attribution 4.0 (CC BY 4.0).
+- **Data:** the derived result artifacts in `output/*.json` are released under CC BY 4.0. The
+  Benchmark Dataset (`data/trajectories.jsonl`) contains quoted prices obtained from a third-party
+  odds feed; **its redistribution terms are under review and no licence is asserted over it beyond
+  the research use for which it was released.** Raw live panels are not distributed at all. A
+  persistent archive or DOI will not be minted until that review is complete.
 
 ## Citation
 

@@ -323,12 +323,12 @@ the original feeds.
 
 The full pipeline, including the collector, is released at
 `https://github.com/alecmessino/third-turn`, with citation metadata in `CITATION.cff`. Release
-`v1.0` corresponds to the results reported here. The environment is Python 3.11 with dependencies
-pinned in `requirements.txt`, and the analysis is versioned on three independent axes, Protocol 1.0,
-Collector 1.1, and Benchmark Dataset 2026.06, because method, engineering, and data evolve
-separately. From a clean checkout of the release tag, installing the pinned requirements and running
-the figure and build scripts regenerates every figure and the manuscript from the committed
-inputs.
+`v1.0` corresponds to the results reported here. The environment is Python 3.11.15 with
+dependencies pinned in `requirements-lock.txt`, and the analysis is versioned on three independent
+axes, Protocol 1.0, Collector 1.1, and Benchmark Dataset 2026.06, because method, engineering, and
+data evolve separately. From a clean checkout of the release tag, installing the pinned requirements
+and running the scripts documented in `paper/REPRODUCE.md` regenerates every figure and the
+manuscript from the committed inputs.
 
 ---
 
@@ -588,12 +588,18 @@ field accumulate falsifications rather than scattered one-off backtests.
 We state the conditions under which the conclusion holds, without editorializing. **Scope.** The
 study covers 163 games in a single month (June 2026) of one sport. The boundary is characterized
 precisely, but only under those conditions, and we claim no seasonal or cross-sport generality.
-This sample is deliberately frozen: independent live collection is ongoing, and a temporal
-replication on a later, non-overlapping month is reported separately rather than pooled into these
-estimates, so that the replication is a genuine out-of-sample test of the present result. **Odds source.** Line trajectories come from a single Pinnacle-grade feed
+This sample is deliberately frozen: independent live collection is ongoing, and any temporal
+replication on a later, non-overlapping month would be reported separately rather than pooled into
+these estimates, so that such a replication remains a genuine out-of-sample test of the present
+result. No such replication is reported here. **Odds source.** Line trajectories come from a single sharp-book feed
 sampled at roughly one-minute intervals, so we cannot separate genuine price-formation latency
 from feed cadence, and the uniform sub-one response ratio in the transfer function is consistent
-with either. **Single-book benchmark.** All encompassing tests run against one sharp book; we
+with either. A companion study instruments the delivery path of live sportsbook feeds directly and
+measures what that caveat costs: delivered quote objects carry substantial, book-specific staleness,
+and the interval between publication and observation is not identifiable from public endpoints
+(Messino 2026). That result bears on how the transfer-function timing should be read; it concerns
+when information entered prices rather than whether prices contain it, and leaves the estimates
+reported here unchanged. **Single-book benchmark.** All encompassing tests run against one sharp book; we
 cannot test cross-book agreement or leadership. **Market coverage.** Retail live team totals were
 not exposed by our feeds and are untested, as are first-five-inning totals. **Ground truth.** The
 remaining-runs model and the RE24 transfer benchmark use published static run values rather than
@@ -787,6 +793,9 @@ Giacomini, R., and H. White (2006). "Tests of Conditional Predictive Ability." *
 
 Hanley, J. A., and B. J. McNeil (1982). "The Meaning and Use of the Area Under a Receiver
 Operating Characteristic (ROC) Curve." *Radiology* 143(1): 29-36.
+
+Messino, A. (2026). "What Prices Cannot Tell You: Identifying Information Transmission in Live
+Markets." Working paper, The Third Turn Research Initiative.
 
 Sauer, R. D. (1998). "The Economics of Wagering Markets." *Journal of Economic Literature* 36(4):
 2021-2064.

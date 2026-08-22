@@ -181,3 +181,45 @@ it to the gate.
 
 Final-publication formatting, figure regeneration, PDF build, and any dissemination step. The draft
 is committed for review only.
+
+---
+
+## 9. Re-verification pass, 2026-08-22
+
+The bounded QC instruction was issued a second time. Rather than repeat work already committed, the
+prior pass was re-verified against the current repository state. **No item changed disposition and no
+regression was found.** Three of the four original items remain closed; one remains open. The
+manuscript was not edited in this pass.
+
+**Reproduction, re-tested against a larger panel.** The point of an as-of *instant* is that later
+collection cannot disturb a historical figure. The panel has grown from 672,035 to **745,831 rows**
+since the last pass — 74k rows of new data — and `july_analyses.py --asof` still returns **7 of 7**
+figures matching the record, including the 28.6% agreement rate. This is stronger evidence than the
+original check, which ran when the panel had barely moved.
+
+**§5.3 versus §7.4, re-compared.** All six shared quantities still agree (3,500 / 116 / 1,094 /
+98.6% / 0.27% / 28.4%). Section-exclusive figures were enumerated and are depth differences rather
+than conflicts: §5.3 alone carries the payload-age medians (115 s, 549 s) and the slate size (8,463);
+§7.4 alone carries the presence bound (0.050% of 5,991 fetches) and the scheduled-start counts
+(3,615/3,616 and 3,494/3,495). §7.4's "90th percentile in the high hundreds of seconds" is the
+qualitative form of §5.3's 549 s, not a competing value.
+
+**Regression sweep.** Fourteen invariants re-checked and all held: section numbering contiguous 1–9,
+tables sequential 1–5, §6.6 Condition 1 verbatim, tripwire present, post-evidence disclosure present,
+no "plausibly common-mode" language, 28.2% confined to the provenance note, 28.6% as the reported
+value, the modal row at 42 of 57, "all seven" reproduction, the matchup-group unit stated, no bare
+572/579 standing as the figure, and both precision clarifications intact.
+
+**The SR-1 bound drifted again, as the manuscript says it does.** The series is now 579 (08-10),
+572 (08-11), 565 (08-17), 568 (08-18), **567 (08-22)**. The manuscript's claim is dated — "568
+seconds as of 2026-08-18" — so it remains accurate as a historical statement and was deliberately not
+updated. The fifth observation strengthens rather than undermines the treatment: no single value is
+canonical, and the stable fact is the order of magnitude, roughly forty times the 15 s criterion.
+
+**Collector state, incidentally confirmed.** 365 checkpoints have landed since the shard fix on
+08-18, with data current to 2026-08-22T16:40Z. The persistence failure recorded as Gap 3 has not
+recurred in four days of continuous operation.
+
+**Item 7.3 remains unresolved** and is unchanged: quantifying the truncated-matchup effect on
+per-matchup interval statistics requires a new analysis, which both the original and repeated
+instructions exclude.

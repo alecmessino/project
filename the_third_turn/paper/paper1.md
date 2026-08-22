@@ -192,7 +192,7 @@ reproduction (Section 3.5).
 
 The study draws on 163 Major League Baseball games played in June 2026, each observed from three
 aligned sources. **Market prices.** Live full-game total (over/under) lines were recorded as
-one-minute trajectories from a single Pinnacle-grade feed. From each trajectory we take the main
+one-minute trajectories from a single sharp-book feed. From each trajectory we take the main
 balanced total, the handicap at which the over and under prices sit closest to even. This is the
 market's median-outcome forecast of final total runs, and it serves as the incumbent forecast; its
 implied over probability feeds the calibration diagnostics. Appendix B details how a snapshot's

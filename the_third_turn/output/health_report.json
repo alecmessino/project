@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-22T04:53:53+00:00",
+  "generated": "2026-08-22T05:05:22+00:00",
   "versions": {
     "protocol": "1.0",
     "collector": "1.1",
     "benchmark_dataset": "2026.06"
   },
   "integrity": {
-    "rows": 745324,
+    "rows": 745508,
     "malformed_json": 0,
     "missing_required_fields": 0,
     "duplicate_rows": 0,
@@ -14,22 +14,22 @@
   },
   "by_book": {
     "bovada": {
-      "rows_total": 285347,
-      "live_total": 86808,
-      "live_today": 3474,
-      "last_row_age_min": 0.3
+      "rows_total": 285439,
+      "live_total": 86854,
+      "live_today": 3520,
+      "last_row_age_min": 0.2
     },
     "fanduel": {
-      "rows_total": 459971,
-      "live_total": 96356,
-      "live_today": 3720,
-      "last_row_age_min": 0.3
+      "rows_total": 460063,
+      "live_total": 96402,
+      "live_today": 3766,
+      "last_row_age_min": 0.2
     },
     "pinnacle": {
       "rows_total": 6,
       "live_total": 0,
       "live_today": 0,
-      "last_row_age_min": 67588.9
+      "last_row_age_min": 67600.4
     }
   },
   "books_reporting_live": [
@@ -37,25 +37,25 @@
     "fanduel"
   ],
   "market_status": {
-    "unset": 86808,
-    "OPEN": 88956,
-    "SUSPENDED": 6946,
+    "unset": 86854,
+    "OPEN": 89000,
+    "SUSPENDED": 6948,
     "REMOVED": 454
   },
   "overlap": {
-    "simultaneous_pairs_total": 100065,
-    "simultaneous_pairs_today": 3836,
+    "simultaneous_pairs_total": 100111,
+    "simultaneous_pairs_today": 3882,
     "overlap_games": 181,
     "median_cocapture_lag_s": 0.0,
     "median_sync_lag_s": 0.0,
     "delivery_staleness_s": {
       "bovada": {
-        "n": 30285,
+        "n": 30322,
         "median": 123.0,
         "p90": 537.0
       },
       "fanduel": {
-        "n": 25176,
+        "n": 25201,
         "median": 30.0,
         "p90": 31.0
       }
@@ -100,7 +100,7 @@
     "criteria": [
       {
         "criterion": "simultaneous live quote pairs",
-        "current": 100065,
+        "current": 100111,
         "target": 2000,
         "pass": true,
         "progress": 1.0

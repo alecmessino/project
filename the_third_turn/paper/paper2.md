@@ -237,9 +237,11 @@ messaging.
 
 The consequence is not that estimation becomes harder. It is that the estimand changes. In the price
 discovery setting the object of inference is a property of the market, and the apparatus is
-transparent. Here the apparatus enters the estimand, and the observed quantity is a sum of a market
-component and two infrastructure components that no amount of additional sampling separates. That is
-the gap this paper occupies.
+transparent. Here the apparatus enters the estimand, and the observed quantity is a sum of four
+terms: the bookmaker's pricing latency, its feed's publication latency, the staleness of the copy
+its distribution path delivers to us, and the sampling delay imposed by our own cadence. Only the
+last is ours to set, and setting it finer separates none of the other three. That is the gap this
+paper occupies.
 
 ### 2.5 Where this paper sits
 

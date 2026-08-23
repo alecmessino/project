@@ -3,7 +3,7 @@
 <h1>From Pitcher Fatigue to Market Efficiency: A Forecast-Encompassing Test of Public Information in Live Baseball Wagering Markets</h1>
 <p class="epigraph">This paper asks whether publicly observable baseball information predicts outcomes, or merely predicts what the market already knows.</p>
 <p class="author">[Author names withheld for anonymous review]</p>
-<p class="wp">Working Paper &middot; July 2026 &middot; Comments welcome</p>
+<p class="wp">Working Paper &middot; July 2026</p>
 </div>
 
 

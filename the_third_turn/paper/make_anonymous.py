@@ -30,6 +30,9 @@ LITERAL = [
     ('<p class="author">Alec Messino<br/><span class="affil">The Third Turn Research '
      'Initiative &middot; alec.messino@gmail.com</span></p>',
      '<p class="author">[Author names withheld for anonymous review]</p>'),
+    # Journal-submission copies drop the working-paper solicitation; paper1.md keeps it.
+    ('<p class="wp">Working Paper &middot; July 2026 &middot; Comments welcome</p>',
+     '<p class="wp">Working Paper &middot; July 2026</p>'),
     ("`https://github.com/alecmessino/third-turn`", WITHHELD),
     ("https://github.com/alecmessino/third-turn", "[repository URL withheld for anonymous review]"),
     ("alec.messino@gmail.com", "[email withheld]"),

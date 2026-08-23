@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Build paper1.pdf from paper1.md — SSRN-style working paper.
+"""Build a PDF from a markdown document — SSRN-style working paper.
+
+Defaults to paper1. Pass a stem in paper/ ("paper2") or a path to any markdown
+document ("docs/VISUAL_COMPANION.md").
 
 python-markdown → styled HTML → headless Chromium print-to-PDF. No LaTeX needed.
 Deps: `pip install -r the_third_turn/paper/requirements.txt` (the container recycle
@@ -75,14 +78,25 @@ a { color: inherit; text-decoration: none; }
 
 
 def main() -> int:
-    stem = sys.argv[1] if len(sys.argv) > 1 else "paper1"
-    stem = stem[:-3] if stem.endswith(".md") else stem
-    src = (HERE / f"{stem}.md").read_text()
+    arg = sys.argv[1] if len(sys.argv) > 1 else "paper1"
+    # Accept either a bare stem in paper/ ("paper2") or a path to any markdown
+    # document ("docs/VISUAL_COMPANION.md"), so supplements and companions build
+    # by the same documented route as the manuscripts. Output lands next to the
+    # source, which keeps relative image paths working.
+    cand = Path(arg if arg.endswith(".md") else f"{arg}.md")
+    for base in (Path.cwd(), HERE, HERE.parent):
+        if (base / cand).is_file():
+            srcpath = (base / cand).resolve()
+            break
+    else:
+        raise SystemExit(f"build_pdf: no such markdown document: {arg}")
+    outdir, stem = srcpath.parent, srcpath.stem
+    src = srcpath.read_text()
     body = markdown.markdown(src, extensions=["tables", "footnotes"])
     html = f"<!doctype html><html><head><meta charset='utf-8'><style>{CSS}</style></head><body>{body}</body></html>"
-    out_html = HERE / f"{stem}.html"
+    out_html = outdir / f"{stem}.html"
     out_html.write_text(html)
-    pdf = HERE / f"{stem}.pdf"
+    pdf = outdir / f"{stem}.pdf"
     subprocess.run([
         CHROMIUM, "--headless=new", "--no-sandbox", "--disable-gpu",
         "--no-pdf-header-footer", f"--print-to-pdf={pdf}", f"file://{out_html}",

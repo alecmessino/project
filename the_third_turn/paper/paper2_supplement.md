@@ -1,0 +1,181 @@
+<div class="titleblock">
+<h1>What Prices Cannot Tell You — Supplementary Material</h1>
+<p class="epigraph">Technical appendix to the companion manuscript. Every figure, disposition and statistic reported here is drawn from the committed research record and appears in, or underlies, the main text. No new analysis was performed for this appendix.</p>
+<p class="author">Alec Messino<br/><span class="affil">The Third Turn Research Initiative &middot; alec.messino@gmail.com</span></p>
+<p class="wp">Supplement &middot; August 2026</p>
+</div>
+
+## S1. Purpose and scope
+
+The main text argues that a specific quantity — the contrast in how quickly two books incorporate
+the same information — is not identifiable from the class of instrument available to it. That is an
+unusual claim to make in a paper, because it is a claim about what the evidence *cannot* support,
+and a referee is entitled to ask whether the conclusion was reached by a rule fixed in advance or
+arrived at afterwards.
+
+This appendix exists to answer that question with the record rather than with assurances. It
+documents four things:
+
+1. the conditions that were fixed before the evidence was seen, and how each was disposed of (§S2);
+2. the amendment made after the evidence was seen, its scope, and the tripwire attached to it (§S3);
+3. the delivery-path measurements on which the non-identification rests (§S4);
+4. the robustness, continuity and reproducibility record (§S5–§S7).
+
+Nothing here is required to follow the argument in the main text. It is here so that the argument
+can be audited.
+
+## S2. The pre-registered gate, as applied
+
+Section 6.6 of the main text fixed four conditions before the results were written, and made the
+reporting of any estimate conditional on them. The gate was then applied literally. The
+determination is dated 2026-08-11 and is preserved verbatim in the research record; its dispositions
+are reproduced below.
+
+| # | Condition (abbreviated) | Disposition | Basis |
+|---|---|---|---|
+| 1 | A well-defined main line: an extraction rule fixed in code and tested, with the primary statistic materially invariant to reasonable alternatives | **Failed** | Rule is fixed in committed code and reproduces the record. The required invariance demonstration returned **non**-invariance: 4.7× / 1.1× / 9.5× across three defensible extraction rules, which agree on **28.6%** of groups |
+| 2 | An event-clock comparability audit, with residual skew quantified | **Unsatisfied** | The audit was never performed. This is an absence, not an adverse finding, and is reported as such |
+| 3 | A defensible treatment of observation latency | **Satisfied — third route only** | Satisfied via the documented-impossibility route. Route 1 is explicitly **not** satisfied |
+| 4 | Estimation safeguards: three live sources, or a committed outlier procedure | **Failed** | Two of three books quote live; no outlier procedure exists in code |
+
+Condition 1 deserves emphasis because it is the condition most easily mistaken for a
+reproducibility problem. It is not. The extraction rule is fixed in committed code and reproduces
+the historical record exactly. **The condition fails on its substantive requirement** — the
+demonstration it required was performed, and it returned the opposite of what the condition asked
+for. The three rules span an order of magnitude in the primary statistic, and the choice among them
+is not adjudicated by anything in the data.
+
+With A excluded twice over and B failing on its own deliverable — `λ_feed` carries no bound of any
+kind — **Outcome C obtains**: the quantity is not identifiable with this class of instrument.
+
+## S3. The post-evidence amendment, and what binds after it
+
+The gate as literally written conditioned the entire Results section on four conditions that exist
+to guard a *reported estimate*. Outcome C reports no estimate. Read literally, the paper could
+therefore never report the one result its own design says is publishable.
+
+The amendment recorded on 2026-08-11 scopes Conditions 1, 2 and 4 to estimate-reporting only. Three
+properties of that amendment matter to a reader deciding how much weight to give it:
+
+1. **It was made after the evidence was seen, and says so.** The four original conditions are
+   preserved byte-for-byte in the manuscript, and the reader is explicitly invited to judge the
+   paper against the unamended gate.
+2. **It scopes; it does not satisfy.** Conditions 1, 2 and 4 are reported as failing throughout.
+   The alternative — declaring them met or inapplicable — was considered and refused in the record
+   as the self-serving version of the same move.
+3. **A tripwire is attached.** If any estimate of the pricing contrast is ever reported — in this
+   paper, a successor, a talk, or a repository artifact — the three conditions bind again in their
+   original, unamended form and must be satisfied first. Condition 1's non-invariance is deferred,
+   not cured.
+
+The separate stopping rule governing the leadership analysis (SR-1) is untouched by the amendment
+and remains blocked at two of four criteria.
+
+## S4. Delivery-path measurements
+
+The non-identification is not an argument from ignorance. It rests on measurements of the delivery
+path itself, taken from a per-market provenance instrument over a single frozen slate of 8,463
+market transitions (4,847 from one book, 3,616 from the other).
+
+**What the event clock does.** One book exposes an event-level modification timestamp. It moved on
+**1,094 of 1,094** price changes — and on **98.6%** of transitions in which the price did *not*
+move. It is a heartbeat, not a publication clock: near-certain coincidence with price changes
+carries almost no information, because it coincides with almost everything else too.
+
+**What it can still do.** No price change left the clock frozen: **0 of 1,094**, giving a 95% upper
+bound of **0.27%** by the rule of three. The clock is therefore a *necessary* condition for a
+revision. It can be used to exclude revisions; it cannot be used to date them.
+
+**What the transport adds.** Delivered objects are served from a cache. Over the frozen slate the
+instrument recorded **3,500 cache hits against 116 misses**, and payload ages with medians of
+**115 s** and **549 s** for the two books — an asymmetry that is a property of the two operators'
+cache policies, not of their pricing. **28.4%** of observations arrived out of order relative to
+their own embedded timestamps.
+
+**Why co-capture is not contemporaneity.** Because both books are read in a single poll, the naive
+synchronization statistic — the spread between capture times — sits pinned at zero. It measures
+when the collector read, not whether the two quotes describe the same market moment. Repaired to
+account for book-specific delivered staleness, the contemporaneity bound is roughly **forty times**
+the 15 s criterion the stopping rule requires. The bound is a cumulative statistic over a growing
+panel and drifts with it; the main text quotes it with an explicit as-of date and lists the
+successive recomputations rather than presenting any single value as canonical.
+
+**The four latencies, kept apart.** `λ_price` (when the book changed its price), `λ_feed` (when it
+published that change), `λ_deliv` (how stale the object we received was), and `λ_samp` (our own
+sampling interval). Only `λ_deliv` and `λ_samp` are measured. Every statistic in this appendix
+concerns delivery. None of it bounds `λ_feed`, and it is the absence of any bound on `λ_feed` that
+excludes the intermediate outcome.
+
+## S5. Robustness
+
+The July window used for the extraction-sensitivity analysis contains a documented collection gap
+that truncated three matchups mid-slate. The load-bearing statistics were recomputed under two
+exclusions, at the record's own as-of instant.
+
+| Statistic | All rows | DROP-SLICE (the precise correction) | DROP-MATCHUP (deliberately over-aggressive) |
+|---|---|---|---|
+| Re-pricing frequency ratio, balanced-odds rule | 4.7× | **4.7×** | 4.3× |
+| Matchup groups favouring one book | 53 of 60 | **53 of 60** | 50 of 57 |
+| Vig IQR (book A / book B) | 0.05 / 0.31 pp | **0.05 / 0.31 pp** | 0.05 / 0.38 pp |
+| Event-response asymmetry | 36% / 18% (+18 pp) | **36% / 18% (+18 pp)** | 35% / 18% (+17 pp) |
+| Reverse (placebo) test | −7 pp | **−7 pp** | −6 pp |
+
+DROP-SLICE — removing only the truncated slices — leaves every figure unchanged. DROP-MATCHUP,
+which discards the affected matchups' complete earlier dates as well and is therefore more
+aggressive than the defect warrants, preserves every direction and every qualitative conclusion
+while moving magnitudes slightly.
+
+One robustness question remains open and is stated rather than papered over: the effect of truncated
+matchups on *per-matchup interval* statistics has not been quantified, because doing so requires an
+analysis outside the scope of the frozen record. What is established is that the exclusion above
+leaves the reported table unchanged, which bounds the concern in practice without measuring it.
+
+## S6. Data continuity
+
+Collection has three documented interruptions. All three are catalogued with their mechanisms; two
+of the three were **persistence** failures rather than collection outages — the collector ran and
+reported healthy while nothing reached the repository.
+
+| Gap | Window | Species | Effect on the analysis |
+|---|---|---|---|
+| 1 | 2026-07-12 → 07-15 | Persistence failure; specific cause not recoverable | Truncated three matchups mid-slate; see §S5 |
+| 2 | 2026-08-06 → 08-10 | True collection outage — one transient API error on the collector's self-restart | Does not overlap the frozen provenance slate |
+| 3 | 2026-08-14 → 08-17 | Persistence failure — the panel file crossed a hard storage ceiling and every push was silently rejected | Later than the analysis window |
+
+That two of three failures were invisible to a monitor reporting "healthy" is itself relevant to the
+paper's thesis. A signal that reports on activity rather than on outcome cannot see a process that is
+running and accomplishing nothing — the same structure as a timestamp that reports when an object
+was delivered rather than when its price was set.
+
+## S7. Reproducibility
+
+**Historical figures reproduce only at their own as-of instant.** The panel is append-only, so the
+same code over a larger sample returns different numbers. That is a property of the dataset, not a
+discrepancy. The as-of must be an *instant*: a date-level cutoff on either side of the original run
+returns values that bracket the recorded figure without matching it, while cutting at the recorded
+run instant reproduces **all seven** figures exactly, including the 28.6% agreement rate. The
+committed implementation enforces this with an explicit as-of parameter.
+
+**The reproduction is stable under growth.** The check was re-run after the panel had grown by
+roughly 74,000 rows, and still returned seven of seven — which is stronger evidence than the
+original check, taken when the panel had barely moved.
+
+**What ships and what does not.** The analysis code, the derived artifacts, and the figures are
+released; all figures in the main text are schematic and rebuild without data access. The
+observational panels are not redistributed: they are third-party sportsbook observations whose
+reuse is governed by the originating endpoints' terms, and that review is not complete. A
+field-level data dictionary for every panel is published with the code, including the delivery
+metadata on which §S4 rests.
+
+Readers should therefore treat the panel statistics as verifiable against the committed record and
+the analysis code, but not independently recomputable from the public release.
+
+## S8. What is deliberately not reported
+
+Statistics shaped like leadership results exist in the internal record. They are named as withheld,
+without values, and the withholding is part of the result rather than an omission from it. Under the
+tripwire in §S3, no estimate of the pricing contrast may be published until Conditions 1, 2 and 4
+are satisfied in their original form — which, for Condition 1, requires either a primary statistic
+that is genuinely invariant across extraction rules or acceptance that the condition fails.
+
+**Observation survives. Identification does not.**

@@ -67,6 +67,7 @@ rm -f "$OUT/output/daemon.log" "$OUT/output/streamlit.log" 2>/dev/null || true
 # scientific record, not operational noise.
 INTERNAL_DOCS="
 ops/THIRD_TURN_PROGRAM_REVIEW_2026_08.md
+ops/FINAL_PUBLICATION_STRATEGY.md
 ops/SUBMISSION_VS_RELEASE.md
 ops/DATA_RIGHTS_REVIEW.md
 ops/DAILY_REPORT_TEMPLATE.md
@@ -79,6 +80,8 @@ output/metrics_history.jsonl
 output/ledger.jsonl
 "
 for f in $INTERNAL_DOCS; do rm -f "$OUT/$f"; done
+# Anonymized submission copies are venue artifacts, not public-release objects.
+rm -f "$OUT"/paper/*_anon.md "$OUT"/paper/*_anon.pdf "$OUT"/paper/*_anon.html
 
 # Fail closed: the strategy memorandum must never ship.
 if [ -e "$OUT/ops/THIRD_TURN_PROGRAM_REVIEW_2026_08.md" ]; then

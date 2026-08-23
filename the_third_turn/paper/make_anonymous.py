@@ -39,8 +39,8 @@ LITERAL = [
     ("The Third Turn Research Initiative", "[affiliation withheld]"),
     # Paper 1's companion-study citation and its reference entry.
     ("(Messino 2026)", "(Author 2026)"),
-    ('Messino, A. (2026). "What Prices Cannot Tell You: Identifying Information Transmission in Live\nMarkets." Working paper, [affiliation withheld].',
-     'Author (2026). "What Prices Cannot Tell You: Identifying Information Transmission in Live\nMarkets." Working paper. [Reference anonymized for review.]'),
+    ('Messino, A. (2026). "What Prices Cannot Tell You: Identification Limits of Information\nTransmission in High-Frequency Markets." Working paper, [affiliation withheld].',
+     'Author (2026). "What Prices Cannot Tell You: Identification Limits of Information\nTransmission in High-Frequency Markets." Working paper. [Reference anonymized for review.]'),
 ]
 
 

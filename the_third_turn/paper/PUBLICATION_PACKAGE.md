@@ -14,7 +14,7 @@ No empirical claim, number, figure, or result may change (owner ruling, 2026-07-
 
 | Field | Value / source |
 |---|---|
-| Title | From Pitcher Fatigue to Market Efficiency: A Forecast-Encompassing Test of Public Information in Live Baseball Wagering Markets |
+| Title | Does the Market Already Know? Forecast Encompassing in Live Baseball Betting Markets |
 | Author | Alec Messino |
 | Affiliation | **The Third Turn Research Initiative** (independent). SSRN accepts an unaffiliated/independent entry; do not invent an institution. |
 | Abstract | **D1** (~150 words) |

@@ -3,7 +3,7 @@
 Two working papers on live betting markets, with the code, derived artifacts and governance record
 that reproduce them.
 
-- **Paper 1 — *From Pitcher Fatigue to Market Efficiency***: a forecast-encompassing test of public
+- **Paper 1 — *Does the Market Already Know?***: a forecast-encompassing test of public
   information in live baseball wagering markets. (`paper/paper1.md`, `paper/paper1.pdf`)
 - **Paper 2 — *What Prices Cannot Tell You***: an identification study of information transmission.
   The pre-registered gate returned **Outcome C — the pricing contrast is not identifiable with this

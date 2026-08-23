@@ -1,7 +1,7 @@
 <div class="titleblock">
 <h1>The Third Turn: A Visual Companion</h1>
 <p class="epigraph">Repository documentation: illustrative figures for talks and curious readers. <strong>This is not part of the paper</strong> and carries no citable claim. The rigorous versions of everything shown here live in the paper's conditional tests; these panels use small buckets and wide intervals and are meant to build intuition, not to support inference.</p>
-<p class="wp">Companion to "From Pitcher Fatigue to Market Efficiency" &middot; July 2026</p>
+<p class="wp">Companion to "Does the Market Already Know?" &middot; July 2026</p>
 </div>
 
 ## Line movement: the live total tracks the runs

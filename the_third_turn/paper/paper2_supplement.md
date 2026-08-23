@@ -1,5 +1,5 @@
 <div class="titleblock">
-<h1>What Prices Cannot Tell You — Supplementary Material</h1>
+<h1>What Prices Cannot Tell You: Identification Limits of Information Transmission in High-Frequency Markets — Supplementary Material</h1>
 <p class="epigraph">Technical appendix to the companion manuscript. Every figure, disposition and statistic reported here is drawn from the committed research record and appears in, or underlies, the main text. No new analysis was performed for this appendix.</p>
 <p class="author">Alec Messino<br/><span class="affil">The Third Turn Research Initiative &middot; alec.messino@gmail.com</span></p>
 <p class="wp">Supplement &middot; August 2026</p>

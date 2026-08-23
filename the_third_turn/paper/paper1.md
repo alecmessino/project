@@ -1,5 +1,5 @@
 <div class="titleblock">
-<h1>From Pitcher Fatigue to Market Efficiency: A Forecast-Encompassing Test of Public Information in Live Baseball Wagering Markets</h1>
+<h1>Does the Market Already Know? Forecast Encompassing in Live Baseball Betting Markets</h1>
 <p class="epigraph">This paper asks whether publicly observable baseball information predicts outcomes, or merely predicts what the market already knows.</p>
 <p class="author">Alec Messino<br/><span class="affil">The Third Turn Research Initiative &middot; alec.messino@gmail.com</span></p>
 <p class="wp">Working Paper &middot; July 2026 &middot; Comments welcome</p>
@@ -793,8 +793,8 @@ Giacomini, R., and H. White (2006). "Tests of Conditional Predictive Ability." *
 Hanley, J. A., and B. J. McNeil (1982). "The Meaning and Use of the Area Under a Receiver
 Operating Characteristic (ROC) Curve." *Radiology* 143(1): 29-36.
 
-Messino, A. (2026). "What Prices Cannot Tell You: Identifying Information Transmission in Live
-Markets." Working paper, The Third Turn Research Initiative.
+Messino, A. (2026). "What Prices Cannot Tell You: Identification Limits of Information
+Transmission in High-Frequency Markets." Working paper, The Third Turn Research Initiative.
 
 Sauer, R. D. (1998). "The Economics of Wagering Markets." *Journal of Economic Literature* 36(4):
 2021-2064.

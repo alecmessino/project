@@ -1,6 +1,6 @@
 # Submission & Visibility Kit
 
-Ready-to-paste copy for getting *From Pitcher Fatigue to Market Efficiency* out the door.
+Ready-to-paste copy for getting *Does the Market Already Know?* out the door.
 Companion to `../ROADMAP.md` (strategy). Everything below is copy you can paste tonight.
 
 ---
@@ -84,8 +84,8 @@ information; public-information capitalization; calibration; reproducible benchm
 
 > Dear Editors,
 >
-> Please consider the enclosed manuscript, "From Pitcher Fatigue to Market Efficiency: A
-> Forecast-Encompassing Test of Public Information in Live Baseball Wagering Markets."
+> Please consider the enclosed manuscript, "Does the Market Already Know? Forecast
+> Encompassing in Live Baseball Betting Markets."
 >
 > The paper uses a sharp live sports-betting line as an incumbent forecast and asks, via the
 > Chong-Hendry encompassing framework and a Clark-West nested comparison, whether any publicly
@@ -121,7 +121,7 @@ information; public-information capitalization; calibration; reproducible benchm
 
 ### D7. LinkedIn post
 
-> New working paper: *From Pitcher Fatigue to Market Efficiency.* We treat a sharp live baseball
+> New working paper: *Does the Market Already Know?* We treat a sharp live baseball
 > betting line as a forecast and ask whether any public information, times through the order,
 > velocity, bullpen, weather, ballpark, improves on it. It doesn't. The interesting part isn't the
 > null; it's the method: a forecast-encompassing protocol that separates "predicts the outcome" from

@@ -321,10 +321,10 @@ the original feeds.
 
 The full pipeline, including the collector, is released at
 `https://github.com/alecmessino/third-turn`, with citation metadata in `CITATION.cff`. Release
-`v1.0` corresponds to the results reported here. The environment is Python 3.11.15 with
+commit `d709878` corresponds to the results reported here. The environment is Python 3.11.15 with
 dependencies pinned in `requirements-lock.txt`, and the analysis is versioned on three independent
 axes, Protocol 1.0, Collector 1.1, and Benchmark Dataset 2026.06, because method, engineering, and
-data evolve separately. From a clean checkout of the release tag, installing the pinned requirements
+data evolve separately. From a clean checkout of that commit, installing the pinned requirements
 and running the scripts documented in `paper/REPRODUCE.md` regenerates every figure and the
 manuscript from the committed inputs.
 
@@ -761,10 +761,11 @@ forecast error is unpredictable.
 ## Data and code availability
 
 The cleaned data, feature schema, and frozen result files are released as the Third Turn Benchmark
-Dataset (v1), openly available at `https://github.com/alecmessino/third-turn` under release tag
-`v1.0`, together with the Third Turn Protocol, its safeguard registry, and its objective stopping
-rules. Reference implementations reproduce every number reported here from the committed inputs. A
-persistent archival DOI is being minted and will be added on deposit.
+Dataset (v1), openly available at `https://github.com/alecmessino/third-turn` at release commit
+`d709878`, together with the Third Turn Protocol, its safeguard registry, and its objective stopping
+rules. Reference implementations reproduce every number reported here from the committed inputs.
+The third-party terms governing the underlying odds feed are under review; a persistent archival
+deposit and DOI will follow only if and when that review permits one.
 
 ## References
 

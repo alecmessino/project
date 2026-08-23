@@ -51,7 +51,7 @@ def anonymize(text: str) -> str:
 
 def main() -> int:
     failures = []
-    for stem in ("paper1", "paper2", "paper2_supplement"):
+    for stem in ("paper1", "paper2", "paper2_journal", "paper2_supplement"):
         src = HERE / f"{stem}.md"
         out = HERE / f"{stem}_anon.md"
         text = anonymize(src.read_text())

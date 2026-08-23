@@ -139,7 +139,7 @@ re-prices every thirty seconds will reach any given price level before a book th
 eight minutes, regardless of which one is better informed. That is not leadership; it is sampling.
 
 Second, the identification problem must be confronted rather than assumed away. The delay we observe
-is a sum of three delays, and only one of them is about pricing. Separating them requires either an
+is a sum of four delays, and only one of them is about pricing. Separating them requires either an
 independent measurement of transport latency or an argument that transport latency is common across
 books. Neither is free, and we do not assume either.
 
@@ -276,8 +276,8 @@ problem, not the baseball application, is the durable object.
 Consider a discrete, publicly observable event in a baseball game occurring at clock time
 `t_E`: a run scores. The event changes the conditional distribution of the game's final total, and a
 bookmaker offering a live total on that game will, at some point, revise its posted number. An
-outside observer records the revision at some later time. Between the event and the record lie three
-distinct delays, produced by three distinct mechanisms.
+outside observer records the revision at some later time. Between the event and the record lie four
+distinct delays, produced by four distinct mechanisms.
 
 **Pricing latency**, which we write as the interval between the event and the bookmaker's internal
 decision to revise, is the economically meaningful quantity. It reflects how quickly the bookmaker
@@ -504,7 +504,7 @@ researcher what to build.
 
 ![](figures/p2_ladder.png)
 
-**Figure 6.** *Identification requires assumptions, not computation.* The requirements form a ladder, and each rung depends on the one above it. Each rung depends on the one above it. We hold the top
+**Figure 6.** *Identification requires assumptions, not computation.* The requirements form a ladder, and each rung depends on the one above it. We hold the top
 two. The third is a methodological choice we can fix and test. The fourth, knowledge of feed latency,
 is not obtainable from public endpoints, and the fifth depends on it. The colour of the fourth rung
 is what determines whether this paper reports Outcome A, B, or C.
@@ -1132,7 +1132,7 @@ unobserved stage, and the data are the sum of that stage and the plumbing around
 What betting markets add is not a novel problem but an unusually clean setting in which to state it.
 The information arrivals are discrete, publicly visible, and precisely dated; the contracts settle
 against ground truth within hours; and two competing quotes on the identical contract can be observed
-simultaneously. Where a general treatment would be forced into abstraction, here the three stages can
+simultaneously. Where a general treatment would be forced into abstraction, here the four stages can
 be named, the boundary of observation can be drawn, and the conditions for identification can be
 written down and checked. A setting in which the problem is tractable is worth more to the literature
 than a setting in which it is merely important.
@@ -1173,7 +1173,8 @@ paper are schematic and rebuild without any data access.
 The observational records underlying Sections 5 and 7 — the two-book quote panel, the game-state
 panel, and the per-market provenance and delivery-probe records — are **not redistributed**. They
 were obtained from commercial and public sportsbook endpoints whose terms govern their reuse, and
-that review is not complete. They are available to researchers on request, subject to those terms.
+that review is not complete. No redistribution is offered or implied while it remains open; any
+future access would be subject to those terms and to the outcome of that review.
 Readers should therefore treat the panel statistics reported in Section 7 as verifiable against the
 committed record and the analysis code, but not independently recomputable from this release.
 Field-level documentation for every panel — including the delivery-metadata fields on which the

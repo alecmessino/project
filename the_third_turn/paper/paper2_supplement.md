@@ -87,9 +87,10 @@ bound of **0.27%** by the rule of three. The clock is therefore a *necessary* co
 revision. It can be used to exclude revisions; it cannot be used to date them.
 
 **What the transport adds.** Delivered objects are served from a cache. Over the frozen slate the
-instrument recorded **3,500 cache hits against 116 misses**, and payload ages with medians of
-**115 s** and **549 s** for the two books — an asymmetry that is a property of the two operators'
-cache policies, not of their pricing. **28.4%** of observations arrived out of order relative to
+instrument recorded **3,500 cache hits against 116 misses**, and, on one book, a payload age with a median of
+**115 s** and a 90th percentile of **549 s** — staleness that is a property of that operator's
+distribution path, not of its pricing, and that the two books do not even report under the same
+convention. **28.4%** of observations arrived out of order relative to
 their own embedded timestamps.
 
 **Why co-capture is not contemporaneity.** Because both books are read in a single poll, the naive

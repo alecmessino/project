@@ -56,7 +56,10 @@ blockquote h3 { margin-top: 0; }
 code { font-family: 'DejaVu Sans Mono', monospace; font-size: 9pt; background: #f2f2f0; padding: 0 2px; }
 hr { border: none; border-top: 0.5pt solid #ccc; margin: 16pt 0; }
 p:has(> img) { text-align: center; margin: 14pt 0 4pt; break-inside: avoid; break-after: avoid; }
-img { max-width: 88%; }
+/* Figures are authored at the full text measure (figstyle.FULL_W), so they display
+   at scale 1.0 and a point inside a figure is a point on paper. Narrowing this
+   silently shrinks every internal label -- see figstyle's production contract. */
+img { max-width: 100%; }
 p:has(> img) + p { font-size: 9pt; color: #333; text-align: center; margin: 0 6% 18pt;
                    break-before: avoid; break-inside: avoid; }
 table { border-collapse: collapse; font-size: 8.4pt; margin: 10pt auto 14pt; width: 100%; }

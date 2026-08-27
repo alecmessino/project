@@ -108,6 +108,12 @@ if ! python3 "$ROOT/the_third_turn/paper/check_title_margins.py" "$OUT"/paper/*.
   echo "==> ERROR: title-block margin check failed; release aborted." >&2
   exit 1
 fi
+
+echo "==> verifying figure legibility"
+if ! python3 "$ROOT/the_third_turn/paper/check_figure_legibility.py"; then
+  echo "==> ERROR: figure legibility check failed; release aborted." >&2
+  exit 1
+fi
 find "$OUT" -type d -name '__pycache__' -prune -exec rm -rf {} + 2>/dev/null || true
 
 # top-level public files (authored in release/)

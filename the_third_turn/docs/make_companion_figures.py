@@ -44,35 +44,35 @@ def line_movement(game_pk=823541):
     burst = max(range(1, len(runs)), key=lambda i: runs[i] - runs[i - 1])
 
     fs.setup()
-    fig, ax = plt.subplots(figsize=(8.8, 4.9))
+    fig, ax = plt.subplots(figsize=(fs.FULL_W, 4.0))
     ax.fill_between(x, runs, live, color=fs.PALETTE[0], alpha=0.09, zorder=1)
     ax.axhline(pregame, color=fs.MUTED, lw=1.0, ls=":")
     ax.text(x[-1] + 0.1, pregame, f"pregame total {pregame:.1f}", va="center", ha="left",
-            fontsize=7.8, color=fs.MUTED)
+            fontsize=8.5, color=fs.MUTED)
     ax.plot(x, live, color=fs.PALETTE[0], lw=2.3, marker="o", ms=4.5, zorder=3,
             label="market's live total  (forecast of final)")
     ax.plot(x, runs, color=fs.PALETTE[3], lw=2.3, marker="s", ms=4.5, zorder=3,
             label="runs actually scored")
     ax.annotate(f"{int(runs[burst] - runs[burst - 1])} runs score →\nthe market lifts its total",
                 xy=(x[burst], live[burst]), xytext=(x[burst] - 3.4, live[burst] + 3.2),
-                fontsize=8.2, color=fs.INK, ha="left", va="bottom",
+                fontsize=8.5, color=fs.INK, ha="left", va="bottom",
                 bbox=dict(facecolor="white", edgecolor="none", alpha=0.8, boxstyle="round,pad=0.15"),
                 arrowprops=dict(arrowstyle="-|>", color=fs.MUTED, lw=1.2))
     ax.annotate("gap = runs the market\nstill expects (its live over/under)",
                 xy=((x[3] + x[4]) / 2, (live[3] + runs[3]) / 2), xytext=(x[3] + 0.3, runs[3] - 4.2),
-                fontsize=7.8, color=fs.PALETTE[0], ha="left", va="top",
+                fontsize=8.5, color=fs.PALETTE[0], ha="left", va="top",
                 arrowprops=dict(arrowstyle="-|>", color=fs.PALETTE[0], lw=1.0))
     ax.plot([x[-1]], [live[-1]], marker="*", ms=15, color=fs.INK, zorder=4)
     ax.text(x[-1], live[-1] + 0.7, "final: line = score", ha="center", va="bottom",
-            fontsize=8.0, color=fs.INK, fontweight="bold")
+            fontsize=8.5, color=fs.INK, fontweight="bold")
     step = max(1, len(x) // 8)
-    ax.set_xticks(x[::step]); ax.set_xticklabels([f"inn {innings[i]}" for i in x[::step]], fontsize=8.2)
+    ax.set_xticks(x[::step]); ax.set_xticklabels([f"inn {innings[i]}" for i in x[::step]], fontsize=8.5)
     ax.set_ylabel("runs")
     ax.set_ylim(-0.5, max(live) + 4.2)
     ax.legend(loc="upper left", fontsize=8.6)
     ax.set_title("Line movement over a game: the live total chases the runs, and meets them at the end",
-                 fontsize=11, pad=10)
-    fig.savefig(FIGDIR / "supp_line_movement.png", bbox_inches="tight")
+                 fontsize=11, pad=10, wrap=True)
+    fs.save_at_measure(fig, FIGDIR / "supp_line_movement.png")
     plt.close(fig)
 
 
@@ -81,7 +81,7 @@ def line_movement(game_pk=823541):
 # ─────────────────────────────────────────────────────────────────────────────
 def weather_diamond():
     fs.setup()
-    fig, ax = plt.subplots(figsize=(9.2, 6.4))
+    fig, ax = plt.subplots(figsize=(fs.FULL_W, 5.0))
     ax.set_xlim(-9, 9); ax.set_ylim(-1.6, 11.2); ax.axis("off"); ax.set_aspect("equal")
 
     # field: grass wedge (foul lines at 45 and 135 deg) + dirt infield diamond
@@ -105,14 +105,14 @@ def weather_diamond():
     ax.text(0.35, 5.9, "WIND OUT", rotation=90, va="center", ha="left", color=fs.PALETTE[0],
             fontsize=10, fontweight="bold")
     ax.text(-0.4, 5.9, "10 · 20 · 30 mph", rotation=90, va="center", ha="right", color=fs.PALETTE[0],
-            fontsize=7.8)
+            fontsize=8.5)
 
     def chip(x, y, title, body, col=fs.INK):
         ax.add_patch(FancyBboxPatch((x, y), 4.5, 1.5, boxstyle="round,pad=0.05,rounding_size=0.12",
                                     facecolor="#F6F6F4", edgecolor=fs.GRID, lw=1.0, zorder=6))
         ax.text(x + 0.22, y + 1.16, title, ha="left", va="center", color=col, fontsize=9.2,
                 fontweight="bold", zorder=7)
-        ax.text(x + 0.22, y + 0.5, body, ha="left", va="center", color=fs.MUTED, fontsize=7.7,
+        ax.text(x + 0.22, y + 0.5, body, ha="left", va="center", color=fs.MUTED, fontsize=8.5,
                 zorder=7)
 
     chip(-8.7, 8.9, "Temperature", "warm air is thinner →\nball carries ~+2.5 ft per +10°F", fs.PALETTE[3])
@@ -123,11 +123,14 @@ def weather_diamond():
     ax.text(0, 10.75, "The run environment: the physics the market already prices",
             ha="center", va="center", fontsize=12, fontweight="bold", color=fs.INK)
     ax.text(0, -1.15,
-            "Fly-ball carry ≈ f(air density): temperature, altitude, barometric pressure, humidity, wind.  "
-            "Denser air = less carry = fewer runs.",
-            ha="center", va="center", fontsize=8.2, color=fs.INK,
+            # Split across two lines: as one line this caption set the figure's
+            # cropped width to 7.8in against a 6.77in measure, shrinking every
+            # label in the figure to 7.4pt on the page.
+            "Fly-ball carry ≈ f(air density): temperature, altitude,\n"
+            "barometric pressure, humidity, wind.  Denser air = less carry = fewer runs.",
+            ha="center", va="center", fontsize=8.5, color=fs.INK,
             bbox=dict(facecolor="#F1F1EE", edgecolor=fs.GRID, boxstyle="round,pad=0.4"))
-    fig.savefig(FIGDIR / "supp_weather_diamond.png", bbox_inches="tight")
+    fs.save_at_measure(fig, FIGDIR / "supp_weather_diamond.png")
     plt.close(fig)
 
 
@@ -170,33 +173,38 @@ def weather_runs():
     cols = [fs.PALETTE[0]] * 3 + [fs.PALETTE[3]] * 3
 
     fs.setup()
-    fig, (axA, axR) = plt.subplots(1, 2, figsize=(10.8, 4.8))
+    fig, (axA, axR) = plt.subplots(1, 2, figsize=(fs.FULL_W, 4.2))
     x = np.arange(6)
 
     axA.bar(x, runs, color=cols, width=0.72, zorder=3)
     for xi, r, n in zip(x, runs, ns):
-        axA.text(xi, r + 0.12, f"{r:.1f}", ha="center", va="bottom", fontsize=8.4, fontweight="bold")
-        axA.text(xi, 0.35, f"n={n}", ha="center", va="bottom", color="white", fontsize=7.4, fontweight="bold", zorder=4)
+        axA.text(xi, r + 0.12, f"{r:.1f}", ha="center", va="bottom", fontsize=8.5, fontweight="bold")
+        axA.text(xi, 0.35, f"n={n}", ha="center", va="bottom", color="white",
+                 fontsize=8.5, fontweight="bold", zorder=4, rotation=90)
     axA.set_ylabel("mean runs scored per game")
     axA.set_ylim(0, max(runs) + 1.4)
-    axA.set_xticks(x); axA.set_xticklabels(labels, fontsize=7.7)
-    axA.set_title("Runs rise with hitter-friendly weather", fontsize=10.6, pad=8)
+    axA.set_xticks(x)
+    axA.set_xticklabels(labels, fontsize=8.5, rotation=30, ha="right",
+                        rotation_mode="anchor")
+    axA.set_title("Runs rise with\nhitter-friendly weather", fontsize=10.6, pad=8)
 
     axR.bar(x, hit, color=cols, width=0.72, alpha=0.85, zorder=3)
     axR.errorbar(x, hit, yerr=[[h - l for h, l in zip(hit, lo)], [u - h for h, u in zip(hit, hi)]],
                  fmt="none", ecolor=fs.INK, elinewidth=1.3, capsize=4, zorder=4)
     axR.axhline(50, color=fs.MUTED, lw=1.1, ls="--")
     axR.axhline(52.38, color=fs.FAIL, lw=1.3, ls="--")
-    axR.text(5.55, 50, "coin flip", va="center", ha="left", fontsize=7.4, color=fs.MUTED)
-    axR.text(5.55, 52.6, "break-even", va="bottom", ha="left", fontsize=7.4, color=fs.FAIL)
+    axR.text(5.55, 50, "coin flip", va="center", ha="left", fontsize=8.5, color=fs.MUTED)
+    axR.text(5.55, 52.6, "break-even", va="bottom", ha="left", fontsize=8.5, color=fs.FAIL)
     axR.set_ylabel("over hit-rate (%)")
     axR.set_ylim(28, 76)
-    axR.set_xticks(x); axR.set_xticklabels(labels, fontsize=7.7)
-    axR.set_title("...but the over never reliably clears break-even", fontsize=10.6, pad=8)
+    axR.set_xticks(x)
+    axR.set_xticklabels(labels, fontsize=8.5, rotation=30, ha="right",
+                        rotation_mode="anchor")
+    axR.set_title("...but the over never\nreliably clears break-even", fontsize=10.6, pad=8)
 
     fig.suptitle("Weather moves runs; it does not move the price enough to beat it",
-                 fontsize=11.6, fontweight="bold", y=1.10)
-    fig.savefig(FIGDIR / "supp_weather_runs.png", bbox_inches="tight")
+                 fontsize=11.6, fontweight="bold", y=1.10, wrap=True)
+    fs.save_at_measure(fig, FIGDIR / "supp_weather_runs.png")
     plt.close(fig)
 
 

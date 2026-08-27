@@ -15,11 +15,17 @@ on:
       - 'the_third_turn/paper/**.pdf'
       - 'the_third_turn/paper/check_title_margins.py'
       - 'the_third_turn/paper/build_pdf.py'
+      - 'the_third_turn/paper/figures/**'
+      - 'the_third_turn/paper/make_*.py'
+      - 'the_third_turn/paper/figstyle.py'
   pull_request:
     paths:
       - 'the_third_turn/paper/**.pdf'
       - 'the_third_turn/paper/check_title_margins.py'
       - 'the_third_turn/paper/build_pdf.py'
+      - 'the_third_turn/paper/figures/**'
+      - 'the_third_turn/paper/make_*.py'
+      - 'the_third_turn/paper/figstyle.py'
   workflow_dispatch:
 
 permissions:
@@ -34,6 +40,10 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
       - name: Title-block margin gate
         run: python3 the_third_turn/paper/check_title_margins.py the_third_turn/paper/*.pdf
+      - name: Figure legibility gate
+        run: |
+          pip install --quiet pillow matplotlib numpy
+          python3 the_third_turn/paper/check_figure_legibility.py
       - name: Structural validity
         run: |
           sudo apt-get install -y -qq qpdf

@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
-"""SUPERSEDED — DO NOT RUN AS PART OF ANY REPLICATION PATH.
+"""Conceptual figures for Paper 1 — the sole producer of three committed figures.
 
-    This script writes three files that `make_figures.py` ALSO writes:
-        concept_laboratory.png, concept_encompassing.png, appendix_vig.png
-    The committed figures — the ones the manuscripts display — come from
-    `make_figures.py`. Running this script AFTER it replaces those three with
-    different images, so the paper and the repository stop agreeing.
+    concept_laboratory.png, concept_encompassing.png, appendix_vig.png
 
-    Verified 2026-08-22: after `make_figures.py` alone all three are byte-identical
-    to the committed PNGs; after this script alone all three differ.
-
-    Retained for history only. The replication path is `paper/REPRODUCE.md`.
+CORRECTION (2026-08-27). This file previously carried a "SUPERSEDED - do not run"
+banner claiming `make_figures.py` also wrote these three. It does not: it writes
+eight figures and none of them are these. The earlier isolation test that appeared
+to show otherwise had restored the committed PNGs and then run `make_figures.py`,
+which never touched them -- so "unchanged" was misread as "reproduced". Dropping
+this script from the replication path left three of Paper 1's eleven figures with
+no generator at all. It is part of the replication path.
 
 Conceptual (schematic) figures for the paper — illustrative, not data plots.
 
@@ -61,62 +60,62 @@ def _arrow(ax, x0, y0, x1, y1, color=None, lw=1.8, style="-|>", cs=None, z=2):
 # ─────────────────────────────────────────────────────────────────────────────
 def laboratory():
     fs.setup()
-    fig, (axE, axB) = plt.subplots(1, 2, figsize=(10.8, 4.9),
+    fig, (axE, axB) = plt.subplots(1, 2, figsize=(fs.FULL_W, 4.2),
                                    gridspec_kw={"width_ratios": [1.0, 1.1]})
     for ax in (axE, axB):
         ax.set_xlim(0, 10); ax.set_ylim(0, 10); ax.axis("off")
 
     # ---- equities: a price wandering around a never-realized fundamental band ----
-    axE.set_title("Equities market", fontsize=10.8, pad=6)
+    axE.set_title("Equities market", fontsize=10.8, pad=6, wrap=True)
     rng = np.random.default_rng(7)
     t = np.linspace(0.7, 9.3, 220)
     p = np.cumsum(rng.normal(0, 0.13, t.size)); p = 5.7 + (p - p.mean())
     axE.fill_between(t, 4.7, 6.7, color=RED, alpha=0.10, zorder=1)
     axE.plot(t, np.full_like(t, 5.7), color=RED, lw=1.2, ls=(0, (2, 3)), alpha=0.75, zorder=2)
     axE.text(5.0, 7.15, "fundamental value?  a fuzzy band, never realized",
-             ha="center", va="center", color=RED, fontsize=7.9)
+             ha="center", va="center", color=RED, fontsize=8.5)
     axE.plot(t, p, color=fs.INK, lw=1.6, zorder=3, solid_capstyle="round")
     axE.annotate("", xy=(9.7, 2.1), xytext=(0.4, 2.1),
                  arrowprops=dict(arrowstyle="-|>", color=fs.MUTED, lw=1.3))
-    axE.text(9.7, 1.72, "time, indefinite horizon", ha="right", va="top", color=fs.MUTED, fontsize=7.8)
+    axE.text(9.7, 1.72, "time, indefinite horizon", ha="right", va="top", color=fs.MUTED, fontsize=8.5)
     axE.text(5.0, 0.85, "price wanders  ·  payoffs need discounting", ha="center", va="center",
-             color=fs.MUTED, fontsize=8.1)
+             color=fs.MUTED, fontsize=8.5)
     axE.text(5.0, 0.35, "no clean per-event value  ·  no terminal truth", ha="center", va="center",
-             color=fs.MUTED, fontsize=8.1)
+             color=fs.MUTED, fontsize=8.5)
 
     # ---- live baseball: discrete valued events resolving to a terminal ground truth ----
-    axB.set_title("Live baseball market", fontsize=10.8, pad=6)
+    axB.set_title("Live baseball market", fontsize=10.8, pad=6, wrap=True)
     yb = 5.7
     axB.plot([1.25, 8.55], [yb, yb], color=fs.MUTED, lw=2.0, solid_capstyle="round", zorder=1)
     axB.plot([1.25], [yb], marker="o", ms=13, color=BLUE, markeredgecolor="white",
              markeredgewidth=1.6, zorder=3)
     axB.text(1.25, yb + 0.72, "first pitch", ha="center", va="bottom", color=fs.INK,
-             fontsize=8.2, fontweight="bold")
-    axB.text(1.25, yb - 0.72, "pregame line", ha="center", va="top", color=fs.MUTED, fontsize=7.4)
+             fontsize=8.5, fontweight="bold")
+    axB.text(1.25, yb - 0.72, "pregame line", ha="center", va="top", color=fs.MUTED, fontsize=8.5)
     axB.plot([8.55], [yb], marker="s", ms=15, color=fs.INK, markeredgecolor="white",
              markeredgewidth=1.6, zorder=3)
     axB.text(8.55, yb + 0.72, "final out", ha="center", va="bottom", color=fs.INK,
-             fontsize=8.2, fontweight="bold")
-    axB.text(8.55, yb - 0.72, "settles", ha="center", va="top", color=fs.MUTED, fontsize=7.4)
+             fontsize=8.5, fontweight="bold")
+    axB.text(8.55, yb - 0.72, "settles", ha="center", va="top", color=fs.MUTED, fontsize=8.5)
     for x, name, dre in [(3.0, "1B", "+0.47"), (4.35, "HR", "+1.4"),
                          (5.7, "K", "−0.26"), (7.05, "2B", "+0.78")]:
         axB.plot([x, x], [yb - 0.16, yb + 0.16], color=BLUE, lw=2.0, zorder=2)
         axB.plot([x], [yb], marker="o", ms=6, color=BLUE, markeredgecolor="white",
                  markeredgewidth=1.1, zorder=3)
-        axB.text(x, yb + 0.30, name, ha="center", va="bottom", color=fs.INK, fontsize=7.6)
-        axB.text(x, yb - 0.30, dre, ha="center", va="top", color=fs.MUTED, fontsize=6.9)
+        axB.text(x, yb + 0.30, name, ha="center", va="bottom", color=fs.INK, fontsize=8.5)
+        axB.text(x, yb - 0.30, dre, ha="center", va="top", color=fs.MUTED, fontsize=8.5)
     axB.text(4.9, 8.7, "each play has a known run value (RE24 / linear weights);",
-             ha="center", va="center", color=fs.MUTED, fontsize=8.1)
+             ha="center", va="center", color=fs.MUTED, fontsize=8.5)
     axB.text(4.9, 8.25, "the live total reprices about once a minute", ha="center", va="center",
-             color=fs.MUTED, fontsize=8.1)
+             color=fs.MUTED, fontsize=8.5)
     axB.text(4.9, 3.05, "resolves to the final total = ground truth  Y", ha="center", va="center",
              color=fs.INK, fontsize=8.6, fontweight="bold")
     axB.text(4.9, 2.55, "an absolute answer, within hours", ha="center", va="center",
-             color=fs.MUTED, fontsize=7.9)
+             color=fs.MUTED, fontsize=8.5)
 
     fig.suptitle("Why baseball is a clean laboratory for market efficiency",
-                 fontsize=11.4, fontweight="bold", y=1.03)
-    fig.savefig(FIGDIR / "concept_laboratory.png", bbox_inches="tight")
+                 fontsize=11.4, fontweight="bold", y=1.03, wrap=True)
+    fs.save_at_measure(fig, FIGDIR / "concept_laboratory.png")
     plt.close(fig)
 
 
@@ -136,7 +135,7 @@ def _brick_wall(ax, x, y0, y1, w=0.5):
 
 def encompassing():
     fs.setup()
-    fig, ax = plt.subplots(figsize=(9.4, 5.2))
+    fig, ax = plt.subplots(figsize=(fs.FULL_W, 4.4))
     ax.set_xlim(0, 10); ax.set_ylim(0, 6.6); ax.axis("off")
 
     # information Venn: X entirely inside B
@@ -149,15 +148,15 @@ def encompassing():
     ax.text(2.4, 3.5, "X", ha="center", va="center", color="white", fontsize=12.5,
             fontweight="bold", zorder=4)
     ax.text(2.55, 1.72, "the market's forecast already reflects\nthe information in X",
-            ha="center", va="center", color=fs.MUTED, fontsize=8.0, style="italic")
+            ha="center", va="center", color=fs.MUTED, fontsize=8.5, style="italic")
     ax.text(2.55, 0.9, "X = TTO · velocity · bullpen · weather · park", ha="center", va="center",
-            color=fs.INK, fontsize=7.8)
+            color=fs.INK, fontsize=8.5)
 
     # target 1: outcome Y — X reaches it
     _box(ax, 7.55, 4.55, 2.2, 1.15, GREEN)
     ax.text(8.65, 5.28, "Outcome  Y", ha="center", va="center", color="white",
             fontsize=10, fontweight="bold")
-    ax.text(8.65, 4.9, "remaining runs", ha="center", va="center", color="white", fontsize=7.8)
+    ax.text(8.65, 4.9, "remaining runs", ha="center", va="center", color="white", fontsize=8.5)
     _arrow(ax, 3.35, 4.35, 7.5, 5.12, color=GREEN, lw=2.2, cs="arc3,rad=-0.12")
     ax.text(5.5, 5.42, "predicts runs   R² = 0.279", ha="center", va="center", color=fs.INK,
             fontsize=8.7, fontweight="bold", bbox=dict(facecolor="white", edgecolor="none",
@@ -176,43 +175,43 @@ def encompassing():
     ax.text(6.55, 3.42, "R² = −0.037", ha="center", va="center", color=BRICK, fontsize=9.0,
             fontweight="bold")
     ax.text(7.15, 0.62, "the market's forecast already exhausts the information in X",
-            ha="center", va="center", color=fs.MUTED, fontsize=7.8, style="italic")
+            ha="center", va="center", color=fs.MUTED, fontsize=8.5, style="italic")
 
     ax.text(0.15, 0.3, "adding X to B:  ΔR² = −0.017", ha="left", va="center", color=fs.FAIL,
             fontsize=8.8, fontweight="bold")
     ax.set_title("The encompassing test: X predicts the outcome, but not the market's error",
-                 fontsize=11, pad=8)
-    fig.savefig(FIGDIR / "concept_encompassing.png", bbox_inches="tight")
+                 fontsize=11, pad=8, wrap=True)
+    fs.save_at_measure(fig, FIGDIR / "concept_encompassing.png")
     plt.close(fig)
 
 
 def vig_hurdle():
     """Appendix C: the break-even (vig) hurdle in win-rate space."""
     fs.setup()
-    fig, ax = plt.subplots(figsize=(8.8, 4.0))
+    fig, ax = plt.subplots(figsize=(fs.FULL_W, 3.6))
     ax.set_xlim(48, 58); ax.set_ylim(-0.55, 1.45); ax.axis("off")
     y = 0.45
     ax.add_patch(plt.Rectangle((48.3, y - 0.14), 52.38 - 48.3, 0.28, facecolor=RED, alpha=0.10, zorder=1))
     ax.add_patch(plt.Rectangle((52.38, y - 0.14), 57.5 - 52.38, 0.28, facecolor=GREEN, alpha=0.12, zorder=1))
     ax.annotate("", xy=(57.75, y), xytext=(48.1, y),
                 arrowprops=dict(arrowstyle="-|>", color=fs.MUTED, lw=1.6), zorder=2)
-    ax.text(50.35, y + 0.075, "loss", ha="center", va="center", color=RED, fontsize=8.2, alpha=0.75)
-    ax.text(55.0, y + 0.075, "profit", ha="center", va="center", color=fs.PASS, fontsize=8.2, alpha=0.9)
+    ax.text(50.35, y + 0.075, "loss", ha="center", va="center", color=RED, fontsize=8.5, alpha=0.75)
+    ax.text(55.0, y + 0.075, "profit", ha="center", va="center", color=fs.PASS, fontsize=8.5, alpha=0.9)
     for xv, lab, sub, col in [(50.0, "50%", "fair coin", fs.MUTED),
                               (52.38, "52.38%", "break-even vs −110 vig", fs.INK),
                               (55.0, "55%", "a marginal edge", fs.PASS)]:
         ax.plot([xv, xv], [y - 0.17, y + 0.17], color=col, lw=2.4, zorder=3)
         ax.text(xv, y + 0.24, lab, ha="center", va="bottom", fontsize=9.6, fontweight="bold", color=col)
-        ax.text(xv, y - 0.24, sub, ha="center", va="top", fontsize=7.7, color=fs.MUTED)
+        ax.text(xv, y - 0.24, sub, ha="center", va="top", fontsize=8.5, color=fs.MUTED)
     ax.annotate("", xy=(52.38, y + 0.66), xytext=(50.0, y + 0.66),
                 arrowprops=dict(arrowstyle="<|-|>", color=RED, lw=1.3))
     ax.text(51.19, y + 0.72, "the vig: 2.38 points to clear just to break even",
-            ha="center", va="bottom", color=RED, fontsize=8.2, fontweight="bold")
+            ha="center", va="bottom", color=RED, fontsize=8.5, fontweight="bold")
     ax.annotate("public information leaves you here\n(the market's error is unpredictable, R² = −0.037)",
-                xy=(50.0, y - 0.17), xytext=(50.0, y - 0.62), ha="center", va="top", fontsize=8.0,
+                xy=(50.0, y - 0.17), xytext=(50.0, y - 0.62), ha="center", va="top", fontsize=8.5,
                 color=fs.INK, arrowprops=dict(arrowstyle="-|>", color=fs.INK, lw=1.2))
-    ax.set_title("The vig hurdle: profitability requires beating 52.4%, not 50%", fontsize=11, pad=14)
-    fig.savefig(FIGDIR / "appendix_vig.png", bbox_inches="tight")
+    ax.set_title("The vig hurdle: profitability requires beating 52.4%, not 50%", fontsize=11, pad=14, wrap=True)
+    fs.save_at_measure(fig, FIGDIR / "appendix_vig.png")
     plt.close(fig)
 
 

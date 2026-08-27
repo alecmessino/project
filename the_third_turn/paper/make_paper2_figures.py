@@ -58,7 +58,7 @@ def canvas(w, h, top=0.92):
     return fig, ax
 
 
-def eyebrow(ax, x, y, s, color=MUTED, size=8.4, ha="left"):
+def eyebrow(ax, x, y, s, color=MUTED, size=8.5, ha="left"):
     ax.text(x, y, " ".join(s.upper()), ha=ha, va="center", fontsize=size,
             color=color, fontweight="bold", zorder=9)
 
@@ -101,7 +101,7 @@ def leader(ax, xy, xytext, s, color=MUTED, size=8.6, ha="left"):
                                 shrinkA=2, shrinkB=4))
 
 
-def chip(ax, x, y, s, color, size=8.4):
+def chip(ax, x, y, s, color, size=8.5):
     ax.text(x, y, s.upper(), ha="center", va="center", fontsize=size, color="white",
             fontweight="bold", zorder=9,
             bbox=dict(boxstyle="round,pad=0.42", fc=color, ec="none"))
@@ -109,7 +109,7 @@ def chip(ax, x, y, s, color, size=8.4):
 
 # ------------------------------------------------------------------- FIG 1
 def fig_boundary():
-    fig, ax = canvas(9.4, 6.0)
+    fig, ax = canvas(fs.FULL_W, 4.6)
     rows = [("Game event",       0.790, True,  "recorded by the state feed"),
             ("Bookmaker prices", 0.618, False, "when the book decided to move"),
             ("Feed publishes",   0.466, False, "when that decision became visible"),
@@ -147,13 +147,13 @@ def fig_boundary():
     ax.text(0.5, 0.000, "Markets reveal prices. They do not reveal how those prices came to be.",
             ha="center", fontsize=9.8, color=MUTED, style="italic")
     title(fig, "The boundary of observation")
-    fig.savefig(FIG / "p2_boundary.png", dpi=220, bbox_inches="tight")
+    fs.save_at_measure(fig, FIG / "p2_boundary.png")
     plt.close(fig)
 
 
 # ------------------------------------------------------------------- FIG 2
 def fig_race():
-    fig, ax = canvas(10.2, 5.0)
+    fig, ax = canvas(fs.FULL_W, 4.0)
     card(ax, 0.172, 0.200, 0.548, 0.645, fc=FOG, ec=HAIR, lw=1.2, r=0.02, z=1)
     ax.text(0.446, 0.800, "N O T   O B S E R V A B L E", ha="center", fontsize=9.4,
             color=MUTED, fontweight="bold", zorder=8)
@@ -171,16 +171,18 @@ def fig_race():
                 markeredgecolor="white", markeredgewidth=1.2)
         ax.text(xe + 0.016, y, lab, fontsize=8.9, color=c, va="center", zorder=6)
 
-    ax.plot([0.793, 0.793], [0.182, 0.792], color=INK, lw=2.2, zorder=5,
+    ax.plot([0.930, 0.930], [0.182, 0.792], color=INK, lw=2.2, zorder=5,
             solid_capstyle="round")
     eyebrow(ax, 0.793, 0.845, "we look", color=INK, size=9.4, ha="center")
-    ax.text(0.793, 0.150, "every 31 s", ha="center", fontsize=8.5, color=MUTED)
+    ax.text(0.930, 0.150, "every 31 s", ha="center", fontsize=8.5, color=MUTED)
 
     for y, c in [(0.643, BLUE), (0.396, ORANGE)]:
-        ax.plot([0.722, 0.780], [y, y], color=c, lw=1.2, ls=(0, (2, 2)), zorder=5, alpha=.8)
-        ax.plot([0.793], [y], "o", ms=7.6, color=INK, zorder=7,
+        ax.plot([0.880, 0.918], [y, y], color=c, lw=1.2, ls=(0, (2, 2)), zorder=5, alpha=.8)
+        ax.plot([0.930], [y], "o", ms=7.6, color=INK, zorder=7,
                 markeredgecolor="white", markeredgewidth=1.4)
-        ax.text(0.818, y, "one timestamp", fontsize=8.9, color=INK, va="center")
+        ax.text(0.930, y + 0.048, "one timestamp", fontsize=8.9, color=INK,
+                va="bottom", ha="center",
+                bbox=dict(boxstyle="round,pad=0.18", fc="white", ec="none"))
 
     ax.text(0.5, 0.082, "Four internal events. Two recorded numbers.",
             ha="center", fontsize=11.4, color=INK, fontweight="bold")
@@ -188,13 +190,13 @@ def fig_race():
             "The interval we can measure is a sum of intervals we cannot measure separately.",
             ha="center", fontsize=9.6, color=MUTED)
     title(fig, "The information race, and how little of it we see")
-    fig.savefig(FIG / "p2_race.png", dpi=220, bbox_inches="tight")
+    fs.save_at_measure(fig, FIG / "p2_race.png")
     plt.close(fig)
 
 
 # ------------------------------------------------------------------- FIG 3
 def fig_why_paper1():
-    fig, axes = plt.subplots(1, 2, figsize=(11.0, 4.9))
+    fig, axes = plt.subplots(1, 2, figsize=(fs.FULL_W, 3.7))
     for ax in axes:
         ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
 
@@ -234,13 +236,13 @@ def fig_why_paper1():
     note(fig,
          "Paper 1 compared two endpoints and could stay agnostic about the machinery between them.\n"
          "Paper 2's question is the machinery, and half its stages are invisible.", y=0.020)
-    fig.savefig(FIG / "p2_why_paper1.png", dpi=220, bbox_inches="tight")
+    fs.save_at_measure(fig, FIG / "p2_why_paper1.png")
     plt.close(fig)
 
 
 # ------------------------------------------------------------------- FIG 4 (centerpiece)
 def fig_three_worlds():
-    fig, axes = plt.subplots(1, 3, figsize=(15.0, 5.6))
+    fig, axes = plt.subplots(3, 1, figsize=(fs.FULL_W, 6.4))
     X0, BH = 0.105, 0.105
     yA, yB = 0.605, 0.455
     worlds = [("World A", "A prices faster; plumbing matches",
@@ -264,7 +266,7 @@ def fig_three_worlds():
             ax.plot([xe, xe], [0.175, 0.735], color=INK, lw=1.0,
                     ls=(0, (2.5, 2.5)), alpha=0.5, zorder=3)
 
-        eyebrow(ax, 0.05, 0.762, "the mechanism", color=MUTED, size=7.6)
+        eyebrow(ax, 0.05, 0.762, "the mechanism", color=MUTED, size=8.5)
         for lab, c, y, pr, fd in [("A", BLUE, yA, pA, fA), ("B", ORANGE, yB, pB, fB)]:
             ax.text(0.058, y + BH / 2, lab, fontsize=10.6, color=c,
                     fontweight="bold", va="center", ha="center", zorder=8)
@@ -276,10 +278,10 @@ def fig_three_worlds():
                                         alpha=0.55, zorder=5))
             if pr > 0.17:
                 ax.text(X0 + pr / 2, y + BH / 2, "pricing", ha="center", va="center",
-                        fontsize=8.2, color=c, fontweight="bold", zorder=7)
+                        fontsize=8.5, color=c, fontweight="bold", zorder=7)
             if fd > 0.155:
                 ax.text(X0 + pr + fd / 2, y + BH / 2, "feed", ha="center", va="center",
-                        fontsize=8.2, color=MUTED, zorder=7)
+                        fontsize=8.5, color=MUTED, zorder=7)
 
         lo, hi = min(endA, endB), max(endA, endB)
         ax.annotate("", xy=(hi, 0.365), xytext=(lo, 0.365),
@@ -290,10 +292,10 @@ def fig_three_worlds():
 
         # what actually lands on disk: identical in all three panels
         ax.plot([0.05, 0.95], [0.258, 0.258], color=HAIR, lw=1.0, zorder=2)
-        eyebrow(ax, 0.05, 0.225, "what reaches disk", color=MUTED, size=7.6)
+        eyebrow(ax, 0.05, 0.225, "what reaches disk", color=MUTED, size=8.5)
         for xe in (endA, endB):
             ax.plot([xe], [0.163], "|", ms=15, mew=2.8, color=INK, zorder=6)
-        ax.text(0.50, 0.112, "identical in every panel", ha="center", fontsize=8.2,
+        ax.text(0.50, 0.156, "identical in every panel", ha="center", va="bottom", fontsize=8.5,
                 color=MUTED, style="italic")
         ax.text(0.50, 0.070, verdict, ha="center", va="center", fontsize=9.6,
                 color=vc, fontweight="bold", zorder=8,
@@ -305,22 +307,24 @@ def fig_three_worlds():
          "The bars differ in every panel; the two recorded timestamps do not. Read the strip along "
          "the bottom of each panel:\nwhat reaches disk is the same in all three, so no statistic "
          "computed from it can tell these worlds apart.", y=0.028)
-    fig.savefig(FIG / "p2_three_worlds.png", dpi=220, bbox_inches="tight")
+    fs.save_at_measure(fig, FIG / "p2_three_worlds.png")
     plt.close(fig)
 
 
 # ------------------------------------------------------------------- FIG 5
 def fig_anchoring():
-    fig, axes = plt.subplots(1, 2, figsize=(11.0, 4.3))
+    fig, axes = plt.subplots(1, 2, figsize=(fs.FULL_W, 3.9))
+    # headroom for the figure title; at 3.5in the heading band overlapped it
+    fig.subplots_adjust(top=0.72, bottom=0.20, left=0.07, right=0.97, wspace=0.22)
     for ax, t in zip(axes, ["Timing one book against the other",
                             "Timing each book against the game"]):
         ax.set_xlim(0, 10); ax.set_ylim(0, 1); ax.set_yticks([])
         ax.set_xlabel("time (minutes)", fontsize=9, color=MUTED, labelpad=6)
-        ax.tick_params(colors=MUTED, labelsize=8.4)
+        ax.tick_params(colors=MUTED, labelsize=8.5)
         for s in ("top", "right", "left"):
             ax.spines[s].set_visible(False)
         ax.spines["bottom"].set_color(HAIR)
-        ax.text(5.0, 1.13, t, ha="center", fontsize=10.4, color=INK, fontweight="bold")
+        ax.text(5.0, 1.09, t, ha="center", fontsize=9.6, color=INK, fontweight="bold")
         ax.axvspan(1.90, 2.10, color=GREEN, alpha=0.22, zorder=1)
         ax.plot([2, 2], [0.02, 0.92], color=GREEN, lw=3.4, zorder=3, solid_capstyle="round")
         ax.text(2.0, 0.955, "event", ha="center", fontsize=8.8, color=GREEN, fontweight="bold")
@@ -352,13 +356,19 @@ def fig_anchoring():
             fontsize=8.6, color=GREEN, ha="center", style="italic")
 
     title(fig, "Why the estimand is anchored to the event", y=1.055)
-    fig.savefig(FIG / "p2_anchoring.png", dpi=220, bbox_inches="tight")
+    fs.save_at_measure(fig, FIG / "p2_anchoring.png")
     plt.close(fig)
 
 
 # ------------------------------------------------------------------- FIG 6
 def fig_ladder():
-    fig, ax = canvas(9.6, 6.2)
+    # Re-authored 2026-08-27. Two defects: the canvas was 9.6in wide against a
+    # 6.77in measure, scaling every label to ~0.71x; and the right-hand callout
+    # sat at x=0.830 while the status tags sat at x=0.878, so the callout
+    # collided with the bottom tag. The tags now live INSIDE the rung boxes, which
+    # reserves the right-hand column for the callout and makes the overlap
+    # impossible by construction rather than by careful placement.
+    fig, ax = canvas(fs.FULL_W, 4.9)
     rungs = [("Observed timestamps", "we hold these", IDENTIFIED, "have"),
              ("A common event clock", "event and quote times comparable", IDENTIFIED, "auditable"),
              ("One well defined price series", "the extraction rule is a free parameter",
@@ -367,38 +377,45 @@ def fig_ladder():
               FAILED, "open"),
              ("Pricing latency identified", "the quantity we actually want", FAILED, "blocked")]
 
-    h, gap, y = 0.130, 0.041, 0.790
+    BOX_X, BOX_W = 0.045, 0.675          # ladder occupies the left three quarters
+    TAG_X        = BOX_X + BOX_W - 0.015  # tag right-aligned inside the box
+    CALLOUT_X    = BOX_X + BOX_W + 0.055  # reserved column, cannot overlap a tag
+    h, gap, y = 0.128, 0.035, 0.792
+    centres = []
     for i, (lab, sub, c, tag) in enumerate(rungs):
-        tinted(ax, 0.095, y, 0.660, h, c, alpha=0.09, lw=1.3, r=0.014)
-        ax.add_patch(Rectangle((0.098, y + 0.010), 0.008, h - 0.020,
+        tinted(ax, BOX_X, y, BOX_W, h, c, alpha=0.09, lw=1.3, r=0.014)
+        ax.add_patch(Rectangle((BOX_X + 0.003, y + 0.009), 0.007, h - 0.018,
                                fc=c, ec="none", zorder=6))
-        ax.text(0.128, y + h / 2 + 0.023, lab, fontsize=10.4, color=INK,
-                va="center", fontweight="bold", zorder=7)
-        ax.text(0.128, y + h / 2 - 0.026, sub, fontsize=8.5, color=MUTED,
+        ax.text(BOX_X + 0.032, y + h / 2 + 0.024, lab, fontsize=10.4, color=INK,
+                va="center", zorder=7, fontweight="bold")
+        ax.text(BOX_X + 0.032, y + h / 2 - 0.026, sub, fontsize=8.5, color=MUTED,
                 va="center", zorder=7)
-        ax.text(0.878, y + h / 2, tag.upper(), fontsize=8.5, color=c, ha="center",
+        ax.text(TAG_X, y + h / 2, tag.upper(), fontsize=8.5, color=c, ha="right",
                 va="center", fontweight="bold", zorder=7)
+        centres.append(y + h / 2)
         if i < len(rungs) - 1:
-            arrow(ax, (0.425, y), (0.425, y - gap + 0.005), lw=1.3, color=MUTED, ms=10)
+            arrow(ax, (BOX_X + BOX_W / 2, y), (BOX_X + BOX_W / 2, y - gap + 0.004),
+                  lw=1.3, color=MUTED, ms=10)
         y -= (h + gap)
 
-    leader(ax, (0.757, 0.255), (0.830, 0.150),
+    # Callout for the deciding rung, in its own column with a horizontal leader.
+    leader(ax, (BOX_X + BOX_W + 0.006, centres[3]), (CALLOUT_X, centres[3]),
            "this rung decides\nthe paper", color=FAILED, size=8.8)
 
-    for c, lab, yy in [(IDENTIFIED, "identifiable", 0.048),
-                       (BOUNDED, "bounded only", 0.014),
-                       (FAILED, "not identifiable here", -0.020)]:
-        ax.add_patch(Rectangle((0.095, yy), 0.020, 0.020, fc=c, ec="none", alpha=0.85))
-        ax.text(0.127, yy + 0.010, lab, fontsize=8.6, color=MUTED, va="center")
+    for c, lab, yy in [(IDENTIFIED, "identifiable", 0.072),
+                       (BOUNDED, "bounded only", 0.040),
+                       (FAILED, "not identifiable here", 0.008)]:
+        ax.add_patch(Rectangle((BOX_X, yy), 0.018, 0.018, fc=c, ec="none", alpha=0.85))
+        ax.text(BOX_X + 0.030, yy + 0.009, lab, fontsize=8.6, color=MUTED, va="center")
 
     title(fig, "The identification ladder", "each rung requires the one above it")
-    fig.savefig(FIG / "p2_ladder.png", dpi=220, bbox_inches="tight")
+    fs.save_at_measure(fig, FIG / "p2_ladder.png")
     plt.close(fig)
 
 
 # ------------------------------------------------------------------- FIG 7
 def fig_decision_tree():
-    fig, ax = canvas(10.4, 6.0)
+    fig, ax = canvas(fs.FULL_W, 4.4)
 
     def diamond(cx, cy, w, h, label):
         ax.add_patch(Polygon([[cx, cy + h], [cx + w, cy], [cx, cy - h], [cx - w, cy]],
@@ -415,12 +432,12 @@ def fig_decision_tree():
     arrow(ax, (0.50, 0.858), (0.50, 0.796), lw=1.5)
     diamond(0.50, 0.520, 0.162, 0.074, "feed latency known\nor common mode?")
     arrow(ax, (0.50, 0.644), (0.50, 0.598), lw=1.5)
-    ax.text(0.524, 0.622, "yes", fontsize=8.4, color=IDENTIFIED, fontweight="bold")
+    ax.text(0.524, 0.622, "yes", fontsize=8.5, color=IDENTIFIED, fontweight="bold")
     diamond(0.50, 0.322, 0.155, 0.072, "price series\nwell defined?")
     arrow(ax, (0.50, 0.446), (0.50, 0.398), lw=1.5)
-    ax.text(0.524, 0.424, "yes", fontsize=8.4, color=IDENTIFIED, fontweight="bold")
+    ax.text(0.524, 0.424, "yes", fontsize=8.5, color=IDENTIFIED, fontweight="bold")
     arrow(ax, (0.50, 0.250), (0.50, 0.198), lw=1.5)
-    ax.text(0.524, 0.226, "yes", fontsize=8.4, color=IDENTIFIED, fontweight="bold")
+    ax.text(0.524, 0.226, "yes", fontsize=8.5, color=IDENTIFIED, fontweight="bold")
 
     def outcome(x, y, w, tag, label, c):
         tinted(ax, x, y, w, 0.105, c, alpha=0.11, lw=2.4)
@@ -431,26 +448,26 @@ def fig_decision_tree():
 
     outcome(0.335, 0.088, 0.33, "OUTCOME A", "pricing latency identified", IDENTIFIED)
     arrow(ax, (0.345, 0.322), (0.224, 0.322), lw=1.4, color=BOUNDED)
-    ax.text(0.285, 0.346, "no", fontsize=8.4, color=BOUNDED, ha="center", fontweight="bold")
+    ax.text(0.285, 0.346, "no", fontsize=8.5, color=BOUNDED, ha="center", fontweight="bold")
     outcome(0.022, 0.270, 0.20, "OUTCOME B", "bounds only", BOUNDED)
     arrow(ax, (0.662, 0.520), (0.782, 0.520), lw=1.4, color=FAILED)
-    ax.text(0.722, 0.544, "no", fontsize=8.4, color=FAILED, ha="center", fontweight="bold")
+    ax.text(0.722, 0.544, "no", fontsize=8.5, color=FAILED, ha="center", fontweight="bold")
     outcome(0.780, 0.468, 0.20, "OUTCOME C", "not identifiable", FAILED)
     arrow(ax, (0.350, 0.718), (0.224, 0.718), lw=1.4, color=FAILED)
-    ax.text(0.287, 0.742, "no", fontsize=8.4, color=FAILED, ha="center", fontweight="bold")
+    ax.text(0.287, 0.742, "no", fontsize=8.5, color=FAILED, ha="center", fontweight="bold")
     ax.text(0.112, 0.718, "audit first", ha="center", va="center", fontsize=8.8,
             color=FAILED, fontweight="bold")
 
     ax.text(0.5, 0.024, "All three outcomes are publishable. C is a contribution, not a failure.",
             ha="center", fontsize=10.6, color=INK, fontweight="bold")
     title(fig, "The identification decision, walked through")
-    fig.savefig(FIG / "p2_decision_tree.png", dpi=220, bbox_inches="tight")
+    fs.save_at_measure(fig, FIG / "p2_decision_tree.png")
     plt.close(fig)
 
 
 # ------------------------------------------------------------------- FIG 8
 def fig_resolution():
-    fig, ax = plt.subplots(figsize=(11.0, 4.6))
+    fig, ax = plt.subplots(figsize=(fs.FULL_W, 3.5))
     ax.set_xlim(-4, 100); ax.set_ylim(0, 1); ax.axis("off")
     evs = [(2, "pitch", 0), (11, "ball", 0), (19, "pitch", 0), (26, "strike", 0),
            (34, "pitch", 0), (43, "single", 1), (52, "pitch", 0), (58, "ball", 0),
@@ -464,7 +481,7 @@ def fig_resolution():
                 color=c, zorder=5, markeredgecolor="white",
                 markeredgewidth=1.2 if big else 0.8)
         if big:
-            ax.text(x, 0.828, lab, ha="center", fontsize=8.4 if big == 2 else 8.0,
+            ax.text(x, 0.828, lab, ha="center", fontsize=8.5 if big == 2 else 8.0,
                     color=c, fontweight="bold" if big == 2 else "normal")
         ax.plot([x, x], [0.732, 0.518], color=MUTED, lw=0.7, ls=(0, (1.6, 2)),
                 alpha=0.5, zorder=2)
@@ -476,9 +493,9 @@ def fig_resolution():
                                fc=(BLUE if i % 2 == 0 else ORANGE), alpha=0.11,
                                ec="white", lw=2.0, zorder=3))
         ax.text(x0 + w / 2, 0.462, f"poll window {i+1}", ha="center", va="center",
-                fontsize=8.4, color=INK, zorder=6)
+                fontsize=8.5, color=INK, zorder=6)
         ax.text(x0 + w / 2, 0.408, "31 s", ha="center", va="center",
-                fontsize=7.8, color=MUTED, zorder=6)
+                fontsize=8.5, color=MUTED, zorder=6)
 
     eyebrow(ax, -3, 0.242, "what we record", color=MUTED)
     for x0 in [0, 31, 62]:
@@ -487,21 +504,21 @@ def fig_resolution():
         ax.plot([cx, cx], [0.358, 0.202], color=INK, lw=0.9, ls=":", zorder=3)
         ax.add_patch(Polygon([[cx - 5, 0.182], [cx + 5, 0.182], [cx, 0.132]],
                              closed=True, fc=INK, ec="none", zorder=6))
-        ax.text(cx, 0.080, f"{n} events collapse\ninto 1 observation", ha="center",
-                fontsize=8.0, color=RED, linespacing=1.45, fontweight="bold")
+        ax.text(cx, 0.104, f"{n} events collapse\ninto 1 observation", ha="center", va="top",
+                fontsize=8.5, color=RED, linespacing=1.45, fontweight="bold")
 
     title(fig, "The resolution ceiling", "the game is finer than the instrument")
     note(fig,
          "A book that re-priced two seconds after the run and one that took twenty five are "
          "recorded identically.\nNo claim below the window is supportable, and the paper makes none.",
          y=0.040)
-    fig.savefig(FIG / "p2_resolution.png", dpi=220, bbox_inches="tight")
+    fs.save_at_measure(fig, FIG / "p2_resolution.png")
     plt.close(fig)
 
 
 # ------------------------------------------------------------------- FIG 9
 def fig_windows():
-    fig, ax = canvas(10.0, 5.8)
+    fig, ax = canvas(fs.FULL_W, 4.4)
     caps = ["Sharp benchmark book", "Two books at once", "Pitch-level measurement",
             "Weather and park", "Live market status", "Cross-book comparison",
             "Sub-minute timing"]
@@ -533,13 +550,13 @@ def fig_windows():
             "This is why a result from one could never confirm or contradict a result from the other.",
             ha="center", fontsize=9.5, color=MUTED)
     title(fig, "What each instrument can see")
-    fig.savefig(FIG / "p2_windows.png", dpi=220, bbox_inches="tight")
+    fs.save_at_measure(fig, FIG / "p2_windows.png")
     plt.close(fig)
 
 
 # ------------------------------------------------------------------- FIG 10
 def fig_bridge():
-    fig, axes = plt.subplots(1, 2, figsize=(11.2, 5.0))
+    fig, axes = plt.subplots(1, 2, figsize=(fs.FULL_W, 3.7))
     for ax in axes:
         ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
 
@@ -562,10 +579,10 @@ def fig_bridge():
     eyebrow(ax, 0.5, 0.950, "paper 2", color=INK, size=10.2, ha="center")
     ax.text(0.5, 0.886, "formation of prices", ha="center", fontsize=9.4,
             color=MUTED, style="italic")
-    tinted(ax, 0.22, 0.708, 0.56, 0.090, GREEN, alpha=0.08, lw=1.2)
-    ax.text(0.5, 0.753, "Game event", ha="center", va="center", fontsize=10.2,
+    tinted(ax, 0.20, 0.708, 0.60, 0.090, GREEN, alpha=0.08, lw=1.2)
+    ax.text(0.5, 0.753, "Game event", ha="center", va="center", fontsize=9.8,
             color=INK, fontweight="bold", zorder=6)
-    card(ax, 0.22, 0.518, 0.56, 0.100, fc=FOG, ec=HAIR, lw=1.1, z=3)
+    card(ax, 0.20, 0.518, 0.60, 0.100, fc=FOG, ec=HAIR, lw=1.1, z=3)
     ax.text(0.5, 0.568, "Hidden market process", ha="center", va="center",
             fontsize=10.2, color=MUTED, zorder=6)
     tinted(ax, 0.22, 0.338, 0.56, 0.090, GREEN, alpha=0.08, lw=1.2)
@@ -583,7 +600,7 @@ def fig_bridge():
     note(fig,
          "Paper 1 asked whether prices contain public information. Paper 2 asks whether prices\n"
          "reveal how that information entered the market.", y=0.018)
-    fig.savefig(FIG / "p2_bridge.png", dpi=220, bbox_inches="tight")
+    fs.save_at_measure(fig, FIG / "p2_bridge.png")
     plt.close(fig)
 
 

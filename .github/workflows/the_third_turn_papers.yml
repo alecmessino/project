@@ -1,0 +1,42 @@
+name: The Third Turn — publication artifacts
+
+# Gate on the built manuscripts, not on their sources. check_title_margins.py reads
+# glyph boxes out of the committed PDFs, so it catches a title that renders into the
+# margin even when the markdown looks fine -- which is exactly how the Paper 2
+# supplement's clipped title reached a reviewer.
+#
+# Deliberately not part of tests/: that suite covers the collector and the analysis,
+# and its count is quoted in the research record. This is a packaging gate and is
+# kept separate.
+
+on:
+  push:
+    paths:
+      - 'the_third_turn/paper/**.pdf'
+      - 'the_third_turn/paper/check_title_margins.py'
+      - 'the_third_turn/paper/build_pdf.py'
+  pull_request:
+    paths:
+      - 'the_third_turn/paper/**.pdf'
+      - 'the_third_turn/paper/check_title_margins.py'
+      - 'the_third_turn/paper/build_pdf.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  title-margins:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Poppler
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+      - name: Title-block margin gate
+        run: python3 the_third_turn/paper/check_title_margins.py the_third_turn/paper/*.pdf
+      - name: Structural validity
+        run: |
+          sudo apt-get install -y -qq qpdf
+          for f in the_third_turn/paper/*.pdf; do
+            echo "checking $f"; qpdf --check "$f" > /dev/null || exit 1
+          done

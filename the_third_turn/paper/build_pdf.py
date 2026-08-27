@@ -93,40 +93,38 @@ def html_escape(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
-def _pdfmark_str(s: str) -> str:
-    """Docinfo value as hex UTF-16BE, so em-dashes and the like survive."""
-    return "<FEFF" + s.encode("utf-16-be").hex().upper() + ">"
-
-
 def normalize(raw: Path, out: Path, title: str, author: str | None) -> None:
-    """Re-emit through Ghostscript and stamp document info.
+    """Stamp document info and rewrite the file structure, preserving page content.
 
-    WHY. Two problems, one fix. Chromium/Skia names the document after the source
-    file, so every PDF carried a Title like "paper2_anon.html" and no Author. And
-    Skia's content streams have been observed to render inconsistently across
-    readers -- text near a following background box masked under Poppler while
-    Ghostscript drew it correctly. Re-emitting through pdfwrite produces one
-    conventional content stream per page and removes that class of difference.
+    WHY. Chromium/Skia names the document after its source file, so every PDF
+    carried a Title like "paper2_anon.html" and no Author.
 
-    Images are kept lossless and un-downsampled, so figures are byte-for-byte the
-    same pixels; only the container changes.
+    WHY NOT GHOSTSCRIPT. An earlier version of this step re-emitted the pages
+    through `gs -sDEVICE=pdfwrite`. A before/after audit showed that cost two
+    semantics the Chromium output had: the logical structure tree disappeared
+    (tagged: yes -> no, which is what a screen reader uses), and text runs inside
+    tables were re-ordered, so extraction and copy/paste read cells in a
+    different sequence. No content was lost -- the character and word multisets
+    matched exactly -- but both are real losses and neither was worth paying for.
+
+    pikepdf rewrites the cross-reference structure and linearizes without
+    touching a single content stream, so tagging, annotations, fonts and text
+    order survive byte-for-byte while the document info is corrected.
+
+    No XMP packet is added. Chromium writes none, and an anonymized edition is
+    safer with one metadata surface than with two.
     """
-    marks = [f"/Title {_pdfmark_str(title)}"]
-    if author:
-        marks.append(f"/Author {_pdfmark_str(author)}")
-    marks.append("/Creator ()")          # drops the Chromium user-agent string
-    pdfmark = raw.with_suffix(".pdfmark")
-    pdfmark.write_text("[ " + " ".join(marks) + " /DOCINFO pdfmark\n")
-    subprocess.run([
-        "gs", "-q", "-dNOPAUSE", "-dBATCH", "-dSAFER", "-sDEVICE=pdfwrite",
-        "-dCompatibilityLevel=1.7", "-dEmbedAllFonts=true", "-dSubsetFonts=true",
-        "-dDownsampleColorImages=false", "-dDownsampleGrayImages=false",
-        "-dDownsampleMonoImages=false", "-dAutoFilterColorImages=false",
-        "-dAutoFilterGrayImages=false", "-dColorImageFilter=/FlateEncode",
-        "-dGrayImageFilter=/FlateEncode", "-dPreserveMarkedContent=true",
-        f"-sOutputFile={out}", str(raw), str(pdfmark),
-    ], check=True, capture_output=True)
-    pdfmark.unlink(missing_ok=True)
+    import pikepdf
+
+    with pikepdf.open(raw) as pdf:
+        info = pdf.docinfo
+        info["/Title"] = title
+        if author:
+            info["/Author"] = author
+        elif "/Author" in info:
+            del info["/Author"]
+        info["/Creator"] = ""          # drops the Chromium user-agent string
+        pdf.save(out, linearize=True)
 
 
 def main() -> int:

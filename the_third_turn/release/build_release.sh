@@ -89,6 +89,25 @@ if [ -e "$OUT/ops/THIRD_TURN_PROGRAM_REVIEW_2026_08.md" ]; then
   exit 1
 fi
 echo "==> excluded internal operational materials (kept the cited governance registers)"
+
+# PUBLICATION-ARTIFACT GATE. Fails the release if any manuscript's title block runs
+# into the margins. Added 2026-08-27 after a retitle left the Paper 2 supplement's
+# title about 3pt from both margins -- inside the page box, so nothing caught it,
+# but read as clipped by a reader rendering it independently. A check that is only
+# run by hand is not a gate, so it runs here, where the artifacts are assembled.
+#
+# Fails closed when pdftotext is unavailable: a release whose artifacts could not be
+# verified should not be published.
+echo "==> verifying title-block margins"
+if ! command -v pdftotext >/dev/null 2>&1; then
+  echo "==> ERROR: pdftotext not found; cannot verify publication artifacts." >&2
+  echo "==>        install poppler-utils (apt-get install -y poppler-utils) and re-run." >&2
+  exit 1
+fi
+if ! python3 "$ROOT/the_third_turn/paper/check_title_margins.py" "$OUT"/paper/*.pdf; then
+  echo "==> ERROR: title-block margin check failed; release aborted." >&2
+  exit 1
+fi
 find "$OUT" -type d -name '__pycache__' -prune -exec rm -rf {} + 2>/dev/null || true
 
 # top-level public files (authored in release/)

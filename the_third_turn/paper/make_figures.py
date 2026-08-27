@@ -27,6 +27,7 @@ from pathlib import Path
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 from matplotlib.patches import Patch, FancyBboxPatch, FancyArrowPatch
 
 HERE = Path(__file__).resolve().parent
@@ -128,11 +129,19 @@ def fig2_graveyard():
 def fig3_encompassing():
     e = _load("encompass.json")
     fs.setup()
-    fig, (axL, axR) = plt.subplots(1, 2, figsize=(fs.FULL_W, 3.6),
-                                   gridspec_kw={"width_ratios": [1, 1.25]})
+    # Left/right is fixed by the caption, so the panels stay side by side and the
+    # left one is given room instead: a wider share, taller canvas for the
+    # title/annotation stack, and category labels broken onto short lines. At
+    # [1, 1.25] the left panel was ~2.7in and "Market + features" alone needed
+    # ~1.06in against 0.9in of slot.
+    fig, (axL, axR) = plt.subplots(1, 2, figsize=(fs.FULL_W, 4.5),
+                                   gridspec_kw={"width_ratios": [1, 1.12]})
+    # Panel spacing is the layout engine's: constrained_layout ignores
+    # subplots_adjust and warns, and the width_ratios above already give the
+    # left panel the room its three-line tick labels need.
 
     # left — three forecasts
-    labels = ["Our features\n(Y ~ X)", "Sharp market\n(Y ~ B)", "Market + features\n(Y ~ B+X)"]
+    labels = ["Our\nfeatures\n(Y ~ X)", "Sharp\nmarket\n(Y ~ B)", "Market\n+ features\n(Y ~ B+X)"]
     vals = [e["r2_features"], e["r2_market"], e["r2_both"]]
     cols = [fs.PALETTE[1], fs.PALETTE[0], fs.PALETTE[2]]
     x = np.arange(3)
@@ -142,15 +151,16 @@ def fig3_encompassing():
                  fontsize=10, fontweight="bold", color=fs.INK)
     # visual annotation over the combined bar — tells the reader what they're seeing
     axL.annotate("no incremental\ninformation", xy=(2, vals[2] + 0.004),
-                 xytext=(2, vals[2] + 0.052), ha="center", va="bottom", fontsize=8.6,
+                 xytext=(2, vals[2] + 0.070), ha="center", va="bottom", fontsize=8.6,
                  color=fs.PALETTE[3], fontweight="bold",
                  arrowprops=dict(arrowstyle="-", color=fs.PALETTE[3], linewidth=1))
     axL.set_xticks(x)
     axL.set_xticklabels(labels, fontsize=9)
     axL.set_ylabel("out-of-sample R²  (remaining runs)")
-    axL.set_ylim(0, max(vals) * 1.18)
-    axL.set_title("Adding features to the market: ΔR² = %+.3f" % e["encompass_gain"],
-                  fontsize=11, pad=10, wrap=True)
+    axL.set_ylim(0, max(vals) * 1.34)   # clear space for the annotation
+    # Both panel titles are set to two lines so their baselines align.
+    axL.set_title("Adding features to the market:\nΔR² = %+.3f" % e["encompass_gain"],
+                  fontsize=11, pad=10)
 
     # right — per-feature incremental ΔR² beyond the market (E+)
     inc = e["incremental"]
@@ -172,9 +182,14 @@ def fig3_encompassing():
     axR.set_yticks(y)
     axR.set_yticklabels(names, fontsize=9)
     axR.set_xlabel("incremental R² beyond the market  (Y~B+Xi − Y~B)")
-    axR.set_title("Every feature, individually encompassed", fontsize=11, wrap=True)
-    axR.text(0.0032, len(names) - 0.6, "±0.003\nnegligible band", fontsize=8.5,
-             color=fs.MUTED, va="center")
+    axR.set_title("Every feature,\nindividually encompassed", fontsize=11, pad=10)
+    # Mid-height, hard right. The bars are sorted by value, so the middle rows are
+    # the ones inside the negligible band and their bars are the shortest -- the only
+    # part of the panel guaranteed clear. (The bottom-right corner is not: bars grow
+    # from zero, so the longest negative bar reaches the zero rule at the bottom row
+    # and the label overprinted its tip.)
+    axR.text(0.985, 0.52, "±0.003\nnegligible band", transform=axR.transAxes,
+             fontsize=8.5, color=fs.MUTED, va="center", ha="right")
     fig.suptitle("The sharp market statistically encompasses every public variable we measure",
                  fontsize=12.5, fontweight="bold", wrap=True)
     fs.save_at_measure(fig, FIGDIR / "forecast_encompassing.png")
@@ -199,7 +214,7 @@ def fig4_debiasing():
     # measure, which is what both of them needed.
     fig, (axL, axR) = plt.subplots(2, 1, figsize=(fs.FULL_W, 7.4),
                                    gridspec_kw={"height_ratios": [1.0, 0.95]})
-    fig.subplots_adjust(hspace=0.34)
+    # Row spacing likewise belongs to constrained_layout.
 
     # ---- LEFT: the survivorship flow (why the raw signal is post-treatment) ----
     axL.set_xlim(0, 10); axL.set_ylim(0, 10); axL.axis("off")
@@ -463,8 +478,19 @@ def fig1_process():
     ax.set_xlim(-0.02, 1.04)
     ax.set_ylim(-0.05, n + 0.05)
     ax.axis("off")
+    # No auto-wrap here. matplotlib decides `wrap=True` breaks from the canvas width
+    # at draw time, and this title sits within a few pixels of the measure, so the
+    # raster and vector renditions of the same figure disagreed about it -- the PNG
+    # broke a one-word widow onto a second line, the SVG did not. Setting the line
+    # explicitly makes both renditions identical by construction. Same words, same
+    # size, one line.
+    # 11pt, the same size the other axes titles in this paper are set at. At 11.5 the
+    # single line was the widest artist on the canvas, so it set the crop -- and the
+    # raster and vector renderers disagree about a long string's width by about a
+    # percent, which is enough to pull the two renditions out of register. At 11 the
+    # crop is set by the figure body instead and both land on the measure.
     ax.set_title("The research process: each surviving explanation handed to a stricter test",
-                 fontsize=11.5, pad=12, wrap=True)
+                 fontsize=11, pad=12)
     fs.save_at_measure(fig, FIGDIR / "research_process.png")
     plt.close(fig)
 
@@ -491,16 +517,27 @@ def fig_power():
                 markeredgewidth=1.2 if near0 else 1.0, zorder=3)
     ax.axvline(0, color=fs.MUTED, lw=1.0)
     ax.axvline(floor, color=fs.INK, lw=1.4, ls="--")
-    ax.text(floor + 0.0003, len(items) - 0.4,
+    # The callout is wider than the shaded band it describes, so it necessarily
+    # crosses the dashed floor rule. Set it in the standard annotation box so the
+    # rule stops at the box edge instead of running through the glyphs.
+    ax.text(0.985, 0.975,
             f"minimum detectable\nincremental R² = {floor:.3f}\n(80% power, snapshots independent)",
-            fontsize=8.5, color=fs.INK, va="top", ha="left")
+            transform=ax.transAxes, fontsize=8.5, color=fs.INK, va="top", ha="right",
+            bbox=fs.box(fc="white"), zorder=5)
     ax.set_yticks(ys); ax.set_yticklabels([nice[k] for k, _ in items], fontsize=8.8)
     ax.set_xlabel("incremental out-of-sample R²  (beyond the market forecast)")
-    ax.set_xlim(-0.009, 0.013); ax.set_ylim(-0.9, len(items) - 0.1)
+    ax.set_xlim(-0.009, 0.013); ax.set_ylim(-0.6, len(items) - 0.1)
+    # Default locator put ~11 labels across the axis; six is legible at 8.5pt.
+    ax.xaxis.set_major_locator(MaxNLocator(nbins=6))
     ax.set_title("Every feature's incremental information falls below the detection floor",
                  fontsize=11, pad=10, wrap=True)
-    ax.text(0.013, -0.75, f"conservative floor (games independent): {mde['mde_r2_games']:.2f}, off-scale right",
-            ha="right", va="center", fontsize=8.5, color=fs.MUTED, style="italic")
+    # Outside the plotting region entirely: at y=-0.75 in data coordinates this
+    # note printed across the x-axis rule and its tick labels.
+    ax.text(1.0, -0.155, f"conservative floor (games independent): {mde['mde_r2_games']:.2f}, off-scale right",
+            transform=ax.transAxes, ha="right", va="top", fontsize=8.5,
+            color=fs.MUTED, style="italic", clip_on=False)
+    # No bottom-margin call here either: the note below the axis is clip_on=False,
+    # so save_at_measure's tight bounding box already grows to include it.
     fs.save_at_measure(fig, FIGDIR / "appendix_power.png")
     plt.close(fig)
 

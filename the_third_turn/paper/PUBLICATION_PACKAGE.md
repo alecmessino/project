@@ -3,7 +3,7 @@
 Everything needed to disseminate Paper 1, in the order it gets used. Ready-to-paste assets live in
 `SUBMISSION_KIT.md` (referenced by ID below, e.g. **D1**); this file is the operational checklist.
 
-**Artifact under dissemination:** `paper/paper1.pdf` (1,312 KB, 11 figures, rebuilt 2026-07-28).
+**Artifact under dissemination:** `paper/paper1.pdf` (510 KB, 11 vector figures, rebuilt 2026-08-27).
 **Status:** scientific content **frozen**. Permitted changes are limited to, and only to:
 data-availability substitution · repository URL · DOI · reproducibility language · copyediting.
 No empirical claim, number, figure, or result may change (owner ruling, 2026-07-28).

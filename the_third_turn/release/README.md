@@ -65,8 +65,12 @@ live feed access is required. Verified 2026-08-22: the JSON outputs and all figu
 **byte-identically**, and `pytest tests/` reports **113 passed**. PDFs rebuild to identical content
 but are not byte-identical (the writer embeds a creation timestamp).
 
-> **Do not run `paper/make_concept_figures.py`.** It is superseded: it rewrites three figures that
-> `make_figures.py` already produces, with different images. See `paper/REPRODUCE.md`.
+> **Run all four figure generators.** `make_figures.py`, `make_concept_figures.py`,
+> `make_paper2_figures.py` and `docs/make_companion_figures.py` write disjoint sets;
+> `make_concept_figures.py` is the sole producer of `concept_laboratory.png`,
+> `concept_encompassing.png` and `appendix_vig.png`. (An earlier revision of this file said to skip
+> it. That was wrong — corrected 2026-08-27; see `paper/REPRODUCE.md`.) Each writes an SVG and a PDF
+> vector master beside the PNG; the manuscripts embed the SVG.
 
 ## Data
 

@@ -3,8 +3,14 @@
 Canonical replication instructions for **Paper 1** and **Paper 2**. Every command below was run
 end-to-end on 2026-08-22 against commit `721f388`; the verification results are stated inline.
 
-> **Read this before `README.md`.** The replication block in the release `README.md` previously
-> listed a figure step that *overwrites* three committed figures. See "Known pitfall" below.
+> **Correction, 2026-08-27.** An earlier revision of this document told replicators *not* to run
+> `paper/make_concept_figures.py`, on the finding that `make_figures.py` already produced the same
+> three figures. That finding was wrong, and the isolation test behind it was wrong: it restored the
+> committed PNGs before running `make_figures.py`, so three files that were never rewritten were read
+> as "reproduced". `make_concept_figures.py` is the **sole** producer of `concept_laboratory.png`,
+> `concept_encompassing.png` and `appendix_vig.png`. Re-verified by deleting all three and running
+> `make_figures.py` alone: none reappears. Following the old instruction left three of Paper 1's
+> eleven figures with no generator. The step is now in the sequence below.
 
 ## 1. Environment
 
@@ -35,23 +41,25 @@ required; everything reads the frozen caches in `output/`.
 ## 3. Reproduce the figures — byte-identical
 
 ```bash
-python3 paper/make_figures.py         # Paper 1: 11 figures (+ shared)
-python3 paper/make_paper2_figures.py  # Paper 2: 10 figures
+python3 paper/make_figures.py          # Paper 1: 8 figures
+python3 paper/make_concept_figures.py  # Paper 1: 3 more (concept_*, appendix_vig)
+python3 paper/make_paper2_figures.py   # Paper 2: 10 figures
+python3 docs/make_companion_figures.py # Visual Companion: 3 figures
 ```
 
-**Verified:** **21 of 21** figures referenced by the two manuscripts regenerate **byte-identical**
-to the committed PNGs.
+All four are required: each writes a disjoint set, and together they produce the **21 figures the two
+manuscripts reference** plus the companion's three. Run order does not matter.
 
-### Known pitfall — do not run `make_concept_figures.py`
+Each call writes **three coeval renditions** of one figure from one converged canvas:
 
-`paper/make_concept_figures.py` is **superseded**. It writes three files —
-`concept_laboratory.png`, `concept_encompassing.png`, `appendix_vig.png` — that
-`make_figures.py` already produces, and it produces *different* images. Running it after
-`make_figures.py` replaces three committed figures with versions that do not match the paper.
+| file | role |
+|---|---|
+| `<name>.svg` | vector master — what `build_pdf.py` embeds in the manuscript |
+| `<name>.pdf` | vector master — the form a journal's production desk asks for |
+| `<name>.png` | raster preview for markdown and web, written at 360 dpi (>= 300 PPI at the text measure) |
 
-Verified by isolation: after `make_figures.py` alone, all three are byte-identical to the committed
-figures; after `make_concept_figures.py` alone, all three differ. The script is retained for
-history and is not part of any replication path.
+**Verified:** every figure regenerates to the same geometry; the PNGs are byte-identical to the
+committed files.
 
 ## 4. Build the PDFs
 
@@ -66,6 +74,11 @@ to build the second manuscript.
 **Verified:** both build successfully. PDFs are **not byte-reproducible** — the writer embeds a
 creation timestamp — but rebuild to the same size with identical content. Byte-level
 reproducibility claims apply to the JSON outputs and the figures, not to the PDFs.
+
+`build_pdf.py` rewrites each `figures/<name>.png` reference to `figures/<name>.svg` when the master
+exists, so the manuscripts embed their line art as vector rather than as a raster object. The
+markdown sources are untouched — they still name the PNG. `paper/check_figure_output.py` gates the
+result: every built PDF must embed its figures as vector, or as raster at no less than 300 PPI.
 
 ## 5. Tests
 

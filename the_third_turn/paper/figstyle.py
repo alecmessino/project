@@ -7,6 +7,8 @@ use PALETTE for categorical series and PASS/FAIL only for status marks.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
 
 # Okabe-Ito — colorblind-safe scientific standard (validated for CVD separation)
@@ -59,6 +61,20 @@ ARROW     = dict(arrowstyle="-|>", mutation_scale=11, linewidth=LW_ARROW,
                  color=MUTED, shrinkA=3, shrinkB=3)
 BOX_R     = 0.06    # rounded-box corner radius, in axes units
 BOX_PAD   = 0.34    # rounded-box padding
+# Output contract. Every figure ships three coeval renditions from one canvas:
+#   .svg  vector master, embedded in the manuscript build (Chromium keeps it vector);
+#   .pdf  vector master, the form journal production asks for;
+#   .png  raster preview for markdown/web, at PNG_DPI.
+# PNG_DPI is 360 rather than 300 because the tight crop adds `pad` inches on each
+# side, so the effective on-page resolution is dpi * (saved width / measure) and
+# lands a few percent under the nominal value. 360 clears the 300 PPI floor with
+# room to spare; see paper/check_figure_output.py, which measures rather than
+# assumes.
+PNG_DPI = 360
+RASTER_PPI_FLOOR = 300
+VECTOR_FMTS = ("svg", "pdf")
+
+
 def box(fc="white", ec=None, lw=LW_RULE):
     """Standard annotation box: one radius, one weight, everywhere."""
     return dict(boxstyle=f"round,pad={BOX_PAD},rounding_size={BOX_R}",
@@ -78,6 +94,16 @@ def setup():
         "axes.spines.right": False, "axes.grid": True, "grid.color": GRID,
         "grid.linewidth": 0.6, "axes.axisbelow": True, "legend.frameon": False,
         "figure.constrained_layout.use": True,
+        # Keep figure labels as real text in the SVG master rather than outlines, so
+        # the vector rendition carries embedded fonts and extractable strings. Verified
+        # against the raster master glyph-for-glyph by paper/check_figure_output.py.
+        "svg.fonttype": "none",
+        "pdf.fonttype": 42,
+        # Fixed salt so the SVG's internal clip-path ids are a function of the figure
+        # rather than of the process. Without it two runs of the same generator produce
+        # byte-different masters, and "regenerates byte-identically" stops being a
+        # claim anyone can check.
+        "svg.hashsalt": "the-third-turn",
     })
 
 
@@ -88,7 +114,7 @@ def boot_ci(fn, n, reps=2000, seed=0):
     vals = [v for v in vals if v == v]
     return (np.percentile(vals, 2.5), np.percentile(vals, 97.5)) if vals else (np.nan, np.nan)
 
-def save_at_measure(fig, path, pad=0.02, tol=0.012, iters=40):
+def save_at_measure(fig, path, pad=0.02, tol=0.012, iters=40, vector=True):
     """Save a figure whose CROPPED width is exactly the text measure.
 
     WHY THIS EXISTS. The page clamps every figure to the measure, so on-page text
@@ -110,6 +136,12 @@ def save_at_measure(fig, path, pad=0.02, tol=0.012, iters=40):
     fixed in points while the canvas moves, so the crop shrinks more slowly than
     the canvas and the iteration contracts onto the target.
     """
+    # The loop runs against the figure's own renderer. Converging it at the SVG
+    # backend's 72 dpi instead was tried and is worse: several figures stop
+    # converging there entirely, landing 5% under the measure. At the authoring dpi
+    # every figure converges, and the raster and vector renditions then agree on
+    # width to within about a percent -- glyph advances round differently at 360 dpi
+    # than at 72, and that residual is the whole of the disagreement.
     fig.canvas.draw()
     for _ in range(iters):
         bb = fig.get_tightbbox(fig.canvas.get_renderer())
@@ -120,4 +152,17 @@ def save_at_measure(fig, path, pad=0.02, tol=0.012, iters=40):
         # Damped correction: the crop responds sub-linearly to the canvas.
         fig.set_size_inches(cur_w * (1 + 0.75 * (FULL_W / w - 1)), cur_h)
         fig.canvas.draw()
-    fig.savefig(path, bbox_inches="tight", pad_inches=pad)
+
+    # One converged canvas, three renditions, identical geometry. The vector
+    # masters are the production artifacts; the PNG is the markdown preview and
+    # the raster fallback, and it clears the 300 PPI floor on its own so the
+    # package stays publishable wherever a vector path is unavailable.
+    path = Path(path)
+    fig.savefig(path, bbox_inches="tight", pad_inches=pad, dpi=PNG_DPI)
+    if vector:
+        # Suppress the wall-clock stamp each vector backend writes by default
+        # (<dc:date> in SVG, /CreationDate in PDF). Nothing downstream reads it, and
+        # with it the masters are byte-reproducible.
+        for ext, nodate in zip(VECTOR_FMTS, ({"Date": None}, {"CreationDate": None})):
+            fig.savefig(path.with_suffix(f".{ext}"), bbox_inches="tight", pad_inches=pad,
+                        metadata=nodate)

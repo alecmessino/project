@@ -96,6 +96,40 @@ def html_escape(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
+def use_vector_masters(body: str, base: Path) -> tuple[str, int, int]:
+    """Point every figure reference at its vector master, where one exists.
+
+    WHY. The manuscripts reference `figures/<name>.png`, and those references are
+    frozen along with the prose. But a PNG placed in a PDF is a raster object: the
+    shipped documents embedded their line art at ~200 PPI, which is below what any
+    journal will accept for production and visibly soft at print size.
+
+    Every generator now emits an SVG master beside the PNG from the same converged
+    canvas (figstyle.save_at_measure). Chromium rasterizes nothing when it prints an
+    <img> whose source is SVG -- the geometry lands in the PDF as paths and the
+    labels as embedded text -- so swapping the extension here upgrades the figures
+    to true vector without touching a single frozen markdown file.
+
+    The PNGs stay in the tree as the markdown/web preview and as the raster
+    fallback; they are written at figstyle.PNG_DPI, which clears the 300 PPI floor
+    on its own, so a build that cannot use the vector path still ships a
+    publishable document. paper/check_figure_output.py enforces one or the other.
+    """
+    swapped = kept = 0
+
+    def sub(m: "re.Match[str]") -> str:
+        nonlocal swapped, kept
+        src = m.group(1)
+        vec = Path(src).with_suffix(".svg")
+        if Path(src).suffix.lower() == ".png" and (base / vec).is_file():
+            swapped += 1
+            return m.group(0).replace(f'src="{src}"', f'src="{vec}"')
+        kept += 1
+        return m.group(0)
+
+    return re.sub(r'<img[^>]*\ssrc="([^"]+)"[^>]*>', sub, body), swapped, kept
+
+
 def normalize(raw: Path, out: Path, title: str, author: str | None) -> None:
     """Stamp document info and rewrite the file structure, preserving page content.
 
@@ -151,6 +185,7 @@ def main() -> int:
     extra = "\n.titleblock h1 { font-size: 15pt; }" if len(title) > 90 else ""
 
     body = markdown.markdown(src, extensions=["tables", "footnotes"])
+    body, vec, raster = use_vector_masters(body, outdir)
     html = (
         "<!doctype html><html><head><meta charset='utf-8'>"
         f"<title>{html_escape(title)}</title>"
@@ -170,7 +205,8 @@ def main() -> int:
     author = None if stem.endswith("_anon") else "Alec Messino"
     normalize(raw, pdf, title, author)
     raw.unlink(missing_ok=True)
-    print(f"wrote {pdf} ({pdf.stat().st_size // 1024} KB)")
+    print(f"wrote {pdf} ({pdf.stat().st_size // 1024} KB) "
+          f"[{vec} vector figure(s), {raster} raster]")
     return 0
 
 

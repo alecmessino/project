@@ -114,6 +114,34 @@ if ! python3 "$ROOT/the_third_turn/paper/check_figure_legibility.py"; then
   echo "==> ERROR: figure legibility check failed; release aborted." >&2
   exit 1
 fi
+
+# FIGURE-OUTPUT GATE. Added 2026-08-27 after `pdfimages -list` showed every shipped
+# PDF embedding its line art as ~200 PPI PNGs. The gate accepts either production
+# route -- figures embedded as vector, or embedded as raster at no less than 300 PPI
+# -- and fails the release on anything below that. It also refuses to publish a
+# release in which a figure has no vector master, since the masters are the form a
+# journal's production desk asks for.
+echo "==> verifying figure embedding (vector, or >= 300 PPI raster)"
+if ! command -v pdfimages >/dev/null 2>&1; then
+  echo "==> ERROR: pdfimages not found; cannot verify figure embedding." >&2
+  echo "==>        install poppler-utils (apt-get install -y poppler-utils) and re-run." >&2
+  exit 1
+fi
+if ! python3 "$ROOT/the_third_turn/paper/check_figure_output.py" \
+       "$OUT"/paper/*.pdf "$OUT"/docs/VISUAL_COMPANION.pdf; then
+  echo "==> ERROR: figure embedding check failed; release aborted." >&2
+  exit 1
+fi
+
+# The vector masters ride along as release assets: one SVG and one PDF per figure,
+# beside the PNG preview, so a production desk never has to ask for them.
+masters=$(find "$OUT/paper/figures" "$OUT/docs/figures" -type f \( -name '*.svg' -o -name '*.pdf' \) 2>/dev/null | wc -l)
+previews=$(find "$OUT/paper/figures" "$OUT/docs/figures" -type f -name '*.png' 2>/dev/null | wc -l)
+if [ "$masters" -ne "$((previews * 2))" ]; then
+  echo "==> ERROR: $previews figure(s) but $masters vector master(s); expected $((previews * 2))." >&2
+  exit 1
+fi
+echo "==> figure masters shipped: $masters vector file(s) for $previews figure(s)"
 find "$OUT" -type d -name '__pycache__' -prune -exec rm -rf {} + 2>/dev/null || true
 
 # top-level public files (authored in release/)

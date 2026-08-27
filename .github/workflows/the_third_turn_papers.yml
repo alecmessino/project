@@ -14,18 +14,24 @@ on:
     paths:
       - 'the_third_turn/paper/**.pdf'
       - 'the_third_turn/paper/check_title_margins.py'
+      - 'the_third_turn/paper/check_figure_output.py'
       - 'the_third_turn/paper/build_pdf.py'
       - 'the_third_turn/paper/figures/**'
       - 'the_third_turn/paper/make_*.py'
       - 'the_third_turn/paper/figstyle.py'
+      - 'the_third_turn/docs/figures/**'
+      - 'the_third_turn/docs/VISUAL_COMPANION.pdf'
   pull_request:
     paths:
       - 'the_third_turn/paper/**.pdf'
       - 'the_third_turn/paper/check_title_margins.py'
+      - 'the_third_turn/paper/check_figure_output.py'
       - 'the_third_turn/paper/build_pdf.py'
       - 'the_third_turn/paper/figures/**'
       - 'the_third_turn/paper/make_*.py'
       - 'the_third_turn/paper/figstyle.py'
+      - 'the_third_turn/docs/figures/**'
+      - 'the_third_turn/docs/VISUAL_COMPANION.pdf'
   workflow_dispatch:
 
 permissions:
@@ -44,6 +50,8 @@ jobs:
         run: |
           pip install --quiet pillow matplotlib numpy
           python3 the_third_turn/paper/check_figure_legibility.py
+      - name: Figure embedding gate (vector, or >= 300 PPI raster)
+        run: python3 the_third_turn/paper/check_figure_output.py the_third_turn/paper/*.pdf the_third_turn/docs/VISUAL_COMPANION.pdf
       - name: Structural validity
         run: |
           sudo apt-get install -y -qq qpdf

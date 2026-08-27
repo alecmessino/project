@@ -72,11 +72,23 @@ def check_rendered(dirs) -> list[str]:
         for png in sorted(d.glob("*.png")):
             with Image.open(png) as im:
                 dpi = im.info.get("dpi", (200, 200))[0] or 200
-                eff = im.size[0] / dpi
-            onpage = figstyle.FS_MIN * figstyle.FULL_W / eff
-            if onpage < figstyle.FS_MIN - 0.05:
-                problems.append(f"{png.name}: saved {eff:.2f}in wide, so {figstyle.FS_MIN}pt "
-                                f"text renders at {onpage:.2f}pt on the page")
+            widths = {"raster": im.size[0] / dpi}
+            # The manuscript embeds the SVG master, so that is the rendition whose
+            # width actually sets on-page text size; the PNG is the fallback. Both
+            # come off one converged canvas and should agree, but they are measured
+            # by different renderers, so measure both rather than assuming.
+            svg = png.with_suffix(".svg")
+            if svg.is_file():
+                head = svg.read_text(errors="ignore")[:600]
+                m = re.search(r'width="([\d.]+)pt"', head)
+                if m:
+                    widths["vector"] = float(m.group(1)) / 72
+            for kind, eff in widths.items():
+                onpage = figstyle.FS_MIN * figstyle.FULL_W / eff
+                if onpage < figstyle.FS_MIN - 0.05:
+                    problems.append(f"{png.stem}: {kind} master saved {eff:.2f}in wide, so "
+                                    f"{figstyle.FS_MIN}pt text renders at {onpage:.2f}pt "
+                                    f"on the page")
     return problems
 
 def main() -> int:

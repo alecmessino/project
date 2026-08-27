@@ -13,6 +13,8 @@ wipes them). Self-provisions python-markdown on first run if missing.
 
 from __future__ import annotations
 
+import html
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -34,7 +36,9 @@ body {
   font-size: 10.5pt; line-height: 1.55; color: #111; margin: 0;
 }
 .titleblock { text-align: center; margin: 0 0 18pt; }
-.titleblock h1 { font-size: 17pt; line-height: 1.3; margin: 0 0 10pt; }
+/* max-width keeps a long title clear of both margins; without it a title can be set
+   flush to the measure and read as clipped. See paper/check_title_margins.py. */
+.titleblock h1 { font-size: 17pt; line-height: 1.3; margin: 0 auto 10pt; max-width: 88%; }
 .epigraph { font-style: italic; color: #444; font-size: 10pt; margin: 0 8% 14pt; }
 .author { font-size: 11pt; margin: 0 0 4pt; }
 .author .affil { font-size: 9.5pt; color: #444; }
@@ -77,6 +81,54 @@ a { color: inherit; text-decoration: none; }
 """
 
 
+def article_title(src: str) -> str:
+    """The <h1> of the title block, as plain text."""
+    m = re.search(r"<h1>(.*?)</h1>", src, re.S)
+    if not m:
+        return ""
+    return " ".join(html.unescape(re.sub(r"<[^>]+>", "", m.group(1))).split())
+
+
+def html_escape(s: str) -> str:
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def _pdfmark_str(s: str) -> str:
+    """Docinfo value as hex UTF-16BE, so em-dashes and the like survive."""
+    return "<FEFF" + s.encode("utf-16-be").hex().upper() + ">"
+
+
+def normalize(raw: Path, out: Path, title: str, author: str | None) -> None:
+    """Re-emit through Ghostscript and stamp document info.
+
+    WHY. Two problems, one fix. Chromium/Skia names the document after the source
+    file, so every PDF carried a Title like "paper2_anon.html" and no Author. And
+    Skia's content streams have been observed to render inconsistently across
+    readers -- text near a following background box masked under Poppler while
+    Ghostscript drew it correctly. Re-emitting through pdfwrite produces one
+    conventional content stream per page and removes that class of difference.
+
+    Images are kept lossless and un-downsampled, so figures are byte-for-byte the
+    same pixels; only the container changes.
+    """
+    marks = [f"/Title {_pdfmark_str(title)}"]
+    if author:
+        marks.append(f"/Author {_pdfmark_str(author)}")
+    marks.append("/Creator ()")          # drops the Chromium user-agent string
+    pdfmark = raw.with_suffix(".pdfmark")
+    pdfmark.write_text("[ " + " ".join(marks) + " /DOCINFO pdfmark\n")
+    subprocess.run([
+        "gs", "-q", "-dNOPAUSE", "-dBATCH", "-dSAFER", "-sDEVICE=pdfwrite",
+        "-dCompatibilityLevel=1.7", "-dEmbedAllFonts=true", "-dSubsetFonts=true",
+        "-dDownsampleColorImages=false", "-dDownsampleGrayImages=false",
+        "-dDownsampleMonoImages=false", "-dAutoFilterColorImages=false",
+        "-dAutoFilterGrayImages=false", "-dColorImageFilter=/FlateEncode",
+        "-dGrayImageFilter=/FlateEncode", "-dPreserveMarkedContent=true",
+        f"-sOutputFile={out}", str(raw), str(pdfmark),
+    ], check=True, capture_output=True)
+    pdfmark.unlink(missing_ok=True)
+
+
 def main() -> int:
     arg = sys.argv[1] if len(sys.argv) > 1 else "paper1"
     # Accept either a bare stem in paper/ ("paper2") or a path to any markdown
@@ -92,15 +144,31 @@ def main() -> int:
         raise SystemExit(f"build_pdf: no such markdown document: {arg}")
     outdir, stem = srcpath.parent, srcpath.stem
     src = srcpath.read_text()
+
+    title = article_title(src) or stem
+    # A very long title needs a smaller face to keep three lines inside the measure.
+    extra = "\n.titleblock h1 { font-size: 15pt; }" if len(title) > 90 else ""
+
     body = markdown.markdown(src, extensions=["tables", "footnotes"])
-    html = f"<!doctype html><html><head><meta charset='utf-8'><style>{CSS}</style></head><body>{body}</body></html>"
+    html = (
+        "<!doctype html><html><head><meta charset='utf-8'>"
+        f"<title>{html_escape(title)}</title>"
+        f"<style>{CSS}{extra}</style></head><body>{body}</body></html>"
+    )
     out_html = outdir / f"{stem}.html"
     out_html.write_text(html)
+
+    raw = outdir / f"{stem}.raw.pdf"
     pdf = outdir / f"{stem}.pdf"
     subprocess.run([
         CHROMIUM, "--headless=new", "--no-sandbox", "--disable-gpu",
-        "--no-pdf-header-footer", f"--print-to-pdf={pdf}", f"file://{out_html}",
+        "--no-pdf-header-footer", f"--print-to-pdf={raw}", f"file://{out_html}",
     ], check=True, capture_output=True)
+
+    # Anonymized editions carry no author. Everything else is Alec Messino.
+    author = None if stem.endswith("_anon") else "Alec Messino"
+    normalize(raw, pdf, title, author)
+    raw.unlink(missing_ok=True)
     print(f"wrote {pdf} ({pdf.stat().st_size // 1024} KB)")
     return 0
 

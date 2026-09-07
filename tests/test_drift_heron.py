@@ -135,51 +135,24 @@ def test_the_master_is_not_a_deployed_asset():
         "a stale copy of the mark is still being shipped in docs/"
 
 
-def test_the_hero_now_carries_the_watershed():
-    """The slot the mark used to hold is not empty, and what holds it is not another atmosphere
-    plate. The watershed is decorative in the accessibility sense — aria-hidden, never a link —
-    but it is the page's argument, which is why it displaced the mark rather than joining it."""
+
+def test_the_homepage_carries_only_the_supplied_heron():
+    import hashlib
     t = HUB.read_text(encoding="utf-8")
-    tag = re.search(r"<svg class=\"ws\"[^>]*>", t)
-    assert tag, "the hero has lost the watershed"
-    assert 'aria-hidden="true"' in tag.group(0), "the watershed is announcing itself to screen readers"
-    before = t[: tag.start()]
-    assert before.rfind("<a ") < before.rfind("</a>"), "the watershed is inside a link"
+    assert t.count('src="img/heron-plate.svg"') == 1
+    assert '<svg class="ws"' not in t
+    supplied = WEB / "img/heron-plate.svg"
+    assert hashlib.sha256(supplied.read_bytes()).hexdigest() == "3a7bf75ade532043c6da5d52d7851f9a90154cd671edf7b5d445d4d2b09c04de"
+    assert supplied.read_bytes() == (DOCS / "img/heron-plate.svg").read_bytes()
+    for page in WEB.glob("*.html"):
+        if page.name != "hub.html":
+            assert "heron-plate.svg" not in page.read_text()
 
 
-def test_the_watershed_sits_behind_the_copy():
-    """Typography has priority structurally, not by luck — the same rule the mark was held to.
-
-    How it wins changed on 2026-08-10. Both earlier tenants of this slot were hairline drawings
-    faded back under the words with a left mask-image, and this file asserted the mask. At the
-    weights the watershed carries, a fade does not clear the copy — it leaves grey ghosts behind
-    it — so the plate is pinned to start after the text column instead and runs at full colour
-    everywhere it appears. The guarantee is stronger, not weaker: the strokes cannot reach the
-    words because they are not drawn there. What is asserted is therefore the boundary, and it
-    has to stay a CSS-space measurement — expressed in viewBox units it drifted with window
-    height, which is the bug that produced the pinning.
-    """
+def test_the_heron_has_its_own_responsive_column():
     t = HUB.read_text(encoding="utf-8")
-    assert re.search(r"\.ws\{[^}]*z-index:0", t, re.S), "the watershed left the back plane"
-    assert re.search(r"\.hero>\.hero-grid,\.hero>\.ctas\{[^}]*z-index:1", t), \
-        "the hero copy is no longer lifted above the drawing"
-    left = re.search(r"\.ws\{[^}]*left:(\d+)px", t, re.S)
-    assert left, "the watershed is no longer pinned clear of the copy column"
-    # 52px hero padding + the 640px measure .hero-aside and .hero .ctas both hold, + a gutter.
-    assert int(left.group(1)) >= 52 + 640, \
-        f"the plate starts at {left.group(1)}px, inside the 692px copy column"
-    assert not re.search(r"\.ws\{[^}]*mask-image:", t, re.S), \
-        "the fade is back; at these weights it ghosts the copy instead of clearing it"
-
-
-def test_the_watershed_carries_no_cartographic_residue():
-    """The whole brief: pure vector structure on limestone. No labels, no city dots, no state
-    borders, no coastline. A <text> element in this plate would be a caption on a hero."""
-    t = HUB.read_text(encoding="utf-8")
-    svg = t[t.index('<svg class="ws"'): t.index("</svg>", t.index('<svg class="ws"'))]
-    assert "<text" not in svg, "the hero drawing has grown a label"
-    # The traced Mississippi generated a basin silhouette and hid it with `.ws .basin{display:none}`;
-    # this asserted that rule. The watershed has no geography to hide — no basin is emitted at all,
-    # so the rule would have nothing to switch off. Absence is now the stronger assertion.
-    assert "basin" not in svg, "a basin silhouette is back in the plate; the network is the picture"
-    assert not re.search(r"<(image|use)\b", svg), "the plate has grown a raster or a borrowed symbol"
+    assert 'class="heron-col"' in t
+    css = (WEB / "driftwood.css").read_text()
+    assert '.dw-home .heron-col{max-width:480px;}' in css
+    assert 'grid-row:auto!important' in css
+    assert 'alt=""' in re.search(r'<img[^>]*heron-plate.svg[^>]*>', t).group(0)

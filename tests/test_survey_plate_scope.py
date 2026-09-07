@@ -70,21 +70,11 @@ def test_the_review_keeps_its_plate_fragments():
     assert "<!--PLATE_LIBRARY-->" in t
 
 
-def test_the_homepage_keeps_its_footer_plate():
-    """Page furniture is explicitly in scope — the argument is about diagrams and directories, and
-    the footer band is furniture.
-
-    The *hero* plate is the one exception, and it was never removed on the "decoration vs content"
-    argument this file makes. It has now held three things: the generic hydrographic plate, then
-    the house mark (2026-08-03), then the hero watershed (2026-08-06). Each replacement moved the
-    slot further from furniture and closer to argument — the watershed is the firm's claim about
-    coordination drawn rather than stated, which is why it displaced a mark whose job was
-    atmosphere. The rule this file guards is unchanged: the survey vocabulary still may not creep
-    into diagrams or directories.
-    """
+def test_the_homepage_uses_the_approved_heron_without_a_footer_plate():
+    """The locked homepage has one supplied illustration, in the hero only."""
     t = (WEB / "hub.html").read_text(encoding="utf-8")
-    assert "survey-plate-footer.svg" in t, "the footer plate is page furniture and should remain"
-    assert 'class="ws"' in t, "the hero lost the watershed"
+    assert "survey-plate-footer.svg" not in t
+    assert 'src="img/heron-plate.svg"' in t
 
 
 def test_every_plate_reference_that_remains_resolves_to_a_real_asset():

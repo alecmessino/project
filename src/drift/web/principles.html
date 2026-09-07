@@ -29,229 +29,55 @@
 <meta name="twitter:title" content="The Driftwood Principles" />
 <meta name="twitter:description" content="Wealth is a system. Everything else follows." />
 <meta name="twitter:image" content="https://driftwoodwealth.com/og/index.png" />
+
 <style>
-  :root{
-    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --wash:var(--soft);
-    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
-    --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330; --on-dark:#e7ecf2;
-    --brass:#2c5878; --accent-strike-soft:#a9c2d6; --gold:#a9c2d6;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--body);font:17px/1.7 var(--sans);
-    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  .wrap{margin:38px auto;padding-block:0 60px;}
-  .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
-  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
-    border-bottom:1px solid var(--line)}
-  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
-  .inner{margin:0 7px 7px}
 
-  .doc{max-width:700px;padding:0 44px;margin:0 auto}
-  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);margin:52px 0 15px;text-align:center}
-  h1{font-family:var(--sans);font-weight:700;font-size:clamp(34px,3.4vw+16px,50px);line-height:1.04;
-    letter-spacing:-.025em;color:var(--ink);margin:0 0 14px;text-align:center}
-  .lead{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0 auto;text-align:center;max-width:44ch}
-  .rule{height:1px;background:var(--line);margin:44px auto;max-width:120px}
+  @media(max-width:680px){.conseq{grid-template-columns:1fr!important}.conseq > div + div{border-left:none!important;border-top:1px solid #d8d3c6}.pad{padding-left:22px!important;padding-right:22px!important}}
 
-  .axiom{text-align:center;margin:8px 0 0}
-  .axiom .k{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:12px}
-  .axiom p{font-family:var(--serif);font-weight:500;font-size:clamp(22px,1.8vw+14px,28px);line-height:1.3;color:var(--ink);margin:0;letter-spacing:-.01em}
-
-  .because{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;margin:0 0 18px}
-  .conseq{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
-  @media(max-width:680px){.conseq{grid-template-columns:1fr}.conseq .con + .con{border-left:none;border-top:1px solid var(--line)}}
-  .con{padding:20px 24px 22px;text-align:center}
-  .con + .con{border-left:1px solid var(--line)}
-  .con .cn{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
-  .con .ct{font-family:var(--sans);font-weight:700;font-size:18px;line-height:1.2;letter-spacing:-.015em;color:var(--ink);margin:0 0 8px}
-  .con p{font-size:13.5px;line-height:1.55;color:var(--body);margin:0}
-  .con.hero .ct{color:var(--teal)}
-
-  /* ── The Architecture, the iconic diagram. Purpose at top, specialists at base, the
-        operating system in the middle, translating one into the other. ── */
-  .arch{border:1px solid var(--frame-line);border-radius:var(--surface-radius);overflow:hidden;background:#fff;margin:8px 0 0}
-  .band{display:grid;grid-template-columns:210px 1fr;gap:20px;align-items:center;padding:16px 22px;border-top:1px solid var(--line2)}
-  .band:first-child{border-top:none}
-  @media(max-width:640px){.band{grid-template-columns:1fr;gap:5px;padding:14px 18px}}
-  .band .bl{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass)}
-  .band .bi{font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--body)}
-  .band.top{background:var(--soft)}
-  .band.top .bl{color:var(--ink)}
-  .band.top .bi{font-family:var(--serif);font-size:17px;color:var(--ink);font-style:italic}
-  .band.fos{background:var(--navy);padding-top:18px;padding-bottom:18px}
-  .band.fos .bl{color:#a9c2d6}
-  .band.fos .bi{color:#eef2f6;font-weight:500}
-  .band.fos .bnote{grid-column:1/-1;font-family:var(--serif);font-style:italic;font-size:13.5px;color:#aeb7c1;margin-top:6px}
-  @media(max-width:640px){.band.fos .bnote{margin-top:8px}}
-  .band.base{background:var(--soft)}
-  .arch-cap{font-size:13.5px;line-height:1.6;color:var(--muted);margin:14px 4px 0;text-align:center;max-width:62ch;margin-left:auto;margin-right:auto}
-  .arch-cap b{color:var(--dim);font-weight:500}
-  .flowtag{display:flex;justify-content:space-between;font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ghost-line);margin:10px 2px 0}
-
-  h2sec{display:block}
-  .stmt{text-align:center;margin:0}
-  .stmt .k{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:12px}
-  .creed{padding:26px 34px;text-align:center;margin:8px 0 0;border-top:3px double var(--frame-line);border-bottom:3px double var(--frame-line)}
-  .creed .k{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
-  .creed p{font-family:var(--serif);font-weight:500;font-size:clamp(22px,2vw+14px,30px);line-height:1.22;color:var(--ink);margin:0;letter-spacing:-.012em}
-
-  .slogan{text-align:center;font-family:var(--sans);font-weight:700;font-size:clamp(20px,2vw+12px,26px);letter-spacing:-.02em;color:var(--ink);margin:0}
-  .slogan .s{display:block;font-family:var(--serif);font-style:italic;font-weight:400;font-size:16px;color:var(--dim);margin-top:10px;letter-spacing:0}
-  .onward{margin:8px 0 0;text-align:center;font-family:var(--sans);font-size:13.5px;color:var(--muted)}
-  .onward a{color:var(--teal2);text-decoration:none;font-weight:500}
-  .onward a:hover{text-decoration:underline}
-
-  .foot{margin-top:52px;padding:20px 44px 40px;border-top:1px solid var(--line);
-    color:var(--muted);font-size:12.5px;line-height:1.65}
-  .foot .note{color:var(--dim);font-weight:500}
-  .foot b{color:var(--dim)}
-  @media(max-width:620px){ .doc{padding:0 22px} .foot{padding-left:22px;padding-right:22px} }
-  /* Folded from the former Our Story page: the founder as a trust artifact for UHNW + CPA partners. */
-  .firm-who{padding:2px 44px 12px}
-  .firm-who .rule{height:1px;background:var(--line,#d8d3c6);margin:22px 0 30px}
-  .firm-who .sh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike,#2c5878);margin:0 0 18px}
-  .founder{display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:start;margin:6px 0 0}
-  @media(max-width:680px){.founder{grid-template-columns:1fr;gap:26px}}
-  .founder-photo{margin:0}
-  .founder-photo img{width:100%;max-width:300px;height:auto;aspect-ratio:1/1;object-fit:cover;object-position:center 30%;border:1px solid var(--frame-line,#c3bcab);display:block}
-  @media(max-width:680px){.founder-photo img{max-width:264px}}
-  .founder-name{font-family:var(--sans);font-weight:700;font-size:24px;letter-spacing:-.02em;color:var(--ink);margin:0}
-  .founder-role{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass,#2c5878);margin:5px 0 18px}
-  .founder-bio p{font-size:16px;line-height:1.72;color:var(--body);margin:0 0 14px}
-  .founder-bio p:last-of-type{margin-bottom:0}
-  .founder-credo{font-family:var(--serif);font-size:16.5px;line-height:1.5;color:var(--ink);font-style:italic;margin:16px 0 0;padding-left:16px;border-left:2px solid var(--frame-line,#c3bcab)}
-  .founder-sign{margin:20px 0 0;padding-left:16px}
-  .founder-sign .sig{display:block;font-family:var(--serif);font-style:italic;font-weight:500;font-size:30px;line-height:1;letter-spacing:.01em;color:var(--ink)}
-  .founder-sign .sigline{display:block;margin-top:9px;font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
-  .trust-strip{grid-column:1/-1;margin-top:30px;padding-top:15px;border-top:1px solid var(--line,#d8d3c6);font-family:var(--sans);font-size:12.5px;line-height:1.9;color:var(--muted)}
 </style>
 </head>
-<body>
+<body class="dw-editorial dw-principles">
 <div class="wrap">
-<nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+<nav class="dwnav dwnav--phase2" data-chrome="waterline" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html" aria-current="page">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-atlas.html">The Coordination Atlas</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="statemap.html">The State Tax Atlas</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
+      <div class="dwnav-links"><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html" aria-current="page">Our Story</a><a href="leadership.html">Leadership</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-atlas.html">The Coordination Atlas</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">The record<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="ic-memo.html">Coordination Report</a><a href="opportunity-register.html">Opportunity Register</a><a href="manual.html">Wealth Operating Manual</a><a href="transition-plan.html">90-Day Plan</a><a href="decision-register.html">Decision Register</a><a class="dwnav-folded-insights" href="insights.html">Insights</a></div></div><div class="dwnav-drop dwnav-insights"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="statemap.html">The State Tax Atlas</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><a class="dwnav-direct" href="fees.html">Fees</a><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
-    </nav>  <div class="frame">
-    <div class="inner">
-    
+    </nav><main class="frame" id="main-content">
+<div class="inner editorial-inner">
+<div class="pad" data-section="principles" style="max-width:760px;padding:0 44px;margin:0 auto">
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#2c5878;margin:56px 0 15px;text-align:center">The Driftwood Principles</p>
+<h1 style="font-family:'Erode',Georgia,serif;font-weight:400;font-size:clamp(34px,3.4vw + 16px,52px);line-height:1.04;letter-spacing:-.024em;color:#1e2833;margin:0 0 14px;text-align:center">Wealth is a system.</h1>
+<p style="font-family:'Erode',Georgia,serif;font-size:19px;line-height:1.55;color:#5c6470;margin:0 auto;text-align:center;max-width:44ch">Principle I, and everything else here follows from it.</p>
+<div aria-hidden="true" style="height:1px;background:#d8d3c6;margin:44px auto;max-width:120px"></div>
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;text-align:center;margin:0 0 18px">Because wealth is a system…</p>
+<div class="conseq" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid #1e2833;border-bottom:1px solid #d8d3c6">
+<div style="padding:22px 24px;text-align:center"><p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#2c5878;margin:0 0 10px">Principle II</p><p style="font-family:'Erode',Georgia,serif;font-size:20px;line-height:1.2;color:#1e2833;margin:0 0 8px">Every decision changes the others.</p><p style="font-size:13.5px;line-height:1.55;color:#3d4650;margin:0">A tax move changes an estate move; a withdrawal changes a bracket.</p></div>
+<div style="padding:22px 24px;text-align:center;border-left:1px solid #d8d3c6"><p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#2c5878;margin:0 0 10px">Principle III</p><p style="font-family:'Erode',Georgia,serif;font-size:20px;line-height:1.2;color:#1e2833;margin:0 0 8px">Time is part of the system.</p><p style="font-size:13.5px;line-height:1.55;color:#3d4650;margin:0">The hidden variable is rarely <em>whether</em>. It’s <em>when</em>. Sell, convert, gift, or move, and the order decides the outcome.</p></div>
+<div style="padding:22px 24px;text-align:center;border-left:1px solid #d8d3c6"><p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#2c5878;margin:0 0 10px">Principle IV</p><p style="font-family:'Erode',Georgia,serif;font-size:20px;line-height:1.2;color:#15463a;margin:0 0 8px">Coordination compounds.</p><p style="font-size:13.5px;line-height:1.55;color:#3d4650;margin:0">Markets compound returns. Coordination compounds what you keep, and it starts the day the pieces begin to talk.</p></div>
+</div>
+<div aria-hidden="true" style="height:1px;background:#d8d3c6;margin:44px auto;max-width:120px"></div>
+<div style="padding:26px 34px;text-align:center;border-top:3px double #c3bcab;border-bottom:3px double #c3bcab">
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#2c5878;margin:0 0 14px">The Constitution</p>
+<p style="font-family:'Erode',Georgia,serif;font-weight:500;font-size:clamp(22px,2vw + 14px,30px);line-height:1.22;color:#1e2833;margin:0;letter-spacing:-.012em">Financial decisions should not surprise one another.</p>
+</div>
+<div aria-hidden="true" style="height:1px;background:#d8d3c6;margin:44px auto;max-width:120px"></div>
+<p style="text-align:center;font-family:'Erode',Georgia,serif;font-size:clamp(20px,1.8vw + 12px,26px);letter-spacing:-.012em;color:#1e2833;margin:0;line-height:1.3">Investments compound. Coordination determines what remains.<span style="display:block;font-style:italic;font-size:16px;color:#5c6470;margin-top:10px;letter-spacing:0">Coordination compounds, and it compounds first.</span></p>
+<p style="margin:26px 0 0;text-align:center;font-family:'Satoshi','Inter',system-ui,sans-serif;font-size:13.5px;color:#6b6e6a">See the thinking in practice: <a href="coordination.html" style="color:#2c5878;text-decoration:none;font-weight:500;border-bottom:1px solid #a9c2d6">How Coordination Works →</a></p>
+</div>
 
-    <div class="doc">
-      <div class="eyebrow">The Driftwood Principles</div>
-      <h1>Wealth is a system.</h1>
-      <p class="lead">Principle I, and everything else here follows from it.</p>
+<div class="pad" style="padding:56px 44px 0">
+<div class="record-block"><p class="record-kicker">The record</p><p class="record-lede">The review produces five documents. The Report diagnoses; the Register sustains; the Manual remembers.</p><div aria-label="The five documents" class="record-strip"><a href="ic-memo.html"><span class="record-number">01</span> Coordination Report</a><span aria-hidden="true" class="record-arrow">→</span><a href="opportunity-register.html"><span class="record-number">02</span> Opportunity Register</a><span aria-hidden="true" class="record-arrow">→</span><a href="manual.html"><span class="record-number">03</span> Wealth Operating Manual</a><span aria-hidden="true" class="record-arrow">→</span><a href="transition-plan.html"><span class="record-number">04</span> 90-Day Plan</a><span aria-hidden="true" class="record-arrow">→</span><a href="decision-register.html"><span class="record-number">05</span> Decision Register</a></div><p class="record-note">Households that proceed keep all five, maintained year over year through the <a href="awor.html">Annual Wealth Operating Review</a>.</p></div>
+</div>
 
-      <div class="rule"></div>
-
-      <p class="because">Because wealth is a system…</p>
-      <div class="conseq">
-        <div class="con">
-          <div class="cn">Principle II</div>
-          <div class="ct">Every decision changes the others.</div>
-          <p>A tax move changes an estate move; a withdrawal changes a bracket.</p>
-        </div>
-        <div class="con">
-          <div class="cn">Principle III</div>
-          <div class="ct">Time is part of the system.</div>
-          <p>The hidden variable is rarely <em>whether</em>. It's <em>when</em>. Sell, convert, gift, or move, and the
-            order decides the outcome.</p>
-        </div>
-        <div class="con hero">
-          <div class="cn">Principle IV</div>
-          <div class="ct">Coordination compounds.</div>
-          <p>Markets compound returns. Coordination compounds what you keep, and it starts the day the pieces begin
-            to talk.</p>
-        </div>
-      </div>
-
-      <div class="rule"></div>
-
-      <div class="stmt" style="margin-bottom:20px">
-        <span class="k">The architecture</span>
-        <p style="font-family:var(--serif);font-size:18px;line-height:1.5;color:var(--ink);margin:0 auto;max-width:52ch">
-          A financial life has layers. Read from the top, purpose becomes execution.</p>
-      </div>
-      <div class="arch" role="img" aria-label="A six-layer architecture: Purpose at the top, then Family, then the Decision Framework, then the Financial Operating System in the middle, then the Financial Subsystems, then Specialists at the base. The operating system translates purpose into execution.">
-        <div class="band top">
-          <div class="bl">Purpose</div>
-          <div class="bi">What is this wealth for?</div>
-        </div>
-        <div class="band">
-          <div class="bl">Family</div>
-          <div class="bi">Values · Goals · Governance · Legacy</div>
-        </div>
-        <div class="band">
-          <div class="bl">Decision framework</div>
-          <div class="bi">Every decision changes the others · Time is part of the system · Coordination compounds</div>
-        </div>
-        <div class="band fos">
-          <div class="bl">Financial Operating System</div>
-          <div class="bi">Coordination Review · Wealth Operating Manual · Coordination Index · Annual Wealth Operating Review</div>
-          <div class="bnote">The operating system. It translates purpose into execution, which is why it sits in the middle.</div>
-        </div>
-        <div class="band">
-          <div class="bl">Financial subsystems</div>
-          <div class="bi">Investments · Taxes · Estate · Insurance · Liquidity · Business · Banking · Philanthropy</div>
-        </div>
-        <div class="band base">
-          <div class="bl">Specialists</div>
-          <div class="bi">CPA · Estate attorney · Investment manager · Insurance · Banker · Business attorney</div>
-        </div>
-      </div>
-      <div class="flowtag"><span>Meaning</span><span>Execution</span></div>
-      <p class="arch-cap">Most firms live in the bottom two layers, and manage one subsystem well. <b>Driftwood
-        operates the middle</b>, the layer that turns what a family wants into what actually happens, and keeps every
-        layer consistent with the others.</p>
-
-      <div class="rule"></div>
-
-      <div class="creed">
-        <div class="k">The Constitution</div>
-        <p>Financial decisions should not surprise one another.</p>
-      </div>
-
-      <div class="rule"></div>
-
-      <p class="slogan">Investments compound. Coordination determines what remains.<span class="s">Coordination compounds, and it compounds first.</span></p>
-
-      <div class="onward" style="margin-top:26px">See the thinking in practice: <a href="coordination.html">a worked example →</a></div>
-    </div>
-
-    <div class="firm-who">
-      <div class="rule"></div>
-      <div class="sh">Who's behind the firm</div>
-      <div class="founder">
-        <figure class="founder-photo">
-          <img src="Headshot.jpg" width="300" height="300" alt="Alec Messino, Founder of Driftwood" onerror="this.closest('.founder-photo').style.display='none'">
-        </figure>
-        <div class="founder-bio">
-          <p class="founder-name">Alec Messino</p>
-          <p class="founder-role">Founder</p>
-          <p>Alec founded Driftwood after working across both institutional investment management and private wealth advisory. He saw wealth from two very different vantage points. First, at Dimensional Fund Advisors, helping many of the country's leading advisory firms build evidence-based investment programs. Then, working directly with families navigating the practical realities of investing, taxes, estate planning, and long-term decisions.</p>
-          <p>The same conclusion kept emerging. Financial decisions rarely break down because individual professionals lack expertise. They break down because important decisions aren't connected. Driftwood was built to solve that problem.</p>
-          <p class="founder-credo">"I didn't want to be one more specialist at the table. I wanted to be the one accountable for how the whole table fits together."</p>
-          <div class="founder-sign" aria-label="Signed, Alec Messino, Founder of Driftwood">
-            <span class="sig">Alec Messino</span>
-            <span class="sigline">Founder · Driftwood</span>
-          </div>
-        </div>
-        <div class="trust-strip">
-          <span class="c">Registered Representative &amp; Financial Advisor of Park Avenue Securities LLC, member FINRA, SIPC &nbsp;·&nbsp; B.S.&nbsp;Finance &amp; Economic Consulting, with Distinction, Indiana University&nbsp;Kelley</span>
-        </div>
-      </div>
-    </div>
-
-    <!--FIRM_ANCHOR-->
-
-    <div class="foot">
-      <span class="note">Educational, not investment, tax, or legal advice.</span>
+</div>
+<!--FIRM_ANCHOR-->
+<div class="foot">
+<span class="note">Educational, not investment, tax, or legal advice.</span>
       This page describes how Driftwood thinks; it is not a recommendation or a guarantee of any result. Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS. Driftwood Wealth is not an affiliate or subsidiary of PAS. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
     </div>
-    </div>
-  </div>
+</main>
 </div>
 </body>
 </html>

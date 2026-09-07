@@ -150,6 +150,19 @@ def main() -> int:
                 (DOCS / "img" / "plates" / f.name).write_bytes(f.read_bytes())
             print(f"   img/plates/*.svg     -> docs/img/plates/ "
                   f"({len(list(plates_src.glob('*.svg')))} canonical plates)")
+    # Editioned pages share the masthead and firm band, but their immutable data is not rebuilt here.
+    from drift.nav import render as render_nav
+    from drift.site import BASE_URL
+    for page in sorted(DOCS.rglob("*.html")):
+        relative = page.relative_to(DOCS)
+        if relative.parts[0] != "atlas" and relative.name != "states.html":
+            continue
+        html = page.read_text()
+        html = re.sub(r'<nav\b[^>]*class="dwnav dwnav--phase2"[^>]*>.*?</nav>',
+                      lambda _: render_nav("statemap.html", abs_base=BASE_URL + "/"), html, flags=re.S)
+        html = re.sub(r'<div class="firm-anchor"[^>]*>.*?</div>',
+                      lambda _: firm_anchor_html(), html, flags=re.S)
+        page.write_text(html)
     if bad:
         print(f"FAILED: {bad} file(s) had problems")
         return 1

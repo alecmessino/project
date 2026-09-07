@@ -46,9 +46,13 @@ jobs:
           drift hub    --docs docs --out docs/index.html
       - name: Render screenshots
         run: python scripts/shots.py
+      - name: Verify approved site layouts and interactions
+        run: python scripts/check_site_merge.py
       - uses: actions/upload-artifact@v4
         with:
           name: site-screenshots
-          path: artifacts/shots/
+          path: |
+            artifacts/shots/
+            artifacts/site-merge/
           retention-days: 14
 

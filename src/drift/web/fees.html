@@ -29,261 +29,133 @@
 <meta name="twitter:title" content="How We're Paid, Driftwood" />
 <meta name="twitter:description" content="Most firms charge to manage investments. Driftwood charges to coordinate decisions. Here's how, and why." />
 <meta name="twitter:image" content="https://driftwoodwealth.com/og/index.png" />
+
 <style>
-  :root{
-    --bg:#f1efe9; --soft:#f7f5f0; --line:#d8d3c6; --line2:#e9e5db; --frame-line:#c3bcab; --ghost-line:#b8b2a4; --wash:var(--soft);
-    --ink:#1e2833; --body:#3d4650; --dim:#5c6470; --muted:#6b6e6a;
-    --teal:#15463a; --teal2:#15806a; --neg:#9b4439; --navy:#1a2330; --on-dark:#e7ecf2;
-    --brass:#2c5878; --gold:#a9c2d6;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.62 var(--sans);
-    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  .wrap{margin:36px auto;padding-block:0 60px;}
-  .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
-  .run{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;margin:7px 7px 0;
-    border-bottom:1px solid var(--line);font-family:var(--sans)}
-  .run .inst{font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-  .run .marker{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
-  .inner{margin:0 7px 7px}
 
-  .doc{padding:50px 44px 6px;max-width:720px}
-  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:15px}
-  h1{font-family:var(--sans);font-weight:700;font-size:clamp(31px,3vw+15px,44px);line-height:1.07;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:20ch}
-  .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:62ch}
-  .lede b{color:var(--ink);font-weight:500}
-  .rule{height:1px;background:var(--line);margin:0 44px}
-  .sh{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-  .sh .sn{color:var(--brass);font-weight:700;margin-right:11px}
-  .sec{padding:44px 44px 6px}
-  .sec .intro{font-size:16.5px;line-height:1.7;color:var(--body);margin:0 0 8px;max-width:64ch}
-  .sec .intro b{color:var(--ink);font-weight:500}
-  .lead-in{font-family:var(--serif);font-size:19px;line-height:1.5;color:var(--ink);margin:8px 0 0;padding-left:18px;border-left:3px solid var(--brass);max-width:60ch}
-  .lead-in b{font-weight:500}
+  @media(max-width:900px){.layers{grid-template-columns:1fr 1fr!important}.two{grid-template-columns:1fr!important}.tiers{grid-template-columns:1fr 1fr!important}}
+  @media(max-width:560px){.layers,.tiers{grid-template-columns:1fr!important}.pad{padding-left:22px!important;padding-right:22px!important}.drivers{columns:1!important}}
 
-  /* Four layers, investing is one of them. */
-  .layers{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0 6px}
-  @media(max-width:820px){.layers{grid-template-columns:1fr 1fr}}
-  @media(max-width:480px){.layers{grid-template-columns:1fr}}
-  .layer{padding:16px 0 18px;border-top:1px solid var(--line)}
-  .layer.exec{border-top:2px solid var(--ink)}
-  .layer .lv{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:8px}
-  .layer .lt{font-family:var(--sans);font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink);margin:0 0 7px}
-  .layer p{font-size:13px;line-height:1.55;color:var(--body);margin:0}
-  .layer .tagone{margin-top:10px;font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal2)}
-  .layernote{font-size:14px;line-height:1.65;color:var(--dim);margin:18px 0 0;max-width:64ch}
-  .layernote b{color:var(--ink);font-weight:500}
-
-  /* Two engagements. */
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0 6px}
-  @media(max-width:680px){.cards{grid-template-columns:1fr}}
-  .card{padding:22px 0 24px;border-top:1px solid var(--line)}
-  .card.lead{border-top:2px solid var(--ink)}
-  .card .tag{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
-  .card h3{font-family:var(--sans);font-weight:700;font-size:20px;letter-spacing:-.015em;color:var(--ink);margin:0 0 4px}
-  .card .role{font-family:var(--serif);font-style:italic;font-size:14.5px;color:var(--dim);margin:0 0 15px}
-  .card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
-  .card li{position:relative;padding-left:18px;font-size:13.5px;line-height:1.5;color:var(--body)}
-  .card li::before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--ghost-line)}
-  .card.lead li::before{border-radius:var(--surface-radius);background:var(--brass)}
-  .card .basis{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-family:var(--sans);font-weight:700;font-size:12.5px;color:var(--teal2)}
-
-  /* Complexity. */
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 18px}
-  .chip{font-size:12.5px;color:var(--ink)}
-  .chip:not(:last-child)::after{content:" · ";color:var(--ghost-line);margin:0 2px}
-  .tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:6px 0 4px}
-  @media(max-width:820px){.tiers{grid-template-columns:1fr 1fr}}
-  @media(max-width:480px){.tiers{grid-template-columns:1fr}}
-  .tier{padding:15px 16px;text-align:center}
-  .tier + .tier{border-left:1px solid var(--line)}
-  .tier .tn{font-family:var(--sans);font-weight:700;font-size:14px;color:var(--ink);letter-spacing:-.01em}
-  .tier .td{font-family:var(--sans);font-size:11.5px;color:var(--muted);margin-top:4px}
-
-  .creed-band{margin:40px 44px 0;text-align:center;font-family:var(--sans);font-weight:700;
-    font-size:clamp(20px,2vw+12px,27px);letter-spacing:-.022em;color:var(--ink);line-height:1.18;max-width:none}
-  .cta{margin:32px 44px 0;border-top:1px solid var(--line);padding:24px 0 0}
-  .cta .ct{font-family:var(--sans);font-weight:700;font-size:20px;line-height:1.25;color:var(--ink);margin:0 0 8px;letter-spacing:-.02em}
-  .cta .cd{font-size:14px;line-height:1.6;color:var(--dim);margin:0 0 18px;max-width:56ch}
-  .cta .btns{display:flex;flex-wrap:wrap;gap:12px}
-  .cta a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-radius:var(--surface-radius);font-family:var(--sans);font-size:14.5px;font-weight:500;padding:12px 22px}
-  .cta a.primary{background:var(--accent-strike);color:#f1ede3}
-  .cta a.ghost{border:1px solid var(--frame-line);color:var(--ink);font-weight:500}
-
-  .foot{margin-top:42px;padding:20px 44px 40px;border-top:1px solid var(--line);
-    color:var(--muted);font-size:12px;line-height:1.65}
-  .foot .note{color:var(--dim);font-weight:500}
-  .foot b{color:var(--dim)}
-  @media(max-width:620px){
-    .doc,.sec{padding-left:22px;padding-right:22px}
-    .rule,.creed-band,.cta,.foot{margin-left:22px;margin-right:22px}
-    .foot{padding-left:22px;padding-right:22px}
-  }
 </style>
 </head>
-<body>
+<body class="dw-editorial dw-fees">
 <div class="wrap">
-<nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+<nav class="dwnav dwnav--phase2" data-chrome="waterline" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html" aria-current="page">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-atlas.html">The Coordination Atlas</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="statemap.html">The State Tax Atlas</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
+      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-atlas.html">The Coordination Atlas</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">The record<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="ic-memo.html">Coordination Report</a><a href="opportunity-register.html">Opportunity Register</a><a href="manual.html">Wealth Operating Manual</a><a href="transition-plan.html">90-Day Plan</a><a href="decision-register.html">Decision Register</a><a class="dwnav-folded-insights" href="insights.html">Insights</a></div></div><div class="dwnav-drop dwnav-insights"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="statemap.html">The State Tax Atlas</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><a class="dwnav-direct" href="fees.html" aria-current="page">Fees</a><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
-    </nav>  <div class="frame">
-    <div class="inner">
-    
+    </nav><main class="frame" id="main-content">
+<div class="inner editorial-inner">
+<header class="pad" data-section="head" style="padding:56px 44px 0;max-width:820px">
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#2c5878;margin:0 0 16px">How we’re paid</p>
+<h1 style="font-family:'Erode',Georgia,serif;font-weight:400;font-size:clamp(31px,3.2vw + 14px,48px);line-height:1.07;letter-spacing:-.022em;color:#1e2833;margin:0 0 18px;max-width:22ch">Most firms charge to manage investments. We charge to coordinate decisions.</h1>
+<p style="font-family:'Erode',Georgia,serif;font-size:19px;line-height:1.55;color:#3d4650;margin:0;max-width:62ch">The greatest source of long-term value isn’t found in any single investment. It’s found in how investments, taxes, estate planning, liquidity, insurance, and family decisions <b style="color:#1e2833;font-weight:500">work together</b>. So that’s what we’re paid to do.</p>
 
-    <div class="doc">
-      <div class="eyebrow">How We're Paid</div>
-      <h1>Most firms charge to manage investments. We charge to coordinate decisions.</h1>
-      <p class="lede">The greatest source of long-term value isn't found in any single investment. It's found in how
-        investments, taxes, estate planning, liquidity, insurance, and family decisions <b>work together</b>. So
-        that's what we're paid to do.</p>
-    </div>
+<dl class="fee-structure" style="margin:34px 0 0;border-top:1px solid #1e2833;font-family:'Satoshi','Inter',system-ui,sans-serif">
+<div style="display:grid;grid-template-columns:minmax(150px,190px) minmax(0,1fr);gap:0 24px;padding:12px 0;border-bottom:1px solid #e9e5db"><dt style="font-weight:700;font-size:12.5px;color:#1e2833">The Coordination Review</dt><dd style="margin:0;font-size:13.5px;line-height:1.55;color:#3d4650">A defined engagement fee, agreed in writing before any work begins.</dd></div>
+<div style="display:grid;grid-template-columns:minmax(150px,190px) minmax(0,1fr);gap:0 24px;padding:12px 0;border-bottom:1px solid #e9e5db"><dt style="font-weight:700;font-size:12.5px;color:#1e2833">Wealth Architecture</dt><dd style="margin:0;font-size:13.5px;line-height:1.55;color:#3d4650">A flat annual engagement fee, priced by complexity across four tiers.</dd></div>
+<div style="display:grid;grid-template-columns:minmax(150px,190px) minmax(0,1fr);gap:0 24px;padding:12px 0;border-bottom:1px solid #e9e5db"><dt style="font-weight:700;font-size:12.5px;color:#1e2833">Investment Management</dt><dd style="margin:0;font-size:13.5px;line-height:1.55;color:#3d4650">Optional. A transparent, tiered fee on assets we manage.</dd></div>
+</dl>
+<p style="font-size:13px;line-height:1.6;color:#5c6470;margin:12px 0 0;max-width:64ch">Figures are set by individual agreement. <span class="fee-schedule-label">The schedule, in full →</span> <span class="fee-schedule-note">PDF not yet published.</span></p>
+</header>
+<section class="pad" data-section="why-not-assets" style="padding:44px 44px 0;max-width:820px">
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6b6e6a;margin:0 0 10px">Why not just charge on assets</p>
+<p style="font-size:16.5px;line-height:1.7;color:#3d4650;margin:0 0 8px;max-width:64ch">Here’s a simple test. If markets returned nothing for the next three years, would Driftwood still create real value? The answer is yes, and it isn’t close.</p>
+<p style="font-size:16.5px;line-height:1.7;color:#3d4650;margin:0 0 8px;max-width:64ch">In a flat market we might still save six figures in taxes through better withdrawal sequencing, convert to Roth at depressed valuations, restructure a trust, coordinate a business sale, and catch an estate problem years before it forces a sale. A fee that only rises and falls with the market would measure none of that.</p>
+<p style="font-family:'Erode',Georgia,serif;font-size:19px;line-height:1.5;color:#1e2833;margin:14px 0 0;padding-left:18px;border-left:2px solid #2c5878;max-width:60ch">You aren’t buying market exposure. You’re buying <b style="font-weight:500">decision architecture</b>, and the fee should reflect that.</p>
+</section>
+<section class="pad" data-section="four-layers" style="padding:44px 44px 0">
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6b6e6a;margin:0 0 10px">What you’re actually paying for</p>
+<p style="font-size:16.5px;line-height:1.7;color:#3d4650;margin:0 0 8px;max-width:64ch">Managing money is one layer of the work. There are four, and only one of them is the portfolio.</p>
+<div class="layers" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:22px 0 6px">
+<div style="padding:16px 0 18px;border-top:1px solid #d8d3c6"><p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#2c5878;margin:0 0 8px">Think</p><p style="font-family:'Erode',Georgia,serif;font-size:19px;color:#1e2833;margin:0 0 7px">Architecture</p><p style="font-size:13px;line-height:1.55;color:#3d4650;margin:0">The strategy and the big calls. Sell the business this year or next? Convert to Roth before retirement? Gift the stock or hold it for the step-up?</p></div>
+<div style="padding:16px 0 18px;border-top:1px solid #d8d3c6"><p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#2c5878;margin:0 0 8px">Connect</p><p style="font-family:'Erode',Georgia,serif;font-size:19px;color:#1e2833;margin:0 0 7px">Coordination</p><p style="font-size:13px;line-height:1.55;color:#3d4650;margin:0">The role no one owns today. Running the meetings, working with your CPA and attorney, keeping every decision aligned with the others.</p></div>
+<div style="padding:16px 0 18px;border-top:2px solid #1e2833"><p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#2c5878;margin:0 0 8px">Execute</p><p style="font-family:'Erode',Georgia,serif;font-size:19px;color:#1e2833;margin:0 0 7px">Implementation</p><p style="font-size:13px;line-height:1.55;color:#3d4650;margin:0">Portfolio construction, trading, rebalancing, tax-loss harvesting, asset location.</p><p style="margin:10px 0 0;font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#2c5878">One layer of four</p></div>
+<div style="padding:16px 0 18px;border-top:1px solid #d8d3c6"><p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#2c5878;margin:0 0 8px">Compound</p><p style="font-family:'Erode',Georgia,serif;font-size:19px;color:#1e2833;margin:0 0 7px">Stewardship</p><p style="font-size:13px;line-height:1.55;color:#3d4650;margin:0">The long arc. Family governance, preparing heirs, updating the plan, and the operating manual that keeps it all current across the years.</p></div>
+</div>
+<p style="font-size:14px;line-height:1.65;color:#5c6470;margin:18px 0 0;max-width:64ch">Most firms price the whole relationship as if it were the third box. <b style="color:#1e2833;font-weight:500">We price the other three as the product, and treat the portfolio as one module inside it.</b></p>
+</section>
+<section class="pad" data-section="two-engagements" style="padding:44px 44px 0">
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6b6e6a;margin:0 0 10px">Two engagements</p>
+<p style="font-size:16.5px;line-height:1.7;color:#3d4650;margin:0 0 8px;max-width:64ch">So the work is priced as two clear, separate things. You can take the first on its own; most clients take both.</p>
+<div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0 6px">
+<div style="padding:22px 0 24px;border-top:2px solid #1e2833">
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#2c5878;margin:0 0 10px">The core product</p>
+<h3 style="font-family:'Erode',Georgia,serif;font-weight:400;font-size:24px;letter-spacing:-.01em;color:#1e2833;margin:0 0 4px">Wealth Architecture</h3>
+<p style="font-family:'Erode',Georgia,serif;font-style:italic;font-size:14.5px;color:#5c6470;margin:0 0 15px">The standing seat that owns how it all fits together.</p>
+<ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px">
+<li style="font-size:13.5px;line-height:1.5;color:#3d4650;padding-left:18px;position:relative"><span aria-hidden="true" style="position:absolute;left:0;top:.6em;width:6px;height:6px;background:#2c5878"></span>Quarterly coordination reviews and an annual operating plan</li>
+<li style="font-size:13.5px;line-height:1.5;color:#3d4650;padding-left:18px;position:relative"><span aria-hidden="true" style="position:absolute;left:0;top:.6em;width:6px;height:6px;background:#2c5878"></span>Tax and estate coordination; work with your CPA and attorney</li>
+<li style="font-size:13.5px;line-height:1.5;color:#3d4650;padding-left:18px;position:relative"><span aria-hidden="true" style="position:absolute;left:0;top:.6em;width:6px;height:6px;background:#2c5878"></span>Liquidity planning, insurance review, cash-flow architecture</li>
+<li style="font-size:13.5px;line-height:1.5;color:#3d4650;padding-left:18px;position:relative"><span aria-hidden="true" style="position:absolute;left:0;top:.6em;width:6px;height:6px;background:#2c5878"></span>Decision support, family meetings, and implementation oversight</li>
+<li style="font-size:13.5px;line-height:1.5;color:#3d4650;padding-left:18px;position:relative"><span aria-hidden="true" style="position:absolute;left:0;top:.6em;width:6px;height:6px;background:#2c5878"></span>A living <a href="manual.html" style="color:#2c5878;font-weight:500;text-decoration:none;border-bottom:1px solid #a9c2d6">Wealth Operating Manual</a> that holds the whole plan</li>
+</ul>
+<p style="margin:16px 0 0;padding-top:14px;border-top:1px solid #d8d3c6;font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:12.5px;color:#2c5878">A flat annual engagement fee, priced by complexity</p>
+</div>
+<div style="padding:22px 0 24px;border-top:1px solid #d8d3c6">
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#2c5878;margin:0 0 10px">Optional</p>
+<h3 style="font-family:'Erode',Georgia,serif;font-weight:400;font-size:24px;letter-spacing:-.01em;color:#1e2833;margin:0 0 4px">Investment Management</h3>
+<p style="font-family:'Erode',Georgia,serif;font-style:italic;font-size:14.5px;color:#5c6470;margin:0 0 15px">When you’d like us to run the portfolio, too.</p>
+<ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px">
+<li style="font-size:13.5px;line-height:1.5;color:#3d4650;padding-left:18px;position:relative"><span aria-hidden="true" style="position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:#b8b2a4"></span>Evidence-based portfolio construction and execution</li>
+<li style="font-size:13.5px;line-height:1.5;color:#3d4650;padding-left:18px;position:relative"><span aria-hidden="true" style="position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:#b8b2a4"></span>Rebalancing, tax-loss harvesting, and asset location</li>
+<li style="font-size:13.5px;line-height:1.5;color:#3d4650;padding-left:18px;position:relative"><span aria-hidden="true" style="position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:#b8b2a4"></span>Manager research and ongoing maintenance</li>
+<li style="font-size:13.5px;line-height:1.5;color:#3d4650;padding-left:18px;position:relative"><span aria-hidden="true" style="position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:#b8b2a4"></span>The “Execute” layer, coordinated with everything above</li>
+</ul>
+<p style="margin:16px 0 0;padding-top:14px;border-top:1px solid #d8d3c6;font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:12.5px;color:#2c5878">A transparent, tiered fee on assets we manage</p>
+</div>
+</div>
+</section>
+<section class="pad" data-section="complexity" style="padding:44px 44px 0">
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6b6e6a;margin:0 0 10px">Priced by coordination demand, not just size</p>
+<p style="font-size:16.5px;line-height:1.7;color:#3d4650;margin:0 0 22px;max-width:64ch">A $6M single brokerage account and a $2.5M business owner with entities, a trust, and multi-state taxes are not the same amount of work. The second creates far more coordination, and far more value to capture. So the engagement fee follows <b style="color:#1e2833;font-weight:500">coordination demand</b>, not just assets. We assess it with a short, transparent review of the drivers that actually generate work. Count yours:</p>
 
-    <div class="rule" style="margin-top:34px"></div>
+<ul class="drivers" style="list-style:none;margin:0;padding:0;columns:2;column-gap:40px;max-width:760px;border-top:1px solid #1e2833">
+<li style="break-inside:avoid;display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13.5px;color:#1e2833"><span aria-hidden="true" style="flex:none;width:11px;height:11px;border:1px solid #1e2833;transform:translateY(1px)"></span>Operating business</li>
+<li style="break-inside:avoid;display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13.5px;color:#1e2833"><span aria-hidden="true" style="flex:none;width:11px;height:11px;border:1px solid #1e2833;transform:translateY(1px)"></span>Multiple entities</li>
+<li style="break-inside:avoid;display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13.5px;color:#1e2833"><span aria-hidden="true" style="flex:none;width:11px;height:11px;border:1px solid #1e2833;transform:translateY(1px)"></span>Trusts</li>
+<li style="break-inside:avoid;display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13.5px;color:#1e2833"><span aria-hidden="true" style="flex:none;width:11px;height:11px;border:1px solid #1e2833;transform:translateY(1px)"></span>Equity comp / options</li>
+<li style="break-inside:avoid;display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13.5px;color:#1e2833"><span aria-hidden="true" style="flex:none;width:11px;height:11px;border:1px solid #1e2833;transform:translateY(1px)"></span>Concentrated stock</li>
+<li style="break-inside:avoid;display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13.5px;color:#1e2833"><span aria-hidden="true" style="flex:none;width:11px;height:11px;border:1px solid #1e2833;transform:translateY(1px)"></span>Multi-state / cross-border</li>
+<li style="break-inside:avoid;display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13.5px;color:#1e2833"><span aria-hidden="true" style="flex:none;width:11px;height:11px;border:1px solid #1e2833;transform:translateY(1px)"></span>Private investments</li>
+<li style="break-inside:avoid;display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13.5px;color:#1e2833"><span aria-hidden="true" style="flex:none;width:11px;height:11px;border:1px solid #1e2833;transform:translateY(1px)"></span>Investment real estate</li>
+<li style="break-inside:avoid;display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13.5px;color:#1e2833"><span aria-hidden="true" style="flex:none;width:11px;height:11px;border:1px solid #1e2833;transform:translateY(1px)"></span>Active philanthropy</li>
+<li style="break-inside:avoid;display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13.5px;color:#1e2833"><span aria-hidden="true" style="flex:none;width:11px;height:11px;border:1px solid #1e2833;transform:translateY(1px)"></span>Estate-tax exposure</li>
+</ul>
+<div class="tiers" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:28px 0 0;border-top:1px solid #1e2833;border-bottom:1px solid #d8d3c6;max-width:760px">
+<div style="padding:16px 18px 18px 0;border-right:1px solid #e9e5db"><p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin:0 0 6px">Tier I</p><p style="font-family:'Erode',Georgia,serif;font-size:19px;color:#1e2833;margin:0 0 4px">Foundational</p><p style="font-size:12.5px;color:#5c6470;margin:0">Straightforward</p></div>
+<div style="padding:16px 18px 18px;border-right:1px solid #e9e5db"><p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin:0 0 6px">Tier II</p><p style="font-family:'Erode',Georgia,serif;font-size:19px;color:#1e2833;margin:0 0 4px">Active</p><p style="font-size:12.5px;color:#5c6470;margin:0">A few moving parts</p></div>
+<div style="padding:16px 18px 18px;border-right:1px solid #e9e5db"><p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin:0 0 6px">Tier III</p><p style="font-family:'Erode',Georgia,serif;font-size:19px;color:#1e2833;margin:0 0 4px">Intensive</p><p style="font-size:12.5px;color:#5c6470;margin:0">Many, interacting</p></div>
+<div style="padding:16px 0 18px 18px"><p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin:0 0 6px">Tier IV</p><p style="font-family:'Erode',Georgia,serif;font-size:19px;color:#1e2833;margin:0 0 4px">Institutional-grade</p><p style="font-size:12.5px;color:#5c6470;margin:0">Bespoke</p></div>
+</div>
+<p style="font-size:14px;line-height:1.65;color:#5c6470;margin:18px 0 0;max-width:64ch">Your coordination demand reads as <b style="color:#1e2833;font-weight:500">opportunity</b>, not a surcharge. A higher tier means more places coordination can create value, and every assessment comes with the register of opportunities it surfaced. <span class="fee-schedule-label">The schedule, in full →</span> <span class="fee-schedule-note">PDF not yet published.</span></p>
+</section>
+<section class="pad" data-section="really-buying" style="padding:44px 44px 0;max-width:820px">
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6b6e6a;margin:0 0 10px">What you’re really buying</p>
+<p style="font-family:'Erode',Georgia,serif;font-size:19px;line-height:1.5;color:#1e2833;margin:8px 0 0;padding-left:18px;border-left:2px solid #2c5878;max-width:60ch">Not meetings, emails, or calls. The assurance that <b style="font-weight:500">no important financial decision is made without its interactions being considered first</b>, and that one accountable party is watching the whole board.</p>
+<p style="font-size:16.5px;line-height:1.7;color:#3d4650;margin:18px 0 0;max-width:64ch">We don’t replace the professionals you trust. We make sure their work and your portfolio move as one plan.</p>
+</section>
+<p class="pad" style="margin:44px 44px 0;padding:0;font-family:'Erode',Georgia,serif;font-size:clamp(20px,1.6vw + 12px,27px);letter-spacing:-.012em;color:#1e2833;line-height:1.25;max-width:34ch">You’re not paying for portfolio management. You’re paying so nothing important happens in isolation.</p>
+<section class="pad" data-section="close" style="margin:32px 44px 0;border-top:1px solid #d8d3c6;padding:24px 0 0">
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:20px;line-height:1.25;color:#1e2833;margin:0 0 8px;letter-spacing:-.02em">See where coordination is worth the most for you.</p>
+<p style="font-size:14px;line-height:1.6;color:#5c6470;margin:0 0 18px;max-width:56ch">The exact figures depend on your complexity and the assets, if any, you’d like us to manage. We walk through them directly. If you’d rather see the numbers first, the two-minute Tax Diagnostic is a good starting point.</p>
+<div style="display:flex;flex-wrap:wrap;gap:12px">
+<a href="coordination-review.html" style="display:inline-flex;align-items:center;min-height:44px;text-decoration:none;font-family:'Satoshi','Inter',system-ui,sans-serif;font-size:14.5px;font-weight:600;padding:12px 22px;background:#2c5878;color:#f1ede3;white-space:nowrap">Request a Coordination Review →</a>
+<a href="leakage.html" style="display:inline-flex;align-items:center;min-height:44px;text-decoration:none;font-family:'Satoshi','Inter',system-ui,sans-serif;font-size:14.5px;font-weight:500;padding:12px 22px;border:1px solid #c3bcab;color:#1e2833;white-space:nowrap">Or run the two-minute Tax Diagnostic</a>
+</div>
+</section>
 
-    <div class="sec">
-      <div class="sh">Why not just charge on assets</div>
-      <p class="intro">Here's a simple test. If markets returned nothing for the next three years, would Driftwood
-        still create real value? The answer is yes, and it isn't close.</p>
-      <p class="intro">In a flat market we might still save six figures in taxes through better withdrawal
-        sequencing, convert to Roth at depressed valuations, restructure a trust, coordinate a business sale, and
-        catch an estate problem years before it forces a sale. A fee that only rises and falls with the market would
-        measure none of that.</p>
-      <p class="lead-in">You aren't buying market exposure. You're buying <b>decision architecture</b>, and the fee
-        should reflect that.</p>
-    </div>
-
-    <div class="sec">
-      <div class="sh">What you're actually paying for</div>
-      <p class="intro">Managing money is one layer of the work. There are four, and only one of them is the
-        portfolio.</p>
-      <div class="layers">
-        <div class="layer">
-          <div class="lv">Think</div>
-          <div class="lt">Architecture</div>
-          <p>The strategy and the big calls. Sell the business this year or next? Convert to Roth before retirement?
-            Gift the stock or hold it for the step-up?</p>
-        </div>
-        <div class="layer">
-          <div class="lv">Connect</div>
-          <div class="lt">Coordination</div>
-          <p>The role no one owns today. Running the meetings, working with your CPA and attorney, keeping every
-            decision aligned with the others.</p>
-        </div>
-        <div class="layer exec">
-          <div class="lv">Execute</div>
-          <div class="lt">Implementation</div>
-          <p>Portfolio construction, trading, rebalancing, tax-loss harvesting, asset location.</p>
-          <div class="tagone">One layer of four</div>
-        </div>
-        <div class="layer">
-          <div class="lv">Compound</div>
-          <div class="lt">Stewardship</div>
-          <p>The long arc. Family governance, preparing heirs, updating the plan, and the operating manual that keeps
-            it all current across the years.</p>
-        </div>
-      </div>
-      <p class="layernote">Most firms price the whole relationship as if it were the third box. <b>We price the other
-        three as the product, and treat the portfolio as one module inside it.</b></p>
-    </div>
-
-    <div class="sec">
-      <div class="sh">Two engagements</div>
-      <p class="intro">So the work is priced as two clear, separate things. You can take the first on its own; most
-        clients take both.</p>
-      <div class="cards">
-        <div class="card lead">
-          <div class="tag">The core product</div>
-          <h3>Wealth Architecture</h3>
-          <p class="role">The standing seat that owns how it all fits together.</p>
-          <ul>
-            <li>Quarterly coordination reviews and an annual operating plan</li>
-            <li>Tax and estate coordination; work with your CPA and attorney</li>
-            <li>Liquidity planning, insurance review, cash-flow architecture</li>
-            <li>Decision support, family meetings, and implementation oversight</li>
-            <li>A living <a href="manual.html" style="color:var(--teal2);font-weight:500">Wealth Operating Manual</a> that holds the whole plan</li>
-          </ul>
-          <div class="basis">A flat annual engagement fee, priced by complexity</div>
-        </div>
-        <div class="card">
-          <div class="tag">Optional</div>
-          <h3>Investment Management</h3>
-          <p class="role">When you'd like us to run the portfolio, too.</p>
-          <ul>
-            <li>Evidence-based portfolio construction and execution</li>
-            <li>Rebalancing, tax-loss harvesting, and asset location</li>
-            <li>Manager research and ongoing maintenance</li>
-            <li>The "Execute" layer, coordinated with everything above</li>
-          </ul>
-          <div class="basis">A transparent, tiered fee on assets we manage</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sec">
-      <div class="sh">Priced by coordination demand, not just size</div>
-      <p class="intro">A $6M single brokerage account and a $2.5M business owner with entities, a trust, and
-        multi-state taxes are not the same amount of work. The second creates far more coordination, and far more
-        value to capture. So the engagement fee follows <b>coordination demand</b>, not just assets. We assess it with
-        a short, transparent review of the drivers that actually generate work:</p>
-      <div class="chips">
-        <span class="chip">Operating business</span>
-        <span class="chip">Multiple entities</span>
-        <span class="chip">Trusts</span>
-        <span class="chip">Equity comp / options</span>
-        <span class="chip">Concentrated stock</span>
-        <span class="chip">Multi-state / cross-border</span>
-        <span class="chip">Private investments</span>
-        <span class="chip">Investment real estate</span>
-        <span class="chip">Active philanthropy</span>
-        <span class="chip">Estate-tax exposure</span>
-      </div>
-      <div class="tiers">
-        <div class="tier"><div class="tn">Foundational</div><div class="td">Straightforward</div></div>
-        <div class="tier"><div class="tn">Active</div><div class="td">A few moving parts</div></div>
-        <div class="tier"><div class="tn">Intensive</div><div class="td">Many, interacting</div></div>
-        <div class="tier"><div class="tn">Institutional-grade</div><div class="td">Bespoke</div></div>
-      </div>
-      <p class="layernote">Your coordination demand reads as <b>opportunity</b>, not a surcharge. A higher tier means
-        more places coordination can create value, and every assessment comes with the register of opportunities it
-        surfaced.</p>
-    </div>
-
-    <div class="sec">
-      <div class="sh">What you're really buying</div>
-      <p class="lead-in">Not meetings, emails, or calls. The assurance that <b>no important financial decision is
-        made without its interactions being considered first</b>, and that one accountable party is watching the
-        whole board.</p>
-      <p class="intro" style="margin-top:18px">We don't replace the professionals you trust. We make sure their work
-        and your portfolio move as one plan.</p>
-    </div>
-
-    <div class="creed-band">You're not paying for portfolio management. You're paying so nothing important happens in isolation.</div>
-
-    <div class="cta">
-      <div class="ct">See where coordination is worth the most for you.</div>
-      <div class="cd">The exact figures depend on your complexity and the assets, if any, you'd like us to manage. We
-        walk through them directly, and our full schedule is available on request. If you'd rather see the numbers
-        first, the two-minute Tax Diagnostic is a good starting point.</div>
-      <div class="btns">
-        <a class="primary" href="coordination-review.html">Schedule a Coordination Review →</a>
-        <a class="ghost" href="leakage.html">or run the two-minute Tax Diagnostic</a>
-      </div>
-    </div>
-
-    <!--FIRM_ANCHOR-->
-
-    <div class="foot">
-      <span class="note">Educational, not investment, tax, or legal advice, and not an offer or a fee quote.</span>
+</div>
+<!--FIRM_ANCHOR-->
+<div class="foot">
+<span class="note">Educational, not investment, tax, or legal advice, and not an offer or a fee quote.</span>
       This page describes how Driftwood thinks about compensation; it is not a fee schedule. Actual fees are set by
       individual agreement. Illustrative benefits of coordination
       depend on your own facts and on current law and are not guaranteed. Driftwood coordinates with your CPA and
       attorney and does not provide tax or legal advice. Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS. Driftwood Wealth is not an affiliate or subsidiary of PAS. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
     </div>
-    </div>
-  </div>
+</main>
 </div>
 </body>
 </html>

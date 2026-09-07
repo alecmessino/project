@@ -66,7 +66,7 @@ FAMILIES = [
         ("Our Story", "principles.html", "principles.html"),
         ("Leadership", "leadership.html", "leadership.html"),
         # Fiduciary Standard belongs here and is deliberately withheld: fiduciary.html is a stub.
-        ("Fees", "fees.html", "fees.html"),
+
     ]),
     # The two near-homonyms were merged into one entry, and on 2026-08-01 the merge finished: the
     # surviving FILE flipped. coordination-framework.html was 10KB of definitional list plus a CTA;
@@ -141,6 +141,15 @@ FAMILIES = [
     ]),
 ]
 
+# Approved public chrome. Existing destinations and dropdown interactions remain intact.
+FAMILIES.insert(2, ("The record", [
+    ("Coordination Report", "ic-memo.html", "ic-memo.html"),
+    ("Opportunity Register", "opportunity-register.html", "opportunity-register.html"),
+    ("Wealth Operating Manual", "manual.html", "manual.html"),
+    ("90-Day Plan", "transition-plan.html", "transition-plan.html"),
+    ("Decision Register", "decision-register.html", "decision-register.html"),
+]))
+
 # page file -> (family_label, sub_href) that should read as current.
 #
 # A sub_href that matches no entry in FAMILIES lights the FAMILY only — which is the correct read
@@ -202,6 +211,10 @@ CURRENT = {
     "cpa-collab.html": ("For Professionals", "cpa-collab.html"),
 }
 
+for _record_page in ("ic-memo.html", "opportunity-register.html", "manual.html", "transition-plan.html", "decision-register.html"):
+    CURRENT[_record_page] = ("The record", _record_page)
+CURRENT["fees.html"] = ("Fees", "fees.html")
+
 
 BRAND = ('<a class="brand" href="index.html" aria-label="Driftwood Wealth, home">'
          '<svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" '
@@ -223,16 +236,22 @@ def build_nav(page_file):
     for fam_label, items in FAMILIES:
         is_current = (fam_label == fam_cur)
         cls = "dwnav-drop" + (" dwnav-drop--current" if is_current else "")
+        if fam_label == "Insights": cls += " dwnav-insights"
         links = []
         for label, href, key in items:
             attrs = ' href="%s"' % href
             if key == sub_cur:
                 attrs += ' aria-current="page"'
             links.append('<a%s>%s</a>' % (attrs, _esc(label)))
+        if fam_label == "The record":
+            links.append('<a class="dwnav-folded-insights" href="insights.html">Insights</a>')
         panel = '<div class="dwnav-panel">%s</div>' % "".join(links)
         trigger = ('<button type="button" class="dwnav-trigger" aria-haspopup="true" '
                    'aria-expanded="false">%s<span class="caret" aria-hidden="true"></span></button>'
-                   % _esc(fam_label))
+                   % _esc({"Our Firm": "Our firm", "For Professionals": "For professionals"}.get(fam_label, fam_label)))
+        if fam_label == "For Professionals":
+            current = ' aria-current="page"' if page_file == "fees.html" else ''
+            families.append('<a class="dwnav-direct" href="fees.html"%s>Fees</a>' % current)
         families.append('<div class="%s">%s%s</div>' % (cls, trigger, panel))
     # The families MUST be wrapped in .dwnav-links. This is not cosmetic markup — it is the hook the
     # entire mobile masthead hangs from, and omitting it broke the nav on every phone and tablet:
@@ -252,7 +271,7 @@ def build_nav(page_file):
     parts.append('<span class="dwnav-sep" aria-hidden="true"></span>')
     parts.append('<a class="dwnav-access" href="private.html">Client Access</a>')
     parts.append('<a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>')
-    return '<nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">\n      %s\n    </nav>' % "\n      ".join(parts)
+    return '<nav class="dwnav dwnav--phase2" data-chrome="waterline" aria-label="Driftwood Wealth">\n      %s\n    </nav>' % "\n      ".join(parts)
 
 
 

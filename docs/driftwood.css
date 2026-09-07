@@ -1071,3 +1071,144 @@ body > .dwnav--phase2{ max-width:calc(1300px - 40px); margin-inline:auto; }
   padding:11px 18px; border-radius:var(--surface-radius,0); transition:filter .18s ease; }
 .case-ask .ca-cta:hover{ filter:brightness(1.08); color:#f4f1ea; }
 @media(max-width:620px){ .case-ask{ margin-left:18px; margin-right:18px; } }
+
+/* Approved waterline chrome, rendered by drift.nav. Existing menus remain progressive enhancements. */
+.dwnav[data-chrome="waterline"]{min-height:60px;padding:0 24px;gap:14px;justify-content:flex-start;background:var(--soft);border-bottom:1px solid var(--line);}
+.dwnav[data-chrome] .brand{margin-right:auto;gap:14px;flex:none;}
+.dwnav[data-chrome] .brand-rule{display:block;}
+.dwnav[data-chrome] .brand-word{font-size:15.5px;}
+.dwnav[data-chrome] .dwnav-links{margin:0;gap:clamp(10px,1.1vw,18px);order:0;}
+.dwnav[data-chrome] .dwnav-trigger,.dwnav[data-chrome] .dwnav-direct{font:500 13.5px/1.5 var(--sans);letter-spacing:0;text-transform:none;white-space:nowrap;padding:6px 0;color:var(--body);text-decoration:none;border-bottom:2px solid transparent;}
+.dwnav[data-chrome] .dwnav-trigger .caret{display:none;}
+.dwnav[data-chrome] .dwnav-drop--current>.dwnav-trigger,.dwnav[data-chrome] .dwnav-direct[aria-current]{color:var(--ink);border-bottom-color:var(--accent-strike);}
+.dwnav[data-chrome] .dwnav-sep{display:block;width:1px;height:22px;background:var(--line);flex:none;}
+.dwnav[data-chrome] .dwnav-access{order:0;margin:0;padding:8px 12px;border:1px solid var(--frame-line);font:600 12px/1.5 var(--sans);letter-spacing:.02em;text-transform:none;white-space:nowrap;}
+.dwnav[data-chrome] .dwnav-cta{order:0;margin:0;padding:10px 16px;font:600 13px/1.5 var(--sans);letter-spacing:0;}
+.dwnav[data-chrome] .dwnav-panel a{font:500 13px/1.4 var(--sans);letter-spacing:0;text-transform:none;}
+.dwnav[data-chrome] .dwnav-folded-insights{display:none;}
+@media(min-width:1180px){
+  .dwnav[data-chrome]{flex-wrap:nowrap;}
+  .dwnav[data-chrome] .dwnav-toggle{display:none;}
+  .dwnav[data-chrome] .dwnav-links{display:flex;flex-flow:row nowrap;width:auto;flex-basis:auto;padding:0;}
+  .dwnav[data-chrome] .dwnav-access,.dwnav[data-chrome] .dwnav-cta{display:inline-block;}
+  .dwnav[data-chrome] .dwnav-panel{display:flex;position:absolute;top:100%;left:-14px;min-width:224px;flex-direction:column;padding:10px 18px;background:var(--soft);border:1px solid var(--line);opacity:0;visibility:hidden;z-index:100;}
+  .dwnav[data-chrome] .dwnav-drop--open>.dwnav-panel,.dwnav[data-chrome]:not(.dwnav--menu) .dwnav-drop:focus-within>.dwnav-panel{opacity:1;visibility:visible;transform:none;}
+}
+@media(min-width:1180px) and (max-width:1240px){
+  .dwnav[data-chrome] .dwnav-insights{display:none;}
+  .dwnav[data-chrome] .dwnav-folded-insights{display:block;border-top:1px solid var(--line);}
+}
+@media(max-width:1179px){
+  .dwnav[data-chrome]{padding:14px 18px;flex-wrap:wrap;}
+  .dwnav[data-chrome] .dwnav-sep{display:none;}
+  .dwnav[data-chrome].dwnav--open .dwnav-links{gap:0;margin:0;}
+  .dwnav[data-chrome].dwnav--open .dwnav-direct{padding-top:18px;margin-top:18px;border-top:1px solid var(--line);width:100%;}
+  .dwnav[data-chrome].dwnav--open .dwnav-access{width:auto;}
+  .dwnav[data-chrome].dwnav--open .dwnav-cta{white-space:normal;}
+  .dwnav[data-chrome]:not(.dwnav--menu) .dwnav-links{display:flex;flex-wrap:wrap;flex-basis:100%;}
+  .dwnav[data-chrome]:not(.dwnav--menu) .dwnav-panel{display:flex;flex-direction:column;}
+}
+/* Firm coordinates retain their authored spelling and a single office line. */
+.firm-anchor-meta .fa-i:first-child{text-transform:none;letter-spacing:.03em;}
+
+/* The approved editorial pages use the existing frame, fonts, disclosure and interaction system. */
+.dw-editorial{margin:0;background:var(--bg);color:var(--body);font:16.5px/1.62 var(--sans);}
+.dw-editorial *{box-sizing:border-box;}
+.dw-editorial .wrap{margin-block:36px;padding-block:0 60px;}
+.dw-editorial .frame{background:var(--bg);}
+.dw-editorial .editorial-inner{margin:0 7px 7px;border-left:1px solid var(--frame-line);display:flow-root;}
+.dw-editorial h1,.dw-editorial h2,.dw-editorial h3{text-wrap:balance;}
+.dw-editorial p{text-wrap:pretty;}
+.dw-editorial a:hover{filter:brightness(.9);}
+.dw-editorial a:focus-visible,.dw-home a:focus-visible,.dw-editorial button:focus-visible{outline:2px solid var(--accent-strike);outline-offset:4px;}
+.dw-editorial .foot{padding-inline:44px;font:12px/1.62 var(--sans);color:var(--dim);border-top:1px solid var(--line);}
+.dw-editorial .foot a{color:inherit;text-underline-offset:2px;}
+.dw-editorial .dv:hover,.dw-partners .tools>a:hover{background:var(--soft);}
+.dw-editorial .dv:focus-visible{outline-offset:-3px;}
+.dw-editorial .book{max-width:100%;white-space:normal!important;}
+.dw-editorial .fee-schedule-label{font-size:13px;font-weight:600;color:var(--dim);}
+.dw-editorial .fee-schedule-note{font-size:12px;color:var(--dim);}
+.dw-fees .drivers li{break-inside:avoid;}
+.dw-partners .pt-table th{text-align:left;}
+.dw-leadership .bio img{max-width:100%;}
+.record-block{margin-top:44px;padding-top:22px;border-top:1px solid var(--ink);}
+.record-kicker{font:700 11px/1.6 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 6px;}
+.record-lede{font:17px/1.5 var(--serif);color:var(--ink);margin:0 0 18px;max-width:56ch;}
+.record-strip{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 8px;padding:14px 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--line);font:600 12.5px/1.9 var(--sans);}
+.record-strip a{color:var(--ink);text-decoration:none;white-space:nowrap;}
+.record-strip a:hover,.record-strip a[aria-current]{color:var(--accent-strike);}
+.record-number{font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--muted);font-variant-numeric:tabular-nums;margin-right:4px;}
+.record-arrow{color:var(--ghost-line);}
+.record-note{font:12.5px/1.6 var(--sans);color:var(--dim);margin:12px 0 0;max-width:70ch;}
+.record-note a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft);}
+/* The homepage's supplied plate occupies its own column, never an overlay on the copy. */
+.dw-home .hero{min-height:0;isolation:auto;}
+.dw-home .hero .hero-grid{display:grid;grid-template-columns:minmax(0,13fr) minmax(0,9fr);gap:0 36px;align-items:end;}
+.dw-home .hero h1{font-size:clamp(34px,4.4vw,58px);}
+.dw-home .heron-col{max-width:480px;}
+.dw-home .heron-col img{width:100%;height:auto;display:block;}
+.dw-home .rc-t{font:400 23px/1.2 var(--serif);letter-spacing:-.008em;}
+.dw-home .reg-note{max-width:62ch;}
+.dw-home .fit-partners{margin:12px 0 0;font:600 14px/1.6 var(--sans);}
+.dw-home .fit-partners a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft);}
+/* Preserve every Manual cell, reference, dependency and status on small screens. */
+.manual-record-nav{padding:20px 44px 16px;border-bottom:1px solid var(--line);}
+.manual-record-nav .record-strip{border:0;padding:0;}
+.manual-print{font:600 12px/1.5 var(--sans);color:var(--accent-strike);border:1px solid var(--line);padding:8px 12px;background:none;margin-top:12px;cursor:pointer;}
+.dw-manual .record-table-scroll{overflow-x:auto;max-width:100%;}
+.dw-manual .ledger{min-width:900px;}
+.dw-manual .reg{min-width:800px;}
+.dw-manual .deps{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;}
+.dw-manual .dep{display:inline-flex;align-items:center;gap:5px;}
+.dw-manual .dep .box{width:7px;height:7px;border:1px solid var(--ink);}
+.dw-manual .dep.done .box{background:var(--ink);}
+.dw-manual .dep.pending{color:var(--dim);}
+@media(max-width:899px){
+  .dw-home .hero .hero-grid{grid-template-columns:minmax(0,1fr)!important;}
+  .dw-home .hero .heron-col{grid-column:1!important;grid-row:auto!important;justify-self:start!important;max-width:380px;margin:30px 0 0!important;}
+  .dw-home .hero h1{font-size:clamp(34px,6.5vw,58px);}
+}
+@media(max-width:620px){
+  .dw-editorial .pad,.dw-editorial .foot,.manual-record-nav{padding-left:22px!important;padding-right:22px!important;}
+  .dw-editorial .wrap{margin-top:18px;}
+  .dw-home .hero.pad{padding:28px 22px 40px!important;}
+  .dw-home .hero .heron-col{max-width:300px;}
+  .dw-home .hero a{white-space:normal!important;}
+  .dw-editorial .fee-structure>div{grid-template-columns:1fr!important;gap:5px!important;}
+  .dw-editorial .pad[style*="margin:44px"],.dw-editorial .pad[style*="margin:34px"]{margin-left:22px!important;margin-right:22px!important;}
+  .record-strip{font-size:12px;gap:2px 7px;}
+  .record-arrow{display:none;}
+  .record-strip a{flex-basis:100%;}
+  .dw-partners .pt-table td::before{content:attr(data-l);display:block;font-size:10px;font-weight:700;color:var(--dim);}
+  .dw-leadership .bio>div{padding:22px!important;border-left:0!important;}
+}
+@media print{
+  .dwnav[data-chrome],.manual-record-nav,.noprint{display:none!important;}
+  .dw-editorial .wrap{margin:0;padding:0;max-width:none;}
+  .dw-editorial .editorial-inner{margin:0;border:0;}
+  .dw-editorial .pad{padding:14px 0!important;margin:0!important;}
+  .dw-manual .record-table-scroll{overflow:visible;}
+  .dw-manual .ledger,.dw-manual .reg{min-width:0!important;font-size:9px!important;}
+  .dw-manual .ledger{grid-template-columns:55px minmax(0,1fr) 80px 85px 72px!important;gap:8px!important;}
+  .dw-manual .reg{grid-template-columns:minmax(0,1fr) 130px 70px 85px!important;gap:8px!important;}
+  .dw-manual .ledger-row,.dw-manual .reg,.dw-manual .front>div{break-inside:avoid;}
+  .dw-manual .ledger span,.dw-manual .reg span{font-size:9px!important;}
+  .dw-manual a{color:var(--ink)!important;}
+  .dw-editorial .foot{margin-top:20px;padding:12px 0;}
+}
+.dwnav[data-chrome] .dwnav-cta{text-transform:none;}
+.dw-manual section>h2{font-weight:400;}
+.dw-manual .changelog-table>div{min-width:620px;}
+@media(max-width:720px){
+  .dw-leadership .bio img{width:calc(100% - 44px)!important;max-width:264px;margin:22px 22px 0;}
+  .dw-leadership .bench>div{padding:16px 18px!important;}
+}
+@media(max-width:620px){
+  .dw-editorial [data-section="close"] a{max-width:100%;white-space:normal!important;}
+}
+@media print{
+  .dw-manual .changelog-table>div{min-width:0;grid-template-columns:45px 55px minmax(0,1fr) 80px!important;}
+}
+@media print{
+  .dw-manual .changelog-table [role="row"]{min-width:0;grid-template-columns:45px 55px minmax(0,1fr) 80px!important;}
+}

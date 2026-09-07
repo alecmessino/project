@@ -58,15 +58,13 @@ def test_firm_anchor_leads_with_the_wordmark_and_nothing_else():
     assert "FOUNDED 2024" not in a and "ADVISERINFO.SEC.GOV" not in a
 
 
-def test_the_anchor_carries_no_descriptor_no_phone_and_no_data_vintage():
-    """Three things left the band on 2026-08-03, at the principal's direction, and each for its
-    own reason. The descriptor repeated what the page's disclosure already says at length. The
-    phone is a different commitment from an inbox, and the email stays. The data vintage was
-    provenance for the exhibits and had no business on an essay."""
+def test_the_anchor_carries_the_confirmed_phone_without_descriptor_or_data_vintage():
+    """The approved chrome restores the confirmed phone and exact office line."""
     a = site.firm_anchor_html()
     assert "A PRACTICE OF" not in a.upper(), "the descriptor is back in the anchor"
     assert "MODEL DATA AS OF" not in a.upper(), "the data vintage is back in the anchor"
-    assert "tel:" not in a and not site.FIRM_PHONE, "a phone number is back in the anchor"
+    assert 'href="tel:+17085487600"' in a and site.FIRM_PHONE == "(708) 548-7600"
+    assert a.count("Chicago, Illinois · Austin, Texas") == 1
     # What must remain: the band still has to make the practice reachable.
     assert "mailto:" in a and site.CONTACT_EMAIL.upper() in a.upper()
 

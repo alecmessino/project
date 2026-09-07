@@ -94,9 +94,8 @@ FIRM_LEGAL_NAME = "Driftwood Wealth"
 FIRM_LOCATIONS = ("Chicago, Illinois", "Austin, Texas")
 FIRM_LOCATION = FIRM_LOCATIONS[0]   # kept for callers that want a single city
 FIRM_SINCE = "2024"              # founding year, for the "Founded" line
-# 2026-08-03, principal-directed: the phone leaves the canonical foot. The email remains, so the
-# band still makes the practice reachable; a number is a different commitment from an inbox.
-FIRM_PHONE = ""
+# Approved production port: retain the confirmed phone in the shared firm-anchor band.
+FIRM_PHONE = "(708) 548-7600"
 
 # Deferred, consumed by the firm-anchor band once confirmed; empty means "render nothing":
 FIRM_CRD = ""        # SEC/IARD CRD number
@@ -151,13 +150,14 @@ def firm_anchor_html() -> str:
     strip below it carries the coordinates alone.
 
     Dropped at the principal's direction: "A PRACTICE OF ALEC MESSINO" (the descriptor repeats what
-    the page's disclosure already says at length), the phone number, and "MODEL DATA AS OF ...".
+    the page's disclosure already says at length) and "MODEL DATA AS OF ...".
+    The approved production port restores the confirmed phone number.
     The last of those was provenance for the exhibits and had no business on an essay.
     """
     f = firm_facts()
     left = []
-    for city in f.get("locations", ()):
-        left.append(city.upper())
+    if f.get("locations"):
+        left.append(" · ".join(f["locations"]))
     if f.get("crd"):
         left.append(f"CRD {f['crd']}")
     if f.get("phone"):

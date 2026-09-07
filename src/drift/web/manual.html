@@ -1,278 +1,199 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <!-- Privacy-first analytics (Plausible) -->
-<script async src="https://plausible.io/js/pa-h6JBp-7giRA83TjPL4uHQ.js"></script>
+<script async="" src="https://plausible.io/js/pa-h6JBp-7giRA83TjPL4uHQ.js"></script>
 <script>
   window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
   plausible.init()
 </script>
-<link rel="stylesheet" href="driftwood.css">
+<link href="driftwood.css" rel="stylesheet"/>
 <script src="dw-context.js"></script>
 <title>The Wealth Operating Manual, Driftwood Wealth</title>
-<meta name="description" content="A report is read once and filed; a record is kept. The Wealth Operating Manual is Driftwood's living operational record, every decision, its reason, and what it touched, kept in one place as it accumulates. Illustrative, not advice." />
-<link rel="canonical" href="https://driftwoodwealth.com/manual.html" />
-<link rel="icon" href="favicon.svg" />
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-<link rel="mask-icon" href="mask-icon.svg" color="#1a2330" />
-<meta name="theme-color" content="#f1efe9" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#1a2330" media="(prefers-color-scheme: dark)" />
-<meta property="og:type" content="article" />
-<meta property="og:site_name" content="Driftwood Wealth" />
-<meta property="og:title" content="The Wealth Operating Manual" />
-<meta property="og:description" content="A report is read once. A record is kept. Driftwood's living operational record, decisions, dependencies, and revisions, kept as one accumulating book." />
-<meta property="og:url" content="https://driftwoodwealth.com/manual.html" />
-<meta property="og:image" content="https://driftwoodwealth.com/og/index.png" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="The Wealth Operating Manual" />
-<meta name="twitter:description" content="A report is read once. A record is kept." />
-<meta name="twitter:image" content="https://driftwoodwealth.com/og/index.png" />
+<meta content="A report is read once and filed; a record is kept. The Wealth Operating Manual is Driftwood's living operational record, every decision, its reason, and what it touched, kept in one place as it accumulates. Illustrative, not advice." name="description"/>
+<link href="https://driftwoodwealth.com/manual.html" rel="canonical"/>
+<link href="favicon.svg" rel="icon"/>
+<link href="favicon-32.png" rel="icon" sizes="32x32" type="image/png"/>
+<link href="apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+<link color="#1a2330" href="mask-icon.svg" rel="mask-icon"/>
+<meta content="#f1efe9" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="#1a2330" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="article" property="og:type"/>
+<meta content="Driftwood Wealth" property="og:site_name"/>
+<meta content="The Wealth Operating Manual" property="og:title"/>
+<meta content="A report is read once. A record is kept. Driftwood's living operational record, decisions, dependencies, and revisions, kept as one accumulating book." property="og:description"/>
+<meta content="https://driftwoodwealth.com/manual.html" property="og:url"/>
+<meta content="https://driftwoodwealth.com/og/index.png" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="The Wealth Operating Manual" name="twitter:title"/>
+<meta content="A report is read once. A record is kept." name="twitter:description"/>
+<meta content="https://driftwoodwealth.com/og/index.png" name="twitter:image"/>
 <style>
-  /* Page-local scaffolding only. Record components (frontmatter, ledger, register,
-     changelog, folio, colophon, stamp) live in the shared driftwood.css additions. */
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--body);font:16px/1.62 var(--sans);
-    letter-spacing:-.004em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  .wrap{margin:34px auto;padding-block:0 72px;}
-  .frame{background:var(--bg);overflow:hidden;}
-  .inner{margin:0 7px 7px}
-
-  .msec{padding:34px 48px}
-  .msec + .msec,.msec.ruled{border-top:1px solid var(--line)}
-  .msec.soft{background:var(--soft)}
-
-  .masthead-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap}
-  .eyebrow{font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
-  h1{font-family:var(--sans);font-weight:700;font-size:clamp(32px,3vw+15px,46px);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:16ch}
-  .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:54ch}
-  .lede b{color:var(--ink);font-weight:500}
-  .tier-note{font-size:12px;line-height:1.6;color:var(--muted);margin:14px 0 0;max-width:74ch}
-
-  .close{background:var(--navy);padding:44px 48px 40px}
-  .close .eyebrow{color:var(--accent-strike-soft)}
-  .close h2{font-family:var(--sans);font-weight:700;font-size:clamp(26px,2.6vw+14px,38px);line-height:1.08;letter-spacing:-.022em;color:#f1ede3;margin:0 0 16px;max-width:20ch}
-  .close p{font-family:var(--serif);font-size:17.5px;line-height:1.55;color:var(--on-dark-dim);margin:0 0 26px;max-width:58ch}
-  .close .foliobar{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(233,229,219,.16);padding-top:14px}
-  .close .foliobar span{font-weight:500;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--on-dark-dim);font-variant-numeric:tabular-nums}
-
-  .foot{padding:20px 48px 34px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;line-height:1.65}
-  .foot .note{color:var(--muted);font-weight:500}
-  .foot a{color:var(--muted)} .foot b{color:var(--muted)}
-
-  @media(max-width:640px){ .msec,.close,.foot{padding-left:22px;padding-right:22px} }
+@media(max-width:900px){.front{grid-template-columns:repeat(2,1fr)!important}.draws{grid-template-columns:1fr!important}} @media(max-width:640px){.pad{padding-left:22px!important;padding-right:22px!important}.front{grid-template-columns:1fr!important}}
 </style>
 </head>
-<body>
+<body class="dw-editorial dw-manual">
 <div class="wrap">
-<nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+<nav class="dwnav dwnav--phase2" data-chrome="waterline" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-atlas.html">The Coordination Atlas</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="statemap.html">The State Tax Atlas</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
+      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-atlas.html">The Coordination Atlas</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">The record<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="ic-memo.html">Coordination Report</a><a href="opportunity-register.html">Opportunity Register</a><a href="manual.html" aria-current="page">Wealth Operating Manual</a><a href="transition-plan.html">90-Day Plan</a><a href="decision-register.html">Decision Register</a><a class="dwnav-folded-insights" href="insights.html">Insights</a></div></div><div class="dwnav-drop dwnav-insights"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="statemap.html">The State Tax Atlas</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><a class="dwnav-direct" href="fees.html">Fees</a><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
-    </nav>  <div class="frame">
-    <div class="inner">
-    
-    <div class="om-sections">
-      <a class="t" href="record.html">The Driftwood Record</a>
-      <a href="constitution.html">Constitution</a><span class="d">·</span><a href="capital-allocation.html">Capital Allocation</a><span class="d">·</span><a href="manual.html" aria-current="page">The Manual</a><span class="d">·</span><a href="decision-register.html">Decision Register</a><span class="d">·</span><a href="opportunity-register.html">Opportunity Register</a><span class="d">·</span><a href="awor.html">Annual Review</a>
-    </div>
-
-    <!-- ── MASTHEAD / FRONT MATTER ── -->
-    <div class="msec">
-      <div class="masthead-top">
-        <div style="max-width:640px">
-          <div class="eyebrow">Permanent operating record · the reserved tier</div>
-          <h1>The Wealth Operating Manual.</h1>
-          <p class="lede">A report is read once and filed. This is the other thing, the record a report becomes. Every decision, its reason, and what it touched, kept in one place and never deleted, so the plan is something that <b>accumulates</b> rather than something that resets each year.</p>
-        </div>
-        <div class="stamp">
-          <div class="t">Confidential</div>
-          <div class="s">Prepared for the Harris household</div>
-        </div>
-      </div>
-
-      <div class="frontmatter" style="margin-top:30px">
-        <div class="cell"><div class="k">Household</div><div class="v">The Harris household</div></div>
-        <div class="cell"><div class="k">Adviser of record</div><div class="v">Driftwood</div></div>
-        <div class="cell"><div class="k">Established</div><div class="v tnum">February 2026</div></div>
-        <div class="cell"><div class="k">Revision</div><div class="v tnum">rev. 06 · current</div></div>
-        <div class="cell"><div class="k">Status</div><div class="v">Current · append-only</div></div>
-        <div class="cell"><div class="k">Authority</div><div class="v">Operational guidance</div></div>
-        <div class="cell"><div class="k">As of</div><div class="v tnum">9 July 2026</div></div>
-        <div class="cell"><div class="k">Next standing review</div><div class="v due">September 2026</div></div>
-      </div>
-      <p class="tier-note">This is the record tier, held apart on purpose. Ordinary pages inherit its type and its rules; only the standing record is framed as the manual, the device keeps its meaning by staying rare.</p>
-    </div>
-
-    <!-- ── § A · HOUSEHOLD DECISION LEDGER ── -->
-    <div class="msec soft ruled">
-      <div class="rec-head"><span class="rs">§ A</span><span class="rt">Household Decision Ledger</span></div>
-      <p class="rec-lede">Every decision, dated, with the reason it was made and the parts of the system it touched. Nothing is removed; the ledger only grows. This is the thing a family office keeps, and the thing an annual statement is not.</p>
-    </div>
-    <div class="msec soft ruled" style="padding-top:6px">
-      <div class="ledger-head">
-        <div>Date</div><div>Decision &amp; reason</div><div>Affected</div><div>Reference</div><div>Status</div>
-      </div>
-
-      <div class="ledger-year"><span class="y">2026</span><span class="c">1 entry</span></div>
-      <div class="ledger-row">
-        <div class="date">Mar 2026</div>
-        <div><div class="title">Relocated municipal bonds to the taxable account.</div><div class="reason">Tax-exempt coupons are wasted inside a tax-deferred account; the taxable book is their right home.</div></div>
-        <div class="affected">Portfolio · Taxes</div>
-        <div class="ref"><a href="index.html#evidence">The evidence →</a></div>
-        <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
-      </div>
-
-      <div class="ledger-year"><span class="y">2026</span><span class="c">the first year · 6 entries</span></div>
-      <div class="ledger-row">
-        <div class="date">Jul 2026</div>
-        <div><div class="title">Sequenced the first Roth conversion rung to fill the 24% bracket.</div><div class="reason">A low-income year before RMDs begin, bracket space that will not return.</div></div>
-        <div class="affected">Taxes · Estate</div>
-        <div class="ref"><a href="taxlab.html">§ After-Tax Lab →</a></div>
-        <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
-      </div>
-      <div class="ledger-row">
-        <div class="date">Jun 2026</div>
-        <div><div class="title">Established a 529 for the first grandchild.</div><div class="reason">Five years of the annual exclusion, front-loaded, funded from the taxable book.</div></div>
-        <div class="affected">Liquidity · Estate</div>
-        <div class="ref"><a href="#changelog">rev. 05 →</a></div>
-        <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
-      </div>
-      <div class="ledger-row">
-        <div class="date">May 2026</div>
-        <div><div class="title">Opened the Texas residency sequence, residency before the business sale.</div><div class="reason">Retire the 4.95% Illinois tax on the coming sale before it is realized; the order, not the components, decides the outcome.</div></div>
-        <div class="affected">Taxes · Liquidity · Estate</div>
-        <div class="ref"><a href="statemap.html">State Tax Atlas →</a></div>
-        <div class="recstatus prog"><span class="sw"></span><span class="lb">In progress</span></div>
-      </div>
-      <div class="ledger-row">
-        <div class="date">Apr 2026</div>
-        <div><div class="title">Moved the life policy into an ILIT.</div><div class="reason">Remove the death benefit from the taxable estate; let it fund the tax it once inflated.</div></div>
-        <div class="affected">Estate</div>
-        <div class="ref"><a href="#changelog">§ Estate →</a></div>
-        <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
-      </div>
-      <div class="ledger-row">
-        <div class="date">Mar 2026</div>
-        <div><div class="title">Began a three-year exit from the concentrated position.</div><div class="reason">Reduce single-stock risk on a schedule, at a tax cost agreed in advance.</div></div>
-        <div class="affected">Portfolio · Taxes</div>
-        <div class="ref"><a href="concentration.html">Concentrated Position Lab →</a></div>
-        <div class="recstatus prog"><span class="sw"></span><span class="lb">In progress</span></div>
-      </div>
-      <div class="ledger-row">
-        <div class="date">Feb 2026</div>
-        <div><div class="title">Set the household asset-location map.</div><div class="reason">Place each asset class in the account where it is taxed least.</div></div>
-        <div class="affected">Portfolio · Taxes</div>
-        <div class="ref"><a href="index.html#evidence">The evidence →</a></div>
-        <div class="recstatus done"><span class="sw"></span><span class="lb">Implemented</span></div>
-      </div>
-      <div class="ledger-row">
-        <div class="date">Feb 2026</div>
-        <div><div class="title">Opened the household book.</div><div class="reason">Inventoried the accounts, the return, and the estate documents, one coordinated starting point.</div></div>
-        <div class="affected">Portfolio · Taxes · Estate · Liquidity</div>
-        <div class="ref"><span class="none">None</span></div>
-        <div class="recstatus"><span class="sw"></span><span class="lb">Baseline</span></div>
-      </div>
-    </div>
-
-    <!-- ── § B · COORDINATION REGISTER ── -->
-    <div class="msec ruled">
-      <div class="rec-head"><span class="rs">§ B</span><span class="rt">Coordination Register</span></div>
-      <p class="rec-lede" style="margin-bottom:20px">The matters currently in motion, what is open, whom it waits on, and who owns the next move. A dependency is closed only when its professional has signed off.</p>
-      <div class="register-head">
-        <div>Matter</div><div>Dependencies</div><div>Owner</div><div>Status</div>
-      </div>
-      <div class="register-row">
-        <div><div class="matter">Sale of the operating business</div><div class="opened">Opened Jan 2026</div></div>
-        <div class="deps">
-          <span class="dep done"><span class="box"></span>CPA</span>
-          <span class="dep done"><span class="box"></span>Attorney</span>
-          <span class="dep pending"><span class="box"></span>Insurance</span>
-          <span class="dep done"><span class="box"></span>Portfolio</span>
-        </div>
-        <div class="owner">Driftwood</div>
-        <div class="rstat">Awaiting valuation</div>
-      </div>
-      <div class="register-row">
-        <div><div class="matter">2026 Roth conversion</div><div class="opened">Opened Feb 2026</div></div>
-        <div class="deps">
-          <span class="dep pending"><span class="box"></span>CPA</span>
-          <span class="dep done"><span class="box"></span>Portfolio</span>
-        </div>
-        <div class="owner">Driftwood</div>
-        <div class="rstat blue">Modeling bracket</div>
-      </div>
-      <div class="register-row">
-        <div><div class="matter">Second-home purchase</div><div class="opened">Opened Jun 2026</div></div>
-        <div class="deps">
-          <span class="dep done"><span class="box"></span>Attorney</span>
-          <span class="dep pending"><span class="box"></span>Portfolio</span>
-        </div>
-        <div class="owner">You</div>
-        <div class="rstat">Funding source open</div>
-      </div>
-      <div class="register-row">
-        <div><div class="matter">Year-end gifting</div><div class="opened">Opened Jun 2026</div></div>
-        <div class="deps">
-          <span class="dep done"><span class="box"></span>CPA</span>
-          <span class="dep pending"><span class="box"></span>Attorney</span>
-        </div>
-        <div class="owner">Driftwood</div>
-        <div class="rstat due">Scheduled December</div>
-      </div>
-    </div>
-
-    <!-- ── § C · HOUSEHOLD CHANGE LOG ── -->
-    <div class="msec soft ruled" id="changelog">
-      <div class="rec-head"><span class="rs">§ C</span><span class="rt">Household Change Log</span></div>
-      <p class="rec-lede" style="margin-bottom:20px">The revision history of the plan itself, what changed at each version, and by whose hand. The manual is a versioned instrument, not a live dashboard that forgets its own past.</p>
-      <div class="changelog-head"><div>Rev.</div><div>Date</div><div>Change</div><div>By</div></div>
-      <div class="changelog-row"><div class="rev">rev. 06</div><div class="cdate">Jul 2026</div><div class="change">Roth conversion recorded; estimated tax adjusted.</div><div class="by">Driftwood</div></div>
-      <div class="changelog-row"><div class="rev">rev. 05</div><div class="cdate">Jun 2026</div><div class="change">529 established; annual gift logged.</div><div class="by">Driftwood</div></div>
-      <div class="changelog-row"><div class="rev">rev. 04</div><div class="cdate">May 2026</div><div class="change">Texas residency sequence opened; estate plan review scheduled.</div><div class="by">Driftwood · Attorney</div></div>
-      <div class="changelog-row"><div class="rev">rev. 03</div><div class="cdate">Apr 2026</div><div class="change">Trust amended; life policy assigned to the ILIT.</div><div class="by">Attorney</div></div>
-      <div class="changelog-row"><div class="rev">rev. 02</div><div class="cdate">Mar 2026</div><div class="change">Concentration transition begun.</div><div class="by">Driftwood</div></div>
-      <div class="changelog-row"><div class="rev">rev. 01</div><div class="cdate">Feb 2026</div><div class="change">Book opened; beneficiaries updated; municipal bonds relocated to taxable.</div><div class="by">Driftwood</div></div>
-
-      <div class="archive-memory">
-        <div class="blk"><div class="k">Draws on</div>
-          <p class="e"><a href="constitution.html">The Constitution</a> (amend. 3), the instrument this book operates under.</p>
-          <p class="e"><a href="capital-allocation.html">The Capital Allocation Policy</a> (Rev. 2), the bands the ledger deploys against.</p>
-        </div>
-        <div class="blk"><div class="k">Related</div>
-          <p class="e"><a href="decision-register.html">The Decision Register</a>, the upstream record; each ledger entry above carries its rationale there.</p>
-          <p class="e"><a href="opportunity-register.html">The Opportunity Register</a>, the open matters this book tracks as dependencies.</p>
-        </div>
-        <div class="blk"><div class="k">Referenced by</div>
-          <p class="e"><a href="awor.html">The Annual Review</a>, the year's reading of this book.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── CLOSE ── -->
-    <div class="close">
-      <div class="eyebrow">The point</div>
-      <h2>A report is read once. A record is kept.</h2>
-      <p>Polish is easy to copy; continuity is not. The manual's advantage is that it <i>remembers</i>, across decades, decisions, and the people who made them. That is the difference between a firm that reports to you and one that keeps your household's book.</p>
-      <div class="foliobar">
-        <span>§ Operating Manual · rev. 06 · fol. 1</span>
-        <span>The Harris household · est. 2026</span>
-      </div>
-    </div>
-
-    <!-- ── COLOPHON + DISCLOSURE ── -->
-    <!--FIRM_ANCHOR-->
-    <div class="foot">
-      <div class="colophon" style="margin-bottom:8px">Set in Satoshi &amp; Erode · a concept for a living operating record · illustrative household, not a real client</div>
-      <span class="note">Illustrative and educational, not investment, tax, or legal advice.</span>
+    </nav><main class="frame" id="main-content">
+<div class="inner editorial-inner">
+<div class="manual-record-nav"><div aria-label="The five documents" class="record-strip"><a href="ic-memo.html"><span class="record-number">01</span> Coordination Report</a><span aria-hidden="true" class="record-arrow">→</span><a href="opportunity-register.html"><span class="record-number">02</span> Opportunity Register</a><span aria-hidden="true" class="record-arrow">→</span><a aria-current="page" href="manual.html"><span class="record-number">03</span> Wealth Operating Manual</a><span aria-hidden="true" class="record-arrow">→</span><a href="transition-plan.html"><span class="record-number">04</span> 90-Day Plan</a><span aria-hidden="true" class="record-arrow">→</span><a href="decision-register.html"><span class="record-number">05</span> Decision Register</a></div><button class="noprint manual-print" onclick="window.print()" type="button">Read as one page ↗</button></div>
+<header class="pad" data-section="masthead" style="padding:40px 44px 34px">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap">
+<div style="max-width:640px">
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#2c5878;margin:0 0 16px">Permanent operating record · the reserved tier</p>
+<h1 style="font-family:'Erode',Georgia,serif;font-weight:400;font-size:clamp(32px,3vw + 15px,46px);line-height:1.05;letter-spacing:-.022em;color:#1e2833;margin:0 0 18px;max-width:16ch">The Wealth Operating Manual.</h1>
+<p style="font-family:'Erode',Georgia,serif;font-size:19px;line-height:1.55;color:#3d4650;margin:0;max-width:54ch">A report is read once and filed. This is the other thing, the record a report becomes. Every decision, its reason, and what it touched, kept in one place and never deleted, so the plan is something that <b style="color:#1e2833;font-weight:500">accumulates</b> rather than something that resets each year.</p>
+</div>
+<div style="border:1px solid #1e2833;padding:10px 14px;font-family:'Satoshi','Inter',system-ui,sans-serif;text-align:center;transform:rotate(-2deg);flex:none">
+<p style="margin:0;font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#1e2833">Confidential</p>
+<p style="margin:4px 0 0;font-size:10.5px;color:#5c6470">Prepared for the Harris household</p>
+</div>
+</div>
+<dl class="front" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#e9e5db;border:1px solid #e9e5db;margin:30px 0 0;font-family:'Satoshi','Inter',system-ui,sans-serif">
+<div style="background:#f1efe9;padding:12px 14px"><dt style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin-bottom:5px">Household</dt><dd style="margin:0;font-size:13.5px;color:#1e2833">The Harris household</dd></div>
+<div style="background:#f1efe9;padding:12px 14px"><dt style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin-bottom:5px">Adviser of record</dt><dd style="margin:0;font-size:13.5px;color:#1e2833">Driftwood</dd></div>
+<div style="background:#f1efe9;padding:12px 14px"><dt style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin-bottom:5px">Established</dt><dd style="margin:0;font-size:13.5px;color:#1e2833;font-variant-numeric:tabular-nums">February 2026</dd></div>
+<div style="background:#f1efe9;padding:12px 14px"><dt style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin-bottom:5px">Revision</dt><dd style="margin:0;font-size:13.5px;color:#1e2833;font-variant-numeric:tabular-nums">rev. 06 · current</dd></div>
+<div style="background:#f1efe9;padding:12px 14px"><dt style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin-bottom:5px">Status</dt><dd style="margin:0;font-size:13.5px;color:#1e2833">Current · append-only</dd></div>
+<div style="background:#f1efe9;padding:12px 14px"><dt style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin-bottom:5px">Authority</dt><dd style="margin:0;font-size:13.5px;color:#1e2833">Operational guidance</dd></div>
+<div style="background:#f1efe9;padding:12px 14px"><dt style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin-bottom:5px">As of</dt><dd style="margin:0;font-size:13.5px;color:#1e2833;font-variant-numeric:tabular-nums">9 July 2026</dd></div>
+<div style="background:#f1efe9;padding:12px 14px"><dt style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin-bottom:5px">Next standing review</dt><dd style="margin:0;font-size:13.5px;color:#2c5878;font-weight:600">September 2026</dd></div>
+</dl>
+<p style="font-size:13.5px;line-height:1.6;color:#3d4650;margin:18px 0 0;max-width:74ch"><b style="color:#1e2833;font-weight:600">How to read this book:</b> § A records what was decided and why; § B holds what is still open and whom it waits on; § C is the revision history of the plan itself.</p>
+</header>
+<section class="pad" data-section="§-a" style="padding:34px 44px;background:#f7f5f0;border-top:1px solid #d8d3c6">
+<h2 style="display:flex;gap:14px;align-items:baseline;margin:0 0 8px"><span style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;color:#2c5878">§ A</span><span style="font-family:'Erode',Georgia,serif;font-size:24px;color:#1e2833;letter-spacing:-.01em">Household Decision Ledger</span></h2>
+<p style="font-family:'Erode',Georgia,serif;font-size:15.5px;line-height:1.55;color:#5c6470;margin:0 0 22px;max-width:62ch">Every decision, dated, with the reason it was made and the parts of the system it touched. Nothing is removed; the ledger only grows. This is the thing a family office keeps, and the thing an annual statement is not.</p>
+<div aria-label="Household ledger" class="record-table-scroll" role="region" style="font-family:'Satoshi','Inter',system-ui,sans-serif" tabindex="0"><div aria-label="Household ledger" role="table">
+<div class="ledger" role="row" style="display:grid;grid-template-columns:82px minmax(0,1fr) 170px 150px 120px;gap:0 18px;padding:0 0 8px;border-bottom:1px solid #1e2833;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a"><span class="c1" role="columnheader">Date</span><span role="columnheader">Decision &amp; reason</span><span class="c3" role="columnheader">Affected</span><span class="c4" role="columnheader">Reference</span><span class="c5" role="columnheader">Status</span></div>
+<div class="ledger ledger-row" role="row" style="display:grid;grid-template-columns:82px minmax(0,1fr) 170px 150px 120px;gap:0 18px;padding:13px 0;border-bottom:1px solid #e9e5db;align-items:start">
+<span class="c1" role="cell" style="font-size:12px;color:#5c6470;font-variant-numeric:tabular-nums;padding-top:2px">Jul 2026</span>
+<span role="cell"><span style="display:block;font-weight:600;font-size:14px;color:#1e2833;line-height:1.4">Sequenced the first Roth conversion rung to fill the 24% bracket.</span><span style="display:block;font-size:12.5px;line-height:1.5;color:#3d4650;margin-top:3px">A low-income year before RMDs begin, bracket space that will not return.</span></span>
+<span class="c3" role="cell" style="font-size:12px;color:#3d4650;padding-top:2px">Taxes · Estate</span>
+<span class="c4" role="cell" style="font-size:12px;padding-top:2px"><a href="taxlab.html" style="color:#2c5878;text-decoration:none;white-space:nowrap">§ After-Tax Lab →</a></span>
+<span class="c5" role="cell" style="display:flex;gap:8px;align-items:center;font-size:12px;color:#1e2833;padding-top:2px"><span aria-hidden="true" style="width:8px;height:8px;background:#15806a;flex:none"></span>Implemented</span>
+</div><div class="ledger ledger-row" role="row" style="display:grid;grid-template-columns:82px minmax(0,1fr) 170px 150px 120px;gap:0 18px;padding:13px 0;border-bottom:1px solid #e9e5db;align-items:start">
+<span class="c1" role="cell" style="font-size:12px;color:#5c6470;font-variant-numeric:tabular-nums;padding-top:2px">Jun 2026</span>
+<span role="cell"><span style="display:block;font-weight:600;font-size:14px;color:#1e2833;line-height:1.4">Established a 529 for the first grandchild.</span><span style="display:block;font-size:12.5px;line-height:1.5;color:#3d4650;margin-top:3px">Five years of the annual exclusion, front-loaded, funded from the taxable book.</span></span>
+<span class="c3" role="cell" style="font-size:12px;color:#3d4650;padding-top:2px">Liquidity · Estate</span>
+<span class="c4" role="cell" style="font-size:12px;padding-top:2px"><a href="#changelog" style="color:#2c5878;text-decoration:none;white-space:nowrap">rev. 05 →</a></span>
+<span class="c5" role="cell" style="display:flex;gap:8px;align-items:center;font-size:12px;color:#1e2833;padding-top:2px"><span aria-hidden="true" style="width:8px;height:8px;background:#15806a;flex:none"></span>Implemented</span>
+</div><div class="ledger ledger-row" role="row" style="display:grid;grid-template-columns:82px minmax(0,1fr) 170px 150px 120px;gap:0 18px;padding:13px 0;border-bottom:1px solid #e9e5db;align-items:start">
+<span class="c1" role="cell" style="font-size:12px;color:#5c6470;font-variant-numeric:tabular-nums;padding-top:2px">May 2026</span>
+<span role="cell"><span style="display:block;font-weight:600;font-size:14px;color:#1e2833;line-height:1.4">Opened the Texas residency sequence, residency before the business sale.</span><span style="display:block;font-size:12.5px;line-height:1.5;color:#3d4650;margin-top:3px">Retire the 4.95% Illinois tax on the coming sale before it is realized; the order, not the components, decides the outcome.</span></span>
+<span class="c3" role="cell" style="font-size:12px;color:#3d4650;padding-top:2px">Taxes · Liquidity · Estate</span>
+<span class="c4" role="cell" style="font-size:12px;padding-top:2px"><a href="statemap.html" style="color:#2c5878;text-decoration:none;white-space:nowrap">State Tax Atlas →</a></span>
+<span class="c5" role="cell" style="display:flex;gap:8px;align-items:center;font-size:12px;color:#1e2833;padding-top:2px"><span aria-hidden="true" style="width:8px;height:8px;background:#2c5878;flex:none"></span>In progress</span>
+</div><div class="ledger ledger-row" role="row" style="display:grid;grid-template-columns:82px minmax(0,1fr) 170px 150px 120px;gap:0 18px;padding:13px 0;border-bottom:1px solid #e9e5db;align-items:start">
+<span class="c1" role="cell" style="font-size:12px;color:#5c6470;font-variant-numeric:tabular-nums;padding-top:2px">Apr 2026</span>
+<span role="cell"><span style="display:block;font-weight:600;font-size:14px;color:#1e2833;line-height:1.4">Moved the life policy into an ILIT.</span><span style="display:block;font-size:12.5px;line-height:1.5;color:#3d4650;margin-top:3px">Remove the death benefit from the taxable estate; let it fund the tax it once inflated.</span></span>
+<span class="c3" role="cell" style="font-size:12px;color:#3d4650;padding-top:2px">Estate</span>
+<span class="c4" role="cell" style="font-size:12px;padding-top:2px"><a href="#changelog" style="color:#2c5878;text-decoration:none;white-space:nowrap">§ Estate →</a></span>
+<span class="c5" role="cell" style="display:flex;gap:8px;align-items:center;font-size:12px;color:#1e2833;padding-top:2px"><span aria-hidden="true" style="width:8px;height:8px;background:#15806a;flex:none"></span>Implemented</span>
+</div><div class="ledger ledger-row" role="row" style="display:grid;grid-template-columns:82px minmax(0,1fr) 170px 150px 120px;gap:0 18px;padding:13px 0;border-bottom:1px solid #e9e5db;align-items:start">
+<span class="c1" role="cell" style="font-size:12px;color:#5c6470;font-variant-numeric:tabular-nums;padding-top:2px">Mar 2026</span>
+<span role="cell"><span style="display:block;font-weight:600;font-size:14px;color:#1e2833;line-height:1.4">Relocated municipal bonds to the taxable account.</span><span style="display:block;font-size:12.5px;line-height:1.5;color:#3d4650;margin-top:3px">Tax-exempt coupons are wasted inside a tax-deferred account; the taxable book is their right home.</span></span>
+<span class="c3" role="cell" style="font-size:12px;color:#3d4650;padding-top:2px">Portfolio · Taxes</span>
+<span class="c4" role="cell" style="font-size:12px;padding-top:2px"><a href="taxlab.html" style="color:#2c5878;text-decoration:none;white-space:nowrap">The evidence →</a></span>
+<span class="c5" role="cell" style="display:flex;gap:8px;align-items:center;font-size:12px;color:#1e2833;padding-top:2px"><span aria-hidden="true" style="width:8px;height:8px;background:#15806a;flex:none"></span>Implemented</span>
+</div><div class="ledger ledger-row" role="row" style="display:grid;grid-template-columns:82px minmax(0,1fr) 170px 150px 120px;gap:0 18px;padding:13px 0;border-bottom:1px solid #e9e5db;align-items:start">
+<span class="c1" role="cell" style="font-size:12px;color:#5c6470;font-variant-numeric:tabular-nums;padding-top:2px">Mar 2026</span>
+<span role="cell"><span style="display:block;font-weight:600;font-size:14px;color:#1e2833;line-height:1.4">Began a three-year exit from the concentrated position.</span><span style="display:block;font-size:12.5px;line-height:1.5;color:#3d4650;margin-top:3px">Reduce single-stock risk on a schedule, at a tax cost agreed in advance.</span></span>
+<span class="c3" role="cell" style="font-size:12px;color:#3d4650;padding-top:2px">Portfolio · Taxes</span>
+<span class="c4" role="cell" style="font-size:12px;padding-top:2px"><a href="concentration.html" style="color:#2c5878;text-decoration:none;white-space:nowrap">Concentrated Position Lab →</a></span>
+<span class="c5" role="cell" style="display:flex;gap:8px;align-items:center;font-size:12px;color:#1e2833;padding-top:2px"><span aria-hidden="true" style="width:8px;height:8px;background:#2c5878;flex:none"></span>In progress</span>
+</div><div class="ledger ledger-row" role="row" style="display:grid;grid-template-columns:82px minmax(0,1fr) 170px 150px 120px;gap:0 18px;padding:13px 0;border-bottom:1px solid #e9e5db;align-items:start">
+<span class="c1" role="cell" style="font-size:12px;color:#5c6470;font-variant-numeric:tabular-nums;padding-top:2px">Feb 2026</span>
+<span role="cell"><span style="display:block;font-weight:600;font-size:14px;color:#1e2833;line-height:1.4">Set the household asset-location map.</span><span style="display:block;font-size:12.5px;line-height:1.5;color:#3d4650;margin-top:3px">Place each asset class in the account where it is taxed least.</span></span>
+<span class="c3" role="cell" style="font-size:12px;color:#3d4650;padding-top:2px">Portfolio · Taxes</span>
+<span class="c4" role="cell" style="font-size:12px;padding-top:2px"><a href="taxlab.html" style="color:#2c5878;text-decoration:none;white-space:nowrap">The evidence →</a></span>
+<span class="c5" role="cell" style="display:flex;gap:8px;align-items:center;font-size:12px;color:#1e2833;padding-top:2px"><span aria-hidden="true" style="width:8px;height:8px;background:#15806a;flex:none"></span>Implemented</span>
+</div><div class="ledger ledger-row" role="row" style="display:grid;grid-template-columns:82px minmax(0,1fr) 170px 150px 120px;gap:0 18px;padding:13px 0;border-bottom:1px solid #e9e5db;align-items:start">
+<span class="c1" role="cell" style="font-size:12px;color:#5c6470;font-variant-numeric:tabular-nums;padding-top:2px">Feb 2026</span>
+<span role="cell"><span style="display:block;font-weight:600;font-size:14px;color:#1e2833;line-height:1.4">Opened the household book.</span><span style="display:block;font-size:12.5px;line-height:1.5;color:#3d4650;margin-top:3px">Inventoried the accounts, the return, and the estate documents, one coordinated starting point.</span></span>
+<span class="c3" role="cell" style="font-size:12px;color:#3d4650;padding-top:2px">Portfolio · Taxes · Estate · Liquidity</span>
+<span class="c4" role="cell" style="font-size:12px;padding-top:2px">None</span>
+<span class="c5" role="cell" style="display:flex;gap:8px;align-items:center;font-size:12px;color:#1e2833;padding-top:2px"><span aria-hidden="true" style="width:8px;height:8px;background:#b8b2a4;flex:none"></span>Baseline</span>
+</div>
+</div></div>
+</section>
+<section class="pad" data-section="§-b" style="padding:34px 44px;border-top:1px solid #d8d3c6">
+<h2 style="display:flex;gap:14px;align-items:baseline;margin:0 0 8px"><span style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;color:#2c5878">§ B</span><span style="font-family:'Erode',Georgia,serif;font-size:24px;color:#1e2833;letter-spacing:-.01em">Open matters</span></h2>
+<p style="font-family:'Erode',Georgia,serif;font-size:15.5px;line-height:1.55;color:#5c6470;margin:0 0 22px;max-width:62ch">The matters currently in motion, what is open, whom it waits on, and who owns the next move. A dependency is closed only when its professional has signed off. These are the working entries of the <a href="opportunity-register.html" style="color:#2c5878;text-decoration:none;border-bottom:1px solid #a9c2d6">Opportunity Register</a>.</p>
+<div aria-label="Open matters" class="record-table-scroll" role="region" style="font-family:'Satoshi','Inter',system-ui,sans-serif" tabindex="0"><div aria-label="Open matters" role="table">
+<div class="reg" role="row" style="display:grid;grid-template-columns:minmax(0,1fr) 300px 110px 170px;gap:0 18px;padding:0 0 8px;border-bottom:1px solid #1e2833;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a"><span role="columnheader">Matter</span><span class="c2" role="columnheader">Dependencies</span><span class="c3" role="columnheader">Owner</span><span role="columnheader">Status</span></div>
+<div class="reg" role="row" style="display:grid;grid-template-columns:minmax(0,1fr) 300px 110px 170px;gap:0 18px;padding:13px 0;border-bottom:1px solid #e9e5db;align-items:start">
+<span role="cell"><span style="display:block;font-weight:600;font-size:14px;color:#1e2833">Sale of the operating business</span><span style="display:block;font-size:11.5px;color:#6b6e6a;margin-top:2px">Opened Jan 2026</span></span>
+<span class="c2" role="cell" style="display:flex;flex-wrap:wrap;gap:6px 14px;padding-top:2px"><div class="deps">
+<span class="dep done"><span class="box"></span>CPA</span>
+<span class="dep done"><span class="box"></span>Attorney</span>
+<span class="dep pending"><span class="box"></span>Insurance</span>
+<span class="dep done"><span class="box"></span>Portfolio</span>
+</div></span>
+<span class="c3" role="cell" style="font-size:12.5px;color:#3d4650;padding-top:2px">Driftwood</span>
+<span role="cell" style="font-size:12.5px;font-weight:600;color:#1e2833;padding-top:2px">Awaiting valuation</span>
+</div><div class="reg" role="row" style="display:grid;grid-template-columns:minmax(0,1fr) 300px 110px 170px;gap:0 18px;padding:13px 0;border-bottom:1px solid #e9e5db;align-items:start">
+<span role="cell"><span style="display:block;font-weight:600;font-size:14px;color:#1e2833">2026 Roth conversion</span><span style="display:block;font-size:11.5px;color:#6b6e6a;margin-top:2px">Opened Feb 2026</span></span>
+<span class="c2" role="cell" style="display:flex;flex-wrap:wrap;gap:6px 14px;padding-top:2px"><div class="deps">
+<span class="dep pending"><span class="box"></span>CPA</span>
+<span class="dep done"><span class="box"></span>Portfolio</span>
+</div></span>
+<span class="c3" role="cell" style="font-size:12.5px;color:#3d4650;padding-top:2px">Driftwood</span>
+<span role="cell" style="font-size:12.5px;font-weight:600;color:#2c5878;padding-top:2px">Modeling bracket</span>
+</div><div class="reg" role="row" style="display:grid;grid-template-columns:minmax(0,1fr) 300px 110px 170px;gap:0 18px;padding:13px 0;border-bottom:1px solid #e9e5db;align-items:start">
+<span role="cell"><span style="display:block;font-weight:600;font-size:14px;color:#1e2833">Second-home purchase</span><span style="display:block;font-size:11.5px;color:#6b6e6a;margin-top:2px">Opened Jun 2026</span></span>
+<span class="c2" role="cell" style="display:flex;flex-wrap:wrap;gap:6px 14px;padding-top:2px"><div class="deps">
+<span class="dep done"><span class="box"></span>Attorney</span>
+<span class="dep pending"><span class="box"></span>Portfolio</span>
+</div></span>
+<span class="c3" role="cell" style="font-size:12.5px;color:#3d4650;padding-top:2px">You</span>
+<span role="cell" style="font-size:12.5px;font-weight:600;color:#1e2833;padding-top:2px">Funding source open</span>
+</div><div class="reg" role="row" style="display:grid;grid-template-columns:minmax(0,1fr) 300px 110px 170px;gap:0 18px;padding:13px 0;border-bottom:1px solid #e9e5db;align-items:start">
+<span role="cell"><span style="display:block;font-weight:600;font-size:14px;color:#1e2833">Year-end gifting</span><span style="display:block;font-size:11.5px;color:#6b6e6a;margin-top:2px">Opened Jun 2026</span></span>
+<span class="c2" role="cell" style="display:flex;flex-wrap:wrap;gap:6px 14px;padding-top:2px"><div class="deps">
+<span class="dep done"><span class="box"></span>CPA</span>
+<span class="dep pending"><span class="box"></span>Attorney</span>
+</div></span>
+<span class="c3" role="cell" style="font-size:12.5px;color:#3d4650;padding-top:2px">Driftwood</span>
+<span role="cell" style="font-size:12.5px;font-weight:600;color:#15806a;padding-top:2px">Scheduled December</span>
+</div>
+</div></div>
+</section>
+<section class="pad" data-section="§-c" id="changelog" style="padding:34px 44px;background:#f7f5f0;border-top:1px solid #d8d3c6">
+<h2 style="display:flex;gap:14px;align-items:baseline;margin:0 0 8px"><span style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;color:#2c5878">§ C</span><span style="font-family:'Erode',Georgia,serif;font-size:24px;color:#1e2833;letter-spacing:-.01em">Household Change Log</span></h2>
+<p style="font-family:'Erode',Georgia,serif;font-size:15.5px;line-height:1.55;color:#5c6470;margin:0 0 22px;max-width:62ch">The revision history of the plan itself, what changed at each version, and by whose hand. The manual is a versioned instrument, not a live dashboard that forgets its own past.</p>
+<div aria-label="Household change log" class="record-table-scroll changelog-table" role="region" style="font-family:'Satoshi','Inter',system-ui,sans-serif;max-width:900px" tabindex="0"><div aria-label="Household change log" role="table">
+<div role="row" style="display:grid;grid-template-columns:70px 90px minmax(0,1fr) 150px;gap:0 18px;padding:0 0 8px;border-bottom:1px solid #1e2833;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a"><span role="columnheader">Rev.</span><span role="columnheader">Date</span><span role="columnheader">Change</span><span role="columnheader">By</span></div>
+<div role="row" style="display:grid;grid-template-columns:70px 90px minmax(0,1fr) 150px;gap:0 18px;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13px;color:#3d4650"><span role="cell" style="font-variant-numeric:tabular-nums;color:#1e2833;font-weight:600">rev. 06</span><span role="cell" style="font-variant-numeric:tabular-nums;color:#5c6470">Jul 2026</span><span role="cell">Roth conversion recorded; estimated tax adjusted.</span><span role="cell" style="color:#5c6470">Driftwood</span></div><div role="row" style="display:grid;grid-template-columns:70px 90px minmax(0,1fr) 150px;gap:0 18px;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13px;color:#3d4650"><span role="cell" style="font-variant-numeric:tabular-nums;color:#1e2833;font-weight:600">rev. 05</span><span role="cell" style="font-variant-numeric:tabular-nums;color:#5c6470">Jun 2026</span><span role="cell">529 established; annual gift logged.</span><span role="cell" style="color:#5c6470">Driftwood</span></div><div role="row" style="display:grid;grid-template-columns:70px 90px minmax(0,1fr) 150px;gap:0 18px;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13px;color:#3d4650"><span role="cell" style="font-variant-numeric:tabular-nums;color:#1e2833;font-weight:600">rev. 04</span><span role="cell" style="font-variant-numeric:tabular-nums;color:#5c6470">May 2026</span><span role="cell">Texas residency sequence opened; estate plan review scheduled.</span><span role="cell" style="color:#5c6470">Driftwood · Attorney</span></div><div role="row" style="display:grid;grid-template-columns:70px 90px minmax(0,1fr) 150px;gap:0 18px;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13px;color:#3d4650"><span role="cell" style="font-variant-numeric:tabular-nums;color:#1e2833;font-weight:600">rev. 03</span><span role="cell" style="font-variant-numeric:tabular-nums;color:#5c6470">Apr 2026</span><span role="cell">Trust amended; life policy assigned to the ILIT.</span><span role="cell" style="color:#5c6470">Attorney</span></div><div role="row" style="display:grid;grid-template-columns:70px 90px minmax(0,1fr) 150px;gap:0 18px;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13px;color:#3d4650"><span role="cell" style="font-variant-numeric:tabular-nums;color:#1e2833;font-weight:600">rev. 02</span><span role="cell" style="font-variant-numeric:tabular-nums;color:#5c6470">Mar 2026</span><span role="cell">Concentration transition begun.</span><span role="cell" style="color:#5c6470">Driftwood</span></div><div role="row" style="display:grid;grid-template-columns:70px 90px minmax(0,1fr) 150px;gap:0 18px;padding:10px 0;border-bottom:1px solid #e9e5db;font-size:13px;color:#3d4650"><span role="cell" style="font-variant-numeric:tabular-nums;color:#1e2833;font-weight:600">rev. 01</span><span role="cell" style="font-variant-numeric:tabular-nums;color:#5c6470">Feb 2026</span><span role="cell">Book opened; beneficiaries updated; municipal bonds relocated to taxable.</span><span role="cell" style="color:#5c6470">Driftwood</span></div>
+</div></div>
+<div class="draws" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:30px;padding-top:20px;border-top:1px solid #d8d3c6;font-family:'Satoshi','Inter',system-ui,sans-serif;font-size:12.5px;line-height:1.55;color:#3d4650">
+<div><p style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin:0 0 8px">Draws on</p><p style="margin:0 0 6px"><a href="constitution.html" style="color:#2c5878;text-decoration:none;border-bottom:1px solid #a9c2d6">The Constitution</a> (amend. 3), the instrument this book operates under.</p><p style="margin:0"><a href="capital-allocation.html" style="color:#2c5878;text-decoration:none;border-bottom:1px solid #a9c2d6">The Capital Allocation Policy</a> (Rev. 2), the bands the ledger deploys against.</p></div>
+<div><p style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin:0 0 8px">Related</p><p style="margin:0 0 6px"><a href="decision-register.html" style="color:#2c5878;text-decoration:none;border-bottom:1px solid #a9c2d6">The Decision Register</a>, the upstream record; each ledger entry above carries its rationale there.</p><p style="margin:0"><a href="opportunity-register.html" style="color:#2c5878;text-decoration:none;border-bottom:1px solid #a9c2d6">The Opportunity Register</a>, the open matters this book tracks as dependencies.</p></div>
+<div><p style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6b6e6a;margin:0 0 8px">Referenced by</p><p style="margin:0"><a href="awor.html" style="color:#2c5878;text-decoration:none;border-bottom:1px solid #a9c2d6">The Annual Review</a>, the year’s reading of this book.</p></div>
+</div>
+</section>
+<section class="pad" data-section="close" style="background:#1a2330;padding:44px 48px 40px">
+<p style="font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#a9c2d6;margin:0 0 16px">The point</p>
+<h2 style="font-family:'Erode',Georgia,serif;font-weight:400;font-size:clamp(26px,2.4vw + 14px,36px);line-height:1.1;letter-spacing:-.018em;color:#f1ede3;margin:0 0 16px;max-width:20ch">A report is read once. A record is kept.</h2>
+<p style="font-family:'Erode',Georgia,serif;font-size:17.5px;line-height:1.55;color:#9aa3ae;margin:0 0 26px;max-width:58ch">Polish is easy to copy; continuity is not. The manual’s advantage is that it <i>remembers</i>, across decades, decisions, and the people who made them. That is the difference between a firm that reports to you and one that keeps your household’s book.</p>
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(233,229,219,.16);padding-top:14px;font-family:'Satoshi','Inter',system-ui,sans-serif;font-weight:500;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#9aa3ae;font-variant-numeric:tabular-nums"><span>§ Operating Manual · rev. 06 · fol. 1</span><span>The Harris household · est. 2026</span></div>
+</section>
+</div>
+<!--FIRM_ANCHOR-->
+<div class="foot">
+<span class="note">Illustrative and educational, not investment, tax, or legal advice.</span>
       The household, decisions, and figures above are hypothetical, drawn to show the form of the record. Driftwood coordinates with your CPA and attorney; it does not provide tax or legal advice. Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS. Driftwood Wealth is not an affiliate or subsidiary of PAS. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
     </div>
-    </div>
-  </div>
+</main>
 </div>
 </body>
 </html>

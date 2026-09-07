@@ -630,7 +630,7 @@
         links.addEventListener("click", function (e) { if (e.target.closest && e.target.closest("a")) setOpen(false); });
         document.addEventListener("keydown", function (e) { if (e.key === "Escape" || e.keyCode === 27) setOpen(false); });
         try {
-          var mq = window.matchMedia("(min-width:1300px)");
+          var mq = window.matchMedia("(min-width:1180px)");
           var onChange = function () { if (mq.matches) setOpen(false); };
           if (mq.addEventListener) mq.addEventListener("change", onChange);
           else if (mq.addListener) mq.addListener(onChange);
@@ -648,7 +648,7 @@
  * shows every link stacked, so this desktop layer stays out of the way (open() is a no-op below 1300px). */
 (function () {
   if (typeof document === "undefined") return;
-  function desktop() { try { return window.matchMedia("(min-width:1300px)").matches; } catch (e) { return true; } }
+  function desktop() { try { return window.matchMedia("(min-width:1180px)").matches; } catch (e) { return true; } }
   function enhance() {
     var drops = [].slice.call(document.querySelectorAll(".dwnav-drop"));
     if (!drops.length) return;
@@ -678,7 +678,7 @@
     function closeOthers(except) { wired.forEach(function (d) { if (d !== except && d._close) d._close(); }); }
     document.addEventListener("click", function (e) { if (!(e.target.closest && e.target.closest(".dwnav-drop"))) closeOthers(null); });
     try {
-      var mq = window.matchMedia("(max-width:1299px)");
+      var mq = window.matchMedia("(max-width:1179px)");
       var onMob = function () { if (mq.matches) closeOthers(null); };
       if (mq.addEventListener) mq.addEventListener("change", onMob); else if (mq.addListener) mq.addListener(onMob);
     } catch (e) {}

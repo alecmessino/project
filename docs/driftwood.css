@@ -850,44 +850,99 @@ details.exhibit-method{ margin-top:14px; border-top:1px solid var(--line2); padd
 .om-sections .d{ color:var(--ghost-line); margin:0 8px; }
 
 
-/* ── Waterline masthead (2026) ───────────────────────────────────────────────────────────────────
-   One flat header for every page, replacing the .dwnav-drop hover panels entirely. A page's granular
-   links belong to that page's in-page index (see .atlas-index on statemap.html), never to the global
-   header. Primary is five words with For Professionals last; Client Access is a ghost outline;
-   Request a Review is the one solid CTA. Mobile carries the same five words wrapped to two lines of
-   tracked caps — no hamburger, no drawer, no JS (see the dwnav--waterline guard in dw-context.js). */
-.dwnav--waterline{ display:flex; align-items:center; gap:clamp(16px,2vw,26px); flex-wrap:wrap;
-  padding:0 clamp(18px,4vw,40px); border-bottom:1px solid var(--ink); }
-.dwnav--waterline .brand{ margin-right:auto; height:60px; }
-.dwnav--waterline .dwnav-links{ display:flex; gap:clamp(16px,2vw,23px); align-items:center; flex-wrap:nowrap; }
+/* ── Waterline masthead (2026-09, the approved shared chrome) ─────────────────────────────────
+   One flat header for every page, replacing the .dwnav-drop hover panels. Six sentence-case words
+   (Our firm · Coordination · The record · Insights · Fees · For professionals), Client Access as a
+   ghost outline, Request a Coordination Review as the one solid action. A page's granular links
+   belong to that page's own body and index, never to the global header.
+
+   Responsive contract: the row never drops a word. Under the one-row breakpoint (1299px, the same
+   ladder the frame uses) .dwnav-links becomes a full-width second row; under 860px the six words set
+   in tracked caps and wrap to two lines; only the solid CTA leaves the header on a phone (every page
+   carries its own closing action). No hamburger, no drawer, no JS (dw-context.js guards on the class). */
+.dwnav--waterline{ display:flex; justify-content:flex-start; align-items:center; gap:clamp(12px,1.6vw,24px); flex-wrap:wrap;
+  padding:0 clamp(18px,2.4vw,30px); border-bottom:1px solid var(--line); background:var(--soft); }
+@media (min-width:1300px){ .dwnav--waterline{ flex-wrap:nowrap; padding:0 30px; } }
+.dwnav--waterline .brand{ margin-right:auto; height:60px; gap:14px; }
+.dwnav--waterline .brand-mark{ height:22px; color:var(--accent-strike); overflow:visible; }
+.dwnav--waterline .brand-rule{ display:block; height:23px; background:var(--line); }
+.dwnav--waterline .brand-word{ font-size:15.5px; letter-spacing:-.01em; }
+/* The legacy .dwnav desktop block (min-width:1300px) adds an order and side margins to the row, the
+   ghost link and the CTA; every one of them is reset here so the row measures ~1150px and fits the
+   1200px band on one line rather than wrapping the CTA under the brand. */
+.dwnav--waterline .dwnav-links{ display:flex; gap:clamp(14px,1.6vw,22px); align-items:center; flex-wrap:nowrap;
+  order:0; margin-left:0; }
+.dwnav--waterline .dwnav-links a{ min-height:0; }
 .dwnav--waterline .dwnav-links a{ text-decoration:none; color:var(--body); font-size:13.5px; font-weight:500;
-  padding:3px 0; border-bottom:1.5px solid transparent; white-space:nowrap;
+  padding:6px 0; border-bottom:2px solid transparent; white-space:nowrap;
   transition:color .18s, border-color .18s; }
 .dwnav--waterline .dwnav-links a:hover{ color:var(--ink); border-bottom-color:var(--accent-strike-soft); }
-.dwnav--waterline .dwnav-links a[aria-current="page"]{ color:var(--ink); border-bottom-color:var(--accent-strike); }
+.dwnav--waterline .dwnav-links a[aria-current]{ color:var(--ink); border-bottom-color:var(--accent-strike); }
 .dwnav--waterline .dwnav-sep{ width:1px; height:22px; background:var(--line); flex:none; }
 .dwnav--waterline .dwnav-access{ text-decoration:none; color:var(--body); font-size:12px; font-weight:600;
-  letter-spacing:.02em; white-space:nowrap; padding:7px 13px; border:1px solid var(--frame-line); border-radius:0;
-  transition:color .18s, border-color .18s; }
-.dwnav--waterline .dwnav-access:hover{ color:var(--ink); border-color:var(--ink); }
+  letter-spacing:.02em; text-transform:none; white-space:nowrap; padding:8px 12px; border:1px solid var(--frame-line);
+  border-radius:0; order:0; margin-left:0; transition:color .18s, border-color .18s; }
+.dwnav--waterline .dwnav-access:hover,.dwnav--waterline .dwnav-access[aria-current]{ color:var(--ink); border-color:var(--ink); }
 .dwnav--waterline .dwnav-access::before{ content:none; }
-.dwnav--waterline .dwnav-cta{ text-decoration:none; background:var(--accent-strike); color:#f4f1ea; font-size:13px;
-  font-weight:700; padding:10px 18px; border-radius:0; white-space:nowrap; transition:filter .18s; }
-.dwnav--waterline .dwnav-cta:hover{ filter:brightness(1.08); }
-
+.dwnav--waterline .dwnav-cta{ order:0; margin-left:4px; text-decoration:none; background:var(--accent-strike); color:#f4f1ea;
+  font-size:13px; font-weight:600; letter-spacing:0; text-transform:none; padding:10px 16px; border-radius:0;
+  white-space:nowrap; transition:filter .18s; }
+.dwnav--waterline .dwnav-cta:hover{ filter:brightness(1.08); color:#f4f1ea; }
+.dwnav--waterline .dwnav-cta .cta-arrow{ margin-left:2px; }
+/* the-practice / the-record hang the nav directly off <body>: give it the framed masthead's box so
+   the wordmark lands on the same x as it does inside a frame. */
+body > .dwnav--waterline{ max-width:calc(1300px - 40px); margin-inline:auto; }
+@media (max-width:1299px){
+  .dwnav--waterline .dwnav-links{ order:3; width:100%; flex-wrap:wrap; gap:4px 20px; padding:0 0 10px; }
+}
 @media (max-width:860px){
   .dwnav--waterline{ padding:0 18px; }
   .dwnav--waterline .brand{ height:54px; }
-  .dwnav--waterline .dwnav-links{ order:3; width:100%; flex-wrap:wrap; gap:4px 18px; padding:0 0 10px; }
+  .dwnav--waterline .dwnav-links{ gap:4px 18px; }
   .dwnav--waterline .dwnav-links a{ font-size:11px; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
     min-height:34px; display:inline-flex; align-items:center; }
   .dwnav--waterline .dwnav-sep{ display:none; }
   .dwnav--waterline .dwnav-access{ order:2; border:0; padding:0; font-size:10px; font-weight:700;
     letter-spacing:.13em; text-transform:uppercase; color:var(--dim); height:54px; display:inline-flex; align-items:center; }
-  .dwnav--waterline .dwnav-cta{ position:fixed; left:0; right:0; bottom:0; z-index:60; text-align:center;
-    padding:15px 0; font-size:13.5px; }
-  body:has(.dwnav--waterline){ padding-bottom:52px; }
+  .dwnav--waterline .dwnav-cta{ font-size:12px; padding:9px 13px; }
 }
+@media (max-width:600px){
+  .dwnav--waterline .dwnav-cta{ display:none; }
+}
+
+/* ── The record strip ────────────────────────────────────────────────────────────────────────────
+   The five documents the Coordination Review produces, as one continuous ruled line (drift.nav.RECORD
+   renders it; pages carry the RECORD_STRIP build token). Full block on the homepage, the Review and
+   Principles; the compact .record-mast sits under the nav on a record page (the Manual). */
+.record-strip{ margin-top:44px; padding-top:22px; border-top:1px solid var(--ink); font-family:var(--sans); }
+.record-strip .rs-k{ font-weight:700; font-size:11px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--accent-strike); margin:0 0 6px; }
+.record-strip .rs-lede{ font-family:var(--serif); font-size:17px; line-height:1.5; color:var(--ink); margin:0 0 18px; max-width:56ch; }
+.record-strip .rs-line{ margin:0; padding:14px 0; border-top:1px solid var(--ink); border-bottom:1px solid var(--line);
+  font-size:13.5px; line-height:1.9; color:var(--ink); display:flex; flex-wrap:wrap; gap:0 10px; align-items:baseline; }
+.record-strip .rs-line a{ color:var(--ink); text-decoration:none; white-space:nowrap; font-weight:600; }
+.record-strip .rs-line a:hover,.record-strip .rs-line a[aria-current]{ color:var(--accent-strike); }
+.record-strip .rs-n{ font-size:10px; font-weight:700; letter-spacing:.14em; color:var(--muted);
+  font-variant-numeric:tabular-nums; margin-right:6px; }
+.record-strip .rs-d{ color:var(--ghost-line); }
+.record-strip .rs-note{ font-size:12.5px; line-height:1.6; color:var(--dim); margin:12px 0 0; max-width:70ch; }
+.record-strip .rs-note a{ color:var(--accent-strike); text-decoration:none; border-bottom:1px solid var(--accent-strike-soft); }
+.record-strip .rs-note a:hover{ border-bottom-color:var(--accent-strike); }
+@media (max-width:899px){ .record-strip .rs-line{ display:block; } .record-strip .rs-line a{ display:block; } .record-strip .rs-d{ display:none; } }
+
+.record-mast{ display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; margin:0; padding:14px 44px;
+  border-bottom:1px solid var(--line); font-family:var(--sans); font-size:12px; }
+.record-mast .rm-k{ font-weight:700; letter-spacing:.14em; text-transform:uppercase; font-size:10px; color:var(--muted); margin-right:8px; }
+.record-mast a{ color:var(--body); text-decoration:none; white-space:nowrap; }
+.record-mast a:hover{ color:var(--ink); }
+.record-mast a[aria-current="page"]{ color:var(--ink); font-weight:700; border-bottom:2px solid var(--accent-strike); }
+.record-mast .rm-d{ color:var(--ghost-line); }
+.record-mast .rm-print{ margin-left:auto; font-family:var(--sans); font-size:12px; font-weight:600; color:var(--ink);
+  background:none; border:1px solid var(--frame-line); border-radius:0; padding:7px 12px; cursor:pointer; white-space:nowrap;
+  transition:border-color .18s; }
+.record-mast .rm-print:hover{ border-color:var(--ink); }
+@media (max-width:640px){ .record-mast{ padding:12px 22px; } .record-mast .rm-print{ margin-left:0; width:100%; } }
+@media print{ .noprint,.record-mast .rm-print{ display:none!important; } }
 
 /* ── Phase 2 dropdown masthead ──────────────────────────────────────────────────────────────
    The persuasion redesign organizes the site into four labelled families (Our Firm, Coordination,

@@ -10,6 +10,7 @@ render template (`web/index.html`).
 from __future__ import annotations
 
 import json
+import re
 import time
 from pathlib import Path
 from typing import Sequence
@@ -155,8 +156,15 @@ def _embed(template: str, state: dict) -> str:
     rather than calling .replace yourself; that is the entire lesson of this function existing.
     """
     from .site import firm_anchor_html
+    from .nav import record_strip_html, record_masthead_html
     html = template.replace("/*__STATE__*/null/*__END__*/", json.dumps(state))
-    return html.replace("<!--FIRM_ANCHOR-->", firm_anchor_html())
+    html = html.replace("<!--FIRM_ANCHOR-->", firm_anchor_html())
+    # The record strip (the five documents of the Coordination Review, one ruled line) and the
+    # compact record masthead, rendered from drift.nav.RECORD — same contract as the anchor, same
+    # reason: one source, every render path.
+    html = re.sub(r"<!--RECORD_STRIP(?::(\d\d))?-->", lambda m: record_strip_html(m.group(1)), html)
+    html = re.sub(r"<!--RECORD_MASTHEAD:(\d\d)-->", lambda m: record_masthead_html(m.group(1)), html)
+    return html
 
 
 def render_html(state: dict) -> str:

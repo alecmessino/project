@@ -38,7 +38,7 @@
     letter-spacing:-.004em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{margin:34px auto;padding-block:0 72px;}
   .frame{background:var(--bg);overflow:hidden;}
-  .inner{margin:0 7px 7px}
+  .inner{margin:0 7px 7px;border-left:1px solid var(--frame-line)}
 
   .msec{padding:34px 48px}
   .msec + .msec,.msec.ruled{border-top:1px solid var(--line)}
@@ -46,40 +46,53 @@
 
   .masthead-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap}
   .eyebrow{font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
-  h1{font-family:var(--sans);font-weight:700;font-size:clamp(32px,3vw+15px,46px);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:16ch}
-  .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:54ch}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(32px,3vw+15px,46px);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:16ch}
+  .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--body);margin:0;max-width:54ch}
   .lede b{color:var(--ink);font-weight:500}
-  .tier-note{font-size:12px;line-height:1.6;color:var(--muted);margin:14px 0 0;max-width:74ch}
+  /* the key: one sentence naming the three sections, immediately above § A */
+  .frontmatter{grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line2);border-color:var(--line2)}
+  @media(max-width:900px){.frontmatter{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:480px){.frontmatter{grid-template-columns:1fr}}
+  .frontmatter .cell{background:var(--bg);padding:12px 14px}
+  .key{font-size:13.5px;line-height:1.6;color:var(--body);margin:18px 0 0;max-width:74ch}
+  .key b{color:var(--ink);font-weight:600}
+  .rec-lede a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
+  .rec-lede a:hover{border-bottom-color:var(--accent-strike)}
 
   .close{background:var(--navy);padding:44px 48px 40px}
   .close .eyebrow{color:var(--accent-strike-soft)}
-  .close h2{font-family:var(--sans);font-weight:700;font-size:clamp(26px,2.6vw+14px,38px);line-height:1.08;letter-spacing:-.022em;color:#f1ede3;margin:0 0 16px;max-width:20ch}
-  .close p{font-family:var(--serif);font-size:17.5px;line-height:1.55;color:var(--on-dark-dim);margin:0 0 26px;max-width:58ch}
+  .close h2{font-family:var(--serif);font-weight:400;font-size:clamp(26px,2.4vw+14px,36px);line-height:1.1;letter-spacing:-.018em;color:#f1ede3;margin:0 0 16px;max-width:20ch}
+  .close p{font-family:var(--serif);font-size:17.5px;line-height:1.55;color:#9aa3ae;margin:0 0 26px;max-width:58ch}
   .close .foliobar{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(233,229,219,.16);padding-top:14px}
-  .close .foliobar span{font-weight:500;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--on-dark-dim);font-variant-numeric:tabular-nums}
+  .close .foliobar span{font-weight:500;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#9aa3ae;font-variant-numeric:tabular-nums}
 
   .foot{padding:20px 48px 34px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;line-height:1.65}
   .foot .note{color:var(--muted);font-weight:500}
   .foot a{color:var(--muted)} .foot b{color:var(--muted)}
 
   @media(max-width:640px){ .msec,.close,.foot{padding-left:22px;padding-right:22px} }
+  @media print{
+    .close{background:#fff;color:var(--ink);border-top:1px solid var(--ink)}
+    .close .eyebrow,.close h2,.close p,.close .foliobar span{color:var(--ink)}
+    .msec,.close{break-inside:avoid}
+    .msec.soft{background:#fff}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-<nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+<nav class="dwnav dwnav--waterline" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-atlas.html">The Coordination Atlas</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="statemap.html">The State Tax Atlas</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
+      <div class="dwnav-links"><a href="principles.html">Our firm</a><a href="coordination.html">Coordination</a><a href="the-record.html" aria-current="true">The record</a><a href="insights.html">Insights</a><a href="fees.html">Fees</a><a href="partners.html">For professionals</a></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
     </nav>  <div class="frame">
     <div class="inner">
     
-    <div class="om-sections">
-      <a class="t" href="record.html">The Driftwood Record</a>
-      <a href="constitution.html">Constitution</a><span class="d">·</span><a href="capital-allocation.html">Capital Allocation</a><span class="d">·</span><a href="manual.html" aria-current="page">The Manual</a><span class="d">·</span><a href="decision-register.html">Decision Register</a><span class="d">·</span><a href="opportunity-register.html">Opportunity Register</a><span class="d">·</span><a href="awor.html">Annual Review</a>
-    </div>
+    <!-- record masthead: the five documents, this one current, and the print action. Constitution
+         and Capital Allocation appear below as "draws on", not as peers (drift.nav.RECORD). -->
+    <div class="record-mast"><span class="rm-k">The record</span><a href="ic-memo.html">01 Coordination Report</a><span class="rm-d" aria-hidden="true">·</span><a href="opportunity-register.html">02 Opportunity Register</a><span class="rm-d" aria-hidden="true">·</span><a href="manual.html" aria-current="page">03 Wealth Operating Manual</a><span class="rm-d" aria-hidden="true">·</span><a href="transition-plan.html">04 90-Day Plan</a><span class="rm-d" aria-hidden="true">·</span><a href="decision-register.html">05 Decision Register</a><button class="rm-print noprint" type="button" onclick="window.print()">Read as one page &#8599;</button></div>
 
     <!-- ── MASTHEAD / FRONT MATTER ── -->
     <div class="msec">
@@ -105,7 +118,7 @@
         <div class="cell"><div class="k">As of</div><div class="v tnum">9 July 2026</div></div>
         <div class="cell"><div class="k">Next standing review</div><div class="v due">September 2026</div></div>
       </div>
-      <p class="tier-note">This is the record tier, held apart on purpose. Ordinary pages inherit its type and its rules; only the standing record is framed as the manual, the device keeps its meaning by staying rare.</p>
+      <p class="key"><b>How to read this book:</b> &sect; A records what was decided and why; &sect; B holds what is still open and whom it waits on; &sect; C is the revision history of the plan itself.</p>
     </div>
 
     <!-- ── § A · HOUSEHOLD DECISION LEDGER ── -->
@@ -179,10 +192,10 @@
       </div>
     </div>
 
-    <!-- ── § B · COORDINATION REGISTER ── -->
+    <!-- ── § B · OPEN MATTERS (the working entries of the Opportunity Register) ── -->
     <div class="msec ruled">
-      <div class="rec-head"><span class="rs">§ B</span><span class="rt">Coordination Register</span></div>
-      <p class="rec-lede" style="margin-bottom:20px">The matters currently in motion, what is open, whom it waits on, and who owns the next move. A dependency is closed only when its professional has signed off.</p>
+      <div class="rec-head"><span class="rs">§ B</span><span class="rt">Open matters</span></div>
+      <p class="rec-lede" style="margin-bottom:20px">The matters currently in motion, what is open, whom it waits on, and who owns the next move. A dependency is closed only when its professional has signed off. These are the working entries of the <a href="opportunity-register.html">Opportunity Register</a>.</p>
       <div class="register-head">
         <div>Matter</div><div>Dependencies</div><div>Owner</div><div>Status</div>
       </div>
@@ -265,9 +278,8 @@
     </div>
 
     <!-- ── COLOPHON + DISCLOSURE ── -->
-    <div class="firm-anchor" role="contentinfo"><span class="firm-anchor-brand">Driftwood Wealth</span><span class="firm-anchor-meta"><span class="fa-i">CHICAGO, ILLINOIS</span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i">AUSTIN, TEXAS</span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i"><a href="mailto:alec@driftwoodwealth.com">ALEC@DRIFTWOODWEALTH.COM</a></span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i">CUSTODY AT BNY PERSHING</span></span></div>
+    <div class="firm-anchor" role="contentinfo"><span class="firm-anchor-brand">Driftwood Wealth</span><span class="firm-anchor-meta"><span class="fa-i">CHICAGO, ILLINOIS</span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i">AUSTIN, TEXAS</span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i"><a href="tel:+17085487600">(708) 548-7600</a></span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i"><a href="mailto:alec@driftwoodwealth.com">ALEC@DRIFTWOODWEALTH.COM</a></span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i">CUSTODY AT BNY PERSHING</span></span></div>
     <div class="foot">
-      <div class="colophon" style="margin-bottom:8px">Set in Satoshi &amp; Erode · a concept for a living operating record · illustrative household, not a real client</div>
       <span class="note">Illustrative and educational, not investment, tax, or legal advice.</span>
       The household, decisions, and figures above are hypothetical, drawn to show the form of the record. Driftwood coordinates with your CPA and attorney; it does not provide tax or legal advice. Driftwood Wealth is the private-wealth practice of Alec Messino. Securities products and advisory services offered through Park Avenue Securities LLC (PAS), member FINRA, SIPC. Alec Messino is a Registered Representative and Financial Advisor of PAS. Driftwood Wealth is not an affiliate or subsidiary of PAS. All figures are illustrative models for educational purposes, not investment, tax, or legal advice, and not a recommendation. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a>.
     </div>

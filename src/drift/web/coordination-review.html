@@ -42,426 +42,294 @@
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{margin:36px auto;padding-block:0 60px;}
   .frame{background:var(--bg);border-radius:var(--surface-radius);overflow:hidden;}
-  .inner{margin:0 7px 7px}
+  .inner{margin:0 7px 7px;border-left:1px solid var(--frame-line)}
 
-  .doc{padding:50px 44px 6px}
-  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin-bottom:16px}
-  h1{font-family:var(--sans);font-weight:700;font-size:clamp(34px,3.2vw+16px,48px);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:18ch}
-  .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--dim);margin:0;max-width:62ch}
+  /* ── Review · Head. One headline, the lede, then the terms of the engagement as four ruled cells
+     directly under it, each a summary of a section below. No second headline. ── */
+  .doc{padding:56px 44px 0}
+  .eyebrow{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 16px}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(34px,3.6vw + 14px,52px);line-height:1.06;letter-spacing:-.022em;color:var(--ink);margin:0 0 18px;max-width:20ch}
+  .lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--body);margin:0;max-width:62ch}
   .lede b{color:var(--ink);font-weight:500}
-
-  /* The introduction, in the first screenful. The one action this page exists to produce lived at
-     the very bottom, behind an argument for a substantial engagement — a reader who arrived already
-     convinced (from the masthead CTA on fifty pages, or from a partner's email) had to scroll the
-     whole case to find a link. The ask is fifteen minutes and needs nothing, so it does not have to
-     be earned first. Same button as the close, same attribution scheme, different utm_content so
-     the two placements stay countable apart.
-
-     The button carries no caption. It had one, and the caption said "nothing to prepare, and no
-     documents" a hundred pixels above the row of "before you read further" that already says it,
-     which was the page's third instance of that sentence. The block below is the caption. */
-  .leadact{padding:26px 44px 0}
-  .leadact a.book{display:inline-block;text-decoration:none;font-family:var(--sans);font-size:14.5px;
-    font-weight:700;padding:13px 26px;border-radius:var(--surface-radius);
-    background:var(--accent-strike);color:#f1ede3}
+  .terms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:34px 0 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--line);font-family:var(--sans)}
+  .terms > div{padding:16px 18px 18px;border-right:1px solid var(--line2)}
+  .terms > div:first-child{padding-left:0}
+  .terms > div:last-child{padding-right:0;border-right:none}
+  .terms dt{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .terms dd{margin:0;font-size:20px;font-weight:500;color:var(--ink);letter-spacing:-.01em;line-height:1.15}
+  .terms dd + dd{margin:5px 0 0;font-size:12.5px;font-weight:400;line-height:1.5;color:var(--dim);letter-spacing:0}
+  .leadact{display:flex;gap:12px 22px;flex-wrap:wrap;align-items:center;margin-top:24px}
+  .leadact a.book{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:600;white-space:nowrap;
+    background:var(--accent-strike);color:#fff;padding:14px 26px;border-radius:0}
   .leadact a.book:hover{filter:brightness(1.08)}
+  .leadact .qnote{font-family:var(--sans);font-size:12.5px;color:var(--dim)}
 
-  .thesis{padding:30px 44px 6px}
-  .thesis p{font-family:var(--serif);font-size:22px;line-height:1.4;color:var(--ink);margin:0;max-width:40ch}
-  .thesis b{color:var(--accent-strike);font-weight:500}
+  .sec{padding:44px 44px 0}
+  .k{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 14px}
+  .k--quiet{font-size:10.5px;letter-spacing:.16em;color:var(--muted);margin-bottom:12px}
 
-  .sec{padding:36px 44px 6px}
-  .k{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-strike);margin:0 0 18px}
-
-  /* what the review examines: the systems, read together */
-  .exam{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink);border-left:1px solid var(--line2)}
-  .ex{padding:18px 20px;border-bottom:1px solid var(--line2);border-right:1px solid var(--line2)}
-  .ex .exn{font-family:var(--sans);font-weight:700;font-size:13.5px;letter-spacing:-.005em;color:var(--ink);margin-bottom:6px}
-  .ex .exq{font-family:var(--serif);font-style:italic;font-size:14.5px;line-height:1.45;color:var(--body)}
-  @media(max-width:720px){.exam{grid-template-columns:1fr}}
-
-  /* what you receive: sell the deliverable */
-  .recv{padding:38px 44px 6px}
-  .recv-lead{font-family:var(--sans);font-size:15px;line-height:1.6;color:var(--body);margin:0 0 24px;max-width:60ch}
+  /* ── What you receive: five artifacts, each with its own specimen thumbnail. The thumbnails are
+     drawn from the palette (rules, a folio number, section marks) so the documents read as things
+     that exist on paper rather than as software icons. ── */
+  .recv-lead{font-family:var(--sans);font-size:15px;line-height:1.6;color:var(--body);margin:0 0 22px;max-width:60ch}
   .recv-lead b{color:var(--ink);font-weight:600}
-  .deliv{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--ink)}
-  @media(max-width:720px){
-    .deliv{grid-template-columns:1fr}
-    .deliv .dv{border-right:none}
-    .deliv .dv:last-child{border-bottom:none}
-  }
-  .dv{padding:24px 24px 22px;border-right:1px solid var(--line2);text-decoration:none;color:inherit;display:block;position:relative}
-  /* Five artifacts in a two-column grid leaves the fifth alone in a half-width cell, which reads
-     as an omission rather than a set. It spans the full width instead and closes the block. The
-     row rules and the nth-child reset are the corollary: with four cards the grid had no
-     horizontal dividers at all and the right-hand column drew a border into the container's own,
-     which was invisible at 2×2 and would not have been at 2×2+1. */
-  .deliv .dv{border-bottom:1px solid var(--line2)}
-  .deliv .dv:nth-child(2n){border-right:none}
-  .deliv .dv--span{grid-column:1/-1;border-right:none;border-bottom:none}
+  .deliv{display:grid;grid-template-columns:1fr;border-top:1px solid var(--ink)}
+  .dv{display:grid;grid-template-columns:96px minmax(0,1fr);gap:22px;padding:22px 0;border-bottom:1px solid var(--line2);text-decoration:none;color:inherit}
+  .dv:last-child{border-bottom:1px solid var(--ink)}
   .dv:hover{background:var(--soft)}
-  .dv--soon:hover{background:none}
-  .dv--soon .dgo{color:var(--muted);font-weight:500}
-  .dv .dn{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
-  .dv .dt{font-family:var(--sans);font-weight:700;font-size:19px;letter-spacing:-.015em;color:var(--ink);margin-bottom:9px}
-  .dv .dd{font-family:var(--sans);font-size:13.5px;line-height:1.56;color:var(--body);margin-bottom:14px}
-  .dv .dgo{font-family:var(--sans);font-weight:600;font-size:12.5px;color:var(--accent-strike)}
-  .recv-more{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--muted);margin:16px 0 0;max-width:64ch}
+  .dv .dn{display:block;font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .dv .dt{display:block;font-family:var(--serif);font-size:23px;line-height:1.2;color:var(--ink);margin-bottom:8px}
+  .dv .dd{display:block;font-family:var(--sans);font-size:13.5px;line-height:1.56;color:var(--body);max-width:64ch}
+  .dv .dgo{display:inline-block;margin-top:10px;font-family:var(--sans);font-weight:600;font-size:12.5px;color:var(--accent-strike);white-space:nowrap}
+  .spec{display:block;width:96px;height:124px;background:#fff;border:1px solid var(--line);padding:12px 10px}
+  .spec > span{display:block}
+  .spec .h{height:3px;width:60%;background:var(--accent-strike);margin-bottom:8px}
+  .spec .r{height:2px;width:100%;background:var(--line);margin-bottom:4px}
+  .spec .r.hd{height:6px;background:var(--ink);margin-bottom:4px}
+  .spec .r.w70{width:70%} .spec .r.w85{width:85%} .spec .r.w90{width:90%} .spec .r.w80{width:80%} .spec .r.w60{width:60%}
+  .spec .r.ink{background:var(--ink)} .spec .r.blue{background:var(--accent-strike)}
+  .spec .r.mb8{margin-bottom:8px} .spec .r.mb10{margin-bottom:10px} .spec .r.mb3{margin-bottom:3px}
+  .spec .r.last{margin-bottom:0}
+  .spec .sec-mark{font-family:var(--serif);font-size:9px;color:var(--ink);line-height:1.1;margin-bottom:8px}
+  .spec .grid3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3px 4px}
+  .spec .grid3 > span{height:2px;background:var(--line)}
+  .spec .grid3 > span.ink{background:var(--ink)} .spec .grid3 > span.blue{background:var(--accent-strike)}
+  .spec .plan{display:grid;grid-template-columns:14px 1fr;gap:5px 6px;align-items:center}
+  .spec .plan .n{font-family:var(--sans);font-size:7px;font-weight:700;color:var(--muted)}
+  .spec .plan .b{height:2px;background:var(--line)} .spec .plan .b.ink{background:var(--ink)}
+  .spec .date{font-family:var(--sans);font-size:7px;font-weight:700;color:var(--muted);margin-bottom:3px}
+  .recv-more{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--dim);margin:16px 0 0;max-width:64ch}
   .recv-more a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
   .recv-more a:hover{border-bottom-color:var(--accent-strike)}
-  .recv-more b{color:var(--dim);font-weight:600}
+  .recv-more b{color:var(--body);font-weight:600}
+
+  /* what the review examines */
+  .exam{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--ink);border-left:1px solid var(--line2)}
+  .ex{padding:18px 20px;border-bottom:1px solid var(--line2);border-right:1px solid var(--line2)}
+  .ex .exn{font-family:var(--sans);font-weight:700;font-size:13.5px;color:var(--ink);margin:0 0 6px}
+  .ex .exq{font-family:var(--serif);font-style:italic;font-size:14.5px;line-height:1.45;color:var(--body);margin:0}
 
   /* how it proceeds */
-  .steps{display:grid;grid-template-columns:1fr;gap:0;max-width:820px}
-  .step{display:grid;grid-template-columns:56px 1fr;gap:18px;padding:18px 0;border-top:1px solid var(--line2)}
-  .step:first-child{border-top:none}
+  .steps{max-width:820px}
+  .step{display:grid;grid-template-columns:56px minmax(0,1fr);gap:18px;padding:18px 0;border-top:1px solid var(--line2)}
+  .step:first-child{border-top:1px solid var(--ink)}
+  .step:last-child{border-bottom:1px solid var(--line2)}
   .step .sn{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.1em;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
-  .step .sh2{font-family:var(--sans);font-weight:700;font-size:15px;color:var(--ink);margin-bottom:4px}
-  .step .sd{font-family:var(--sans);font-size:13.5px;line-height:1.56;color:var(--body);max-width:60ch}
+  .step .sh2{font-family:var(--sans);font-weight:700;font-size:15px;color:var(--ink);margin:0 0 4px}
+  .step .sh2 .stime{font-weight:500;font-size:12px;letter-spacing:.02em;color:var(--muted);white-space:nowrap;margin-left:10px}
+  .step .sd{font-family:var(--sans);font-size:13.5px;line-height:1.56;color:var(--body);margin:0;max-width:60ch}
 
-  /* qualification: the page already promises "if it isn't warranted we will say so". Stating the
-     criteria is what makes that promise checkable rather than a courtesy. */
-  .qual{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--ink)}
+  /* what changes after: a ruled register, the same instrument as the terms */
+  .shape dl{margin:0;border-top:1px solid var(--ink);max-width:820px}
+  .shape dl > div{display:grid;grid-template-columns:minmax(150px,170px) minmax(0,1fr);gap:0 24px;padding:11px 0;border-bottom:1px solid var(--line2)}
+  .shape dt{font-family:var(--sans);font-weight:700;font-size:12.5px;color:var(--ink)}
+  .shape dd{margin:0;font-family:var(--sans);font-size:13.5px;line-height:1.55;color:var(--body);max-width:62ch}
+
+  /* qualification */
+  .qual{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--ink)}
   .qc{padding:20px 24px 22px;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2)}
+  .qc:first-child{padding-left:0}
   .qc:last-child{border-right:none}
   .qc--not{background:var(--soft)}
-  .qc .qk{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .qc .qk{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
   .qc ul{list-style:none;margin:0;padding:0}
   .qc li{font-family:var(--sans);font-size:13.5px;line-height:1.5;color:var(--body);padding:11px 0;border-top:1px solid var(--ghost-line)}
   .qc li:first-child{border-top:none;padding-top:0}
-  .qual-note{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--muted);margin:16px 0 0;max-width:64ch}
-  @media(max-width:720px){.qual{grid-template-columns:1fr}.qc{border-right:none}}
+  .qc li:last-child{padding-bottom:0}
+  .qual-note{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--dim);margin:16px 0 0;max-width:64ch}
+  .qual-note b{color:var(--ink);font-weight:600}
+  .qual-note a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
+  .qual-note a:hover{border-bottom-color:var(--accent-strike)}
 
-  /* what we ask for: the objection a reader actually has at this point in the page */
-  .ask{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--ink);border-left:1px solid var(--line2)}
+  /* what we ask for */
+  .ask{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--ink);border-left:1px solid var(--line2)}
   .ak{padding:18px 20px;border-bottom:1px solid var(--line2);border-right:1px solid var(--line2)}
-  .ak .akh{font-family:var(--sans);font-weight:700;font-size:13.5px;color:var(--ink);margin-bottom:6px}
-  .ak .akd{font-family:var(--sans);font-size:13px;line-height:1.5;color:var(--body)}
-  @media(max-width:900px){.ask{grid-template-columns:1fr 1fr}}
-  @media(max-width:560px){.ask{grid-template-columns:1fr}}
-
-  /* duration: three plain facts, no ornament */
-
-  /* The duration now rides on its own step rather than in a second table further down. */
-  .step .sh2 .stime{font-weight:500;font-size:12px;letter-spacing:.02em;color:var(--muted);
-    white-space:nowrap;margin-left:10px}
-  /* The shape of the commitment. A ruled register, not a feature box: no card, no shadow, no icons. */
-  .shape{padding:30px 44px 34px}
-  .shape .sk{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-  .shape dl{margin:0;border-top:1px solid var(--ink);max-width:820px}
-  .shape dl > div{display:grid;grid-template-columns:170px 1fr;gap:0 24px;
-    padding:11px 0;border-bottom:1px solid var(--line2)}
-  .shape dt{font-family:var(--sans);font-weight:700;font-size:12.5px;color:var(--ink)}
-  .shape dd{margin:0;font-family:var(--sans);font-size:13.5px;line-height:1.55;color:var(--body);max-width:62ch}
-  /* "What changes after the review" reuses this block wholesale — deliberately the same
-     instrument, because it makes the same kind of promise (a plain fact per row, no card, no
-     icon), and because the answer to the question is literally that a register like this one stays
-     open. It needs no modifier: .shape's own 30px top padding after a .sec's 6px bottom reproduces
-     exactly the gap the first instance has under .thesis. */
-  .shape dd a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
-  .shape dd a:hover{border-bottom-color:var(--accent-strike)}
-  @media(max-width:720px){
-    .shape{padding-left:22px;padding-right:22px}
-    .shape dl > div{grid-template-columns:1fr;gap:2px}
-  }
-  .feenote{padding:26px 44px 6px}
-  .feenote p{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--muted);margin:0;max-width:64ch}
-  .feenote b{color:var(--ink);font-weight:600}
-  .feenote a{color:var(--accent-strike);text-decoration:none;border-bottom:1px solid var(--accent-strike-soft)}
-  .feenote a:hover{border-bottom-color:var(--accent-strike)}
+  .ak .akh{font-family:var(--sans);font-weight:700;font-size:13.5px;color:var(--ink);margin:0 0 6px}
+  .ak .akd{font-family:var(--sans);font-size:13px;line-height:1.5;color:var(--body);margin:0}
 
   /* the one door */
-  .door{margin:22px 44px 8px;padding:34px 36px;background:var(--navy);color:var(--on-dark);border-radius:var(--surface-radius)}
-  .door .dh{font-family:var(--sans);font-weight:700;font-size:26px;letter-spacing:-.02em;color:#f1ede3;margin:0 0 10px}
+  .door{margin:44px 44px 0;padding:34px 36px;background:var(--navy);color:var(--on-dark)}
+  .door .dh{font-family:var(--serif);font-size:clamp(24px,1.6vw + 14px,30px);line-height:1.25;color:#f1ede3;margin:0 0 10px}
   .door .ds{font-family:var(--sans);font-size:14px;line-height:1.55;color:var(--accent-strike-soft);margin:0 0 22px;max-width:56ch}
-  .door a.book{display:inline-block;text-decoration:none;font-family:var(--sans);font-size:15px;font-weight:700;
-    padding:15px 30px;border-radius:var(--surface-radius);background:var(--accent-strike);color:#f1ede3}
-  .door a.book:hover{filter:brightness(1.08)}
-  /* A second route in. A reader who will not put their name on a stranger's calendar as a first
-     move currently has no way to make contact at all, so the page loses them silently. */
-  .door .alt{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--accent-strike-soft);margin-top:14px}
+  .door .row{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center}
+  .door a.book{display:inline-block;text-decoration:none;font-family:var(--sans);font-size:15px;font-weight:700;padding:15px 30px;background:#f1ede3;color:var(--navy)}
+  .door a.book:hover{filter:brightness(1.06)}
+  .door .alt{font-family:var(--sans);font-size:13.5px;line-height:1.6;color:var(--accent-strike-soft)}
   .door .alt a{color:#f1ede3;text-decoration:none;border-bottom:1px solid rgba(241,237,227,.4)}
   .door .alt a:hover{border-bottom-color:#f1ede3}
-  @media(min-width:721px){.door .alt{display:inline-block;margin-left:20px;margin-top:0}}
   .door .founder{display:flex;align-items:center;gap:14px;margin-top:26px;padding-top:22px;border-top:1px solid rgba(169,194,214,.24)}
-  .door .fimg{width:52px;height:52px;border-radius:0;object-fit:cover;flex-shrink:0;filter:grayscale(1) contrast(1.02)}
-  .door .fmeta{font-family:var(--sans)}
-  .door .fnm{font-weight:700;font-size:14px;color:#f1ede3}
-  .door .fsay{font-size:12.5px;line-height:1.5;color:var(--accent-strike-soft);margin-top:3px;max-width:52ch}
+  .door .fimg{width:52px;height:52px;object-fit:cover;flex:none;filter:grayscale(1) contrast(1.02)}
+  .door .fnm{font-family:var(--sans);font-weight:700;font-size:14px;color:#f1ede3;margin:0}
+  .door .fsay{font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--accent-strike-soft);margin:3px 0 0;max-width:52ch}
   .door .founder.no-photo .fimg{display:none}
 
-  @media(max-width:620px){
-    .doc,.thesis,.sec,.recv,.feenote,.leadact{padding-left:22px;padding-right:22px}
+  .foot{margin-top:26px;padding:18px 44px 34px;border-top:1px solid var(--line);color:var(--dim);font-size:12px;line-height:1.62}
+  .foot .note{color:var(--body);font-weight:500}
+  .foot a{color:var(--dim);text-decoration:underline;text-underline-offset:2px}
+
+  @media(max-width:900px){
+    .terms{grid-template-columns:1fr 1fr}
+    .terms > div:nth-child(2){padding-right:0;border-right:none}
+    .terms > div:nth-child(3){padding-left:0}
+    .exam{grid-template-columns:1fr 1fr}
+    .qual{grid-template-columns:1fr}
+    .qc{padding-left:0;padding-right:0;border-right:none}
+    .qc--not{padding-left:24px;padding-right:24px}
+    .ask{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:560px){
+    .doc,.sec,.foot{padding-left:22px;padding-right:22px}
     .door{margin-left:22px;margin-right:22px;padding:26px 22px}
-    .step{grid-template-columns:44px 1fr;gap:12px}
+    .terms{grid-template-columns:1fr}
+    .terms > div{padding-left:0;padding-right:0;border-right:none;border-bottom:1px solid var(--line2)}
+    .terms > div:last-child{border-bottom:none}
+    .exam,.ask{grid-template-columns:1fr}
+    .dv{grid-template-columns:1fr}
+    .spec{display:none}
+    .step{grid-template-columns:44px minmax(0,1fr);gap:12px}
+    .shape dl > div{grid-template-columns:1fr;gap:2px}
   }
   @media print{.door{background:#fff;color:var(--ink);border:1px solid var(--ink)}.dv:hover{background:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+<nav class="dwnav dwnav--waterline" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop dwnav-drop--current"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-atlas.html">The Coordination Atlas</a><a href="coordination-review.html" aria-current="page">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="statemap.html">The State Tax Atlas</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
+      <div class="dwnav-links"><a href="principles.html">Our firm</a><a href="coordination.html" aria-current="true">Coordination</a><a href="the-record.html">The record</a><a href="insights.html">Insights</a><a href="fees.html">Fees</a><a href="partners.html">For professionals</a></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
     </nav>  <div class="frame">
     <div class="inner">
 
-    <div class="doc">
-      <div class="eyebrow">The flagship engagement</div>
+    <header class="doc">
+      <p class="eyebrow">The flagship engagement</p>
       <h1>One review. Every system, read together.</h1>
       <p class="lede">Not a meeting, and not a plan you file away. An engagement: your investments, taxes, estate,
         liquidity, and risk <b>read as one system</b>, the findings written down, and an owner put against every
         gap. You leave with the documents, yours to keep.</p>
-    </div>
 
-    <!-- Tagged for attribution: a booking completes on calendly.com, where this site's analytics
-         cannot see it. utm_content distinguishes this placement from the close at the foot of the
-         page, so the export can say whether readers book before the argument or after it. Scheme
-         and the generator-side equivalent live in src/drift/site.py booking_link(). -->
-    <div class="leadact">
-      <a class="book" href="https://calendly.com/alec-messino/introductory-call-driftwood-wealth?utm_source=driftwoodwealth&amp;utm_medium=website&amp;utm_campaign=coordination_review&amp;utm_content=coordination-review-lede" target="_blank" rel="noopener">Schedule the 15-minute introduction &rarr;</a>
-    </div>
-
-    <div class="thesis">
-      <p>Most financial mistakes are not investment mistakes or tax mistakes. They are <b>coordination
-        mistakes.</b></p>
-    </div>
-
-    <!-- The page argues for a substantial engagement, but the ask is a fifteen-minute call that needs
-         nothing. Every practical answer a reader wants before booking was on the page already, in
-         sections six and seven and a trailing paragraph, behind seven named documents. This states the
-         shape of the commitment before any of it, and each line is a summary of a section below rather
-         than a new claim. -->
-    <div class="shape">
-      <div class="sk">Before you read further</div>
-      <dl>
-        <div><dt>To begin</dt><dd>Fifteen minutes, by phone. Nothing to prepare and no documents.</dd></div>
-        <div><dt>If it proceeds</dt><dd>Two to three weeks, then one sitting to walk the report through.</dd></div>
-        <div><dt>What we ask for</dt><dd>Statements, estate and entity documents, and last year's return. The whole list is below.</dd></div>
-        <div><dt>What it costs</dt><dd>A defined engagement fee, agreed in writing before any work begins.</dd></div>
+      <!-- the terms, first screen: four ruled cells, each a summary of a section below -->
+      <dl class="terms">
+        <div><dt>To begin</dt><dd>Fifteen minutes</dd><dd>By phone. Nothing to prepare.</dd></div>
+        <div><dt>If it proceeds</dt><dd>Two to three weeks</dd><dd>Then one sitting to walk the report through.</dd></div>
+        <div><dt>What you receive</dt><dd>Five documents</dd><dd>Yours to keep and to share with your CPA and counsel.</dd></div>
+        <div><dt>What it costs</dt><dd>A defined fee</dd><dd>Agreed in writing before any work begins.</dd></div>
       </dl>
-    </div>
+      <!-- Tagged for attribution: a booking completes on calendly.com, where this site's analytics
+           cannot see it. utm_content distinguishes this placement from the close at the foot of the
+           page. Scheme and the generator-side equivalent live in src/drift/site.py booking_link(). -->
+      <div class="leadact">
+        <a class="book" href="https://calendly.com/alec-messino/introductory-call-driftwood-wealth?utm_source=driftwoodwealth&amp;utm_medium=website&amp;utm_campaign=coordination_review&amp;utm_content=coordination-review-lede" target="_blank" rel="noopener">Request a Coordination Review &rarr;</a>
+        <span class="qnote">A 15-minute introduction. If a review isn&rsquo;t warranted, we will say so on the call.</span>
+      </div>
+    </header>
 
-    <!-- Moved above "what the review examines" on 2026-08-09. The order was argument, then
-         evidence, then output: a reader had to work through six diagnostic questions and a
-         three-stage timeline before seeing a single thing the engagement actually hands them.
-         The tangible output now comes first — this is what you get — and the examination that
-         produces it follows as the explanation. Nothing in the section changed but its position
-         and the fifth card. -->
-    <div class="recv">
-      <div class="k">What you receive</div>
+    <section class="sec">
+      <p class="k">What you receive</p>
       <p class="recv-lead">The review produces <b>documents, not impressions.</b> Each is yours to keep and to
         share with your CPA and estate attorney. Magnitudes appear where they belong: after the judgment, as
         evidence for it. Five artifacts leave the room with you:</p>
       <div class="deliv">
         <a class="dv" href="ic-memo.html">
-          <div class="dn">01 · The findings</div>
-          <div class="dt">The Coordination Report</div>
-          <div class="dd">The written findings: what we observed in each system, the consequence of each, and who
-            owns its resolution. The tax line is computed privately, on your holdings, and enters as evidence
-            beneath the finding, never as the headline.</div>
-          <div class="dgo">Read a specimen memorandum &rarr;</div>
+          <span class="spec spec--report" aria-hidden="true"><span class="h"></span><span class="r hd w90"></span><span class="r hd w70 mb10"></span><span class="r"></span><span class="r"></span><span class="r w85"></span><span class="r"></span><span class="r w60 last"></span></span>
+          <span><span class="dn">01 &middot; The findings</span><span class="dt">The Coordination Report</span><span class="dd">The written findings: what we observed in each system, the consequence of each, and who owns its resolution. The tax line is computed privately, on your holdings, and enters as evidence beneath the finding, never as the headline.</span><span class="dgo">Read a specimen memorandum &rarr;</span></span>
         </a>
         <a class="dv" href="opportunity-register.html">
-          <div class="dn">02 · The standing record</div>
-          <div class="dt">The Opportunity Register</div>
-          <div class="dd">Every open matter the review surfaces, entered in one standing register with a status,
-            an owner, and its dependency, so coordination continues after the meeting ends. Not tasks. Not
-            reminders. The register is the product of the relationship.</div>
-          <div class="dgo">View a specimen register &rarr;</div>
+          <span class="spec spec--register" aria-hidden="true"><span class="h"></span><span class="grid3"><span class="ink"></span><span class="ink"></span><span class="ink"></span><span></span><span></span><span class="blue"></span><span></span><span></span><span></span><span></span><span></span><span class="blue"></span><span></span><span></span><span></span><span></span><span></span><span></span></span></span>
+          <span><span class="dn">02 &middot; The standing record</span><span class="dt">The Opportunity Register</span><span class="dd">Every open matter the review surfaces, entered in one standing register with a status, an owner, and its dependency, so coordination continues after the meeting ends. Not tasks. Not reminders. The register is the product of the relationship.</span><span class="dgo">View a specimen register &rarr;</span></span>
         </a>
         <a class="dv" href="manual.html">
-          <div class="dn">03 · The system of record</div>
-          <div class="dt">The Wealth Operating Manual</div>
-          <div class="dd">The written operating system for your household: every decision, its rationale, and the
-            conditions that would reopen it — so ten years from now it still makes sense, even to a different
-            advisor.</div>
-          <div class="dgo">See the Manual &rarr;</div>
+          <span class="spec spec--manual" aria-hidden="true"><span class="h"></span><span class="sec-mark">&sect; A</span><span class="r"></span><span class="r mb8"></span><span class="sec-mark">&sect; B</span><span class="r"></span><span class="r w80 mb8"></span><span class="sec-mark" style="margin-bottom:0">&sect; C</span></span>
+          <span><span class="dn">03 &middot; The system of record</span><span class="dt">The Wealth Operating Manual</span><span class="dd">The written operating system for your household: every decision, its rationale, and the conditions that would reopen it &mdash; so ten years from now it still makes sense, even to a different advisor.</span><span class="dgo">See the Manual &rarr;</span></span>
         </a>
-        <!-- Linked again. The destination was never missing: transition-plan.html is "The first ninety
-             days, written down", a written sample that had no inbound link from anywhere on the site.
-             The stub this card used to point at (first-90-days.html) now redirects here. -->
+        <!-- transition-plan.html is "The first ninety days, written down", the written sample. -->
         <a class="dv" href="transition-plan.html">
-          <div class="dn">04 · The opening plan</div>
-          <div class="dt">Your 90-Day Plan</div>
-          <div class="dd">The first owned decisions, sequenced: which matters move first, who executes them, and
-            the date each closes. The review's conclusions become a schedule, not a stack of recommendations.</div>
-          <div class="dgo">See a specimen transition plan &rarr;</div>
+          <span class="spec spec--plan" aria-hidden="true"><span class="h"></span><span class="plan"><span class="n">01</span><span class="b ink"></span><span class="n">02</span><span class="b ink" style="width:80%"></span><span class="n">03</span><span class="b"></span><span class="n">04</span><span class="b" style="width:70%"></span><span class="n">05</span><span class="b"></span><span class="n">06</span><span class="b" style="width:60%"></span></span></span>
+          <span><span class="dn">04 &middot; The opening plan</span><span class="dt">Your 90-Day Plan</span><span class="dd">The first owned decisions, sequenced: which matters move first, who executes them, and the date each closes. The review&rsquo;s conclusions become a schedule, not a stack of recommendations.</span><span class="dgo">See a specimen transition plan &rarr;</span></span>
         </a>
-        <!-- The fifth. The page has said "five artifacts" since it was written and then showed four,
-             naming the missing one only in a trailing paragraph — as "the Decision Log", which is
-             what decision-register.html has been publishing as The Decision Register all along. It
-             is a card like the others now, under the site's own name for it, so the count on the
-             page and the specimen behind it finally agree. -->
-        <a class="dv dv--span" href="decision-register.html">
-          <div class="dn">05 · The reasoning of record</div>
-          <div class="dt">The Decision Register</div>
-          <div class="dd">The decision log of the relationship: every judgment recorded as it is made, with the
-            reasoning behind it and the conditions that would reopen it. It is what lets a decision be revisited
-            years later on the facts that produced it, rather than re-argued from memory.</div>
-          <div class="dgo">Read a specimen decision register &rarr;</div>
+        <a class="dv" href="decision-register.html">
+          <span class="spec spec--decisions" aria-hidden="true"><span class="h"></span><span class="date">2026-03</span><span class="r ink mb3"></span><span class="r w90 mb8"></span><span class="date">2026-05</span><span class="r ink mb3"></span><span class="r w70 mb8"></span><span class="date">2026-08</span><span class="r ink last"></span></span>
+          <span><span class="dn">05 &middot; The reasoning of record</span><span class="dt">The Decision Register</span><span class="dd">The decision log of the relationship: every judgment recorded as it is made, with the reasoning behind it and the conditions that would reopen it. It is what lets a decision be revisited years later on the facts that produced it, rather than re-argued from memory.</span><span class="dgo">Read a specimen decision register &rarr;</span></span>
         </a>
       </div>
-      <p class="recv-more">Beneath the five, the <b>Coordination Register</b> keeps each open matter against an
-        owner until it closes — the working face of the Opportunity Register, and the reason coordination does
-        not stop when the report is delivered. Households that proceed to a standing engagement keep all five,
-        maintained year over year through the <a href="awor.html">Annual Wealth Operating Review</a>.
-        <b>The Report diagnoses; the Register sustains.</b></p>
-    </div>
+      <p class="recv-more">Households that proceed to a standing engagement keep all five, maintained year over
+        year through the <a href="awor.html">Annual Wealth Operating Review</a>. <b>The Report diagnoses; the
+        Register sustains.</b></p>
+    </section>
 
-    <div class="sec">
-      <div class="k">What the review examines</div>
+    <section class="sec">
+      <p class="k" style="margin-bottom:18px">What the review examines</p>
       <div class="exam">
-        <div class="ex"><div class="exn">Implementation</div><div class="exq">Is each asset in the account where it is taxed least?</div></div>
-        <div class="ex"><div class="exn">Tax character</div><div class="exq">Where is the return quietly leaking, and could you keep more of it?</div></div>
-        <div class="ex"><div class="exn">Ownership</div><div class="exq">Would your family inherit it the way the documents intend?</div></div>
-        <div class="ex"><div class="exn">Liquidity</div><div class="exq">Can you reach your money in the year you actually need it?</div></div>
-        <div class="ex"><div class="exn">Risk &amp; governance</div><div class="exq">Does one decision quietly create the next problem?</div></div>
-        <div class="ex"><div class="exn">The connections</div><div class="exq">Who, today, is actually coordinating all of it?</div></div>
+        <div class="ex"><p class="exn">Implementation</p><p class="exq">Is each asset in the account where it is taxed least?</p></div>
+        <div class="ex"><p class="exn">Tax character</p><p class="exq">Where is the return quietly leaking, and could you keep more of it?</p></div>
+        <div class="ex"><p class="exn">Ownership</p><p class="exq">Would your family inherit it the way the documents intend?</p></div>
+        <div class="ex"><p class="exn">Liquidity</p><p class="exq">Can you reach your money in the year you actually need it?</p></div>
+        <div class="ex"><p class="exn">Risk &amp; governance</p><p class="exq">Does one decision quietly create the next problem?</p></div>
+        <div class="ex"><p class="exn">The connections</p><p class="exq">Who, today, is actually coordinating all of it?</p></div>
       </div>
-    </div>
+    </section>
 
-    <div class="sec">
-      <!-- Merged 2026-08-04. "How it proceeds" and "How long it takes" described the same three
-           stages eighty lines apart, in near-identical words: fifteen-minute introduction with
-           nothing to prepare, the review read privately on the household's own holdings, the report
-           walked through with the CPA and counsel. Neither instance was complete on its own, so a
-           reader had to hold two passes in their head to answer one question. One section now
-           carries the sequence and its clock together. -->
-      <div class="k">How it proceeds, and how long it takes</div>
+    <section class="sec">
+      <p class="k" style="margin-bottom:10px">How it proceeds, and how long it takes</p>
       <div class="steps">
-        <div class="step">
-          <div class="sn">01</div>
-          <div><div class="sh2">The introduction <span class="stime">Fifteen minutes</span></div>
-            <div class="sd">You see how we think, we understand your situation, and together we decide whether a
-            review is warranted. Nothing to prepare, and no documents. If it isn't warranted, we will say so.</div></div>
-        </div>
-        <div class="step">
-          <div class="sn">02</div>
-          <div><div class="sh2">The review, privately <span class="stime">Two to three weeks</span></div>
-            <div class="sd">Your systems are read one at a time, on your actual holdings, documents, and state.
-            The instruments that compute the tax line run here, on your numbers, not on a public page.</div></div>
-        </div>
-        <div class="step">
-          <div class="sn">03</div>
-          <div><div class="sh2">The report, walked through together <span class="stime">One sitting</span></div>
-            <div class="sd">The Coordination Report and the opening Register, reviewed with you, and with your CPA
-            and estate attorney where the findings touch their work.</div></div>
-        </div>
+        <div class="step"><span class="sn">01</span><div><p class="sh2">The introduction <span class="stime">Fifteen minutes</span></p><p class="sd">You see how we think, we understand your situation, and together we decide whether a review is warranted. Nothing to prepare, and no documents. If it isn&rsquo;t warranted, we will say so.</p></div></div>
+        <div class="step"><span class="sn">02</span><div><p class="sh2">The review, privately <span class="stime">Two to three weeks</span></p><p class="sd">Your systems are read one at a time, on your actual holdings, documents, and state. The instruments that compute the tax line run here, on your numbers, not on a public page.</p></div></div>
+        <div class="step"><span class="sn">03</span><div><p class="sh2">The report, walked through together <span class="stime">One sitting</span></p><p class="sd">The Coordination Report and the opening Register, reviewed with you, and with your CPA and estate attorney where the findings touch their work.</p></div></div>
       </div>
-    </div>
+    </section>
 
-    <!-- Added 2026-08-09. The page sold a diagnosis and then stopped: three stages ending at "the
-         report, walked through together", with the standing Register named as the product of the
-         relationship in a card and never shown doing anything. A reader weighing a defined
-         engagement fee wants to know what the week after the sitting looks like, and the honest
-         answer is the most distinctive thing here — the register stays open, and the household
-         stops being the party that notices. Each row is a mechanism already described elsewhere on
-         the page or in the specimen register, restated as what happens rather than what exists.
-         Same ruled dl as "the shape of the commitment": same kind of promise, same instrument. -->
-    <div class="shape">
-      <div class="sk">What changes after the review</div>
+    <section class="sec shape">
+      <p class="k k--quiet">What changes after the review</p>
       <dl>
-        <div><dt>The register stays open</dt><dd>Every matter the review surfaced keeps its owner and its
-          next date until it closes. Nothing is finished because a meeting ended.</dd></div>
-        <div><dt>Decisions arrive early</dt><dd>An account opened, a beneficiary form signed, a move
-          considered: each is read against the documents and the plan before it settles, not at the
-          next annual meeting.</dd></div>
-        <div><dt>Your CPA and attorney are called first</dt><dd>Where a matter is theirs, they are brought
-          in while it is still a choice. The filing and the document are never the last to know.</dd></div>
+        <div><dt>The register stays open</dt><dd>Every matter the review surfaced keeps its owner and its next date until it closes. Nothing is finished because a meeting ended.</dd></div>
+        <div><dt>Decisions arrive early</dt><dd>An account opened, a beneficiary form signed, a move considered: each is read against the documents and the plan before it settles, not at the next annual meeting.</dd></div>
+        <div><dt>Your CPA and attorney are called first</dt><dd>Where a matter is theirs, they are brought in while it is still a choice. The filing and the document are never the last to know.</dd></div>
       </dl>
-    </div>
+    </section>
 
-    <div class="sec">
-      <div class="k">Who the review is for, and who it is not for</div>
+    <section class="sec">
+      <p class="k" style="margin-bottom:18px">Who the review is for, and who it is not for</p>
       <div class="qual">
-        <div class="qc">
-          <div class="qk">A review is warranted when</div>
-          <ul>
-            <li>Several accounts, and an estate plan already drafted.</li>
-            <li>An operating business, or a concentrated position.</li>
-            <li>Income or property that crosses a state line.</li>
-          </ul>
-        </div>
-        <div class="qc qc--not">
-          <div class="qk">It is not warranted when</div>
-          <ul>
-            <li>One account, and no estate documents yet.</li>
-            <li>Nothing has changed in years, and nothing is planned.</li>
-            <li>You want someone to run a portfolio, not coordinate a household.</li>
-          </ul>
-        </div>
+        <div class="qc"><p class="qk">A review is warranted when</p><ul><li>Several accounts, and an estate plan already drafted.</li><li>An operating business, or a concentrated position.</li><li>Income or property that crosses a state line.</li></ul></div>
+        <div class="qc qc--not"><p class="qk">It is not warranted when</p><ul><li>One account, and no estate documents yet.</li><li>Nothing has changed in years, and nothing is planned.</li><li>You want someone to run a portfolio, not coordinate a household.</li></ul></div>
       </div>
-      <p class="qual-note">In any of those three cases we will say so on the introduction call, and no proposal
-        follows.</p>
-    </div>
+      <p class="qual-note">In any of those three cases we will say so on the introduction call, and no proposal follows.</p>
+    </section>
 
-    <div class="sec">
-      <div class="k">What we will ask you for</div>
-      <p class="qual-note" style="margin:0 0 18px">A review of holdings, documents, and a state implies handing
-        statements and trust documents to someone you have met once. Here is the whole list, in advance.</p>
+    <section class="sec">
+      <p class="k" style="margin-bottom:12px">What we will ask you for</p>
+      <p class="qual-note" style="margin:0 0 18px">A review of holdings, documents, and a state implies handing statements and trust documents to someone you have met once. Here is the whole list, in advance.</p>
       <div class="ask">
-        <div class="ak">
-          <div class="akh">Statements</div>
-          <div class="akd">One recent statement per account, including the ones we will not manage.</div>
-        </div>
-        <div class="ak">
-          <div class="akh">Documents</div>
-          <div class="akd">The estate documents as executed, and the entity documents if there is a business.</div>
-        </div>
-        <div class="ak">
-          <div class="akh">Last year's return</div>
-          <div class="akd">The whole return, not a summary. The bracket picture comes from it.</div>
-        </div>
-        <div class="ak">
-          <div class="akh">Nothing, at first</div>
-          <div class="akd">The introduction call requires no documents at all.</div>
-        </div>
+        <div class="ak"><p class="akh">Statements</p><p class="akd">One recent statement per account, including the ones we will not manage.</p></div>
+        <div class="ak"><p class="akh">Documents</p><p class="akd">The estate documents as executed, and the entity documents if there is a business.</p></div>
+        <div class="ak"><p class="akh">Last year&rsquo;s return</p><p class="akd">The whole return, not a summary. The bracket picture comes from it.</p></div>
+        <div class="ak"><p class="akh">Nothing, at first</p><p class="akd">The introduction call requires no documents at all.</p></div>
       </div>
-      <!-- HOW THEY ARE HANDLED — deliberately not written here, and not by me.
-           The mockup asks for one sentence stating how documents are transmitted, where they are held,
-           how long they are kept, and that they are shared with no third party without written
-           instruction. Every clause of that is a factual claim about a real firm's data practice and a
-           representation to a prospect; inventing it would be worse than omitting it. It also has to
-           agree with privacy.html, which is itself still unfinished (five bracketed placeholders as of
-           2026-08-01). Write the sentence, finish the privacy policy so the two agree, then uncomment:
+      <!-- HOW THEY ARE HANDLED — deliberately not written here. Every clause of that is a factual
+           claim about a real firm's data practice; it is written by the principal, matching
+           privacy.html exactly, or not at all. -->
+      <p class="qual-note" style="margin-top:26px"><b>On fees:</b> Driftwood charges to coordinate decisions, not to manage a number. The review&rsquo;s fee is a defined engagement fee, agreed in writing before any work begins. How we are paid, and why, is set out in full on <a href="fees.html">Fees</a>.</p>
+    </section>
 
-      <p class="qual-note"><b>How they are handled:</b> [one sentence, supplied by the principal, matching
-        privacy.html exactly]</p>
-      -->
-    </div>
-
-    <div class="feenote">
-      <p><b>On fees:</b> Driftwood charges to coordinate decisions, not to manage a number. The review's fee is a
-        defined engagement fee, agreed in writing before any work begins. How we are paid, and why, is set out in
-        full on <a href="fees.html">Fees</a>.</p>
-    </div>
-
-    <div class="door">
-      <div class="dh">Request a Coordination Review.</div>
-      <div class="ds">It begins with the fifteen-minute introduction. There is nothing to prepare, and if a review
-        isn't warranted, we'll tell you on the call.</div>
-      <!-- Tagged for attribution: a booking completes on calendly.com, where this site's analytics
-           cannot see it. Calendly records these parameters against the booked event, so utm_content
-           is what tells you a booking started here rather than on a state page. Scheme and the
-           generator-side equivalent live in src/drift/site.py booking_link(). -->
-      <a class="book" href="https://calendly.com/alec-messino/introductory-call-driftwood-wealth?utm_source=driftwoodwealth&amp;utm_medium=website&amp;utm_campaign=coordination_review&amp;utm_content=coordination-review" target="_blank" rel="noopener">Schedule the introduction &rarr;</a>
-      <div class="alt">Or call <a href="tel:+17085487600">(708)&nbsp;548-7600</a>, or write to
-        <a href="mailto:alec@driftwoodwealth.com">alec@driftwoodwealth.com</a>.</div>
+    <section class="door">
+      <p class="dh">Request a Coordination Review.</p>
+      <p class="ds">It begins with the fifteen-minute introduction. There is nothing to prepare, and if a review
+        isn&rsquo;t warranted, we&rsquo;ll tell you on the call.</p>
+      <div class="row">
+        <!-- Tagged for attribution, see the lede placement above. -->
+        <a class="book" href="https://calendly.com/alec-messino/introductory-call-driftwood-wealth?utm_source=driftwoodwealth&amp;utm_medium=website&amp;utm_campaign=coordination_review&amp;utm_content=coordination-review" target="_blank" rel="noopener">Request a Coordination Review &rarr;</a>
+        <span class="alt">Or call <a href="tel:+17085487600">(708)&nbsp;548-7600</a>, or write to
+          <a href="mailto:alec@driftwoodwealth.com">alec@driftwoodwealth.com</a>.</span>
+      </div>
       <div class="founder">
         <img class="fimg" src="Headshot.jpg" width="52" height="52" loading="lazy"
              alt="Alec Messino, founder of Driftwood Wealth"
              onerror="this.closest('.founder').classList.add('no-photo')">
-        <div class="fmeta">
-          <div class="fnm">Alec Messino, Founder</div>
-          <div class="fsay">Every review is conducted personally. You are not handed to a team.</div>
-        </div>
+        <div><p class="fnm">Alec Messino, Founder</p><p class="fsay">Every review is conducted personally. You are not handed to a team.</p></div>
       </div>
-    </div>
+    </section>
 
     <!--FIRM_ANCHOR-->
 

@@ -60,8 +60,8 @@ def test_an_unframed_masthead_still_aligns_to_the_frame():
     """the-practice / the-record hang the nav off <body>. Without this rule the wordmark sits 90px
     left of where it sits on every other page."""
     t = CSS.read_text(encoding="utf-8")
-    assert re.search(r"body\s*>\s*\.dwnav--phase2\{[^}]*max-width", t)
-    assert re.search(r"body\s*>\s*\.dwnav--phase2\{[^}]*margin-inline:\s*auto", t)
+    assert re.search(r"body\s*>\s*\.dwnav--waterline\{[^}]*max-width", t)
+    assert re.search(r"body\s*>\s*\.dwnav--waterline\{[^}]*margin-inline:\s*auto", t)
 
 
 @pytest.mark.parametrize("sel", FRAME_SELECTORS)
@@ -97,7 +97,7 @@ def test_no_page_overrides_the_frame_gutter(sel):
 def test_every_page_carries_the_masthead():
     """A page reachable from the menu with no way back out is a dead end. Six pages were in that
     state, two of them linked directly from the Coordination dropdown."""
-    missing = [n for n, t in _pages() if 'class="dwnav dwnav--phase2"' not in t]
+    missing = [n for n, t in _pages() if 'class="dwnav dwnav--waterline"' not in t]
     assert not missing, f"pages with no masthead: {missing}"
 
 
@@ -114,7 +114,7 @@ def test_the_masthead_sits_on_the_frame_not_inside_the_reading_column():
     so its width tracked the text measure instead of the page."""
     bad = []
     for name, t in _pages():
-        i = t.find('<nav class="dwnav dwnav--phase2"')
+        i = t.find('<nav class="dwnav dwnav--waterline"')
         if i < 0:
             continue
         before = t[max(0, i - 220):i]

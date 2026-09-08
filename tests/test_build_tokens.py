@@ -24,7 +24,11 @@ from drift import exhibit
 DOCS = Path(__file__).resolve().parents[1] / "docs"
 WEB = Path(__file__).resolve().parents[1] / "src" / "drift" / "web"
 
-TOKENS = ("<!--FIRM_ANCHOR-->", "<!--PLATE_LIBRARY-->")
+TOKENS = ("<!--FIRM_ANCHOR-->", "<!--PLATE_LIBRARY-->",
+          # The record strip and the compact record masthead (drift.nav.RECORD, 2026-09). The
+          # strip token may carry a current-document suffix (<!--RECORD_STRIP:03-->) and the
+          # masthead always does; the raw-token sweep below matches on the bare prefix.
+          "<!--RECORD_STRIP-->", "<!--RECORD_MASTHEAD-->")
 
 # Deliberately unresolved, and it must stay that way. privacy.html and terms.html are structured
 # drafts awaiting counsel and the compliance principal; each carries `<!--LEGAL_DATE-->[date pending]`
@@ -63,7 +67,7 @@ def test_no_render_path_emits_a_raw_token(name):
     """The CLI path must resolve tokens, not just sync_docs.py."""
     html = getattr(exhibit, name)({})
     for token in TOKENS:
-        assert token not in html, f"{name}() ships a raw {token}"
+        assert token.rstrip("->") not in html, f"{name}() ships a raw {token}"
 
 
 @pytest.mark.parametrize("name", RENDERERS)
@@ -95,7 +99,7 @@ def test_no_shipped_page_contains_a_raw_token():
     for page in sorted(DOCS.glob("*.html")):
         text = page.read_text(encoding="utf-8")
         for token in TOKENS:
-            if token in text:
+            if token.rstrip("->") in text:
                 bad.append(f"{page.name}: {token}")
     assert not bad, f"raw build tokens shipped in docs/: {bad}"
 
@@ -122,7 +126,7 @@ def test_every_template_token_is_one_the_build_knows_how_to_resolve():
     for tpl in sorted(WEB.glob("*.html")):
         text = tpl.read_text(encoding="utf-8")
         paired = _paired_regions(text)
-        for m in re.findall(r"<!--([A-Z][A-Z0-9_]{3,})-->", text):
+        for m in re.findall(r"<!--([A-Z][A-Z0-9_]{3,})(?::\d\d)?-->", text):
             if m in known or m in paired or tpl.name in DEFERRED.get(m, ()):
                 continue
             unknown.add(f"{tpl.name}: <!--{m}-->")

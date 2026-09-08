@@ -16,8 +16,16 @@ PLACEHOLDER = "/*__STATE__*/null/*__END__*/"
 # Build-time tokens replaced from a single source (drift.site) so firm facts have one home.
 sys.path.insert(0, str(ROOT / "src"))
 from drift.site import firm_anchor_html  # noqa: E402
+from drift.nav import record_strip_html, record_masthead_html  # noqa: E402
 
 FIRM_ANCHOR_TOKEN = "<!--FIRM_ANCHOR-->"
+# The record strip (the five documents, one ruled line) and the compact record masthead. Like the
+# firm anchor they are rendered from one source (drift.nav.RECORD) so the hierarchy cannot drift
+# between the homepage, the Review, the Manual and Principles. `<!--RECORD_STRIP-->` renders the
+# block; `<!--RECORD_STRIP:03-->` marks document 03 current; `<!--RECORD_MASTHEAD:03-->` renders
+# the compact masthead a record page carries under its nav.
+RECORD_STRIP_RE = re.compile(r"<!--RECORD_STRIP(?::(\d\d))?-->")
+RECORD_MASTHEAD_RE = re.compile(r"<!--RECORD_MASTHEAD:(\d\d)-->")
 PLATE_LIBRARY_TOKEN = "<!--PLATE_LIBRARY-->"
 
 _plate_lib = None
@@ -48,6 +56,8 @@ def _inject_tokens(html: str) -> str:
         html = html.replace(FIRM_ANCHOR_TOKEN, firm_anchor_html())
     if PLATE_LIBRARY_TOKEN in html:
         html = html.replace(PLATE_LIBRARY_TOKEN, _plate_library())
+    html = RECORD_STRIP_RE.sub(lambda m: record_strip_html(m.group(1)), html)
+    html = RECORD_MASTHEAD_RE.sub(lambda m: record_masthead_html(m.group(1)), html)
     return html
 
 # template -> docs output

@@ -45,7 +45,7 @@ def test_no_sitemap_entry_is_a_redirect_stub_or_noindex():
 def test_every_primary_navigation_destination_is_in_the_sitemap():
     """If a page is important enough to sit in the masthead, it is important enough to announce.
     This is the rule that catches the next Insights-shaped omission automatically."""
-    nav = re.search(r'<nav class="dwnav dwnav--phase2".*?</nav>',
+    nav = re.search(r'<nav class="dwnav dwnav--waterline".*?</nav>',
                     (WEB / "index.html").read_text(encoding="utf-8")
                     if (WEB / "index.html").exists()
                     else (WEB / "hub.html").read_text(encoding="utf-8"), re.S)

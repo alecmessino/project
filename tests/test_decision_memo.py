@@ -147,7 +147,7 @@ def test_the_memo_is_built_and_carries_the_masthead():
     built = DOCS / "decision-memo-domicile.html"
     assert built.exists(), "the memo is not registered in scripts/sync_docs.py"
     b = built.read_text(encoding="utf-8")
-    assert 'class="dwnav dwnav--phase2"' in b
+    assert 'class="dwnav dwnav--waterline"' in b
     assert "<!--FIRM_ANCHOR-->" not in b and "firm-anchor" in b
 
 

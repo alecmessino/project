@@ -83,7 +83,9 @@
      height is now set by the content, the padding is tighter, and the body copy is sized to hold
      its own against a 70px headline instead of reading as a caption under it. */
   .hero{display:block;padding:60px 52px 44px}
-  .hero-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:0 72px;align-items:end}
+  /* 13:9, the approved Homepage v2 proportion: the copy column on the left, the heron plate in the
+     right column spanning headline, aside and action so its feet sit on the CTA baseline. */
+  .hero-grid{display:grid;grid-template-columns:minmax(0,13fr) minmax(0,9fr);gap:0 36px;align-items:end}
   .hero h1{grid-column:1;font-family:var(--sans);font-weight:700;
     font-size:clamp(34px,4.4vw,70px);line-height:1.08;letter-spacing:-.024em;color:var(--ink);margin:0;max-width:21ch;text-wrap:balance}
   .hero h1 span{display:block}
@@ -99,17 +101,30 @@
   /* second beat of the margin argument: separated by air and a change of face, so the two paragraphs
      read as claim then answer rather than one run-on column. */
   .hero-aside .lede2-note{margin:16px 0 0}
-  .hero .ctas{margin-top:26px;padding-top:24px;border-top:1px solid var(--line);max-width:640px}
-  @media(max-width:900px){
+  .hero .ctas{grid-column:1;margin-top:26px;padding-top:24px;border-top:1px solid var(--line);max-width:640px}
+  /* ══ THE HERON PLATE (2026-09, Homepage v2 lock 1a) ═══════════════════════════════════════
+     The house mark returns to the one page that makes an enduring statement, as the approved
+     plate img/heron-plate.svg: a great blue heron in monochrome ink on the limestone ground, bill
+     toward the headline, nothing else in the plate — no water, reeds, frame, gradient or label.
+     One master, used verbatim, never nav / footer / favicon / a repeating slot (OPERATIONS.md).
+     It is decorative in the accessibility sense (aria-hidden, never a link) and it sits in the
+     right column of the grid so it can never be drawn under the copy. Desktop scale ≈ 480px, feet
+     on the CTA baseline; below 900px it drops under the copy at 380px and keeps its balance rather
+     than the baseline. It draws once on load and never moves. */
+  .heron-col{grid-column:2;grid-row:1 / span 3;align-self:end;justify-self:end;margin:0 0 -4px;
+    width:100%;max-width:480px;position:relative}
+  .heron-col img{display:block;width:100%;height:auto;mix-blend-mode:multiply}
+  @media(max-width:899px){
     .hero{padding-top:40px}
-    .hero-grid{display:block}
+    .hero-grid{grid-template-columns:minmax(0,1fr)}
+    .heron-col{grid-column:1;grid-row:auto;justify-self:start;max-width:380px;margin:30px 0 0}
     .hero-aside{margin-top:28px;padding-left:20px;max-width:56ch}
     .hero .ctas{margin-top:32px}
   }
   .ctas{display:flex;gap:12px 20px;flex-wrap:wrap;align-items:center}
   /* the qualifier does more trust work than a third paragraph would: it removes the reader's main
      objection to booking (being sold to) in six words, so it sits with the action, not in the prose. */
-  .hero-qual{font-family:var(--sans);font-size:12.5px;letter-spacing:.01em;color:var(--muted)}
+  .hero-qual{font-family:var(--sans);font-size:12.5px;line-height:1.5;letter-spacing:.01em;color:var(--dim);max-width:34ch}
   .ctas a{text-decoration:none;font-family:var(--sans);font-size:14.5px;font-weight:500;white-space:nowrap;
     transition:filter var(--t-fast),transform var(--t-fast),background var(--t-fast),border-color var(--t-fast)}
   .ctas .primary{background:var(--accent-strike);color:#fff;padding:15px 26px;border-radius:var(--surface-radius);font-weight:600}
@@ -552,7 +567,6 @@
      on every laptop viewport. The hero now ends where its argument ends, and the lattice breaks
      the fold instead of the dead zone. */
   .hero{position:relative;overflow:hidden;isolation:isolate;min-height:470px}
-  .hero>.hero-grid,.hero>.ctas{position:relative;z-index:1}
   .plateband{position:relative;height:190px;overflow:hidden;margin-top:56px}
   .plateband>.splate{position:absolute;top:-10%;left:-6%;width:112%;height:130%;object-fit:cover;
     opacity:.85;pointer-events:none}
@@ -565,113 +579,14 @@
   .splate.splot{animation:splateplot 760ms linear both,splatedrift 90s ease-in-out 800ms infinite alternate}
   @media(prefers-reduced-motion:reduce){.splate,.splate.splot{animation:none}}
 
-  /* ══ THE HERO WATERSHED ════════════════════════════════════════════════════════════════════
-     A watershed, not a river. The traced Mississippi that stood in this slot until 2026-08-10 was
-     the right argument in the wrong register: twenty-four capillaries at hairline weight read as
-     atmosphere from three feet away, and the thing the plate is actually claiming — that separate
-     decisions converge, and that the channel is larger below every join than above it — was
-     legible only to a reader who came close enough to study it. This is the same claim drawn at
-     poster scale: twelve feeders, four junctions, two confluences, one outflow. No basin, no
-     geography, no labels. Hierarchy is carried by weight and by depth of colour, which is what
-     keeps it reading as water rather than as a wiring diagram.
-
-     THE GEOMETRY IS LOCKED, NOT GENERATED. It is composed on a fixed grid and baked at presence
-     1.0 and boldness 0.75 (strokes 9.75 / 15 / 18 / 21.75, palette #5d7e96 → #2c5878).
-     build_paths.py no longer drives this plate and there are no GEOM markers to stay outside of.
-     The same drawing stands alone for print, PDF and email in
-     design/watershed-diagram-redesign/assets/ — watershed-hero.svg (animated) and
-     watershed-hero-static.svg (flat), pinned against each other by tests/test_watershed_assets.py.
-     Those two guard each other; this third copy is guarded by nothing, so a geometry change made
-     here has to be carried there by hand.
-
-     TYPOGRAPHY STILL WINS, but by geometry now rather than by a mask. The old plate spanned the
-     whole hero and was faded back under the copy with a left gradient; at these weights a fade
-     leaves grey ghosts behind the words instead of clearing them. The plate is pinned to start at
-     716px instead — 24px clear of the copy's 692px right edge (52px of hero padding plus the
-     640px measure the aside and the CTA rule both hold) — so every stroke is full, solid colour
-     everywhere it appears, and simply does not appear where the text is. The boundary is pinned in
-     CSS space, not in viewBox units: expressed in drawing units it drifted with window height. ── */
-
-  /* One shot on load and never again: the front runs headwaters-inward — feeders, then junctions,
-     then confluences, then the outflow — so the eye is walked through the argument in the order
-     the argument is made. Nothing loops, breathes, or answers the cursor. A hero that keeps moving
-     asks to be watched; this one only needs to be read. */
-  @keyframes wsdraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
-  @keyframes wsnode{from{opacity:0;transform:scale(.35)}to{opacity:1;transform:scale(1)}}
-
-  .ws{position:absolute;top:50%;left:716px;right:0;transform:translateY(-50%);
-    height:auto;aspect-ratio:680/626;   /* the viewBox, so the box never letterboxes */
-    z-index:0;pointer-events:none;-webkit-user-select:none;user-select:none}
-
-  /* Every vector carries a second identity as a dash pattern exactly one path-length long
-     (pathLength="1", dasharray 1), so a single dashoffset 1 → 0 draws it end to end whatever its
-     real length is. Delays sit in the markup, per path, because they encode the order of the
-     merge — they are the drawing's argument, not a decoration on it. */
-  .ws path{fill:none;stroke-linecap:round;stroke-linejoin:round;
-    stroke-dasharray:1;stroke-dashoffset:1;
-    /* Longhands, never the `animation` shorthand — the same rule the standalone export carries.
-       The shorthand brings an animation-delay:0 with it, and every delay here is a per-element
-       inline style. Inline wins today, but the shorthand leaves nothing standing between this
-       rule and a flattened sequence the moment one delay moves into the stylesheet. */
-    animation-name:wsdraw;animation-timing-function:cubic-bezier(.45,0,.2,1);
-    animation-fill-mode:both;animation-duration:.9s}
-  /* THE ACCUMULATION. Four weights, four depths of blue. Below every join the channel is both
-     wider and darker, because a bigger river is a darker river — and it is that pairing that stops
-     the plate reading as a dendrite, which is what uniform branches off a constant-width trunk
-     always look like. */
-  .ws .t1 path{stroke:#5d7e96;stroke-width:9.75}
-  .ws .t2 path{stroke:#486e8a;stroke-width:15;animation-duration:.6s}
-  .ws .t3 path{stroke:#386280;stroke-width:18;animation-duration:.55s}
-  /* The outflow is cut square and runs past the right edge of the viewBox rather than stopping
-     inside it: the system leaves the plate, exactly as the house mark's outflow does. */
-  .ws .t4{stroke:#2c5878;stroke-width:21.75;stroke-linecap:butt;animation-duration:.55s}
-
-  /* Each junction lands just before the runs that leave it, so it reads as the cause of the next
-     channel rather than as a marker dropped on top of one already drawn. */
-  .ws circle{transform-box:fill-box;transform-origin:center;opacity:0;
-    animation-name:wsnode;animation-timing-function:cubic-bezier(.2,.8,.25,1);
-    animation-fill-mode:both;animation-duration:.4s}
-  .ws .n2 circle{fill:#486e8a}
-  .ws .n3 circle{fill:#386280}
-  .ws .n4{fill:#2c5878;animation-duration:.44s}
-
-  /* ── STACKED: the drawing comes out of the background and becomes a plate of its own ────────
-     It cannot stay pinned once the column collapses — there is no right-hand void left for it to
-     occupy, and the 716px boundary would push it off the page. In flow, with an aspect-ratio
-     matching the viewBox, it has one size that depends on nothing but the column width, and it
-     bleeds off the right frame edge the way every other survey plate does. Ordered between the
-     argument and the ask — headline, lede, drawing, CTA: after the CTA it sits a thousand pixels
-     down a phone and stops being a hero at all, and first it pushes the headline below the fold.
-     The breakpoint is 1040px rather than the old 900px because the wrap has already stepped down
-     to 1060px by then, which leaves the pinned plate about 330px of drawing — too little to carry
-     four tiers of weight. ── */
-  @media(max-width:1040px){
-    .hero{display:flex;flex-direction:column;padding-bottom:28px}
-    .hero-grid{order:1}
-    .ws{order:2;position:relative;top:auto;left:auto;right:auto;transform:none;
-      display:block;width:calc(100% + 52px);margin:26px -52px 4px 0}
-    .ctas{order:3}
-  }
-  /* the hero's side padding drops to 22px here, so the bleed has to drop with it or it overshoots
-     the frame and reopens a horizontal scroll on the phone */
-  @media(max-width:620px){
-    .ws{width:calc(100% + 22px);margin-right:-22px}
-  }
-
-  /* Reduced motion keeps the whole drawing — it is the argument, not the animation. Only the
-     draw-on goes, and it goes to the finished state rather than to nothing. */
-  @media(prefers-reduced-motion:reduce){
-    .ws path{animation:none;stroke-dashoffset:0}
-    .ws circle{animation:none;opacity:1;transform:none}
-  }
 </style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
 <div class="wrap">
-<nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">
+<nav class="dwnav dwnav--waterline" aria-label="Driftwood Wealth">
       <a class="brand" href="index.html" aria-label="Driftwood Wealth, home"><svg class="brand-mark" viewBox="6 13 90 74" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="10,18 24.35,18 62,50" stroke-width="4.6"></polyline><polyline points="10,34 43.18,34 62,50" stroke-width="4.6"></polyline><line x1="10" y1="50" x2="62" y2="50" stroke-width="4.6"></line><polyline points="10,66 43.18,66 62,50" stroke-width="4.6"></polyline><polyline points="10,82 24.35,82 62,50" stroke-width="4.6"></polyline><line x1="62" y1="50" x2="90" y2="50" stroke-width="7"></line></svg><span class="brand-rule" aria-hidden="true"></span><span class="brand-word">Driftwood Wealth</span></a>
-      <div class="dwnav-links"><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Our Firm<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="principles.html">Our Story</a><a href="leadership.html">Leadership</a><a href="fees.html">Fees</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Coordination<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="coordination.html">How Coordination Works</a><a href="household-example.html">A Household, Coordinated</a><a href="coordination-atlas.html">The Coordination Atlas</a><a href="coordination-review.html">The Coordination Review</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">Insights<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="research.html">Research</a><a href="commentary.html">Commentary</a><a href="driftwood-review.html">The Driftwood Review</a><a href="statemap.html">The State Tax Atlas</a><a href="insights.html#decision-tools">Tools &amp; References</a></div></div><div class="dwnav-drop"><button type="button" class="dwnav-trigger" aria-haspopup="true" aria-expanded="false">For Professionals<span class="caret" aria-hidden="true"></span></button><div class="dwnav-panel"><a href="partners.html">For CPAs</a><a href="estate-attorneys.html">For Estate Attorneys</a><a href="referral.html">Making a Referral</a></div></div></div>
+      <div class="dwnav-links"><a href="principles.html">Our firm</a><a href="coordination.html">Coordination</a><a href="the-record.html">The record</a><a href="insights.html">Insights</a><a href="fees.html">Fees</a><a href="partners.html">For professionals</a></div>
       <span class="dwnav-sep" aria-hidden="true"></span>
       <a class="dwnav-access" href="private.html">Client Access</a>
       <a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>
@@ -690,60 +605,6 @@
          already answered; the method sheet moved to the-practice.html, where "how the work runs" is
          the page's actual subject. Length was never the problem; duplicate questions were. ── -->
     <header class="hero">
-      <!-- The hero watershed. Decorative: the wordmark in the masthead already carries the
-           identity, so this is aria-hidden and it is never a link. The geometry is locked — no
-           generator, no GEOM markers — and it is mirrored by the two standalone files in
-           design/watershed-diagram-redesign/assets/. Change one and change all three. The
-           per-path delays are the order of the merge, not decoration. -->
-      <svg class="ws" viewBox="370 52 680 626" preserveAspectRatio="xMaxYMid meet"
-           aria-hidden="true" focusable="false">
-        <!-- TIER 1 · the twelve feeders, as four clusters of three. Each leaves the left edge dead
-             straight and horizontal before it turns, so the entry reads as a level plane of
-             separate starting points rather than a spray. They stop at x=390, short of the plate's
-             own left edge, so no round cap bleeds toward the copy column. -->
-        <g class="t1">
-          <path pathLength="1" d="M 390 94 L 520 94 C 578 94 632 140 690 140" style="animation-delay:.20s"></path>
-          <path pathLength="1" d="M 390 140 L 520 140 C 578 140 632 140 690 140" style="animation-delay:.15s"></path>
-          <path pathLength="1" d="M 390 186 L 520 186 C 578 186 632 140 690 140" style="animation-delay:.20s"></path>
-          <path pathLength="1" d="M 390 244 L 520 244 C 578 244 632 290 690 290" style="animation-delay:.33s"></path>
-          <path pathLength="1" d="M 390 290 L 520 290 C 578 290 632 290 690 290" style="animation-delay:.28s"></path>
-          <path pathLength="1" d="M 390 336 L 520 336 C 578 336 632 290 690 290" style="animation-delay:.33s"></path>
-          <path pathLength="1" d="M 390 394 L 520 394 C 578 394 632 440 690 440" style="animation-delay:.46s"></path>
-          <path pathLength="1" d="M 390 440 L 520 440 C 578 440 632 440 690 440" style="animation-delay:.41s"></path>
-          <path pathLength="1" d="M 390 486 L 520 486 C 578 486 632 440 690 440" style="animation-delay:.46s"></path>
-          <path pathLength="1" d="M 390 544 L 520 544 C 578 544 632 590 690 590" style="animation-delay:.59s"></path>
-          <path pathLength="1" d="M 390 590 L 520 590 C 578 590 632 590 690 590" style="animation-delay:.54s"></path>
-          <path pathLength="1" d="M 390 636 L 520 636 C 578 636 632 590 690 590" style="animation-delay:.59s"></path>
-        </g>
-        <!-- TIER 2 · the four cluster channels, pairing off toward two confluences -->
-        <g class="t2">
-          <path pathLength="1" d="M 690 140 C 760 140 760 215 830 215" style="animation-delay:1.42s"></path>
-          <path pathLength="1" d="M 690 290 C 760 290 760 215 830 215" style="animation-delay:1.48s"></path>
-          <path pathLength="1" d="M 690 440 C 760 440 760 515 830 515" style="animation-delay:1.54s"></path>
-          <path pathLength="1" d="M 690 590 C 760 590 760 515 830 515" style="animation-delay:1.60s"></path>
-        </g>
-        <!-- TIER 3 · the two confluences, closing on the trunk from above and below -->
-        <g class="t3">
-          <path pathLength="1" d="M 830 215 C 880 215 880 365 930 365" style="animation-delay:2.18s"></path>
-          <path pathLength="1" d="M 830 515 C 880 515 880 365 930 365" style="animation-delay:2.18s"></path>
-        </g>
-        <!-- TIER 4 · the outflow. Starts inside the terminal node so no seam shows, and runs
-             squarely off the right edge of the viewBox: the system leaves the plate. -->
-        <path class="t4" pathLength="1" d="M 902 365 L 1052 365" style="animation-delay:2.76s"></path>
-        <!-- The junctions, drawn last so they sit over the channels they resolve. Each one lands
-             just before the run that leaves it. -->
-        <g class="n2">
-          <circle cx="690" cy="140" r="20" style="animation-delay:1.22s"></circle>
-          <circle cx="690" cy="290" r="20" style="animation-delay:1.28s"></circle>
-          <circle cx="690" cy="440" r="20" style="animation-delay:1.34s"></circle>
-          <circle cx="690" cy="590" r="20" style="animation-delay:1.40s"></circle>
-        </g>
-        <g class="n3">
-          <circle cx="830" cy="215" r="25" style="animation-delay:2.00s"></circle>
-          <circle cx="830" cy="515" r="25" style="animation-delay:2.06s"></circle>
-        </g>
-        <circle class="n4" cx="930" cy="365" r="31" style="animation-delay:2.66s"></circle>
-      </svg>
       <div class="hero-grid">
         <h1><span>Uncoordinated decisions</span> <span>leak what you keep.</span></h1>
         <div class="hero-aside">
@@ -757,14 +618,99 @@
             convene them, hold the register of open decisions, and read the whole <b>after-tax system</b> as
             one, so the second-order effects are chosen rather than inherited.</p>
         </div>
-      </div>
-      <div class="ctas">
-        <a class="primary" href="coordination-review.html">Request a Coordination Review &rarr;</a>
-        <span class="hero-qual">No products at the first meeting.</span>
+        <div class="ctas">
+          <a class="primary" href="coordination-review.html">Request a Coordination Review &rarr;</a>
+          <!-- The qualifier carries the three facts a prospect wants before clicking: time,
+               preparation, fee. All three are stated on the review page. -->
+          <span class="hero-qual">Fifteen minutes. Nothing to prepare. No products. Fee in writing before work.</span>
+        </div>
+        <!-- The heron plate. See the .heron-col note in the stylesheet above. -->
+        <figure class="heron-col" aria-hidden="true">
+          <img src="img/heron-plate.svg" alt="" width="660" height="720" decoding="async">
+        </figure>
       </div>
     </header>
 
-    <!-- ── GALLERY II · THE SYSTEM (Plate I), the machine first: seven systems in one lattice;
+    <!-- ══ PLATE II · THE REGISTER, the artifact before the theory (2026-09, Homepage v2) ═══ -->
+    <div class="sec gal" id="governance">
+      <div class="reg seeded" id="register">
+        <div class="reg-head">
+          <p class="reg-lead">Between reviews, nothing is idle.</p>
+          <h2 class="reg-h">This household isn’t waiting for the next annual review.</h2>
+          <p class="reg-sub">Eight matters are already being carried — each one with the systems it
+            touches, a person responsible, and the date it is next examined. They stay open until they
+            are resolved and dated. Not tasks. Not reminders. The decisions themselves.</p>
+        </div>
+        <div class="reg-cards" role="list" aria-label="Eight matters currently carried for one household: six open, two resolved.">
+          <article class="rc" style="--i:0">
+            <h3 class="rc-t">Asset location</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Driftwood</dd>
+              <dt>Touches</dt><dd>Investments · Taxes</dd>
+              <dt>Next decision</dt><dd>September</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-open">Open</span></p>
+          </article>
+          <article class="rc" style="--i:1">
+            <h3 class="rc-t">Trust funding &amp; titling</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Estate attorney</dd>
+              <dt>Touches</dt><dd>Estate · Business Ownership</dd>
+              <dt>Next decision</dt><dd>August</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-wait">Waiting</span></p>
+          </article>
+          <article class="rc" style="--i:2">
+            <h3 class="rc-t">Roth conversion window</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Driftwood + CPA</dd>
+              <dt>Touches</dt><dd>Taxes</dd>
+              <dt>Next decision</dt><dd>November</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-mon">Monitoring</span></p>
+          </article>
+          <article class="rc" style="--i:3">
+            <h3 class="rc-t">Business liquidity</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Driftwood</dd>
+              <dt>Touches</dt><dd>Cash Flow · Protection</dd>
+              <dt>Next decision</dt><dd>At event</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-fut">Future event</span></p>
+          </article>
+          <article class="rc rc--done" style="--i:4">
+            <h3 class="rc-t">Loss carryforward deployment</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Driftwood</dd>
+              <dt>Touches</dt><dd>Taxes</dd>
+              <dt>Next decision</dt><dd>Closed March</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-res">Resolved ✓</span></p>
+          </article>
+          <article class="rc rc--done" style="--i:5">
+            <h3 class="rc-t">Reserve target</h3>
+            <dl class="rc-d">
+              <dt>Owner</dt><dd>Driftwood</dd>
+              <dt>Touches</dt><dd>Cash Flow</dd>
+              <dt>Next decision</dt><dd>Closed May</dd>
+            </dl>
+            <p class="rc-s"><span class="st st-res">Resolved ✓</span></p>
+          </article>
+        </div>
+        <div class="reg-foot">
+          <p class="reg-note">Illustrative sample entries, a fictional household, not client data. A live
+            register typically runs longer.</p>
+          <a class="reg-go" href="opportunity-register.html">See the full Opportunity Register &rarr;</a>
+        </div>
+        <p class="reg-records">One household, carried end to end: <a href="household-example.html">a worked
+          example</a>.</p>
+        <!-- THE RECORD · the canonical hierarchy, in the order the Review page uses, rendered from
+             drift.nav.RECORD so it cannot drift from the Manual's masthead or the Principles foot. -->
+        <div class="record-strip"><p class="rs-k">The record</p><p class="rs-lede">The review produces five documents. The Report diagnoses; the Register sustains; the Manual remembers.</p><p class="rs-line"><a href="ic-memo.html"><span class="rs-n">01</span>The Coordination Report</a><span class="rs-d" aria-hidden="true">·</span><a href="opportunity-register.html"><span class="rs-n">02</span>The Opportunity Register</a><span class="rs-d" aria-hidden="true">·</span><a href="manual.html"><span class="rs-n">03</span>The Wealth Operating Manual</a><span class="rs-d" aria-hidden="true">·</span><a href="transition-plan.html"><span class="rs-n">04</span>Your 90-Day Plan</a><span class="rs-d" aria-hidden="true">·</span><a href="decision-register.html"><span class="rs-n">05</span>The Decision Register</a></p><p class="rs-note">Households that proceed keep all five, maintained year over year through the <a href="awor.html">Annual Wealth Operating Review</a>.</p></div>
+      </div>
+    </div>
+
+    <!-- ── PLATE III · THE SYSTEM, the theory behind the artifact (third since 2026-09): seven systems in one lattice;
          hovering a system teaches what it moves, and tracing a common decision lights everything it
          touches. The whole argument is visible before a single paragraph. ── -->
     <div class="sysband" id="thesystem">
@@ -871,84 +817,6 @@
          FIGURE_PROVENANCE.md. A "Next review" date is the more honest and more institutional column:
          it proves the matter is *carried*, which is the actual claim, and it needs no model to stand
          behind it. Two of eight rows are resolved-and-dated (25%), the floor set in OPERATIONS.md. ── -->
-    <div class="sec gal" id="governance">
-      <div class="reg seeded" id="register">
-        <div class="reg-head">
-          <p class="reg-lead">Between reviews, nothing is idle.</p>
-          <h2 class="reg-h">This household isn’t waiting for the next annual review.</h2>
-          <p class="reg-sub">Eight matters are already being carried — each one with the systems it
-            touches, a person responsible, and the date it is next examined. They stay open until they
-            are resolved and dated. Not tasks. Not reminders. The decisions themselves.</p>
-        </div>
-        <div class="reg-cards" role="list" aria-label="Eight matters currently carried for one household: six open, two resolved.">
-          <article class="rc" style="--i:0">
-            <h3 class="rc-t">Asset location</h3>
-            <dl class="rc-d">
-              <dt>Owner</dt><dd>Driftwood</dd>
-              <dt>Touches</dt><dd>Investments · Taxes</dd>
-              <dt>Next decision</dt><dd>September</dd>
-            </dl>
-            <p class="rc-s"><span class="st st-open">Open</span></p>
-          </article>
-          <article class="rc" style="--i:1">
-            <h3 class="rc-t">Trust funding &amp; titling</h3>
-            <dl class="rc-d">
-              <dt>Owner</dt><dd>Estate attorney</dd>
-              <dt>Touches</dt><dd>Estate · Business Ownership</dd>
-              <dt>Next decision</dt><dd>August</dd>
-            </dl>
-            <p class="rc-s"><span class="st st-wait">Waiting</span></p>
-          </article>
-          <article class="rc" style="--i:2">
-            <h3 class="rc-t">Roth conversion window</h3>
-            <dl class="rc-d">
-              <dt>Owner</dt><dd>Driftwood + CPA</dd>
-              <dt>Touches</dt><dd>Taxes</dd>
-              <dt>Next decision</dt><dd>November</dd>
-            </dl>
-            <p class="rc-s"><span class="st st-mon">Monitoring</span></p>
-          </article>
-          <article class="rc" style="--i:3">
-            <h3 class="rc-t">Business liquidity</h3>
-            <dl class="rc-d">
-              <dt>Owner</dt><dd>Driftwood</dd>
-              <dt>Touches</dt><dd>Cash Flow · Protection</dd>
-              <dt>Next decision</dt><dd>At event</dd>
-            </dl>
-            <p class="rc-s"><span class="st st-fut">Future event</span></p>
-          </article>
-          <article class="rc rc--done" style="--i:4">
-            <h3 class="rc-t">Loss carryforward deployment</h3>
-            <dl class="rc-d">
-              <dt>Owner</dt><dd>Driftwood</dd>
-              <dt>Touches</dt><dd>Taxes</dd>
-              <dt>Next decision</dt><dd>Closed March</dd>
-            </dl>
-            <p class="rc-s"><span class="st st-res">Resolved ✓</span></p>
-          </article>
-          <article class="rc rc--done" style="--i:5">
-            <h3 class="rc-t">Reserve target</h3>
-            <dl class="rc-d">
-              <dt>Owner</dt><dd>Driftwood</dd>
-              <dt>Touches</dt><dd>Cash Flow</dd>
-              <dt>Next decision</dt><dd>Closed May</dd>
-            </dl>
-            <p class="rc-s"><span class="st st-res">Resolved ✓</span></p>
-          </article>
-        </div>
-        <div class="reg-foot">
-          <p class="reg-note">Illustrative sample entries, a fictional household, not client data. A live
-            register typically runs longer. The Annual Review's opportunity table and the Manual's open
-            matters are scoped views of this one record.</p>
-          <a class="reg-go" href="opportunity-register.html">See the full Opportunity Register &rarr;</a>
-        </div>
-        <p class="reg-records">One household, carried end to end: <a href="household-example.html">a worked
-          example</a>. The register feeds the record it is kept in: the
-          <a href="manual.html">Wealth Operating Manual</a>, the <a href="decision-register.html">Decision
-          Register</a>, and the <a href="awor.html">Annual Wealth Operating Review</a>.</p>
-      </div>
-    </div>
-
     <!-- ══ PLATE IV · WHO THIS IS FOR ═════════════════════════════════════════════════════════
          Resequenced 2026-08-01 (council). Nothing here is added, rewritten, or removed: the "Who
          this is for" paragraph and the founder tag are the same copy, moved out of the closing ask
@@ -1042,7 +910,7 @@
       </div>
     </div>
 
-    <div class="firm-anchor" role="contentinfo"><span class="firm-anchor-brand">Driftwood Wealth</span><span class="firm-anchor-meta"><span class="fa-i">CHICAGO, ILLINOIS</span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i">AUSTIN, TEXAS</span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i"><a href="mailto:alec@driftwoodwealth.com">ALEC@DRIFTWOODWEALTH.COM</a></span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i">CUSTODY AT BNY PERSHING</span></span></div>
+    <div class="firm-anchor" role="contentinfo"><span class="firm-anchor-brand">Driftwood Wealth</span><span class="firm-anchor-meta"><span class="fa-i">CHICAGO, ILLINOIS</span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i">AUSTIN, TEXAS</span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i"><a href="tel:+17085487600">(708) 548-7600</a></span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i"><a href="mailto:alec@driftwoodwealth.com">ALEC@DRIFTWOODWEALTH.COM</a></span>&nbsp;&nbsp;·&nbsp;&nbsp;<span class="fa-i">CUSTODY AT BNY PERSHING</span></span></div>
     <div class="foot" id="disclosures">
       <span class="note">Research &amp; illustrative modeling, not investment, tax, or legal advice.</span>
       The Model Portfolio referenced across this site is a hypothetical, append-only backtest, not actual trading or

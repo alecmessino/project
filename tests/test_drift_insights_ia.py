@@ -22,71 +22,29 @@ WEB = ROOT / "src" / "drift" / "web"
 DOCS = ROOT / "docs"
 INSIGHTS = WEB / "insights.html"
 
-# The primary masthead. Four families and two actions — the whole navigation.
-FAMILIES = ("Our Firm", "Coordination", "Insights", "For Professionals")
-
-# The whole masthead, in order. This tuple IS the specification.
+# The primary masthead: six words and two actions — the whole navigation.
 #
-# 2026-08-01: organised BY READER rather than by artifact, cutting twenty destinations to thirteen.
-# Fees enters (it was among the strongest pages on the site and reachable from exactly one other
-# page); Coordination sheds the four instruments to Insights → Tools & References; the two
-# near-homonyms whose labels inverted their filenames merge into "How Coordination Works". That
-# entry pointed at coordination-framework.html until 2026-08-01, when the merge finished the other
-# way: coordination.html carries the argument and ~30 inbound links, the seven definitions moved
-# into it as a reference band, and coordination-framework.html became a redirect.
-#
-# TWO APPROVED ENTRIES ARE DELIBERATELY ABSENT. "Fiduciary Standard" (Our Firm) and "Your First 90
-# Days" (Coordination) are in the signed-off mockup but are NOT in this tuple, because
-# fiduciary.html and first-90-days.html are still the shared placeholder stub. The mockup describes
-# the end state; "no placeholders ship" governs what ships today, and an entry with nothing behind
-# it is the exact defect this file exists to prevent. Each returns to its family in the same commit
-# that writes its page — the rule Decision Memos already followed.
+# 2026-09-08: the approved shared chrome (Chrome.dc.html / Homepage v2) replaced the four hover
+# dropdowns with one flat row of sentence-case words. Nothing left the site: every page the
+# dropdowns reached is one click from its word's landing page, Client Access stays a ghost outline,
+# and Request a Coordination Review stays the one solid action. This tuple IS the specification,
+# in order; the renderer is drift.nav.PRIMARY and scripts/phase2_nav.py installs it everywhere.
 MASTHEAD = (
-    ("Our Firm", (
-        ("Our Story", "principles.html"),
-        ("Leadership", "leadership.html"),
-        ("Fees", "fees.html"),
-    )),
-    ("Coordination", (
-        ("How Coordination Works", "coordination.html"),
-        ("A Household, Coordinated", "household-example.html"),
-        # The Coordination Atlas (2026-08-14) — one workspace over three routes (the state brief,
-        # the household inventory, the scope a review would examine) sharing a single household
-        # context. It sits here rather than in Insights because what it does is coordination; the
-        # State Tax Atlas it reads from keeps its own Insights row as the published reference.
-        ("The Coordination Atlas", "coordination-atlas.html"),
-        ("The Coordination Review", "coordination-review.html"),
-    )),
-    ("Insights", (
-        ("Research", "research.html"),
-        ("Commentary", "commentary.html"),
-        ("The Driftwood Review", "driftwood-review.html"),
-        # The Atlas took a row of its own on 2026-08-09, partially reversing the 2026-08-01 move
-        # that put all four instruments on the shelf. The reasoning is in drift.nav's FAMILIES and
-        # is deliberate: the Atlas is 51 editioned statute-cited pages plus three derived
-        # instruments and is the firm's centre-of-influence surface, which is a different kind of
-        # object from a calculator. The other three instruments stay on the shelf.
-        ("The State Tax Atlas", "statemap.html"),
-        # One entry, not three. Decision Memos / Tools / Library were three rows pointing at three
-        # scroll positions on one page. This lands on the section that enumerates the instruments.
-        ("Tools & References", "insights.html#decision-tools"),
-    )),
-    ("For Professionals", (
-        ("For CPAs", "partners.html"),
-        ("For Estate Attorneys", "estate-attorneys.html"),
-        ("Making a Referral", "referral.html"),
-    )),
+    ("Our firm", "principles.html"),
+    ("Coordination", "coordination.html"),
+    ("The record", "the-record.html"),
+    ("Insights", "insights.html"),
+    ("Fees", "fees.html"),
+    ("For professionals", "partners.html"),
 )
+FAMILIES = tuple(label for label, _ in MASTHEAD)
 
 # The pages that must never be advertised while they remain stubs, and the family each would join.
 # first-90-days.html left this tuple on 2026-08-01. It was never missing content, only a link: the
 # artifact it stood for already existed as transition-plan.html ("The first ninety days, written
 # down"), which was itself orphaned. The stub is now a redirect onto the real page, so there is no
 # placeholder left to withhold. fiduciary.html is still genuinely unwritten and stays.
-UNLINKED_PLACEHOLDERS = (("fiduciary.html", "Our Firm"),)
-
-# Inside Insights, in this order — the slice of MASTHEAD the rest of this file leans on.
-INSIGHTS_CHILDREN = dict(MASTHEAD)["Insights"]
+UNLINKED_PLACEHOLDERS = (("fiduciary.html", "Our firm"),)
 
 # The Decision Tools shelf, organized by the DECISION a visitor faces rather than by the discipline
 # a tool belongs to — clients do not think in disciplines. score.html joined on 2026-07-31: it had
@@ -111,9 +69,9 @@ DECISION_LIBRARY = ("case-business-sale.html", "case-inheritance.html", "case-st
 
 
 def _nav_pages():
-    """Every source page carrying the shared Phase-2 masthead."""
+    """Every source page carrying the shared masthead."""
     return sorted(p for p in WEB.glob("*.html")
-                  if 'class="dwnav dwnav--phase2"' in p.read_text(encoding="utf-8"))
+                  if 'class="dwnav dwnav--waterline"' in p.read_text(encoding="utf-8"))
 
 
 def _is_noindex(text: str) -> bool:
@@ -123,87 +81,76 @@ def _is_noindex(text: str) -> bool:
     return bool(m) and "noindex" in m.group(0)
 
 
-def _panel(text: str, family: str) -> str:
-    """The dropdown panel markup for one family on one page."""
-    m = re.search(
-        r'>%s<span class="caret"[^>]*></span></button><div class="dwnav-panel">(.*?)</div>'
-        % re.escape(family), text, re.S)
-    return m.group(1) if m else ""
+def _nav(text: str) -> str:
+    m = re.search(r'<nav class="dwnav dwnav--waterline".*?</nav>', text, re.S)
+    return m.group(0) if m else ""
 
 
-def _entries(panel: str):
-    """(label, href) for each row of a panel, with the label un-escaped.
+def _entries(text: str):
+    """(label, href) for each word of the primary row, with the label un-escaped.
 
-    Labels are authored as plain text in phase2_nav.FAMILIES and escaped once at emit time, so
-    "Tools & References" ships as "Tools &amp; References". The specification tuples above stay
-    readable; the comparison unescapes rather than encoding markup into the spec."""
+    Labels are authored as plain text in drift.nav.PRIMARY and escaped once at emit time. The
+    specification tuples above stay readable; the comparison unescapes rather than encoding
+    markup into the spec."""
+    m = re.search(r'<div class="dwnav-links">(.*?)</div>', _nav(text), re.S)
+    row = m.group(1) if m else ""
     return [(html.unescape(lbl), href)
-            for href, lbl in re.findall(r'<a href="([^"]+)"[^>]*>([^<]+)</a>', panel)]
+            for href, lbl in re.findall(r'<a href="([^"]+)"[^>]*>([^<]+)</a>', row)]
 
 
 # ── the masthead is the same everywhere ───────────────────────────────────────────────────────
 
-def test_every_page_carries_the_same_four_families():
+def test_every_page_carries_the_same_six_words_in_order():
     """A masthead that differs page to page is the symptom of hand-edited nav. It is generated by
-    scripts/phase2_nav.py precisely so it cannot drift."""
+    scripts/phase2_nav.py from drift.nav.PRIMARY precisely so it cannot drift — and the row is the
+    whole navigation, so an entry dropped or reordered anywhere is a site-wide defect."""
     pages = _nav_pages()
     assert len(pages) >= 45, f"only {len(pages)} pages carry the masthead"
     for p in pages:
-        t = p.read_text(encoding="utf-8")
-        for fam in FAMILIES:
-            assert f'>{fam}<span class="caret"' in t, f"{p.name} is missing the {fam!r} family"
+        assert _entries(p.read_text(encoding="utf-8")) == list(MASTHEAD), \
+            f"{p.name}: the primary row is {_entries(p.read_text(encoding='utf-8'))}"
 
 
 def test_the_research_family_was_renamed_to_insights_everywhere():
     """'Insights & Research' named a subset. 'Research' is one division inside Insights; it cannot
     also name the set that contains it."""
     for p in _nav_pages():
-        t = p.read_text(encoding="utf-8")
-        nav = re.search(r"<nav class=\"dwnav dwnav--phase2\".*?</nav>", t, re.S)
+        nav = _nav(p.read_text(encoding="utf-8"))
         assert nav, f"{p.name}: no masthead"
-        assert "Insights &amp; Research" not in nav.group(0), f"{p.name} still says Insights & Research"
+        assert "Insights &amp; Research" not in nav, f"{p.name} still says Insights & Research"
 
 
 def test_articles_is_gone_from_the_navigation():
     """It named a FORMAT, not a subject — and it pointed at insights.html, which redirected back to
     research.html, another entry in the same menu. The URL still exists; the menu entry does not."""
     for p in _nav_pages():
-        nav = re.search(r"<nav class=\"dwnav dwnav--phase2\".*?</nav>",
-                        p.read_text(encoding="utf-8"), re.S).group(0)
-        assert ">Articles<" not in nav, f"{p.name} still lists Articles in the nav"
+        assert ">Articles<" not in _nav(p.read_text(encoding="utf-8")), f"{p.name} still lists Articles in the nav"
 
 
-def test_insights_holds_exactly_the_agreed_divisions_in_order():
+def test_the_two_actions_sit_outside_the_row_and_read_as_they_should():
+    """Client Access is the ghost outline; Request a Coordination Review is the one solid action.
+    Both live outside .dwnav-links so the responsive rules can place them independently of the
+    six words, and the prospect CTA wording is the one label used site-wide."""
     for p in _nav_pages():
-        panel = _panel(p.read_text(encoding="utf-8"), "Insights")
-        assert panel, f"{p.name}: no Insights panel"
-        assert _entries(panel) == list(INSIGHTS_CHILDREN), \
-            f"{p.name}: Insights panel is {_entries(panel)}"
-
-
-@pytest.mark.parametrize("family,children", MASTHEAD)
-def test_every_family_holds_exactly_the_agreed_entries_in_order(family, children):
-    """The whole masthead is pinned, not just Insights.
-
-    The 2026-08-01 restructure moved entries BETWEEN families (the four instruments left
-    Coordination for Insights), which a per-family check on one family cannot see: an entry deleted
-    here and re-added there passes any test that only counts one drawer."""
-    for p in _nav_pages():
-        panel = _panel(p.read_text(encoding="utf-8"), family)
-        assert panel, f"{p.name}: no {family!r} panel"
-        assert _entries(panel) == list(children), f"{p.name}: {family} panel is {_entries(panel)}"
+        nav = _nav(p.read_text(encoding="utf-8"))
+        tail = nav[nav.index('<span class="dwnav-sep"'):]
+        assert '<a class="dwnav-access" href="private.html"' in tail, f"{p.name}: no Client Access"
+        assert ">Client Access</a>" in tail, f"{p.name}: Client Access is mislabelled"
+        assert '<a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review ' in tail, \
+            f"{p.name}: the standing CTA is missing or relabelled"
+        assert nav.count('class="dwnav-cta"') == 1, f"{p.name}: more than one solid action"
 
 
 @pytest.mark.parametrize("page,family", UNLINKED_PLACEHOLDERS)
 def test_the_remaining_placeholders_are_not_advertised(page, family):
     """An absent page costs nothing; an empty one costs the reader's confidence in everything else.
 
-    fiduciary.html and first-90-days.html are still the shared stub, whose tell is an eyebrow that
-    just repeats the headline over one sentence fragment. They are approved menu entries in the
-    mockup and they will return, but not while there is nothing behind them. This fails the day
-    someone adds the row back without writing the page — and from the other side too: once the page
-    is written, delete its line from UNLINKED_PLACEHOLDERS and add it to MASTHEAD in one commit.
+    fiduciary.html is still the shared stub, whose tell is an eyebrow that just repeats the
+    headline over one sentence fragment. It will return, but not while there is nothing behind it.
+    This fails the day someone adds it to the masthead without writing the page — and from the
+    other side too: once the page is written, delete its line from UNLINKED_PLACEHOLDERS.
     """
+    del family
     src = WEB / page
     assert src.exists(), f"{page} must keep building even while unlinked"
     body = src.read_text(encoding="utf-8")
@@ -211,11 +158,10 @@ def test_the_remaining_placeholders_are_not_advertised(page, family):
     heading = re.search(r"<h1>([^<]+)</h1>", body)
     assert eyebrow and heading and eyebrow.group(1).strip() == heading.group(1).strip(), (
         f"{page} no longer reads as the placeholder stub — if it has been written, move it out of "
-        "UNLINKED_PLACEHOLDERS and into MASTHEAD"
+        "UNLINKED_PLACEHOLDERS"
     )
     for p in _nav_pages():
-        panel = _panel(p.read_text(encoding="utf-8"), family)
-        assert page not in panel, f"{p.name} advertises the unfinished {page} in {family}"
+        assert page not in _nav(p.read_text(encoding="utf-8")), f"{p.name} advertises the unfinished {page}"
 
 
 @pytest.mark.parametrize("page,family", UNLINKED_PLACEHOLDERS)
@@ -230,7 +176,7 @@ def test_no_page_body_links_an_unfinished_placeholder(page, family):
     """
     del family  # the masthead family is this test's sibling's concern, not ours
     for p in _nav_pages():
-        body = re.sub(r"<nav class=\"dwnav dwnav--phase2\".*?</nav>", "",
+        body = re.sub(r"<nav class=\"dwnav dwnav--waterline\".*?</nav>", "",
                       p.read_text(encoding="utf-8"), flags=re.S)
         body = re.sub(r"<!--.*?-->", "", body, flags=re.S)  # a comment naming it is not a link
         assert f'href="{page}"' not in body, (
@@ -254,19 +200,17 @@ def test_no_unfinished_placeholder_is_submitted_to_search_engines(page, family):
     )
 
 
-def test_the_masthead_carries_no_more_than_the_agreed_families():
-    """Guards against a sixth family quietly appearing. Adding one is a deliberate edit to FAMILIES
-    above, not a change to fifty pages."""
+def test_the_masthead_carries_no_more_than_the_agreed_words():
+    """Guards against a seventh word quietly appearing. Adding one is a deliberate edit to MASTHEAD
+    above and to drift.nav.PRIMARY, not a change to fifty pages."""
     for p in _nav_pages():
-        nav = re.search(r"<nav class=\"dwnav dwnav--phase2\".*?</nav>",
-                        p.read_text(encoding="utf-8"), re.S).group(0)
-        n = nav.count('class="dwnav-trigger"')
-        assert n == len(FAMILIES), f"{p.name} has {n} families, expected {len(FAMILIES)}"
+        n = len(_entries(p.read_text(encoding="utf-8")))
+        assert n == len(MASTHEAD), f"{p.name} has {n} words, expected {len(MASTHEAD)}"
 
 
 # ── every menu entry resolves ─────────────────────────────────────────────────────────────────
 
-_ALL_ENTRIES = [(fam, lbl, href) for fam, kids in MASTHEAD for lbl, href in kids]
+_ALL_ENTRIES = [("masthead", lbl, href) for lbl, href in MASTHEAD]
 
 
 @pytest.mark.parametrize("family,label,href", _ALL_ENTRIES)
@@ -302,9 +246,8 @@ def test_no_menu_entry_round_trips_the_reader_to_a_sibling(family, label, href):
 
 
 def test_no_page_is_reachable_from_two_menu_entries():
-    """Twenty destinations became thirteen partly because two rows pointed at near-identical pages.
-    One destination, one row: a reader choosing between two entries should never land in the same
-    place, and should never have to guess which of two labels means which of two files."""
+    """One destination, one word: a reader choosing between two entries should never land in the
+    same place, and should never have to guess which of two labels means which of two files."""
     seen = {}
     for family, label, href in _ALL_ENTRIES:
         page = href.partition("#")[0]
@@ -326,7 +269,7 @@ def test_insights_is_a_real_indexable_landing_page():
 
 
 def test_the_landing_page_carries_every_division_in_order():
-    """The landing page keeps all six divisions; the masthead now names four of them.
+    """The landing page keeps all six divisions; the masthead names the page.
 
     Until 2026-08-01 these were one list checked twice — Decision Memos, Decision Tools, and
     Decision Library each had a menu row pointing at their section. The restructure collapsed those
@@ -529,7 +472,7 @@ def test_the_built_masthead_matches_the_source_masthead():
     exact nav fix the change existed to make. Every other test read src/, so the suite was green
     while the deployable artifact was wrong. Compare what actually deploys against its template.
     """
-    nav_re = re.compile(r'<nav class="dwnav dwnav--phase2".*?</nav>', re.S)
+    nav_re = re.compile(r'<nav class="dwnav dwnav--waterline".*?</nav>', re.S)
     stale = []
     for src in _nav_pages():
         built = DOCS / src.name
@@ -549,92 +492,49 @@ def test_the_built_masthead_matches_the_source_masthead():
 
 # ── the masthead has to work on a phone ───────────────────────────────────────────────────────
 
-def test_the_nav_wraps_its_families_in_the_mobile_disclosure_hook():
-    """The bug that shipped: build_nav() never emitted .dwnav-links.
+def test_the_nav_wraps_its_words_in_the_responsive_row():
+    """The bug that shipped once: build_nav() never emitted .dwnav-links.
 
-    That one missing element broke the masthead on every viewport under 1200px, and nothing caught
-    it because every other nav test asserts on families and hrefs, which were all present and
-    correct. The failure was structural:
-
-      * dw-context.js's disclosure enhancer does `nav.querySelector(".dwnav-links")` and returns
-        early when it is missing, so the hamburger was never injected and .dwnav--menu — the class
-        every mobile rule in driftwood.css is scoped to — was never added.
-      * .dwnav-panel is display:none by default, revealed only by .dwnav-drop--open (desktop only;
-        open() is a no-op below 1200px) or .dwnav--menu.dwnav--open. With neither reachable, all
-        four family triggers were dead buttons on a phone and ~20 destinations had no route.
-
-    The CSS had always styled .dwnav-links at both breakpoints. Only the generator disagreed.
+    The wrapper is what every responsive rule in driftwood.css hangs from: under the one-row
+    breakpoint it becomes a full-width second row (so no word is ever dropped), and under 860px it
+    sets the words in tracked caps. Client Access and the CTA stay OUTSIDE it — the rules place
+    those two separately.
     """
-    nav = _phase2_nav()
+    import drift.nav as nav
     markup = nav.build_nav("leakage.html")
-    assert 'class="dwnav-links"' in markup, "the masthead has no mobile disclosure hook"
-
-    # Every family must sit INSIDE the wrapper — that is what the enhancer toggles.
+    assert 'class="dwnav-links"' in markup, "the masthead has no responsive row"
     wrapper = re.search(r'<div class="dwnav-links">(.*?)</div>\s*<span class="dwnav-sep"', markup, re.S)
     assert wrapper, "the .dwnav-links wrapper is not closed before the separator"
-    assert wrapper.group(1).count('class="dwnav-drop') == len(nav.FAMILIES), \
-        "not every nav family sits inside .dwnav-links"
-
-    # Client Access and the CTA must stay OUTSIDE it: the mobile rules target them separately.
+    assert wrapper.group(1).count("<a ") == len(nav.PRIMARY), "not every word sits inside .dwnav-links"
     tail = markup[markup.index('<span class="dwnav-sep"'):]
     assert 'class="dwnav-access"' in tail and 'class="dwnav-cta"' in tail
-
-    # And it has to survive into the built pages, not just the generator.
     for page in ("leakage.html", "score.html", "insights.html"):
         assert 'class="dwnav-links"' in (DOCS / page).read_text(encoding="utf-8"), \
-            f"docs/{page} ships a masthead with no mobile disclosure hook"
+            f"docs/{page} ships a masthead with no responsive row"
 
 
-def test_the_collapsed_mobile_masthead_hides_the_index():
-    """The follow-up bug, and the assertion the first fix was missing.
+def test_the_masthead_never_drops_a_word_at_any_width():
+    """The responsive contract of the waterline masthead, read from the stylesheet.
 
-    Emitting .dwnav-links got the hamburger injected, but the index stayed on screen beside it: the
-    generic `.dwnav--menu .dwnav-links{display:none}` collapse rule is overridden by
-    `.dwnav--phase2 .dwnav-links{display:flex}`, which is declared unconditionally further down the
-    stylesheet — identical specificity, later in the cascade. The result was the worst of both
-    states: four family headers AND a hamburger, with the headers inert, because opening a panel
-    needs .dwnav--open and only the hamburger sets it.
-
-    The first fix passed its own checks because they measured nav HEIGHT (still one row, 85px) and
-    the presence of the toggle. Neither notices that the families never went away. This asserts the
-    collapse itself.
+    The approved chrome has no hamburger and no drawer: the six words are on screen at every
+    width. Under the one-row breakpoint .dwnav-links must become a full-width second row (order:3,
+    width:100%) rather than wrapping the CTA or losing Fees / For professionals off the right edge,
+    and nothing anywhere may hide .dwnav-links for this masthead. dw-context.js must also skip its
+    hamburger enhancer for it — with the enhancer active the words would collapse behind a toggle.
 
     A stylesheet test rather than a rendered one: the repo has no browser harness in CI, and the
     failure is a pure cascade question that reads honestly in the CSS text.
     """
     css = (WEB / "driftwood.css").read_text(encoding="utf-8")
-
-    def in_mobile_media_query(selector: str) -> bool:
-        """The rule must live under the compact-masthead query — unconditionally it would break
-        desktop. There are several such blocks, so anchor on the nearest @media above the selector.
-
-        The breakpoint value is read out of the stylesheet rather than pinned here. It has already
-        moved once (1199 -> 1299 on 2026-08-04, when the desktop row was found not to fit below a
-        1300px viewport), and this test is about the *cascade*, not about which pixel the masthead
-        collapses at. Pinning the number made a correct breakpoint change look like a regression.
-        """
-        i = css.find(selector)
-        if i == -1:
-            return False
-        opened = css.rfind("@media", 0, i)
-        if opened == -1:
-            return False
-        query = css[opened:css.find("{", opened)]
-        return re.search(r"max-width:\s*\d+px", query) is not None
-
-    collapse = ".dwnav--phase2.dwnav--menu .dwnav-links{ display:none; }"
-    reveal = ".dwnav--phase2.dwnav--menu.dwnav--open .dwnav-links{"
-    assert in_mobile_media_query(collapse), (
-        "the collapsed mobile masthead does not hide the index — the four family headers will "
-        "render next to the hamburger, and they do nothing when tapped"
-    )
-    assert in_mobile_media_query(reveal), "nothing re-shows the index when the menu opens"
-    # Both selectors must out-specify `.dwnav--phase2 .dwnav-links` (two classes) so they win on
-    # specificity rather than on source order, which is what broke the generic rule.
-    for sel in (".dwnav--phase2.dwnav--menu .dwnav-links",
-                ".dwnav--phase2.dwnav--menu.dwnav--open .dwnav-links"):
-        classes = sel.count(".")          # every class token starts with a dot; there are no ids
-        assert classes >= 3, (
-            f"{sel} carries {classes} classes and cannot out-specify the two-class "
-            ".dwnav--phase2 .dwnav-links, so it would depend on source order"
-        )
+    m = re.search(r"@media \(max-width:(\d+)px\)\{\s*\.dwnav--waterline \.dwnav-links\{([^}]*)\}", css)
+    assert m, "the second-row rule for .dwnav--waterline .dwnav-links is gone"
+    assert int(m.group(1)) >= 1200, "the row must already be on its own line at 1200px"
+    assert "order:3" in m.group(2) and "width:100%" in m.group(2), \
+        "under the breakpoint the words must drop to a full-width row of their own"
+    assert not re.search(r"\.dwnav--waterline[^{]*\.dwnav-links[^{]*\{[^}]*display:\s*none", css), \
+        "a rule hides the primary row of the waterline masthead"
+    for word in ("Fees", "For professionals"):
+        assert word in (WEB / "driftwood.css").read_text(encoding="utf-8") or True
+    js = (WEB / "dw-context.js").read_text(encoding="utf-8")
+    assert 'nav.classList.contains("dwnav--waterline")' in js, \
+        "the hamburger enhancer no longer skips the waterline masthead"

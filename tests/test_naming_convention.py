@@ -146,7 +146,7 @@ def test_the_taxlab_cta_asks_for_the_engagement_not_the_tool():
 
 def test_every_nav_tool_label_follows_the_convention():
     """The masthead is where the collision was most visible — two 'Reviews' in one dropdown."""
-    nav = re.search(r'<nav class="dwnav dwnav--phase2".*?</nav>',
+    nav = re.search(r'<nav class="dwnav dwnav--waterline".*?</nav>',
                     (WEB / "hub.html").read_text(encoding="utf-8"), re.S)
     assert nav
     labels = re.findall(r'<a href="[^"]+"[^>]*>([^<]+)</a>', nav.group(0))

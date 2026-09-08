@@ -342,7 +342,7 @@ def test_no_workspace_class_silently_inherits_a_site_wide_rule(src):
 
 
 def test_the_workspace_carries_the_shared_masthead_and_frame(src):
-    assert 'class="dwnav dwnav--phase2"' in src, "the workspace has no masthead"
+    assert 'class="dwnav dwnav--waterline"' in src, "the workspace has no masthead"
     assert '<div class="sheet">' in src, "the workspace is not on the shared page frame"
     assert not re.search(r"\.sheet\{[^}]*max-width:\s*\d", src), "the workspace redeclares the frame width"
 

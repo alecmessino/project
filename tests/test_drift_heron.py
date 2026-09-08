@@ -23,9 +23,15 @@ now instead of under web/img/, because it is no longer a deployed asset and shou
 to docs/ as though it were.
 
 So the scarcity tests below inverted rather than disappeared. They used to assert the mark appears
-on exactly one page; they now assert it appears on NONE, which is the same rule — the mark goes
-where Driftwood makes an enduring statement, and today no web page is one. The day it returns to a
-page, that page has to earn it, and this file should be edited deliberately to say so.
+on exactly one page; from 2026-08-06 they asserted it appears on NONE, which is the same rule.
+
+── 2026-09-08: THE MARK CAME BACK, ON THE HOMEPAGE ONLY ─────────────────────────────────────────
+The approved Homepage v2 (lock 1a) put the heron in the right column of the hero as a plate,
+img/heron-plate.svg: the supplied engraving, one ink on limestone, bill toward the headline, feet on
+the CTA baseline. The watershed left the slot rather than sharing it. The scarcity rule stands in
+its original form again — one page, one master, never nav / footer / favicon / a repeating slot —
+and the generated master at design/house-mark/ still ships nowhere; the plate is its only deployed
+form. This file was edited deliberately to say so.
 """
 import re
 import sys
@@ -111,17 +117,23 @@ def _pages(root: Path):
     return sorted(p for p in root.glob("*.html"))
 
 
-def test_the_house_mark_appears_on_no_page_at_all():
-    """This is the rule the mark's meaning is made of, in its current form. It is not a decorative
-    asset that pages may reach for; it appears where Driftwood makes an enduring statement, and as
-    of 2026-08-06 no web page is one. Every page is a deliberate absence, not an oversight — and a
-    reappearance should be a considered edit to this test, never a quiet import."""
-    strays = []
+def test_the_house_mark_appears_on_the_homepage_and_nowhere_else():
+    """This is the rule the mark's meaning is made of. It is not a decorative asset that pages may
+    reach for; it appears where Driftwood makes an enduring statement. As of 2026-09-08 exactly one
+    web page is one: the homepage hero (Homepage v2 lock 1a), which carries the approved plate
+    img/heron-plate.svg. The generated master (heron-engraving) still ships nowhere. Every other
+    page is a deliberate absence — a second page has to earn it with an edit to this test."""
+    strays, plates = [], []
     for root in (WEB, DOCS):
         for page in _pages(root):
-            if "heron-engraving" in page.read_text(encoding="utf-8"):
+            t = page.read_text(encoding="utf-8")
+            if "heron-engraving" in t:
                 strays.append(f"{root.name}/{page.name}")
-    assert not strays, f"the house mark has returned to: {strays} — rarity is the whole instrument"
+            if "heron-plate" in t:
+                plates.append(f"{root.name}/{page.name}")
+    assert not strays, f"the master has returned to: {strays} — the plate is the only deployed form"
+    assert sorted(plates) == ["docs/index.html", "web/hub.html"], \
+        f"the plate must appear on the homepage only, found on: {plates} — rarity is the whole instrument"
 
 
 def test_the_master_is_not_a_deployed_asset():
@@ -135,51 +147,47 @@ def test_the_master_is_not_a_deployed_asset():
         "a stale copy of the mark is still being shipped in docs/"
 
 
-def test_the_hero_now_carries_the_watershed():
-    """The slot the mark used to hold is not empty, and what holds it is not another atmosphere
-    plate. The watershed is decorative in the accessibility sense — aria-hidden, never a link —
-    but it is the page's argument, which is why it displaced the mark rather than joining it."""
+def test_the_hero_carries_the_heron_plate_and_nothing_else_decorative():
+    """2026-09-08: the mark returns to the homepage as the approved plate (img/heron-plate.svg,
+    Homepage v2 lock 1a). It is decorative in the accessibility sense — inside an aria-hidden
+    figure, never a link — and the watershed it replaces is gone entirely rather than sharing the
+    plate: two atmospheric drawings in one hero would make both quieter."""
     t = HUB.read_text(encoding="utf-8")
-    tag = re.search(r"<svg class=\"ws\"[^>]*>", t)
-    assert tag, "the hero has lost the watershed"
-    assert 'aria-hidden="true"' in tag.group(0), "the watershed is announcing itself to screen readers"
-    before = t[: tag.start()]
-    assert before.rfind("<a ") < before.rfind("</a>"), "the watershed is inside a link"
+    fig = re.search(r'<figure class="heron-col"[^>]*>(.*?)</figure>', t, re.S)
+    assert fig, "the hero has lost the heron plate"
+    assert 'aria-hidden="true"' in t[fig.start():fig.start() + 80], \
+        "the plate is announcing itself to screen readers"
+    assert 'src="img/heron-plate.svg"' in fig.group(1)
+    before = t[: fig.start()]
+    assert before.rfind("<a ") < before.rfind("</a>"), "the plate is inside a link"
+    assert '<svg class="ws"' not in t, "the watershed is back beside the heron"
+    assert "mask-image" not in t, "the plate is faded under the copy; it sits in its own column"
 
 
-def test_the_watershed_sits_behind_the_copy():
-    """Typography has priority structurally, not by luck — the same rule the mark was held to.
-
-    How it wins changed on 2026-08-10. Both earlier tenants of this slot were hairline drawings
-    faded back under the words with a left mask-image, and this file asserted the mask. At the
-    weights the watershed carries, a fade does not clear the copy — it leaves grey ghosts behind
-    it — so the plate is pinned to start after the text column instead and runs at full colour
-    everywhere it appears. The guarantee is stronger, not weaker: the strokes cannot reach the
-    words because they are not drawn there. What is asserted is therefore the boundary, and it
-    has to stay a CSS-space measurement — expressed in viewBox units it drifted with window
-    height, which is the bug that produced the pinning.
-    """
+def test_the_plate_sits_in_its_own_column_and_never_under_the_copy():
+    """Typography wins by geometry: the plate is the second column of the hero grid, spanning the
+    headline, the aside and the action, so it can never be drawn under a word. Feet on the CTA
+    baseline at desktop (align-self:end in a grid aligned to end), a 480px plate; below 900px it
+    drops under the copy at 380px and keeps its balance rather than the baseline."""
     t = HUB.read_text(encoding="utf-8")
-    assert re.search(r"\.ws\{[^}]*z-index:0", t, re.S), "the watershed left the back plane"
-    assert re.search(r"\.hero>\.hero-grid,\.hero>\.ctas\{[^}]*z-index:1", t), \
-        "the hero copy is no longer lifted above the drawing"
-    left = re.search(r"\.ws\{[^}]*left:(\d+)px", t, re.S)
-    assert left, "the watershed is no longer pinned clear of the copy column"
-    # 52px hero padding + the 640px measure .hero-aside and .hero .ctas both hold, + a gutter.
-    assert int(left.group(1)) >= 52 + 640, \
-        f"the plate starts at {left.group(1)}px, inside the 692px copy column"
-    assert not re.search(r"\.ws\{[^}]*mask-image:", t, re.S), \
-        "the fade is back; at these weights it ghosts the copy instead of clearing it"
+    col = re.search(r"\.heron-col\{([^}]*)\}", t)
+    assert col, "the heron column has no rule"
+    assert "grid-column:2" in col.group(1) and "align-self:end" in col.group(1)
+    assert "max-width:480px" in col.group(1), "the desktop plate is no longer the approved 480px"
+    assert re.search(r"\.hero-grid\{[^}]*grid-template-columns:minmax\(0,13fr\) minmax\(0,9fr\)", t), \
+        "the hero lost its 13:9 copy/plate proportion"
+    assert re.search(r"@media\(max-width:899px\)\{[^@]*\.heron-col\{[^}]*max-width:380px", t, re.S), \
+        "the plate does not step down under the copy on narrow viewports"
 
 
-def test_the_watershed_carries_no_cartographic_residue():
-    """The whole brief: pure vector structure on limestone. No labels, no city dots, no state
-    borders, no coastline. A <text> element in this plate would be a caption on a hero."""
-    t = HUB.read_text(encoding="utf-8")
-    svg = t[t.index('<svg class="ws"'): t.index("</svg>", t.index('<svg class="ws"'))]
-    assert "<text" not in svg, "the hero drawing has grown a label"
-    # The traced Mississippi generated a basin silhouette and hid it with `.ws .basin{display:none}`;
-    # this asserted that rule. The watershed has no geography to hide — no basin is emitted at all,
-    # so the rule would have nothing to switch off. Absence is now the stronger assertion.
-    assert "basin" not in svg, "a basin silhouette is back in the plate; the network is the picture"
-    assert not re.search(r"<(image|use)\b", svg), "the plate has grown a raster or a borrowed symbol"
+def test_the_plate_is_the_supplied_asset_one_ink_on_limestone():
+    """The approved plate, used verbatim: one ink (#1e2833) with limestone (#f1efe9) knockouts,
+    no gradient, no raster, no text, no second colour. The file is shipped from web/img so
+    sync_docs copies it through with the other plates."""
+    plate = WEB / "img" / "heron-plate.svg"
+    assert plate.exists() and (DOCS / "img" / "heron-plate.svg").exists()
+    svg = plate.read_text(encoding="utf-8")
+    colours = set(re.findall(r'(?:fill|stroke)="(#[0-9a-fA-F]{6})"', svg))
+    assert colours == {"#1e2833", "#f1efe9"}, f"the plate is no longer ink on limestone: {sorted(colours)}"
+    assert "<text" not in svg and "<image" not in svg and "gradient" not in svg.lower()
+    assert 'viewBox="0 0 660 720"' in svg

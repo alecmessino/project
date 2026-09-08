@@ -215,44 +215,65 @@ BRAND = ('<a class="brand" href="index.html" aria-label="Driftwood Wealth, home"
          '<span class="brand-rule" aria-hidden="true"></span>'
          '<span class="brand-word">Driftwood Wealth</span></a>')
 
-def build_nav(page_file):
+# ── 2026-09: the Waterline masthead ───────────────────────────────────────────────────────────
+# The approved site design (Homepage v2 / Chrome) replaced the four hover dropdowns with one flat
+# row of six sentence-case words. Nothing was removed from the site: every page the dropdowns
+# reached is still one click from its family's landing page, and the two actions are unchanged
+# (Client Access stays a ghost outline, Request a Coordination Review stays the one solid CTA).
+#
+# (label, href, key). The key is what CURRENT maps a page onto, so the row a reader is standing
+# under lights up (family highlight) and the row that IS the page carries aria-current="page".
+# The href of each word is the production landing page for that family — the design files linked
+# whichever page of the family they happened to contain, and production routing governs.
+PRIMARY = [
+    ("Our firm", "principles.html", "firm"),
+    ("Coordination", "coordination.html", "coordination"),
+    ("The record", "the-record.html", "record"),
+    ("Insights", "insights.html", "insights"),
+    ("Fees", "fees.html", "fees"),
+    ("For professionals", "partners.html", "professionals"),
+]
+
+_FAMILY_KEY = {"Our Firm": "firm", "Coordination": "coordination",
+               "Insights": "insights", "For Professionals": "professionals"}
+
+# The record: the five documents the Coordination Review produces, plus the pages that publish
+# their specimens. Any page on this list stands under "The record".
+RECORD_PAGES = ("the-record.html", "record.html", "manual.html", "decision-register.html",
+                "opportunity-register.html", "awor.html", "constitution.html",
+                "capital-allocation.html", "ic-memo.html", "transition-plan.html")
+
+
+def current_key(page_file: str) -> str | None:
+    """Which of the six words a page stands under, or None for a page outside every family."""
+    if page_file == "fees.html":
+        return "fees"
+    if page_file in RECORD_PAGES:
+        return "record"
     cur = CURRENT.get(page_file)
-    fam_cur, sub_cur = cur if cur else (None, None)
+    return _FAMILY_KEY.get(cur[0]) if cur else None
+
+
+def build_nav(page_file):
+    key = current_key(page_file)
+    links = []
+    for label, href, k in PRIMARY:
+        attrs = ' href="%s"' % href
+        if k == key:
+            # The word that IS this page carries aria-current="page"; the family a deeper page
+            # stands under carries aria-current="true" so it still lights without lying about
+            # which page the reader is on.
+            attrs += ' aria-current="page"' if href == page_file else ' aria-current="true"'
+        links.append('<a%s>%s</a>' % (attrs, _esc(label)))
     parts = [BRAND]
-    families = []
-    for fam_label, items in FAMILIES:
-        is_current = (fam_label == fam_cur)
-        cls = "dwnav-drop" + (" dwnav-drop--current" if is_current else "")
-        links = []
-        for label, href, key in items:
-            attrs = ' href="%s"' % href
-            if key == sub_cur:
-                attrs += ' aria-current="page"'
-            links.append('<a%s>%s</a>' % (attrs, _esc(label)))
-        panel = '<div class="dwnav-panel">%s</div>' % "".join(links)
-        trigger = ('<button type="button" class="dwnav-trigger" aria-haspopup="true" '
-                   'aria-expanded="false">%s<span class="caret" aria-hidden="true"></span></button>'
-                   % _esc(fam_label))
-        families.append('<div class="%s">%s%s</div>' % (cls, trigger, panel))
-    # The families MUST be wrapped in .dwnav-links. This is not cosmetic markup — it is the hook the
-    # entire mobile masthead hangs from, and omitting it broke the nav on every phone and tablet:
-    #
-    #   * dw-context.js's disclosure enhancer does `nav.querySelector(".dwnav-links")` and returns
-    #     early when it is absent, so the hamburger was never injected and .dwnav--menu was never
-    #     added — which is what activates every mobile rule in driftwood.css.
-    #   * .dwnav-panel is display:none by default. It is revealed by .dwnav-drop--open (desktop
-    #     only — open() is a no-op below 1200px) or by .dwnav--menu.dwnav--open. With neither
-    #     reachable, all four family triggers were dead buttons under 1200px and roughly twenty
-    #     destinations had no route to them at all.
-    #
-    # The CSS has always expected this element (it styles .dwnav-links at both breakpoints); only
-    # the generator failed to emit it. Keep the separator, Client Access, and the CTA OUTSIDE it —
-    # the mobile rules target those three separately.
-    parts.append('<div class="dwnav-links">%s</div>' % "".join(families))
+    # .dwnav-links is still the wrapper the stylesheet's responsive rules hang from: below the
+    # one-row breakpoint it becomes a full-width second row so no word is ever dropped.
+    parts.append('<div class="dwnav-links">%s</div>' % "".join(links))
     parts.append('<span class="dwnav-sep" aria-hidden="true"></span>')
-    parts.append('<a class="dwnav-access" href="private.html">Client Access</a>')
+    parts.append('<a class="dwnav-access" href="private.html"%s>Client Access</a>'
+                 % (' aria-current="page"' if page_file == "private.html" else ""))
     parts.append('<a class="dwnav-cta" href="coordination-review.html">Request a Coordination Review <span class="cta-arrow" aria-hidden="true">&rarr;</span></a>')
-    return '<nav class="dwnav dwnav--phase2" aria-label="Driftwood Wealth">\n      %s\n    </nav>' % "\n      ".join(parts)
+    return '<nav class="dwnav dwnav--waterline" aria-label="Driftwood Wealth">\n      %s\n    </nav>' % "\n      ".join(parts)
 
 
 
@@ -266,3 +287,57 @@ def render(page_file: str | None = None, abs_base: str | None = None) -> str:
     if abs_base:
         nav = re.sub(r'href="(?!https?:|#|/)([^"]*)"', lambda m: f'href="{abs_base}{m.group(1)}"', nav)
     return nav
+
+
+# ── The record strip ──────────────────────────────────────────────────────────────────────────
+# The five documents the Coordination Review produces, in the order the Review page lists them.
+# This is the canonical public hierarchy (2026-09): "Coordination Index" and "Coordination
+# Register" are retired as public names. One list, rendered two ways: the full block (homepage,
+# Principles, the Review) and the compact masthead the Manual carries above its own front matter.
+RECORD = [
+    ("01", "Coordination Report", "ic-memo.html"),
+    ("02", "Opportunity Register", "opportunity-register.html"),
+    ("03", "Wealth Operating Manual", "manual.html"),
+    ("04", "90-Day Plan", "transition-plan.html"),
+    ("05", "Decision Register", "decision-register.html"),
+]
+RECORD_LEDE = ("The review produces five documents. The Report diagnoses; the Register sustains; "
+               "the Manual remembers.")
+RECORD_NOTE = ('Households that proceed keep all five, maintained year over year through the '
+               '<a href="awor.html">Annual Wealth Operating Review</a>.')
+
+
+def _record_title(n: str, name: str) -> str:
+    return ("Your " if n == "04" else "The ") + name
+
+
+def record_strip_html(current: str | None = None) -> str:
+    """The full block: eyebrow, one sentence, one continuous ruled line of the five, the AWOR note."""
+    items = []
+    for n, name, href in RECORD:
+        cur = ' aria-current="page"' if n == current else ""
+        items.append('<a href="%s"%s><span class="rs-n">%s</span>%s</a>'
+                     % (href, cur, n, _record_title(n, name)))
+    line = '<span class="rs-d" aria-hidden="true">·</span>'.join(items)
+    return ('<div class="record-strip">'
+            '<p class="rs-k">The record</p>'
+            '<p class="rs-lede">%s</p>'
+            '<p class="rs-line">%s</p>'
+            '<p class="rs-note">%s</p>'
+            '</div>' % (RECORD_LEDE, line, RECORD_NOTE))
+
+
+def record_masthead_html(current: str) -> str:
+    """The compact masthead a record page carries under the nav: the five, this one current, and the
+    print action. Every record page prints as one page through the shared print stylesheet."""
+    items = []
+    for n, name, href in RECORD:
+        cur = ' aria-current="page"' if n == current else ""
+        items.append('<a href="%s"%s>%s %s</a>' % (href, cur, n, name))
+    line = '<span class="rm-d" aria-hidden="true">·</span>'.join(items)
+    return ('<div class="record-mast">'
+            '<span class="rm-k">The record</span>'
+            '%s'
+            '<button class="rm-print noprint" type="button" onclick="window.print()">'
+            'Read as one page &#8599;</button>'
+            '</div>' % line)

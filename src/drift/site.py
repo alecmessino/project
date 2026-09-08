@@ -94,9 +94,10 @@ FIRM_LEGAL_NAME = "Driftwood Wealth"
 FIRM_LOCATIONS = ("Chicago, Illinois", "Austin, Texas")
 FIRM_LOCATION = FIRM_LOCATIONS[0]   # kept for callers that want a single city
 FIRM_SINCE = "2024"              # founding year, for the "Founded" line
-# 2026-08-03, principal-directed: the phone leaves the canonical foot. The email remains, so the
-# band still makes the practice reachable; a number is a different commitment from an inbox.
-FIRM_PHONE = ""
+# 2026-08-03, principal-directed: the phone left the canonical foot. 2026-09-08: it returns. The
+# approved shared chrome (Chrome.dc.html, the footer band) carries the number beside the email on
+# every page, and the Leadership page's firm-anchor band is where the principal placed it.
+FIRM_PHONE = "(708) 548-7600"
 
 # Deferred, consumed by the firm-anchor band once confirmed; empty means "render nothing":
 FIRM_CRD = ""        # SEC/IARD CRD number

@@ -151,7 +151,7 @@ def test_capability_sequence_lives_on_the_practice_not_the_homepage():
     # decide this test's answer: the 2026-08-01 IA restructure added "A Household, Coordinated",
     # whose "Coordinated" contains "Coordinate", which then matched ~8KB above the real sequence and
     # reported the order as drifted while the section itself was untouched.
-    practice = re.sub(r'<nav class="dwnav dwnav--phase2".*?</nav>', "", practice, flags=re.S)
+    practice = re.sub(r'<nav class="dwnav dwnav--waterline".*?</nav>', "", practice, flags=re.S)
     caps = ("Diagnose", "Measure", "Coordinate", "Manage")
     for cap in caps:
         assert cap in practice, f"the {cap} capability should anchor the guided path on The Practice"
